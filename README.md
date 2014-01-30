@@ -3,7 +3,7 @@ Antox
 
 Android client for the Tox project. Still in development
 
-###Current Progress
+###Completed
 
 - Create navigation drawer as a container for friends list
 - Loading and saving of user settings
