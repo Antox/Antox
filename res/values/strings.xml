@@ -5,8 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="add_friend">Add Friend</string>
     <string name="join_group">Join Group</string>
-    <string name="drawer_open">Open Navigation Drawer</string>
-    <string name="drawer_close">Close Navigation Drawer</string>
     <string name="welcome_string">Welcome to Antox</string>
     <string name="about_string">This client is still in pre-alpha.</string>
     <string name="getstarted_string">To get started, enter your desired name and either add your own DHT details or leave as default</string>
