@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class WelcomeActivity extends Activity {
 
@@ -62,6 +63,12 @@ public class WelcomeActivity extends Activity {
 		editor.putString("saved_dht_port", dhtPortText);
 		editor.putString("saved_dht_key", dhtKeyText);
 		editor.apply();
+		
+		Context context = getApplicationContext();
+		CharSequence text = "Your details have been sent to the NSA";
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
 	}
 	
 	@Override

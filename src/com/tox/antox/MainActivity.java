@@ -22,9 +22,9 @@ public class MainActivity extends Activity {
         SharedPreferences pref = getSharedPreferences("main", Context.MODE_PRIVATE);
         
         //For testing WelcomeActivity
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putInt("beenLoaded", 0);
-        editor.apply();
+        //SharedPreferences.Editor editor = pref.edit();
+        //editor.putInt("beenLoaded", 0);
+        //editor.apply();
         //End testing
         
         //If beenLoaded is blank, then never been run
