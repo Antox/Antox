@@ -1,7 +1,7 @@
 Antox
 =====
 
-Android client for the Tox project. Still in development
+Android client for the Tox project. Still in heavy development. Currently is only tested using a Samsung S3 running android 4.4 and cyanogenmod.
 
 ###Completed
 
@@ -16,3 +16,4 @@ Android client for the Tox project. Still in development
 
 - Tox Java binding
 - Store a list of up to date DHT servers
+- Support variety of screen sizes from smaller phones up to larger tablets
