@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
+
     <string name="app_name">antox</string>
     <string name="action_settings">Settings</string>
     <string name="add_friend">Add Friend</string>
@@ -8,34 +8,24 @@
     <string name="drawer_open">Open Navigation Drawer</string>
     <string name="drawer_close">Close Navigation Drawer</string>
     <string name="welcome_string">Welcome to Antox</string>
-    <string name="about_string">Antox is an android client for Tox, a decentralised, open-source
-        alternative to Skype. This client is still in testing.</string>
-    <string name="getstarted_string">To get started, tap the dropdown in the top right and click on settings</string>
+    <string name="about_string">This client is still in pre-alpha.</string>
+    <string name="getstarted_string">To get started, enter your desired name and either add your own DHT details or leave as default</string>
     <string name="developer_string">Developed by astonex\nirc.freednode.org#tox-dev</string>
-
-    <string-array name="friend_list">
-        <item>Friend 1</item>
-    </string-array>
 
     <string name="title_activity_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    
+
     <!-- Settings Activity -->
     <string name="settings_user_key">Your User Key: abcdef</string>
-    
-	<string name="settings_name_hint">enter your name</string>
-	
-	<string name="settings_note_hint">enter your personal note</string>
-	
-	<string name="settings_status_hint">enter your status</string>
-	
-	<string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
-	<string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
-	<string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-	
-	<string name="settings_button">Update Settings</string>
-	<string name="settings_updated">Settings have been updated</string>
-	
-	<!--  Chat Fragment -->
-	<string name="chat_message_hint">enter your message here</string>
+    <string name="settings_name_hint">enter your name</string>
+    <string name="settings_note_hint">enter your personal note</string>
+    <string name="settings_status_hint">enter your status</string>
+    <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
+    <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Update Settings</string>
+    <string name="settings_updated">Settings have been updated</string>
+
+    <string name="title_activity_welcome">WelcomeActivity</string>
+
 </resources>

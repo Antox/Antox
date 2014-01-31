@@ -2,7 +2,6 @@ package com.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -28,13 +27,13 @@ public class SettingsActivity extends Activity {
 		}
 		
 		/* Get saved preferences */
-        SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         
         String userKeyText = pref.getString("saved_user_key_hint", "");
         String nameHintText = pref.getString("saved_name_hint", "");
         String dhtIpHintText = pref.getString("saved_dht_ip", "192.254.75.98");
         String dhtPortHintText = pref.getString("saved_dht_port", "33445");
-        String dhtKeyHintText = pref.getString("saved_dht_key", "33445");
+        String dhtKeyHintText = pref.getString("saved_dht_key", "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
         String noteHintText = pref.getString("saved_note_hint", "");
         String statusHintText = pref.getString("saved_status_hint", "");
 
@@ -97,7 +96,7 @@ public class SettingsActivity extends Activity {
 		
 		/* Save settings to file */
 		
-		SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
 		
 		if(nameHintText.getText().toString() != getString(R.id.settings_name_hint))
