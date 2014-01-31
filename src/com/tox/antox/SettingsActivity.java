@@ -29,54 +29,53 @@ public class SettingsActivity extends Activity {
 		/* Get saved preferences */
         SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         
-        String userKeyText = pref.getString("saved_user_key_hint", "");
-        String nameHintText = pref.getString("saved_name_hint", "");
-        String dhtIpHintText = pref.getString("saved_dht_ip", "192.254.75.98");
-        String dhtPortHintText = pref.getString("saved_dht_port", "33445");
-        String dhtKeyHintText = pref.getString("saved_dht_key", "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
-        String noteHintText = pref.getString("saved_note_hint", "");
-        String statusHintText = pref.getString("saved_status_hint", "");
-
-        if(userKeyText != "")
+        /* If the preferences aren't blank/default, then add them to text fields */
+        /* If they are blank/default, the text from strings.xml will be displayed instead */
+        if(pref.getString("saved_user_key_hint", "") != "")
         {
         	TextView userKey = (TextView) findViewById(R.id.settings_user_key);
-        	userKey.setText(userKeyText);
+        	userKey.setText(pref.getString("saved_user_key_hint", ""));
         }
         
-        if(nameHintText != "")
+        if(pref.getString("saved_name_hint", "") != "")
         {
         	EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
-        	nameHint.setText(nameHintText);
+        	nameHint.setText(pref.getString("saved_name_hint", ""));
         }
         
-        if(dhtIpHintText != "")
+        if(pref.getString("saved_dht_ip", "192.254.75.98") != "192.254.75.98")
         {
         	EditText dhtIpHint = (EditText) findViewById(R.id.settings_dht_ip);
-        	dhtIpHint.setText(dhtIpHintText);
+        	dhtIpHint.setText(pref.getString("saved_dht_ip", "192.254.75.98"));
         }
         
-        if(dhtPortHintText != "")
+        if(pref.getString("saved_dht_port", "33445") != "33445")
         {
         	EditText dhtPortHint = (EditText) findViewById(R.id.settings_dht_port);
-        	dhtPortHint.setText(dhtPortHintText);
+        	dhtPortHint.setText(pref.getString("saved_dht_port", "33445"));
         }
         
-        if(dhtKeyHintText != "")
+        if(pref.getString("saved_dht_key", "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B")
+        		!= "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B")
         {
         	EditText dhtKeyHint = (EditText) findViewById(R.id.settings_dht_key);
-        	dhtKeyHint.setText(dhtKeyHintText);
+        	dhtKeyHint.setText(pref.getString(
+        			"saved_dht_key", 
+        			"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B"
+        			)
+        			);
         }
         
-        if(noteHintText != "")
+        if(pref.getString("saved_note_hint", "") != "")
         {
         	EditText noteHint = (EditText) findViewById(R.id.settings_note_hint);
-        	noteHint.setText(noteHintText);
+        	noteHint.setText(pref.getString("saved_note_hint", ""));
         }
         
-        if(statusHintText != "")
+        if(pref.getString("saved_status_hint", "") != "")
         {
         	EditText statusHint = (EditText) findViewById(R.id.settings_status_hint);
-        	statusHint.setText(statusHintText);
+        	statusHint.setText(pref.getString("saved_status_hint", ""));
         }
         
 		
@@ -99,6 +98,9 @@ public class SettingsActivity extends Activity {
 		SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();
 		
+		/* If the fields aren't equal to the default strings in strings.xml then they contain user entered data 
+		 * so they need saving
+		 */
 		if(nameHintText.getText().toString() != getString(R.id.settings_name_hint))
 			editor.putString("saved_name_hint", nameHintText.getText().toString());
 		if(userKeyText.getText().toString() != getString(R.id.settings_user_key))
