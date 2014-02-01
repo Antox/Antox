@@ -46,6 +46,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tox.antox.MainActivity" />
         </activity>
+        <activity
+            android:name="com.tox.antox.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName="com.tox.antox.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tox.antox.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

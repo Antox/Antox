@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -49,38 +48,38 @@ public class MainActivity extends Activity {
         
         final ListView listView = (ListView) findViewById(R.id.mainListView);
         /* Placeholder values until tox binding is done */
-        String values[] = new String[] { 
+        String[] friends = new String[] { 
         		"astonex", 
         		"irungentoo", 
         		"sonOfRa", 
         		"stqism",  
         		"nurupo",
-        		"JFreegman",
-        		"FullName"
+        		"jfreegman",
+        		"fullName"
         		};
         
+        //Sort strings for better optimisation of searchFriend()
+        Arrays.sort(friends);
+        
         ArrayList<String> valuesList = new ArrayList<String>();
-        valuesList.addAll(Arrays.asList(values));
+        valuesList.addAll(Arrays.asList(friends));
+        
         
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-        		 R.layout.main_list_item, values);
+        		 R.layout.main_list_item, friends);
         
         listView.setAdapter(adapter);
         
+        final Intent chatIntent = new Intent(this, ChatActivity.class);
+        
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-
+        {        	
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				/* Just for show */
-				Context context = getApplicationContext();
-				CharSequence text = (String) listView.getItemAtPosition(position);
-				int duration = Toast.LENGTH_SHORT;
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
-				
-				/* Load chat activity */
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
+			{
+				CharSequence friendName = (String) listView.getItemAtPosition(position);
+				chatIntent.putExtra(EXTRA_MESSAGE, friendName);
+				startActivity(chatIntent);
 			}
         	
         });
@@ -88,7 +87,7 @@ public class MainActivity extends Activity {
         getActionBar().setHomeButtonEnabled(true);
     }
     
-    public void openSearch()
+    public void openSettings()
     {
     	Intent intent = new Intent(this, SettingsActivity.class);
     	startActivity(intent);
@@ -100,16 +99,24 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
     
+    public void searchFriend()
+    {
+    	/* Binary search friends */
+    }
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
     	switch(item.getItemId())
     	{
     	case R.id.action_settings:
-    		openSearch();
+    		openSettings();
     		return true;
     	case R.id.add_friend:
     		addFriend();
+    		return true;
+    	case R.id.search_friend:
+    		searchFriend();
     		return true;
     	default:
     		return super.onOptionsItemSelected(item);
