@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
         /* Set up friends list using a ListView */
         
         final ListView listView = (ListView) findViewById(R.id.mainListView);
+        /* Placeholder values until tox binding is done */
         String values[] = new String[] { 
         		"astonex", 
         		"irungentoo", 
