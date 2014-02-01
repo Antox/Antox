@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+    
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
@@ -11,5 +11,11 @@
         android:orderInCategory="50"
         android:showAsAction="ifRoom"
         android:title="@string/add_friend" />
+    
+    <item
+        android:id="@+id/search_friend"
+        android:orderInCategory="25"
+        android:showAsAction="ifRoom"
+        android:title="@string/search_friend" />
     
 </menu>
