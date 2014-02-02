@@ -1,8 +1,5 @@
 package com.tox.antox;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 
 public class MainActivity extends Activity {
 
 	public final static String EXTRA_MESSAGE = "com.tox.antox.MESSAGE";
+	
+	private ListView friendListView;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,38 +43,49 @@ public class MainActivity extends Activity {
 
         /* Set up friends list using a ListView */
         
-        final ListView listView = (ListView) findViewById(R.id.mainListView);
-        /* Placeholder values until tox binding is done */
-        String[] friends = new String[] { 
-        		"astonex", 
-        		"irungentoo", 
-        		"sonOfRa", 
-        		"stqism",  
-        		"nurupo",
-        		"jfreegman",
-        		"fullName"
-        		};
+        FriendsList friends_list[] = new FriendsList[]
+        {
+        		new FriendsList(
+        				R.drawable.ic_status_online, 
+        				"astonex", 
+        				"my first status. lol how do i android"
+        				),
+        				
+        		new FriendsList(
+        				R.drawable.ic_status_offline, 
+        				"irungentoo", 
+        				"everyone should install gentoo"
+        				),
+        				
+        		new FriendsList(
+        				R.drawable.ic_status_away, 
+        				"sonOfRa", 
+        				"wut is JNI pls halp"
+        				),
+        				
+        		new FriendsList(
+        				R.drawable.ic_status_busy, 
+        				"nurupo", 
+        				"how do I into QT GUI"
+        				)
+        };
         
-        //Sort strings for better optimisation of searchFriend()
-        Arrays.sort(friends);
+        FriendsListAdapter adapter = new FriendsListAdapter(this,
+        		R.layout.main_list_item, friends_list);
+
+        friendListView = (ListView) findViewById(R.id.mainListView);
         
-        ArrayList<String> valuesList = new ArrayList<String>();
-        valuesList.addAll(Arrays.asList(friends));
-        
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
-        		 R.layout.main_list_item, friends);
-        
-        listView.setAdapter(adapter);
-        
+        friendListView.setAdapter(adapter);
+
         final Intent chatIntent = new Intent(this, ChatActivity.class);
-        
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+ 
+        friendListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {        	
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
-			{
-				CharSequence friendName = (String) listView.getItemAtPosition(position);
+			{				
+				//.toString() overridden in FriedsList.java to return the friend name
+				String friendName = parent.getItemAtPosition(position).toString();
 				chatIntent.putExtra(EXTRA_MESSAGE, friendName);
 				startActivity(chatIntent);
 			}
@@ -101,7 +109,7 @@ public class MainActivity extends Activity {
     
     public void searchFriend()
     {
-    	/* Binary search friends */
+    	
     }
     
     @Override

@@ -18,6 +18,7 @@
     <string name="main_avatar">Avatar</string>
     <string name="main_username">Username</string>
     <string name="main_status">Status</string>
+    <string name="icon_description">Connection Status</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_string">Welcome to Antox</string>
@@ -43,4 +44,6 @@
     <string name="title_activity_chat">Chat Activity</string>
     <string name="hello_world">Hello world!</string>
 
+    <!--  Misc -->
+    
 </resources>
