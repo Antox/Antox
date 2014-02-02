@@ -7,15 +7,30 @@
 
     <ListView
         	android:id="@+id/chatMessages"
-        	android:layout_width="fill_parent"
-	        android:layout_height="fill_parent"
+        	android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
 	        android:layout_marginBottom="5dp"
 	        android:layout_marginTop="5dp"
 	        android:background="@android:color/transparent"
 	        android:cacheColorHint="@android:color/transparent"
 	        android:divider="#CCCCCC"
-	        android:dividerHeight="10dp"
-	        android:paddingLeft="2dp" >
+	        android:dividerHeight="20dp"
+	        android:paddingLeft="2dp"
+	        android:stackFromBottom="true" >
     </ListView>
+    
+    <EditText 
+        android:id="@+id/enter_message"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/chat_enter_message"
+        />
+    
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/chat_button"
+        android:onClick="sendMessage"
+       />
 
 </LinearLayout>

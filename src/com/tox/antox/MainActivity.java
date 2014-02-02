@@ -84,7 +84,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 			{				
-				//.toString() overridden in FriedsList.java to return the friend name
+				//.toString() overridden in FriendsList.java to return the friend name
 				String friendName = parent.getItemAtPosition(position).toString();
 				chatIntent.putExtra(EXTRA_MESSAGE, friendName);
 				startActivity(chatIntent);

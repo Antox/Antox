@@ -32,29 +32,31 @@ public final class R {
         public static final int ic_status_online=0x7f020008;
     }
     public static final class id {
-        public static final int action_settings=0x7f080014;
+        public static final int action_settings=0x7f080016;
         public static final int addFriend=0x7f080002;
-        public static final int add_friend=0x7f080015;
+        public static final int add_friend=0x7f080017;
         public static final int addfriend_key=0x7f080000;
         public static final int addfriend_message=0x7f080001;
         public static final int chatMessages=0x7f080003;
-        public static final int friend_name=0x7f080013;
-        public static final int friend_status=0x7f080012;
-        public static final int imgIcon=0x7f080011;
-        public static final int mainListView=0x7f080004;
-        public static final int search_friend=0x7f080016;
-        public static final int settings_dht_ip=0x7f080009;
-        public static final int settings_dht_key=0x7f08000b;
-        public static final int settings_dht_port=0x7f08000a;
-        public static final int settings_name_hint=0x7f080006;
-        public static final int settings_note_hint=0x7f080008;
-        public static final int settings_status_hint=0x7f080007;
-        public static final int settings_user_key=0x7f080005;
-        public static final int updateSettings=0x7f08000c;
-        public static final int welcome_dht_ip=0x7f08000e;
-        public static final int welcome_dht_key=0x7f080010;
-        public static final int welcome_dht_port=0x7f08000f;
-        public static final int welcome_name_hint=0x7f08000d;
+        public static final int enter_message=0x7f080004;
+        public static final int friend_name=0x7f080015;
+        public static final int friend_status=0x7f080014;
+        public static final int imgIcon=0x7f080013;
+        public static final int mainListView=0x7f080005;
+        public static final int message_text=0x7f080012;
+        public static final int search_friend=0x7f080018;
+        public static final int settings_dht_ip=0x7f08000a;
+        public static final int settings_dht_key=0x7f08000c;
+        public static final int settings_dht_port=0x7f08000b;
+        public static final int settings_name_hint=0x7f080007;
+        public static final int settings_note_hint=0x7f080009;
+        public static final int settings_status_hint=0x7f080008;
+        public static final int settings_user_key=0x7f080006;
+        public static final int updateSettings=0x7f08000d;
+        public static final int welcome_dht_ip=0x7f08000f;
+        public static final int welcome_dht_key=0x7f080011;
+        public static final int welcome_dht_port=0x7f080010;
+        public static final int welcome_name_hint=0x7f08000e;
     }
     public static final class layout {
         public static final int activity_add_friend=0x7f030000;
@@ -62,7 +64,8 @@ public final class R {
         public static final int activity_main=0x7f030002;
         public static final int activity_settings=0x7f030003;
         public static final int activity_welcome=0x7f030004;
-        public static final int main_list_item=0x7f030005;
+        public static final int chat_message_item=0x7f030005;
+        public static final int main_list_item=0x7f030006;
     }
     public static final class menu {
         public static final int add_friend=0x7f070000;
@@ -72,20 +75,24 @@ public final class R {
         public static final int welcome=0x7f070004;
     }
     public static final class string {
-        public static final int about_string=0x7f05000d;
+        public static final int about_string=0x7f05000f;
         /**  Navigation / Action Bar 
          */
         public static final int action_settings=0x7f050004;
         public static final int add_friend=0x7f050005;
-        public static final int addfriend_button=0x7f05001b;
+        public static final int addfriend_button=0x7f05001d;
         /**  Add Friend Activity 
          */
-        public static final int addfriend_friend_key=0x7f050019;
-        public static final int addfriend_friend_message=0x7f05001a;
+        public static final int addfriend_friend_key=0x7f05001b;
+        public static final int addfriend_friend_message=0x7f05001c;
         public static final int app_name=0x7f050000;
-        public static final int developer_string=0x7f05000f;
-        public static final int getstarted_string=0x7f05000e;
-        public static final int hello_world=0x7f05001d;
+        public static final int chat_button=0x7f05000d;
+        /**   Chat Activity 
+         */
+        public static final int chat_enter_message=0x7f05000c;
+        public static final int developer_string=0x7f050011;
+        public static final int getstarted_string=0x7f050010;
+        public static final int hello_world=0x7f05001f;
         public static final int icon_description=0x7f05000b;
         public static final int join_group=0x7f050006;
         /**  Main Activity 
@@ -94,26 +101,26 @@ public final class R {
         public static final int main_status=0x7f05000a;
         public static final int main_username=0x7f050009;
         public static final int search_friend=0x7f050007;
-        public static final int settings_button=0x7f050017;
-        public static final int settings_dht_ip=0x7f050014;
-        public static final int settings_dht_key=0x7f050016;
-        public static final int settings_dht_port=0x7f050015;
-        public static final int settings_name_hint=0x7f050011;
-        public static final int settings_note_hint=0x7f050012;
-        public static final int settings_status_hint=0x7f050013;
-        public static final int settings_updated=0x7f050018;
+        public static final int settings_button=0x7f050019;
+        public static final int settings_dht_ip=0x7f050016;
+        public static final int settings_dht_key=0x7f050018;
+        public static final int settings_dht_port=0x7f050017;
+        public static final int settings_name_hint=0x7f050013;
+        public static final int settings_note_hint=0x7f050014;
+        public static final int settings_status_hint=0x7f050015;
+        public static final int settings_updated=0x7f05001a;
         /**  Settings Activity 
          */
-        public static final int settings_user_key=0x7f050010;
+        public static final int settings_user_key=0x7f050012;
         public static final int title_activity_add_friend=0x7f050002;
-        public static final int title_activity_chat=0x7f05001c;
+        public static final int title_activity_chat=0x7f05001e;
         public static final int title_activity_settings=0x7f050003;
         /**  Activity titles 
          */
         public static final int title_activity_welcome=0x7f050001;
         /**  Welcome Activity 
          */
-        public static final int welcome_string=0x7f05000c;
+        public static final int welcome_string=0x7f05000e;
     }
     public static final class style {
         /** 

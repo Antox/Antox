@@ -20,6 +20,11 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Connection Status</string>
 
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">enter your message</string>
+    <string name="chat_button">send</string>
+    
+    
     <!-- Welcome Activity -->
     <string name="welcome_string">Welcome to Antox</string>
     <string name="about_string">This client is still in pre-alpha.</string>

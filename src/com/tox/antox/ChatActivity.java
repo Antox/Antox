@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 public class ChatActivity extends Activity {
 
+	private ListView chatListView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,7 +26,20 @@ public class ChatActivity extends Activity {
 		String friendName = chatIntent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 		
 		setTitle(friendName);
+			
+		ChatMessages chat_messages[] = new ChatMessages[]
+		{
+				new ChatMessages("this is some chat message"),
+				new ChatMessages("this is another chat message"),
+				new ChatMessages("one more for good measure")
+		};
 		
+		
+		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this, 
+				R.layout.chat_message_item, chat_messages);
+		
+		chatListView = (ListView) findViewById(R.id.chatMessages);
+		chatListView.setAdapter(adapter);
 		
 	}
 
