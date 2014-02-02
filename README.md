@@ -8,18 +8,18 @@ Android client for the Tox project. Still in heavy development. Currently is onl
 - Loading and saving of user settings
 - Display a welcome screen when using the app for the first time
 - Add Friend activity
+- Design MainActivity window to hold friends list
+- Extended Adapter class for the friends list (show status, online/offline)
 
 ###In Progress
 
-- Design MainActivity window to hold friends list
 - Design ChatActivity window for conversations 
+- Extended Adapter class for displaying chat messages
 - Searching through friends list
 
 ###TODO
 
 - Tox Java binding
-- Extended Adapter class for the friends list (show status, online/offline)
-- Extended Adapter class for displaying chat messages
 - Store a list of up to date DHT servers
 - Support variety of screen sizes from smaller phones up to larger tablets
 
