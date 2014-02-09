@@ -3,10 +3,13 @@ package com.tox.antox;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages>
@@ -26,6 +29,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
+		ChatMessages messages = (ChatMessages) this.getItem(position);
 		View row = convertView;
 		ChatMessagesHolder holder = null;
 		
@@ -44,6 +48,17 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages>
 		
 		ChatMessages chatMessages = data[position];
 		holder.message.setText(chatMessages.message);
+		
+		if(messages.IsMine())
+		{
+			//not currently working as intended
+			LinearLayout.LayoutParams lp = (LayoutParams) holder.message.getLayoutParams();
+			lp.gravity = Gravity.RIGHT;
+			holder.message.setLayoutParams(lp);
+		}
+		else
+		{
+		}
 		
 		return row;
 	}

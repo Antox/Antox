@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class ChatActivity extends Activity {
 
 	private ListView chatListView;
+	ChatMessagesAdapter adapter;
+	ChatMessages chat_messages[];
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,21 +32,27 @@ public class ChatActivity extends Activity {
 		setTitle(friendName);
 			
 		ChatMessages chat_messages[] = new ChatMessages[]
-		{
-				new ChatMessages("this is some chat message"),
-				new ChatMessages("this is another chat message"),
-				new ChatMessages("one more for good measure")
+	    {
+				new ChatMessages("this is some chat message", true),
+				new ChatMessages("this is another chat message", true),
+				new ChatMessages("one more for good measure", true)
 		};
 		
 		
-		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this, 
-				R.layout.chat_message_item, chat_messages);
+		adapter = new ChatMessagesAdapter(this, 
+				R.layout.chat_message_row, chat_messages);
 		
 		chatListView = (ListView) findViewById(R.id.chatMessages);
 		chatListView.setAdapter(adapter);
 		
 	}
 
+	public void sendMessage(View view)
+	{
+		EditText tmp = (EditText) findViewById(R.id.yourMessage);
+		tmp.setText("");
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
