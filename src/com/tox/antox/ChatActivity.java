@@ -14,8 +14,9 @@ import android.widget.ListView;
 public class ChatActivity extends Activity {
 
 	private ListView chatListView;
-	ChatMessagesAdapter adapter;
+	
 	ChatMessages chat_messages[];
+	ChatMessagesAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,11 @@ public class ChatActivity extends Activity {
 	public void sendMessage(View view)
 	{
 		EditText tmp = (EditText) findViewById(R.id.yourMessage);
+		ChatMessages chat_messages[] = new ChatMessages[]
+				{
+					new ChatMessages(tmp.toString(), true) 
+				};
+		adapter.notifyDataSetChanged();
 		tmp.setText("");
 	}
 	
