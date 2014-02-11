@@ -1,5 +1,7 @@
 package com.tox.antox;
 
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -14,8 +16,9 @@ import android.widget.ListView;
 public class ChatActivity extends Activity {
 
 	private ListView chatListView;
+	private int counter = 0;
 	
-	ChatMessages chat_messages[];
+	ChatMessages chat_messages[] = new ChatMessages[counter];
 	ChatMessagesAdapter adapter;
 	
 	@Override
@@ -26,37 +29,29 @@ public class ChatActivity extends Activity {
             // Show the Up button in the action bar.
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+		
 		Intent chatIntent = getIntent();
 		String friendName = chatIntent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 		
 		setTitle(friendName);
-			
-		ChatMessages chat_messages[] = new ChatMessages[]
-	    {
-				new ChatMessages("this is some chat message", true),
-				new ChatMessages("this is another chat message", true),
-				new ChatMessages("one more for good measure", true)
-		};
-		
-		
-		adapter = new ChatMessagesAdapter(this, 
-				R.layout.chat_message_row, chat_messages);
-		
-		chatListView = (ListView) findViewById(R.id.chatMessages);
-		chatListView.setAdapter(adapter);
-		
 	}
 
 	public void sendMessage(View view)
 	{
 		EditText tmp = (EditText) findViewById(R.id.yourMessage);
-		ChatMessages chat_messages[] = new ChatMessages[]
-				{
-					new ChatMessages(tmp.toString(), true) 
-				};
-		adapter.notifyDataSetChanged();
+		
+		chat_messages = Arrays.copyOf(chat_messages, chat_messages.length + 1);
+		
+		chat_messages[counter] = new ChatMessages(tmp.getText().toString(), true);
+		
+		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this, 
+				R.layout.chat_message_row, chat_messages);
+		
+		chatListView = (ListView) findViewById(R.id.chatMessages);
+		chatListView.setAdapter(adapter);
+		
 		tmp.setText("");
+		counter++;
 	}
 	
 	@Override

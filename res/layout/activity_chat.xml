@@ -12,6 +12,7 @@
       android:layout_weight="1"
       android:divider="#CCCCCC"
       android:dividerHeight="2dp"
+      android:stackFromBottom="true"
       />
 
     <LinearLayout 
