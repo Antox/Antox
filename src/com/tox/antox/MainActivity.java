@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         //editor.apply();
         //End testing
         
-        //If beenLoaded is blank, then never been run
+        //If beenLoaded is 0, then never been run
         int beenLoaded = pref.getInt("beenLoaded", 0);
         if (beenLoaded == 0)
         {
@@ -43,32 +43,28 @@ public class MainActivity extends Activity {
 
         /* Set up friends list using a ListView */
         
-        FriendsList friends_list[] = new FriendsList[]
-        {
-        		new FriendsList(
-        				R.drawable.ic_status_online, 
-        				"astonex", 
-        				"my first status. lol how do i android"
-        				),
-        				
-        		new FriendsList(
-        				R.drawable.ic_status_offline, 
-        				"irungentoo", 
-        				"everyone should install gentoo"
-        				),
-        				
-        		new FriendsList(
-        				R.drawable.ic_status_away, 
-        				"sonOfRa", 
-        				"wut is JNI pls halp"
-        				),
-        				
-        		new FriendsList(
-        				R.drawable.ic_status_busy, 
-        				"nurupo", 
-        				"how do I into QT GUI"
-        				)
+        //Will be populated by Tox core method
+        String[][] friends = { 
+        		{"1", "astonex", "status"}, 
+        		{"0", "irungentoo", "status"}, 
+        		{"2", "nurupo", "status"}, 
+        		{"3", "sonOfRa", "status"} 
         };
+        
+        FriendsList friends_list[] = new FriendsList[friends.length];
+        
+        for(int i = 0; i < friends.length; i++)
+        {
+        	if(friends[i][0] == "1")
+        		friends_list[i] = new FriendsList(R.drawable.ic_status_online, friends[i][1], friends[i][2]);
+        	else if(friends[i][0] == "0")
+        		friends_list[i] = new FriendsList(R.drawable.ic_status_offline, friends[i][1], friends[i][2]);
+        	else if(friends[i][0] == "2")
+        		friends_list[i] = new FriendsList(R.drawable.ic_status_away, friends[i][1], friends[i][2]);
+        	else if(friends[i][0] == "3")
+        		friends_list[i] = new FriendsList(R.drawable.ic_status_busy, friends[i][1], friends[i][2]);
+        }
+
         
         FriendsListAdapter adapter = new FriendsListAdapter(this,
         		R.layout.main_list_item, friends_list);
