@@ -1,9 +1,11 @@
 package com.tox.antox;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +19,8 @@ public class MainActivity extends Activity {
 	
 	private ListView friendListView;
 	
-    @Override
+	@SuppressLint("NewApi")
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -41,10 +44,13 @@ public class MainActivity extends Activity {
         	startActivity(intent);
         }
 
+       
+        
         /* Set up friends list using a ListView */
         
-        //Will be populated by Tox core method
+        //Will be populated by a Tox core method
         String[][] friends = { 
+        		//0 - offline, 1 - online, 2 - away, 3 - busy 
         		{"1", "astonex", "status"}, 
         		{"0", "irungentoo", "status"}, 
         		{"2", "nurupo", "status"}, 
@@ -88,7 +94,10 @@ public class MainActivity extends Activity {
         	
         });
         
-        getActionBar().setHomeButtonEnabled(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
     }
     
     public void openSettings()

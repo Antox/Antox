@@ -18,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,16 +37,17 @@ public class SettingsActivity extends Activity {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 
-		/* Check if connected to the internet */
+		/* Check if connected to the Internet */
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 		if (networkInfo != null && networkInfo.isConnected()) 
 		{
+				//Executes in a separate thread so UI experience isn't affected
 		        new DownloadDHTList().execute("http://markwinter.me/servers.php");
 		} 
 		else 
 		{
-		        //TODO: Decide on a whole what to do if the user isnt connected to the internet and using antox
+		        //TODO: Decide on a whole what to do if the user isnt connected to the Internet and using antox
 		}
 
 		
@@ -203,7 +203,6 @@ public class SettingsActivity extends Activity {
                 conn.setDoInput(true);
                 // Starts the query
                 conn.connect();
-                int response = conn.getResponseCode();
                 is = conn.getInputStream();
 
                 // Convert the InputStream into a string
