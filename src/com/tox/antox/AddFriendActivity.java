@@ -1,17 +1,22 @@
 package com.tox.antox;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddFriendActivity extends Activity {
-
+	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,6 +24,17 @@ public class AddFriendActivity extends Activity {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
 			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+		
+		EditText friendID = (EditText) findViewById(R.id.addfriend_key);
+		
+		Intent intentURI = getIntent();
+		Uri uri = null;
+		if(Intent.ACTION_VIEW.equals(intentURI.getAction()) && intentURI != null)
+		{
+			uri = intentURI.getData();
+			if(uri != null)
+				friendID.setText(uri.getHost());
 		}
 	}
 	
