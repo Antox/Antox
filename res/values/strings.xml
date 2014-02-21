@@ -41,6 +41,9 @@
     <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Update Settings</string>
     <string name="settings_updated">Settings have been updated</string>
+    <string name="settings_dht_spinner_title">Select a DHT node</string>
+    <string name="settings_radio_dht_pre">Use a default DHT node (recommended)</string>
+    <string name="settings_radio_dht_self">Enter your own DHT node settings</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">enter your friends public key</string>

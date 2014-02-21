@@ -14,43 +14,86 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textIsSelectable="true"
+        android:layout_marginTop="10dp"
         android:text="@string/settings_user_key" />
     
     <EditText
         android:id="@+id/settings_name_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="@string/settings_name_hint" />
     
     <EditText
         android:id="@+id/settings_status_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="@string/settings_status_hint" />
 
     <EditText
         android:id="@+id/settings_note_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="@string/settings_note_hint" />
     
+    <TextView
+        android:id="@+id/dhtSpinnerTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/settings_dht_spinner_title" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+        <RadioButton
+            android:id="@+id/settings_radio_dht_pre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_radio_dht_pre"
+            android:onClick="onDHTPreClicked" />
+        
+        <RadioButton
+            android:id="@+id/settings_radio_dht_self"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_radio_dht_self"
+            android:onClick="onDHTSelfClicked" />
+        
+    </RadioGroup>
+       
+    <Spinner
+        android:id="@+id/dhtSpinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:spinnerMode="dropdown"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/settings_dht_ip"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_ip" />
+        android:hint="@string/settings_dht_ip"
+        android:visibility="gone" />
     
     <EditText
         android:id="@+id/settings_dht_port"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_port" />
+        android:hint="@string/settings_dht_port"
+        android:visibility="gone" />
     
     <EditText
         android:id="@+id/settings_dht_key"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_key" />
+        android:hint="@string/settings_dht_key"
+        android:visibility="gone" />
     
     <Button
         android:id="@+id/updateSettings"

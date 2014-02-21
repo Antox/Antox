@@ -8,8 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import im.tox.antox.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -23,12 +21,22 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//TODO: Rewrite the loading and saving of data to something more optimal i.e. not creating a new variable for the same box
+
 public class SettingsActivity extends Activity {
 
+	Spinner dhtSpinner;
+	EditText dhtIP;
+	EditText dhtPort;
+	EditText dhtKey;
+	private boolean usingSpinner;
+	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,15 @@ public class SettingsActivity extends Activity {
 		        //TODO: Decide on a whole what to do if the user isnt connected to the Internet and using antox
 		}
 
+		usingSpinner = false;
+		dhtSpinner = (Spinner)findViewById(R.id.dhtSpinner);
+		dhtIP = (EditText)findViewById(R.id.settings_dht_ip);
+		dhtPort = (EditText)findViewById(R.id.settings_dht_port);
+		dhtKey = (EditText)findViewById(R.id.settings_dht_key);
+		
+		String[] dhtItems = new String[] { "stqism - US", "NSA - US", "sonOfRa - DE", "stal - US"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, dhtItems);
+		dhtSpinner.setAdapter(adapter);
 		
 		/* Get saved preferences */
         SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
@@ -69,7 +86,7 @@ public class SettingsActivity extends Activity {
         	EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
         	nameHint.setText(pref.getString("saved_name_hint", ""));
         }
-        
+
         if(pref.getString("saved_dht_ip", "192.254.75.98") != "192.254.75.98")
         {
         	EditText dhtIpHint = (EditText) findViewById(R.id.settings_dht_ip);
@@ -152,6 +169,24 @@ public class SettingsActivity extends Activity {
 		toast.show();
 		
 		finish();
+	}
+	
+	public void onDHTPreClicked(View view)
+	{
+		usingSpinner = true;
+		dhtSpinner.setVisibility(View.VISIBLE);
+		dhtIP.setVisibility(View.GONE);
+		dhtPort.setVisibility(View.GONE);
+		dhtKey.setVisibility(View.GONE);
+	}
+	
+	public void onDHTSelfClicked(View view)
+	{
+		usingSpinner = false;
+		dhtSpinner.setVisibility(View.GONE);
+		dhtIP.setVisibility(View.VISIBLE);
+		dhtPort.setVisibility(View.VISIBLE);
+		dhtKey.setVisibility(View.VISIBLE);
 	}
 	
 	@Override
