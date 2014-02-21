@@ -15,7 +15,7 @@ Android client for the Tox project. Still in heavy development. Currently is onl
 
 ###In Progress
 
-- Implement jToxCore
+- [Implement jToxCore](https://github.com/Tox/jToxcore)
 
 ###TODO
 
