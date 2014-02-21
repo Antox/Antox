@@ -16,8 +16,9 @@
     <item
         android:id="@+id/search_friend"
         android:orderInCategory="25"
-        android:showAsAction="ifRoom"
+        android:showAsAction="collapseActionView|ifRoom"
         android:icon="@drawable/ic_action_search"
-        android:title="@string/search_friend" />
+        android:title="@string/search_friend"
+        android:actionViewClass="android.widget.SearchView" />
     
 </menu>
