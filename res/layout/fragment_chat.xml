@@ -18,4 +18,4 @@
     android:id="@+id/chat_message"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:hint="@string/chat_message_hint"/>
+    android:hint="@string/chat_enter_message"/>
