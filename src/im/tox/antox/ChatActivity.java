@@ -20,44 +20,45 @@ public class ChatActivity extends Activity {
 
 	private ListView chatListView;
 	private int counter = 0;
-	
+
 	ChatMessages chat_messages[] = new ChatMessages[counter];
 	ChatMessagesAdapter adapter;
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // Show the Up button in the action bar.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-		
+			// Show the Up button in the action bar.
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+
 		Intent chatIntent = getIntent();
-		String friendName = chatIntent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-		
+		String friendName = chatIntent
+				.getStringExtra(MainActivity.EXTRA_MESSAGE);
+
 		setTitle(friendName);
 	}
 
-	public void sendMessage(View view)
-	{
+	public void sendMessage(View view) {
 		EditText tmp = (EditText) findViewById(R.id.yourMessage);
-		
+
 		chat_messages = Arrays.copyOf(chat_messages, chat_messages.length + 1);
-		
-		chat_messages[counter] = new ChatMessages(tmp.getText().toString(), true);
-		
-		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this, 
+
+		chat_messages[counter] = new ChatMessages(tmp.getText().toString(),
+				true);
+
+		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this,
 				R.layout.chat_message_row, chat_messages);
-		
+
 		chatListView = (ListView) findViewById(R.id.chatMessages);
 		chatListView.setAdapter(adapter);
-		
+
 		tmp.setText("");
 		counter++;
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
