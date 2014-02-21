@@ -27,8 +27,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO: Rewrite the loading and saving of data to something more optimal i.e. not creating a new variable for the same box
-
 public class SettingsActivity extends Activity {
 
 	Spinner dhtSpinner;
@@ -62,7 +60,7 @@ public class SettingsActivity extends Activity {
 		dhtIP = (EditText) findViewById(R.id.settings_dht_ip);
 		dhtPort = (EditText) findViewById(R.id.settings_dht_port);
 		dhtKey = (EditText) findViewById(R.id.settings_dht_key);
-
+		
 		String[] dhtItems = new String[] { "stqism - US", "NSA - US",
 				"sonOfRa - DE", "stal - US" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -89,20 +87,16 @@ public class SettingsActivity extends Activity {
 		}
 
 		if (pref.getString("saved_dht_ip", "192.254.75.98") != "192.254.75.98") {
-			EditText dhtIpHint = (EditText) findViewById(R.id.settings_dht_ip);
-			dhtIpHint.setText(pref.getString("saved_dht_ip", "192.254.75.98"));
+			dhtIP.setText(pref.getString("saved_dht_ip", "192.254.75.98"));
 		}
 
 		if (pref.getString("saved_dht_port", "33445") != "33445") {
-			EditText dhtPortHint = (EditText) findViewById(R.id.settings_dht_port);
-			dhtPortHint.setText(pref.getString("saved_dht_port", "33445"));
+			dhtPort.setText(pref.getString("saved_dht_port", "33445"));
 		}
 
 		if (pref.getString("saved_dht_key",
 				"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") != "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") {
-			EditText dhtKeyHint = (EditText) findViewById(R.id.settings_dht_key);
-			dhtKeyHint
-					.setText(pref
+			dhtKey.setText(pref
 							.getString("saved_dht_key",
 									"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B"));
 		}
@@ -145,14 +139,16 @@ public class SettingsActivity extends Activity {
 		if (userKeyText.getText().toString() != getString(R.id.settings_user_key))
 			editor.putString("saved_user_key_hint", userKeyText.getText()
 					.toString());
-		if (dhtIpHintText.getText().toString() != getString(R.id.settings_dht_ip))
-			editor.putString("saved_dht_ip", dhtIpHintText.getText().toString());
-		if (dhtKeyHintText.getText().toString() != getString(R.id.settings_dht_key))
-			editor.putString("saved_dht_key", dhtKeyHintText.getText()
-					.toString());
-		if (dhtPortHintText.getText().toString() != getString(R.id.settings_dht_port))
-			editor.putString("saved_dht_port", dhtPortHintText.getText()
-					.toString());
+		if(!usingSpinner) {
+			if (dhtIpHintText.getText().toString() != getString(R.id.settings_dht_ip))
+				editor.putString("saved_dht_ip", dhtIpHintText.getText().toString());
+			if (dhtKeyHintText.getText().toString() != getString(R.id.settings_dht_key))
+				editor.putString("saved_dht_key", dhtKeyHintText.getText()
+						.toString());
+			if (dhtPortHintText.getText().toString() != getString(R.id.settings_dht_port))
+				editor.putString("saved_dht_port", dhtPortHintText.getText()
+						.toString());
+		}
 		if (noteHintText.getText().toString() != getString(R.id.settings_note_hint))
 			editor.putString("saved_note_hint", noteHintText.getText()
 					.toString());
