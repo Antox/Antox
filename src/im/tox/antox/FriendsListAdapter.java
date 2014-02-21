@@ -15,23 +15,24 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements Filterable {
+public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
+		Filterable {
 	Context context;
 	int layoutResourceId;
 	List<FriendsList> data = null;
-	
+
 	private final Object lock = new Object();
 	private ArrayList<FriendsList> originalData;
 	private FriendsFilter filter;
-	
-	public FriendsListAdapter(Context context, int layoutResourceId, FriendsList[] data)
-	{
+
+	public FriendsListAdapter(Context context, int layoutResourceId,
+			FriendsList[] data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
 		this.data = Arrays.asList(data);
 	}
-	
+
 	@Override
 	public int getCount() {
 		return data.size();
@@ -46,43 +47,39 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements Fil
 	public long getItemId(int position) {
 		return position;
 	}
-	
+
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent)
-	{
+	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = convertView;
 		FriendsListHolder holder = null;
-		
-		if(row == null)
-		{
-			LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+
+		if (row == null) {
+			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 			holder = new FriendsListHolder();
-			holder.imgIcon = (ImageView)row.findViewById(R.id.imgIcon);
-			holder.friendName = (TextView)row.findViewById(R.id.friend_name);
-			holder.friendStatus = (TextView)row.findViewById(R.id.friend_status);
+			holder.imgIcon = (ImageView) row.findViewById(R.id.imgIcon);
+			holder.friendName = (TextView) row.findViewById(R.id.friend_name);
+			holder.friendStatus = (TextView) row
+					.findViewById(R.id.friend_status);
 			row.setTag(holder);
+		} else {
+			holder = (FriendsListHolder) row.getTag();
 		}
-		else
-		{
-			holder = (FriendsListHolder)row.getTag();
-		}
-		
+
 		FriendsList friendsList = data.get(position);
 		holder.friendName.setText(friendsList.friendName);
 		holder.imgIcon.setImageResource(friendsList.icon);
 		holder.friendStatus.setText(friendsList.friendStatus);
-		
+
 		return row;
 	}
-	
-	static class FriendsListHolder
-	{
+
+	static class FriendsListHolder {
 		ImageView imgIcon;
 		TextView friendName;
 		TextView friendStatus;
 	}
-	
+
 	@Override
 	public Filter getFilter() {
 		if (filter == null) {
@@ -90,7 +87,7 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements Fil
 		}
 		return filter;
 	}
-	
+
 	class FriendsFilter extends Filter {
 
 		@Override

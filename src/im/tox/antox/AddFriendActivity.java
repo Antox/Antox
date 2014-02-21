@@ -17,45 +17,41 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class AddFriendActivity extends Activity {
-	
+
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friend);
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-		{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-		
+
 		EditText friendID = (EditText) findViewById(R.id.addfriend_key);
-		
+
 		Intent intentURI = getIntent();
 		Uri uri = null;
-		if(Intent.ACTION_VIEW.equals(intentURI.getAction()) && intentURI != null)
-		{
+		if (Intent.ACTION_VIEW.equals(intentURI.getAction())
+				&& intentURI != null) {
 			uri = intentURI.getData();
-			if(uri != null)
+			if (uri != null)
 				friendID.setText(uri.getHost());
 		}
 	}
-	
-	public void addFriend(View view)
-	{
-		//Execute Tox tox_addfriend()
-		
-		
-		
+
+	public void addFriend(View view) {
+		// Execute Tox tox_addfriend()
+
 		Context context = getApplicationContext();
 		CharSequence text = "Friend Added";
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
-		
-		//Close activity
+
+		// Close activity
 		finish();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
