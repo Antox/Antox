@@ -2,8 +2,9 @@ package im.tox.antox;
 
 import java.util.Arrays;
 
-import com.tox.antox.R;
+import im.tox.antox.R;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -23,6 +24,7 @@ public class ChatActivity extends Activity {
 	ChatMessages chat_messages[] = new ChatMessages[counter];
 	ChatMessagesAdapter adapter;
 	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -1,6 +1,6 @@
 package im.tox.antox;
 
-import com.tox.antox.R;
+import im.tox.antox.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

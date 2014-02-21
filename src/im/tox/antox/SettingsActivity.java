@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.tox.antox.R;
+import im.tox.antox.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
