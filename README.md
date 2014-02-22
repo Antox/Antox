@@ -22,6 +22,7 @@ Android client for the Tox project. Still in heavy development. Currently is onl
 ###TODO
 
 - Improve the ChatMessagesAdapter ([design goal](http://assets.hardwarezone.com/img/2013/11/messages.jpg)) 
+- Redesign welcome activity to be more user friendly
 
 ###Screenshots of progress
 <img src="http://i.imgur.com/DQSxfjC.png" width="230px" height="400px"/><img src="http://i.imgur.com/JfX9ZgJ.png" width="230px" height="400px"/><img src="http://i.imgur.com/qQmpODj.png" width="230px" height="400px"/>
