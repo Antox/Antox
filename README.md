@@ -23,4 +23,4 @@ Android client for the Tox project. Still in heavy development. Currently is onl
 - Store a list of up to date DHT servers
 
 ###Screenshots of progress
-<img src="http://i.imgur.com/DQSxfjC.png" width="230px" height="400px"/><img src="http://i.imgur.com/JfX9ZgJ.png" width="230px" height="400px"/><img src="http://i.imgur.com/xbsMalf.png" width="230px" height="400px"/>
+<img src="http://i.imgur.com/DQSxfjC.png" width="230px" height="400px"/><img src="http://i.imgur.com/JfX9ZgJ.png" width="230px" height="400px"/><img src="http://i.imgur.com/qQmpODj.png" width="230px" height="400px"/>
