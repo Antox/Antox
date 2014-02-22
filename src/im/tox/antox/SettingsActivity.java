@@ -30,6 +30,7 @@ import android.widget.Toast;
 public class SettingsActivity extends Activity {
 
 	Spinner dhtSpinner;
+	Spinner statusSpinner;
 	EditText dhtIP;
 	EditText dhtPort;
 	EditText dhtKey;
@@ -57,6 +58,7 @@ public class SettingsActivity extends Activity {
 
 		usingSpinner = false;
 		dhtSpinner = (Spinner) findViewById(R.id.dhtSpinner);
+		statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
 		dhtIP = (EditText) findViewById(R.id.settings_dht_ip);
 		dhtPort = (EditText) findViewById(R.id.settings_dht_port);
 		dhtKey = (EditText) findViewById(R.id.settings_dht_key);
@@ -67,6 +69,11 @@ public class SettingsActivity extends Activity {
 				android.R.layout.simple_spinner_item, dhtItems);
 		dhtSpinner.setAdapter(adapter);
 
+		String[] statusItems = new String[] { "online", "away", "busy" };
+		ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, statusItems);
+		statusSpinner.setAdapter(statusAdapter);
+		
 		/* Get saved preferences */
 		SharedPreferences pref = getSharedPreferences("settings",
 				Context.MODE_PRIVATE);
@@ -85,21 +92,25 @@ public class SettingsActivity extends Activity {
 			EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
 			nameHint.setText(pref.getString("saved_name_hint", ""));
 		}
-
+		
 		if (pref.getString("saved_dht_ip", "192.254.75.98") != "192.254.75.98") {
 			dhtIP.setText(pref.getString("saved_dht_ip", "192.254.75.98"));
 		}
-
+	
 		if (pref.getString("saved_dht_port", "33445") != "33445") {
 			dhtPort.setText(pref.getString("saved_dht_port", "33445"));
 		}
-
+	
 		if (pref.getString("saved_dht_key",
-				"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") != "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") {
-			dhtKey.setText(pref
-							.getString("saved_dht_key",
-									"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B"));
+				"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") 
+				!= "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B") {
+			dhtKey.setText(pref.getString("saved_dht_key", 
+					"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B"));
 		}
+
+		String savedDHT = pref.getString("saved_dht_spinner", "");
+		int statusPosDHT = adapter.getPosition(savedDHT);
+		dhtSpinner.setSelection(statusPosDHT);
 
 		if (pref.getString("saved_note_hint", "") != "") {
 			EditText noteHint = (EditText) findViewById(R.id.settings_note_hint);
@@ -107,8 +118,9 @@ public class SettingsActivity extends Activity {
 		}
 
 		if (pref.getString("saved_status_hint", "") != "") {
-			EditText statusHint = (EditText) findViewById(R.id.settings_status_hint);
-			statusHint.setText(pref.getString("saved_status_hint", ""));
+			String savedStatus = pref.getString("saved_status_hint", "");
+			int statusPos = statusAdapter.getPosition(savedStatus);
+			statusSpinner.setSelection(statusPos);		
 		}
 
 	}
@@ -121,7 +133,7 @@ public class SettingsActivity extends Activity {
 		EditText dhtKeyHintText = (EditText) findViewById(R.id.settings_dht_key);
 		EditText dhtPortHintText = (EditText) findViewById(R.id.settings_dht_port);
 		EditText noteHintText = (EditText) findViewById(R.id.settings_note_hint);
-		EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
+		//EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
 
 		/* Save settings to file */
 
@@ -152,10 +164,10 @@ public class SettingsActivity extends Activity {
 		if (noteHintText.getText().toString() != getString(R.id.settings_note_hint))
 			editor.putString("saved_note_hint", noteHintText.getText()
 					.toString());
-		if (statusHintText.getText().toString() != getString(R.id.settings_status_hint))
-			editor.putString("saved_status_hint", statusHintText.getText()
-					.toString());
 
+		editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
+		editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
+		
 		editor.apply();
 
 		Context context = getApplicationContext();

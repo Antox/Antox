@@ -32,7 +32,8 @@
     <string name="developer_string">Developed by astonex\nirc.freenode.net#tox-dev</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key">Your User Key: abcdef</string>
+    <string name="settings_user_key_title">Your User Key</string>
+    <string name="settings_user_key">56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE5185520B3E6FC5D64</string>
     <string name="settings_name_hint">enter your name</string>
     <string name="settings_note_hint">enter your personal note</string>
     <string name="settings_status_hint">enter your status</string>
@@ -44,6 +45,9 @@
     <string name="settings_dht_spinner_title">Select a DHT node</string>
     <string name="settings_radio_dht_pre">Use a default DHT node (recommended)</string>
     <string name="settings_radio_dht_self">Enter your own DHT node settings</string>
+    <string name="settings_status_title">Set your status</string>
+    <string name="settings_note_title">Set your personal note</string>
+    <string name="settings_username_title">Set your username</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">enter your friends public key</string>
