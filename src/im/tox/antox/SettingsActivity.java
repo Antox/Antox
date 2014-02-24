@@ -11,6 +11,7 @@ import java.net.URL;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -83,11 +84,10 @@ public class SettingsActivity extends Activity {
 		 * If they are blank/default, the text from strings.xml will be
 		 * displayed instead
 		 */
-		if (pref.getString("saved_user_key_hint", "") != "") {
-			TextView userKey = (TextView) findViewById(R.id.settings_user_key);
-			userKey.setText(pref.getString("saved_user_key_hint", ""));
-		}
-
+		TextView userKey = (TextView) findViewById(R.id.settings_user_key);
+		Intent intent = getIntent();
+		userKey.setText(intent.getStringExtra(MainActivity.EXTRA_MESSAGE));
+		
 		if (pref.getString("saved_name_hint", "") != "") {
 			EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
 			nameHint.setText(pref.getString("saved_name_hint", ""));

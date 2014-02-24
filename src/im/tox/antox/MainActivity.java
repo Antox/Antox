@@ -1,10 +1,19 @@
 package im.tox.antox;
 
+import java.net.UnknownHostException;
+import java.util.List;
+import im.tox.jtoxcore.FriendList;
+import im.tox.jtoxcore.JTox;
+import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.jtoxcore.ToxWorker;
+import im.tox.jtoxcore.callbacks.CallbackHandler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,16 +25,49 @@ import android.widget.SearchView;
 
 public class MainActivity extends Activity {
 
-	public final static String EXTRA_MESSAGE = "com.tox.antox.MESSAGE";
+	public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
 
 	private ListView friendListView;
 	private FriendsListAdapter adapter;
 
+	JTox jt;
+	String ourPubKey;
+	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		AntoxFriendList jFriendList = new AntoxFriendList();
+		CallbackHandler jHandler = new CallbackHandler(jFriendList);
+		try {
+			jt = new JTox(jFriendList, jHandler);
+			ToxWorker toxWorker = new ToxWorker(jt);
+		} catch (ToxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/* Get public key - Should really be in WelcomeActivity but only testing it */
+		try {
+			ourPubKey = jt.getAddress();
+		} catch (ToxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			jt.bootstrap("192.254.75.98", 
+					33445, 
+					"FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ToxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		/* Check if first time ever running by checking the preferences */
 		SharedPreferences pref = getSharedPreferences("main",
@@ -49,12 +91,32 @@ public class MainActivity extends Activity {
 
 		/* Set up friends list using a ListView */
 
-		// Will be populated by a Tox core method
 		String[][] friends = {
 				// 0 - offline, 1 - online, 2 - away, 3 - busy
 				{ "1", "astonex", "status" }, { "0", "irungentoo", "status" },
 				{ "2", "nurupo", "status" }, { "3", "sonOfRa", "status" } };
-
+		
+		List<AntoxFriend> allFriends = jFriendList.all();
+		if (!allFriends.isEmpty()) {
+			for (int i = 0; i < allFriends.size(); i++) {
+			    AntoxFriend antoxFriend = allFriends.get(i);
+				
+			    if(antoxFriend.isOnline())
+			    	friends[i][0] = "1";
+			    else
+			    	friends[i][0] = "0";
+			    
+			    if(antoxFriend.getStatus() == ToxUserStatus.TOX_USERSTATUS_AWAY)
+			    	friends[i][0] = "2";
+			    
+			    else if(antoxFriend.getStatus() == ToxUserStatus.TOX_USERSTATUS_BUSY)
+			    	friends[i][0] = "3";
+			    
+				friends[i][1] = antoxFriend.getNickname();
+				friends[i][2] = antoxFriend.getStatusMessage();
+			}
+		}
+		
 		FriendsList friends_list[] = new FriendsList[friends.length];
 
 		for (int i = 0; i < friends.length; i++) {
@@ -103,12 +165,23 @@ public class MainActivity extends Activity {
 
 	public void openSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
+		intent.putExtra(EXTRA_MESSAGE, ourPubKey);
 		startActivity(intent);
 	}
 
 	public void addFriend() {
-		Intent intent = new Intent(this, AddFriendActivity.class);
-		startActivity(intent);
+		//Intent intent = new Intent(this, AddFriendActivity.class);
+		//startActivity(intent);
+		try {
+			if(jt.isConnected()) {
+				setTitle("antox - connected");
+			} else {
+				setTitle("antox - disconnected");
+			}
+		} catch (ToxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void searchFriend() {
@@ -168,5 +241,21 @@ public class MainActivity extends Activity {
 		}
 
 		return true;
+	}
+	
+	/* This Async task is not necessarily the way tox should be implemented */
+	private class DoTox extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			while(true) {
+				try {
+					jt.doTox();
+				} catch (ToxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 }
