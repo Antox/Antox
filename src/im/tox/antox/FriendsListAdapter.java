@@ -3,6 +3,7 @@ package im.tox.antox;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -109,7 +110,8 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 				results.values = list;
 				results.count = list.size();
 			} else {
-				String prefixString = constraint.toString().toLowerCase();
+				String prefixString = constraint.toString().toLowerCase(
+						Locale.getDefault());
 
 				ArrayList<FriendsList> values;
 				synchronized (lock) {
@@ -121,9 +123,9 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 
 				for (int i = 0; i < count; i++) {
 					final FriendsList value = values.get(i);
-					final String valueText = value.toString().toLowerCase();
+					final String valueText = value.toString().toLowerCase(
+							Locale.getDefault());
 
-					// First match against the whole, non-splitted value
 					if (valueText.startsWith(prefixString)) {
 						newValues.add(value);
 					} else if (findByWords(valueText, prefixString)) {
@@ -144,7 +146,6 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 			final String[] words = haystack.split(" ");
 			final int wordCount = words.length;
 
-			// Start at index 0, in case valueText starts with space(s)
 			for (int k = 0; k < wordCount; k++) {
 				if (words[k].startsWith(needle)) {
 					return true;
@@ -154,12 +155,13 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 			return false;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
 			data = (List<FriendsList>) results.values;
 			notifyDataSetChanged();
 		}
-
 	}
+
 }
