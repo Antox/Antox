@@ -69,6 +69,17 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 
+		try {
+			if(jt.isConnected()) {
+				setTitle("antox - connected");
+			} else {
+				setTitle("antox - disconnected");
+			}
+		} catch (ToxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		/* Check if first time ever running by checking the preferences */
 		SharedPreferences pref = getSharedPreferences("main",
 				Context.MODE_PRIVATE);
@@ -170,18 +181,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void addFriend() {
-		//Intent intent = new Intent(this, AddFriendActivity.class);
-		//startActivity(intent);
-		try {
-			if(jt.isConnected()) {
-				setTitle("antox - connected");
-			} else {
-				setTitle("antox - disconnected");
-			}
-		} catch (ToxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Intent intent = new Intent(this, AddFriendActivity.class);
+		startActivity(intent);
 	}
 
 	public void searchFriend() {
