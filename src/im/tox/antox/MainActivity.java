@@ -66,21 +66,22 @@ public class MainActivity extends Activity {
 		String[][] friends = {
 				// 0 - offline, 1 - online, 2 - away, 3 - busy
 				{ "1", "astonex", "status" }, { "0", "irungentoo", "status" },
-				{ "2", "nurupo", "status" }, { "3", "sonOfRa", "status" } };
+				{ "2", "nurupo", "status" }, { "3", "sonOfRa", "status" } 
+		};
 		
 		FriendsList friends_list[] = new FriendsList[friends.length];
 
 		for (int i = 0; i < friends.length; i++) {
-			if (friends[i][0] == "1")
+			if (friends[i][0].equals("1"))
 				friends_list[i] = new FriendsList(R.drawable.ic_status_online,
 						friends[i][1], friends[i][2]);
-			else if (friends[i][0] == "0")
+			else if (friends[i][0].equals("0"))
 				friends_list[i] = new FriendsList(R.drawable.ic_status_offline,
 						friends[i][1], friends[i][2]);
-			else if (friends[i][0] == "2")
+			else if (friends[i][0].equals("2"))
 				friends_list[i] = new FriendsList(R.drawable.ic_status_away,
 						friends[i][1], friends[i][2]);
-			else if (friends[i][0] == "3")
+			else if (friends[i][0].equals("3"))
 				friends_list[i] = new FriendsList(R.drawable.ic_status_busy,
 						friends[i][1], friends[i][2]);
 		}
@@ -125,10 +126,6 @@ public class MainActivity extends Activity {
 		startActivity(intent);
 	}
 
-	public void searchFriend() {
-
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -137,9 +134,6 @@ public class MainActivity extends Activity {
 			return true;
 		case R.id.add_friend:
 			addFriend();
-			return true;
-		case R.id.search_friend:
-			searchFriend();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
