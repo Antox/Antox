@@ -26,3 +26,4 @@ build.properties
 /.idea/misc.xml
 /GrocerySync-Android.iml
 *.iml
+/*/*/build
