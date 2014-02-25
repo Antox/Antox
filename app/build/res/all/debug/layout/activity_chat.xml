@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+  android:orientation="vertical"
+  android:padding="10dip" 
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+    <ListView
+      android:id="@+id/chatMessages"
+      android:layout_width="fill_parent" 
+      android:layout_height="0dip" 
+      android:layout_weight="1"
+      android:divider="#CCCCCC"
+      android:dividerHeight="2dp"
+      android:stackFromBottom="true"
+      />
+
+    <LinearLayout 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content" >
+
+      <EditText
+        android:id="@+id/yourMessage"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:layout_weight="1"
+        android:hint="@string/chat_enter_message"/>
+
+      <Button 
+          android:id="@+id/sendMessageButton"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight="4"
+          android:text="@string/chat_button"
+          android:onClick="sendMessage"/>
+
+    </LinearLayout>
+
+</LinearLayout><!-- From: file:/home/soft/workspace-studio/app/src/main/res/layout/activity_chat.xml -->

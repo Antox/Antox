@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="im.tox.antox"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="im.tox.antox.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="im.tox.antox.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="im.tox.antox.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.MainActivity" />
+        </activity>
+        <activity
+            android:name="im.tox.antox.WelcomeActivity"
+            android:label="@string/title_activity_welcome"
+            android:parentActivityName="im.tox.antox.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tox.antox.MainActivity" />
+        </activity>
+        <activity
+            android:name="im.tox.antox.AddFriendActivity"
+            android:label="@string/title_activity_add_friend"
+            android:parentActivityName="im.tox.antox.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.MainActivity" />
+            
+            <!--  Intent filter for handling tox:// links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+        		<category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tox" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="im.tox.antox.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName="im.tox.antox.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>
