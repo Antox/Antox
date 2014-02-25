@@ -244,8 +244,9 @@ public class SettingsActivity extends Activity {
 
 				// Convert the InputStream into a string
 				String contentAsString = readIt(is, len);
+				
 				return contentAsString;
-
+				
 				// Makes sure that the InputStream is closed after the app is
 				// finished using it.
 			} finally {
@@ -261,7 +262,6 @@ public class SettingsActivity extends Activity {
 			reader = new InputStreamReader(stream, "UTF-8");
 			char[] buffer = new char[len];
 			reader.read(buffer);
-			// TODO: Parse the JSON
 			return new String(buffer);
 		}
 	}

@@ -2,8 +2,10 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,11 +25,19 @@ public class MainActivity extends Activity {
 	
 	String ourPubKey;
 	
+	private ResponseReceiver receiver;
+	
 	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		/* Register response receiver */
+		IntentFilter filter = new IntentFilter(Constants.REGISTER);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);
 		
 		/* Check if first time ever running by checking the preferences */
 		SharedPreferences pref = getSharedPreferences("main",
@@ -40,8 +50,7 @@ public class MainActivity extends Activity {
 		// End testing
 
 		// If beenLoaded is 0, then never been run
-		int beenLoaded = pref.getInt("beenLoaded", 0);
-		if (beenLoaded == 0) {
+		if (pref.getInt("beenLoaded", 0) == 0) {
 			// Launch welcome activity which will run the user through initial
 			// settings
 			// and give a brief description of antox
@@ -170,5 +179,12 @@ public class MainActivity extends Activity {
 		}
 
 		return true;
+	}
+	
+	public class ResponseReceiver extends BroadcastReceiver {		    
+		   @Override
+		    public void onReceive(Context context, Intent intent) {
+		       //Do something with broadcasted message
+		    }
 	}
 }

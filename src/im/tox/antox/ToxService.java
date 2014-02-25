@@ -14,11 +14,6 @@ import android.util.Log;
 
 public class ToxService extends IntentService {
 
-	private static final String TAG = "im.tox.antox.ToxService";
-	private static final String REGISTER = "im.tox.antox.REGISTER";
-	private static final String UNREGISTER = "im.tox.antox.UNREGISTER";
-	private static final String REGISTER_NAME = "im.tox.antox.REGISTER_NAME";
-
 	public ToxService() {
 		super("ToxService");
 	}
@@ -28,9 +23,9 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
 
-		Log.d(TAG, "Got intent action: " + intent.getAction());
-		if (intent.getAction().equals(REGISTER)) {
-			String name = intent.getStringExtra(REGISTER_NAME);
+		Log.d(Constants.TAG, "Got intent action: " + intent.getAction());
+		if (intent.getAction().equals(Constants.REGISTER)) {
+			String name = intent.getStringExtra(Constants.REGISTER_NAME);
 			boundActivities.add(name);
 
 			if (name.equals(ChatActivity.CHAT_ACTIVITY)) {
@@ -38,8 +33,8 @@ public class ToxService extends IntentService {
 						AntoxOnMessageCallback.FRIEND_NUMBER,
 						AntoxState.NO_CHAT_PARTNER));
 			}
-		} else if (intent.getAction().equals(UNREGISTER)) {
-			String name = intent.getStringExtra(REGISTER_NAME);
+		} else if (intent.getAction().equals(Constants.UNREGISTER)) {
+			String name = intent.getStringExtra(Constants.REGISTER_NAME);
 			state.getBoundActivities().remove(name);
 
 			if (name.equals(ChatActivity.CHAT_ACTIVITY)) {
@@ -76,16 +71,16 @@ public class ToxService extends IntentService {
 
 	public static Intent getRegisterIntent(Context ctx, String name) {
 		Intent intent = new Intent(ctx, ToxService.class);
-		intent.setAction(REGISTER);
-		intent.putExtra(REGISTER_NAME, name);
+		intent.setAction(Constants.REGISTER);
+		intent.putExtra(Constants.REGISTER_NAME, name);
 
 		return intent;
 	}
 
 	public static Intent getUnRegisterIntent(Context ctx, String name) {
 		Intent intent = new Intent(ctx, ToxService.class);
-		intent.setAction(UNREGISTER);
-		intent.putExtra(REGISTER_NAME, name);
+		intent.setAction(Constants.UNREGISTER);
+		intent.putExtra(Constants.REGISTER_NAME, name);
 
 		return intent;
 	}
