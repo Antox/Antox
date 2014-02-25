@@ -1,7 +1,12 @@
 Antox
 =====
 
-Android client for the Tox project. Still in heavy development. Currently is only tested using a Samsung S3 running android 4.4 and cyanogenmod.
+Android client for the Tox project. Still in heavy development. 
+
+Currently is only tested with:
+* Samsung S3 running android 4.4 and cyanogenmod
+* Galaxy Nexus running android 4.4
+
 
 ###Completed
 
