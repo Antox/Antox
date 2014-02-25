@@ -3,7 +3,7 @@ package im.tox.antox;
 import java.util.Arrays;
 
 import im.tox.antox.R;
-
+import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 public class ChatActivity extends Activity {
 
+	public static final String CHAT_ACTIVITY = "im.tox.antox.ChatActivity.CHAT_ACTIVITY";
 	private ListView chatListView;
 	private int counter = 0;
 
@@ -83,4 +84,20 @@ public class ChatActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Intent intent = ToxService.getRegisterIntent(this, CHAT_ACTIVITY);
+
+		// The no_chat_partner part needs to be changed in the future
+		intent.putExtra(AntoxOnMessageCallback.FRIEND_NUMBER,
+				AntoxState.NO_CHAT_PARTNER);
+		startService(intent);
+	}
+
+	@Override
+	protected void onPause() {
+		startService(ToxService.getUnRegisterIntent(this, CHAT_ACTIVITY));
+		super.onPause();
+	}
 }
