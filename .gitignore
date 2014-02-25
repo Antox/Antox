@@ -9,21 +9,25 @@
 *.class
 
 # generated files
-/bin/
-/gen/
+bin/
+gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
-build.properties
 
-/GrocerySync-Android/build/
-/GrocerySync-Android/src/main/res/.DS_Store
-/.gradle/
-/.idea/
-/.DS_Store
-/GrocerySync-Android/.DS_Store
-/GrocerySync-Android/GrocerySync-Android-GrocerySync-Android.iml
-/.idea/misc.xml
-/GrocerySync-Android.iml
-*.iml
+# Eclipse project files
+.classpath
+.project
+
+# Android Studio
+.idea/
+.gradle
+/*/local.properties
+/*/out
 /*/*/build
+/*/*/production
+*.iml
+*.iws
+*.ipr
+*~
+*.swp
