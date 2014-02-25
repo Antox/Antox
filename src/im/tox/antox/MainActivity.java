@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,10 +35,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		/* Register response receiver */
-		IntentFilter filter = new IntentFilter(Constants.REGISTER);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new ResponseReceiver();
-        registerReceiver(receiver, filter);
+		// Will receive intents with Constants.Register action
+		IntentFilter mStatusIntentFilter = new IntentFilter(Constants.REGISTER);
+		receiver = new ResponseReceiver();
+		LocalBroadcastManager.getInstance(this).registerReceiver(
+				receiver,
+				mStatusIntentFilter);
 		
 		/* Check if first time ever running by checking the preferences */
 		SharedPreferences pref = getSharedPreferences("main",
@@ -181,10 +184,11 @@ public class MainActivity extends Activity {
 		return true;
 	}
 	
-	public class ResponseReceiver extends BroadcastReceiver {		    
+	private class ResponseReceiver extends BroadcastReceiver {	
+
 		   @Override
 		    public void onReceive(Context context, Intent intent) {
-		       //Do something with broadcasted message
+		       //Do something with received broadcasted message
 		    }
 	}
 }

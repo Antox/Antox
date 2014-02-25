@@ -45,7 +45,7 @@ public class SettingsActivity extends Activity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-
+		
 		/* Check if connected to the Internet */
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -63,13 +63,13 @@ public class SettingsActivity extends Activity {
 		dhtIP = (EditText) findViewById(R.id.settings_dht_ip);
 		dhtPort = (EditText) findViewById(R.id.settings_dht_port);
 		dhtKey = (EditText) findViewById(R.id.settings_dht_key);
-		
+
 		String[] dhtItems = new String[] { "stqism - US", "NSA - US",
 				"sonOfRa - DE", "stal - US" };
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, dhtItems);
 		dhtSpinner.setAdapter(adapter);
-
+		
 		String[] statusItems = new String[] { "online", "away", "busy" };
 		ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, statusItems);
@@ -231,24 +231,25 @@ public class SettingsActivity extends Activity {
 			int len = 500;
 
 			try {
-				URL url = new URL(myurl);
-				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
-				conn.setReadTimeout(10000 /* milliseconds */);
-				conn.setConnectTimeout(15000 /* milliseconds */);
-				conn.setRequestMethod("GET");
-				conn.setDoInput(true);
-				// Starts the query
-				conn.connect();
-				is = conn.getInputStream();
+			URL url = new URL(myurl);
+			HttpURLConnection conn = (HttpURLConnection) url
+			.openConnection();
+			conn.setReadTimeout(10000 /* milliseconds */);
+			conn.setConnectTimeout(15000 /* milliseconds */);
+			conn.setRequestMethod("GET");
+			conn.setDoInput(true);
+			// Starts the query
+			conn.connect();
+			is = conn.getInputStream();
+			
+			// Convert the InputStream into a string
+			
+			String contentAsString = readIt(is,len);
 
-				// Convert the InputStream into a string
-				String contentAsString = readIt(is, len);
-				
-				return contentAsString;
-				
-				// Makes sure that the InputStream is closed after the app is
-				// finished using it.
+			return contentAsString;
+
+			// Makes sure that the InputStream is closed after the app is
+			// finished using it.
 			} finally {
 				if (is != null) {
 					is.close();
@@ -257,13 +258,19 @@ public class SettingsActivity extends Activity {
 		}
 
 		public String readIt(InputStream stream, int len) throws IOException,
-				UnsupportedEncodingException {
-			Reader reader = null;
-			reader = new InputStreamReader(stream, "UTF-8");
-			char[] buffer = new char[len];
-			reader.read(buffer);
-			return new String(buffer);
+			UnsupportedEncodingException {
+					Reader reader = null;
+					reader = new InputStreamReader(stream, "UTF-8");
+					char[] buffer = new char[len];
+					reader.read(buffer);
+					return new String(buffer);
 		}
+
+		protected void onPostExecute(String result) {
+			//Parse the JSON, store it, and add it to the dhtSpinner
+			
+		}
+
 	}
 
 }

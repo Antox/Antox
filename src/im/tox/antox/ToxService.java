@@ -14,6 +14,8 @@ import android.util.Log;
 
 public class ToxService extends IntentService {
 
+	private static final String TAG = "im.tox.antox.ToxService";
+	
 	public ToxService() {
 		super("ToxService");
 	}
@@ -23,7 +25,7 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
 
-		Log.d(Constants.TAG, "Got intent action: " + intent.getAction());
+		Log.d(TAG, "Got intent action: " + intent.getAction());
 		if (intent.getAction().equals(Constants.REGISTER)) {
 			String name = intent.getStringExtra(Constants.REGISTER_NAME);
 			boundActivities.add(name);
