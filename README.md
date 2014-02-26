@@ -7,6 +7,8 @@ Android client for the Tox project. Still in heavy development.
 * Samsung S3 running android 4.4 and cyanogenmod
 * Galaxy Nexus running android 4.4
 
+####Submitting Pull Requests
+- All pull requests must be well documentated before being accepted
 
 ###Completed
 
@@ -22,7 +24,8 @@ Android client for the Tox project. Still in heavy development.
 ###In Progress
 
 - [Implement jToxCore](https://github.com/Tox/jToxcore)
-- Store a list of up to date DHT servers
+- Store a list of up to date DHT servers (SettingsActivity)
+- Documenting the current code base
 
 ###TODO
 
