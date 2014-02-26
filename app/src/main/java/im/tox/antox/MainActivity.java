@@ -17,15 +17,35 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+/**
+ * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
+ * central part of the entire app. It also displays the friends list to the user.
+ *
+ * @author Mark Winter (Astonex)
+ */
+
 public class MainActivity extends Activity {
 
+    /**
+     * Extra message to be passed with intents - Should be unique from every other app
+     */
 	public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
 
+    /**
+     * List View for displaying all the friends in a scrollable list
+     */
 	private ListView friendListView;
+    /**
+     * Adapter for the friends list
+     */
 	private FriendsListAdapter adapter;
-
+    /**
+     * Stores the users public key - will be used by JTox
+     */
 	private String ourPubKey;
-	
+	/**
+     * Receiver for getting work reports from ToxService
+	 */
 	private ResponseReceiver receiver;
 	
 	@SuppressLint("NewApi")
@@ -33,11 +53,17 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		/* Register response receiver */
-		// Will receive intents with Constants.Register action
+
+        /**
+         *  Intent filter will listen only for intents with action Constants.Register
+         *  @see im.tox.antox.Constants
+         */
 		IntentFilter mStatusIntentFilter = new IntentFilter(Constants.REGISTER);
 		receiver = new ResponseReceiver();
+        /**
+         * Local Broadcast Manager for listening for work reports from ToxService.
+         * Local is used as it's more efficient and to stop other apps reading the messages
+         */
 		LocalBroadcastManager.getInstance(this).registerReceiver(
 				receiver,
 				mStatusIntentFilter);
@@ -61,14 +87,18 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 		}
 
-		/* Set up friends list using a ListView */
 
+        /**
+         * Stores a 2 dimensional string array holding friend details. Will be populated
+         * by a tox function once implemented
+         */
 		String[][] friends = {
 				// 0 - offline, 1 - online, 2 - away, 3 - busy
 				{ "1", "astonex", "status" }, { "0", "irungentoo", "status" },
 				{ "2", "nurupo", "status" }, { "3", "sonOfRa", "status" } 
 		};
-		
+
+        /* Go through status strings and set appropriate resource image */
 		FriendsList friends_list[] = new FriendsList[friends.length];
 
 		for (int i = 0; i < friends.length; i++) {
@@ -115,12 +145,20 @@ public class MainActivity extends Activity {
 		}
 	}
 
+    /**
+     * Starts a new intent to open the SettingsActivity class
+     * @see im.tox.antox.SettingsActivity
+     */
 	private void openSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		intent.putExtra(EXTRA_MESSAGE, ourPubKey);
 		startActivity(intent);
 	}
 
+    /**
+     * Starts a new intent to open the AddFriendActivity class
+     * @see im.tox.antox.AddFriendActivity
+     */
 	private void addFriend() {
 		Intent intent = new Intent(this, AddFriendActivity.class);
 		startActivity(intent);
@@ -179,9 +217,17 @@ public class MainActivity extends Activity {
 
 		return true;
 	}
-	
-	private class ResponseReceiver extends BroadcastReceiver {	
 
+    /**
+     * Response receiver for receiving work reports from ToxService to update the UI with results
+     */
+	private class ResponseReceiver extends BroadcastReceiver {
+
+        /**
+         * Uses the info passed in the Intent to update the UI with ToxService reports
+         * @param context
+         * @param intent
+         */
 		   @Override
 		    public void onReceive(Context context, Intent intent) {
 		       //Do something with received broadcasted message
