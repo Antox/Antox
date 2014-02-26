@@ -60,6 +60,7 @@
         <activity
             android:name="im.tox.antox.ChatActivity"
             android:label="@string/title_activity_chat"
+	    android:configChanges="keyboardHidden|orientation"
             android:parentActivityName="im.tox.antox.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
