@@ -1,40 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-  android:orientation="vertical"
-  android:padding="10dip" 
-  android:layout_width="fill_parent"
-  android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white">
 
     <ListView
-      android:id="@+id/chatMessages"
-      android:layout_width="fill_parent" 
-      android:layout_height="0dip" 
-      android:layout_weight="1"
-      android:divider="#CCCCCC"
-      android:dividerHeight="2dp"
-      android:stackFromBottom="true"
-      />
-
-    <LinearLayout 
-      android:layout_width="fill_parent" 
-      android:layout_height="wrap_content" >
-
-      <EditText
-        android:id="@+id/yourMessage"
+        android:id="@+id/chatMessages"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top"
-        android:layout_weight="1"
-        android:hint="@string/chat_enter_message"/>
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/relativeLayoutSend"
+        android:dividerHeight="2dp" />
 
-      <Button 
-          android:id="@+id/sendMessageButton"
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content"
-          android:layout_weight="4"
-          android:text="@string/chat_button"
-          android:onClick="sendMessage"/>
+    <RelativeLayout
+        android:id="@+id/relativeLayoutSend"
+        android:layout_width="fill_parent"
+        android:background="#ff67abc7"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
 
-    </LinearLayout>
+        <View
+            android:id="@+id/divider_comment"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@android:color/darker_gray" />
+        <EditText
+            android:id="@+id/yourMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="12dp"
+            android:imeOptions="actionSend"
+            android:minLines="2"
+            android:maxLines="4"
+            android:inputType="text|textCapSentences|textMultiLine"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:background="@android:color/transparent"
+            android:layout_toLeftOf="@+id/sendMessageButton"
+            android:hint="@string/chat_enter_message" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/sendMessageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_send"
+            android:onClick="sendMessage" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
