@@ -28,6 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Settings Activity where the user can change their username, status, note and DHT nodes.
+ * Allows the user to specify their own DHT Node, or to pick one from a downloaded list of known
+ * working nodes.
+ * @author Mark Winter (Astonex)
+ */
+
 public class SettingsActivity extends Activity {
 
     /**

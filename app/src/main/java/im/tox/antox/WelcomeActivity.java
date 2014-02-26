@@ -15,6 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * Welcome Activity is displayed when the user is using the app for the very first time to get
+ * some required details such as a username.
+ * @author Mark Winter (Astonex)
+ */
+
 public class WelcomeActivity extends Activity {
 
 	@SuppressLint("NewApi")

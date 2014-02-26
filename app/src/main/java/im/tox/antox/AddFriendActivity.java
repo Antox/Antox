@@ -16,6 +16,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
+ * keys from tox:// links. See AndroidManifest.xml for more information on the URI handler.
+ * @author Mark Winter (Astonex)
+ */
+
 public class AddFriendActivity extends Activity {
 
 	@SuppressLint("NewApi")
