@@ -136,14 +136,16 @@ public class SettingsActivity extends Activity {
 		SharedPreferences pref = getSharedPreferences("settings",
 				Context.MODE_PRIVATE);
 
+        /* Sets the user key to be the extra message passed by the intent */
+        TextView userKey = (TextView) findViewById(R.id.settings_user_key);
+        Intent intent = getIntent();
+        userKey.setText(intent.getStringExtra(MainActivity.EXTRA_MESSAGE));
+
 		/* If the preferences aren't blank/default, then add them to text fields */
 		/*
 		 * If they are blank/default, the text from strings.xml will be
 		 * displayed instead
 		 */
-		TextView userKey = (TextView) findViewById(R.id.settings_user_key);
-		Intent intent = getIntent();
-		userKey.setText(intent.getStringExtra(MainActivity.EXTRA_MESSAGE));
 		
 		if (!pref.getString("saved_name_hint", "").equals("")) {
 			EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
