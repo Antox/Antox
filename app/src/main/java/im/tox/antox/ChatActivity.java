@@ -1,9 +1,5 @@
 package im.tox.antox;
 
-import java.util.Arrays;
-
-import im.tox.antox.R;
-import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+import im.tox.antox.callbacks.AntoxOnMessageCallback;
 
 public class ChatActivity extends Activity {
 
@@ -47,8 +49,10 @@ public class ChatActivity extends Activity {
 
 		chat_messages = Arrays.copyOf(chat_messages, chat_messages.length + 1);
 
+        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+
 		chat_messages[counter] = new ChatMessages(tmp.getText().toString(),
-				true);
+				time.format(new Date()),true);
 
 		ChatMessagesAdapter adapter = new ChatMessagesAdapter(this,
 				R.layout.chat_message_row, chat_messages);
