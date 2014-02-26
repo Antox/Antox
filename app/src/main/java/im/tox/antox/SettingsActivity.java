@@ -30,12 +30,33 @@ import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 
+    /**
+     * Spinner for displaying DHT nodes in a dropdown menu to the users
+     */
 	Spinner dhtSpinner;
+    /**
+     * Spinner for displaying acceptable statuses (online/away/busy) to the users
+     */
 	Spinner statusSpinner;
+    /**
+     * Editable text box where the user can enter their own DHT IP address
+     */
 	EditText dhtIP;
+    /**
+     * Editable text box where the user can enter their own DHT Port
+     */
 	EditText dhtPort;
+    /**
+     * Editable text box where the user can enter their own DHT Public Key address
+     */
 	EditText dhtKey;
+    /**
+     * Boolean to keep track of whether the user is using the DHT dropdown or their own DHT settings
+     */
 	private boolean usingSpinner;
+    /**
+     * 2D string array to store DHT node details
+     */
 	String[][] downloadedDHTNodes;
 	
 	
@@ -154,6 +175,11 @@ public class SettingsActivity extends Activity {
 
 	}
 
+    /**
+     * This method is called when the user updates their settings. It will check all the text fields
+     * to see if they contain default values, and if they don't, save them using SharedPreferences
+     * @param view
+     */
 	public void updateSettings(View view) {
 		/* Get all text from the fields */
 		TextView userKeyText = (TextView) findViewById(R.id.settings_user_key);
@@ -208,6 +234,11 @@ public class SettingsActivity extends Activity {
 		finish();
 	}
 
+    /**
+     * This method is called when the user clicks on the radio button for selecting a a default
+     * DHT node
+     * @param view
+     */
 	public void onDHTPreClicked(View view) {
 		usingSpinner = true;
 		dhtSpinner.setVisibility(View.VISIBLE);
@@ -216,6 +247,11 @@ public class SettingsActivity extends Activity {
 		dhtKey.setVisibility(View.GONE);
 	}
 
+    /**
+     * This method is called when the user clicks on the radio button for entering their own DHT
+     * settings
+     * @param view
+     */
 	public void onDHTSelfClicked(View view) {
 		usingSpinner = false;
 		dhtSpinner.setVisibility(View.GONE);
@@ -241,7 +277,17 @@ public class SettingsActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+    /**
+     * This class downloads a file from a given website. Specifically will be used to download a
+     * JSON file containing DHT node details so that the user can select one of them from the
+     * dropdown list. It is an AsyncTask so it doesn't affect the UI.
+     */
 	private class DownloadDHTList extends AsyncTask<String, Void, String> {
+        /**
+         * Default method called by an AsyncTask. Requires the URL to download from.
+         * @param urls
+         * @return
+         */
 		@Override
 		protected String doInBackground(String... urls) {
 
@@ -253,6 +299,12 @@ public class SettingsActivity extends Activity {
 			}
 		}
 
+        /**
+         * Downloads the data and will return a string of it
+         * @param myurl
+         * @return
+         * @throws IOException
+         */
 		private String downloadUrl(String myurl) throws IOException {
 			InputStream is = null;
 			// Only display the first 500 characters of the retrieved
@@ -284,6 +336,14 @@ public class SettingsActivity extends Activity {
 			}
 		}
 
+        /**
+         * Take the Input Stream and convert it from a char[] buffer to a String
+         * @param stream
+         * @param len
+         * @return
+         * @throws IOException
+         * @throws UnsupportedEncodingException
+         */
 		public String readIt(InputStream stream, int len) throws IOException,
 			UnsupportedEncodingException {
 					Reader reader = null;
@@ -293,6 +353,11 @@ public class SettingsActivity extends Activity {
 					return new String(buffer);
 		}
 
+        /**
+         * Will take the return of the AsyncTask to be used for operations. Specifically, it will
+         * take the result of downloading the JSON file, parse it, and add it to the DHT spinner
+         * @param result
+         */
 		protected void onPostExecute(String result) {
 			//Parse the JSON, store it, and add it to the dhtSpinner
 			

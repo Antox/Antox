@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
      */
 	private ListView friendListView;
     /**
-     * Adapter for the friends list
+     * Adapter for the friendListView
      */
 	private FriendsListAdapter adapter;
     /**
