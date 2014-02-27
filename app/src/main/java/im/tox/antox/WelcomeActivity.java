@@ -1,10 +1,7 @@
 package im.tox.antox;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -36,7 +33,7 @@ public class WelcomeActivity extends ActionBarActivity {
                 Context.MODE_PRIVATE);
         editor = pref.edit();
         editor.putInt("beenLoaded", 1);
-        editor.apply();
+        editor.commit();
     }
 
     public void updateSettings(View view) {
@@ -54,7 +51,7 @@ public class WelcomeActivity extends ActionBarActivity {
                     Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("saved_name_hint", usernameText);
-            editor.apply();
+            editor.commit();
             Context context = getApplicationContext();
             CharSequence text = "Your details have been sent to the NSA";
             int duration = Toast.LENGTH_SHORT;
