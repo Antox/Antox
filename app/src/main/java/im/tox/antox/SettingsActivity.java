@@ -111,10 +111,9 @@ public class SettingsActivity extends ActionBarActivity {
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
 
-        /* Sets the user key to be the extra message passed by the intent */
+        /* Sets the user key to the saved user key */
         TextView userKey = (TextView) findViewById(R.id.settings_user_key);
-        Intent intent = getIntent();
-        userKey.setText(intent.getStringExtra(MainActivity.EXTRA_MESSAGE));
+        userKey.setText(pref.getString("user_key", ""));
 
 		/* If the preferences aren't blank/default, then add them to text fields */
 		/*
