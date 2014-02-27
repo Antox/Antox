@@ -224,12 +224,14 @@ public class SettingsActivity extends Activity {
 			if (!dhtPortHintText.getText().toString().equals(getString(R.id.settings_dht_port)))
 				editor.putString("saved_dht_port", dhtPortHintText.getText()
 						.toString());
-		}
+		} else {
+            editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
+        }
+
 		if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint)))
 			editor.putString("saved_note_hint", noteHintText.getText()
 					.toString());
 
-		editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
 		editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
 		
 		editor.apply();
