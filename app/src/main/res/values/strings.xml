@@ -26,9 +26,9 @@
     
     
     <!-- Welcome Activity -->
-    <string name="welcome_string">Welcome to Antox</string>
+    <string name="welcome_string">Antox</string>
     <string name="about_string">This client is still in pre-alpha.</string>
-    <string name="getstarted_string">To get started, enter your desired name and either add your own DHT details or leave as default</string>
+    <string name="getstarted_string">Enter your desired username</string>
     <string name="developer_string">Developed by astonex\nirc.freenode.net#tox-dev</string>
 
     <!-- Settings Activity -->
