@@ -274,7 +274,7 @@ public class MainActivity extends ActionBarActivity {
             InputStream is = null;
             // Only display the first 500 characters of the retrieved
             // web page content.
-            int len = 500;
+            int len = 200;
 
             try {
                 URL url = new URL(myurl);
@@ -327,10 +327,22 @@ public class MainActivity extends ActionBarActivity {
          */
         protected void onPostExecute(String result) {
             //Parse the page and store it so it can be used to automatically connect to a DHT
-            //Some default values for now until I've written the parser
-            DhtNode.ip = "192.254.75.98";
-            DhtNode.port = 33445;
-            DhtNode.key = "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B ";
+            String[] dhtDetails = new String[7];
+
+            int posOfFirst = 1;
+            int counter = 0;
+            for(int i = 2; i < result.length() - 2; i++) {
+                if(result.charAt(i) == '"') {
+                    dhtDetails[counter] = result.substring(posOfFirst, i);
+                    posOfFirst = i + 2;
+                    counter++;
+                    i = i+3;
+                }
+            }
+
+            DhtNode.ip = dhtDetails[0];
+            DhtNode.port = dhtDetails[2];
+            DhtNode.key = dhtDetails[3];
         }
     }
 

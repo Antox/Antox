@@ -5,6 +5,6 @@ package im.tox.antox;
  */
 public final class DhtNode {
     public static String ip;
-    public static int port;
+    public static String port;
     public static String key;
 }
