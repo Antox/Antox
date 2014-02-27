@@ -1,14 +1,16 @@
 package im.tox.antox;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,47 +37,33 @@ public class WelcomeActivity extends ActionBarActivity {
         editor = pref.edit();
         editor.putInt("beenLoaded", 1);
         editor.apply();
-
-		/* Load default values for DHT */
-        EditText dhtIP = (EditText) findViewById(R.id.welcome_dht_ip);
-        dhtIP.setText("192.254.75.98");
-
-        EditText dhtPort = (EditText) findViewById(R.id.welcome_dht_port);
-        dhtPort.setText("33445");
-
-        EditText dhtKey = (EditText) findViewById(R.id.welcome_dht_key);
-        dhtKey.setText("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
     }
 
     public void updateSettings(View view) {
-        SharedPreferences pref = getSharedPreferences("settings",
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-
         TextView username = (TextView) findViewById(R.id.welcome_name_hint);
         String usernameText = username.getText().toString();
 
-        EditText dhtIP = (EditText) findViewById(R.id.welcome_dht_ip);
-        String dhtIPText = dhtIP.getText().toString();
-        EditText dhtPort = (EditText) findViewById(R.id.welcome_dht_port);
-        String dhtPortText = dhtPort.getText().toString();
-        EditText dhtKey = (EditText) findViewById(R.id.welcome_dht_key);
-        String dhtKeyText = dhtKey.getText().toString();
+        if (usernameText.equals("")) {
+            Context context = getApplicationContext();
+            CharSequence text = "You must select a username";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            SharedPreferences pref = getSharedPreferences("settings",
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("saved_name_hint", usernameText);
+            editor.apply();
+            Context context = getApplicationContext();
+            CharSequence text = "Your details have been sent to the NSA";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
 
-        editor.putString("saved_name_hint", usernameText);
-        editor.putString("saved_dht_ip", dhtIPText);
-        editor.putString("saved_dht_port", dhtPortText);
-        editor.putString("saved_dht_key", dhtKeyText);
-        editor.apply();
-
-        Context context = getApplicationContext();
-        CharSequence text = "Your details have been sent to the NSA";
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
-        // Close activity
-        finish();
+            // Close activity
+            finish();
+        }
     }
 
     @Override

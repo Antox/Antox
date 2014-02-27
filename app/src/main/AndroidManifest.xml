@@ -16,6 +16,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".ToxService"
+            android:exported="false" />
+
         <activity
             android:name="im.tox.antox.MainActivity"
             android:label="@string/app_name">

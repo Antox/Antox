@@ -1,11 +1,22 @@
 package im.tox.antox;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -17,14 +28,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * Settings Activity where the user can change their username, status, note and DHT nodes.
@@ -125,7 +128,7 @@ public class SettingsActivity extends ActionBarActivity {
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, statusItems);
         statusSpinner.setAdapter(statusAdapter);
-		
+
 		/* Get saved preferences */
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
@@ -219,12 +222,14 @@ public class SettingsActivity extends ActionBarActivity {
             if (!dhtPortHintText.getText().toString().equals(getString(R.id.settings_dht_port)))
                 editor.putString("saved_dht_port", dhtPortHintText.getText()
                         .toString());
+        } else {
+            editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
         }
+
         if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint)))
             editor.putString("saved_note_hint", noteHintText.getText()
                     .toString());
 
-        editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
 
         editor.apply();
