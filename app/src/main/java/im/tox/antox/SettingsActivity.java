@@ -71,33 +71,15 @@ public class SettingsActivity extends ActionBarActivity {
 
         downloadedDHTNodes = new String[][]{
                 {
-                        "192.254.75.98",
-                        "33445",
-                        "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B",
-                        "stqism",
-                        "US",
-                        "WORK"
-                },
-                {
-                        "192.184.81.118",
-                        "33445",
-                        "5CD7EB176C19A2FD840406CD56177BB8E75587BB366F7BB3004B19E3EDC04143",
-                        "NSA",
-                        "US",
-                        "WORK"
-                },
-                {
-                        "144.76.60.215",
-                        "33445",
-                        "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F",
-                        "sonOfRa",
-                        "DE",
-                        "WORK"
+                        DhtNode.ipv4,
+                        DhtNode.port,
+                        DhtNode.key,
+                        DhtNode.owner,
+                        DhtNode.location
                 }
         };
 
-        String[] dhtItems = new String[]{downloadedDHTNodes[0][3], downloadedDHTNodes[1][3],
-                downloadedDHTNodes[2][3]};
+        String[] dhtItems = new String[]{downloadedDHTNodes[0][3] + " - " + downloadedDHTNodes[0][4]};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, dhtItems);
         dhtSpinner.setAdapter(adapter);

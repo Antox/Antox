@@ -333,16 +333,19 @@ public class MainActivity extends ActionBarActivity {
             int counter = 0;
             for(int i = 2; i < result.length() - 2; i++) {
                 if(result.charAt(i) == '"') {
-                    dhtDetails[counter] = result.substring(posOfFirst, i);
+                    dhtDetails[counter] = result.substring(posOfFirst+1, i);
                     posOfFirst = i + 2;
                     counter++;
                     i = i+3;
                 }
             }
 
-            DhtNode.ip = dhtDetails[0];
+            DhtNode.ipv4 = dhtDetails[0];
+            DhtNode.ipv6 = dhtDetails[1];
             DhtNode.port = dhtDetails[2];
             DhtNode.key = dhtDetails[3];
+            DhtNode.owner = dhtDetails[4];
+            DhtNode.location = dhtDetails[5];
         }
     }
 
