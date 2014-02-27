@@ -6,16 +6,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import im.tox.jtoxcore.JTox;
+import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -40,19 +56,41 @@ public class MainActivity extends ActionBarActivity {
      */
     private FriendsListAdapter adapter;
     /**
-     * Stores the users public key - will be used by JTox
-     */
-    private String ourPubKey;
-    /**
      * Receiver for getting work reports from ToxService
      */
     private ResponseReceiver receiver;
+
+    private JTox jTox;
+    private AntoxFriendList antoxFriendList;
+    private CallbackHandler callbackHandler;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* Check if connected to the Internet */
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Executes in a separate thread so UI experience isn't affected
+            new DownloadDHTList().execute("http://markwinter.me/servers.php");
+        } else {
+            // TODO: Decide on a whole what to do if the user isnt connected to the Internet
+        }
+
+        try {
+            antoxFriendList = new AntoxFriendList();
+            callbackHandler = new CallbackHandler(antoxFriendList);
+            jTox = new JTox(antoxFriendList, callbackHandler);
+            /* Save the users key to preferences */
+            SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putString("user_key", jTox.getAddress());
+        } catch (ToxException e) {
+            e.printStackTrace();
+        }
 
         /**
          *  Intent filter will listen only for intents with action Constants.Register
@@ -150,7 +188,6 @@ public class MainActivity extends ActionBarActivity {
      */
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, ourPubKey);
         startActivity(intent);
     }
 
@@ -212,6 +249,89 @@ public class MainActivity extends ActionBarActivity {
                 });
 
         return true;
+    }
+
+    private class DownloadDHTList extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+
+        /**
+         * Downloads the data and will return a string of it
+         *
+         * @param myurl
+         * @return
+         * @throws IOException
+         */
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            int len = 500;
+
+            try {
+                URL url = new URL(myurl);
+                HttpURLConnection conn = (HttpURLConnection) url
+                        .openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                // Starts the query
+                conn.connect();
+                is = conn.getInputStream();
+
+                // Convert the InputStream into a string
+
+                return readIt(is, len);
+
+                // Makes sure that the InputStream is closed after the app is
+                // finished using it.
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
+
+        /**
+         * Take the Input Stream and convert it from a char[] buffer to a String
+         *
+         * @param stream
+         * @param len
+         * @return
+         * @throws IOException
+         * @throws UnsupportedEncodingException
+         */
+        public String readIt(InputStream stream, int len) throws IOException,
+                UnsupportedEncodingException {
+            Reader reader = null;
+            reader = new InputStreamReader(stream, "UTF-8");
+            char[] buffer = new char[len];
+            reader.read(buffer);
+            return new String(buffer);
+        }
+
+        /**
+         * Will take the return of the AsyncTask to be used for operations. Specifically, it will
+         * take the result of downloading the JSON file, parse it, and add it to the DHT spinner
+         *
+         * @param result
+         */
+        protected void onPostExecute(String result) {
+            //Parse the page and store it so it can be used to automatically connect to a DHT
+            //Some default values for now until I've written the parser
+            DhtNode.ip = "192.254.75.98";
+            DhtNode.port = 33445;
+            DhtNode.key = "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B ";
+        }
     }
 
     /**

@@ -17,15 +17,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
  * Settings Activity where the user can change their username, status, note and DHT nodes.
  * Allows the user to specify their own DHT Node, or to pick one from a downloaded list of known
@@ -70,16 +61,6 @@ public class SettingsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /* Check if connected to the Internet */
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            // Executes in a separate thread so UI experience isn't affected
-            new DownloadDHTList().execute("http://markwinter.me/servers.php");
-        } else {
-            // TODO: Decide on a whole what to do if the user isnt connected to
-            // the Internet and using antox
-        }
 
         usingSpinner = false;
         dhtSpinner = (Spinner) findViewById(R.id.dhtSpinner);
@@ -284,97 +265,4 @@ public class SettingsActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * This class downloads a file from a given website. Specifically will be used to download a
-     * JSON file containing DHT node details so that the user can select one of them from the
-     * dropdown list. It is an AsyncTask so it doesn't affect the UI.
-     */
-    private class DownloadDHTList extends AsyncTask<String, Void, String> {
-        /**
-         * Default method called by an AsyncTask. Requires the URL to download from.
-         *
-         * @param urls
-         * @return
-         */
-        @Override
-        protected String doInBackground(String... urls) {
-
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-
-        /**
-         * Downloads the data and will return a string of it
-         *
-         * @param myurl
-         * @return
-         * @throws IOException
-         */
-        private String downloadUrl(String myurl) throws IOException {
-            InputStream is = null;
-            // Only display the first 500 characters of the retrieved
-            // web page content.
-            int len = 500;
-
-            try {
-                URL url = new URL(myurl);
-                HttpURLConnection conn = (HttpURLConnection) url
-                        .openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                // Starts the query
-                conn.connect();
-                is = conn.getInputStream();
-
-                // Convert the InputStream into a string
-
-                return readIt(is, len);
-
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
-        }
-
-        /**
-         * Take the Input Stream and convert it from a char[] buffer to a String
-         *
-         * @param stream
-         * @param len
-         * @return
-         * @throws IOException
-         * @throws UnsupportedEncodingException
-         */
-        public String readIt(InputStream stream, int len) throws IOException,
-                UnsupportedEncodingException {
-            Reader reader = null;
-            reader = new InputStreamReader(stream, "UTF-8");
-            char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
-        }
-
-        /**
-         * Will take the return of the AsyncTask to be used for operations. Specifically, it will
-         * take the result of downloading the JSON file, parse it, and add it to the DHT spinner
-         *
-         * @param result
-         */
-        protected void onPostExecute(String result) {
-            //Parse the JSON, store it, and add it to the dhtSpinner
-
-        }
-
-    }
-
 }
