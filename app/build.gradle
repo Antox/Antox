@@ -19,5 +19,6 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v4:+'
+    compile 'com.android.support:appcompat-v7:+'
     compile files('libs/jToxcore-0.5.1.jar')
 }
