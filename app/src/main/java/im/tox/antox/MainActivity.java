@@ -267,7 +267,7 @@ public class MainActivity extends ActionBarActivity {
             InputStream is = null;
             // Only display the first 500 characters of the retrieved
             // web page content.
-            int len = 200;
+            int len = 160;
 
             try {
                 URL url = new URL(myurl);
@@ -357,11 +357,6 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
-
-            SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = settingsPref.edit();
-            editor.putString("user_key", intent.getStringExtra(Constants.USER_KEY));
-            editor.commit();
         }
     }
 }

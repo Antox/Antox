@@ -15,6 +15,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -81,18 +82,19 @@ public class ToxService extends IntentService {
                 AntoxFriendList antoxFriendList = new AntoxFriendList();
                 CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
                 JTox jTox = new JTox(antoxFriendList, callbackHandler);
+
+                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
+                callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
+
                 jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
-
-                Intent keyIntent = new Intent(Constants.BROADCAST_ACTION)
-                        .putExtra(Constants.USER_KEY, jTox.getAddress());
-                LocalBroadcastManager.getInstance(this).sendBroadcast(keyIntent);
-
                 jTox.setName(UserDetails.username);
                 jTox.setStatusMessage(UserDetails.note);
                 jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
 
-                jTox.addFriend("12B06D7BA656A88BC23258F6B5425C510A303A63DE0156244A3CFC5EC5578927EB82A4410F66", "sup");
-
+                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settingsPref.edit();
+                editor.putString("user_key", jTox.getAddress());
+                editor.commit();
 
                 while(true) {
                     jTox.doTox();
@@ -103,8 +105,6 @@ public class ToxService extends IntentService {
                     }
                     Thread.sleep(50);
                 }
-            } catch (FriendExistsException e) {
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (UnknownHostException e) {
