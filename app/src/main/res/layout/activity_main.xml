@@ -12,7 +12,7 @@
         android:layout_height="match_parent" />
     <!-- The navigation drawer -->
     <ListView
-        android:id="@+id/mainListView"
+        android:id="@+id/contacts_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

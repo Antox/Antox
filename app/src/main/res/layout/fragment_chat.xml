@@ -1,21 +1,54 @@
-<!--
-  Copyright 2013 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+<ListView
+    android:id="@+id/chatMessages"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_above="@+id/relativeLayoutSend"
+    android:dividerHeight="2dp" />
 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+<RelativeLayout
+android:id="@+id/relativeLayoutSend"
+android:layout_width="fill_parent"
+android:background="#ff67abc7"
+android:layout_alignParentBottom="true"
+android:layout_height="wrap_content">
 
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
-  -->
-
-<EditText xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/chat_message"
+<View
+    android:id="@+id/divider_comment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:hint="@string/chat_enter_message"/>
+    android:layout_height="1px"
+    android:background="@android:color/darker_gray" />
+<EditText
+    android:id="@+id/yourMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="12dp"
+    android:imeOptions="actionSend"
+    android:minLines="2"
+    android:maxLines="4"
+    android:inputType="textShortMessage|textCapSentences"
+    android:textSize="16sp"
+    android:gravity="center_vertical"
+    android:textColor="@android:color/white"
+    android:background="@android:color/transparent"
+    android:layout_toLeftOf="@+id/sendMessageButton"
+    android:hint="@string/chat_enter_message" />
+
+<ImageView
+    android:id="@+id/sendMessageButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    android:paddingRight="8dp"
+    android:src="@drawable/ic_send"
+    android:onClick="sendMessage" />
+
+</RelativeLayout>
+    </LinearLayout>

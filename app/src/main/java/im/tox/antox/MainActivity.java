@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +9,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
@@ -62,12 +65,21 @@ public class MainActivity extends ActionBarActivity {
     private ResponseReceiver receiver;
 
     private Intent doToxIntent;
+    private ListView mDrawerList;
+    private DrawerLayout mDrawerLayout;
+
+
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mDrawerList = (ListView) findViewById(R.id.contacts_drawer);
+
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -161,29 +173,49 @@ public class MainActivity extends ActionBarActivity {
         adapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
-        friendListView = (ListView) findViewById(R.id.mainListView);
+        friendListView = (ListView) findViewById(R.id.contacts_drawer);
 
         friendListView.setAdapter(adapter);
 
         final Intent chatIntent = new Intent(this, ChatActivity.class);
 
         friendListView
-                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        // .toString() overridden in FriendsList.java to return
-                        // the friend name
-                        String friendName = parent.getItemAtPosition(position)
-                                .toString();
-                        chatIntent.putExtra(EXTRA_MESSAGE, friendName);
-                        startActivity(chatIntent);
-                    }
-
-                });
-
+                .setOnItemClickListener(new DrawerItemClickListener());
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            // .toString() overridden in FriendsList.java to return
+            // the friend name
+            String friendName = parent.getItemAtPosition(position)
+                    .toString();
+            selectItem(position, friendName);
+            //chatIntent.putExtra(EXTRA_MESSAGE, friendName);
+            //startActivity(chatIntent);
+        }
+    }/** Swaps fragments in the main content view */
+    private void selectItem(int position, String friendName) {
+        // Create a new fragment and specify the planet to show based on position
+        Fragment fragment = new ChatFragment();
+        Bundle args = new Bundle();
+        args.putInt(ChatFragment.ARG_CONTACT_NUMBER, position);
+        fragment.setArguments(args);
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(friendName);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+
+
 
     /**
      * Starts a new intent to open the SettingsActivity class
