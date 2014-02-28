@@ -91,6 +91,8 @@ public class ToxService extends IntentService {
                 jTox.setStatusMessage(UserDetails.note);
                 jTox.setUserStatus(UserDetails.status);
 
+                jTox.addFriend("","pls respond ");
+
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
                 editor.putString("user_key", jTox.getAddress());
@@ -105,6 +107,8 @@ public class ToxService extends IntentService {
                     }
                     Thread.sleep(50);
                 }
+            } catch (FriendExistsException e) {
+                e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (UnknownHostException e) {
