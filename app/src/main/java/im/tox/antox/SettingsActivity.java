@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +27,6 @@ import android.widget.Toast;
  */
 
 public class SettingsActivity extends ActionBarActivity {
-
-    /**
-     * Spinner for displaying DHT nodes in a dropdown menu to the users
-     */
-    Spinner dhtSpinner;
     /**
      * Spinner for displaying acceptable statuses (online/away/busy) to the users
      */
@@ -48,10 +44,6 @@ public class SettingsActivity extends ActionBarActivity {
      */
     EditText dhtKey;
     /**
-     * Boolean to keep track of whether the user is using the DHT dropdown or their own DHT settings
-     */
-    private boolean usingSpinner;
-    /**
      * 2D string array to store DHT node details
      */
     String[][] downloadedDHTNodes;
@@ -62,28 +54,13 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        usingSpinner = false;
-        dhtSpinner = (Spinner) findViewById(R.id.dhtSpinner);
+
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtIP = (EditText) findViewById(R.id.settings_dht_ip);
         dhtPort = (EditText) findViewById(R.id.settings_dht_port);
         dhtKey = (EditText) findViewById(R.id.settings_dht_key);
 
-        downloadedDHTNodes = new String[][]{
-                {
-                        DhtNode.ipv4,
-                        DhtNode.port,
-                        DhtNode.key,
-                        DhtNode.owner,
-                        DhtNode.location
-                }
-        };
-
-        String[] dhtItems = new String[]{downloadedDHTNodes[0][3] + " - " + downloadedDHTNodes[0][4]};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, dhtItems);
-        dhtSpinner.setAdapter(adapter);
-
+        /* Add acceptable statuses to the drop down menu */
         String[] statusItems = new String[]{"online", "away", "busy"};
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, statusItems);
@@ -97,35 +74,32 @@ public class SettingsActivity extends ActionBarActivity {
         TextView userKey = (TextView) findViewById(R.id.settings_user_key);
         userKey.setText(pref.getString("user_key", ""));
 
-		/* If the preferences aren't blank/default, then add them to text fields */
-		/*
-		 * If they are blank/default, the text from strings.xml will be
-		 * displayed instead
-		 */
+		/* If the preferences aren't blank, then add them to text fields
+         * otherwise it will display the predefined hints in strings.xml
+         */
 
         if (!pref.getString("saved_name_hint", "").equals("")) {
             EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
             nameHint.setText(pref.getString("saved_name_hint", ""));
         }
 
-        if (!pref.getString("saved_dht_ip", "192.254.75.98").equals("192.254.75.98")) {
-            dhtIP.setText(pref.getString("saved_dht_ip", "192.254.75.98"));
+        if (!pref.getString("saved_dht_ip", "").equals("")) {
+            dhtIP.setText(pref.getString("saved_dht_ip", ""));
+            /* If saved DHT settings exist then show the extra dht boxes to begin with */
+            RadioButton dhtButton = (RadioButton) findViewById(R.id.settings_radio_dht_self);
+            dhtButton.toggle();
+            dhtIP.setVisibility(View.VISIBLE);
+            dhtPort.setVisibility(View.VISIBLE);
+            dhtKey.setVisibility(View.VISIBLE);
         }
 
-        if (!pref.getString("saved_dht_port", "33445").equals("33445")) {
-            dhtPort.setText(pref.getString("saved_dht_port", "33445"));
+        if (!pref.getString("saved_dht_port", "").equals("")) {
+            dhtPort.setText(pref.getString("saved_dht_port", ""));
         }
 
-        if (!pref.getString("saved_dht_key",
-                "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B")
-                .equals("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B")) {
-            dhtKey.setText(pref.getString("saved_dht_key",
-                    "FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B"));
+        if (!pref.getString("saved_dht_key","").equals("")) {
+            dhtKey.setText(pref.getString("saved_dht_key",""));
         }
-
-        String savedDHT = pref.getString("saved_dht_spinner", "");
-        int statusPosDHT = adapter.getPosition(savedDHT);
-        dhtSpinner.setSelection(statusPosDHT);
 
         if (!pref.getString("saved_note_hint", "").equals("")) {
             EditText noteHint = (EditText) findViewById(R.id.settings_note_hint);
@@ -137,7 +111,6 @@ public class SettingsActivity extends ActionBarActivity {
             int statusPos = statusAdapter.getPosition(savedStatus);
             statusSpinner.setSelection(statusPos);
         }
-
     }
 
     /**
@@ -172,24 +145,24 @@ public class SettingsActivity extends ActionBarActivity {
         if (!userKeyText.getText().toString().equals(getString(R.id.settings_user_key)))
             editor.putString("saved_user_key_hint", userKeyText.getText()
                     .toString());
-        if (!usingSpinner) {
-            if (!dhtIpHintText.getText().toString().equals(getString(R.id.settings_dht_ip)))
-                editor.putString("saved_dht_ip", dhtIpHintText.getText().toString());
-            if (!dhtKeyHintText.getText().toString().equals(getString(R.id.settings_dht_key)))
-                editor.putString("saved_dht_key", dhtKeyHintText.getText()
-                        .toString());
-            if (!dhtPortHintText.getText().toString().equals(getString(R.id.settings_dht_port)))
-                editor.putString("saved_dht_port", dhtPortHintText.getText()
-                        .toString());
-        } else {
-            editor.putString("saved_dht_spinner", dhtSpinner.getSelectedItem().toString());
-        }
-
         if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint)))
             editor.putString("saved_note_hint", noteHintText.getText()
                     .toString());
-
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
+
+        /* Also save DHT details to DhtNode class */
+        if (!dhtIpHintText.getText().toString().equals(getString(R.id.settings_dht_ip))) {
+            editor.putString("saved_dht_ip", dhtIpHintText.getText().toString());
+            DhtNode.ipv4 = dhtIpHintText.getText().toString();
+        }
+        if (!dhtKeyHintText.getText().toString().equals(getString(R.id.settings_dht_key))) {
+            editor.putString("saved_dht_key", dhtKeyHintText.getText().toString());
+            DhtNode.key = dhtKeyHintText.getText().toString();
+        }
+        if (!dhtPortHintText.getText().toString().equals(getString(R.id.settings_dht_port))) {
+            editor.putString("saved_dht_port", dhtPortHintText.getText().toString());
+            DhtNode.port = dhtPortHintText.getText().toString();
+        }
 
         editor.commit();
 
@@ -201,21 +174,6 @@ public class SettingsActivity extends ActionBarActivity {
 
         finish();
     }
-
-    /**
-     * This method is called when the user clicks on the radio button for selecting a a default
-     * DHT node
-     *
-     * @param view
-     */
-    public void onDHTPreClicked(View view) {
-        usingSpinner = true;
-        dhtSpinner.setVisibility(View.VISIBLE);
-        dhtIP.setVisibility(View.GONE);
-        dhtPort.setVisibility(View.GONE);
-        dhtKey.setVisibility(View.GONE);
-    }
-
     /**
      * This method is called when the user clicks on the radio button for entering their own DHT
      * settings
@@ -223,8 +181,6 @@ public class SettingsActivity extends ActionBarActivity {
      * @param view
      */
     public void onDHTSelfClicked(View view) {
-        usingSpinner = false;
-        dhtSpinner.setVisibility(View.GONE);
         dhtIP.setVisibility(View.VISIBLE);
         dhtPort.setVisibility(View.VISIBLE);
         dhtKey.setVisibility(View.VISIBLE);

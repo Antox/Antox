@@ -89,13 +89,6 @@
             android:orientation="vertical">
 
             <RadioButton
-                android:id="@+id/settings_radio_dht_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_radio_dht_pre"
-                android:onClick="onDHTPreClicked" />
-
-            <RadioButton
                 android:id="@+id/settings_radio_dht_self"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,13 +96,6 @@
                 android:onClick="onDHTSelfClicked" />
 
         </RadioGroup>
-
-        <Spinner
-            android:id="@+id/dhtSpinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            android:visibility="gone" />
 
         <EditText
             android:id="@+id/settings_dht_ip"
