@@ -61,6 +61,8 @@ public class MainActivity extends ActionBarActivity {
      */
     private ResponseReceiver receiver;
 
+    private Intent doToxIntent;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
             // TODO: Decide on a whole what to do if the user isnt connected to the Internet
         }
 
-        Intent doToxIntent = new Intent(this, ToxService.class);
+        doToxIntent = new Intent(this, ToxService.class);
         doToxIntent.setAction(Constants.DO_TOX);
         this.startService(doToxIntent);
 
@@ -201,6 +203,19 @@ public class MainActivity extends ActionBarActivity {
     private void addFriend() {
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.startService(doToxIntent);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.stopService(doToxIntent);
+        setTitle("antox");
     }
 
     @Override
