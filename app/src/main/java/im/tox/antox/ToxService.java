@@ -81,7 +81,20 @@ public class ToxService extends IntentService {
 
                 AntoxFriendList antoxFriendList = new AntoxFriendList();
                 CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                JTox jTox = new JTox(antoxFriendList, callbackHandler);
+
+                ToxDataFile dataFile = new ToxDataFile();
+
+                JTox jTox;
+                if(dataFile.doesFileExist(getBaseContext())) {
+                    Log.d(TAG, "Data file found");
+                    Log.d(TAG, dataFile.loadFile(getBaseContext()).toString());
+                    jTox = new JTox(dataFile.loadFile(getBaseContext()), antoxFriendList, callbackHandler);
+                } else {
+                    Log.d(TAG, "Data file not found");
+                    jTox = new JTox(antoxFriendList, callbackHandler);
+                }
+
+                dataFile.saveFile(jTox.save(), getBaseContext());
 
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
                 callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
