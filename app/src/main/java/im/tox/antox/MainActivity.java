@@ -119,10 +119,13 @@ public class MainActivity extends ActionBarActivity {
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
         if (settingsPref.getString("saved_status_hint", "") == "online")
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (settingsPref.getString("saved_status_hint", "") == "away")
+        else if (settingsPref.getString("saved_status_hint", "") == "away")
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (settingsPref.getString("saved_status_hint", "") == "busy")
+        else if (settingsPref.getString("saved_status_hint", "") == "busy")
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
+        else
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         /**
