@@ -18,6 +18,9 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import im.tox.jtoxcore.ToxUserStatus;
+
 /**
  * Settings Activity where the user can change their username, status, note and DHT nodes.
  * Allows the user to specify their own DHT Node, or to pick one from a downloaded list of known
@@ -150,7 +153,12 @@ public class SettingsActivity extends ActionBarActivity {
             UserDetails.note = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        UserDetails.status = statusSpinner.getSelectedItem().toString();
+        if (statusSpinner.getSelectedItem().toString() == "online")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+        if (statusSpinner.getSelectedItem().toString() == "away")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
+        if (statusSpinner.getSelectedItem().toString() == "busy")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
         /* Also save DHT details to DhtNode class */
         if (!dhtIpHintText.getText().toString().equals(getString(R.id.settings_dht_ip))) {

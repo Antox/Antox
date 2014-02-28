@@ -89,7 +89,7 @@ public class ToxService extends IntentService {
                 jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
                 jTox.setName(UserDetails.username);
                 jTox.setStatusMessage(UserDetails.note);
-                jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
+                jTox.setUserStatus(UserDetails.status);
 
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();

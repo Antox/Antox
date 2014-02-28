@@ -31,6 +31,7 @@ import java.net.URL;
 
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 /**
@@ -116,7 +117,12 @@ public class MainActivity extends ActionBarActivity {
         /* Load user details */
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
-        UserDetails.status = settingsPref.getString("saved_status_hint", "");
+        if (settingsPref.getString("saved_status_hint", "") == "online")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+        if (settingsPref.getString("saved_status_hint", "") == "away")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
+        if (settingsPref.getString("saved_status_hint", "") == "busy")
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         /**
