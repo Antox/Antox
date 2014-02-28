@@ -1,7 +1,13 @@
 package im.tox.antox;
 
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
+import im.tox.jtoxcore.FriendExistsException;
+import im.tox.jtoxcore.JTox;
+import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.jtoxcore.callbacks.CallbackHandler;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import android.app.IntentService;
@@ -10,6 +16,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class ToxService extends IntentService {
@@ -68,7 +75,44 @@ public class ToxService extends IntentService {
 					nm.notify(0, mn);
 				}
 			}
-		}
+		} else if (intent.getAction().equals(Constants.DO_TOX)) {
+            try {
+
+                AntoxFriendList antoxFriendList = new AntoxFriendList();
+                CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
+                JTox jTox = new JTox(antoxFriendList, callbackHandler);
+                jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+
+                Intent keyIntent = new Intent(Constants.BROADCAST_ACTION)
+                        .putExtra(Constants.USER_KEY, jTox.getAddress());
+                LocalBroadcastManager.getInstance(this).sendBroadcast(keyIntent);
+
+                jTox.setName(UserDetails.username);
+                jTox.setStatusMessage(UserDetails.note);
+                jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
+
+                jTox.addFriend("12B06D7BA656A88BC23258F6B5425C510A303A63DE0156244A3CFC5EC5578927EB82A4410F66", "sup");
+
+
+                while(true) {
+                    jTox.doTox();
+                    if(jTox.isConnected()) {
+                        Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
+                                .putExtra(Constants.CONNECTED_STATUS, "connected");
+                        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+                    }
+                    Thread.sleep(50);
+                }
+            } catch (FriendExistsException e) {
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 
 	public static Intent getRegisterIntent(Context ctx, String name) {

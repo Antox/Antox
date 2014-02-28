@@ -60,10 +60,6 @@ public class MainActivity extends ActionBarActivity {
      */
     private ResponseReceiver receiver;
 
-    private JTox jTox;
-    private AntoxFriendList antoxFriendList;
-    private CallbackHandler callbackHandler;
-
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,23 +76,15 @@ public class MainActivity extends ActionBarActivity {
             // TODO: Decide on a whole what to do if the user isnt connected to the Internet
         }
 
-        try {
-            antoxFriendList = new AntoxFriendList();
-            callbackHandler = new CallbackHandler(antoxFriendList);
-            jTox = new JTox(antoxFriendList, callbackHandler);
-            /* Save the users key to preferences */
-            SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = settingsPref.edit();
-            editor.putString("user_key", jTox.getAddress());
-        } catch (ToxException e) {
-            e.printStackTrace();
-        }
+        Intent doToxIntent = new Intent(this, ToxService.class);
+        doToxIntent.setAction(Constants.DO_TOX);
+        this.startService(doToxIntent);
 
         /**
          *  Intent filter will listen only for intents with action Constants.Register
          *  @see im.tox.antox.Constants
          */
-        IntentFilter mStatusIntentFilter = new IntentFilter(Constants.REGISTER);
+        IntentFilter mStatusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
         receiver = new ResponseReceiver();
         /**
          * Local Broadcast Manager for listening for work reports from ToxService.
@@ -125,6 +113,11 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
         }
 
+        /* Load user details */
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        UserDetails.username = settingsPref.getString("saved_name_hint", "");
+        UserDetails.status = settingsPref.getString("saved_status_hint", "");
+        UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         /**
          * Stores a 2 dimensional string array holding friend details. Will be populated
@@ -363,6 +356,12 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
+            setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
+
+            SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putString("user_key", intent.getStringExtra(Constants.USER_KEY));
+            editor.commit();
         }
     }
 }

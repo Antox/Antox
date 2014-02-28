@@ -139,16 +139,18 @@ public class SettingsActivity extends ActionBarActivity {
 		 * If the fields aren't equal to the default strings in strings.xml then
 		 * they contain user entered data so they need saving
 		 */
-        if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint)))
-            editor.putString("saved_name_hint", nameHintText.getText()
-                    .toString());
+        if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint))) {
+            editor.putString("saved_name_hint", nameHintText.getText().toString());
+            UserDetails.username = nameHintText.getText().toString();
+        }
         if (!userKeyText.getText().toString().equals(getString(R.id.settings_user_key)))
-            editor.putString("saved_user_key_hint", userKeyText.getText()
-                    .toString());
-        if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint)))
-            editor.putString("saved_note_hint", noteHintText.getText()
-                    .toString());
+            editor.putString("saved_user_key_hint", userKeyText.getText().toString());
+        if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint))) {
+            editor.putString("saved_note_hint", noteHintText.getText().toString());
+            UserDetails.note = noteHintText.getText().toString();
+        }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
+        UserDetails.status = statusSpinner.getSelectedItem().toString();
 
         /* Also save DHT details to DhtNode class */
         if (!dhtIpHintText.getText().toString().equals(getString(R.id.settings_dht_ip))) {
