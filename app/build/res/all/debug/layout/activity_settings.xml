@@ -1,143 +1,105 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context=".SettingsActivity" >
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/settings_user_key_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="@string/settings_user_key_title" />
-    
-    <TextView
-        android:id="@+id/settings_user_key"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textIsSelectable="true"
-        android:textSize="12sp"
-         />
-    
-    <TextView
-        android:id="@+id/settings_username_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="@string/settings_username_title" />
-    
-    <EditText
-        android:id="@+id/settings_name_hint"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/settings_name_hint" />
-    
-    <TextView
-        android:id="@+id/settings_status_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="@string/settings_status_title" />
-    
-    <Spinner
-        android:id="@+id/settings_spinner_status"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        tools:context=".SettingsActivity">
 
-    <TextView
-        android:id="@+id/settings_note_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="@string/settings_note_title" />
-    
-    <EditText
-        android:id="@+id/settings_note_hint"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/settings_note_hint" />
-    
-    <TextView
-        android:id="@+id/dhtSpinnerTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:text="@string/settings_dht_spinner_title" />
+        <TextView
+            android:id="@+id/settings_user_key_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_user_key_title" />
 
-    <RadioGroup
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-        
-        <RadioButton
-            android:id="@+id/settings_radio_dht_pre"
+        <TextView
+            android:id="@+id/settings_user_key"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textIsSelectable="true"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/settings_username_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_username_title" />
+
+        <EditText
+            android:id="@+id/settings_name_hint"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_name_hint" />
+
+        <TextView
+            android:id="@+id/settings_status_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_status_title" />
+
+        <Spinner
+            android:id="@+id/settings_spinner_status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+        <TextView
+            android:id="@+id/settings_note_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_note_title" />
+
+        <EditText
+            android:id="@+id/settings_note_hint"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_note_hint" />
+
+        <TextView
+            android:id="@+id/dhtSpinnerTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_dht_spinner_title" />
+
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings_radio_dht_pre"
-            android:onClick="onDHTPreClicked" />
-        
-        <RadioButton
-            android:id="@+id/settings_radio_dht_self"
-            android:layout_width="wrap_content"
+            android:text="Use Custom DHT node settings"
+            android:id="@+id/settings_dht_box"
+            android:layout_gravity="center_horizontal|left"
+            android:checked="false"
+            android:onClick="onDhtBoxClicked"/>
+
+
+
+        <Button
+            android:id="@+id/updateSettings"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_radio_dht_self"
-            android:onClick="onDHTSelfClicked" />
-        
-    </RadioGroup>
-       
-    <Spinner
-        android:id="@+id/dhtSpinner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        android:visibility="gone" />
+            android:text="@string/settings_button"
+            android:onClick="updateSettings" />
 
-    <EditText
-        android:id="@+id/settings_dht_ip"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_ip"
-        android:textSize="12sp"
-        android:visibility="gone" />
-    
-    <EditText
-        android:id="@+id/settings_dht_port"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_port"
-        android:textSize="12sp"
-        android:visibility="gone" />
-    
-    <EditText
-        android:id="@+id/settings_dht_key"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/settings_dht_key"
-        android:textSize="12sp"
-        android:visibility="gone" />
-    
-    <Button
-        android:id="@+id/updateSettings"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_button"
-        android:onClick="updateSettings" />
-
-</LinearLayout>
-<!-- From: file:/home/soft/workspace-studio/app/src/main/res/layout/activity_settings.xml -->
+    </LinearLayout>
+</ScrollView><!-- From: file:/G:/GSoC/Projects/Antox/Antox/app/src/main/res/layout/activity_settings.xml -->

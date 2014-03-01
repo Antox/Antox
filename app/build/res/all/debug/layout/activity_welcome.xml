@@ -1,91 +1,71 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context=".WelcomeActivity" >
-        
-       <TextView 
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:textSize="30sp"
-           android:text="@string/welcome_string"
-        />
-       
-       <TextView
-       	   android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="0dp"
-           android:textSize="12sp"
-           android:text="@string/about_string"
-       />
-       
-       <TextView
-       	   android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:textSize="15sp"
-           android:layout_marginTop="10dp"
-           android:text="@string/getstarted_string"
-       />
-       
-       <EditText
-           android:id="@+id/welcome_name_hint"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="20dp"
-           android:hint="@string/settings_name_hint"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:background="@drawable/welc"
+        tools:context=".WelcomeActivity" >
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:textSize="30sp"
+               android:text="@string/welcome_string"
+            />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_marginTop="5dp"
+               android:textSize="12sp"
+               android:text="@string/about_string"
            />
-       
-       <EditText
-           android:id="@+id/welcome_dht_ip"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="0dp"
-           android:hint="@string/settings_dht_ip"
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:textSize="15sp"
+               android:layout_marginTop="60dp"
+               android:text="@string/getstarted_string"
            />
-       
-       <EditText
-           android:id="@+id/welcome_dht_port"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="0dp"
-           android:hint="@string/settings_dht_port"
+
+           <EditText
+               android:id="@+id/welcome_name_hint"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_marginTop="5dp"
+               android:hint="@string/settings_name_hint"
+               />
+
+           <Button
+                android:id="@+id/updateSettings"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_button"
+                android:layout_marginTop="15dp"
+                android:onClick="updateSettings" />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:textSize="12sp"
+               android:layout_marginTop="170dp"
+               android:text="@string/developer_string"
            />
-       
-       <EditText
-           android:id="@+id/welcome_dht_key"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="0dp"
-           android:hint="@string/settings_dht_key"
-           />
-       
-       <Button
-	        android:id="@+id/updateSettings"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:text="@string/settings_button"
-	        android:onClick="updateSettings" />
-       
-       <TextView
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:textSize="12sp"
-           android:layout_marginTop="5dp"
-           android:text="@string/developer_string"
-       />
-       
-</LinearLayout>
-<!-- From: file:/home/soft/workspace-studio/app/src/main/res/layout/activity_welcome.xml -->
+    </LinearLayout>
+
+</ScrollView><!-- From: file:/G:/GSoC/Projects/Antox/Antox/app/src/main/res/layout/activity_welcome.xml -->

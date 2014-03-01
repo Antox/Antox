@@ -1,11 +1,15 @@
-<!-- From: file:/home/soft/workspace-studio/app/src/main/AndroidManifest.xml --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="im.tox.antox">
+<!-- From: file:/G:/GSoC/Projects/Antox/Antox/app/src/main/AndroidManifest.xml --><manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="im.tox.antox">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true"/>
 
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme">
+
+        <service android:exported="false" android:name="im.tox.antox.ToxService"/>
+
         <activity android:label="@string/app_name" android:name="im.tox.antox.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,16 +25,18 @@
         </activity>
         <activity android:label="@string/title_activity_add_friend" android:name="im.tox.antox.AddFriendActivity" android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="im.tox.antox.MainActivity"/>
-            
+
             <!--  Intent filter for handling tox:// links -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
-        		<category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
                 <data android:scheme="tox"/>
             </intent-filter>
         </activity>
-        <activity android:label="@string/title_activity_chat" android:name="im.tox.antox.ChatActivity" android:parentActivityName="im.tox.antox.MainActivity">
+        <activity android:configChanges="keyboardHidden|orientation" android:label="@string/title_activity_chat" android:name="im.tox.antox.ChatActivity" android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="im.tox.antox.MainActivity"/>
         </activity>
     </application>

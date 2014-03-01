@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merger>
 
+    <dataSet config="ComAndroidSupportAppcompatV71901.aar" >
+        <source path="G:\GSoC\Projects\Antox\Antox\app\build\exploded-bundles\ComAndroidSupportAppcompatV71901.aar\assets" />
+    </dataSet>
     <dataSet config="main" >
-        <source path="/home/soft/workspace-studio/app/src/main/assets" />
+        <source path="G:\GSoC\Projects\Antox\Antox\app\src\main\assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/home/soft/workspace-studio/app/src/debug/assets" />
+        <source path="G:\GSoC\Projects\Antox\Antox\app\src\debug\assets" />
     </dataSet>
 
 </merger>
