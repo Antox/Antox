@@ -33,7 +33,7 @@
             android:id="@+id/settings_username_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="@string/settings_username_title" />
@@ -78,7 +78,7 @@
             android:id="@+id/dhtSpinnerTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="@string/settings_dht_spinner_title" />
@@ -99,6 +99,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_button"
+            android:layout_marginTop="40dp"
             android:onClick="updateSettings" />
 
     </LinearLayout>
