@@ -24,7 +24,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 		Intent intent = new Intent(INTENT_ACTION);
 		intent.putExtra(MESSAGE, message);
 		String name;
-		if (friend.getNickname() == null || friend.getNickname().isEmpty()) {
+		if (friend.getNickname() == null || friend.getNickname().equals("")) {
 			name = friend.getName();
 		} else {
 			name = friend.getNickname();
