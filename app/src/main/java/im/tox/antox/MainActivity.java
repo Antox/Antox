@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -79,10 +80,12 @@ public class MainActivity extends ActionBarActivity {
             // TODO: Decide on a whole what to do if the user isnt connected to the Internet
         }
 
-        doToxIntent = new Intent(this, ToxService.class);
-        doToxIntent.setAction(Constants.DO_TOX);
-        this.startService(doToxIntent);
-
+        /* If the tox service isn't already running, start it */
+        if(!isToxServiceRunning()) {
+            doToxIntent = new Intent(this, ToxService.class);
+            doToxIntent.setAction(Constants.DO_TOX);
+            this.startService(doToxIntent);
+        }
         /**
          *  Intent filter will listen only for intents with action Constants.Register
          *  @see im.tox.antox.Constants
@@ -208,7 +211,9 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        this.startService(doToxIntent);
+        if(!isToxServiceRunning()) {
+            this.startService(doToxIntent);
+        }
     }
 
     @Override
@@ -266,6 +271,19 @@ public class MainActivity extends ActionBarActivity {
                 });
 
         return true;
+    }
+
+    /**
+     * Method to see if the tox service is already running so it isn't restarted
+     */
+    private boolean isToxServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (ToxService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class DownloadDHTList extends AsyncTask<String, Void, String> {
