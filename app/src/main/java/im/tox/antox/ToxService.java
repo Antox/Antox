@@ -79,8 +79,6 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-                toxSingleton.jTox.doTox();
-
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
@@ -99,6 +97,37 @@ public class ToxService extends IntentService {
                 e.printStackTrace();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
+                e.printStackTrace();
+            }
+        } else if (intent.getAction().equals(Constants.ADD_FRIEND)) {
+            try {
+                String[] friendData = intent.getStringArrayExtra("friendData");
+                toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
+            } catch (FriendExistsException e) {
+                e.printStackTrace();
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
+        } else if (intent.getAction().equals(Constants.UPDATE_SETTINGS)) {
+            String[] newSettings = intent.getStringArrayExtra("newSettings");
+
+            /* If not empty, update the users settings which is passed in intent from SettingsActivity */
+            try {
+                if(!newSettings[0].equals(""))
+                    toxSingleton.jTox.setName(newSettings[0]);
+
+                if(!newSettings[1].equals("")) {
+                    if(newSettings[1].equals("away"))
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_AWAY);
+                    else if(newSettings[1].equals("busy"))
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
+                    else
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_NONE);
+                }
+
+                if(!newSettings[2].equals(""))
+                    toxSingleton.jTox.setStatusMessage(newSettings[2]);
+            } catch (ToxException e) {
                 e.printStackTrace();
             }
         }

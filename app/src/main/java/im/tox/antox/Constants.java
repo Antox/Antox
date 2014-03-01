@@ -7,5 +7,6 @@ public final class Constants {
     public static final String DO_TOX = "im.tox.antox.DO_TOX";
     public static final String BROADCAST_ACTION = "im.tox.antox.BROADCAST";
     public static final String CONNECTED_STATUS = "im.tox.antox.STATUS";
-    public static final String USER_KEY = "im.tox.antox.KEY";
+    public static final String ADD_FRIEND = "im.tox.antox.ADD";
+    public static final String UPDATE_SETTINGS = "im.tox.antox.SETTINGS";
 }

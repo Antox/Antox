@@ -40,13 +40,22 @@ public class AddFriendActivity extends ActionBarActivity {
     }
 
     public void addFriend(View view) {
-        // Execute Tox tox_addfriend()
-
         Context context = getApplicationContext();
         CharSequence text = "Friend Added";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+
+        /* Send intent to ToxService */
+        EditText friendID = (EditText) findViewById(R.id.addfriend_key);
+        EditText friendMessage = (EditText) findViewById(R.id.addfriend_message);
+
+        String[] friendData = { friendID.getText().toString(), friendMessage.getText().toString()};
+
+        Intent addFriend = new Intent(this, ToxService.class);
+        addFriend.setAction(Constants.ADD_FRIEND);
+        addFriend.putExtra("friendData", friendData);
+        this.startService(addFriend);
 
         // Close activity
         finish();

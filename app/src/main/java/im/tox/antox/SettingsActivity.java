@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -108,8 +109,8 @@ public class SettingsActivity extends ActionBarActivity
             dhtPort = pref.getString("saved_dht_port", "");
         }
 
-        if (!pref.getString("saved_dht_key","").equals("")) {
-            dhtKey = pref.getString("saved_dht_key","");
+        if (!pref.getString("saved_dht_key", "").equals("")) {
+            dhtKey = pref.getString("saved_dht_key", "");
         }
 
         // Set dhtBox as checked if it is set
@@ -126,6 +127,11 @@ public class SettingsActivity extends ActionBarActivity
      * @param view
      */
     public void updateSettings(View view) {
+        /**
+         * String array to store updated details to be passed by intent to ToxService
+         */
+        String[] updatedSettings = { null, null, null};
+
 		/* Get all text from the fields */
         TextView userKeyText = (TextView) findViewById(R.id.settings_user_key);
         EditText nameHintText = (EditText) findViewById(R.id.settings_name_hint);
@@ -145,12 +151,13 @@ public class SettingsActivity extends ActionBarActivity
         if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint))) {
             editor.putString("saved_name_hint", nameHintText.getText().toString());
             UserDetails.username = nameHintText.getText().toString();
+            updatedSettings[0] = nameHintText.getText().toString();
         }
-        if (!userKeyText.getText().toString().equals(getString(R.id.settings_user_key)))
-            editor.putString("saved_user_key_hint", userKeyText.getText().toString());
+
         if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint))) {
             editor.putString("saved_note_hint", noteHintText.getText().toString());
             UserDetails.note = noteHintText.getText().toString();
+            updatedSettings[2] = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
         if (statusSpinner.getSelectedItem().toString() == "online")
@@ -159,6 +166,8 @@ public class SettingsActivity extends ActionBarActivity
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
         if (statusSpinner.getSelectedItem().toString() == "busy")
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
+
+        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
 
         /* Also save DHT details to DhtNode class */
         editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
@@ -176,6 +185,12 @@ public class SettingsActivity extends ActionBarActivity
         }
 
         editor.commit();
+
+        /* Send an intent to ToxService notifying change of settings */
+        Intent updateSettings = new Intent(this, ToxService.class);
+        updateSettings.setAction(Constants.UPDATE_SETTINGS);
+        updateSettings.putExtra("newSettings", updatedSettings);
+        this.startService(updateSettings);
 
         Context context = getApplicationContext();
         CharSequence text = "Settings updated";
