@@ -10,6 +10,12 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19"/>
+    <supports-screens
+        android:smallScreens="true"
+        android:anyDensity="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:largeScreens="true"/>
 
     <application
         android:allowBackup="true"
