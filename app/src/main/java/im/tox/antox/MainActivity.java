@@ -64,6 +64,9 @@ public class MainActivity extends ActionBarActivity {
 
     private Intent doToxIntent;
 
+    String[][] friends;
+    String friendNames;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,11 @@ public class MainActivity extends ActionBarActivity {
             doToxIntent.setAction(Constants.DO_TOX);
             this.startService(doToxIntent);
         }
+
+        Intent getFriendsList = new Intent(this, ToxService.class);
+        getFriendsList.setAction(Constants.FRIEND_LIST);
+        this.startService(getFriendsList);
+
         /**
          *  Intent filter will listen only for intents with action Constants.Register
          *  @see im.tox.antox.Constants
@@ -137,11 +145,23 @@ public class MainActivity extends ActionBarActivity {
          * Stores a 2 dimensional string array holding friend details. Will be populated
          * by a tox function once implemented
          */
-        String[][] friends = {
-                // 0 - offline, 1 - online, 2 - away, 3 - busy
-                {"1", "astonex", "status"}, {"0", "irungentoo", "status"},
-                {"2", "nurupo", "status"}, {"3", "sonOfRa", "status"}
-        };
+        if(friendNames != null) {
+            friends = new String[friendNames.length()][3];
+            for(int i = 0; i < friendNames.length(); i++) {
+                //0 - offline, 1 - online, 2 - away, 3 - busy
+                //Default offline until we check
+                friends[i][0] = "0";
+                //Friends name
+                friends[i][1] = friendNames.toString();
+                //Default blank status
+                friends[i][2] = "";
+            }
+        } else {
+            friends = new String[1][3];
+            friends[0][0] = "0";
+            friends[0][1] = "You have no friends";
+            friends[0][2] = "Why not try adding some?";
+        }
 
         /* Go through status strings and set appropriate resource image */
         FriendsList friends_list[] = new FriendsList[friends.length];
@@ -399,6 +419,7 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
+            friendNames = intent.getStringExtra("friendList");
         }
     }
 }

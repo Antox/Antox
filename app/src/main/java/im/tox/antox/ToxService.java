@@ -2,6 +2,7 @@ package im.tox.antox;
 
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.jtoxcore.FriendExistsException;
+import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -9,6 +10,7 @@ import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -130,6 +132,13 @@ public class ToxService extends IntentService {
             } catch (ToxException e) {
                 e.printStackTrace();
             }
+        } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
+            FriendList friendsList = toxSingleton.jTox.getFriendList();
+            List<String> friends = friendsList.all();
+            String[] friendsArray = friends.toArray(new String[friends.size()]);
+            Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
+            returnFriends.putExtra("friendList", friendsArray);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
         }
 	}
 
