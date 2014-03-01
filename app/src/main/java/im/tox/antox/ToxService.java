@@ -139,6 +139,8 @@ public class ToxService extends IntentService {
             Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
             returnFriends.putExtra("friendList", friendsArray);
             LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
+        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+
         }
 	}
 

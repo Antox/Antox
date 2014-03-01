@@ -198,7 +198,8 @@ public class MainActivity extends ActionBarActivity {
                         String friendName = parent.getItemAtPosition(position)
                                 .toString();
                         chatIntent.putExtra(EXTRA_MESSAGE, friendName);
-                        startActivity(chatIntent);
+                        if(!friendName.equals("You have no friends"))
+                            startActivity(chatIntent);
                     }
 
                 });
