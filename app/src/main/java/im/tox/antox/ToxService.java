@@ -31,6 +31,7 @@ public class ToxService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		AntoxState state = AntoxState.getInstance();
+        ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
 
 		Log.d(TAG, "Got intent action: " + intent.getAction());
@@ -78,46 +79,16 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-
-                AntoxFriendList antoxFriendList = new AntoxFriendList();
-                CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-
-                ToxDataFile dataFile = new ToxDataFile();
-
-                /* Loading a file currently throws an exception so delete any file for now */
-                dataFile.deleteFile(getBaseContext());
-
-                JTox jTox;
-                if(dataFile.doesFileExist(getBaseContext())) {
-                    Log.d(TAG, "Data file found");
-                    Log.d(TAG, dataFile.loadFile(getBaseContext()).toString());
-                    jTox = new JTox(dataFile.loadFile(getBaseContext()), antoxFriendList, callbackHandler);
-                } else {
-                    Log.d(TAG, "Data file not found");
-                    jTox = new JTox(antoxFriendList, callbackHandler);
-                }
-
-                /* If file doesn't exist, save one */
-                if(!dataFile.doesFileExist(getBaseContext())) {
-                    dataFile.saveFile(jTox.save(), getBaseContext());
-                }
-
-                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
-                callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
-
-                jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
-                jTox.setName(UserDetails.username);
-                jTox.setStatusMessage(UserDetails.note);
-                jTox.setUserStatus(UserDetails.status);
+                toxSingleton.jTox.doTox();
 
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
-                editor.putString("user_key", jTox.getAddress());
+                editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
 
                 while(true) {
-                    jTox.doTox();
-                    if(jTox.isConnected()) {
+                    toxSingleton.jTox.doTox();
+                    if(toxSingleton.jTox.isConnected()) {
                         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
@@ -125,8 +96,6 @@ public class ToxService extends IntentService {
                     Thread.sleep(50);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
