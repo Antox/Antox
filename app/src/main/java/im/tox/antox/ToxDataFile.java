@@ -1,15 +1,13 @@
 package im.tox.antox;
 
-import android.Manifest;
 import android.content.Context;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -56,28 +54,16 @@ public class ToxDataFile {
      * @return
      */
     public byte[] loadFile(Context ctx) {
-        byte[] data = null;
-
+        File dataFile = ctx.getFileStreamPath(fileName);
+        int sizeOfFile = (int) dataFile.length();
+        byte[] data = new byte[sizeOfFile];
         try {
-            FileInputStream inputStream = ctx.openFileInput(fileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            data = stringBuilder.toString().getBytes();
-
+            BufferedInputStream buff = new BufferedInputStream(new FileInputStream(dataFile));
+            buff.read(data, 0, data.length);
+            buff.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /* For debugging */
-        dataContent = data;
-        dataContentString = data.toString();
 
         return data;
     }
