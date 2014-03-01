@@ -20,16 +20,17 @@ Android client for the Tox project. Still in heavy development.
 - Design ChatActivity window for conversations 
 - Extended Adapter class for displaying chat messages (only basic - needs a lot of design improvement)
 - Searching through friends list
+- Improve the ChatMessagesAdapter ([design goal](http://assets.hardwarezone.com/img/2013/11/messages.jpg)) 
+- Store a list of up to date DHT servers (SettingsActivity)
 
 ###In Progress
 
 - [Implement jToxCore](https://github.com/Tox/jToxcore)
-- Store a list of up to date DHT servers (SettingsActivity)
+- Create a singleton for Tox/JTox backend stuff
 - Documenting the current code base
 
 ###TODO
 
-- Improve the ChatMessagesAdapter ([design goal](http://assets.hardwarezone.com/img/2013/11/messages.jpg)) 
 - Redesign welcome activity to be more user friendly
 
 ###Screenshots of progress
