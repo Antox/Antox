@@ -1,4 +1,4 @@
-package com.example.tox;
+package im.tox.antox;
 
 import java.io.File;
 import java.io.FileInputStream;
