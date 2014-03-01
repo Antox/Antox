@@ -84,6 +84,9 @@ public class ToxService extends IntentService {
 
                 ToxDataFile dataFile = new ToxDataFile();
 
+                /* Loading a file currently throws an exception so delete any file for now */
+                dataFile.deleteFile(getBaseContext());
+
                 JTox jTox;
                 if(dataFile.doesFileExist(getBaseContext())) {
                     Log.d(TAG, "Data file found");
@@ -94,7 +97,10 @@ public class ToxService extends IntentService {
                     jTox = new JTox(antoxFriendList, callbackHandler);
                 }
 
-                dataFile.saveFile(jTox.save(), getBaseContext());
+                /* If file doesn't exist, save one */
+                if(!dataFile.doesFileExist(getBaseContext())) {
+                    dataFile.saveFile(jTox.save(), getBaseContext());
+                }
 
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
                 callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
@@ -123,6 +129,7 @@ public class ToxService extends IntentService {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (ToxException e) {
+                Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
         }

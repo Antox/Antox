@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 
 /**
  * Class for loading and saving the data file to be used by JTox(byte[] data, ...)
+ * @author Mark Winter (astonex)
  */
 public class ToxDataFile {
 
@@ -21,6 +22,10 @@ public class ToxDataFile {
      * Other clients use the file name data so we shall as well
      */
     private String fileName = "data";
+
+    /* Some variables for debgging */
+    private byte[] dataContent;
+    private String dataContentString;
 
     public ToxDataFile() {
     }
@@ -45,7 +50,7 @@ public class ToxDataFile {
     }
 
     /**
-     * Method for loading data from a saved file and return it. Requires the contexxt of the activity
+     * Method for loading data from a saved file and return it. Requires the context of the activity
      * or service calling it.
      * @param ctx
      * @return
@@ -69,6 +74,10 @@ public class ToxDataFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        /* For debugging */
+        dataContent = data;
+        dataContentString = data.toString();
 
         return data;
     }
