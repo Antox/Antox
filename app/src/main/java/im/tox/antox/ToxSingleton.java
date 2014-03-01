@@ -1,9 +1,5 @@
 package im.tox.antox;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
 import java.net.UnknownHostException;
 
 import im.tox.jtoxcore.JTox;
@@ -16,9 +12,9 @@ import im.tox.jtoxcore.callbacks.CallbackHandler;
 public class ToxSingleton {
 
     private static final String TAG = "im.tox.antox.ToxSingleton";
-    JTox jTox;
-    AntoxFriendList antoxFriendList;
-    CallbackHandler callbackHandler;
+    public JTox jTox;
+    private AntoxFriendList antoxFriendList;
+    private CallbackHandler callbackHandler;
 
     private static volatile ToxSingleton instance = null;
 

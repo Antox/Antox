@@ -13,7 +13,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import im.tox.jtoxcore.JTox;
-import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
-import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -64,8 +60,14 @@ public class MainActivity extends ActionBarActivity {
 
     private Intent doToxIntent;
 
-    String[][] friends;
-    String friendNames;
+    /**
+     * Stores all friend details and used by the adapter for displaying
+     */
+    private String[][] friends;
+    /**
+     * Stores the friends list returned by ToxService to feed into String[][] friends
+     */
+    private String friendNames;
 
     @SuppressLint("NewApi")
     @Override
@@ -130,21 +132,17 @@ public class MainActivity extends ActionBarActivity {
         /* Load user details */
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
-        if (settingsPref.getString("saved_status_hint", "") == "online")
+        if (settingsPref.getString("saved_status_hint", "").equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        else if (settingsPref.getString("saved_status_hint", "") == "away")
+        else if (settingsPref.getString("saved_status_hint", "").equals("away"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        else if (settingsPref.getString("saved_status_hint", "") == "busy")
+        else if (settingsPref.getString("saved_status_hint", "").equals("busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
         else
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
-        /**
-         * Stores a 2 dimensional string array holding friend details. Will be populated
-         * by a tox function once implemented
-         */
         if(friendNames != null) {
             friends = new String[friendNames.length()][3];
             for(int i = 0; i < friendNames.length(); i++) {
@@ -152,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
                 //Default offline until we check
                 friends[i][0] = "0";
                 //Friends name
-                friends[i][1] = friendNames.toString();
+                friends[i][1] = friendNames;
                 //Default blank status
                 friends[i][2] = "";
             }
@@ -365,9 +363,8 @@ public class MainActivity extends ActionBarActivity {
          * @throws IOException
          * @throws UnsupportedEncodingException
          */
-        public String readIt(InputStream stream, int len) throws IOException,
-                UnsupportedEncodingException {
-            Reader reader = null;
+        public String readIt(InputStream stream, int len) throws IOException {
+            Reader reader;
             reader = new InputStreamReader(stream, "UTF-8");
             char[] buffer = new char[len];
             reader.read(buffer);

@@ -30,7 +30,7 @@ public class AddFriendActivity extends ActionBarActivity {
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
 
         Intent intentURI = getIntent();
-        Uri uri = null;
+        Uri uri;
         if (Intent.ACTION_VIEW.equals(intentURI.getAction())
                 && intentURI != null) {
             uri = intentURI.getData();

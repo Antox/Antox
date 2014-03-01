@@ -32,23 +32,23 @@ public class SettingsActivity extends ActionBarActivity
     /**
      * Spinner for displaying acceptable statuses (online/away/busy) to the users
      */
-    Spinner statusSpinner;
+    private Spinner statusSpinner;
     /**
      * Checkbox that inflates a DHTDialog where the user can enter their own DHT settings
      */
-    CheckBox dhtBox;
+    private CheckBox dhtBox;
     /**
      * String that store's the user's DHT IP address entry
      */
-    String dhtIP;
+    private String dhtIP;
     /**
      * String that store's the user's DHT Port entry
      */
-    String dhtPort;
+    private String dhtPort;
     /**
      * String that store's the user's DHT Public Key address entry
      */
-    String dhtKey;
+    private String dhtKey;
     /**
      * 2D string array to store DHT node details
      */
@@ -133,7 +133,6 @@ public class SettingsActivity extends ActionBarActivity
         String[] updatedSettings = { null, null, null};
 
 		/* Get all text from the fields */
-        TextView userKeyText = (TextView) findViewById(R.id.settings_user_key);
         EditText nameHintText = (EditText) findViewById(R.id.settings_name_hint);
         EditText noteHintText = (EditText) findViewById(R.id.settings_note_hint);
         //EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
@@ -160,11 +159,11 @@ public class SettingsActivity extends ActionBarActivity
             updatedSettings[2] = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        if (statusSpinner.getSelectedItem().toString() == "online")
+        if (statusSpinner.getSelectedItem().toString().equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (statusSpinner.getSelectedItem().toString() == "away")
+        if (statusSpinner.getSelectedItem().toString().equals("away"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString() == "busy")
+        if (statusSpinner.getSelectedItem().toString().equals("busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
         updatedSettings[1] = statusSpinner.getSelectedItem().toString();
@@ -175,11 +174,11 @@ public class SettingsActivity extends ActionBarActivity
             editor.putString("saved_dht_ip", dhtIP);
             DhtNode.ipv4 = dhtIP;
         }
-        if (dhtBox.isChecked() && !dhtKey.toString().equals(getString(R.id.settings_dht_key))) {
+        if (dhtBox.isChecked() && !dhtKey.equals(getString(R.id.settings_dht_key))) {
             editor.putString("saved_dht_key", dhtKey);
             DhtNode.key = dhtKey;
         }
-        if (dhtBox.isChecked() && !dhtPort.toString().equals(getString(R.id.settings_dht_port))) {
+        if (dhtBox.isChecked() && !dhtPort.equals(getString(R.id.settings_dht_port))) {
             editor.putString("saved_dht_port", dhtPort);
             DhtNode.port = dhtPort;
         }
