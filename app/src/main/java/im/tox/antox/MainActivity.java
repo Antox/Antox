@@ -1,7 +1,6 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,25 +38,27 @@ import im.tox.jtoxcore.ToxUserStatus;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity implements ContactsFragment.ContactListener {
+public class MainActivity extends ActionBarActivity {
 
     /**
      * Extra message to be passed with intents - Should be unique from every other app
      */
     public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
 
-
+    /**
+     * List View for displaying all the friends in a scrollable list
+     */
+    private ListView friendListView;
+    /**
+     * Adapter for the friendListView
+     */
+    private FriendsListAdapter adapter;
     /**
      * Receiver for getting work reports from ToxService
      */
     private ResponseReceiver receiver;
 
     private Intent doToxIntent;
-
-    private FriendsListAdapter adapter;
-
-    private SlidingPaneLayout pane;
-    private ChatFragment chat;
 
     /**
      * Stores all friend details and used by the adapter for displaying
@@ -75,7 +74,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -184,15 +182,30 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         adapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
+        friendListView = (ListView) findViewById(R.id.mainListView);
+
+        friendListView.setAdapter(adapter);
+
+        final Intent chatIntent = new Intent(this, ChatActivity.class);
+
+        friendListView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        // .toString() overridden in FriendsList.java to return
+                        // the friend name
+                        String friendName = parent.getItemAtPosition(position)
+                                .toString();
+                        chatIntent.putExtra(EXTRA_MESSAGE, friendName);
+                        if(!friendName.equals("You have no friends"))
+                            startActivity(chatIntent);
+                    }
+
+                });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        pane.openPane();
-        chat = (ChatFragment) getFragmentManager().findFragmentById(R.id.fragment_chat);
-
     }
-
-
 
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -406,23 +419,5 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
             friendNames = intent.getStringExtra("friendList");
         }
-    }
-    @Override
-    public void onBackPressed() {
-        if (!pane.isOpen()) {
-            pane.openPane();
-        } else {
-            finish();
-        }
-    }
-
-    public void onChangeContact(int position, String contact) {
-        setTitle(contact);
-        pane.closePane();
-        chat.setContact(position, contact);
-    }
-
-    public void sendMessage(View v){
-        chat.sendMessage(v);
     }
 }

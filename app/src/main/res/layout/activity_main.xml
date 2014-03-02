@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+        <ListView
+        android:id="@+id/mainListView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+
+        android:background="@android:color/transparent"
+
+        android:cacheColorHint="@android:color/transparent"
+
+         android:divider="#CCCCCC"
+
+        android:dividerHeight="1dp"
+        android:paddingLeft="2dp" >
+
+</ListView>
+
+</LinearLayout>
+    <!--
 <android.support.v4.widget.SlidingPaneLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/slidingpane_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"> -->
     <!-- Left side pane. (Master) -->
+    <!--
     <fragment android:id="@+id/fragment_contacts"
         android:name="im.tox.antox.ContactsFragment"
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" /> -->
 
     <!-- Right side page. (Slave)  -->
+    <!--
     <fragment android:id="@+id/fragment_chat"
         android:name="im.tox.antox.ChatFragment"
         android:layout_width="350dp"
@@ -22,4 +50,4 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_chat" />
 
-</android.support.v4.widget.SlidingPaneLayout>
+</android.support.v4.widget.SlidingPaneLayout> -->
