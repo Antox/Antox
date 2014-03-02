@@ -241,7 +241,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             case android.R.id.home:
                 pane.openPane();
                 return true;
-        default:
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
