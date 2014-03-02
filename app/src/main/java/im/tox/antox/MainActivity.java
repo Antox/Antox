@@ -192,20 +192,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     }
 
-        friendListView
-                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        // .toString() overridden in FriendsList.java to return
-                        // the friend name
-                        String friendName = parent.getItemAtPosition(position)
-                                .toString();
-                        chatIntent.putExtra(EXTRA_MESSAGE, friendName);
-                        if(!friendName.equals("You have no friends"))
-                            startActivity(chatIntent);
-                    }
-
 
 
     /**
