@@ -18,7 +18,7 @@ public class ToxSingleton {
     private static final String TAG = "im.tox.antox.ToxSingleton";
     public JTox jTox;
     private AntoxFriendList antoxFriendList;
-    private CallbackHandler callbackHandler;
+    public CallbackHandler callbackHandler;
 
     private static volatile ToxSingleton instance = null;
 

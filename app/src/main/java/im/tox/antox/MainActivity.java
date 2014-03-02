@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,7 +84,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // Executes in a separate thread so UI experience isn't affected
             new DownloadDHTList().execute("http://markwinter.me/servers.php");
         } else {
-            // TODO: Decide on a whole what to do if the user isnt connected to the Internet
+            Log.d(EXTRA_MESSAGE, "Not connected to the internet");
         }
 
         /* If the tox service isn't already running, start it */
