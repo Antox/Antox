@@ -234,7 +234,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     public void onStop() {
         super.onStop();
         this.stopService(doToxIntent);
-        setTitle(R.string.title);
+        setTitle(R.string.app_name);
     }
 
     @Override
@@ -451,7 +451,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         @Override
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            setTitle(R.string.title);
+            setTitle(R.string.app_name);
             System.out.println("Panel opened");
         }
 
