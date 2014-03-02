@@ -8,9 +8,9 @@
         android:orientation="vertical"
         android:id="@+id/message_text_layout"
         android:layout_width="fill_parent"
-        android:background="#ffcccccc"
-        android:layout_margin="7dp"
-        android:padding="7dp"
+        android:background="#ffffff"
+        android:layout_margin="5dp"
+        android:padding="3dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/message_text"
             android:text="Asdsd"
-            android:textSize="18sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -26,7 +26,7 @@
             android:id="@+id/message_text_date"
             android:textStyle="italic"
             android:text="Asdsd"
-            android:textSize="10sp" />
+            android:textSize="8sp" />
     </LinearLayout>
 </LinearLayout>
 
