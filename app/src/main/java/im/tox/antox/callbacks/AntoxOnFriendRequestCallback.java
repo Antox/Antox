@@ -17,6 +17,6 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
 
     @Override
     public void execute(String publicKey, String message){
-        
+
     }
 }
