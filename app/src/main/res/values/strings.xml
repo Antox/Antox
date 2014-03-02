@@ -40,7 +40,7 @@
     <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
     <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Update Settings</string>
+    <string name="settings_button">Update</string>
     <string name="settings_updated">Settings have been updated</string>
     <string name="settings_dht_spinner_title">Advanced Settings</string>
     <string name="settings_radio_dht_pre">Use a default DHT node (recommended)</string>
