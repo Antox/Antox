@@ -33,7 +33,10 @@ public class ToxSingleton {
                 jTox = new JTox(antoxFriendList, callbackHandler);
             } else {
                 Log.d(TAG, "Data file has been found");
-                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+                if(dataFile.isExternalStorageReadable())
+                    jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+                else
+                    Log.d(TAG, "Data file wasn't available for reading");
             }
 
             jTox.setName(UserDetails.username);
@@ -42,8 +45,8 @@ public class ToxSingleton {
             jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
 
             /* Save data file */
-            Log.d(TAG, "Saving data file");
-            dataFile.saveFile(jTox.save());
+            if(dataFile.isExternalStorageWritable())
+                dataFile.saveFile(jTox.save());
 
         } catch (UnknownHostException e) {
             e.printStackTrace();

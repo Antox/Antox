@@ -41,6 +41,31 @@ public class ToxDataFile {
 		file.delete();
 	}
 
+    /**
+     * Check if external storage is available to read and write
+     * @return
+     */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if external storage is available to read
+     * @return
+     */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
 	/**
 	 * Method for loading data from a saved file and return it. Requires the
 	 * context of the activity or service calling it.
