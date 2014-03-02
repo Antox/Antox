@@ -66,6 +66,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      */
     private String friendNames;
 
+    private String activeContactName;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,10 +182,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         adapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
+        pane.setPanelSlideListener(new PaneListener());
         pane.openPane();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
 
     }
@@ -236,7 +238,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 return true;
             case R.id.search_friend:
                 return true;
-            default:
+            case android.R.id.home:
+                pane.openPane();
+                return true;
+        default:
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -399,7 +404,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         @Override
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
-            setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
             friendNames = intent.getStringExtra("friendList");
         }
     }
@@ -413,7 +417,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     }
 
     public void onChangeContact(int position, String contact) {
-        setTitle(contact);
+        activeContactName = contact;
         pane.closePane();
         chat.setContact(position, contact);
     }
@@ -421,4 +425,28 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     public void sendMessage(View v){
         chat.sendMessage(v);
     }
+
+    private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
+
+        @Override
+        public void onPanelClosed(View view) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            setTitle(activeContactName);
+            System.out.println("Panel closed");
+        }
+
+        @Override
+        public void onPanelOpened(View view) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            setTitle("antox");
+            System.out.println("Panel opened");
+        }
+
+        @Override
+        public void onPanelSlide(View view, float arg1) {
+        }
+
+    }
+
+
 }
