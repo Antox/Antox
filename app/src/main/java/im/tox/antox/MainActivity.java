@@ -1,7 +1,6 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,9 +17,6 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -188,7 +184,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
         pane.openPane();
-        chat = (ChatFragment) getFragmentManager().findFragmentById(R.id.fragment_chat);
+        chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
 
     }
 

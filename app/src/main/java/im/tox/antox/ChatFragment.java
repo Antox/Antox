@@ -1,13 +1,8 @@
 package im.tox.antox;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -40,7 +35,11 @@ public class ChatFragment extends Fragment {
     public void sendMessage(View view) {
         EditText tmp = (EditText) getView().findViewById(R.id.yourMessage);
 
-        chat_messages = Arrays.copyOf(chat_messages, chat_messages.length + 1);
+        ChatMessages new_chat_messages[] = new ChatMessages[chat_messages.length+1];
+
+        System.arraycopy(chat_messages,0,new_chat_messages,0,chat_messages.length);
+
+        chat_messages = new_chat_messages;
 
         SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 
