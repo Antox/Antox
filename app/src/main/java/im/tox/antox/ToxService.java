@@ -1,5 +1,6 @@
 package im.tox.antox;
 
+import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.FriendList;
@@ -81,6 +82,12 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
+
+                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
+                AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getBaseContext());
+                toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
+                toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
+
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
@@ -89,6 +96,7 @@ public class ToxService extends IntentService {
                 while(true) {
                     toxSingleton.jTox.doTox();
                     if(toxSingleton.jTox.isConnected()) {
+                        Log.d(TAG, "connected to tox network");
                         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
