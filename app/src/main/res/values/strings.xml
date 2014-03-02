@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">antox</string>
+    <string name="app_name">Antox</string>
 
     <!-- Activity titles -->
     <string name="title_activity_welcome">Welcome</string>
