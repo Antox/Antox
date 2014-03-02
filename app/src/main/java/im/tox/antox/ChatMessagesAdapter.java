@@ -36,6 +36,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder = new ChatMessagesHolder();
             holder.message = (TextView) row.findViewById(R.id.message_text);
             holder.layout = (LinearLayout) row.findViewById(R.id.message_text_layout);
+            holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
+            holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
             holder.time = (TextView) row.findViewById(R.id.message_text_date);
             row.setTag(holder);
         } else {
@@ -49,7 +51,9 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         if (messages.IsMine()) {
             holder.message.setGravity(Gravity.RIGHT);
             holder.time.setGravity(Gravity.RIGHT);
-            holder.layout.setBackgroundColor(Color.parseColor("#ffe6e6e6"));
+            holder.layout.setGravity(Gravity.RIGHT);
+            holder.row.setGravity(Gravity.RIGHT);
+            holder.background.setBackgroundColor(Color.parseColor("#ffffff"));
         } else {
             /* keep default orientation and
                 color for friend */
@@ -58,7 +62,9 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     }
 
     static class ChatMessagesHolder {
+        LinearLayout row;
         LinearLayout layout;
+        LinearLayout background;
         TextView message;
         TextView time;
     }
