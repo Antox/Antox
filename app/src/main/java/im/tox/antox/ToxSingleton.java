@@ -1,5 +1,8 @@
 package im.tox.antox;
 
+import android.nfc.Tag;
+import android.util.Log;
+
 import java.net.UnknownHostException;
 
 import im.tox.jtoxcore.JTox;
@@ -22,11 +25,26 @@ public class ToxSingleton {
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
         try {
-            jTox = new JTox(antoxFriendList, callbackHandler);
+            ToxDataFile dataFile = new ToxDataFile();
+
+            /* Choose appropriate constructor depending on if data file exists */
+            if(!dataFile.doesFileExist()) {
+                Log.d(TAG, "Data file not found");
+                jTox = new JTox(antoxFriendList, callbackHandler);
+            } else {
+                Log.d(TAG, "Data file has been found");
+                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+            }
+
             jTox.setName(UserDetails.username);
             jTox.setStatusMessage(UserDetails.note);
             jTox.setUserStatus(UserDetails.status);
             jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+
+            /* Save data file */
+            Log.d(TAG, "Saving data file");
+            dataFile.saveFile(jTox.save());
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (ToxException e) {
