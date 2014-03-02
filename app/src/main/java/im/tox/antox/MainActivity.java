@@ -9,17 +9,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -32,10 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import im.tox.jtoxcore.JTox;
-import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
-import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -44,30 +40,25 @@ import im.tox.jtoxcore.callbacks.CallbackHandler;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ContactsFragment.ContactListener {
 
     /**
      * Extra message to be passed with intents - Should be unique from every other app
      */
     public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
 
-    /**
-     * List View for displaying all the friends in a scrollable list
-     */
-    private ListView friendListView;
-    /**
-     * Adapter for the friendListView
-     */
-    private FriendsListAdapter adapter;
+
     /**
      * Receiver for getting work reports from ToxService
      */
     private ResponseReceiver receiver;
 
     private Intent doToxIntent;
-    private ListView mDrawerList;
-    private DrawerLayout mDrawerLayout;
 
+    private FriendsListAdapter adapter;
+
+    private SlidingPaneLayout pane;
+    private ChatFragment chat;
 
 
     @SuppressLint("NewApi")
@@ -75,10 +66,6 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        mDrawerList = (ListView) findViewById(R.id.contacts_drawer);
 
 
         /* Check if connected to the Internet */
@@ -142,76 +129,13 @@ public class MainActivity extends ActionBarActivity {
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
-        /**
-         * Stores a 2 dimensional string array holding friend details. Will be populated
-         * by a tox function once implemented
-         */
-        String[][] friends = {
-                // 0 - offline, 1 - online, 2 - away, 3 - busy
-                {"1", "astonex", "status"}, {"0", "irungentoo", "status"},
-                {"2", "nurupo", "status"}, {"3", "sonOfRa", "status"}
-        };
 
-        /* Go through status strings and set appropriate resource image */
-        FriendsList friends_list[] = new FriendsList[friends.length];
 
-        for (int i = 0; i < friends.length; i++) {
-            if (friends[i][0].equals("1"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_online,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("0"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_offline,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("2"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_away,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("3"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_busy,
-                        friends[i][1], friends[i][2]);
-        }
-
-        adapter = new FriendsListAdapter(this, R.layout.main_list_item,
-                friends_list);
-
-        friendListView = (ListView) findViewById(R.id.contacts_drawer);
-
-        friendListView.setAdapter(adapter);
-
-        final Intent chatIntent = new Intent(this, ChatActivity.class);
-
-        friendListView
-                .setOnItemClickListener(new DrawerItemClickListener());
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-    }
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            // .toString() overridden in FriendsList.java to return
-            // the friend name
-            String friendName = parent.getItemAtPosition(position)
-                    .toString();
-            selectItem(position, friendName);
-            //chatIntent.putExtra(EXTRA_MESSAGE, friendName);
-            //startActivity(chatIntent);
-        }
-    }/** Swaps fragments in the main content view */
-    private void selectItem(int position, String friendName) {
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment = new ChatFragment();
-        Bundle args = new Bundle();
-        args.putInt(ChatFragment.ARG_CONTACT_NUMBER, position);
-        fragment.setArguments(args);
+        pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
+        pane.openPane();
+        chat = (ChatFragment) getFragmentManager().findFragmentById(R.id.fragment_chat);
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(friendName);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
 
@@ -414,5 +338,23 @@ public class MainActivity extends ActionBarActivity {
             //Do something with received broadcasted message
             setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
         }
+    }
+    @Override
+    public void onBackPressed() {
+        if (!pane.isOpen()) {
+            pane.openPane();
+        } else {
+            finish();
+        }
+    }
+
+    public void onChangeContact(int position, String contact) {
+        setTitle(contact);
+        pane.closePane();
+        chat.setContact(position, contact);
+    }
+
+    public void sendMessage(View v){
+        chat.sendMessage(v);
     }
 }
