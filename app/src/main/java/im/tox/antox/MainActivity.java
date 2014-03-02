@@ -52,10 +52,11 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private Intent doToxIntent;
 
-    private FriendsListAdapter adapter;
+    public FriendsListAdapter adapter;
 
     private SlidingPaneLayout pane;
     private ChatFragment chat;
+    private ContactsFragment contacts;
 
     /**
      * Stores all friend details and used by the adapter for displaying
@@ -143,6 +144,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
+        pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
+        pane.setPanelSlideListener(new PaneListener());
+        pane.openPane();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
+        contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
+
+        updateFriends();
+
+
+    }
+
+    private void updateFriends() {
         if(friendNames != null) {
             friends = new String[friendNames.length()][3];
             for(int i = 0; i < friendNames.length(); i++) {
@@ -182,12 +196,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         adapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
-        pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        pane.setPanelSlideListener(new PaneListener());
-        pane.openPane();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
-
+        contacts.updateFriends();
     }
 
 
@@ -405,6 +414,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             friendNames = intent.getStringExtra("friendList");
+            if (friendNames != null) {
+                updateFriends();
+            }
         }
     }
     @Override
