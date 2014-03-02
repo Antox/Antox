@@ -35,9 +35,13 @@ public class ToxDataFile {
 	 * @param ctx
 	 * @return
 	 */
-	public boolean doesFileExist(Context ctx) {
-		File file = ctx.getFileStreamPath(fileName);
-		return file.exists();
+	public boolean doesFileExist() {
+		File myFile = new File("/sdcard/" + fileName);
+		return myFile.exists();
+		  //Do action
+		
+//		File file = ctx.getFileStreamPath(fileName);
+//		return file.exists();
 	}
 
 	/**
@@ -45,8 +49,8 @@ public class ToxDataFile {
 	 * 
 	 * @param ctx
 	 */
-	public void deleteFile(Context ctx) {
-		File file = ctx.getFileStreamPath(fileName);
+	public void deleteFile() {
+		File file = new File("/sdcard/" + fileName);
 		file.delete();
 	}
 
