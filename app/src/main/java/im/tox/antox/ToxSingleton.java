@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 /**
@@ -39,9 +40,18 @@ public class ToxSingleton {
                     Log.d(TAG, "Data file wasn't available for reading");
             }
 
+            if(UserDetails.username == null)
+                UserDetails.username = "antoxUser";
             jTox.setName(UserDetails.username);
+
+            if(UserDetails.note == null)
+                UserDetails.note = "using antox";
             jTox.setStatusMessage(UserDetails.note);
+
+            if(UserDetails.status == null)
+                UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
             jTox.setUserStatus(UserDetails.status);
+
             jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
 
             /* Save data file */
@@ -52,6 +62,7 @@ public class ToxSingleton {
             e.printStackTrace();
         } catch (ToxException e) {
             e.printStackTrace();
+            Log.d(TAG, e.getError().toString());
         }
     }
 

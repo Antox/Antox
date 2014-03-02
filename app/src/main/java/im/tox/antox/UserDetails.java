@@ -7,7 +7,7 @@ import im.tox.jtoxcore.ToxUserStatus;
  * from the preferences each time
  */
 public final class UserDetails {
-    public static String username;
-    public static ToxUserStatus status;
-    public static String note;
+    public static String username = null;
+    public static ToxUserStatus status = null;
+    public static String note = null;
 }

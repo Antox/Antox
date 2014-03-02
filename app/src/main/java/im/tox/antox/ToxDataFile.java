@@ -19,7 +19,7 @@ public class ToxDataFile {
 	/**
 	 * Other clients use the file name data so we shall as well
 	 */
-	private String fileName = "data";
+	private String fileName = "AntoxDataFile";
 
 	public ToxDataFile() {
 	}
@@ -29,7 +29,8 @@ public class ToxDataFile {
 	 * @return
 	 */
 	public boolean doesFileExist() {
-		File myFile = new File("/sdcard/" + fileName);
+		File myFile = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), fileName);
 		return myFile.exists();
 	}
 
@@ -37,7 +38,8 @@ public class ToxDataFile {
 	 * Method for deleting the tox data file
 	 */
 	public void deleteFile() {
-		File file = new File("/sdcard/" + fileName);
+		File file = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), fileName);
 		file.delete();
 	}
 
@@ -106,7 +108,8 @@ public class ToxDataFile {
 	 * @param dataToBeSaved
 	 */
 	public void saveFile(byte[] dataToBeSaved) {
-		File myFile = new File("/sdcard/" + fileName);
+		File myFile = new File(Environment.getExternalStorageDirectory()
+                .getAbsolutePath(), fileName);
 		try {
 			myFile.createNewFile();
 		} catch (IOException e1) {
