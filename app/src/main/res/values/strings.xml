@@ -15,6 +15,7 @@
     <string name="search_friend">Search</string>
 
     <!-- Main Activity -->
+    <string name="title">Tox</string>
     <string name="main_avatar">Avatar</string>
     <string name="main_username">Username</string>
     <string name="main_status">Status</string>
