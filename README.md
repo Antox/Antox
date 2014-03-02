@@ -27,11 +27,12 @@ Android client for the Tox project. Still in heavy development.
 
 - [Implement jToxCore](https://github.com/Tox/jToxcore)
 - Create a singleton for Tox/JTox backend stuff
+- Implement all the callbacks 
 - Documenting the current code base
 
 ###TODO
 
-- Redesign welcome activity to be more user friendly
+- Add a QR scanner for adding friends and generating a QR of the users own public key
 
 ###Screenshots of progress
 <img src="http://i.imgur.com/DQSxfjC.png" width="230px" height="400px"/><img src="http://i.imgur.com/JfX9ZgJ.png" width="230px" height="400px"/><img src="http://i.imgur.com/qQmpODj.png" width="230px" height="400px"/>
