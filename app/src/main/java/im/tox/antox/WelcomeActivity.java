@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import im.tox.jtoxcore.ToxUserStatus;
+
 /**
  * Welcome Activity is displayed when the user is using the app for the very first time to get
  * some required details such as a username.
@@ -52,6 +54,9 @@ public class WelcomeActivity extends ActionBarActivity {
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("saved_name_hint", usernameText);
             editor.commit();
+            UserDetails.username = usernameText;
+            UserDetails.note = "";
+            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
             Context context = getApplicationContext();
             CharSequence text = "Your details have been sent to the NSA";
             int duration = Toast.LENGTH_SHORT;

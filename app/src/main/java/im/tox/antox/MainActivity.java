@@ -2,6 +2,7 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,6 +61,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private SlidingPaneLayout pane;
     private ChatFragment chat;
 
+    /**
+     * Stores all friend details and used by the adapter for displaying
+     */
+    private String[][] friends;
+    /**
+     * Stores the friends list returned by ToxService to feed into String[][] friends
+     */
+    private String friendNames;
 
     @SuppressLint("NewApi")
     @Override
@@ -78,9 +87,16 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // TODO: Decide on a whole what to do if the user isnt connected to the Internet
         }
 
-        doToxIntent = new Intent(this, ToxService.class);
-        doToxIntent.setAction(Constants.DO_TOX);
-        this.startService(doToxIntent);
+        /* If the tox service isn't already running, start it */
+        if(!isToxServiceRunning()) {
+            doToxIntent = new Intent(this, ToxService.class);
+            doToxIntent.setAction(Constants.DO_TOX);
+            this.startService(doToxIntent);
+        }
+
+        Intent getFriendsList = new Intent(this, ToxService.class);
+        getFriendsList.setAction(Constants.FRIEND_LIST);
+        this.startService(getFriendsList);
 
         /**
          *  Intent filter will listen only for intents with action Constants.Register
@@ -118,17 +134,55 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         /* Load user details */
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
-        if (settingsPref.getString("saved_status_hint", "") == "online")
+        if (settingsPref.getString("saved_status_hint", "").equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        else if (settingsPref.getString("saved_status_hint", "") == "away")
+        else if (settingsPref.getString("saved_status_hint", "").equals("away"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        else if (settingsPref.getString("saved_status_hint", "") == "busy")
+        else if (settingsPref.getString("saved_status_hint", "").equals("busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
         else
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
+        if(friendNames != null) {
+            friends = new String[friendNames.length()][3];
+            for(int i = 0; i < friendNames.length(); i++) {
+                //0 - offline, 1 - online, 2 - away, 3 - busy
+                //Default offline until we check
+                friends[i][0] = "0";
+                //Friends name
+                friends[i][1] = friendNames;
+                //Default blank status
+                friends[i][2] = "";
+            }
+        } else {
+            friends = new String[1][3];
+            friends[0][0] = "0";
+            friends[0][1] = "You have no friends";
+            friends[0][2] = "Why not try adding some?";
+        }
+
+        /* Go through status strings and set appropriate resource image */
+        FriendsList friends_list[] = new FriendsList[friends.length];
+
+        for (int i = 0; i < friends.length; i++) {
+            if (friends[i][0].equals("1"))
+                friends_list[i] = new FriendsList(R.drawable.ic_status_online,
+                        friends[i][1], friends[i][2]);
+            else if (friends[i][0].equals("0"))
+                friends_list[i] = new FriendsList(R.drawable.ic_status_offline,
+                        friends[i][1], friends[i][2]);
+            else if (friends[i][0].equals("2"))
+                friends_list[i] = new FriendsList(R.drawable.ic_status_away,
+                        friends[i][1], friends[i][2]);
+            else if (friends[i][0].equals("3"))
+                friends_list[i] = new FriendsList(R.drawable.ic_status_busy,
+                        friends[i][1], friends[i][2]);
+        }
+
+        adapter = new FriendsListAdapter(this, R.layout.main_list_item,
+                friends_list);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -138,6 +192,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     }
 
+        friendListView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        // .toString() overridden in FriendsList.java to return
+                        // the friend name
+                        String friendName = parent.getItemAtPosition(position)
+                                .toString();
+                        chatIntent.putExtra(EXTRA_MESSAGE, friendName);
+                        if(!friendName.equals("You have no friends"))
+                            startActivity(chatIntent);
+                    }
 
 
 
@@ -164,7 +231,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     @Override
     public void onResume() {
         super.onResume();
-        this.startService(doToxIntent);
+        if(!isToxServiceRunning()) {
+            this.startService(doToxIntent);
+        }
     }
 
     @Override
@@ -222,6 +291,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 });
 
         return true;
+    }
+
+    /**
+     * Method to see if the tox service is already running so it isn't restarted
+     */
+    private boolean isToxServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (ToxService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class DownloadDHTList extends AsyncTask<String, Void, String> {
@@ -283,9 +365,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
          * @throws IOException
          * @throws UnsupportedEncodingException
          */
-        public String readIt(InputStream stream, int len) throws IOException,
-                UnsupportedEncodingException {
-            Reader reader = null;
+        public String readIt(InputStream stream, int len) throws IOException {
+            Reader reader;
             reader = new InputStreamReader(stream, "UTF-8");
             char[] buffer = new char[len];
             reader.read(buffer);
@@ -337,6 +418,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             setTitle("antox - " + intent.getStringExtra(Constants.CONNECTED_STATUS));
+            friendNames = intent.getStringExtra("friendList");
         }
     }
     @Override

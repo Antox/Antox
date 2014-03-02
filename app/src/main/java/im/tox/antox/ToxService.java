@@ -2,6 +2,7 @@ package im.tox.antox;
 
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.jtoxcore.FriendExistsException;
+import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -9,6 +10,7 @@ import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -31,6 +33,7 @@ public class ToxService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		AntoxState state = AntoxState.getInstance();
+        ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
 
 		Log.d(TAG, "Got intent action: " + intent.getAction());
@@ -78,27 +81,14 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-
-                AntoxFriendList antoxFriendList = new AntoxFriendList();
-                CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                JTox jTox = new JTox(antoxFriendList, callbackHandler);
-
-                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
-                callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
-
-                jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
-                jTox.setName(UserDetails.username);
-                jTox.setStatusMessage(UserDetails.note);
-                jTox.setUserStatus(UserDetails.status);
-
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
-                editor.putString("user_key", jTox.getAddress());
+                editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
 
                 while(true) {
-                    jTox.doTox();
-                    if(jTox.isConnected()) {
+                    toxSingleton.jTox.doTox();
+                    if(toxSingleton.jTox.isConnected()) {
                         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
@@ -107,11 +97,50 @@ public class ToxService extends IntentService {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (UnknownHostException e) {
+            } catch (ToxException e) {
+                Log.d(TAG, e.getError().toString());
+                e.printStackTrace();
+            }
+        } else if (intent.getAction().equals(Constants.ADD_FRIEND)) {
+            try {
+                String[] friendData = intent.getStringArrayExtra("friendData");
+                toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
+            } catch (FriendExistsException e) {
                 e.printStackTrace();
             } catch (ToxException e) {
                 e.printStackTrace();
             }
+        } else if (intent.getAction().equals(Constants.UPDATE_SETTINGS)) {
+            String[] newSettings = intent.getStringArrayExtra("newSettings");
+
+            /* If not empty, update the users settings which is passed in intent from SettingsActivity */
+            try {
+                if(!newSettings[0].equals(""))
+                    toxSingleton.jTox.setName(newSettings[0]);
+
+                if(!newSettings[1].equals("")) {
+                    if(newSettings[1].equals("away"))
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_AWAY);
+                    else if(newSettings[1].equals("busy"))
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
+                    else
+                        toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_NONE);
+                }
+
+                if(!newSettings[2].equals(""))
+                    toxSingleton.jTox.setStatusMessage(newSettings[2]);
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
+        } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
+            FriendList friendsList = toxSingleton.jTox.getFriendList();
+            List<String> friends = friendsList.all();
+            String[] friendsArray = friends.toArray(new String[friends.size()]);
+            Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
+            returnFriends.putExtra("friendList", friendsArray);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
+        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+
         }
 	}
 

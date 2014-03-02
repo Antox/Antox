@@ -15,8 +15,13 @@ public class AntoxState {
 	}
 
 	public static AntoxState getInstance() {
+        /* Double-checked locking */
 		if (instance == null) {
-			instance = new AntoxState();
+            synchronized (AntoxState.class) {
+			    if (instance == null) {
+                    instance = new AntoxState();
+                }
+            }
 		}
 		return instance;
 	}

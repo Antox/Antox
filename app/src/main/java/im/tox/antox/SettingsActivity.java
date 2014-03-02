@@ -3,18 +3,16 @@ package im.tox.antox;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,27 +27,35 @@ import im.tox.jtoxcore.ToxUserStatus;
  * @author Mark Winter (Astonex)
  */
 
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends ActionBarActivity
+        implements DHTDialogFragment.DHTDialogListener {
     /**
      * Spinner for displaying acceptable statuses (online/away/busy) to the users
      */
-    Spinner statusSpinner;
+    private Spinner statusSpinner;
     /**
-     * Editable text box where the user can enter their own DHT IP address
+     * Checkbox that inflates a DHTDialog where the user can enter their own DHT settings
      */
-    EditText dhtIP;
+    private CheckBox dhtBox;
     /**
-     * Editable text box where the user can enter their own DHT Port
+     * String that store's the user's DHT IP address entry
      */
-    EditText dhtPort;
+    private String dhtIP;
     /**
-     * Editable text box where the user can enter their own DHT Public Key address
+     * String that store's the user's DHT Port entry
      */
-    EditText dhtKey;
+    private String dhtPort;
+    /**
+     * String that store's the user's DHT Public Key address entry
+     */
+    private String dhtKey;
     /**
      * 2D string array to store DHT node details
      */
     String[][] downloadedDHTNodes;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +65,7 @@ public class SettingsActivity extends ActionBarActivity {
 
 
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
-        dhtIP = (EditText) findViewById(R.id.settings_dht_ip);
-        dhtPort = (EditText) findViewById(R.id.settings_dht_port);
-        dhtKey = (EditText) findViewById(R.id.settings_dht_key);
+        dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);
 
         /* Add acceptable statuses to the drop down menu */
         String[] statusItems = new String[]{"online", "away", "busy"};
@@ -86,24 +90,6 @@ public class SettingsActivity extends ActionBarActivity {
             nameHint.setText(pref.getString("saved_name_hint", ""));
         }
 
-        if (!pref.getString("saved_dht_ip", "").equals("")) {
-            dhtIP.setText(pref.getString("saved_dht_ip", ""));
-            /* If saved DHT settings exist then show the extra dht boxes to begin with */
-            RadioButton dhtButton = (RadioButton) findViewById(R.id.settings_radio_dht_self);
-            dhtButton.toggle();
-            dhtIP.setVisibility(View.VISIBLE);
-            dhtPort.setVisibility(View.VISIBLE);
-            dhtKey.setVisibility(View.VISIBLE);
-        }
-
-        if (!pref.getString("saved_dht_port", "").equals("")) {
-            dhtPort.setText(pref.getString("saved_dht_port", ""));
-        }
-
-        if (!pref.getString("saved_dht_key","").equals("")) {
-            dhtKey.setText(pref.getString("saved_dht_key",""));
-        }
-
         if (!pref.getString("saved_note_hint", "").equals("")) {
             EditText noteHint = (EditText) findViewById(R.id.settings_note_hint);
             noteHint.setText(pref.getString("saved_note_hint", ""));
@@ -114,6 +100,24 @@ public class SettingsActivity extends ActionBarActivity {
             int statusPos = statusAdapter.getPosition(savedStatus);
             statusSpinner.setSelection(statusPos);
         }
+
+        if (!pref.getString("saved_dht_ip", "").equals("")) {
+            dhtIP = pref.getString("saved_dht_ip", "");
+        }
+
+        if (!pref.getString("saved_dht_port", "").equals("")) {
+            dhtPort = pref.getString("saved_dht_port", "");
+        }
+
+        if (!pref.getString("saved_dht_key", "").equals("")) {
+            dhtKey = pref.getString("saved_dht_key", "");
+        }
+
+        // Set dhtBox as checked if it is set
+        dhtBox.setChecked(pref.getBoolean("saved_custom_dht", false));
+        if(pref.getBoolean("saved_custom_dht", false)) {
+            dhtBox.setChecked(true);
+        }
     }
 
     /**
@@ -123,12 +127,13 @@ public class SettingsActivity extends ActionBarActivity {
      * @param view
      */
     public void updateSettings(View view) {
+        /**
+         * String array to store updated details to be passed by intent to ToxService
+         */
+        String[] updatedSettings = { null, null, null};
+
 		/* Get all text from the fields */
-        TextView userKeyText = (TextView) findViewById(R.id.settings_user_key);
         EditText nameHintText = (EditText) findViewById(R.id.settings_name_hint);
-        EditText dhtIpHintText = (EditText) findViewById(R.id.settings_dht_ip);
-        EditText dhtKeyHintText = (EditText) findViewById(R.id.settings_dht_key);
-        EditText dhtPortHintText = (EditText) findViewById(R.id.settings_dht_port);
         EditText noteHintText = (EditText) findViewById(R.id.settings_note_hint);
         //EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
 
@@ -145,36 +150,46 @@ public class SettingsActivity extends ActionBarActivity {
         if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint))) {
             editor.putString("saved_name_hint", nameHintText.getText().toString());
             UserDetails.username = nameHintText.getText().toString();
+            updatedSettings[0] = nameHintText.getText().toString();
         }
-        if (!userKeyText.getText().toString().equals(getString(R.id.settings_user_key)))
-            editor.putString("saved_user_key_hint", userKeyText.getText().toString());
+
         if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint))) {
             editor.putString("saved_note_hint", noteHintText.getText().toString());
             UserDetails.note = noteHintText.getText().toString();
+            updatedSettings[2] = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        if (statusSpinner.getSelectedItem().toString() == "online")
+        if (statusSpinner.getSelectedItem().toString().equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (statusSpinner.getSelectedItem().toString() == "away")
+        if (statusSpinner.getSelectedItem().toString().equals("away"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString() == "busy")
+        if (statusSpinner.getSelectedItem().toString().equals("busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
+        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
+
         /* Also save DHT details to DhtNode class */
-        if (!dhtIpHintText.getText().toString().equals(getString(R.id.settings_dht_ip))) {
-            editor.putString("saved_dht_ip", dhtIpHintText.getText().toString());
-            DhtNode.ipv4 = dhtIpHintText.getText().toString();
+        editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
+        if (dhtBox.isChecked() && !dhtIP.equals(getString(R.id.settings_dht_ip))) {
+            editor.putString("saved_dht_ip", dhtIP);
+            DhtNode.ipv4 = dhtIP;
         }
-        if (!dhtKeyHintText.getText().toString().equals(getString(R.id.settings_dht_key))) {
-            editor.putString("saved_dht_key", dhtKeyHintText.getText().toString());
-            DhtNode.key = dhtKeyHintText.getText().toString();
+        if (dhtBox.isChecked() && !dhtKey.equals(getString(R.id.settings_dht_key))) {
+            editor.putString("saved_dht_key", dhtKey);
+            DhtNode.key = dhtKey;
         }
-        if (!dhtPortHintText.getText().toString().equals(getString(R.id.settings_dht_port))) {
-            editor.putString("saved_dht_port", dhtPortHintText.getText().toString());
-            DhtNode.port = dhtPortHintText.getText().toString();
+        if (dhtBox.isChecked() && !dhtPort.equals(getString(R.id.settings_dht_port))) {
+            editor.putString("saved_dht_port", dhtPort);
+            DhtNode.port = dhtPort;
         }
 
         editor.commit();
+
+        /* Send an intent to ToxService notifying change of settings */
+        Intent updateSettings = new Intent(this, ToxService.class);
+        updateSettings.setAction(Constants.UPDATE_SETTINGS);
+        updateSettings.putExtra("newSettings", updatedSettings);
+        this.startService(updateSettings);
 
         Context context = getApplicationContext();
         CharSequence text = "Settings updated";
@@ -184,16 +199,36 @@ public class SettingsActivity extends ActionBarActivity {
 
         finish();
     }
+
     /**
-     * This method is called when the user clicks on the radio button for entering their own DHT
+     * This method is called when the user clicks on the check button for entering their own DHT
      * settings
      *
      * @param view
      */
-    public void onDHTSelfClicked(View view) {
-        dhtIP.setVisibility(View.VISIBLE);
-        dhtPort.setVisibility(View.VISIBLE);
-        dhtKey.setVisibility(View.VISIBLE);
+    public void onDhtBoxClicked(View view) {
+        //If the user is checking the box, create a dialog prompting the user for the information
+        boolean checked = ((CheckBox) view).isChecked();
+        if(checked) {
+            // Create an instance of the dialog fragment and show it
+            DialogFragment dialog = new DHTDialogFragment(dhtIP, dhtPort, dhtKey);
+            dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+        }
+    }
+
+    //Called when the DHT settings dialog is confirmed
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog,
+                                      String dhtIP_, String dhtPort_, String dhtKey_) {
+        dhtIP = dhtIP_;
+        dhtPort = dhtPort_;
+        dhtKey = dhtKey_;
+    }
+
+    //Called when the DHT settings dialog is canceled
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        dhtBox.setChecked(false);
     }
 
     @Override
@@ -212,4 +247,6 @@ public class SettingsActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
