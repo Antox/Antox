@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -75,7 +77,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -414,9 +415,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         @Override
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
-            friendNames = intent.getStringExtra("friendList");
-            if (friendNames != null) {
-                updateFriends();
+            if(intent.getAction().equals(Constants.FRIEND_LIST)) {
+                friendNames = intent.getStringExtra("friendList");
+                if (friendNames != null) {
+                    updateFriends();
+                }
+            }
+
+            if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
+                Context ctx = getApplicationContext();
+                CharSequence text = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(ctx, text, duration);
+                toast.show();
             }
         }
     }

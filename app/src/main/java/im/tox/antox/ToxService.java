@@ -82,8 +82,8 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
-                AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getBaseContext());
+                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
+                AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
                 toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
                 toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
 
@@ -99,7 +99,7 @@ public class ToxService extends IntentService {
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
                     }
-                    Thread.sleep(50);
+                    Thread.sleep(10);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -143,10 +143,16 @@ public class ToxService extends IntentService {
             List<String> friends = friendsList.all();
             String[] friendsArray = friends.toArray(new String[friends.size()]);
             Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
+            returnFriends.setAction(Constants.FRIEND_LIST);
             returnFriends.putExtra("friendList", friendsArray);
             LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
-        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
-
+        } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
+            Log.d(TAG, "Constants.FRIEND_REQUEST");
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.setAction(Constants.FRIEND_REQUEST);
+            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
+            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         }
 	}
 

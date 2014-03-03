@@ -9,7 +9,7 @@ public final class Constants {
     public static final String CONNECTED_STATUS = "im.tox.antox.STATUS";
     public static final String ADD_FRIEND = "im.tox.antox.ADD";
     public static final String UPDATE_SETTINGS = "im.tox.antox.SETTINGS";
-    public static final String FRIEND_LIST = "im.tox.antox.FREINDS";
+    public static final String FRIEND_LIST = "im.tox.antox.FRIENDS";
     public static final String SEND_MESSAGE ="im.tox.antox.MESSAGE";
     public static final String FRIEND_REQUEST = "im.tox.antox.REQUEST";
 }
