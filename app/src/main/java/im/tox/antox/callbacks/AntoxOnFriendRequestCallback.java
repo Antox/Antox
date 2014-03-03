@@ -3,9 +3,9 @@ package im.tox.antox.callbacks;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import im.tox.antox.Constants;
+import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
 
 /**
@@ -14,6 +14,8 @@ import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
 public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
 
     private static final String TAG = "im.tox.antox.TAG";
+    public static final String FRIEND_KEY = "im.tox.antox.FRIEND_KEY";
+    public static final String FRIEND_MESSAGE = "im.tox.antox.FRIEND_MESSAGE";
 
     private Context ctx;
 
@@ -24,10 +26,10 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
     @Override
     public void execute(String publicKey, String message){
         Log.d(TAG, "Friend request callback");
-        Context context = ctx;
-        CharSequence text = "You have received a friend request: " + message;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
+        Intent intent = new Intent(this.ctx, ToxService.class);
+        intent.setAction(Constants.FRIEND_REQUEST);
+        intent.putExtra(FRIEND_KEY, publicKey);
+        intent.putExtra(FRIEND_MESSAGE, message);
+        this.ctx.startService(intent);
     }
 }
