@@ -72,6 +72,11 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private String activeContactName;
 
+    /*
+     * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
+     */
+    private Menu menu;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +292,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         MenuItemCompat.collapseActionView(menuItem);
                     }
                 });
+        //the class menu property is now the initialized menu
+        this.menu=menu;
 
         return true;
     }
