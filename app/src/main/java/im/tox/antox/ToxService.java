@@ -1,7 +1,13 @@
 package im.tox.antox;
 
+import im.tox.antox.callbacks.AntoxOnActionCallback;
+import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
+import im.tox.antox.callbacks.AntoxOnNameChangeCallback;
+import im.tox.antox.callbacks.AntoxOnReadReceiptCallback;
+import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
+import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.JTox;
@@ -84,8 +90,21 @@ public class ToxService extends IntentService {
             try {
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
+                AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
+                AntoxOnConnectionStatusCallback antoxOnConnectionStatusCallback = new AntoxOnConnectionStatusCallback(getApplicationContext());
+                AntoxOnNameChangeCallback antoxOnNameChangeCallback = new AntoxOnNameChangeCallback(getApplicationContext());
+                AntoxOnReadReceiptCallback antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(getApplicationContext());
+                AntoxOnStatusMessageCallback antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(getApplicationContext());
+                AntoxOnUserStatusCallback antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(getApplicationContext());
+
                 toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
                 toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
+                toxSingleton.callbackHandler.registerOnActionCallback(antoxOnActionCallback);
+                toxSingleton.callbackHandler.registerOnConnectionStatusCallback(antoxOnConnectionStatusCallback);
+                toxSingleton.callbackHandler.registerOnNameChangeCallback(antoxOnNameChangeCallback);
+                toxSingleton.callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback);
+                toxSingleton.callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback);
+                toxSingleton.callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
 
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
