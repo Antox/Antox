@@ -55,14 +55,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private Intent doToxIntent;
 
-    public FriendsListAdapter adapter;
+    public FriendsListAdapter contactsAdapter;
+    public FriendsListAdapter friendRequestsAdapter;
 
     private SlidingPaneLayout pane;
     private ChatFragment chat;
     private ContactsFragment contacts;
 
     /**
-     * Stores all friend details and used by the adapter for displaying
+     * Stores all friend details and used by the contactsAdapter for displaying
      */
     private String[][] friends;
     /**
@@ -195,7 +196,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         friends[i][1], friends[i][2]);
         }
 
-        adapter = new FriendsListAdapter(this, R.layout.main_list_item,
+        contactsAdapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
         contacts.updateFriends();
@@ -276,7 +277,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        MainActivity.this.adapter.getFilter().filter(
+                        MainActivity.this.contactsAdapter.getFilter().filter(
                                 newText);
                         return true;
                     }
