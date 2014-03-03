@@ -163,26 +163,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     }
 
     private void updateFriends() {
-        if(friendNames != null) {
-            friends = new String[friendNames.length][3];
-            for(int i = 0; i < friendNames.length; i++) {
-                //0 - offline, 1 - online, 2 - away, 3 - busy
-                //Default offline
-                if(connectedUsers.contains(friendNames[i]))
-                    friends[i][0] = "1";
-                else
-                    friends[i][0] = "0";
-                //Friends name
-                friends[i][1] = friendNames[i];
-                //Default blank status
-                friends[i][2] = "";
-            }
-        } else {
-            friends = new String[1][3];
-            friends[0][0] = "0";
-            friends[0][1] = "You have no friends";
-            friends[0][2] = "Why not try adding some?";
-        }
+        friends = new String[1][3];
+        friends[0][0] = "0";
+        friends[0][1] = "You have no friends";
+        friends[0][2] = "Why not try adding some?";
 
         /* Go through status strings and set appropriate resource image */
         FriendsList friends_list[] = new FriendsList[friends.length];
@@ -425,26 +409,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-                friendNames = intent.getStringArrayExtra("friendList");
-                if (friendNames != null) {
-                    updateFriends();
-                }
+
             }
 
             if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-                Context ctx = getApplicationContext();
-                CharSequence text = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, text, duration);
-                toast.show();
+
             }
 
             if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
-                if(intent.getBooleanExtra("connection_status", false)) {
-                    connectedUsers.add(intent.getStringExtra("name"));
-                } else {
-                    connectedUsers.remove(intent.getStringExtra("name"));
-                }
+
             }
         }
     }
