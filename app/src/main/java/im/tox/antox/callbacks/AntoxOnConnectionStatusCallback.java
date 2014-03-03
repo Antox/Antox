@@ -1,9 +1,12 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
+import im.tox.antox.Constants;
+import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
 
 /**

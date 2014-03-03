@@ -1,7 +1,6 @@
 package im.tox.antox;
 
 import android.support.v4.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,8 @@ public class ContactsFragment extends Fragment {
     /**
      * Adapter for the friendListView
      */
-    private FriendsListAdapter adapter;
+    private FriendsListAdapter contactsAdapter;
+    private FriendsListAdapter friendRequestsAdapter;
 
     public ContactsFragment() {
 
@@ -30,9 +30,15 @@ public class ContactsFragment extends Fragment {
     }
 
     public void updateFriends() {
-        adapter = main_act.adapter;
-        friendListView.setAdapter(adapter);
+        contactsAdapter = main_act.contactsAdapter;
+        friendListView.setAdapter(contactsAdapter);
         System.out.println("updated friends");
+    }
+
+    public void updateFriendRequests() {
+        friendRequestsAdapter = main_act.friendRequestsAdapter;
+        friendListView.setAdapter(friendRequestsAdapter);
+        System.out.println("updated friend requests");
     }
 
     private MainActivity main_act;

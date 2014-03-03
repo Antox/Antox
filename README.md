@@ -1,14 +1,16 @@
-Antox
+![Antox](http://vexx.us/Images/AntoxFull.png "Antox Tox Android Client")
 =====
 
-Android client for the Tox project. Still in heavy development. 
+Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. 
 
 ####Known to work on
 * Samsung S3 running android 4.4 and cyanogenmod
 * Galaxy Nexus running android 4.4
+* Galaxy Note 3 running 4.3 (TouchWiz)
+* Galaxy Note 10.1 running 4.3 (TouchWiz)
 
 ####Submitting Pull Requests
-- All pull requests must be well documentated before being accepted
+- We ask that all pull requests are well documented so that we may better understand your commits. Requests that lack documentation may be rejected.
 
 ###Completed
 
@@ -35,7 +37,8 @@ Android client for the Tox project. Still in heavy development.
 - Add a QR scanner for adding friends and generating a QR of the users own public key
 
 ###Screenshots of progress
-<img src="http://i.imgur.com/DQSxfjC.png" width="230px" height="400px"/><img src="http://i.imgur.com/JfX9ZgJ.png" width="230px" height="400px"/><img src="http://i.imgur.com/qQmpODj.png" width="230px" height="400px"/>
+<img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
+
 
 ####Milestones
 

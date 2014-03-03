@@ -29,6 +29,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -55,27 +56,32 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private Intent doToxIntent;
 
-    public FriendsListAdapter adapter;
+    public FriendsListAdapter contactsAdapter;
+    public FriendsListAdapter friendRequestsAdapter;
 
     private SlidingPaneLayout pane;
     private ChatFragment chat;
     private ContactsFragment contacts;
 
     /**
-     * Stores all friend details and used by the adapter for displaying
+     * Stores all friend details and used by the contactsAdapter for displaying
      */
     private String[][] friends;
     /**
      * Stores the friends list returned by ToxService to feed into String[][] friends
      */
-    private String friendNames;
+    private String[] friendNames;
 
     private String activeContactName;
+
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
     private Menu menu;
+
+    private List<String> connectedUsers;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -164,23 +170,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     }
 
     private void updateFriends() {
-        if(friendNames != null) {
-            friends = new String[friendNames.length()][3];
-            for(int i = 0; i < friendNames.length(); i++) {
-                //0 - offline, 1 - online, 2 - away, 3 - busy
-                //Default offline until we check
-                friends[i][0] = "0";
-                //Friends name
-                friends[i][1] = friendNames;
-                //Default blank status
-                friends[i][2] = "";
-            }
-        } else {
-            friends = new String[1][3];
-            friends[0][0] = "0";
-            friends[0][1] = "You have no friends";
-            friends[0][2] = "Why not try adding some?";
-        }
+        friends = new String[1][3];
+        friends[0][0] = "0";
+        friends[0][1] = "You have no friends";
+        friends[0][2] = "Why not try adding some?";
 
         /* Go through status strings and set appropriate resource image */
         FriendsList friends_list[] = new FriendsList[friends.length];
@@ -200,7 +193,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         friends[i][1], friends[i][2]);
         }
 
-        adapter = new FriendsListAdapter(this, R.layout.main_list_item,
+        contactsAdapter = new FriendsListAdapter(this, R.layout.main_list_item,
                 friends_list);
 
         contacts.updateFriends();
@@ -239,8 +232,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     @Override
     public void onStop() {
         super.onStop();
-        this.stopService(doToxIntent);
-        setTitle(R.string.app_name);
     }
 
     @Override
@@ -256,6 +247,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 return true;
             case android.R.id.home:
                 pane.openPane();
+                return true;
+            case R.id.action_exit:
+                this.stopService(doToxIntent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -279,7 +274,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        MainActivity.this.adapter.getFilter().filter(
+                        MainActivity.this.contactsAdapter.getFilter().filter(
                                 newText);
                         return true;
                     }
@@ -423,18 +418,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-                friendNames = intent.getStringExtra("friendList");
-                if (friendNames != null) {
-                    updateFriends();
-                }
+
             }
 
             if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-                Context ctx = getApplicationContext();
-                CharSequence text = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, text, duration);
-                toast.show();
+
+            }
+
+            if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
+
             }
         }
     }

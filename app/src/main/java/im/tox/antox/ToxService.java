@@ -118,7 +118,7 @@ public class ToxService extends IntentService {
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
                     }
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -157,21 +157,15 @@ public class ToxService extends IntentService {
             } catch (ToxException e) {
                 e.printStackTrace();
             }
+
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
-            FriendList friendsList = toxSingleton.jTox.getFriendList();
-            List<String> friends = friendsList.all();
-            String[] friendsArray = friends.toArray(new String[friends.size()]);
-            Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
-            returnFriends.setAction(Constants.FRIEND_LIST);
-            returnFriends.putExtra("friendList", friendsArray);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
+            Log.d(TAG, "Constants.FRIEND_LIST");
+
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.setAction(Constants.FRIEND_REQUEST);
-            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
-            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+
+        } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
+            Log.d(TAG, "Constants.CONNECTION_STATUS");
         }
 	}
 
