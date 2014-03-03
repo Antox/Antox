@@ -118,7 +118,7 @@ public class ToxService extends IntentService {
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
                     }
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -157,6 +157,7 @@ public class ToxService extends IntentService {
             } catch (ToxException e) {
                 e.printStackTrace();
             }
+
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
             FriendList friendsList = toxSingleton.jTox.getFriendList();
             List<String> friends = friendsList.all();
@@ -165,12 +166,25 @@ public class ToxService extends IntentService {
             returnFriends.setAction(Constants.FRIEND_LIST);
             returnFriends.putExtra("friendList", friendsArray);
             LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
+
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.setAction(Constants.FRIEND_REQUEST);
             notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
             notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            /* Update friends list */
+            Intent updateFriends = new Intent(this, ToxService.class);
+            updateFriends.setAction(Constants.FRIEND_LIST);
+            this.startService(updateFriends);
+
+        } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
+            Log.d(TAG, "Constants.CONNECTION_STATUS");
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.setAction(Constants.CONNECTED_STATUS);
+            notify.putExtra("name", intent.getStringExtra("name"));
+            notify.putExtra("connection_status", intent.getBooleanExtra("connection_status", false));
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         }
 	}

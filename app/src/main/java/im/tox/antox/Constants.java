@@ -12,4 +12,5 @@ public final class Constants {
     public static final String FRIEND_LIST = "im.tox.antox.FRIENDS";
     public static final String SEND_MESSAGE ="im.tox.antox.MESSAGE";
     public static final String FRIEND_REQUEST = "im.tox.antox.REQUEST";
+    public static final String CONNECTION_STATUS = "im.tox.antox.CONNECTION_STATUS";
 }

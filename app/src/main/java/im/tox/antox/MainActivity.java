@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     /**
      * Stores the friends list returned by ToxService to feed into String[][] friends
      */
-    private String friendNames;
+    private String[] friendNames;
 
     private String activeContactName;
 
@@ -161,13 +161,13 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private void updateFriends() {
         if(friendNames != null) {
-            friends = new String[friendNames.length()][3];
-            for(int i = 0; i < friendNames.length(); i++) {
+            friends = new String[friendNames.length][3];
+            for(int i = 0; i < friendNames.length; i++) {
                 //0 - offline, 1 - online, 2 - away, 3 - busy
                 //Default offline until we check
                 friends[i][0] = "0";
                 //Friends name
-                friends[i][1] = friendNames;
+                friends[i][1] = friendNames[i];
                 //Default blank status
                 friends[i][2] = "";
             }
@@ -419,7 +419,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-                friendNames = intent.getStringExtra("friendList");
+                friendNames = intent.getStringArrayExtra("friendList");
                 if (friendNames != null) {
                     updateFriends();
                 }
