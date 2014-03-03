@@ -210,6 +210,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+    /**
+     * Starts a new intent to open the SettingsActivity class
+     *
+     * @see im.tox.antox.ProfileActivity
+     */
+    private void openProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
 
     /**
      * Starts a new intent to open the AddFriendActivity class
@@ -239,6 +248,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         switch (item.getItemId()) {
             case R.id.action_settings:
                 openSettings();
+                return true;
+            case R.id.action_profile:
+                openProfile();
                 return true;
             case R.id.add_friend:
                 addFriend();
