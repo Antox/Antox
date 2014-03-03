@@ -74,7 +74,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private String activeContactName;
 
+
+    /*
+     * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
+     */
+    private Menu menu;
+
     private List<String> connectedUsers;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -280,6 +287,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         MenuItemCompat.collapseActionView(menuItem);
                     }
                 });
+        //the class menu property is now the initialized menu
+        this.menu=menu;
 
         return true;
     }
@@ -446,6 +455,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeContactName);
+            MenuItem af = (MenuItem)menu.getItem(1);
+            af.setIcon(R.drawable.ic_action_add_group);
             System.out.println("Panel closed");
         }
 
@@ -453,6 +464,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
+            MenuItem af = (MenuItem)menu.getItem(1);
+            af.setIcon(R.drawable.ic_action_add_person);
             System.out.println("Panel opened");
         }
 
