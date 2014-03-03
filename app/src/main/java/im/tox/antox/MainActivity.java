@@ -234,8 +234,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     @Override
     public void onStop() {
         super.onStop();
-        this.stopService(doToxIntent);
-        setTitle(R.string.app_name);
     }
 
     @Override
@@ -251,6 +249,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 return true;
             case android.R.id.home:
                 pane.openPane();
+                return true;
+            case R.id.action_exit:
+                this.stopService(doToxIntent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
