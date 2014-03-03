@@ -1,9 +1,12 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
+import im.tox.antox.Constants;
+import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
 
 /**
@@ -21,5 +24,10 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
     @Override
     public void execute(AntoxFriend friend, boolean online) {
         Log.d(TAG, "OnConnectionStatusCallback received");
+        Intent intent = new Intent(this.ctx, ToxService.class);
+        intent.setAction(Constants.CONNECTION_STATUS);
+        intent.putExtra("name", friend.getName());
+        intent.putExtra("connection_status", online);
+        this.ctx.startService(intent);
     }
 }

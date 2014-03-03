@@ -73,6 +73,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private String activeContactName;
 
+    private String connectedUsers;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,8 +166,11 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             friends = new String[friendNames.length][3];
             for(int i = 0; i < friendNames.length; i++) {
                 //0 - offline, 1 - online, 2 - away, 3 - busy
-                //Default offline until we check
-                friends[i][0] = "0";
+                //Default offline
+                if(connectedUsers.contains(friendNames[i]))
+                    friends[i][0] = "1";
+                else
+                    friends[i][0] = "0";
                 //Friends name
                 friends[i][1] = friendNames[i];
                 //Default blank status
@@ -431,6 +436,12 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(ctx, text, duration);
                 toast.show();
+            }
+
+            if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
+                if(intent.getBooleanExtra("connection_status", false)) {
+                    connectedUsers += intent.getStringExtra("name");
+                }
             }
         }
     }
