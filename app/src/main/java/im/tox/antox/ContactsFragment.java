@@ -20,7 +20,7 @@ public class ContactsFragment extends Fragment {
      * Adapter for the friendListView
      */
     private FriendsListAdapter contactsAdapter;
-    private FriendsListAdapter friendRequestsAdapter;
+    private FriendRequestsAdapter friendRequestsAdapter;
 
     public ContactsFragment() {
 

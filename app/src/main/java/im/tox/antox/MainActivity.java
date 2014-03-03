@@ -29,6 +29,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
@@ -57,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private Intent doToxIntent;
 
     public FriendsListAdapter contactsAdapter;
-    public FriendsListAdapter friendRequestsAdapter;
+    public FriendRequestsAdapter friendRequestsAdapter;
 
     private SlidingPaneLayout pane;
     private ChatFragment chat;
@@ -67,10 +68,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      * Stores all friend details and used by the contactsAdapter for displaying
      */
     private String[][] friends;
+
     /**
      * Stores the friends list returned by ToxService to feed into String[][] friends
      */
     private String[] friendNames;
+
+    // Stores friend requests
+    private ArrayList<FriendRequests> friend_requests;
 
     private String activeContactName;
 
@@ -158,6 +163,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateFriends();
+        friend_requests = new ArrayList<FriendRequests>();
 
 
     }
@@ -202,13 +208,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         friends[i][1], friends[i][2]);
         }
 
-        contactsAdapter = new FriendsListAdapter(this, R.layout.main_list_item,
+        contactsAdapter = new FriendsListAdapter(this, R.layout.contact_list_item,
                 friends_list);
 
         contacts.updateFriends();
     }
 
-
+    private void updateFriendRequests() {
+        FriendRequests friend_requests_list[] = new FriendRequests[friend_requests.size()];
+        friend_requests_list = friend_requests.toArray(friend_requests_list);
+        friendRequestsAdapter = new FriendRequestsAdapter(this, R.layout.friendrequest_list_item,
+                friend_requests_list);
+        contacts.updateFriendRequests();
+    }
 
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -432,11 +444,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             }
 
             if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
+                System.out.println("test");
                 Context ctx = getApplicationContext();
-                CharSequence text = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
+                CharSequence msg = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
+                CharSequence key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
                 int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, text, duration);
+                Toast toast = Toast.makeText(ctx, msg, duration);
                 toast.show();
+                friend_requests.add(new FriendRequests((String) key, (String) msg));
+                updateFriendRequests();
             }
 
             if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
