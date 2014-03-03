@@ -10,6 +10,7 @@
         android:background="#e5e5e5"
         android:layout_weight="1"
         android:layout_above="@+id/relativeLayoutSend"
+        android:divider="@null"
         android:dividerHeight="0dp" />
 
     <RelativeLayout
