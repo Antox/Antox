@@ -5,6 +5,7 @@ import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnMessageCallback;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 	public static final String TAG = "AntoxOnMessageCallback";
@@ -21,6 +22,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 
 	@Override
 	public void execute(AntoxFriend friend, String message) {
+        Log.d(TAG, "OnMessageCallback received");
 		Intent intent = new Intent(INTENT_ACTION);
 		intent.putExtra(MESSAGE, message);
 		String name;

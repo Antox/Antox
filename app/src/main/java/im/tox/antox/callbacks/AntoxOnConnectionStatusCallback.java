@@ -1,6 +1,7 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
@@ -10,6 +11,7 @@ import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
  */
 public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallback<AntoxFriend> {
 
+    private final static String TAG = "im.tox.antox.TAG";
     private Context ctx;
 
     public AntoxOnConnectionStatusCallback(Context ctx) {
@@ -18,6 +20,6 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
 
     @Override
     public void execute(AntoxFriend friend, boolean online) {
-
+        Log.d(TAG, "OnConnectionStatusCallback received");
     }
 }

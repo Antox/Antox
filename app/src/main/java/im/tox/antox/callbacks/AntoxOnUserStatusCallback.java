@@ -1,6 +1,7 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -11,6 +12,7 @@ import im.tox.jtoxcore.callbacks.OnUserStatusCallback;
  */
 public class AntoxOnUserStatusCallback implements OnUserStatusCallback<AntoxFriend> {
 
+    private final static String TAG = "im.tox.antox.TAG";
     private Context ctx;
 
     public AntoxOnUserStatusCallback(Context ctx) {
@@ -19,6 +21,6 @@ public class AntoxOnUserStatusCallback implements OnUserStatusCallback<AntoxFrie
 
     @Override
     public void execute(AntoxFriend friend, ToxUserStatus newStatus) {
-
+        Log.d(TAG, "OnUserStatusCallback received");
     }
 }

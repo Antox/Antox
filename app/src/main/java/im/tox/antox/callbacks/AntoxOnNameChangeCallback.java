@@ -1,6 +1,7 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnNameChangeCallback;
@@ -10,6 +11,7 @@ import im.tox.jtoxcore.callbacks.OnNameChangeCallback;
  */
 public class AntoxOnNameChangeCallback implements OnNameChangeCallback<AntoxFriend> {
 
+    private final static String TAG = "im.tox.antox.TAG";
     private Context ctx;
 
     public AntoxOnNameChangeCallback(Context ctx) {
@@ -18,6 +20,6 @@ public class AntoxOnNameChangeCallback implements OnNameChangeCallback<AntoxFrie
 
     @Override
     public void execute(AntoxFriend friend, String newName) {
-
+        Log.d(TAG, "OnNameChangeCallback received");
     }
 }
