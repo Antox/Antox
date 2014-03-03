@@ -29,6 +29,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -73,7 +74,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private String activeContactName;
 
-    private String connectedUsers;
+    private List<String> connectedUsers;
 
     @SuppressLint("NewApi")
     @Override
@@ -440,7 +441,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
             if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
                 if(intent.getBooleanExtra("connection_status", false)) {
-                    connectedUsers += intent.getStringExtra("name");
+                    connectedUsers.add(intent.getStringExtra("name"));
+                } else {
+                    connectedUsers.remove(intent.getStringExtra("name"));
                 }
             }
         }
