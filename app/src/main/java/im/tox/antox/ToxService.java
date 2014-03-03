@@ -82,7 +82,6 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getBaseContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getBaseContext());
                 toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
@@ -96,7 +95,6 @@ public class ToxService extends IntentService {
                 while(true) {
                     toxSingleton.jTox.doTox();
                     if(toxSingleton.jTox.isConnected()) {
-                        Log.d(TAG, "connected to tox network");
                         Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                                 .putExtra(Constants.CONNECTED_STATUS, "connected");
                         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
