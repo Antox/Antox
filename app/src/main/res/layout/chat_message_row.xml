@@ -14,6 +14,7 @@
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/message_text_background"
@@ -30,21 +31,25 @@
                 android:layout_marginRight="8dp">
 
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/message_text"
-            android:text="Asdsd"
-            android:textSize="14sp" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message_text"
+                    android:text="Asdsd"
+                    android:textSize="14sp" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/message_text_date"
-            android:textStyle="italic"
-            android:text="Asdsd"
-            android:textSize="8sp" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message_text_date"
+                    android:textStyle="italic"
+                    android:text="Asdsd"
+                    android:textSize="8sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
