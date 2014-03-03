@@ -9,7 +9,10 @@
         android:orientation="vertical"
         android:id="@+id/message_text_layout"
         android:layout_width="300dp"
-        android:layout_margin="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="vertical"
