@@ -4,10 +4,20 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     <ListView
+        android:id="@+id/friend_requests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp" >
+    </ListView>
+    <ListView
         android:id="@+id/contacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:cacheColorHint="@android:color/transparent"
         android:divider="#CCCCCC"
