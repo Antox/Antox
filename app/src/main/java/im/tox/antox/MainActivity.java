@@ -241,14 +241,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void rejectFriendRequest(View view) {
-        int pos = -1;
         if(toxSingleton.friend_requests.size() != 0) {
             for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                if(activeFriendRequestKey.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey));
-                pos = i;
-            }
-            if (pos != -1) {
-                toxSingleton.friend_requests.remove(pos);
+                if(activeFriendRequestKey.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
+                    toxSingleton.friend_requests.remove(i);
+                }
             }
 
             if(!toxSingleton.db.isOpen())
