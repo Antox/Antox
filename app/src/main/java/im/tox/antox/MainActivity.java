@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,7 +30,11 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -55,9 +60,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private ResponseReceiver receiver;
 
     private Intent doToxIntent;
+    private Intent startToxIntent;
 
     public FriendsListAdapter contactsAdapter;
-    public FriendsListAdapter friendRequestsAdapter;
+    public FriendRequestsAdapter friendRequestsAdapter;
 
     private SlidingPaneLayout pane;
     private ChatFragment chat;
@@ -67,10 +73,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      * Stores all friend details and used by the contactsAdapter for displaying
      */
     private String[][] friends;
+
     /**
      * Stores the friends list returned by ToxService to feed into String[][] friends
      */
     private String[] friendNames;
+
+    // Stores friend requests
+    private ArrayList<FriendRequests> friend_requests;
 
     private String activeContactName;
 
@@ -101,9 +111,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
+            startToxIntent = new Intent(this, ToxService.class);
+            startToxIntent.setAction(Constants.START_TOX);
             doToxIntent = new Intent(this, ToxService.class);
             doToxIntent.setAction(Constants.DO_TOX);
-            this.startService(doToxIntent);
+            this.startService(startToxIntent);
+            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+// This schedule a runnable task every 2 minutes
+            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+                Context ctx = getApplicationContext();
+                public void run() {
+                    ctx.startService(doToxIntent);
+                }
+            }, 0, 50, TimeUnit.MILLISECONDS);
         }
 
         Intent getFriendsList = new Intent(this, ToxService.class);
@@ -165,6 +185,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateFriends();
+        friend_requests = new ArrayList<FriendRequests>();
 
 
     }
@@ -193,13 +214,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         friends[i][1], friends[i][2]);
         }
 
-        contactsAdapter = new FriendsListAdapter(this, R.layout.main_list_item,
+        contactsAdapter = new FriendsListAdapter(this, R.layout.contact_list_item,
                 friends_list);
 
         contacts.updateFriends();
     }
 
-
+    private void updateFriendRequests() {
+        FriendRequests friend_requests_list[] = new FriendRequests[friend_requests.size()];
+        friend_requests_list = friend_requests.toArray(friend_requests_list);
+        friendRequestsAdapter = new FriendRequestsAdapter(this, R.layout.friendrequest_list_item,
+                friend_requests_list);
+        contacts.updateFriendRequests();
+    }
 
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -434,7 +461,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             }
 
             if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-
+                Context ctx = getApplicationContext();
+                CharSequence msg = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
+                CharSequence key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(ctx, msg, duration);
+                toast.show();
+                friend_requests.add(new FriendRequests((String) key, (String) msg));
+                updateFriendRequests();
             }
 
             if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
