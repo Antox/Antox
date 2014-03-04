@@ -86,8 +86,14 @@ public class AddFriendActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
-            EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
-            addFriendKey.setText(scanResult.getContents());
+            if(scanResult.getContents().contains("tox://")) {
+                String friendKey = scanResult.getContents().substring(6);
+                EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
+                addFriendKey.setText(friendKey);
+            } else {
+                EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
+                addFriendKey.setText(scanResult.getContents());
+            }
         }
 
     }
