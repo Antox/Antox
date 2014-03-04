@@ -49,7 +49,7 @@ import im.tox.antox.Constants;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity implements ContactsFragment.ContactListener {
+public class MainActivity extends ActionBarActivity {
 
     /**
      * Extra message to be passed with intents - Should be unique from every other app
@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     public FriendsListAdapter contactsAdapter;
     public FriendRequestsAdapter friendRequestsAdapter;
 
-    private SlidingPaneLayout pane;
+    public SlidingPaneLayout pane;
     private ChatFragment chat;
     private ContactsFragment contacts;
     private IntentFilter filter;
@@ -180,7 +180,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         pane.setPanelSlideListener(new PaneListener());
         pane.openPane();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateFriends();
@@ -477,16 +476,6 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         } else {
             finish();
         }
-    }
-
-    public void onChangeContact(int position, String contact) {
-        activeContactName = contact;
-        pane.closePane();
-        chat.setContact(position, contact);
-    }
-
-    public void sendMessage(View v){
-        chat.sendMessage(v);
     }
 
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {

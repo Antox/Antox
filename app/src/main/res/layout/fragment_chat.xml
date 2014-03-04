@@ -50,8 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingRight="8dp"
-            android:src="@drawable/ic_send"
-            android:onClick="sendMessage" />
+            android:src="@drawable/ic_send" />
 
     </RelativeLayout>
 </LinearLayout>

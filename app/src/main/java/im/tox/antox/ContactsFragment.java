@@ -1,5 +1,6 @@
 package im.tox.antox;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,8 +27,21 @@ public class ContactsFragment extends Fragment {
     public ContactsFragment() {
 
     }
-    public interface ContactListener {
-        public void onChangeContact(int position, String contactName);
+
+    public void onChangeFriendRequest(int position, String key, String message) {
+        Fragment newFragment = new FriendRequestFragment(key, message);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.right_pane, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void onChangeContact(int position, String name) {
+        Fragment newFragment = new ChatFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.right_pane, newFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     public void updateFriends() {
@@ -69,9 +83,25 @@ public class ContactsFragment extends Fragment {
 	                    long id) {
                         String friendName = parent.getItemAtPosition(position)
                                 .toString();
-                        ( (ContactListener) getActivity()).onChangeContact( position, friendName );
+                        onChangeContact(position, friendName);
+                        main_act.pane.closePane();
                     }
                 });
+
+        friendRequestsView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position,
+                                            long id) {
+                        FriendRequests item = (FriendRequests) parent.getAdapter().getItem(position);
+                        String key = item.key();
+                        String message = item.message();
+                        onChangeFriendRequest(position, key, message);
+                        main_act.pane.closePane();
+                    }
+                });
+
 
 
 

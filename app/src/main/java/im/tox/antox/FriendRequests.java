@@ -13,4 +13,11 @@ public class FriendRequests {
 		this.requestKey = requestKey;
 		this.requestMessage = requestMessage;
 	}
+
+    public String key() {
+        return requestKey;
+    }
+    public String message() {
+        return requestMessage;
+    }
 }
