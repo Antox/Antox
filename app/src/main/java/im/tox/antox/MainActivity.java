@@ -84,7 +84,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     private String activeContactName;
 
+
+    /*
+     * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
+     */
+    private Menu menu;
+
     private List<String> connectedUsers;
+
 
     @SuppressLint("NewApi")
     @Override
@@ -99,7 +106,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // Executes in a separate thread so UI experience isn't affected
             new DownloadDHTList().execute("http://markwinter.me/servers.php");
         } else {
-            Log.d(EXTRA_MESSAGE, "Not connected to the internet");
+
         }
 
         /* If the tox service isn't already running, start it */
@@ -184,26 +191,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     }
 
     private void updateFriends() {
-        if(friendNames != null) {
-            friends = new String[friendNames.length][3];
-            for(int i = 0; i < friendNames.length; i++) {
-                //0 - offline, 1 - online, 2 - away, 3 - busy
-                //Default offline
-                if(connectedUsers.contains(friendNames[i]))
-                    friends[i][0] = "1";
-                else
-                    friends[i][0] = "0";
-                //Friends name
-                friends[i][1] = friendNames[i];
-                //Default blank status
-                friends[i][2] = "";
-            }
-        } else {
-            friends = new String[1][3];
-            friends[0][0] = "0";
-            friends[0][1] = "You have no friends";
-            friends[0][2] = "Why not try adding some?";
-        }
+        friends = new String[1][3];
+        friends[0][0] = "0";
+        friends[0][1] = "You have no friends";
+        friends[0][2] = "Why not try adding some?";
 
         /* Go through status strings and set appropriate resource image */
         FriendsList friends_list[] = new FriendsList[friends.length];
@@ -246,6 +237,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
+    /**
+     * Starts a new intent to open the SettingsActivity class
+     *
+     * @see im.tox.antox.ProfileActivity
+     */
+    private void openProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
 
     /**
      * Starts a new intent to open the AddFriendActivity class
@@ -275,6 +275,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         switch (item.getItemId()) {
             case R.id.action_settings:
                 openSettings();
+                return true;
+            case R.id.action_profile:
+                openProfile();
                 return true;
             case R.id.add_friend:
                 addFriend();
@@ -323,6 +326,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         MenuItemCompat.collapseActionView(menuItem);
                     }
                 });
+        //the class menu property is now the initialized menu
+        this.menu=menu;
 
         return true;
     }
@@ -452,14 +457,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onReceive(Context context, Intent intent) {
             //Do something with received broadcasted message
             if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-                friendNames = intent.getStringArrayExtra("friendList");
-                if (friendNames != null) {
-                    updateFriends();
-                }
+
             }
 
             if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-                System.out.println("test");
                 Context ctx = getApplicationContext();
                 CharSequence msg = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
                 CharSequence key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
@@ -471,11 +472,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             }
 
             if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
-                if(intent.getBooleanExtra("connection_status", false)) {
-                    connectedUsers.add(intent.getStringExtra("name"));
-                } else {
-                    connectedUsers.remove(intent.getStringExtra("name"));
-                }
+
             }
         }
     }
@@ -504,6 +501,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeContactName);
+            MenuItem af = (MenuItem)menu.getItem(1);
+            af.setIcon(R.drawable.ic_action_add_group);
             System.out.println("Panel closed");
         }
 
@@ -511,6 +510,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
+            MenuItem af = (MenuItem)menu.getItem(1);
+            af.setIcon(R.drawable.ic_action_add_person);
             System.out.println("Panel opened");
         }
 

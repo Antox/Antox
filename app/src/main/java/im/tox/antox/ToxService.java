@@ -25,6 +25,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcel;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -117,7 +118,6 @@ public class ToxService extends IntentService {
             }
         } else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
-
                 toxSingleton.jTox.doTox();
                 if(toxSingleton.jTox.isConnected()) {
                     Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
@@ -162,33 +162,13 @@ public class ToxService extends IntentService {
             }
 
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
-            FriendList friendsList = toxSingleton.jTox.getFriendList();
-            List<String> friends = friendsList.all();
-            String[] friendsArray = friends.toArray(new String[friends.size()]);
-            Intent returnFriends = new Intent(Constants.BROADCAST_ACTION);
-            returnFriends.setAction(Constants.FRIEND_LIST);
-            returnFriends.putExtra("friendList", friendsArray);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(returnFriends);
+            Log.d(TAG, "Constants.FRIEND_LIST");
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.setAction(Constants.FRIEND_REQUEST);
-            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
-            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-            /* Update friends list */
-            Intent updateFriends = new Intent(this, ToxService.class);
-            updateFriends.setAction(Constants.FRIEND_LIST);
-            this.startService(updateFriends);
 
         } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
             Log.d(TAG, "Constants.CONNECTION_STATUS");
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.setAction(Constants.CONNECTED_STATUS);
-            notify.putExtra("name", intent.getStringExtra("name"));
-            notify.putExtra("connection_status", intent.getBooleanExtra("connection_status", false));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         }
 	}
 

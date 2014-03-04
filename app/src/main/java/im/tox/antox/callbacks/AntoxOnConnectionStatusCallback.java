@@ -24,10 +24,5 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
     @Override
     public void execute(AntoxFriend friend, boolean online) {
         Log.d(TAG, "OnConnectionStatusCallback received");
-        Intent intent = new Intent(this.ctx, ToxService.class);
-        intent.setAction(Constants.CONNECTION_STATUS);
-        intent.putExtra("name", friend.getName());
-        intent.putExtra("connection_status", online);
-        this.ctx.startService(intent);
     }
 }
