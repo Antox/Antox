@@ -2,6 +2,10 @@ package im.tox.antox;
 
 public final class Constants {
 
+    public static final int TYPE_HEADER = 0;
+    public static final int TYPE_FRIEND_REQUEST = 1;
+    public static final int TYPE_CONTACT = 2;
+    public static final int TYPE_MAX_COUNT = 3;
 	public static final String REGISTER = "im.tox.antox.REGISTER";
 	public static final String UNREGISTER = "im.tox.antox.UNREGISTER";
 	public static final String REGISTER_NAME = "im.tox.antox.REGISTER_NAME";

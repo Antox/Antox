@@ -1,29 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="90dp"
     android:padding="6dip" >
-
-    <TextView
-        android:id="@+id/request_message"
-        android:layout_width="fill_parent"
-        android:layout_height="16dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textSize="12sp" 
-        android:textStyle="italic"/>
-
-    <TextView
-        android:id="@+id/request_key"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/request_message"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/imgIcon"
-        android:textSize="12dp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/request_key"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/request_message"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textSize="12sp"
+            android:textStyle="italic"/>
+    </LinearLayout>
 
 </RelativeLayout> 
