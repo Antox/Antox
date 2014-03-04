@@ -52,52 +52,7 @@ public class ToxService extends IntentService {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
 
-        if (!intent.getAction().equals(Constants.DO_TOX)) {
-            Log.d(TAG, "Got intent action: " + intent.getAction());
-        }
-		if (intent.getAction().equals(Constants.REGISTER)) {
-			String name = intent.getStringExtra(Constants.REGISTER_NAME);
-			boundActivities.add(name);
-
-			if (name.equals(ChatActivity.CHAT_ACTIVITY)) {
-				state.setActiveChatPartner(intent.getIntExtra(
-						AntoxOnMessageCallback.FRIEND_NUMBER,
-						AntoxState.NO_CHAT_PARTNER));
-			}
-		} else if (intent.getAction().equals(Constants.UNREGISTER)) {
-			String name = intent.getStringExtra(Constants.REGISTER_NAME);
-			state.getBoundActivities().remove(name);
-
-			if (name.equals(ChatActivity.CHAT_ACTIVITY)) {
-				state.setActiveChatPartner(AntoxState.NO_CHAT_PARTNER);
-			}
-		} else if (intent.getAction().equals(
-				AntoxOnMessageCallback.INTENT_ACTION)) {
-			if (state.getBoundActivities().contains(ChatActivity.CHAT_ACTIVITY)) {
-				int friendNumber = intent.getIntExtra(
-						AntoxOnMessageCallback.FRIEND_NUMBER,
-						AntoxState.NO_CHAT_PARTNER);
-				if (friendNumber != AntoxState.NO_CHAT_PARTNER
-						&& friendNumber == state.getActiveChatPartner()) {
-					// Send intent
-				} else {
-					// Send notification
-					String message = intent
-							.getStringExtra(AntoxOnMessageCallback.MESSAGE);
-					String name = intent
-							.getStringExtra(AntoxOnMessageCallback.NAME);
-					NotificationCompat.Builder nb = new NotificationCompat.Builder(
-							getApplicationContext())
-							.setContentTitle("Message from: " + name)
-							.setContentText(message)
-							.setSmallIcon(R.drawable.ic_action_new);
-
-					Notification mn = nb.build();
-					NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-					nm.notify(0, mn);
-				}
-			}
-		} else if (intent.getAction().equals(Constants.START_TOX)) {
+        if (intent.getAction().equals(Constants.START_TOX)) {
             try {
                 toxSingleton.initTox();
 
@@ -141,21 +96,24 @@ public class ToxService extends IntentService {
                         null                                 // The sort order
                 );
                 try {
-                int count = cursor.getCount();
-                cursor.moveToFirst();
-                for (int i=0; i<count; i++) {
-                    String key = cursor.getString(
-                            cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY)
-                    );
-                    String message = cursor.getString(
-                            cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE)
-                    );
-                    toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
-                    cursor.moveToNext();
-                }
+                    int count = cursor.getCount();
+                    cursor.moveToFirst();
+                    for (int i=0; i<count; i++) {
+                        String key = cursor.getString(
+                                cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY)
+                        );
+                        String message = cursor.getString(
+                                cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE)
+                        );
+                        toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
+                        cursor.moveToNext();
+                    }
                 } finally {
                     cursor.close();
                 }
+                cursor.close();
+                mDbHelper.close();
+
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
@@ -230,6 +188,7 @@ public class ToxService extends IntentService {
                     FriendRequestTable.FriendRequestEntry.TABLE_NAME,
                     null,
                     values);
+            mDbHelper.close();
             /* Update friends list */
             Intent updateFriends = new Intent(this, ToxService.class);
             updateFriends.setAction(Constants.FRIEND_LIST);

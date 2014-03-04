@@ -1,7 +1,5 @@
 package im.tox.antox;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -57,9 +55,6 @@ public class ToxSingleton {
             if(UserDetails.status == null)
                 UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
             jTox.setUserStatus(UserDetails.status);
-
-            //jTox.bootstrap("144.76.60.215", 33445, "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
-            //jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
 
             /* Save data file */
             if(dataFile.isExternalStorageWritable())
