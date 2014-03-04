@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -242,11 +243,15 @@ public class MainActivity extends ActionBarActivity {
 
     public void rejectFriendRequest(View view) {
         if(toxSingleton.friend_requests.size() != 0) {
-            for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                if(activeFriendRequestKey.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
-                    toxSingleton.friend_requests.remove(i);
+            for(int j = 0; j < toxSingleton.friend_requests.size(); j++) {
+                for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
+                    if(activeFriendRequestKey.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
+                        toxSingleton.friend_requests.remove(i);
+                        break;
+                    }
                 }
             }
+
 
             if(!toxSingleton.db.isOpen())
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
