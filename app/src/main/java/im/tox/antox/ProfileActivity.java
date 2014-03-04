@@ -52,7 +52,6 @@ public class ProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_profile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
 
         /* Add acceptable statuses to the drop down menu */
@@ -73,7 +72,11 @@ public class ProfileActivity extends ActionBarActivity {
          * adds onClickListener to the ImageButton to add share the QR
           * */
         ImageButton qrCode = (ImageButton) findViewById(R.id.qr_code);
-        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
+        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        file = new File(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
         if(!file.exists()){
             generateQR(pref.getString("user_key", ""));
         }
@@ -84,9 +87,9 @@ public class ProfileActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/antox/userkey_qr.png")));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/userkey_qr.png")));
                 shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, "Share with"));
+                startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_with)));
             }
         });
 

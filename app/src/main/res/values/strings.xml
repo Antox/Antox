@@ -59,6 +59,9 @@
     <string name="title_activity_chat">Chat Activity</string>
     <string name="hello_world">Hello world!</string>
 
+    <!--  Profile Activity -->
+    <string name="share_with">Share With</string>
+
     <!--  Misc -->
 
 </resources>
