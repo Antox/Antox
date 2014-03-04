@@ -86,6 +86,9 @@ public class ToxService extends IntentService {
                         FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE
                 };
 
+                if(!toxSingleton.db.isOpen())
+                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
                 Cursor cursor = toxSingleton.db.query(
                         FriendRequestTable.FriendRequestEntry.TABLE_NAME,  // The table to query
                         projection,                               // The columns to return
@@ -180,6 +183,8 @@ public class ToxService extends IntentService {
             notify.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             /* Add friend request to database */
+            if(!toxSingleton.db.isOpen())
+                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY, key);
             values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE, message);
