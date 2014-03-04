@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.2"
+    buildToolsVersion '19.0.2'
 
     defaultConfig {
         minSdkVersion 8
@@ -21,4 +21,5 @@ dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.android.support:appcompat-v7:+'
     compile files('libs/jToxcore-0.5.1.jar')
+    compile files('libs/core.jar')
 }

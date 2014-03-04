@@ -3,7 +3,11 @@ package im.tox.antox;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -13,10 +17,20 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+import im.tox.QR.Contents;
+import im.tox.QR.QRCodeEncode;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -55,6 +69,27 @@ public class ProfileActivity extends ActionBarActivity {
         TextView userKey = (TextView) findViewById(R.id.settings_user_key);
         userKey.setText(pref.getString("user_key", ""));
 
+        /* Looks for the userkey qr.png if it doesn't exist then it creates it with the generateQR method.
+         * adds onClickListener to the ImageButton to add share the QR
+          * */
+        ImageButton qrCode = (ImageButton) findViewById(R.id.qr_code);
+        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
+        if(!file.exists()){
+            generateQR(pref.getString("user_key", ""));
+        }
+        Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+        qrCode.setImageBitmap(bmp);
+        qrCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/antox/userkey_qr.png")));
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "Share with"));
+            }
+        });
+
 		/* If the preferences aren't blank, then add them to text fields
          * otherwise it will display the predefined hints in strings.xml
          */
@@ -73,6 +108,26 @@ public class ProfileActivity extends ActionBarActivity {
             String savedStatus = pref.getString("saved_status_hint", "");
             int statusPos = statusAdapter.getPosition(savedStatus);
             statusSpinner.setSelection(statusPos);
+        }
+    }
+
+    /*
+    * generates the QR using the ZXING library (core.jar in libs folder)
+     */
+    private void generateQR(String userKey) {
+        String qrData = "tox://"+userKey;
+        int qrCodeSize= 500;
+        QRCodeEncode qrCodeEncoder = new QRCodeEncode(qrData, null,
+                Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeSize);
+        FileOutputStream out;
+        try {
+            Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
+            out = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
+            bitmap.compress(Bitmap.CompressFormat.PNG,90,out);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
