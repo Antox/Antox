@@ -1,8 +1,8 @@
 package im.tox.antox;
 
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,11 @@ public class ContactsFragment extends Fragment {
     }
 
     public void onChangeFriendRequest(int position, String key, String message) {
-        Fragment newFragment = new FriendRequestFragment(key, message);
+        Fragment newFragment = new FriendRequestFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(key, key);
+        bundle.putString(message, message);
+        newFragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
