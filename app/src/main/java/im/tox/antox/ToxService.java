@@ -22,9 +22,12 @@ import java.util.List;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -45,6 +48,9 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
+        FriendRequestDbHelper mDbHelper = new FriendRequestDbHelper(getApplicationContext());
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
 
         if (!intent.getAction().equals(Constants.DO_TOX)) {
             Log.d(TAG, "Got intent action: " + intent.getAction());
@@ -118,6 +124,43 @@ public class ToxService extends IntentService {
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
 
+// Define a projection that specifies which columns from the database
+// you will actually use after this query.
+                String[] projection = {
+                        FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY,
+                        FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE
+                };
+
+                Cursor cursor = db.query(
+                        FriendRequestTable.FriendRequestEntry.TABLE_NAME,  // The table to query
+                        projection,                               // The columns to return
+                        null,                                // The columns for the WHERE clause
+                        null,                            // The values for the WHERE clause
+                        null,                                     // don't group the rows
+                        null,                                     // don't filter by row groups
+                        null                                 // The sort order
+                );
+                try {
+                int count = cursor.getCount();
+                cursor.moveToFirst();
+                for (int i=0; i<count; i++) {
+                    String key = cursor.getString(
+                            cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY)
+                    );
+                    String message = cursor.getString(
+                            cursor.getColumnIndexOrThrow(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE)
+                    );
+                    toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
+                    cursor.moveToNext();
+                }
+                } finally {
+                    cursor.close();
+                }
+                Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+                Log.d(TAG, "Loaded requests from database");
+
                 try {
                     toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
                 } catch (UnknownHostException e) {
@@ -172,11 +215,21 @@ public class ToxService extends IntentService {
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
+            String key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
+            String message = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.FRIEND_REQUEST);
-            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
-            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
+            notify.putExtra("key", key);
+            notify.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            /* Add friend request to database */
+            ContentValues values = new ContentValues();
+            values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY, key);
+            values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE, message);
+            db.insert(
+                    FriendRequestTable.FriendRequestEntry.TABLE_NAME,
+                    null,
+                    values);
             /* Update friends list */
             Intent updateFriends = new Intent(this, ToxService.class);
             updateFriends.setAction(Constants.FRIEND_LIST);

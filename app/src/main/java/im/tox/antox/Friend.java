@@ -1,15 +1,15 @@
 package im.tox.antox;
 
-public class FriendsList {
+public class Friend {
 	public int icon;
 	public String friendName;
 	public String friendStatus;
 
-	public FriendsList() {
+	public Friend() {
 		super();
 	}
 
-	public FriendsList(int icon, String friendName, String friendStatus) {
+	public Friend(int icon, String friendName, String friendStatus) {
 		super();
 		this.icon = icon;
 		this.friendName = friendName;

@@ -1,9 +1,7 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,15 +30,11 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
-import im.tox.antox.Constants;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -62,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
     private Intent startToxIntent;
 
     public FriendsListAdapter contactsAdapter;
-    public FriendRequestsAdapter friendRequestsAdapter;
+    public FriendRequestAdapter friendRequestAdapter;
 
     public SlidingPaneLayout pane;
     private ChatFragment chat;
@@ -94,6 +88,8 @@ public class MainActivity extends ActionBarActivity {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
                     friendRequest(intent);
+                } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
+                    updateFriendRequests();
                 }
             }
         }
@@ -183,7 +179,7 @@ public class MainActivity extends ActionBarActivity {
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateFriends();
-        //toxSingleton.friend_requests = new ArrayList<FriendRequests>();
+        //toxSingleton.friend_requests = new ArrayList<FriendRequest>();
         updateFriendRequests();
 
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
@@ -198,20 +194,20 @@ public class MainActivity extends ActionBarActivity {
         friends[0][2] = "Why not try adding some?";
 
         /* Go through status strings and set appropriate resource image */
-        FriendsList friends_list[] = new FriendsList[friends.length];
+        Friend friends_list[] = new Friend[friends.length];
 
         for (int i = 0; i < friends.length; i++) {
             if (friends[i][0].equals("1"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_online,
+                friends_list[i] = new Friend(R.drawable.ic_status_online,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("0"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_offline,
+                friends_list[i] = new Friend(R.drawable.ic_status_offline,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("2"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_away,
+                friends_list[i] = new Friend(R.drawable.ic_status_away,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("3"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_busy,
+                friends_list[i] = new Friend(R.drawable.ic_status_busy,
                         friends[i][1], friends[i][2]);
         }
 
@@ -230,9 +226,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateFriendRequests() {
-        FriendRequests friend_requests_list[] = new FriendRequests[toxSingleton.friend_requests.size()];
+        FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
         friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
-        friendRequestsAdapter = new FriendRequestsAdapter(this, R.layout.friendrequest_list_item,
+        friendRequestAdapter = new FriendRequestAdapter(this, R.layout.friendrequest_list_item,
                 friend_requests_list);
 
         View header = findViewById(R.id.friend_requests_header);
@@ -478,7 +474,7 @@ public class MainActivity extends ActionBarActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctx, "Friend request received", duration);
         toast.show();
-        toxSingleton.friend_requests.add(new FriendRequests((String) key, (String) msg));
+        toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) msg));
         Log.d(TAG, toxSingleton.friend_requests.toString());
         updateFriendRequests();
     }
