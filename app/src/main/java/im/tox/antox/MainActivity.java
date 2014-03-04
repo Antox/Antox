@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
     private Menu menu;
-
+    private boolean isInChat=false;
     private List<String> connectedUsers;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -296,7 +296,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 openProfile();
                 return true;
             case R.id.add_friend:
-                addFriend();
+                if(isInChat)
+                    addFriendToGroup();
+                else
+                    addFriend();
                 return true;
             case R.id.search_friend:
                 return true;
@@ -310,6 +313,10 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addFriendToGroup() {
+        Log.v("Add friend to group method","To implement");
     }
 
     @Override
@@ -495,8 +502,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeContactName);
-            MenuItem af = (MenuItem)menu.getItem(1);
+            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
+            isInChat=true;
             System.out.println("Panel closed");
         }
 
@@ -504,8 +512,9 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
-            MenuItem af = (MenuItem)menu.getItem(1);
+            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
+            isInChat=false;
             System.out.println("Panel opened");
         }
 
