@@ -77,11 +77,13 @@ public class ContactsFragment extends Fragment {
                         int type = item.viewType();
                         if (type == Constants.TYPE_CONTACT) {
                             onChangeContact(position, item.first());
+                            main_act.activeTitle = item.first();
                             main_act.pane.closePane();
                         } else if (type == Constants.TYPE_FRIEND_REQUEST) {
                             String key = item.first();
                             String message = item.second();
                             onChangeFriendRequest(position, key, message);
+                            main_act.activeTitle = "Friend Request";
                             main_act.pane.closePane();
                         }
                     }
