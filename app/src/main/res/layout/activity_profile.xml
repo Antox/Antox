@@ -29,6 +29,12 @@
             android:textIsSelectable="true"
             android:textSize="12sp" />
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qr_code"
+            android:layout_gravity="center_horizontal" />
+
         <TextView
             android:id="@+id/settings_username_title"
             android:layout_width="fill_parent"
