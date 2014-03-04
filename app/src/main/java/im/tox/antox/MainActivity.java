@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
 
     public FriendsListAdapter contactsAdapter;
     public FriendRequestAdapter friendRequestAdapter;
+    private ScheduledExecutorService scheduleTaskExecutor;
 
     public SlidingPaneLayout pane;
     private ChatFragment chat;
@@ -119,7 +120,7 @@ public class MainActivity extends ActionBarActivity {
             doToxIntent = new Intent(this, ToxService.class);
             doToxIntent.setAction(Constants.DO_TOX);
             this.startService(startToxIntent);
-            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+            scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
 // This schedule a runnable task every 2 minutes
             scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
                 Context ctx = getApplicationContext();
@@ -272,10 +273,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(!isToxServiceRunning()) {
-            this.startService(doToxIntent);
-        }
-
     }
 
     @Override
@@ -285,6 +282,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onStop() {
+        scheduleTaskExecutor.shutdownNow();
         super.onStop();
     }
 
@@ -309,7 +307,6 @@ public class MainActivity extends ActionBarActivity {
                 pane.openPane();
                 return true;
             case R.id.action_exit:
-                this.stopService(doToxIntent);
                 finish();
                 return true;
             default:
