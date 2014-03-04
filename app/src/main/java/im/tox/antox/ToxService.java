@@ -126,7 +126,6 @@ public class ToxService extends IntentService {
             try {
                 toxSingleton.jTox.doTox();
                 if(toxSingleton.jTox.isConnected()) {
-                    Log.d(TAG, "Connected to tox network");
                     Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                             .putExtra(Constants.CONNECTED_STATUS, "connected");
                     LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
