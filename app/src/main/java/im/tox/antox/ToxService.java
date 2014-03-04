@@ -32,7 +32,7 @@ import android.util.Log;
 
 public class ToxService extends IntentService {
 
-	private static final String TAG = "im.tox.antox.ToxService";
+
 	
 	public ToxService() {
 		super("ToxService");
@@ -44,7 +44,7 @@ public class ToxService extends IntentService {
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
         if (!intent.getAction().equals(Constants.DO_TOX)) {
-            Log.d(TAG, "Got intent action: " + intent.getAction());
+            Log.d(Constants.TAG, "Got intent action: " + intent.getAction());
         }
 		if (intent.getAction().equals(Constants.REGISTER)) {
 			String name = intent.getStringExtra(Constants.REGISTER_NAME);
@@ -113,7 +113,7 @@ public class ToxService extends IntentService {
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
             } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
+                Log.d(Constants.TAG, e.getError().toString());
                 e.printStackTrace();
             }
         } else if (intent.getAction().equals(Constants.DO_TOX)) {
@@ -125,7 +125,7 @@ public class ToxService extends IntentService {
                     LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
                 }
             } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
+                Log.d(Constants.TAG, e.getError().toString());
                 e.printStackTrace();
             }
 
@@ -162,13 +162,22 @@ public class ToxService extends IntentService {
             }
 
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
-            Log.d(TAG, "Constants.FRIEND_LIST");
+            Log.d(Constants.TAG, "Constants.FRIEND_LIST");
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-            Log.d(TAG, "Constants.FRIEND_REQUEST");
+            Log.d(Constants.TAG, "Constants.FRIEND_REQUEST");
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.setAction(Constants.FRIEND_REQUEST);
+            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
+            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            /* Update friends list */
+            Intent updateFriends = new Intent(this, ToxService.class);
+            updateFriends.setAction(Constants.FRIEND_LIST);
+            this.startService(updateFriends);
 
         } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
-            Log.d(TAG, "Constants.CONNECTION_STATUS");
+            Log.d(Constants.TAG, "Constants.CONNECTION_STATUS");
         }
 	}
 

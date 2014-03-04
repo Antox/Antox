@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.antox.Constants;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -468,6 +469,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 Toast toast = Toast.makeText(ctx, msg, duration);
                 toast.show();
                 friend_requests.add(new FriendRequests((String) key, (String) msg));
+                Log.d(Constants.TAG, friend_requests.toString());
                 updateFriendRequests();
             }
 
