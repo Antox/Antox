@@ -14,71 +14,9 @@
         tools:context=".SettingsActivity">
 
         <TextView
-            android:id="@+id/settings_user_key_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_user_key_title" />
-
-        <TextView
-            android:id="@+id/settings_user_key"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:textIsSelectable="true"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/settings_username_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_username_title" />
-
-        <EditText
-            android:id="@+id/settings_name_hint"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/settings_name_hint" />
-
-        <TextView
-            android:id="@+id/settings_status_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_status_title" />
-
-        <Spinner
-            android:id="@+id/settings_spinner_status"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
-
-        <TextView
-            android:id="@+id/settings_note_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_note_title" />
-
-        <EditText
-            android:id="@+id/settings_note_hint"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/settings_note_hint" />
-
-        <TextView
             android:id="@+id/dhtSpinnerTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:textSize="15sp"
             android:textStyle="bold"
             android:text="@string/settings_dht_spinner_title" />

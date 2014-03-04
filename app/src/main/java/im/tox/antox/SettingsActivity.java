@@ -20,7 +20,7 @@ import android.widget.Toast;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
- * Settings Activity where the user can change their username, status, note and DHT nodes.
+ * Settings Activity DHT nodes.
  * Allows the user to specify their own DHT Node, or to pick one from a downloaded list of known
  * working nodes.
  *
@@ -67,39 +67,12 @@ public class SettingsActivity extends ActionBarActivity
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);
 
-        /* Add acceptable statuses to the drop down menu */
-        String[] statusItems = new String[]{"online", "away", "busy"};
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, statusItems);
-        statusSpinner.setAdapter(statusAdapter);
-
-		/* Get saved preferences */
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
-
-        /* Sets the user key to the saved user key */
-        TextView userKey = (TextView) findViewById(R.id.settings_user_key);
-        userKey.setText(pref.getString("user_key", ""));
 
 		/* If the preferences aren't blank, then add them to text fields
          * otherwise it will display the predefined hints in strings.xml
          */
-
-        if (!pref.getString("saved_name_hint", "").equals("")) {
-            EditText nameHint = (EditText) findViewById(R.id.settings_name_hint);
-            nameHint.setText(pref.getString("saved_name_hint", ""));
-        }
-
-        if (!pref.getString("saved_note_hint", "").equals("")) {
-            EditText noteHint = (EditText) findViewById(R.id.settings_note_hint);
-            noteHint.setText(pref.getString("saved_note_hint", ""));
-        }
-
-        if (!pref.getString("saved_status_hint", "").equals("")) {
-            String savedStatus = pref.getString("saved_status_hint", "");
-            int statusPos = statusAdapter.getPosition(savedStatus);
-            statusSpinner.setSelection(statusPos);
-        }
 
         if (!pref.getString("saved_dht_ip", "").equals("")) {
             dhtIP = pref.getString("saved_dht_ip", "");
@@ -132,9 +105,6 @@ public class SettingsActivity extends ActionBarActivity
          */
         String[] updatedSettings = { null, null, null};
 
-		/* Get all text from the fields */
-        EditText nameHintText = (EditText) findViewById(R.id.settings_name_hint);
-        EditText noteHintText = (EditText) findViewById(R.id.settings_note_hint);
         //EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
 
 		/* Save settings to file */
@@ -147,17 +117,7 @@ public class SettingsActivity extends ActionBarActivity
 		 * If the fields aren't equal to the default strings in strings.xml then
 		 * they contain user entered data so they need saving
 		 */
-        if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint))) {
-            editor.putString("saved_name_hint", nameHintText.getText().toString());
-            UserDetails.username = nameHintText.getText().toString();
-            updatedSettings[0] = nameHintText.getText().toString();
-        }
 
-        if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint))) {
-            editor.putString("saved_note_hint", noteHintText.getText().toString());
-            UserDetails.note = noteHintText.getText().toString();
-            updatedSettings[2] = noteHintText.getText().toString();
-        }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
         if (statusSpinner.getSelectedItem().toString().equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;

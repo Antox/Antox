@@ -12,17 +12,14 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        android:background="@drawable/welc"
         android:weightSum="100"
         tools:context=".WelcomeActivity" >
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:gravity="center"
-               android:textSize="30sp"
-               android:text="@string/welcome_string"
-            />
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/full_logo" />
 
            <TextView
                android:layout_width="match_parent"
@@ -66,7 +63,7 @@
                android:gravity="center"
                android:textSize="12sp"
                android:layout_centerInParent="true"
-                android:text="@string/developer_string"
+               android:text="@string/developer_string"
                android:layout_weight="90" />
     </LinearLayout>
 
