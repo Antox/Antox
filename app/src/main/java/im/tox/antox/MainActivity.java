@@ -262,7 +262,9 @@ public class MainActivity extends ActionBarActivity {
             toxSingleton.db.close();
 
             updateLeftPane();
-            pane.closePane();
+            getSupportFragmentManager().popBackStack();
+            pane.openPane();
+
 
             Context context = getApplicationContext();
             String text = "Friend request deleted";
