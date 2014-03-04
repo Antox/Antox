@@ -21,6 +21,7 @@ import android.view.View;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -236,6 +237,37 @@ public class MainActivity extends ActionBarActivity {
         }
 
         contacts.updateLeftPane();
+    }
+
+    public void rejectFriendRequest(View view) {
+
+        TextView k = (TextView) findViewById(R.id.requestfragment_key);
+
+        int pos = -1;
+        for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
+            if(k.getText().toString().equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey));
+            pos = i;
+        }
+
+        toxSingleton.friend_requests.remove(pos);
+
+        if(!toxSingleton.db.isOpen())
+            toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
+        toxSingleton.db.delete(FriendRequestTable.FriendRequestEntry.TABLE_NAME,
+                FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + k.getText().toString() + "'",
+                null);
+
+        toxSingleton.db.close();
+
+        updateLeftPane();
+        pane.closePane();
+
+        Context context = getApplicationContext();
+        String text = "Friend request deleted";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     /**
