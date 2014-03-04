@@ -28,14 +28,15 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 ###In Progress
 
-- [Implement jToxCore](https://github.com/Tox/jToxcore)
-- Create a singleton for Tox/JTox backend stuff
 - Implement all the callbacks 
 - Documenting the current code base
 
 ###TODO
 
 - Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
+- Fix app crashing when you launch barcode scanner then back out of it
+- When adding a friend, check the key is at least of proper length and only A-z 0-9
+- Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
