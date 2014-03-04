@@ -16,6 +16,7 @@ public class ContactsFragment extends Fragment {
      * List View for displaying all the friends in a scrollable list
      */
     private ListView friendListView;
+    private ListView friendRequestsView;
     /**
      * Adapter for the friendListView
      */
@@ -37,7 +38,7 @@ public class ContactsFragment extends Fragment {
 
     public void updateFriendRequests() {
         friendRequestsAdapter = main_act.friendRequestsAdapter;
-        friendListView.setAdapter(friendRequestsAdapter);
+        friendRequestsView.setAdapter(friendRequestsAdapter);
         System.out.println("updated friend requests");
     }
 
@@ -56,6 +57,7 @@ public class ContactsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         friendListView = (ListView) rootView.findViewById(R.id.contacts);
+        friendRequestsView = (ListView) rootView.findViewById(R.id.friend_requests);
 
         updateFriends();
 
