@@ -120,10 +120,15 @@ public class ToxService extends IntentService {
             try {
                 toxSingleton.jTox.doTox();
                 if(toxSingleton.jTox.isConnected()) {
+                    Log.d(TAG, "Connected to tox network");
                     Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
                             .putExtra(Constants.CONNECTED_STATUS, "connected");
                     LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+                } else {
+                    toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
                 }
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
