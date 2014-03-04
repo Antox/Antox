@@ -1,11 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="90dp"
+    android:layout_height="wrap_content"
     android:padding="6dip" >
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/request_key"
             android:layout_width="fill_parent"
@@ -20,6 +25,7 @@
             android:singleLine="true"
             android:textSize="12sp"
             android:textStyle="italic"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout> 
