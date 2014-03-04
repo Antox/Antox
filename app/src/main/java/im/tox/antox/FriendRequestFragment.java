@@ -25,12 +25,16 @@ public class FriendRequestFragment extends Fragment {
         this.message = message;
     }
 
+    private String SplitKey(String key) {
+        return key.substring(0,38) + "\n" + key.substring(38);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_friendrequest, container, false);
         TextView k = (TextView) rootView.findViewById(R.id.requestfragment_key);
-        k.setText(key);
+        k.setText(SplitKey(key));
         TextView m = (TextView) rootView.findViewById(R.id.requestfragment_message);
         m.setText(message);
 

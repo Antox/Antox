@@ -64,6 +64,11 @@ public class LeftPaneAdapter extends BaseAdapter {
         return position;
     }
 
+
+    private String SplitKey(String key) {
+        return key.substring(0,38) + "\n" + key.substring(38);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
@@ -93,7 +98,11 @@ public class LeftPaneAdapter extends BaseAdapter {
         }
         LeftPaneItem item = mData.get(position);
 
-        holder.firstText.setText(item.first());
+        if (type == Constants.TYPE_FRIEND_REQUEST) {
+            holder.firstText.setText(SplitKey(item.first()));
+        } else {
+            holder.firstText.setText(item.first());
+        }
         if (type != Constants.TYPE_HEADER) {
             holder.secondText.setText(item.second());
         }
