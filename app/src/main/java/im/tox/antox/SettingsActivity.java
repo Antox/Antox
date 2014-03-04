@@ -171,7 +171,13 @@ public class SettingsActivity extends ActionBarActivity
         boolean checked = ((CheckBox) view).isChecked();
         if(checked) {
             // Create an instance of the dialog fragment and show it
-            DialogFragment dialog = new DHTDialogFragment(dhtIP, dhtPort, dhtKey);
+            DialogFragment dialog = new DHTDialogFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(dhtIP, dhtIP);
+            bundle.putString(dhtPort, dhtPort);
+            bundle.putString(dhtKey, dhtKey);
+            dialog.setArguments(bundle);
+
             dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
         }
     }
