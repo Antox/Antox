@@ -9,8 +9,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import im.tox.QR.IntentIntegrator;
+import im.tox.QR.IntentResult;
 
 /**
  * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
@@ -27,8 +31,16 @@ public class AddFriendActivity extends ActionBarActivity {
         setContentView(R.layout.activity_add_friend);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        EditText friendID = (EditText) findViewById(R.id.addfriend_key);
+        //scanQR button to call the barcode reader app
+        Button scanQR = (Button)findViewById(R.id.scanFriendQR);
+        scanQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanIntent();
+            }
+        });
 
+        EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         Intent intentURI = getIntent();
         Uri uri;
         if (Intent.ACTION_VIEW.equals(intentURI.getAction())
@@ -37,6 +49,14 @@ public class AddFriendActivity extends ActionBarActivity {
             if (uri != null)
                 friendID.setText(uri.getHost());
         }
+    }
+
+    /*
+    * method is outside so that the intent can be passed this object
+     */
+    private void scanIntent() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.initiateScan();
     }
 
     public void addFriend(View view) {
@@ -59,6 +79,17 @@ public class AddFriendActivity extends ActionBarActivity {
 
         // Close activity
         finish();
+    }
+    /*
+    * handle intent to read a friend QR code
+    * */
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
+            addFriendKey.setText(scanResult.getContents());
+        }
+
     }
 
     @Override
