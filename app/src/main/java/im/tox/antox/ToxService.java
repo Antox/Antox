@@ -32,7 +32,9 @@ import android.util.Log;
 
 public class ToxService extends IntentService {
 
-	private static final String TAG = "im.tox.antox.ToxService";
+    private static final String TAG = "im.tox.antox.ToxService";
+
+
 	
 	public ToxService() {
 		super("ToxService");
@@ -43,6 +45,7 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
+
         if (!intent.getAction().equals(Constants.DO_TOX)) {
             Log.d(TAG, "Got intent action: " + intent.getAction());
         }
@@ -126,9 +129,9 @@ public class ToxService extends IntentService {
             try {
                 toxSingleton.jTox.doTox();
                 if(toxSingleton.jTox.isConnected()) {
-                    Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
-                            .putExtra(Constants.CONNECTED_STATUS, "connected");
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+                    //Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
+                    //       .putExtra(Constants.CONNECTED_STATUS, "connected");
+                    //LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
                 }
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
@@ -172,6 +175,15 @@ public class ToxService extends IntentService {
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.FRIEND_REQUEST);
+            notify.putExtra("key", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY));
+            notify.putExtra("message", intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            /* Update friends list */
+            Intent updateFriends = new Intent(this, ToxService.class);
+            updateFriends.setAction(Constants.FRIEND_LIST);
+            this.startService(updateFriends);
 
         } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
             Log.d(TAG, "Constants.CONNECTION_STATUS");

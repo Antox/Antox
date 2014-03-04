@@ -3,6 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:id="@+id/friend_requests_header"
+        android:text="Friend Requests"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/white" />
     <ListView
         android:id="@+id/friend_requests"
         android:layout_width="match_parent"
@@ -14,6 +22,14 @@
         android:paddingLeft="2dp"
         android:paddingRight="2dp" >
     </ListView>
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:id="@+id/contacts_header"
+        android:text="Friends"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/white" />
     <ListView
         android:id="@+id/contacts"
         android:layout_width="match_parent"

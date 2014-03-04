@@ -57,8 +57,7 @@ public class FriendRequestsAdapter extends ArrayAdapter<FriendRequests> implemen
 			row = inflater.inflate(layoutResourceId, parent, false);
 			holder = new FriendRequestsHolder();
 			holder.requestKey = (TextView) row.findViewById(R.id.request_key);
-			holder.requestMessage = (TextView) row
-					.findViewById(R.id.friend_status);
+			holder.requestMessage = (TextView) row.findViewById(R.id.request_message);
 			row.setTag(holder);
 		} else {
 			holder = (FriendRequestsHolder) row.getTag();

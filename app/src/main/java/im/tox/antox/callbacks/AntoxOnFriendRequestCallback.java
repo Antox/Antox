@@ -26,5 +26,11 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
     @Override
     public void execute(String publicKey, String message){
         Log.d(TAG, "Friend request callback");
+        Intent intent = new Intent(this.ctx, ToxService.class);
+        intent.setAction(Constants.FRIEND_REQUEST);
+        intent.putExtra(FRIEND_KEY, publicKey);
+        intent.putExtra(FRIEND_MESSAGE, message);
+        this.ctx.startService(intent);
+
     }
 }

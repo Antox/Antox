@@ -1,7 +1,9 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.antox.Constants;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -52,12 +55,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      * Extra message to be passed with intents - Should be unique from every other app
      */
     public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
+    private static final String TAG = "im.tox.antox.MainActivity";
 
-
-    /**
-     * Receiver for getting work reports from ToxService
-     */
-    private ResponseReceiver receiver;
 
     private Intent doToxIntent;
     private Intent startToxIntent;
@@ -68,6 +67,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private SlidingPaneLayout pane;
     private ChatFragment chat;
     private ContactsFragment contacts;
+    private IntentFilter filter;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
@@ -91,6 +91,21 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private Menu menu;
     private boolean isInChat=false;
     private List<String> connectedUsers;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "broadcast received");
+            String action = intent.getStringExtra("action");
+            if (action != null) {
+            Log.d(TAG, "action: " + action);
+                if (action == Constants.FRIEND_REQUEST) {
+                    friendRequest(intent);
+                }
+            }
+        }
+    };
 
 
     @SuppressLint("NewApi")
@@ -130,19 +145,11 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
-        /**
-         *  Intent filter will listen only for intents with action Constants.Register
-         *  @see im.tox.antox.Constants
-         */
-        IntentFilter mStatusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
-        receiver = new ResponseReceiver();
+
         /**
          * Local Broadcast Manager for listening for work reports from ToxService.
          * Local is used as it's more efficient and to stop other apps reading the messages
          */
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver,
-                mStatusIntentFilter);
 
 		/* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
@@ -187,6 +194,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         updateFriends();
         friend_requests = new ArrayList<FriendRequests>();
 
+        filter = new IntentFilter(Constants.BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
     }
 
@@ -218,6 +227,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 friends_list);
 
         contacts.updateFriends();
+
     }
 
     private void updateFriendRequests() {
@@ -263,6 +273,12 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         if(!isToxServiceRunning()) {
             this.startService(doToxIntent);
         }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -449,40 +465,18 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         }
     }
 
-    /**
-     * Response receiver for receiving work reports from ToxService to update the UI with results
-     */
-    private class ResponseReceiver extends BroadcastReceiver {
-
-        /**
-         * Uses the info passed in the Intent to update the UI with ToxService reports
-         *
-         * @param context
-         * @param intent
-         */
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //Do something with received broadcasted message
-            if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-
-            }
-
-            if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-                Context ctx = getApplicationContext();
-                CharSequence msg = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
-                CharSequence key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(ctx, msg, duration);
-                toast.show();
-                friend_requests.add(new FriendRequests((String) key, (String) msg));
-                updateFriendRequests();
-            }
-
-            if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
-
-            }
-        }
+    public void friendRequest(Intent intent) {
+        Context ctx = getApplicationContext();
+        CharSequence msg = intent.getStringExtra("message");
+        CharSequence key = intent.getStringExtra("key");
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctx, "Friend request received", duration);
+        toast.show();
+        friend_requests.add(new FriendRequests((String) key, (String) msg));
+        Log.d(TAG, friend_requests.toString());
+        updateFriendRequests();
     }
+
     @Override
     public void onBackPressed() {
         if (!pane.isOpen()) {
