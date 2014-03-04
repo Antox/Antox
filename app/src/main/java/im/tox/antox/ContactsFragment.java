@@ -28,11 +28,7 @@ public class ContactsFragment extends Fragment {
     }
 
     public void onChangeFriendRequest(int position, String key, String message) {
-        Fragment newFragment = new FriendRequestFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(key, key);
-        bundle.putString(message, message);
-        newFragment.setArguments(bundle);
+        Fragment newFragment = new FriendRequestFragment(key, message);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);

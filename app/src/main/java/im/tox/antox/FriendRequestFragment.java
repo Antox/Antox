@@ -20,8 +20,9 @@ public class FriendRequestFragment extends Fragment {
     private String key;
     private String message;
 
-    public FriendRequestFragment() {
-
+    public FriendRequestFragment(String key, String message) {
+        this.key = key;
+        this.message = message;
     }
 
     @Override
