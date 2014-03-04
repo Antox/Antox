@@ -63,6 +63,11 @@
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
 
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Accept</string>
+    <string name="friendrequest_reject">Reject</string>
+
+
     <!--  Misc -->
 
 </resources>
