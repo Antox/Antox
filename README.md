@@ -34,7 +34,8 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 ###TODO
 
-- Add a QR scanner for adding friends and generating a QR of the users own public key
+- Add a QR scanner for adding friends and generating a QR of the users own public kye
+- Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
