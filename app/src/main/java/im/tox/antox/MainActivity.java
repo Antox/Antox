@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private String[][] friends;
 
-    private String activeContactName;
+    public String activeTitle = "Antox";
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -486,7 +486,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle(activeContactName);
+            setTitle(activeTitle);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
             isInChat=true;
