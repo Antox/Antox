@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // Executes in a separate thread so UI experience isn't affected
             new DownloadDHTList().execute("http://markwinter.me/servers.php");
         } else {
-            Log.d(EXTRA_MESSAGE, "Not connected to the internet");
+
         }
 
         /* If the tox service isn't already running, start it */

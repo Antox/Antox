@@ -25,6 +25,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Parcel;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -113,14 +114,16 @@ public class ToxService extends IntentService {
 
                 while(true) {
                     toxSingleton.jTox.doTox();
-                    if(toxSingleton.jTox.isConnected()) {
-                        Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
-                                .putExtra(Constants.CONNECTED_STATUS, "connected");
-                        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-                    }
+
+                    if(!toxSingleton.jTox.isConnected())
+                        toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+
                     Thread.sleep(1);
                 }
-            } catch (InterruptedException e) {
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+            catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());

@@ -53,14 +53,12 @@ public class ToxSingleton {
             jTox.setUserStatus(UserDetails.status);
 
             //jTox.bootstrap("144.76.60.215", 33445, "04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
-            jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+            //jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
 
             /* Save data file */
             if(dataFile.isExternalStorageWritable())
                 dataFile.saveFile(jTox.save());
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (ToxException e) {
             e.printStackTrace();
             Log.d(TAG, e.getError().toString());
