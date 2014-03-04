@@ -93,6 +93,8 @@ public class ToxService extends IntentService {
 			}
 		} else if (intent.getAction().equals(Constants.START_TOX)) {
             try {
+                toxSingleton.initTox();
+
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
                 AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
@@ -128,11 +130,6 @@ public class ToxService extends IntentService {
         } else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
                 toxSingleton.jTox.doTox();
-                if(toxSingleton.jTox.isConnected()) {
-                    //Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
-                    //       .putExtra(Constants.CONNECTED_STATUS, "connected");
-                    //LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-                }
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();

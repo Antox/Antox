@@ -4,6 +4,7 @@ import android.nfc.Tag;
 import android.util.Log;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
@@ -19,10 +20,15 @@ public class ToxSingleton {
     public JTox jTox;
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
+    public ArrayList<FriendRequests> friend_requests = new ArrayList<FriendRequests>();
 
     private static volatile ToxSingleton instance = null;
 
     private ToxSingleton() {
+
+    }
+
+    public void initTox() {
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
         try {

@@ -74,23 +74,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      */
     private String[][] friends;
 
-    /**
-     * Stores the friends list returned by ToxService to feed into String[][] friends
-     */
-    private String[] friendNames;
-
-    // Stores friend requests
-    private ArrayList<FriendRequests> friend_requests;
-
     private String activeContactName;
 
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
     private Menu menu;
     private boolean isInChat=false;
-    private List<String> connectedUsers;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -192,7 +184,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateFriends();
-        friend_requests = new ArrayList<FriendRequests>();
+        //toxSingleton.friend_requests = new ArrayList<FriendRequests>();
+        updateFriendRequests();
 
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
@@ -231,8 +224,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     }
 
     private void updateFriendRequests() {
-        FriendRequests friend_requests_list[] = new FriendRequests[friend_requests.size()];
-        friend_requests_list = friend_requests.toArray(friend_requests_list);
+        FriendRequests friend_requests_list[] = new FriendRequests[toxSingleton.friend_requests.size()];
+        friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
         friendRequestsAdapter = new FriendRequestsAdapter(this, R.layout.friendrequest_list_item,
                 friend_requests_list);
         contacts.updateFriendRequests();
@@ -472,8 +465,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctx, "Friend request received", duration);
         toast.show();
-        friend_requests.add(new FriendRequests((String) key, (String) msg));
-        Log.d(TAG, friend_requests.toString());
+        toxSingleton.friend_requests.add(new FriendRequests((String) key, (String) msg));
+        Log.d(TAG, toxSingleton.friend_requests.toString());
         updateFriendRequests();
     }
 
