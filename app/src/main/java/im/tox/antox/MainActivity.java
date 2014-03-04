@@ -282,7 +282,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onStop() {
-        scheduleTaskExecutor.shutdownNow();
+        if(scheduleTaskExecutor != null){
+            scheduleTaskExecutor.shutdownNow();
+        }
         super.onStop();
     }
 
