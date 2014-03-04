@@ -48,13 +48,13 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
-        FriendRequestDbHelper mDbHelper = new FriendRequestDbHelper(getApplicationContext());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
 
         if (intent.getAction().equals(Constants.START_TOX)) {
             try {
                 toxSingleton.initTox();
+
+                toxSingleton.mDbHelper = new FriendRequestDbHelper(getApplicationContext());
+                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
 
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
@@ -86,7 +86,7 @@ public class ToxService extends IntentService {
                         FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE
                 };
 
-                Cursor cursor = db.query(
+                Cursor cursor = toxSingleton.db.query(
                         FriendRequestTable.FriendRequestEntry.TABLE_NAME,  // The table to query
                         projection,                               // The columns to return
                         null,                                // The columns for the WHERE clause
@@ -111,8 +111,7 @@ public class ToxService extends IntentService {
                 } finally {
                     cursor.close();
                 }
-                cursor.close();
-                mDbHelper.close();
+                toxSingleton.mDbHelper.close();
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
@@ -184,11 +183,11 @@ public class ToxService extends IntentService {
             ContentValues values = new ContentValues();
             values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY, key);
             values.put(FriendRequestTable.FriendRequestEntry.COLUMN_NAME_MESSAGE, message);
-            db.insert(
+            toxSingleton.db.insert(
                     FriendRequestTable.FriendRequestEntry.TABLE_NAME,
                     null,
                     values);
-            mDbHelper.close();
+            toxSingleton.mDbHelper.close();
             /* Update friends list */
             Intent updateFriends = new Intent(this, ToxService.class);
             updateFriends.setAction(Constants.FRIEND_LIST);

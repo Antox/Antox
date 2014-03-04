@@ -1,5 +1,6 @@
 package im.tox.antox;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class ToxSingleton {
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
     public ArrayList<FriendRequest> friend_requests = new ArrayList<FriendRequest>();
+    FriendRequestDbHelper mDbHelper;
+    SQLiteDatabase db;
 
     private static volatile ToxSingleton instance = null;
 
