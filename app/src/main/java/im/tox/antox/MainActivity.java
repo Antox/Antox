@@ -218,6 +218,13 @@ public class MainActivity extends ActionBarActivity {
         contactsAdapter = new FriendsListAdapter(this, R.layout.contact_list_item,
                 friends_list);
 
+        View header = findViewById(R.id.contacts_header);
+        if (friends.length == 0) {
+            header.setVisibility(View.GONE);
+        } else {
+            header.setVisibility(View.VISIBLE);
+        }
+
         contacts.updateFriends();
 
     }
@@ -227,6 +234,13 @@ public class MainActivity extends ActionBarActivity {
         friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
         friendRequestsAdapter = new FriendRequestsAdapter(this, R.layout.friendrequest_list_item,
                 friend_requests_list);
+
+        View header = findViewById(R.id.friend_requests_header);
+        if (friend_requests_list.length == 0) {
+            header.setVisibility(View.GONE);
+        } else {
+            header.setVisibility(View.VISIBLE);
+        }
         contacts.updateFriendRequests();
     }
 
