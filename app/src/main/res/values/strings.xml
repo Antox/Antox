@@ -56,6 +56,7 @@
     <string name="addfriend_friend_key">enter your friends public key</string>
     <string name="addfriend_friend_message">optional message to send with request</string>
     <string name="addfriend_button">Add Friend</string>
+    <string name="scanqr_button">Scan a QR code</string>
     <string name="title_activity_chat">Chat Activity</string>
     <string name="hello_world">Hello world!</string>
 

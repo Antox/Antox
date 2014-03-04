@@ -112,6 +112,12 @@ public class ToxService extends IntentService {
                 SharedPreferences.Editor editor = settingsPref.edit();
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
+
+                try {
+                    toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
             } catch (ToxException e) {
                 Log.d(Constants.TAG, e.getError().toString());
                 e.printStackTrace();
