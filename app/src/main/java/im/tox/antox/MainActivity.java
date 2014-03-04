@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
@@ -502,6 +503,9 @@ public class MainActivity extends ActionBarActivity {
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
             isInChat=false;
+            InputMethodManager imm = (InputMethodManager)getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
         }
 
