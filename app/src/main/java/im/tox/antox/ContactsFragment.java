@@ -22,7 +22,7 @@ public class ContactsFragment extends Fragment {
      * Adapter for the friendListView
      */
     private FriendsListAdapter contactsAdapter;
-    private FriendRequestsAdapter friendRequestsAdapter;
+    private FriendRequestAdapter friendRequestAdapter;
 
     public ContactsFragment() {
 
@@ -51,8 +51,8 @@ public class ContactsFragment extends Fragment {
     }
 
     public void updateFriendRequests() {
-        friendRequestsAdapter = main_act.friendRequestsAdapter;
-        friendRequestsView.setAdapter(friendRequestsAdapter);
+        friendRequestAdapter = main_act.friendRequestAdapter;
+        friendRequestsView.setAdapter(friendRequestAdapter);
         System.out.println("updated friend requests");
     }
 
@@ -94,7 +94,7 @@ public class ContactsFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position,
                                             long id) {
-                        FriendRequests item = (FriendRequests) parent.getAdapter().getItem(position);
+                        FriendRequest item = (FriendRequest) parent.getAdapter().getItem(position);
                         String key = item.key();
                         String message = item.message();
                         onChangeFriendRequest(position, key, message);

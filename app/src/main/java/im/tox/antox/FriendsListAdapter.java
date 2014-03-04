@@ -16,18 +16,18 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
+public class FriendsListAdapter extends ArrayAdapter<Friend> implements
 		Filterable {
 	Context context;
 	int layoutResourceId;
-	List<FriendsList> data = null;
+	List<Friend> data = null;
 
 	private final Object lock = new Object();
-	private ArrayList<FriendsList> originalData;
+	private ArrayList<Friend> originalData;
 	private FriendsFilter filter;
 
 	public FriendsListAdapter(Context context, int layoutResourceId,
-			FriendsList[] data) {
+			Friend[] data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
@@ -40,7 +40,7 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 	}
 
 	@Override
-	public FriendsList getItem(int position) {
+	public Friend getItem(int position) {
 		return data.get(position);
 	}
 
@@ -67,10 +67,10 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 			holder = (FriendsListHolder) row.getTag();
 		}
 
-		FriendsList friendsList = data.get(position);
-		holder.friendName.setText(friendsList.friendName);
-		holder.imgIcon.setImageResource(friendsList.icon);
-		holder.friendStatus.setText(friendsList.friendStatus);
+		Friend friend = data.get(position);
+		holder.friendName.setText(friend.friendName);
+		holder.imgIcon.setImageResource(friend.icon);
+		holder.friendStatus.setText(friend.friendStatus);
 
 		return row;
 	}
@@ -97,15 +97,15 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 
 			if (originalData == null) {
 				synchronized (lock) {
-					originalData = new ArrayList<FriendsList>(data);
+					originalData = new ArrayList<Friend>(data);
 				}
 			}
 
 			// filter is empty string, result is original data of friends list
 			if (constraint == null || constraint.length() == 0) {
-				ArrayList<FriendsList> list;
+				ArrayList<Friend> list;
 				synchronized (lock) {
-					list = new ArrayList<FriendsList>(originalData);
+					list = new ArrayList<Friend>(originalData);
 				}
 				results.values = list;
 				results.count = list.size();
@@ -113,16 +113,16 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 				String prefixString = constraint.toString().toLowerCase(
 						Locale.getDefault());
 
-				ArrayList<FriendsList> values;
+				ArrayList<Friend> values;
 				synchronized (lock) {
-					values = new ArrayList<FriendsList>(originalData);
+					values = new ArrayList<Friend>(originalData);
 				}
 
 				final int count = values.size();
-				final ArrayList<FriendsList> newValues = new ArrayList<FriendsList>();
+				final ArrayList<Friend> newValues = new ArrayList<Friend>();
 
 				for (int i = 0; i < count; i++) {
-					final FriendsList value = values.get(i);
+					final Friend value = values.get(i);
 					final String valueText = value.toString().toLowerCase(
 							Locale.getDefault());
 
@@ -159,7 +159,7 @@ public class FriendsListAdapter extends ArrayAdapter<FriendsList> implements
 		@Override
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
-			data = (List<FriendsList>) results.values;
+			data = (List<Friend>) results.values;
 			notifyDataSetChanged();
 		}
 	}

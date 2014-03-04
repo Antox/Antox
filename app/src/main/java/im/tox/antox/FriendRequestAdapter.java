@@ -12,20 +12,19 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-public class FriendRequestsAdapter extends ArrayAdapter<FriendRequests> implements
+public class FriendRequestAdapter extends ArrayAdapter<FriendRequest> implements
 		Filterable {
 
 	Context context;
 	int layoutResourceId;
-	List<FriendRequests> data = null;
+	List<FriendRequest> data = null;
 
 	private final Object lock = new Object();
-	private ArrayList<FriendRequests> originalData;
+	private ArrayList<FriendRequest> originalData;
 
-	public FriendRequestsAdapter(Context context, int layoutResourceId,
-                                 FriendRequests[] data) {
+	public FriendRequestAdapter(Context context, int layoutResourceId,
+                                FriendRequest[] data) {
 		super(context, layoutResourceId, data);
 		this.layoutResourceId = layoutResourceId;
 		this.context = context;
@@ -38,7 +37,7 @@ public class FriendRequestsAdapter extends ArrayAdapter<FriendRequests> implemen
 	}
 
 	@Override
-	public FriendRequests getItem(int position) {
+	public FriendRequest getItem(int position) {
 		return data.get(position);
 	}
 
@@ -63,9 +62,9 @@ public class FriendRequestsAdapter extends ArrayAdapter<FriendRequests> implemen
 			holder = (FriendRequestsHolder) row.getTag();
 		}
 
-		FriendRequests friendRequests = data.get(position);
-		holder.requestKey.setText(friendRequests.requestKey);
-		holder.requestMessage.setText(friendRequests.requestMessage);
+		FriendRequest friendRequest = data.get(position);
+		holder.requestKey.setText(friendRequest.requestKey);
+		holder.requestMessage.setText(friendRequest.requestMessage);
 
 		return row;
 	}

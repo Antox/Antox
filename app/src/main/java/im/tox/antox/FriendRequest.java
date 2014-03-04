@@ -1,14 +1,14 @@
 package im.tox.antox;
 
-public class FriendRequests {
+public class FriendRequest {
 	public String requestKey;
 	public String requestMessage;
 
-	public FriendRequests() {
+	public FriendRequest() {
 		super();
 	}
 
-	public FriendRequests(String requestKey, String requestMessage) {
+	public FriendRequest(String requestKey, String requestMessage) {
 		super();
 		this.requestKey = requestKey;
 		this.requestMessage = requestMessage;

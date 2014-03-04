@@ -1,9 +1,9 @@
 package im.tox.antox;
 
-import android.nfc.Tag;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.JTox;
@@ -20,7 +20,7 @@ public class ToxSingleton {
     public JTox jTox;
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
-    public ArrayList<FriendRequests> friend_requests = new ArrayList<FriendRequests>();
+    public ArrayList<FriendRequest> friend_requests = new ArrayList<FriendRequest>();
 
     private static volatile ToxSingleton instance = null;
 
