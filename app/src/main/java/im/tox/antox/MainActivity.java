@@ -22,6 +22,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +32,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -56,6 +60,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
     private ResponseReceiver receiver;
 
     private Intent doToxIntent;
+    private Intent startToxIntent;
 
     public FriendsListAdapter contactsAdapter;
     public FriendRequestsAdapter friendRequestsAdapter;
@@ -99,9 +104,19 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
+            startToxIntent = new Intent(this, ToxService.class);
+            startToxIntent.setAction(Constants.START_TOX);
             doToxIntent = new Intent(this, ToxService.class);
             doToxIntent.setAction(Constants.DO_TOX);
-            this.startService(doToxIntent);
+            this.startService(startToxIntent);
+            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+// This schedule a runnable task every 2 minutes
+            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+                Context ctx = getApplicationContext();
+                public void run() {
+                    ctx.startService(doToxIntent);
+                }
+            }, 0, 50, TimeUnit.MILLISECONDS);
         }
 
         Intent getFriendsList = new Intent(this, ToxService.class);

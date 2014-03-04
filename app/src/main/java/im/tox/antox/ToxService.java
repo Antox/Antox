@@ -42,8 +42,9 @@ public class ToxService extends IntentService {
 		AntoxState state = AntoxState.getInstance();
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
 		ArrayList<String> boundActivities = state.getBoundActivities();
-
-		Log.d(TAG, "Got intent action: " + intent.getAction());
+        if (!intent.getAction().equals(Constants.DO_TOX)) {
+            Log.d(TAG, "Got intent action: " + intent.getAction());
+        }
 		if (intent.getAction().equals(Constants.REGISTER)) {
 			String name = intent.getStringExtra(Constants.REGISTER_NAME);
 			boundActivities.add(name);
@@ -86,7 +87,7 @@ public class ToxService extends IntentService {
 					nm.notify(0, mn);
 				}
 			}
-		} else if (intent.getAction().equals(Constants.DO_TOX)) {
+		} else if (intent.getAction().equals(Constants.START_TOX)) {
             try {
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
@@ -110,22 +111,24 @@ public class ToxService extends IntentService {
                 SharedPreferences.Editor editor = settingsPref.edit();
                 editor.putString("user_key", toxSingleton.jTox.getAddress());
                 editor.commit();
-
-                while(true) {
-                    toxSingleton.jTox.doTox();
-                    if(toxSingleton.jTox.isConnected()) {
-                        Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
-                                .putExtra(Constants.CONNECTED_STATUS, "connected");
-                        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-                    }
-                    Thread.sleep(1);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
+        } else if (intent.getAction().equals(Constants.DO_TOX)) {
+            try {
+
+                toxSingleton.jTox.doTox();
+                if(toxSingleton.jTox.isConnected()) {
+                    Intent localIntent = new Intent(Constants.BROADCAST_ACTION)
+                            .putExtra(Constants.CONNECTED_STATUS, "connected");
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+                }
+            } catch (ToxException e) {
+                Log.d(TAG, e.getError().toString());
+                e.printStackTrace();
+            }
+
         } else if (intent.getAction().equals(Constants.ADD_FRIEND)) {
             try {
                 String[] friendData = intent.getStringArrayExtra("friendData");
