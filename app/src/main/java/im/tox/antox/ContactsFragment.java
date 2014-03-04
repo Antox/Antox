@@ -16,13 +16,12 @@ public class ContactsFragment extends Fragment {
     /**
      * List View for displaying all the friends in a scrollable list
      */
-    private ListView friendListView;
-    private ListView friendRequestsView;
+    private ListView leftPaneListView;
     /**
      * Adapter for the friendListView
      */
-    private FriendsListAdapter contactsAdapter;
-    private FriendRequestAdapter friendRequestAdapter;
+    private LeftPaneAdapter leftPaneAdapter;
+
 
     public ContactsFragment() {
 
@@ -44,16 +43,10 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-    public void updateFriends() {
-        contactsAdapter = main_act.contactsAdapter;
-        friendListView.setAdapter(contactsAdapter);
-        System.out.println("updated friends");
-    }
-
-    public void updateFriendRequests() {
-        friendRequestAdapter = main_act.friendRequestAdapter;
-        friendRequestsView.setAdapter(friendRequestAdapter);
-        System.out.println("updated friend requests");
+    public void updateLeftPane() {
+        leftPaneAdapter = main_act.leftPaneAdapter;
+        leftPaneListView.setAdapter(leftPaneAdapter);
+        System.out.println("updated left pane");
     }
 
     private MainActivity main_act;
@@ -69,41 +62,30 @@ public class ContactsFragment extends Fragment {
 
 
 
-        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
-        friendListView = (ListView) rootView.findViewById(R.id.contacts);
-        friendRequestsView = (ListView) rootView.findViewById(R.id.friend_requests);
+        View rootView = inflater.inflate(R.layout.fragment_leftpane, container, false);
+        leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
 
-        updateFriends();
+        updateLeftPane();
 
-        friendListView
+        leftPaneListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position,
 	                    long id) {
-                        String friendName = parent.getItemAtPosition(position)
-                                .toString();
-                        onChangeContact(position, friendName);
-                        main_act.pane.closePane();
+                        LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
+                        int type = item.viewType();
+                        if (type == Constants.TYPE_CONTACT) {
+                            onChangeContact(position, item.first());
+                            main_act.pane.closePane();
+                        } else if (type == Constants.TYPE_FRIEND_REQUEST) {
+                            String key = item.first();
+                            String message = item.second();
+                            onChangeFriendRequest(position, key, message);
+                            main_act.pane.closePane();
+                        }
                     }
                 });
-
-        friendRequestsView
-                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position,
-                                            long id) {
-                        FriendRequest item = (FriendRequest) parent.getAdapter().getItem(position);
-                        String key = item.key();
-                        String message = item.message();
-                        onChangeFriendRequest(position, key, message);
-                        main_act.pane.closePane();
-                    }
-                });
-
-
-
 
         return rootView;
     }

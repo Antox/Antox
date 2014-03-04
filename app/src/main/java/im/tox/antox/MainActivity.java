@@ -35,6 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.antox.LeftPaneItem;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -55,8 +56,7 @@ public class MainActivity extends ActionBarActivity {
     private Intent doToxIntent;
     private Intent startToxIntent;
 
-    public FriendsListAdapter contactsAdapter;
-    public FriendRequestAdapter friendRequestAdapter;
+    public LeftPaneAdapter leftPaneAdapter;
     private ScheduledExecutorService scheduleTaskExecutor;
 
     public SlidingPaneLayout pane;
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
                 if (action == Constants.FRIEND_REQUEST) {
                     friendRequest(intent);
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
-                    updateFriendRequests();
+                    updateLeftPane();
                 }
             }
         }
@@ -179,16 +179,16 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
-        updateFriends();
+
         //toxSingleton.friend_requests = new ArrayList<FriendRequest>();
-        updateFriendRequests();
+        updateLeftPane();
 
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
     }
 
-    private void updateFriends() {
+    private void updateLeftPane() {
         friends = new String[1][3];
         friends[0][0] = "0";
         friends[0][1] = "You have no friends";
@@ -212,33 +212,29 @@ public class MainActivity extends ActionBarActivity {
                         friends[i][1], friends[i][2]);
         }
 
-        contactsAdapter = new FriendsListAdapter(this, R.layout.contact_list_item,
-                friends_list);
-
-        View header = findViewById(R.id.contacts_header);
-        if (friends.length == 0) {
-            header.setVisibility(View.GONE);
-        } else {
-            header.setVisibility(View.VISIBLE);
-        }
-
-        contacts.updateFriends();
-
-    }
-
-    private void updateFriendRequests() {
         FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
         friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
-        friendRequestAdapter = new FriendRequestAdapter(this, R.layout.friendrequest_list_item,
-                friend_requests_list);
 
-        View header = findViewById(R.id.friend_requests_header);
-        if (friend_requests_list.length == 0) {
-            header.setVisibility(View.GONE);
-        } else {
-            header.setVisibility(View.VISIBLE);
+        leftPaneAdapter = new LeftPaneAdapter(this);
+
+        if (friend_requests_list.length > 0) {
+            LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, "Friend Requests", null, 0);
+            leftPaneAdapter.addItem(friend_request_header);
+            for (int i = 0; i < friend_requests_list.length; i++) {
+                LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
+                leftPaneAdapter.addItem(friend_request);
+            }
         }
-        contacts.updateFriendRequests();
+        if (friends_list.length > 0) {
+            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Friends", null, 0);
+            leftPaneAdapter.addItem(friends_header);
+            for (int i = 0; i < friends_list.length; i++) {
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].friendStatus, friends_list[i].icon);
+                leftPaneAdapter.addItem(friend);
+            }
+        }
+
+        contacts.updateLeftPane();
     }
 
     /**
@@ -335,8 +331,8 @@ public class MainActivity extends ActionBarActivity {
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        MainActivity.this.contactsAdapter.getFilter().filter(
-                                newText);
+                        //MainActivity.this.contactsAdapter.getFilter().filter(
+                        //        newText);
                         return true;
                     }
                 });
@@ -473,7 +469,7 @@ public class MainActivity extends ActionBarActivity {
         toast.show();
         toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) msg));
         Log.d(TAG, toxSingleton.friend_requests.toString());
-        updateFriendRequests();
+        updateLeftPane();
     }
 
     @Override
