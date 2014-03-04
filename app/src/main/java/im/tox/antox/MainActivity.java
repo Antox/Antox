@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
     private String[][] friends;
 
     public String activeTitle = "Antox";
+    public String activeFriendRequestKey = null;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -240,23 +241,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void rejectFriendRequest(View view) {
-
-        TextView k = (TextView) findViewById(R.id.requestfragment_key);
-
         int pos = -1;
         if(toxSingleton.friend_requests.size() != 0) {
             for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                if(k.getText().toString().equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey));
+                if(activeFriendRequestKey.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey));
                 pos = i;
             }
-
-            toxSingleton.friend_requests.remove(pos);
+            if (pos != -1) {
+                toxSingleton.friend_requests.remove(pos);
+            }
 
             if(!toxSingleton.db.isOpen())
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
 
             toxSingleton.db.delete(FriendRequestTable.FriendRequestEntry.TABLE_NAME,
-                    FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + k.getText().toString() + "'",
+                    FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + activeFriendRequestKey + "'",
                     null);
 
             toxSingleton.db.close();
