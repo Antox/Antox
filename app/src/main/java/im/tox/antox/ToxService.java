@@ -42,46 +42,25 @@ public class ToxService extends IntentService {
     private static final String TAG = "im.tox.antox.ToxService";
 
     private ScheduledExecutorService scheduleTaskExecutor;
-	
-	public ToxService() {
-		super("ToxService");
-	}
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		AntoxState state = AntoxState.getInstance();
+    private boolean toxStarted;
+
+    public ToxService() {
+        super("ToxService");
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        AntoxState state = AntoxState.getInstance();
         ToxSingleton toxSingleton = ToxSingleton.getInstance();
-		ArrayList<String> boundActivities = state.getBoundActivities();
+        ArrayList<String> boundActivities = state.getBoundActivities();
 
         if (intent.getAction().equals(Constants.START_TOX)) {
             try {
+                Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox();
-
                 toxSingleton.mDbHelper = new FriendRequestDbHelper(getApplicationContext());
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
-                AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
-                AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
-                AntoxOnConnectionStatusCallback antoxOnConnectionStatusCallback = new AntoxOnConnectionStatusCallback(getApplicationContext());
-                AntoxOnNameChangeCallback antoxOnNameChangeCallback = new AntoxOnNameChangeCallback(getApplicationContext());
-                AntoxOnReadReceiptCallback antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(getApplicationContext());
-                AntoxOnStatusMessageCallback antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(getApplicationContext());
-                AntoxOnUserStatusCallback antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(getApplicationContext());
-
-                toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
-                toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
-                toxSingleton.callbackHandler.registerOnActionCallback(antoxOnActionCallback);
-                toxSingleton.callbackHandler.registerOnConnectionStatusCallback(antoxOnConnectionStatusCallback);
-                toxSingleton.callbackHandler.registerOnNameChangeCallback(antoxOnNameChangeCallback);
-                toxSingleton.callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback);
-                toxSingleton.callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback);
-                toxSingleton.callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
-
-                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settingsPref.edit();
-                editor.putString("user_key", toxSingleton.jTox.getAddress());
-                editor.commit();
 
 // Define a projection that specifies which columns from the database
 // you will actually use after this query.
@@ -119,11 +98,36 @@ public class ToxService extends IntentService {
                     cursor.close();
                 }
                 toxSingleton.mDbHelper.close();
+                Log.d(TAG, "Loaded requests from database");
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-                Log.d(TAG, "Loaded requests from database");
+
+                AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
+                AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
+                AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
+                AntoxOnConnectionStatusCallback antoxOnConnectionStatusCallback = new AntoxOnConnectionStatusCallback(getApplicationContext());
+                AntoxOnNameChangeCallback antoxOnNameChangeCallback = new AntoxOnNameChangeCallback(getApplicationContext());
+                AntoxOnReadReceiptCallback antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(getApplicationContext());
+                AntoxOnStatusMessageCallback antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(getApplicationContext());
+                AntoxOnUserStatusCallback antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(getApplicationContext());
+
+                toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
+                toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
+                toxSingleton.callbackHandler.registerOnActionCallback(antoxOnActionCallback);
+                toxSingleton.callbackHandler.registerOnConnectionStatusCallback(antoxOnConnectionStatusCallback);
+                toxSingleton.callbackHandler.registerOnNameChangeCallback(antoxOnNameChangeCallback);
+                toxSingleton.callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback);
+                toxSingleton.callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback);
+                toxSingleton.callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
+
+                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settingsPref.edit();
+                editor.putString("user_key", toxSingleton.jTox.getAddress());
+                editor.commit();
+
+
 
                 try {
                     toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
@@ -138,21 +142,17 @@ public class ToxService extends IntentService {
 // This schedule a runnable task every 2 minutes
             Log.d("Service", "Start do_tox");
             scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                Context ctx = getApplicationContext();
+                ToxSingleton toxS = ToxSingleton.getInstance();
                 public void run() {
-                    Intent doToxIntent = new Intent(ctx, ToxService.class);
-                    doToxIntent.setAction(Constants.DO_TOX);
-                    ctx.startService(doToxIntent);
+                    try {
+                        Log.v("Service", "do_tox");
+                        toxS.jTox.doTox();
+                    } catch (ToxException e) {
+                        Log.d(TAG, e.getError().toString());
+                        e.printStackTrace();
+                    }
                 }
             }, 0, 50, TimeUnit.MILLISECONDS);
-        } else if (intent.getAction().equals(Constants.DO_TOX)) {
-            try {
-                Log.v("Service", "do_tox");
-                toxSingleton.jTox.doTox();
-            } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
-                e.printStackTrace();
-            }
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();
@@ -274,12 +274,16 @@ public class ToxService extends IntentService {
                         FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + key + "'",
                         null);
                 toxSingleton.db.close();
+
                 /* Broadcast */
+
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.ACCEPT_FRIEND_REQUEST);
                 notify.putExtra("key", key);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             }
         }
+
 	}
+
 }
