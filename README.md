@@ -26,6 +26,8 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 - Store a list of up to date DHT servers (SettingsActivity)
 - Add a QR scanner for adding friends and generating a QR of the users own public key
 - Fix app crashing when you launch barcode scanner then back out of it
+- When adding a friend, check the key is at least of proper length and only A-z 0-9
+
 
 ###In Progress
 
@@ -35,7 +37,7 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 ###TODO
 
 - Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
-- When adding a friend, check the key is at least of proper length and only A-z 0-9
+- Check checksum to correctly validate the userkey id in the validateFriendKey method of addFriendActivity
 - Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
 
 ###Screenshots of progress
