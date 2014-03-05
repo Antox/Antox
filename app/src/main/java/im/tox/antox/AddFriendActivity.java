@@ -108,11 +108,16 @@ public class AddFriendActivity extends ActionBarActivity {
         }
     }
 
-    /*validates id, should check checksum*/
     private boolean validateFriendKey(String friendKey) {
         if(friendKey.length()!=76 || friendKey.matches("[[:xdigit:]]")){
             return false;
         }
+        int x=0;
+        for(int i=0;i<friendKey.length();i+=4){
+            x=x^Integer.valueOf(friendKey.substring(i, i+4),16);
+        }
+        if(x!=0)
+            return false;
         return true;
     }
 
