@@ -62,7 +62,6 @@
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
-    <string name="settings_updated">Settings Updated</string>
     <string name="status_online">Online</string>
     <string name="status_away">Away</string>
     <string name="status_busy">Busy</string>
