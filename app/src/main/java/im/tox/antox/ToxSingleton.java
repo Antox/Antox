@@ -22,6 +22,7 @@ public class ToxSingleton {
     public ArrayList<FriendRequest> friend_requests = new ArrayList<FriendRequest>();
     FriendRequestDbHelper mDbHelper;
     SQLiteDatabase db;
+    public boolean toxStarted = false;
 
     private static volatile ToxSingleton instance = null;
 
@@ -30,6 +31,7 @@ public class ToxSingleton {
     }
 
     public void initTox() {
+        toxStarted = true;
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
         try {

@@ -118,6 +118,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         /* Check if connected to the Internet */
@@ -142,21 +143,9 @@ public class MainActivity extends ActionBarActivity {
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
-
-        /**
-         * Local Broadcast Manager for listening for work reports from ToxService.
-         * Local is used as it's more efficient and to stop other apps reading the messages
-         */
-
 		/* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
-
-        // For testing WelcomeActivity
-        // SharedPreferences.Editor editor = pref.edit();
-        // editor.putInt("beenLoaded", 0);
-        // editor.apply();
-        // End testing
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -187,16 +176,19 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
-
         //toxSingleton.friend_requests = new ArrayList<FriendRequest>();
         updateLeftPane();
+    }
 
-
-
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "onStart");
+        super.onStart();
     }
 
     @Override
     protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
     }
 
@@ -298,6 +290,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
+        Log.i(TAG, "onResume");
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         super.onResume();
@@ -305,12 +298,14 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onPause() {
+        Log.i(TAG, "onPause");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onPause();
     }
 
     @Override
     public void onStop() {
+        Log.i(TAG, "onStop");
         super.onStop();
     }
 
@@ -389,13 +384,7 @@ public class MainActivity extends ActionBarActivity {
      * Method to see if the tox service is already running so it isn't restarted
      */
     private boolean isToxServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (ToxService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        return toxSingleton.toxStarted;
     }
 
     private class DownloadDHTList extends AsyncTask<String, Void, String> {
