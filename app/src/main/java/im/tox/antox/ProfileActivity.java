@@ -55,7 +55,11 @@ public class ProfileActivity extends ActionBarActivity {
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
 
         /* Add acceptable statuses to the drop down menu */
-        String[] statusItems = new String[]{"online", "away", "busy"};
+        String[] statusItems = new String[]{ getResources().getString(R.string.status_online),
+                getResources().getString(R.string.status_away),
+                getResources().getString(R.string.status_busy)
+        };
+
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, statusItems);
         statusSpinner.setAdapter(statusAdapter);
@@ -76,7 +80,7 @@ public class ProfileActivity extends ActionBarActivity {
         if(!file.exists()){
             file.mkdirs();
         }
-        file = new File(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
+        file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
         if(!file.exists()){
             generateQR(pref.getString("user_key", ""));
         }
@@ -191,7 +195,7 @@ public class ProfileActivity extends ActionBarActivity {
         this.startService(updateSettings);
 
         Context context = getApplicationContext();
-        CharSequence text = "Settings updated";
+        CharSequence text = getResources().getString(R.string.settings_updated);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
