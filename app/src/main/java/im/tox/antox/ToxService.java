@@ -138,21 +138,17 @@ public class ToxService extends IntentService {
 // This schedule a runnable task every 2 minutes
             Log.d("Service", "Start do_tox");
             scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                Context ctx = getApplicationContext();
+                ToxSingleton toxS = ToxSingleton.getInstance();
                 public void run() {
-                    Intent doToxIntent = new Intent(ctx, ToxService.class);
-                    doToxIntent.setAction(Constants.DO_TOX);
-                    ctx.startService(doToxIntent);
+                    try {
+                        Log.v("Service", "do_tox");
+                        toxS.jTox.doTox();
+                    } catch (ToxException e) {
+                        Log.d(TAG, e.getError().toString());
+                        e.printStackTrace();
+                    }
                 }
             }, 0, 50, TimeUnit.MILLISECONDS);
-        } else if (intent.getAction().equals(Constants.DO_TOX)) {
-            try {
-                Log.v("Service", "do_tox");
-                toxSingleton.jTox.doTox();
-            } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
-                e.printStackTrace();
-            }
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();
