@@ -18,6 +18,9 @@ import im.tox.jtoxcore.callbacks.CallbackHandler;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -32,12 +35,13 @@ import android.os.Parcel;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ToxService extends IntentService {
 
     private static final String TAG = "im.tox.antox.ToxService";
 
-
+    private ScheduledExecutorService scheduleTaskExecutor;
 	
 	public ToxService() {
 		super("ToxService");
@@ -130,14 +134,30 @@ public class ToxService extends IntentService {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
+            scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
+// This schedule a runnable task every 2 minutes
+            Log.d("Service", "Start do_tox");
+            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+                Context ctx = getApplicationContext();
+                public void run() {
+                    Intent doToxIntent = new Intent(ctx, ToxService.class);
+                    doToxIntent.setAction(Constants.DO_TOX);
+                    ctx.startService(doToxIntent);
+                }
+            }, 0, 50, TimeUnit.MILLISECONDS);
         } else if (intent.getAction().equals(Constants.DO_TOX)) {
             try {
+                Log.v("Service", "do_tox");
                 toxSingleton.jTox.doTox();
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
-
+        } else if (intent.getAction().equals(Constants.STOP_TOX)) {
+            if (scheduleTaskExecutor != null) {
+                scheduleTaskExecutor.shutdownNow();
+            }
+            stopSelf();
         } else if (intent.getAction().equals(Constants.ADD_FRIEND)) {
             try {
                 String[] friendData = intent.getStringArrayExtra("friendData");
@@ -177,11 +197,8 @@ public class ToxService extends IntentService {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
             String key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
             String message = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.putExtra("action", Constants.FRIEND_REQUEST);
-            notify.putExtra("key", key);
-            notify.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            /* Add friend request to arraylist */
+            toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
             /* Add friend request to database */
             if(!toxSingleton.db.isOpen())
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
@@ -193,6 +210,12 @@ public class ToxService extends IntentService {
                     null,
                     values);
             toxSingleton.mDbHelper.close();
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.FRIEND_REQUEST);
+            notify.putExtra("key", key);
+            notify.putExtra("message", message);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             /* Update friends list */
             Intent updateFriends = new Intent(this, ToxService.class);
             updateFriends.setAction(Constants.FRIEND_LIST);
@@ -200,6 +223,61 @@ public class ToxService extends IntentService {
 
         } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
             Log.d(TAG, "Constants.CONNECTION_STATUS");
+        } else if (intent.getAction().equals(Constants.REJECT_FRIEND_REQUEST)) {
+            String key = intent.getStringExtra("key");
+            if(toxSingleton.friend_requests.size() != 0) {
+                for(int j = 0; j < toxSingleton.friend_requests.size(); j++) {
+                    for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
+                        if(key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
+                            toxSingleton.friend_requests.remove(i);
+                            break;
+                        }
+                    }
+                }
+
+                if(!toxSingleton.db.isOpen())
+                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
+                toxSingleton.db.delete(FriendRequestTable.FriendRequestEntry.TABLE_NAME,
+                        FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + key + "'",
+                        null);
+                toxSingleton.db.close();
+            }
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.REJECT_FRIEND_REQUEST);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+        } else if (intent.getAction().equals(Constants.ACCEPT_FRIEND_REQUEST)) {
+            String key = intent.getStringExtra("key");
+            try {
+                toxSingleton.jTox.confirmRequest(key);
+            } catch (Exception e) {
+
+            }
+            if(toxSingleton.friend_requests.size() != 0) {
+                for(int j = 0; j < toxSingleton.friend_requests.size(); j++) {
+                    for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
+                        if(key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
+                            toxSingleton.friend_requests.remove(i);
+                            break;
+                        }
+                    }
+                }
+
+                if(!toxSingleton.db.isOpen())
+                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
+                toxSingleton.db.delete(FriendRequestTable.FriendRequestEntry.TABLE_NAME,
+                        FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + key + "'",
+                        null);
+                toxSingleton.db.close();
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.ACCEPT_FRIEND_REQUEST);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            }
         }
 	}
 
