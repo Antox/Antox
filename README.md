@@ -11,6 +11,14 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 ####Submitting Pull Requests
 - We ask that all pull requests are well documented so that we may better understand your commits. Requests that lack documentation may be rejected.
+ 
+####Submitting Bug Reports
+When submitting a bug report, please include the following:-
+- Phone Model
+- Android Verison
+- Custom ROM?
+- Error report (please give as much information as possible, not just a couple lines from logcat)
+
 
 ###Completed
 
