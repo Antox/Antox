@@ -42,6 +42,7 @@
                     android:text="@string/friendrequest_reject"
                     android:layout_marginRight="20dp"/>
                 <Button
+                    android:onClick="acceptFriendRequest"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/friendrequest_accept" />

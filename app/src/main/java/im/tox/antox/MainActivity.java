@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,11 +56,10 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = "im.tox.antox.MainActivity";
 
 
-    private Intent doToxIntent;
     private Intent startToxIntent;
 
     public LeftPaneAdapter leftPaneAdapter;
-    private ScheduledExecutorService scheduleTaskExecutor;
+
 
     public SlidingPaneLayout pane;
     private ChatFragment chat;
@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
     private String[][] friends;
 
     public String activeTitle = "Antox";
+    public String activeFriendRequestKey = null;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -93,6 +94,20 @@ public class MainActivity extends ActionBarActivity {
                     friendRequest(intent);
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
                     updateLeftPane();
+                } else if (action == Constants.REJECT_FRIEND_REQUEST) {
+                    updateLeftPane();
+                    Context ctx = getApplicationContext();
+                    String text = "Friend request deleted";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(ctx, text, duration);
+                    toast.show();
+                } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
+                    updateLeftPane();
+                    Context ctx = getApplicationContext();
+                    String text = "Friend request accepted";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(ctx, text, duration);
+                    toast.show();
                 }
             }
         }
@@ -119,17 +134,8 @@ public class MainActivity extends ActionBarActivity {
         if(!isToxServiceRunning()) {
             startToxIntent = new Intent(this, ToxService.class);
             startToxIntent.setAction(Constants.START_TOX);
-            doToxIntent = new Intent(this, ToxService.class);
-            doToxIntent.setAction(Constants.DO_TOX);
             this.startService(startToxIntent);
-            scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-// This schedule a runnable task every 2 minutes
-            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                Context ctx = getApplicationContext();
-                public void run() {
-                    ctx.startService(doToxIntent);
-                }
-            }, 0, 50, TimeUnit.MILLISECONDS);
+
         }
 
         Intent getFriendsList = new Intent(this, ToxService.class);
@@ -185,9 +191,13 @@ public class MainActivity extends ActionBarActivity {
         //toxSingleton.friend_requests = new ArrayList<FriendRequest>();
         updateLeftPane();
 
-        filter = new IntentFilter(Constants.BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void updateLeftPane() {
@@ -240,36 +250,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void rejectFriendRequest(View view) {
+        getSupportFragmentManager().popBackStack();
+        pane.openPane();
+        Intent rejectRequestIntent = new Intent(this, ToxService.class);
+        rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
+        rejectRequestIntent.putExtra("key", activeFriendRequestKey);
+        this.startService(rejectRequestIntent);
 
-        TextView k = (TextView) findViewById(R.id.requestfragment_key);
-
-        int pos = -1;
-        if(toxSingleton.friend_requests.size() != 0) {
-            for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                if(k.getText().toString().equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey));
-                pos = i;
-            }
-
-            toxSingleton.friend_requests.remove(pos);
-
-            if(!toxSingleton.db.isOpen())
-                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-            toxSingleton.db.delete(FriendRequestTable.FriendRequestEntry.TABLE_NAME,
-                    FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + k.getText().toString() + "'",
-                    null);
-
-            toxSingleton.db.close();
-
-            updateLeftPane();
-            pane.closePane();
-
-            Context context = getApplicationContext();
-            String text = "Friend request deleted";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
+    }
+    public void acceptFriendRequest(View view) {
+        getSupportFragmentManager().popBackStack();
+        pane.openPane();
+        Intent acceptRequestIntent = new Intent(this, ToxService.class);
+        acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
+        acceptRequestIntent.putExtra("key", activeFriendRequestKey);
+        this.startService(acceptRequestIntent);
     }
 
     /**
@@ -303,19 +298,19 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
+        filter = new IntentFilter(Constants.BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         super.onResume();
     }
 
     @Override
     public void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onPause();
     }
 
     @Override
     public void onStop() {
-        if(scheduleTaskExecutor != null){
-            scheduleTaskExecutor.shutdownNow();
-        }
         super.onStop();
     }
 
@@ -340,6 +335,9 @@ public class MainActivity extends ActionBarActivity {
                 pane.openPane();
                 return true;
             case R.id.action_exit:
+                Intent stopToxIntent = new Intent(this, ToxService.class);
+                stopToxIntent.setAction(Constants.STOP_TOX);
+                this.startService(stopToxIntent);
                 finish();
                 return true;
             default:
@@ -504,7 +502,6 @@ public class MainActivity extends ActionBarActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctx, "Friend request received", duration);
         toast.show();
-        toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) msg));
         Log.d(TAG, toxSingleton.friend_requests.toString());
         updateLeftPane();
     }
