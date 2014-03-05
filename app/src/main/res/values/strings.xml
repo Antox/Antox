@@ -58,10 +58,14 @@
     <string name="addfriend_button">Add Friend</string>
     <string name="scanqr_button">Scan a QR code</string>
     <string name="title_activity_chat">Chat Activity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="invalid_friend_ID">Invalid Friend ID</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Away</string>
+    <string name="status_busy">Busy</string>
+
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>

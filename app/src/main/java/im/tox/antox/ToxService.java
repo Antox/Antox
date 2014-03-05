@@ -248,20 +248,22 @@ public class ToxService extends IntentService {
             notify.putExtra("action", Constants.REJECT_FRIEND_REQUEST);
             notify.putExtra("key", key);
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+
         } else if (intent.getAction().equals(Constants.ACCEPT_FRIEND_REQUEST)) {
+
             String key = intent.getStringExtra("key");
             try {
                 toxSingleton.jTox.confirmRequest(key);
             } catch (Exception e) {
 
             }
+
             if(toxSingleton.friend_requests.size() != 0) {
-                for(int j = 0; j < toxSingleton.friend_requests.size(); j++) {
-                    for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                        if(key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
-                            toxSingleton.friend_requests.remove(i);
-                            break;
-                        }
+
+                for(int i = 0; i < toxSingleton.friend_requests.size(); i++) {
+                    if(key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
+                        toxSingleton.friend_requests.remove(i);
+                        break;
                     }
                 }
 
@@ -272,28 +274,16 @@ public class ToxService extends IntentService {
                         FriendRequestTable.FriendRequestEntry.COLUMN_NAME_KEY + "='" + key + "'",
                         null);
                 toxSingleton.db.close();
-            /* Broadcast */
+
+                /* Broadcast */
+
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.ACCEPT_FRIEND_REQUEST);
                 notify.putExtra("key", key);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             }
         }
-    }
 
-    public static Intent getRegisterIntent(Context ctx, String name) {
-        Intent intent = new Intent(ctx, ToxService.class);
-        intent.setAction(Constants.REGISTER);
-        intent.putExtra(Constants.REGISTER_NAME, name);
+	}
 
-        return intent;
-    }
-
-    public static Intent getUnRegisterIntent(Context ctx, String name) {
-        Intent intent = new Intent(ctx, ToxService.class);
-        intent.setAction(Constants.UNREGISTER);
-        intent.putExtra(Constants.REGISTER_NAME, name);
-
-        return intent;
-    }
 }

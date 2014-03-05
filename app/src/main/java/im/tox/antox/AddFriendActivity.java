@@ -64,11 +64,19 @@ public class AddFriendActivity extends ActionBarActivity {
         CharSequence text = "Friend Added";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
 
         /* Send intent to ToxService */
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         EditText friendMessage = (EditText) findViewById(R.id.addfriend_message);
+
+        /*validates key*/
+        if(validateFriendKey(friendID.getText().toString())){
+            toast.show();
+        }else{
+            toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
 
         String[] friendData = { friendID.getText().toString(), friendMessage.getText().toString()};
 
@@ -86,16 +94,26 @@ public class AddFriendActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
-            if(scanResult.getContents().contains("tox://")) {
-                String friendKey = scanResult.getContents().substring(6);
+            if(scanResult.getContents()!=null){
                 EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
-                addFriendKey.setText(friendKey);
-            } else {
-                EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
-                addFriendKey.setText(scanResult.getContents());
+                String friendKey = (scanResult.getContents().contains("tox://")? scanResult.getContents().substring(6):scanResult.getContents());
+                if(validateFriendKey(friendKey)){
+                    addFriendKey.setText(friendKey);
+                }else{
+                    Context context = getApplicationContext();
+                    Toast toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         }
+    }
 
+    /*validates id, should check checksum*/
+    private boolean validateFriendKey(String friendKey) {
+        if(friendKey.length()!=76 || friendKey.matches("[[:xdigit:]]")){
+            return false;
+        }
+        return true;
     }
 
     @Override
