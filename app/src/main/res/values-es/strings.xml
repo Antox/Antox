@@ -22,6 +22,10 @@
     <string name="main_username">Nombre de usuario</string>
     <string name="main_status">Estado</string>
     <string name="icon_description">Estado de conexión</string>
+    <string name="main_no_friends">No tienes amigos</string>
+    <string name="main_try_adding">Por que no intentas agregar algunos</string>
+    <string name="main_friend_requests">Peticion de amistad</string>
+    <string name="main_friends">Amigos</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Enviar mensaje</string>
@@ -70,7 +74,11 @@
     <string name="friendrequest_accept">Aceptar</string>
     <string name="friendrequest_reject">Rechazar</string>
 
-
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Enviar Archivo</string>
+    <string name="friend_action_delete">Borrar</string>
+    <string name="friend_action_block">Bloquear</string>
+    <string name="group_action_leave">Salir del grupo</string>
     <!--  Misc -->
 
 </resources>
