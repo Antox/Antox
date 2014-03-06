@@ -56,6 +56,15 @@ public class ToxService extends IntentService {
         ArrayList<String> boundActivities = state.getBoundActivities();
 
         if (intent.getAction().equals(Constants.START_TOX)) {
+
+            try {
+                System.load("/data/data/im.tox.antox/lib/libsodium.so");
+                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+            } catch(Exception e) {
+                Log.d(TAG, "Failed System.load()");
+                e.printStackTrace();
+            }
+
             try {
                 Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox();
