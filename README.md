@@ -45,8 +45,8 @@ When submitting a bug report, please include the following:-
 ###TODO
 
 - Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
-- Check checksum to correctly validate the userkey id in the validateFriendKey method of addFriendActivity
 - Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
+- Take this script, http://markwinter/script.html which fetches the table of nodes from http://wiki.tox.im/Nodes before parsing them for working nodes, and implement it in the app instead.
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
