@@ -3,44 +3,28 @@
 
 Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. 
 
-####Known to work on
+###Known to work on
 * Samsung S3 running android 4.4 and cyanogenmod
 * Galaxy Nexus running android 4.4
 * Galaxy Note 3 running 4.3 (TouchWiz)
 * Galaxy Note 10.1 running 4.3 (TouchWiz)
 
-####Submitting Pull Requests
+###Getting Started With Antox
+- Download https://developer.android.com/sdk/installing/studio.html
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.4.6
+- In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6 and 19.0.3 respectively as of writing)
+- To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
+
+###Submitting Pull Requests
 - We ask that all pull requests are well documented so that we may better understand your commits. Requests that lack documentation may be rejected.
  
-####Submitting Bug Reports
+###Submitting Bug Reports
 When submitting a bug report, please include the following:-
 - Phone Model
 - Android Verison
 - Custom ROM?
 - Error report (please give as much information as possible, not just a couple lines from logcat)
 
-
-###Completed
-
-- Loading and saving of user settings
-- Display a welcome screen when using the app for the first time
-- Add Friend activity
-- Design MainActivity window to hold friends list
-- Extended Adapter class for the friends list (show status, online/offline)
-- Design ChatActivity window for conversations 
-- Extended Adapter class for displaying chat messages (only basic - needs a lot of design improvement)
-- Searching through friends list
-- Improve the ChatMessagesAdapter ([design goal](http://assets.hardwarezone.com/img/2013/11/messages.jpg)) 
-- Store a list of up to date DHT servers (SettingsActivity)
-- Add a QR scanner for adding friends and generating a QR of the users own public key
-- Fix app crashing when you launch barcode scanner then back out of it
-- When adding a friend, check the key is at least of proper length and only A-z 0-9
-
-
-###In Progress
-
-- Implement all the callbacks 
-- Documenting the current code base
 
 ###TODO
 
