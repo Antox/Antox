@@ -1,13 +1,17 @@
 package im.tox.antox;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 
 /**
  * Created by ollie on 28/02/14.
@@ -75,7 +79,7 @@ public class ContactsFragment extends Fragment {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position,
-	                    long id) {
+                                            long id) {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType();
                         if (type == Constants.TYPE_CONTACT) {
@@ -91,6 +95,66 @@ public class ContactsFragment extends Fragment {
                         }
                     }
                 });
+
+        leftPaneListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View itemView, int index, long id) {
+                final LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(index);
+                AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
+                boolean isGroupChat=false;
+                final boolean isFriendRequest = item.viewType()==Constants.TYPE_FRIEND_REQUEST;
+                final CharSequence items[];
+                if(isFriendRequest){
+                    items= new CharSequence[]{getResources().getString(R.string.friendrequest_accept),
+                            getResources().getString(R.string.friendrequest_reject)
+                    };
+                }else{
+                    items= new CharSequence[]{
+                            getResources().getString(R.string.friend_action_sendfile),
+                            isGroupChat ? getResources().getString(R.string.group_action_leave) : getResources().getString(R.string.friend_action_delete),
+                            getResources().getString(R.string.friend_action_block)
+                    };
+                }
+                builder.setTitle("Actions on " + item.first)
+                        .setCancelable(true)
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int index) {
+                                Log.d("picked", "" + items[index]);
+                                if(isFriendRequest){
+                                    switch (index){
+                                        case 0:
+                                            Log.v("To implement", "" + items[0]);
+                                            //acceptRequest(item.first); item.first equals the key
+                                            break;
+                                        case 1:
+                                            Log.v("To implement", "" + items[1]);
+                                            //rejectRequest(item.first);
+                                            break;
+                                    }
+                                }else{
+                                    switch (index){
+                                        case 0:
+                                            Log.v("To implement", "" + items[0]);
+                                            break;
+                                        case 1:
+                                            Log.v("To implement", "" + items[1]);
+                                            break;
+                                        case 2:
+                                            Log.v("To implement", "" + items[2]);
+                                            break;
+                                    }
+                                }
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                if(item.viewType()!=Constants.TYPE_HEADER){
+                    alert.show();
+                }
+                return true;
+            }
+        });
 
         return rootView;
     }

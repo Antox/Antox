@@ -22,6 +22,11 @@
     <string name="main_username">Username</string>
     <string name="main_status">Status</string>
     <string name="icon_description">Connection Status</string>
+    <string name="main_no_friends">You have no friends</string>
+    <string name="main_try_adding">Why not try adding some?</string>
+    <string name="main_friend_requests">Friend Requests</string>
+    <string name="main_friends">Friends</string>
+
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
@@ -71,7 +76,11 @@
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
 
-
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Send File</string>
+    <string name="friend_action_delete">Delete</string>
+    <string name="friend_action_block">Block</string>
+    <string name="group_action_leave">Leave Group</string>
     <!--  Misc -->
 
 </resources>
