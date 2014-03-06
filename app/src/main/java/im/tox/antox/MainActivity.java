@@ -195,8 +195,8 @@ public class MainActivity extends ActionBarActivity {
     private void updateLeftPane() {
         friends = new String[1][3];
         friends[0][0] = "0";
-        friends[0][1] = "You have no friends";
-        friends[0][2] = "Why not try adding some?";
+        friends[0][1] = getResources().getString(R.string.main_no_friends);
+        friends[0][2] = getResources().getString(R.string.main_try_adding);
 
         /* Go through status strings and set appropriate resource image */
         Friend friends_list[] = new Friend[friends.length];
@@ -222,7 +222,7 @@ public class MainActivity extends ActionBarActivity {
         leftPaneAdapter = new LeftPaneAdapter(this);
 
         if (friend_requests_list.length > 0) {
-            LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, "Friend Requests", null, 0);
+            LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
             leftPaneAdapter.addItem(friend_request_header);
             for (int i = 0; i < friend_requests_list.length; i++) {
                 LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
@@ -230,7 +230,7 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         if (friends_list.length > 0) {
-            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Friends", null, 0);
+            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
             leftPaneAdapter.addItem(friends_header);
             for (int i = 0; i < friends_list.length; i++) {
                 LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].friendStatus, friends_list[i].icon);
