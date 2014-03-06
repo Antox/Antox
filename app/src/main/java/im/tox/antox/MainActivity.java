@@ -154,6 +154,7 @@ public class MainActivity extends ActionBarActivity {
             // and give a brief description of antox
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
+            finish();
         }
 
         /* Load user details */
