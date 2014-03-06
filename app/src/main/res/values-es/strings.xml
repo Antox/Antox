@@ -24,7 +24,7 @@
     <string name="icon_description">Estado de conexión</string>
     <string name="main_no_friends">No tienes amigos</string>
     <string name="main_try_adding">Por que no intentas agregar algunos</string>
-    <string name="main_friend_requests">Peticion de amistad</string>
+    <string name="main_friend_requests">Peticiones de amistad</string>
     <string name="main_friends">Amigos</string>
 
     <!--  Chat Activity -->
