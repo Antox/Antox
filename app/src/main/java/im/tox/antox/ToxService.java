@@ -58,8 +58,8 @@ public class ToxService extends IntentService {
         if (intent.getAction().equals(Constants.START_TOX)) {
 
             try {
-                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
                 System.load("/data/data/im.tox.antox/lib/libsodium.so");
+                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
             } catch(Exception e) {
                 Log.d(TAG, "Failed System.load()");
                 e.printStackTrace();
