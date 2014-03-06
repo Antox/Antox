@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Benvenuto</string>
+    <string name="title_activity_add_friend">Aggiungi Amico</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_profile">Profilo</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_exit">Esci</string>
+    <string name="add_friend">Aggiungi Amico</string>
+    <string name="search_friend">Cerca Amici</string>
+    <string name="action_profile">Profilo</string>
+
+    <!-- Main Activity -->
+    <string name="icon_description">Stato Connessione</string>
+    <string name="main_no_friends">Non hai amici</string>
+    <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
+    <string name="main_friend_requests">Richieste d'Amicizia</string>
+    <string name="main_friends">Amici</string>
+
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Scrivi un messaggio</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="about_string">Questo client è in fase pre-alpha.</string>
+    <string name="getstarted_string">Inserisci il tuo nome</string>
+    <string name="developer_string">Sviluppato da astonex\nirc.freenode.net#tox-dev</string>
+
+    <!-- Settings Activity -->
+    <string name="settings_user_key_title">ID Utente</string>
+    <string name="settings_name_hint">inserisci il tuo nome</string>
+    <string name="settings_note_hint">inserisci le tue informazioni personali</string>
+    <string name="settings_dht_ip">Indirizzo IP del server DHT (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Porta usata dal server DHT (ex: 33445)</string>
+    <string name="settings_dht_key">Chiave pubblica del server DHT (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">OK</string>
+    <string name="settings_updated">Le impostazioni sono state aggiornate</string>
+    <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
+    <string name="settings_status_title">Imposta il tuo stato</string>
+    <string name="settings_note_title">Imposta le tue informazioni personali</string>
+    <string name="settings_username_title">Imposta il tuo nickname</string>
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">inserisci l'ID del tuo amico</string>
+    <string name="addfriend_friend_message">messaggio opzionale da inviare insieme alla richiesta</string>
+    <string name="addfriend_button">Aggiugni Amico</string>
+    <string name="scanqr_button">Scansiona un codice QR</string>
+    <string name="invalid_friend_ID">ID inserito non valido</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Condividi Con</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Assente</string>
+    <string name="status_busy">Occupato</string>
+
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Accetta</string>
+    <string name="friendrequest_reject">Rifiuta</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Invia File</string>
+    <string name="friend_action_delete">Rimuovi</string>
+    <string name="friend_action_block">Blocca</string>
+    <string name="group_action_leave">Lascia Gruppo</string>
+    <!--  Misc -->
+
+</resources>
