@@ -20,7 +20,7 @@
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
-    <string name="main_friend_requests">Richieste d'Amicizia</string>
+    <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
 
 
@@ -48,7 +48,7 @@
     <string name="settings_username_title">Imposta il tuo nickname</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">inserisci l'ID del tuo amico</string>
+    <string name="addfriend_friend_key">inserisci l\'ID del tuo amico</string>
     <string name="addfriend_friend_message">messaggio opzionale da inviare insieme alla richiesta</string>
     <string name="addfriend_button">Aggiugni Amico</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
