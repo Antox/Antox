@@ -130,7 +130,8 @@ public class ToxService extends IntentService {
 
 
                 try {
-                    toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
+                    if(DhtNode.port != null)
+                        toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
