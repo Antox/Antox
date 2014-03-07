@@ -40,3 +40,5 @@ When submitting a bug report, please include the following:-
 
 - Connect to the tox network
 - Working chat
+
+*The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
