@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import im.tox.antox.Constants;
+import im.tox.antox.FriendRequest;
 import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
+import im.tox.antox.ToxSingleton;
 
 /**
  * Created by soft on 02/03/14.
@@ -26,5 +28,10 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
     @Override
     public void execute(String publicKey, String message){
         Log.d(TAG, "Friend request callback");
+        Intent intent = new Intent(this.ctx, ToxService.class);
+        intent.setAction(Constants.FRIEND_REQUEST);
+        intent.putExtra(FRIEND_KEY, publicKey);
+        intent.putExtra(FRIEND_MESSAGE, message);
+        this.ctx.startService(intent);
     }
 }

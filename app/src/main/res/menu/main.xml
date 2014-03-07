@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:antonx="http://schemas.android.com/apk/res-auto">
+    xmlns:antonx="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_exit"
         android:orderInCategory="100"
@@ -21,6 +21,13 @@
         antonx:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_add_person"
         android:title="@string/add_friend"/>
+
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="27"
+        android:showAsAction="never"
+        antonx:showAsAction="never"
+        android:title="@string/action_profile"/>
 
     <item
         android:id="@+id/search_friend"

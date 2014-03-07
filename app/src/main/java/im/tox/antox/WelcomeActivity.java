@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -27,15 +28,6 @@ public class WelcomeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        SharedPreferences.Editor editor;
-
-		/* Save the fact the user has seen the welcome message */
-        SharedPreferences pref = getSharedPreferences("main",
-                Context.MODE_PRIVATE);
-        editor = pref.edit();
-        editor.putInt("beenLoaded", 1);
-        editor.commit();
     }
 
     public void updateSettings(View view) {
@@ -62,6 +54,18 @@ public class WelcomeActivity extends ActionBarActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+
+		/* Save the fact the user has seen the welcome message */
+            SharedPreferences.Editor editorMain;
+            SharedPreferences prefMain = getSharedPreferences("main",
+                    Context.MODE_PRIVATE);
+            editorMain = prefMain.edit();
+            editorMain.putInt("beenLoaded", 1);
+            editorMain.commit();
+
+            //Restart MainActivity
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
 
             // Close activity
             finish();

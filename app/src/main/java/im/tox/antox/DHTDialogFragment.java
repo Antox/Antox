@@ -35,10 +35,8 @@ public class DHTDialogFragment extends DialogFragment{
 
     EditText dhtIP, dhtPort, dhtKey;
 
-    public DHTDialogFragment(String ip_, String port_, String key_) {
-        ip = ip_;
-        port = port_;
-        key = key_;
+    public DHTDialogFragment() {
+
     }
     // Override the Fragment.onAttach() method to instantiate the DHTDialogListener
     @Override

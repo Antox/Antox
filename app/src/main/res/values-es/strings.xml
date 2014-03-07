@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Bienvenido</string>
+    <string name="title_activity_add_friend">Agregar amigo</string>
+    <string name="title_activity_settings">Configuración</string>
+    <string name="title_activity_profile">Perfil</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Configuración</string>
+    <string name="action_exit">Salir</string>
+    <string name="add_friend">Agregar amigo</string>
+    <string name="join_group">Unirse a grupo</string>
+    <string name="search_friend">Buscar</string>
+    <string name="action_profile">Perfil</string>
+
+    <!-- Main Activity -->
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Nombre de usuario</string>
+    <string name="main_status">Estado</string>
+    <string name="icon_description">Estado de conexión</string>
+    <string name="main_no_friends">No tienes amigos</string>
+    <string name="main_try_adding">Por que no intentas agregar algunos</string>
+    <string name="main_friend_requests">Peticiones de amistad</string>
+    <string name="main_friends">Amigos</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Enviar mensaje</string>
+    <string name="chat_button">Enviar</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="welcome_string">Antox</string>
+    <string name="about_string">El cliente aun esta en pre-alfa.</string>
+    <string name="getstarted_string">Ingrese el nombre de usuario que desee.</string>
+    <string name="developer_string">Desarrollado por astonex\nirc.freenode.net#tox-dev</string>
+
+    <!-- Settings Activity -->
+    <string name="settings_user_key_title">Tu clave de usuario</string>
+    <string name="settings_user_key">56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE5185520B3E6FC5D64</string>
+    <string name="settings_name_hint">Ingresa tu nombre</string>
+    <string name="settings_note_hint">Ingresa una nota personal</string>
+    <string name="settings_status_hint">Cambia tu estado</string>
+    <string name="settings_dht_ip">Direccion IP de un nodo inicial (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Puerto del nodo inicial (ex: 33445)</string>
+    <string name="settings_dht_key">Llave publica de un nodo inicial (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Actualizar</string>
+    <string name="settings_updated">La  configuración ha sido actualizada</string>
+    <string name="settings_dht_spinner_title">Configuración avanzada</string>
+    <string name="settings_radio_dht_pre">Usar un nodo DHT por defecto(recomendado)</string>
+    <string name="settings_radio_dht_self">Ingresar tu propia configuración DHT</string>
+    <string name="settings_status_title">Ingresa tu estado</string>
+    <string name="settings_note_title">Ingresa tu nota personal</string>
+    <string name="settings_username_title">Ingresa tu nombre de usuario</string>
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Ingresa la clave de usuario de tu amigo</string>
+    <string name="addfriend_friend_message">Mensaje opcional a enviar con la petición</string>
+    <string name="addfriend_button">Agregar amigo</string>
+    <string name="scanqr_button">Escanear un código QR</string>
+    <string name="title_activity_chat">Actividad de Chat</string>
+    <string name="invalid_friend_ID">ID de amigo invalida</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Compartir con</string>
+    <string name="status_online">Conectado</string>
+    <string name="status_away">Ausente</string>
+    <string name="status_busy">Ocupado</string>
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Aceptar</string>
+    <string name="friendrequest_reject">Rechazar</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Enviar Archivo</string>
+    <string name="friend_action_delete">Borrar</string>
+    <string name="friend_action_block">Bloquear</string>
+    <string name="group_action_leave">Salir del grupo</string>
+    <!--  Misc -->
+
+</resources>

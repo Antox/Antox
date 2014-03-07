@@ -10,22 +10,22 @@
     tools:context=".AddFriendActivity" >
 
     <EditText
-           android:id="@+id/addfriend_key"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="20dp"
-           android:hint="@string/addfriend_friend_key"
-           />
-       
-       <EditText
-           android:id="@+id/addfriend_message"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center"
-           android:layout_marginTop="20dp"
-           android:hint="@string/addfriend_friend_message"
-           />
+        android:id="@+id/addfriend_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="@string/addfriend_friend_key"
+        />
+
+    <EditText
+        android:id="@+id/addfriend_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="@string/addfriend_friend_message"
+        />
 
     <Button
         android:id="@+id/addFriend"
@@ -33,7 +33,15 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="20dp"
-        android:hint="@string/addfriend_button" 
+        android:hint="@string/addfriend_button"
         android:onClick="addFriend"/>
-    
+    <Button
+        android:id="@+id/scanFriendQR"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="@string/scanqr_button"
+        android:onClick="addFriend"/>
+
 </LinearLayout>

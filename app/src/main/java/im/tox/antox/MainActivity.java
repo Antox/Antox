@@ -20,7 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,10 +32,13 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.antox.LeftPaneItem;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -41,45 +47,78 @@ import im.tox.jtoxcore.ToxUserStatus;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity implements ContactsFragment.ContactListener {
+public class MainActivity extends ActionBarActivity {
 
     /**
      * Extra message to be passed with intents - Should be unique from every other app
      */
     public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
+    private static final String TAG = "im.tox.antox.MainActivity";
 
 
-    /**
-     * Receiver for getting work reports from ToxService
-     */
-    private ResponseReceiver receiver;
+    private Intent startToxIntent;
 
-    private Intent doToxIntent;
+    public LeftPaneAdapter leftPaneAdapter;
 
-    public FriendsListAdapter contactsAdapter;
-    public FriendsListAdapter friendRequestsAdapter;
 
-    private SlidingPaneLayout pane;
+    public SlidingPaneLayout pane;
     private ChatFragment chat;
     private ContactsFragment contacts;
+    private IntentFilter filter;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
      */
     private String[][] friends;
-    /**
-     * Stores the friends list returned by ToxService to feed into String[][] friends
+
+    public String activeTitle = "Antox";
+    public String activeFriendRequestKey = null;
+
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+    /*
+     * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
-    private String[] friendNames;
+    private Menu menu;
+    private boolean isInChat=false;
 
-    private String activeContactName;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
 
-    private List<String> connectedUsers;
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "broadcast received");
+            String action = intent.getStringExtra("action");
+            if (action != null) {
+            Log.d(TAG, "action: " + action);
+                if (action == Constants.FRIEND_REQUEST) {
+                    friendRequest(intent);
+                } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
+                    updateLeftPane();
+                } else if (action == Constants.REJECT_FRIEND_REQUEST) {
+                    updateLeftPane();
+                    Context ctx = getApplicationContext();
+                    String text = "Friend request deleted";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(ctx, text, duration);
+                    toast.show();
+                } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
+                    updateLeftPane();
+                    Context ctx = getApplicationContext();
+                    String text = "Friend request accepted";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(ctx, text, duration);
+                    toast.show();
+                }
+            }
+        }
+    };
+
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         /* Check if connected to the Internet */
@@ -89,43 +128,24 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // Executes in a separate thread so UI experience isn't affected
             new DownloadDHTList().execute("http://markwinter.me/servers.php");
         } else {
-            Log.d(EXTRA_MESSAGE, "Not connected to the internet");
+
         }
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
-            doToxIntent = new Intent(this, ToxService.class);
-            doToxIntent.setAction(Constants.DO_TOX);
-            this.startService(doToxIntent);
+            startToxIntent = new Intent(this, ToxService.class);
+            startToxIntent.setAction(Constants.START_TOX);
+            this.startService(startToxIntent);
+
         }
 
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
-        /**
-         *  Intent filter will listen only for intents with action Constants.Register
-         *  @see im.tox.antox.Constants
-         */
-        IntentFilter mStatusIntentFilter = new IntentFilter(Constants.BROADCAST_ACTION);
-        receiver = new ResponseReceiver();
-        /**
-         * Local Broadcast Manager for listening for work reports from ToxService.
-         * Local is used as it's more efficient and to stop other apps reading the messages
-         */
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                receiver,
-                mStatusIntentFilter);
-
 		/* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
-
-        // For testing WelcomeActivity
-        // SharedPreferences.Editor editor = pref.edit();
-        // editor.putInt("beenLoaded", 0);
-        // editor.apply();
-        // End testing
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -134,6 +154,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             // and give a brief description of antox
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
+            finish();
         }
 
         /* Load user details */
@@ -154,45 +175,90 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         pane.setPanelSlideListener(new PaneListener());
         pane.openPane();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
-        updateFriends();
-
-
+        //toxSingleton.friend_requests = new ArrayList<FriendRequest>();
+        updateLeftPane();
     }
 
-    private void updateFriends() {
+    @Override
+    protected void onStart() {
+        Log.i(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    private void updateLeftPane() {
         friends = new String[1][3];
         friends[0][0] = "0";
-        friends[0][1] = "You have no friends";
-        friends[0][2] = "Why not try adding some?";
+        friends[0][1] = getResources().getString(R.string.main_no_friends);
+        friends[0][2] = getResources().getString(R.string.main_try_adding);
 
         /* Go through status strings and set appropriate resource image */
-        FriendsList friends_list[] = new FriendsList[friends.length];
+        Friend friends_list[] = new Friend[friends.length];
 
         for (int i = 0; i < friends.length; i++) {
             if (friends[i][0].equals("1"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_online,
+                friends_list[i] = new Friend(R.drawable.ic_status_online,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("0"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_offline,
+                friends_list[i] = new Friend(R.drawable.ic_status_offline,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("2"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_away,
+                friends_list[i] = new Friend(R.drawable.ic_status_away,
                         friends[i][1], friends[i][2]);
             else if (friends[i][0].equals("3"))
-                friends_list[i] = new FriendsList(R.drawable.ic_status_busy,
+                friends_list[i] = new Friend(R.drawable.ic_status_busy,
                         friends[i][1], friends[i][2]);
         }
 
-        contactsAdapter = new FriendsListAdapter(this, R.layout.main_list_item,
-                friends_list);
+        FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
+        friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
 
-        contacts.updateFriends();
+        leftPaneAdapter = new LeftPaneAdapter(this);
+
+        if (friend_requests_list.length > 0) {
+            LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
+            leftPaneAdapter.addItem(friend_request_header);
+            for (int i = 0; i < friend_requests_list.length; i++) {
+                LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
+                leftPaneAdapter.addItem(friend_request);
+            }
+        }
+        if (friends_list.length > 0) {
+            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
+            leftPaneAdapter.addItem(friends_header);
+            for (int i = 0; i < friends_list.length; i++) {
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].friendStatus, friends_list[i].icon);
+                leftPaneAdapter.addItem(friend);
+            }
+        }
+
+        contacts.updateLeftPane();
     }
 
+    public void rejectFriendRequest(View view) {
+        getSupportFragmentManager().popBackStack();
+        pane.openPane();
+        Intent rejectRequestIntent = new Intent(this, ToxService.class);
+        rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
+        rejectRequestIntent.putExtra("key", activeFriendRequestKey);
+        this.startService(rejectRequestIntent);
 
+    }
+    public void acceptFriendRequest(View view) {
+        getSupportFragmentManager().popBackStack();
+        pane.openPane();
+        Intent acceptRequestIntent = new Intent(this, ToxService.class);
+        acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
+        acceptRequestIntent.putExtra("key", activeFriendRequestKey);
+        this.startService(acceptRequestIntent);
+    }
 
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -201,6 +267,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      */
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+    /**
+     * Starts a new intent to open the SettingsActivity class
+     *
+     * @see im.tox.antox.ProfileActivity
+     */
+    private void openProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
@@ -216,14 +291,22 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
     @Override
     public void onResume() {
+        Log.i(TAG, "onResume");
+        filter = new IntentFilter(Constants.BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         super.onResume();
-        if(!isToxServiceRunning()) {
-            this.startService(doToxIntent);
-        }
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "onPause");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onPause();
     }
 
     @Override
     public void onStop() {
+        Log.i(TAG, "onStop");
         super.onStop();
     }
 
@@ -233,8 +316,14 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
             case R.id.action_settings:
                 openSettings();
                 return true;
+            case R.id.action_profile:
+                openProfile();
+                return true;
             case R.id.add_friend:
-                addFriend();
+                if(isInChat)
+                    addFriendToGroup();
+                else
+                    addFriend();
                 return true;
             case R.id.search_friend:
                 return true;
@@ -242,12 +331,18 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                 pane.openPane();
                 return true;
             case R.id.action_exit:
-                this.stopService(doToxIntent);
+                Intent stopToxIntent = new Intent(this, ToxService.class);
+                stopToxIntent.setAction(Constants.STOP_TOX);
+                this.startService(stopToxIntent);
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addFriendToGroup() {
+        Log.v("Add friend to group method","To implement");
     }
 
     @Override
@@ -267,8 +362,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
 
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        MainActivity.this.contactsAdapter.getFilter().filter(
-                                newText);
+                        //MainActivity.this.contactsAdapter.getFilter().filter(
+                        //        newText);
                         return true;
                     }
                 });
@@ -280,6 +375,8 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
                         MenuItemCompat.collapseActionView(menuItem);
                     }
                 });
+        //the class menu property is now the initialized menu
+        this.menu=menu;
 
         return true;
     }
@@ -288,13 +385,7 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
      * Method to see if the tox service is already running so it isn't restarted
      */
     private boolean isToxServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (ToxService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        return toxSingleton.toxStarted;
     }
 
     private class DownloadDHTList extends AsyncTask<String, Void, String> {
@@ -394,33 +485,17 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         }
     }
 
-    /**
-     * Response receiver for receiving work reports from ToxService to update the UI with results
-     */
-    private class ResponseReceiver extends BroadcastReceiver {
-
-        /**
-         * Uses the info passed in the Intent to update the UI with ToxService reports
-         *
-         * @param context
-         * @param intent
-         */
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //Do something with received broadcasted message
-            if(intent.getAction().equals(Constants.FRIEND_LIST)) {
-
-            }
-
-            if(intent.getAction().equals(Constants.FRIEND_REQUEST)) {
-
-            }
-
-            if(intent.getAction().equals(Constants.CONNECTION_STATUS)) {
-
-            }
-        }
+    public void friendRequest(Intent intent) {
+        Context ctx = getApplicationContext();
+        CharSequence msg = intent.getStringExtra("message");
+        CharSequence key = intent.getStringExtra("key");
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctx, "Friend request received", duration);
+        toast.show();
+        Log.d(TAG, toxSingleton.friend_requests.toString());
+        updateLeftPane();
     }
+
     @Override
     public void onBackPressed() {
         if (!pane.isOpen()) {
@@ -430,22 +505,15 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         }
     }
 
-    public void onChangeContact(int position, String contact) {
-        activeContactName = contact;
-        pane.closePane();
-        chat.setContact(position, contact);
-    }
-
-    public void sendMessage(View v){
-        chat.sendMessage(v);
-    }
-
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle(activeContactName);
+            setTitle(activeTitle);
+            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
+            af.setIcon(R.drawable.ic_action_add_group);
+            isInChat=true;
             System.out.println("Panel closed");
         }
 
@@ -453,6 +521,12 @@ public class MainActivity extends ActionBarActivity implements ContactsFragment.
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
+            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
+            af.setIcon(R.drawable.ic_action_add_person);
+            isInChat=false;
+            InputMethodManager imm = (InputMethodManager)getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
         }
 

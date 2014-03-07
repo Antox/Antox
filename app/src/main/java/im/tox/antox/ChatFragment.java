@@ -32,7 +32,12 @@ public class ChatFragment extends Fragment {
 
     }
 
-    public void sendMessage(View view) {
+
+
+    public void sendMessage() {
+        if(messageBox.getText().toString().length()==0){
+            return;
+        }
         EditText tmp = (EditText) getView().findViewById(R.id.yourMessage);
 
         ChatMessages new_chat_messages[] = new ChatMessages[chat_messages.length+1];
@@ -80,6 +85,14 @@ public class ChatFragment extends Fragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 chatListView.setSelection(adapter.getCount() - 1);
+            }
+        });
+
+        View b = (View) rootView.findViewById(R.id.sendMessageButton);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
             }
         });
 
