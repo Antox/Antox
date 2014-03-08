@@ -457,7 +457,8 @@ public class MainActivity extends ActionBarActivity {
             isInChat=false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            /* This is causing a null pointer exception */
+            //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
         }
 

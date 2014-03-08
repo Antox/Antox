@@ -164,8 +164,10 @@ public class ToxService extends IntentService {
                 String[] friendData = intent.getStringArrayExtra("friendData");
                 toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
             } catch (FriendExistsException e) {
+                Log.d(TAG, "Friend already exists");
                 e.printStackTrace();
             } catch (ToxException e) {
+                Log.d(TAG, "ToxException: " + e.getError().toString());
                 e.printStackTrace();
             }
         } else if (intent.getAction().equals(Constants.UPDATE_SETTINGS)) {
@@ -293,7 +295,6 @@ public class ToxService extends IntentService {
                 toxSingleton.db.close();
 
                 /* Broadcast */
-
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.ACCEPT_FRIEND_REQUEST);
                 notify.putExtra("key", key);
