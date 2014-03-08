@@ -4,6 +4,7 @@ public class Friend {
 	public int icon;
 	public String friendName;
 	public String friendStatus;
+    public String personalNote="";
 
 	public Friend() {
 		super();

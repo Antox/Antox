@@ -1,6 +1,8 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -26,6 +29,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +71,6 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
      */
-    private String[][] friends;
-
     public String activeTitle = "Antox";
     public String activeFriendRequestKey = null;
 
@@ -89,6 +91,18 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
+                    NotificationCompat.Builder builder =
+                            new NotificationCompat.Builder(context)
+                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setContentTitle("Someone sent you a request")
+                                    .setContentText("isn't that rad!?");
+                    int NOTIFICATION_ID = 12345;
+                    Intent targetIntent = new Intent(context, MainActivity.class);
+                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    builder.setContentIntent(contentIntent);
+                    NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    nManager.notify(NOTIFICATION_ID, builder.build());
+                    Log.d("Notification lol", "Friend request notify");
                     friendRequest(intent);
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
                     updateLeftPane();
@@ -194,29 +208,15 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-    private void updateLeftPane() {
-        friends = new String[1][3];
-        friends[0][0] = "0";
-        friends[0][1] = getResources().getString(R.string.main_no_friends);
-        friends[0][2] = getResources().getString(R.string.main_try_adding);
+    public void updateLeftPane() {
+
+        AntoxDB antoxDB = new AntoxDB(this);
+
+        ArrayList<Friend> friendList = antoxDB.getFriendList();
 
         /* Go through status strings and set appropriate resource image */
-        Friend friends_list[] = new Friend[friends.length];
-
-        for (int i = 0; i < friends.length; i++) {
-            if (friends[i][0].equals("1"))
-                friends_list[i] = new Friend(R.drawable.ic_status_online,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("0"))
-                friends_list[i] = new Friend(R.drawable.ic_status_offline,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("2"))
-                friends_list[i] = new Friend(R.drawable.ic_status_away,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("3"))
-                friends_list[i] = new Friend(R.drawable.ic_status_busy,
-                        friends[i][1], friends[i][2]);
-        }
+        Friend friends_list[] = new Friend[friendList.size()];
+        friends_list = friendList.toArray(friends_list);
 
         FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
         friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
@@ -240,25 +240,8 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+        antoxDB.close();
         contacts.updateLeftPane();
-    }
-
-    public void rejectFriendRequest(View view) {
-        getSupportFragmentManager().popBackStack();
-        pane.openPane();
-        Intent rejectRequestIntent = new Intent(this, ToxService.class);
-        rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
-        rejectRequestIntent.putExtra("key", activeFriendRequestKey);
-        this.startService(rejectRequestIntent);
-
-    }
-    public void acceptFriendRequest(View view) {
-        getSupportFragmentManager().popBackStack();
-        pane.openPane();
-        Intent acceptRequestIntent = new Intent(this, ToxService.class);
-        acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
-        acceptRequestIntent.putExtra("key", activeFriendRequestKey);
-        this.startService(acceptRequestIntent);
     }
 
     /**
@@ -489,7 +472,8 @@ public class MainActivity extends ActionBarActivity {
             isInChat=false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            /* This is causing a null pointer exception */
+            //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
         }
 
