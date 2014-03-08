@@ -61,7 +61,7 @@ public class ProfileActivity extends ActionBarActivity {
         };
 
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, statusItems);
+                R.layout.simple_spinner_item, statusItems);
         statusSpinner.setAdapter(statusAdapter);
 
 		/* Get saved preferences */
