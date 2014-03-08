@@ -22,4 +22,18 @@ public final class Constants {
     public static final String ACCEPT_FRIEND_REQUEST = "im.tox.antox.ACCEPT_REQUEST";
     public static final String UPDATE_FRIEND_REQUESTS= "im.tox.antox.UPDATE_REQUESTS";
     public static final String CONNECTION_STATUS = "im.tox.antox.CONNECTION_STATUS";
+
+    //All DB Constants
+    public static final String DATABASE_NAME = "antoxdb";
+    public static final int DATABASE_VERSION = 1;
+    public static final String TABLE_FRIENDS = "friends";
+    public static final String TABLE_FRIEND_REQUEST = "friend_request";
+    public static final String COLUMN_NAME_KEY ="key";
+    public static final String COLUMN_NAME_MESSAGE ="message";
+    public static final String COLUMN_NAME_USERNAME ="username";
+    public static final String COLUMN_NAME_NOTE ="note";
+    public static final String COLUMN_NAME_STATUS ="status";
+
+
+
 }
