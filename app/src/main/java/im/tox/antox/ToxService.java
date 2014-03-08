@@ -56,6 +56,15 @@ public class ToxService extends IntentService {
         ArrayList<String> boundActivities = state.getBoundActivities();
 
         if (intent.getAction().equals(Constants.START_TOX)) {
+
+            try {
+                System.load("/data/data/im.tox.antox/lib/libsodium.so");
+                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+            } catch(Exception e) {
+                Log.d(TAG, "Failed System.load()");
+                e.printStackTrace();
+            }
+
             try {
                 Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox();
@@ -193,6 +202,22 @@ public class ToxService extends IntentService {
 
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
             Log.d(TAG, "Constants.FRIEND_LIST");
+            List<AntoxFriend> onlineFriends = toxSingleton.friendsList.getOnlineFriends();
+            if(onlineFriends.size() > 0) {
+                Log.d(TAG, "Friends found in friendsList");
+                String[] names = new String[onlineFriends.size()];
+                String[] notes = new String[onlineFriends.size()];
+                for(int i = 0; i < onlineFriends.size(); i++) {
+                    names[i] = onlineFriends.get(i).getName();
+                    notes[i] = onlineFriends.get(i).getStatusMessage();
+                }
+
+                Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                notify.setAction(Constants.FRIEND_LIST);
+                notify.putExtra("names", names);
+                notify.putExtra("notes", notes);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            }
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");

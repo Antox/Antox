@@ -1,29 +1,31 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,12 +35,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import im.tox.jtoxcore.ToxUserStatus;
-import im.tox.antox.LeftPaneItem;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -108,25 +106,29 @@ public class MainActivity extends ActionBarActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
+                } else if (action == Constants.FRIEND_LIST) {
+                    
                 }
             }
         }
     };
 
 
-    @SuppressLint("NewApi")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
+        Log.i(TAG, "onCreaye");
         setContentView(R.layout.activity_main);
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected())
+        {
             // Executes in a separate thread so UI experience isn't affected
-            new DownloadDHTList().execute("http://markwinter.me/servers.php");
+           // Downloads the DHT node details
+            new DHTNodeDetails().execute();
         } else {
 
         }
@@ -344,8 +346,11 @@ public class MainActivity extends ActionBarActivity {
         Log.v("Add friend to group method","To implement");
     }
 
+
+    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem menuItem = menu.findItem(R.id.search_friend);
@@ -372,6 +377,7 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         MenuItemCompat.collapseActionView(menuItem);
+
                     }
                 });
         //the class menu property is now the initialized menu
@@ -387,100 +393,58 @@ public class MainActivity extends ActionBarActivity {
         return toxSingleton.toxStarted;
     }
 
-    private class DownloadDHTList extends AsyncTask<String, Void, String> {
+
+
+    // Downloads the the first working DHT node
+    private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
+       String nodeDetails[] = new String[7];
+
+
+
         @Override
-        protected String doInBackground(String... urls) {
-
-            // params comes from the execute() call: params[0] is the url.
+        protected Void doInBackground(Void... params) {
             try {
-                return downloadUrl(urls[0]);
+                // Connect to the web site
+                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").get();
+                Elements nodeRows = document.getElementsByTag("tr");
+
+                for(Element nodeRow : nodeRows)
+                {
+                    Elements nodeElements = nodeRow.getElementsByTag("td");
+                    int c = 0;
+                    for(Element nodeElement : nodeElements)
+                         nodeDetails[c++]=nodeElement.text();
+
+
+                    if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
+                    {
+                        DhtNode.ipv4 = nodeDetails[0];
+                        DhtNode.ipv6 = nodeDetails[1];
+                        DhtNode.port = nodeDetails[2];
+                        DhtNode.key = nodeDetails[3];
+                        DhtNode.owner = nodeDetails[4];
+                        DhtNode.location = nodeDetails[5];
+                        break;
+                    }
+                }
             } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
+                e.printStackTrace();
             }
+            return null;
         }
 
-        /**
-         * Downloads the data and will return a string of it
-         *
-         * @param myurl
-         * @return
-         * @throws IOException
-         */
-        private String downloadUrl(String myurl) throws IOException {
-            InputStream is = null;
-            // Only display the first 500 characters of the retrieved
-            // web page content.
-            int len = 160;
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            //Checking the details
+            System.out.println("node details:");
+            System.out.println(DhtNode.ipv4);
+            System.out.println(DhtNode.ipv6);
+            System.out.println(DhtNode.port);
+            System.out.println(DhtNode.key);
+            System.out.println(DhtNode.owner);
+            System.out.println(DhtNode.location);
 
-            try {
-                URL url = new URL(myurl);
-                HttpURLConnection conn = (HttpURLConnection) url
-                        .openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                // Starts the query
-                conn.connect();
-                is = conn.getInputStream();
-
-                // Convert the InputStream into a string
-
-                return readIt(is, len);
-
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
-        }
-
-        /**
-         * Take the Input Stream and convert it from a char[] buffer to a String
-         *
-         * @param stream
-         * @param len
-         * @return
-         * @throws IOException
-         * @throws UnsupportedEncodingException
-         */
-        public String readIt(InputStream stream, int len) throws IOException {
-            Reader reader;
-            reader = new InputStreamReader(stream, "UTF-8");
-            char[] buffer = new char[len];
-            reader.read(buffer);
-            return new String(buffer);
-        }
-
-        /**
-         * Will take the return of the AsyncTask to be used for operations. Specifically, it will
-         * take the result of downloading the JSON file, parse it, and add it to the DHT spinner
-         *
-         * @param result
-         */
-        protected void onPostExecute(String result) {
-            //Parse the page and store it so it can be used to automatically connect to a DHT
-            String[] dhtDetails = new String[7];
-
-            int posOfFirst = 1;
-            int counter = 0;
-            for(int i = 2; i < result.length() - 2; i++) {
-                if(result.charAt(i) == '"') {
-                    dhtDetails[counter] = result.substring(posOfFirst+1, i);
-                    posOfFirst = i + 2;
-                    counter++;
-                    i = i+3;
-                }
-            }
-
-            DhtNode.ipv4 = dhtDetails[0];
-            DhtNode.ipv6 = dhtDetails[1];
-            DhtNode.port = dhtDetails[2];
-            DhtNode.key = dhtDetails[3];
-            DhtNode.owner = dhtDetails[4];
-            DhtNode.location = dhtDetails[5];
         }
     }
 
