@@ -55,12 +55,12 @@
         </activity>
         <activity
             android:name="im.tox.antox.WelcomeActivity"
-            android:label="@string/title_activity_welcome"
-            android:parentActivityName="im.tox.antox.MainActivity">
+            android:label="@string/title_activity_welcome" >
+            <!--android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tox.antox.MainActivity"/>
-        </activity>
+                android:value="im.tox.antox.MainActivity"/>-->
+    </activity>
         <activity
             android:name="im.tox.antox.AddFriendActivity"
             android:label="@string/title_activity_add_friend"
