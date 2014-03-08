@@ -134,6 +134,12 @@ public class ToxService extends IntentService {
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
+                try {
+                    toxSingleton.jTox.getSelfUserStatus();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
