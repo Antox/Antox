@@ -2,6 +2,7 @@ package im.tox.antox;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -122,14 +123,22 @@ public class ContactsFragment extends Fragment {
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
                                 Log.d("picked", "" + items[index]);
+                                //item.first equals the key
                                 if(isFriendRequest){
                                     switch (index){
                                         case 0:
-                                            Log.v("To implement", "" + items[0]);
-                                            //acceptRequest(item.first); item.first equals the key
+                                            Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
+                                            acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
+                                            acceptRequestIntent.putExtra("key", item.first);
+                                            main_act.startService(acceptRequestIntent);
+                                            main_act.updateLeftPane();
                                             break;
                                         case 1:
-                                            Log.v("To implement", "" + items[1]);
+                                            Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
+                                            rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
+                                            rejectRequestIntent.putExtra("key", item.first);
+                                            main_act.startService(rejectRequestIntent);
+                                            main_act.updateLeftPane();
                                             //rejectRequest(item.first);
                                             break;
                                     }
