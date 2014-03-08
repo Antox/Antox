@@ -1,6 +1,8 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -88,6 +91,18 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
+                    NotificationCompat.Builder builder =
+                            new NotificationCompat.Builder(context)
+                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setContentTitle("Someone sent you a request")
+                                    .setContentText("isn't that rad!?");
+                    int NOTIFICATION_ID = 12345;
+                    Intent targetIntent = new Intent(context, MainActivity.class);
+                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    builder.setContentIntent(contentIntent);
+                    NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    nManager.notify(NOTIFICATION_ID, builder.build());
+                    Log.d("Notification lol", "Friend request notify");
                     friendRequest(intent);
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
                     updateLeftPane();
