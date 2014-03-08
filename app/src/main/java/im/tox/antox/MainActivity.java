@@ -106,6 +106,8 @@ public class MainActivity extends ActionBarActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
+                } else if (action == Constants.FRIEND_LIST) {
+                    
                 }
             }
         }
