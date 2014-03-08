@@ -23,6 +23,7 @@ public class ToxSingleton {
     AntoxDB mDbHelper;
     SQLiteDatabase db;
     public boolean toxStarted = false;
+    AntoxFriendList friendsList;
 
     private static volatile ToxSingleton instance = null;
 
@@ -31,6 +32,7 @@ public class ToxSingleton {
     }
 
     public void initTox() {
+        friendsList = new AntoxFriendList();
         toxStarted = true;
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);

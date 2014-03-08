@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -192,6 +193,22 @@ public class ToxService extends IntentService {
 
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
             Log.d(TAG, "Constants.FRIEND_LIST");
+            List<AntoxFriend> onlineFriends = toxSingleton.friendsList.getOnlineFriends();
+            if(onlineFriends.size() > 0) {
+                Log.d(TAG, "Friends found in friendsList");
+                String[] names = new String[onlineFriends.size()];
+                String[] notes = new String[onlineFriends.size()];
+                for(int i = 0; i < onlineFriends.size(); i++) {
+                    names[i] = onlineFriends.get(i).getName();
+                    notes[i] = onlineFriends.get(i).getStatusMessage();
+                }
+
+                Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                notify.setAction(Constants.FRIEND_LIST);
+                notify.putExtra("names", names);
+                notify.putExtra("notes", notes);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            }
 
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
