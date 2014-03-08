@@ -11,7 +11,7 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.0
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
 
@@ -30,7 +30,7 @@ When submitting a bug report, please include the following:-
 
 - Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
 - Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
-- Take this script, http://markwinter.me/script.html which fetches the table of nodes from http://wiki.tox.im/Nodes before parsing them for working nodes, and implement it in the app instead.
+- Add a 'paranoid' mode to the app so nothing at all is saved (very low priority)
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>

@@ -36,13 +36,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <Button
-                    android:onClick="rejectFriendRequest"
+                    android:id="@+id/rejectFriendRequest"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/friendrequest_reject"
                     android:layout_marginRight="20dp"/>
                 <Button
-                    android:onClick="acceptFriendRequest"
+                    android:id="@+id/acceptFriendRequest"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/friendrequest_accept" />

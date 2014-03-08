@@ -87,6 +87,7 @@ public class ContactsFragment extends Fragment {
                             main_act.activeTitle = item.first();
                             main_act.pane.closePane();
                         } else if (type == Constants.TYPE_FRIEND_REQUEST) {
+
                             String key = item.first();
                             String message = item.second();
                             onChangeFriendRequest(position, key, message);
