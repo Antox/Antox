@@ -225,27 +225,8 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+        antoxDB.close();
         contacts.updateLeftPane();
-    }
-
-    public void rejectFriendRequest(View view) {
-        getSupportFragmentManager().popBackStack();
-        pane.openPane();
-        Intent rejectRequestIntent = new Intent(this, ToxService.class);
-        rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
-        rejectRequestIntent.putExtra("key", activeFriendRequestKey);
-        this.startService(rejectRequestIntent);
-
-    }
-    public void acceptFriendRequest(View view) {
-        getSupportFragmentManager().popBackStack();
-
-
-        pane.openPane();
-        Intent acceptRequestIntent = new Intent(this, ToxService.class);
-        acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
-        acceptRequestIntent.putExtra("key", activeFriendRequestKey);
-        this.startService(acceptRequestIntent);
     }
 
     /**
