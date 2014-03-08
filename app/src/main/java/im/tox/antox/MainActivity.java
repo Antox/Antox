@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -67,8 +68,6 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
      */
-    private String[][] friends;
-
     public String activeTitle = "Antox";
     public String activeFriendRequestKey = null;
 
@@ -194,29 +193,15 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-    private void updateLeftPane() {
-        friends = new String[1][3];
-        friends[0][0] = "0";
-        friends[0][1] = getResources().getString(R.string.main_no_friends);
-        friends[0][2] = getResources().getString(R.string.main_try_adding);
+    public void updateLeftPane() {
+
+        AntoxDB antoxDB = new AntoxDB(this);
+
+        ArrayList<Friend> friendList = antoxDB.getFriendList();
 
         /* Go through status strings and set appropriate resource image */
-        Friend friends_list[] = new Friend[friends.length];
-
-        for (int i = 0; i < friends.length; i++) {
-            if (friends[i][0].equals("1"))
-                friends_list[i] = new Friend(R.drawable.ic_status_online,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("0"))
-                friends_list[i] = new Friend(R.drawable.ic_status_offline,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("2"))
-                friends_list[i] = new Friend(R.drawable.ic_status_away,
-                        friends[i][1], friends[i][2]);
-            else if (friends[i][0].equals("3"))
-                friends_list[i] = new Friend(R.drawable.ic_status_busy,
-                        friends[i][1], friends[i][2]);
-        }
+        Friend friends_list[] = new Friend[friendList.size()];
+        friends_list = friendList.toArray(friends_list);
 
         FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
         friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
@@ -254,6 +239,8 @@ public class MainActivity extends ActionBarActivity {
     }
     public void acceptFriendRequest(View view) {
         getSupportFragmentManager().popBackStack();
+
+
         pane.openPane();
         Intent acceptRequestIntent = new Intent(this, ToxService.class);
         acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
