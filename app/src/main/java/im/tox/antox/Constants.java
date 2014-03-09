@@ -33,6 +33,7 @@ public final class Constants {
     public static final String COLUMN_NAME_USERNAME ="username";
     public static final String COLUMN_NAME_NOTE ="note";
     public static final String COLUMN_NAME_STATUS ="status";
+    public static final String COLUMN_NAME_ISONLINE = "isonline";
 
 
 

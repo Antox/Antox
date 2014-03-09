@@ -85,6 +85,10 @@ public class AddFriendActivity extends ActionBarActivity {
         addFriend.putExtra("friendData", friendData);
         this.startService(addFriend);
 
+        AntoxDB db = new AntoxDB(getApplicationContext());
+        db.addFriend(friendID.getText().toString(), "Friend Request Sent");
+        db.close();
+
         // Close activity
         finish();
     }

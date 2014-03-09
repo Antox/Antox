@@ -8,13 +8,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
+import im.tox.jtoxcore.ToxUserStatus;
+
 /**
  * Created by Aagam Shah on 7/3/14.
  */
 public class AntoxDB extends SQLiteOpenHelper {
 
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends " +
-            "( _id integer primary key , key text, username text, status text,note text)";
+            "( _id integer primary key , key text, username text, status text,note text, isonline boolean)";
 
     public String CREATE_TABLE_FRIEND_REQUEST = "CREATE TABLE IF NOT EXISTS friend_request " +
             "( _id integer primary key, key text, message text)";
@@ -53,6 +55,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_STATUS, "0");
         values.put(Constants.COLUMN_NAME_NOTE, message);
         values.put(Constants.COLUMN_NAME_USERNAME, "");
+        values.put(Constants.COLUMN_NAME_ISONLINE, false);
         db.insert(Constants.TABLE_FRIENDS, null, values);
         db.close();
     }
@@ -68,19 +71,58 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                String name=cursor.getString(2);
-                String key=cursor.getString(1);
-                String status=cursor.getString(3);
-                String note=cursor.getString(4);
+                String name = cursor.getString(2);
+                String key = cursor.getString(1);
+                String status = cursor.getString(3);
+                String note = cursor.getString(4);
+                String online = (String) cursor.getString(5);
 
-                // Adding friends to list
-                friendList.add(new Friend(R.drawable.ic_status_online,key.substring(0,7),note));
+                if(name.equals(""))
+                    name = key.substring(0,7);
+
+                if(online == "online")
+                    friendList.add(new Friend(R.drawable.ic_status_online,name,status,note));
+                else
+                    friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note));
             } while (cursor.moveToNext());
         }
 
-
+        cursor.close();
 
         return friendList;
     }
 
+    public void updateFriendName(String key, String newName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_USERNAME, newName);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+    }
+
+    public void updateStatusMessage(String key, String newMessage) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_NOTE, newMessage);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+    }
+
+    public void updateUserStatus(String key, ToxUserStatus status) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        String tmp = "";
+        if (status == ToxUserStatus.TOX_USERSTATUS_BUSY) {
+            tmp = "busy";
+        } else if (status == ToxUserStatus.TOX_USERSTATUS_AWAY) {
+            tmp = "away";
+        }
+        values.put(Constants.COLUMN_NAME_STATUS, tmp);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+    }
+
+    public void updateUserOnline(String key, boolean online) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_ISONLINE, online);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+    }
 }
