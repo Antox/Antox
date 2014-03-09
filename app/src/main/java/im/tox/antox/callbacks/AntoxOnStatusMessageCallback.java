@@ -25,5 +25,6 @@ public class AntoxOnStatusMessageCallback implements OnStatusMessageCallback<Ant
         AntoxDB db = new AntoxDB(ctx);
         db.updateStatusMessage(friend.getId(), newStatus);
         db.close();
+        Log.d(TAG, "OnStatusMessageCallback id: " + friend.getId() + " status: " + newStatus);
     }
 }

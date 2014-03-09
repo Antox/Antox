@@ -28,5 +28,6 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserOnline(friend.getId(), online);
         db.close();
+        Log.d(TAG, "OnConnectionStatusCallback id: " + friend.getId() + " status: " + online);
     }
 }

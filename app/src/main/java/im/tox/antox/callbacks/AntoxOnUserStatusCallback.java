@@ -26,5 +26,6 @@ public class AntoxOnUserStatusCallback implements OnUserStatusCallback<AntoxFrie
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserStatus(friend.getId(), newStatus);
         db.close();
+        Log.d(TAG, "OnUserStatusCallback id: " + friend.getId() + " userStatus: " + newStatus.toString());
     }
 }

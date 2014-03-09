@@ -25,5 +25,6 @@ public class AntoxOnNameChangeCallback implements OnNameChangeCallback<AntoxFrie
         AntoxDB db = new AntoxDB(ctx);
         db.updateFriendName(friend.getId(), newName);
         db.close();
+        Log.d(TAG, "OnNameChangeCallback id: " + friend.getId() + " name: " + newName);
     }
 }
