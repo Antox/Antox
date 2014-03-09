@@ -29,7 +29,7 @@
     <string name="about_details">Antox is an Android client for Tox</string>
     <string name="about_github_url">https://github.com/Astonex/Antox</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">We're on Freenode on #tox-dev</string>
+    <string name="about_irc">We\'re on Freenode on #tox-dev</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
