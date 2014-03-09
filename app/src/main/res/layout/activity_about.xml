@@ -89,6 +89,26 @@
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_facebook" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_centerInParent="true"
+                android:text="@string/about_facebook_url"
+                android:autoLink="web"
+                android:textAlignment="center"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_monolog" />
             <TextView
                 android:layout_width="match_parent"
@@ -99,6 +119,26 @@
                 android:textAlignment="center"
                 android:layout_gravity="center" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_bug" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_centerInParent="true"
+                android:text="@string/about_bugs"
+                android:textAlignment="left"
+                android:layout_gravity="bottom" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

@@ -27,7 +27,9 @@
 
     <!-- About Activity -->
     <string name="about_details">Antox is an Android client for Tox</string>
+    <string name="about_bugs">To report a bug, please visit our GitHub page and click on \"issues\".</string>
     <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
     <string name="about_irc">We\'re on Freenode on #tox-dev</string>
 
