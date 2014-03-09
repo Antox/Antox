@@ -460,6 +460,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(activeTitle);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
+            af.setTitle("Add To Group");
             isInChat=true;
             System.out.println("Panel closed");
         }
@@ -470,6 +471,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(R.string.app_name);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
+            af.setTitle("Add Friend");
             isInChat=false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
