@@ -3,6 +3,7 @@ package im.tox.antox.callbacks;
 import android.content.Context;
 import android.util.Log;
 
+import im.tox.antox.AntoxDB;
 import im.tox.antox.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnStatusMessageCallback;
 
@@ -21,5 +22,8 @@ public class AntoxOnStatusMessageCallback implements OnStatusMessageCallback<Ant
     @Override
     public void execute(AntoxFriend friend, String newStatus) {
         Log.d(TAG, "OnStatusMessageCallback received");
+        AntoxDB db = new AntoxDB(ctx);
+        db.updateStatusMessage(friend.getId(), newStatus);
+        db.close();
     }
 }

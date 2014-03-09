@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import im.tox.antox.AntoxDB;
 import im.tox.antox.AntoxFriend;
 import im.tox.antox.Constants;
 import im.tox.antox.ToxService;
@@ -24,5 +25,8 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
     @Override
     public void execute(AntoxFriend friend, boolean online) {
         Log.d(TAG, "OnConnectionStatusCallback received");
+        AntoxDB db = new AntoxDB(ctx);
+        db.updateUserOnline(friend.getId(), online);
+        db.close();
     }
 }
