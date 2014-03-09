@@ -146,10 +146,14 @@ public class SettingsActivity extends ActionBarActivity
         editor.commit();
 
         /* Send an intent to ToxService notifying change of settings */
+        /* IF we send an intent the updatedSettings will always be null*/
+        /*
         Intent updateSettings = new Intent(this, ToxService.class);
         updateSettings.setAction(Constants.UPDATE_SETTINGS);
         updateSettings.putExtra("newSettings", updatedSettings);
         this.startService(updateSettings);
+        */
+
 
         Context context = getApplicationContext();
         CharSequence text = "Settings updated";
