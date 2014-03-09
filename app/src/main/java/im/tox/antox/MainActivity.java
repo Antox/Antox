@@ -93,6 +93,7 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
+                    /* Comment this out until I do something with it properly
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.ic_launcher)
@@ -106,6 +107,7 @@ public class MainActivity extends ActionBarActivity {
                     nManager.notify(NOTIFICATION_ID, builder.build());
                     Log.d("Notification lol", "Friend request notify");
                     friendRequest(intent);
+                    */
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
                     updateLeftPane();
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
