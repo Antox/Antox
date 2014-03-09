@@ -1,10 +1,13 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import im.tox.antox.AntoxDB;
 import im.tox.antox.AntoxFriend;
+import im.tox.antox.Constants;
 import im.tox.jtoxcore.callbacks.OnNameChangeCallback;
 
 /**
@@ -26,5 +29,8 @@ public class AntoxOnNameChangeCallback implements OnNameChangeCallback<AntoxFrie
         db.updateFriendName(friend.getId(), newName);
         db.close();
         Log.d(TAG, "OnNameChangeCallback id: " + friend.getId() + " name: " + newName);
+        Intent update = new Intent(Constants.BROADCAST_ACTION);
+        update.putExtra("action", Constants.UPDATE);
+        LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);
     }
 }

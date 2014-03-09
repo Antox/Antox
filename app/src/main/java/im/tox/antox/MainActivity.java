@@ -126,6 +126,8 @@ public class MainActivity extends ActionBarActivity {
                     toast.show();
                 } else if (action == Constants.FRIEND_LIST) {
                     
+                } else if (action == Constants.UPDATE) {
+                    updateLeftPane();
                 }
             }
         }
