@@ -80,7 +80,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                 if(name.equals(""))
                     name = key.substring(0,7);
 
-                if(online == "online")
+                if(online.equals("1"))
                     friendList.add(new Friend(R.drawable.ic_status_online,name,status,note, key));
                 else
                     friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note, key));

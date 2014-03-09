@@ -2,11 +2,13 @@ package im.tox.antox.callbacks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import im.tox.antox.AntoxDB;
 import im.tox.antox.AntoxFriend;
 import im.tox.antox.Constants;
+import im.tox.antox.MainActivity;
 import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
 
@@ -28,5 +30,9 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserOnline(friend.getId(), online);
         db.close();
+        Log.d(TAG, "OnConnectionStatusCallback id: " + friend.getId() + " status: " + online);
+        Intent update = new Intent(Constants.BROADCAST_ACTION);
+        update.putExtra("action", Constants.UPDATE);
+        LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);
     }
 }

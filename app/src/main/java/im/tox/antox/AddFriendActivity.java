@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,6 +89,10 @@ public class AddFriendActivity extends ActionBarActivity {
         AntoxDB db = new AntoxDB(getApplicationContext());
         db.addFriend(friendID.getText().toString(), "Friend Request Sent");
         db.close();
+
+        Intent update = new Intent(Constants.BROADCAST_ACTION);
+        update.putExtra("action", Constants.UPDATE);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(update);
 
         // Close activity
         finish();

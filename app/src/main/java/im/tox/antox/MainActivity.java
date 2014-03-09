@@ -93,6 +93,7 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
+                    /* Comment this out until I do something with it properly
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(context)
                                     .setSmallIcon(R.drawable.ic_launcher)
@@ -106,6 +107,7 @@ public class MainActivity extends ActionBarActivity {
                     nManager.notify(NOTIFICATION_ID, builder.build());
                     Log.d("Notification lol", "Friend request notify");
                     friendRequest(intent);
+                    */
                 } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
                     updateLeftPane();
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
@@ -124,6 +126,8 @@ public class MainActivity extends ActionBarActivity {
                     toast.show();
                 } else if (action == Constants.FRIEND_LIST) {
                     
+                } else if (action == Constants.UPDATE) {
+                    updateLeftPane();
                 }
             }
         }
@@ -431,15 +435,18 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void result)
         {
-            //Checking the details
-            System.out.println("node details:");
-            System.out.println(DhtNode.ipv4);
-            System.out.println(DhtNode.ipv6);
-            System.out.println(DhtNode.port);
-            System.out.println(DhtNode.key);
-            System.out.println(DhtNode.owner);
-            System.out.println(DhtNode.location);
-
+            try {
+                //Checking the details
+                System.out.println("node details:");
+                System.out.println(DhtNode.ipv4);
+                System.out.println(DhtNode.ipv6);
+                System.out.println(DhtNode.port);
+                System.out.println(DhtNode.key);
+                System.out.println(DhtNode.owner);
+                System.out.println(DhtNode.location);
+            }catch (NullPointerException e){
+                Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -471,6 +478,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(activeTitle);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
+            af.setTitle(R.string.add_to_group);
             isInChat=true;
             System.out.println("Panel closed");
         }
@@ -481,6 +489,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(R.string.app_name);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
+            af.setTitle(R.string.add_friend);
             isInChat=false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
