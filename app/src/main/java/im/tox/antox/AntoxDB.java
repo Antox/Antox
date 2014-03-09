@@ -81,15 +81,21 @@ public class AntoxDB extends SQLiteOpenHelper {
                     name = key.substring(0,7);
 
                 if(online == "online")
-                    friendList.add(new Friend(R.drawable.ic_status_online,name,status,note));
+                    friendList.add(new Friend(R.drawable.ic_status_online,name,status,note, key));
                 else
-                    friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note));
+                    friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note, key));
             } while (cursor.moveToNext());
         }
 
         cursor.close();
 
         return friendList;
+    }
+
+    public void deleteFriend(String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
     }
 
     public void updateFriendName(String key, String newName) {

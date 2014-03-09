@@ -76,6 +76,8 @@ public class MainActivity extends ActionBarActivity {
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
+    public ArrayList<Friend> friendList;
+
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
@@ -211,7 +213,7 @@ public class MainActivity extends ActionBarActivity {
 
         AntoxDB antoxDB = new AntoxDB(this);
 
-        ArrayList<Friend> friendList = antoxDB.getFriendList();
+        friendList = antoxDB.getFriendList();
 
         /* Go through status strings and set appropriate resource image */
         Friend friends_list[] = new Friend[friendList.size()];

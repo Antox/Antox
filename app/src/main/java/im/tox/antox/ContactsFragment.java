@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by ollie on 28/02/14.
@@ -148,7 +150,20 @@ public class ContactsFragment extends Fragment {
                                             Log.v("To implement", "" + items[0]);
                                             break;
                                         case 1:
-                                            Log.v("To implement", "" + items[1]);
+                                            //Delete friend
+                                            Log.d("ContactsFragment","Delete Friend selected");
+                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                                            ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                            String key = "";
+                                            for(int i = 0; i < tmp.size(); i++) {
+                                                if(item.first.equals(tmp.get(i).friendName)) {
+                                                    key = tmp.get(i).friendKey;
+                                                    break;
+                                                }
+                                            }
+                                            db.deleteFriend(key);
+                                            db.close();
+                                            ((MainActivity)getActivity()).updateLeftPane();
                                             break;
                                         case 2:
                                             Log.v("To implement", "" + items[2]);
