@@ -48,11 +48,11 @@
     <string name="settings_username_title">Set your username</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">enter your friends public key</string>
-    <string name="addfriend_friend_message">optional message to send with request</string>
+    <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
+    <string name="addfriend_friend_message">Optional message</string>
     <string name="addfriend_button">Add Friend</string>
     <string name="scanqr_button">Scan a QR code</string>
-    <string name="invalid_friend_ID">Invalid Friend ID</string>
+    <string name="invalid_friend_ID">Invalid Tox ID</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
