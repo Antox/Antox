@@ -8,6 +8,8 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 * Galaxy Nexus running android 4.4
 * Galaxy Note 3 running 4.3 (TouchWiz)
 * Galaxy Note 10.1 running 4.3 (TouchWiz)
+* Samsung Galaxy Tab 10.1 Wi-Fi running 4.0.4
+* Moto G running 4.4.2
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
