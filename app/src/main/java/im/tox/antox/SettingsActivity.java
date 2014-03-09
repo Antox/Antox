@@ -64,7 +64,7 @@ public class SettingsActivity extends ActionBarActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
+//        statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);
 
         SharedPreferences pref = getSharedPreferences("settings",
@@ -118,15 +118,15 @@ public class SettingsActivity extends ActionBarActivity
 		 * they contain user entered data so they need saving
 		 */
 
-        editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        if (statusSpinner.getSelectedItem().toString().equals("online"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (statusSpinner.getSelectedItem().toString().equals("away"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString().equals("busy"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
-
-        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
+//        editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
+//        if (statusSpinner.getSelectedItem().toString().equals("online"))
+//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+//        if (statusSpinner.getSelectedItem().toString().equals("away"))
+//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
+//        if (statusSpinner.getSelectedItem().toString().equals("busy"))
+//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
+//
+//        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
 
         /* Also save DHT details to DhtNode class */
         editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
