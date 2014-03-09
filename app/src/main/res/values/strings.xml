@@ -34,14 +34,14 @@
     <string name="developer_string">Developed by astonex\nirc.freenode.net#tox-dev</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key_title">Your User Key</string>
+    <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">enter your name</string>
     <string name="settings_note_hint">enter your personal note</string>
     <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
     <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Update</string>
-    <string name="settings_updated">Settings have been updated</string>
+    <string name="settings_updated">Your Settings has been updated</string>
     <string name="settings_dht_spinner_title">Advanced Settings</string>
     <string name="settings_status_title">Set your status</string>
     <string name="settings_note_title">Set your personal note</string>
@@ -59,6 +59,7 @@
     <string name="status_online">Online</string>
     <string name="status_away">Away</string>
     <string name="status_busy">Busy</string>
+    <string name="profile_updated">Your Profile has been updated</string>
 
 
     <!-- Friend request fragment -->

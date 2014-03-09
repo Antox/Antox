@@ -195,7 +195,7 @@ public class ProfileActivity extends ActionBarActivity {
         this.startService(updateSettings);
 
         Context context = getApplicationContext();
-        CharSequence text = getResources().getString(R.string.settings_updated);
+        CharSequence text = getResources().getString(R.string.profile_updated);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
