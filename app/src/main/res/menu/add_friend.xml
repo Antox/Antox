@@ -1,4 +1,10 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:antonx="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/scanFriend"
+        android:showAsAction="always"
+        antonx:showAsAction="always"
+        android:icon="@drawable/ic_action_barcode_2"
+        android:title="@string/scanqr_button"
+        />
 </menu>
