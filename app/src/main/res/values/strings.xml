@@ -53,6 +53,7 @@
     <string name="settings_status_title">Set your status</string>
     <string name="settings_note_title">Set your personal note</string>
     <string name="settings_username_title">Set your username</string>
+    <string name="developer_string">Developed by astonex &amp; co.</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
