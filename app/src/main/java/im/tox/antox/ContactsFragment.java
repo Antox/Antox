@@ -129,6 +129,8 @@ public class ContactsFragment extends Fragment {
                                 if(isFriendRequest){
                                     switch (index){
                                         case 0:
+                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                                            db.addFriend(item.first, "Friend Accepted");
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                                             acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
                                             acceptRequestIntent.putExtra("key", item.first);
