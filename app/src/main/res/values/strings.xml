@@ -16,11 +16,8 @@
     <string name="add_friend">Add Friend</string>
     <string name="search_friend">Search</string>
     <string name="action_profile">Profile</string>
-<<<<<<< HEAD
     <string name="action_about">About</string>
-=======
     <string name="add_to_group">Add To Group</string>
->>>>>>> c20e2e3c17df3bc31d762ab1eeb7c6015e632dc8
 
     <!-- Main Activity -->
     <string name="icon_description">Connection Status</string>
@@ -28,7 +25,6 @@
     <string name="main_try_adding">Why not try adding some?</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
-    <string name="add_to_group">Add To Group</string>
 
     <!-- About Activity -->
     <string name="about_details">Antox is an Android client for Tox</string>
