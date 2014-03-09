@@ -263,7 +263,15 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
-
+    /**
+     * Starts a new intent to open the AboutActivity class
+     *
+     * @see im.tox.antox.AboutActivity
+     */
+    private void openAbout() {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
     /**
      * Starts a new intent to open the AddFriendActivity class
      *
@@ -303,6 +311,9 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             case R.id.action_profile:
                 openProfile();
+                return true;
+            case R.id.action_about:
+                openAbout();
                 return true;
             case R.id.add_friend:
                 if(isInChat)

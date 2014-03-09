@@ -35,6 +35,7 @@
         android:layout_marginTop="20dp"
         android:hint="@string/addfriend_button"
         android:onClick="addFriend"/>
+
     <Button
         android:id="@+id/scanFriendQR"
         android:layout_width="fill_parent"
@@ -43,5 +44,4 @@
         android:layout_marginTop="20dp"
         android:hint="@string/scanqr_button"
         android:onClick="addFriend"/>
-
 </LinearLayout>

@@ -30,6 +30,13 @@
         android:title="@string/action_profile"/>
 
     <item
+        android:id="@+id/action_about"
+        android:orderInCategory="99"
+        android:showAsAction="never"
+        antonx:showAsAction="never"
+        android:title="@string/action_about"/>
+
+    <item
         android:id="@+id/search_friend"
         android:orderInCategory="25"
         android:showAsAction="collapseActionView|ifRoom"
