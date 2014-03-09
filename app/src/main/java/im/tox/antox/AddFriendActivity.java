@@ -31,16 +31,6 @@ public class AddFriendActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //scanQR button to call the barcode reader app
-        Button scanQR = (Button)findViewById(R.id.scanFriendQR);
-        scanQR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanIntent();
-            }
-        });
-
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         Intent intentURI = getIntent();
         Uri uri;
@@ -150,6 +140,10 @@ public class AddFriendActivity extends ActionBarActivity {
                 //
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            //scanQR button to call the barcode reader app
+            case R.id.scanFriend:
+                scanIntent();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

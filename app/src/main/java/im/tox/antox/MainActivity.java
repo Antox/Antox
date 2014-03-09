@@ -476,7 +476,7 @@ public class MainActivity extends ActionBarActivity {
         public void onPanelClosed(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
-            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
+            MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
             af.setTitle(R.string.add_to_group);
             isInChat=true;
@@ -487,7 +487,7 @@ public class MainActivity extends ActionBarActivity {
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
-            MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
+            MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);
             isInChat=false;
