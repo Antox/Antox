@@ -420,15 +420,18 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Void result)
         {
-            //Checking the details
-            System.out.println("node details:");
-            System.out.println(DhtNode.ipv4);
-            System.out.println(DhtNode.ipv6);
-            System.out.println(DhtNode.port);
-            System.out.println(DhtNode.key);
-            System.out.println(DhtNode.owner);
-            System.out.println(DhtNode.location);
-
+            try {
+                //Checking the details
+                System.out.println("node details:");
+                System.out.println(DhtNode.ipv4);
+                System.out.println(DhtNode.ipv6);
+                System.out.println(DhtNode.port);
+                System.out.println(DhtNode.key);
+                System.out.println(DhtNode.owner);
+                System.out.println(DhtNode.location);
+            }catch (NullPointerException e){
+                Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -460,6 +463,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(activeTitle);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
+            af.setTitle(R.string.add_to_group);
             isInChat=true;
             System.out.println("Panel closed");
         }
@@ -470,6 +474,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(R.string.app_name);
             MenuItem af = (MenuItem)menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
+            af.setTitle(R.string.add_friend);
             isInChat=false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
