@@ -114,6 +114,11 @@ public class ToxService extends IntentService {
                 if(friends.size() > 0) {
                         Log.d(TAG, "Adding friends to tox friendlist");
                         for (int i = 0; i < friends.size(); i++) {
+                            try {
+                                toxSingleton.jTox.confirmRequest(friends.get(i).friendKey);
+                            } catch (Exception e) {
+
+                            }
                             AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(i);
                             friend.setId(friends.get(i).friendKey);
                             friend.setName(friends.get(i).friendName);
