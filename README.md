@@ -3,6 +3,11 @@
 
 Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. 
 
+###Want to get Antox on Google Play?
+1. Join the Google+ Alpha testing page <a href="https://plus.google.com/communities/112302171077600707137">here</a>.
+2. Join the Google Play Alpha group <a href="https://play.google.com/apps/testing/im.tox.antox">here</a>
+3. Download the app <a href="https://play.google.com/store/apps/details?id=im.tox.antox">here</a>
+
 ###Known to work on
 * Samsung S3 running android 4.4 and cyanogenmod
 * Galaxy Nexus running android 4.4
