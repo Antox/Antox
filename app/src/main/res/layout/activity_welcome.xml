@@ -19,7 +19,8 @@
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/full_logo" />
+            android:src="@drawable/full_logo"
+            android:layout_gravity="center" />
 
            <TextView
                android:layout_width="match_parent"
@@ -50,8 +51,9 @@
 
            <Button
                 android:id="@+id/updateSettings"
-                android:layout_width="fill_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/settings_button"
                 android:layout_marginTop="20dp"
                 android:onClick="updateSettings" />
