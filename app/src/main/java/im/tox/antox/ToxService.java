@@ -331,6 +331,26 @@ public class ToxService extends IntentService {
             String key = intent.getStringExtra("key");
             try {
                 toxSingleton.jTox.confirmRequest(key);
+
+                /* Add friend to tox friends list */
+                //This is so wasteful. Should pass the info in the intent with the key
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<Friend> friends = db.getFriendList();
+                //Long statement but just getting size of friends list and adding one for the friend number
+                AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(toxSingleton.friendsList.all().size()+1);
+                int pos = -1;
+                for(int i = 0; i < friends.size(); i++) {
+                    if(friends.get(i).friendKey == key) {
+                        pos = i;
+                        break;
+                    }
+                }
+                if(pos != -1) {
+                    friend.setId(key);
+                    friend.setName(friends.get(pos).friendName);
+                    friend.setStatusMessage(friends.get(pos).personalNote);
+                }
+
             } catch (Exception e) {
 
             }
