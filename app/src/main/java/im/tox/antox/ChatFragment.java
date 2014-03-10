@@ -67,7 +67,6 @@ public class ChatFragment extends Fragment {
             data[i] = new ChatMessages(messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing);
         }
         adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, data);
-        chatListView = (ListView) getView().findViewById(R.id.chatMessages);
         chatListView.setAdapter(adapter);
         chatListView.setSelection(adapter.getCount() - 1);
     }
@@ -100,7 +99,7 @@ public class ChatFragment extends Fragment {
         });
         main_act = (MainActivity) getActivity();
         main_act.chat = this;
-
+        main_act.updateChat(main_act.activeFriendKey);
         return rootView;
     }
 }
