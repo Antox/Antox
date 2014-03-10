@@ -54,6 +54,14 @@
                 android:value="im.tox.antox.MainActivity"/>
         </activity>
         <activity
+            android:name="im.tox.antox.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="im.tox.antox.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.MainActivity"/>
+        </activity>
+        <activity
             android:name="im.tox.antox.WelcomeActivity"
             android:label="@string/title_activity_welcome" >
             <!--android:parentActivityName="im.tox.antox.MainActivity">

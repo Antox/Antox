@@ -36,5 +36,4 @@
         android:hint="@string/addfriend_button"
         android:onClick="addFriend"/>
 
-
 </LinearLayout>
