@@ -141,12 +141,11 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
         chat.updateChat(toxSingleton.mDbHelper.getMessageList(key));
     };
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +167,13 @@ public class MainActivity extends ActionBarActivity {
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
+            /* If the service wasn't running then we wouldn't have gotten callbacks for a user
+            *  going offline so default everyone to offline and just wait for callbacks.
+            */
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.setAllOffline();
+            db.close();
+
             startToxIntent = new Intent(this, ToxService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
@@ -436,13 +442,12 @@ public class MainActivity extends ActionBarActivity {
 
                     if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
                     {
-                        DhtNode.ipv4 = nodeDetails[0];
-                        DhtNode.ipv6 = nodeDetails[1];
-                        DhtNode.port = nodeDetails[2];
-                        DhtNode.key = nodeDetails[3];
-                        DhtNode.owner = nodeDetails[4];
-                        DhtNode.location = nodeDetails[5];
-                        break;
+                        DhtNode.ipv4.add(nodeDetails[0]);
+                        DhtNode.ipv6.add(nodeDetails[1]);
+                        DhtNode.port.add(nodeDetails[2]);
+                        DhtNode.key.add(nodeDetails[3]);
+                        DhtNode.owner.add(nodeDetails[4]);
+                        DhtNode.location.add(nodeDetails[5]);
                     }
                 }
             } catch (IOException e) {

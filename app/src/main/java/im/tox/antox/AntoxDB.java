@@ -130,8 +130,17 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return friendList;
+    }
+
+    public void setAllOffline() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_ISONLINE, "0");
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'",  null);
+        db.close();
     }
 
     public void deleteFriend(String key) {
@@ -145,6 +154,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_USERNAME, newName);
         db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
     }
 
     public void updateStatusMessage(String key, String newMessage) {
@@ -152,6 +162,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_NOTE, newMessage);
         db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
     }
 
     public void updateUserStatus(String key, ToxUserStatus status) {
@@ -165,6 +176,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
         values.put(Constants.COLUMN_NAME_STATUS, tmp);
         db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
     }
 
     public void updateUserOnline(String key, boolean online) {
@@ -172,5 +184,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_ISONLINE, online);
         db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
     }
 }

@@ -132,15 +132,15 @@ public class SettingsActivity extends ActionBarActivity
         editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
         if (dhtBox.isChecked() && !dhtIP.equals(getString(R.id.settings_dht_ip))) {
             editor.putString("saved_dht_ip", dhtIP);
-            DhtNode.ipv4 = dhtIP;
+            DhtNode.ipv4.add(dhtIP);
         }
         if (dhtBox.isChecked() && !dhtKey.equals(getString(R.id.settings_dht_key))) {
             editor.putString("saved_dht_key", dhtKey);
-            DhtNode.key = dhtKey;
+            DhtNode.key.add(dhtKey);
         }
         if (dhtBox.isChecked() && !dhtPort.equals(getString(R.id.settings_dht_port))) {
             editor.putString("saved_dht_port", dhtPort);
-            DhtNode.port = dhtPort;
+            DhtNode.port.add(dhtPort);
         }
 
         editor.commit();

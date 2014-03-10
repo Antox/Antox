@@ -130,17 +130,21 @@ public class ToxService extends IntentService {
 
 
                 try {
-                    if (DhtNode.port != null)
-                        toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    toxSingleton.jTox.getSelfUserStatus();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    //If counter has reached max size set it back to zero and to try all nodes again
+                    if(DhtNode.counter >= DhtNode.ipv4.size())
+                        DhtNode.counter = 0;
 
+                    if (DhtNode.port != null)
+                        toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
+                                Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
+                } catch (UnknownHostException e) {
+                    this.stopService(intent);
+                    DhtNode.counter++;
+                    Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                    restart.setAction(Constants.START_TOX);
+                    this.startService(restart);
+                    e.printStackTrace();
+                }
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
@@ -153,7 +157,6 @@ public class ToxService extends IntentService {
 
                 public void run() {
                     try {
-                        Log.v("Service", "do_tox");
                         toxS.jTox.doTox();
                     } catch (ToxException e) {
                         Log.d(TAG, e.getError().toString());
