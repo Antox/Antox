@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     public SlidingPaneLayout pane;
-    private ChatFragment chat;
+    public ChatFragment chat;
     private ContactsFragment contacts;
     private IntentFilter filter;
 
@@ -73,6 +73,9 @@ public class MainActivity extends ActionBarActivity {
      */
     public String activeTitle = "Antox";
     public String activeFriendRequestKey = null;
+    public String activeFriendKey = null;
+
+    public ArrayList<String> leftPaneKeyList;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -117,6 +120,11 @@ public class MainActivity extends ActionBarActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
+                } else if (action == Constants.UPDATE_MESSAGES) {
+                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + activeFriendKey);
+                    if (intent.getStringExtra("key").equals(activeFriendKey)) {
+                        updateChat(activeFriendKey);
+                    }
                 } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
@@ -131,6 +139,12 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }
+    };
+
+    
+    void updateChat(String key) {
+        Log.d(TAG, "updating chat");
+        chat.updateChat(toxSingleton.mDbHelper.getMessageList(key));
     };
 
     @Override
@@ -233,20 +247,26 @@ public class MainActivity extends ActionBarActivity {
 
         leftPaneAdapter = new LeftPaneAdapter(this);
 
+        leftPaneKeyList = new ArrayList<String>();
+
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
             leftPaneAdapter.addItem(friend_request_header);
+            leftPaneKeyList.add("");
             for (int i = 0; i < friend_requests_list.length; i++) {
                 LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
                 leftPaneAdapter.addItem(friend_request);
+                leftPaneKeyList.add(friend_requests_list[i].requestKey);
             }
         }
         if (friends_list.length > 0) {
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
             leftPaneAdapter.addItem(friends_header);
+            leftPaneKeyList.add("");
             for (int i = 0; i < friends_list.length; i++) {
                 LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].personalNote, friends_list[i].icon);
                 leftPaneAdapter.addItem(friend);
+                leftPaneKeyList.add(friends_list[i].friendKey);
             }
         }
 

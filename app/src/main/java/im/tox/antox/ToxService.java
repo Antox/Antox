@@ -26,6 +26,7 @@ import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxFriend;
 import im.tox.jtoxcore.ToxUserStatus;
 
 public class ToxService extends IntentService {
@@ -205,11 +206,11 @@ public class ToxService extends IntentService {
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
             Log.d(TAG, "Constants.FRIEND_LIST");
             List<AntoxFriend> onlineFriends = toxSingleton.friendsList.getOnlineFriends();
-            if(onlineFriends.size() > 0) {
+            if (onlineFriends.size() > 0) {
                 Log.d(TAG, "Friends found in friendsList");
                 String[] names = new String[onlineFriends.size()];
                 String[] notes = new String[onlineFriends.size()];
-                for(int i = 0; i < onlineFriends.size(); i++) {
+                for (int i = 0; i < onlineFriends.size(); i++) {
                     names[i] = onlineFriends.get(i).getName();
                     notes[i] = onlineFriends.get(i).getStatusMessage();
                 }
@@ -220,7 +221,42 @@ public class ToxService extends IntentService {
                 notify.putExtra("notes", notes);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             }
-
+        } else if (intent.getAction().equals(Constants.ON_MESSAGE)) {
+            Log.d(TAG, "Constants.ON_MESSAGE");
+            String key = intent.getStringExtra(AntoxOnMessageCallback.KEY);
+            String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
+            int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
+            toxSingleton.mDbHelper.addMessage(-1, key, message, false, true);
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.UPDATE_MESSAGES);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+            Log.d(TAG, "Constants.SEND_MESSAGE");
+            String key = intent.getStringExtra("key");
+            String message = intent.getStringExtra("message");
+            toxSingleton.mDbHelper.addMessage(-1, key, message, true, false);
+            /* Send message */
+            ToxFriend friend = null;
+            try {
+                friend = toxSingleton.friendsList.getById(key);
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            try {
+                if (friend != null) {
+                    Log.d(TAG, "Sending message to " + friend.getName());
+                    toxSingleton.jTox.sendMessage(friend, message);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.UPDATE_MESSAGES);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
             String key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);

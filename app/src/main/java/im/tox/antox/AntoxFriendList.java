@@ -1,5 +1,7 @@
 package im.tox.antox;
 
+import android.util.Log;
+
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.ToxFriend;
