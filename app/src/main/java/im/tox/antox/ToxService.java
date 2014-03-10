@@ -109,13 +109,17 @@ public class ToxService extends IntentService {
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 ArrayList<Friend> friends = db.getFriendList();
 
+                toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
+
                 if(friends.size() > 0) {
+                        Log.d(TAG, "Adding friends to tox friendlist");
                         for (int i = 0; i < friends.size(); i++) {
                             AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(i);
                             friend.setId(friends.get(i).friendKey);
                             friend.setName(friends.get(i).friendName);
                             friend.setStatusMessage(friends.get(i).personalNote);
                         }
+                        Log.d(TAG, "Size of tox friendlist: " + toxSingleton.friendsList.all().size());
                 }
 
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
@@ -259,15 +263,16 @@ public class ToxService extends IntentService {
             try {
                 friend = toxSingleton.friendsList.getById(key);
             } catch (Exception e) {
-                Log.e(TAG, e.toString());
+                Log.d(TAG, e.toString());
             }
             try {
                 if (friend != null) {
                     Log.d(TAG, "Sending message to " + friend.getName());
                     toxSingleton.jTox.sendMessage(friend, message);
                 }
-            } catch (Exception e) {
-                Log.e(TAG, e.toString());
+            } catch (ToxException e) {
+                Log.d(TAG, e.toString());
+                e.printStackTrace();
             }
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -341,7 +346,7 @@ public class ToxService extends IntentService {
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 ArrayList<Friend> friends = db.getFriendList();
                 //Long statement but just getting size of friends list and adding one for the friend number
-                AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(toxSingleton.friendsList.all().size()+1);
+                AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
                 int pos = -1;
                 for(int i = 0; i < friends.size(); i++) {
                     if(friends.get(i).friendKey == key) {
@@ -354,6 +359,11 @@ public class ToxService extends IntentService {
                     friend.setName(friends.get(pos).friendName);
                     friend.setStatusMessage(friends.get(pos).personalNote);
                 }
+
+                toxSingleton.jTox.save();
+                Log.d(TAG, "Saving request");
+
+                Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
 
             } catch (Exception e) {
 
