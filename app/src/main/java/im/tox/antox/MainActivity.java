@@ -133,7 +133,7 @@ public class MainActivity extends ActionBarActivity {
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
                 } else if (action == Constants.FRIEND_LIST) {
-                    
+
                 } else if (action == Constants.UPDATE) {
                     updateLeftPane();
                 }
@@ -160,7 +160,8 @@ public class MainActivity extends ActionBarActivity {
         {
             // Executes in a separate thread so UI experience isn't affected
            // Downloads the DHT node details
-            new DHTNodeDetails().execute();
+            if(DhtNode.ipv4.size() == 0)
+                new DHTNodeDetails().execute();
         } else {
 
         }

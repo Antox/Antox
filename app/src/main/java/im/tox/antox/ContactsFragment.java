@@ -157,14 +157,6 @@ public class ContactsFragment extends Fragment {
                                             Log.v("To implement", "" + items[0]);
                                             break;
                                         case 1:
-                                            /* Remove friend from tox friend list */
-                                            List<AntoxFriend> friend = ((MainActivity)getActivity()).toxSingleton.friendsList.getByName(item.first, false);
-                                            ((MainActivity)getActivity()).toxSingleton.friendsList.removeFriend(friend.get(0).getFriendnumber());
-                                            try {
-                                                ((MainActivity) getActivity()).toxSingleton.jTox.deleteFriend(friend.get(0).getFriendnumber());
-                                            } catch (ToxException e) {
-                                                e.printStackTrace();
-                                            }
                                             //Delete friend
                                             Log.d("ContactsFragment","Delete Friend selected");
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
@@ -178,6 +170,18 @@ public class ContactsFragment extends Fragment {
                                             }
                                             db.deleteFriend(key);
                                             db.close();
+
+                                            /* Remove friend from tox friend list */
+                                            AntoxFriend friend = ((MainActivity)getActivity()).toxSingleton.friendsList.getById(key);
+                                            if(friend != null) {
+                                                ((MainActivity) getActivity()).toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
+                                                try {
+                                                    ((MainActivity) getActivity()).toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                                } catch (ToxException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+
                                             ((MainActivity)getActivity()).updateLeftPane();
                                             break;
                                         case 2:
