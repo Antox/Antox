@@ -42,6 +42,7 @@ public class ContactsFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
         main_act.activeFriendRequestKey = key;
+        main_act.activeFriendKey = null;
     }
 
     public void onChangeContact(int position, String name) {
@@ -50,6 +51,7 @@ public class ContactsFragment extends Fragment {
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        main_act.activeFriendKey = main_act.leftPaneKeyList.get(position);
         main_act.activeFriendRequestKey = null;
     }
 
