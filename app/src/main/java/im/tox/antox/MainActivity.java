@@ -417,13 +417,12 @@ public class MainActivity extends ActionBarActivity {
 
                     if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
                     {
-                        DhtNode.ipv4 = nodeDetails[0];
-                        DhtNode.ipv6 = nodeDetails[1];
-                        DhtNode.port = nodeDetails[2];
-                        DhtNode.key = nodeDetails[3];
-                        DhtNode.owner = nodeDetails[4];
-                        DhtNode.location = nodeDetails[5];
-                        break;
+                        DhtNode.ipv4.add(nodeDetails[0]);
+                        DhtNode.ipv6.add(nodeDetails[1]);
+                        DhtNode.port.add(nodeDetails[2]);
+                        DhtNode.key.add(nodeDetails[3]);
+                        DhtNode.owner.add(nodeDetails[4]);
+                        DhtNode.location.add(nodeDetails[5]);
                     }
                 }
             } catch (IOException e) {
