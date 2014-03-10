@@ -43,7 +43,7 @@ When submitting a bug report, please include the following:-
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
-
+<img src="http://vexx.us/Examples/Antox/device-2014-03-09-203434.png" width="690px" height=400px"/>
 
 ####Milestones
 
