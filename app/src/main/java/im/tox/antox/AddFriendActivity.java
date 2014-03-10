@@ -75,7 +75,7 @@ public class AddFriendActivity extends ActionBarActivity {
          */
         String message = null;
         if(friendMessage.getText().toString() == "")
-            message = "0";
+            message = "00";
         else
             message = friendMessage.getText().toString();
 
