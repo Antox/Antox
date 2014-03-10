@@ -105,6 +105,19 @@ public class ToxService extends IntentService {
                 notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
 
+                /* Populate tox friends list with saved friends in database */
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<Friend> friends = db.getFriendList();
+
+                if(friends.size() > 0) {
+                        for (int i = 0; i < friends.size(); i++) {
+                            AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(i);
+                            friend.setId(friends.get(i).friendKey);
+                            friend.setName(friends.get(i).friendName);
+                            friend.setStatusMessage(friends.get(i).personalNote);
+                        }
+                }
+
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
                 AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
