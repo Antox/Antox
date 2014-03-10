@@ -133,8 +133,6 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +153,13 @@ public class MainActivity extends ActionBarActivity {
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
+            /* If the service wasn't running then we wouldn't have gotten callbacks for a user
+            *  going offline so default everyone to offline and just wait for callbacks.
+            */
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.setAllOffline();
+            db.close();
+
             startToxIntent = new Intent(this, ToxService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
