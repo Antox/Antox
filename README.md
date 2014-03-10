@@ -1,7 +1,7 @@
 ![Antox](http://vexx.us/Images/AntoxFull.png "Antox Tox Android Client")
 =====
 
-Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. 
+Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. Once ready, Antox will be available on Google Play and on F-Droid.
 
 ###Want to get Antox on Google Play?
 1. Join the Google+ Alpha testing page <a href="https://plus.google.com/communities/112302171077600707137">here</a>.
@@ -35,9 +35,13 @@ When submitting a bug report, please include the following:-
 - Custom ROM?
 - Error report (please give as much information as possible, not just a couple lines from logcat)
 
+###What Is Currently Working
+- Sending friend requests
+- Receiving friend requests
+- Profile, Settings and About Activities
+- Friends list updates when a friend comes online / goes offline, or changes their other details at all.
 
 ###TODO
-
 - Update the friends list properly after adding a friend (call updateLeftPane();)
 - Check updating the users settings gets sent across the network
 - Check accepting friend requests then proceeds to update the users details in the friends list
@@ -49,10 +53,5 @@ When submitting a bug report, please include the following:-
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
 <img src="http://vexx.us/Examples/Antox/device-2014-03-09-203434.png" width="690px" height=431px"/>
-
-####Milestones
-
-- Connect to the tox network
-- Working chat
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
