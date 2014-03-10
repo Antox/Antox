@@ -52,7 +52,7 @@ When submitting a bug report, please include the following:-
 - Add a 'paranoid' mode to the app so nothing at all is saved (very low priority)
 
 ###Screenshots of progress
-<img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231650.png" width="230px" height="400px"/>
+<img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://markwinter.me/profile.png" width="230px" height="400px"/>
 <img src="http://vexx.us/Examples/Antox/device-2014-03-09-203434.png" width="690px" height=431px"/>
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
