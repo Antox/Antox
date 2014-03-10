@@ -45,6 +45,7 @@ When submitting a bug report, please include the following:-
 - Update the friends list properly after adding a friend (call updateLeftPane();)
 - Check updating the users settings gets sent across the network
 - Check accepting friend requests then proceeds to update the users details in the friends list
+- Friends default status should be offline when starting the app instead of last known status
 - Start working on the chat
 - Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
 - Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
