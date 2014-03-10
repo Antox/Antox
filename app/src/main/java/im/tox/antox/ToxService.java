@@ -129,6 +129,10 @@ public class ToxService extends IntentService {
 
 
                 try {
+                    //If counter has reached max size set it back to zero and to try all nodes again
+                    if(DhtNode.counter >= DhtNode.ipv4.size())
+                        DhtNode.counter = 0;
+                    
                     if (DhtNode.port != null)
                         toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                 Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
