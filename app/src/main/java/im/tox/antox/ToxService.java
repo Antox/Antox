@@ -153,7 +153,7 @@ public class ToxService extends IntentService {
 
                         toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                 Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
-                    
+
                 } catch (UnknownHostException e) {
                     this.stopService(intent);
                     DhtNode.counter++;
@@ -180,7 +180,7 @@ public class ToxService extends IntentService {
                         e.printStackTrace();
                     }
                 }
-            }, 0, 50, TimeUnit.MILLISECONDS);
+            }, 0, 10, TimeUnit.MILLISECONDS);
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();

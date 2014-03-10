@@ -16,6 +16,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.tox.jtoxcore.ToxException;
+
 
 /**
  * Created by ollie on 28/02/14.
@@ -158,6 +160,11 @@ public class ContactsFragment extends Fragment {
                                             /* Remove friend from tox friend list */
                                             List<AntoxFriend> friend = ((MainActivity)getActivity()).toxSingleton.friendsList.getByName(item.first, false);
                                             ((MainActivity)getActivity()).toxSingleton.friendsList.removeFriend(friend.get(0).getFriendnumber());
+                                            try {
+                                                ((MainActivity) getActivity()).toxSingleton.jTox.deleteFriend(friend.get(0).getFriendnumber());
+                                            } catch (ToxException e) {
+                                                e.printStackTrace();
+                                            }
                                             //Delete friend
                                             Log.d("ContactsFragment","Delete Friend selected");
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
