@@ -1,8 +1,10 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -153,8 +155,10 @@ public class MainActivity extends ActionBarActivity {
            // Downloads the DHT node details
             if(DhtNode.ipv4.size() == 0)
                 new DHTNodeDetails().execute();
-        } else {
-
+        }
+        else {
+            showAlertDialog(MainActivity.this, "No Internet Connection",
+                    "You are not connected to the Internet");
         }
 
         /* If the tox service isn't already running, start it */
@@ -409,6 +413,17 @@ public class MainActivity extends ActionBarActivity {
         return toxSingleton.toxStarted;
     }
 
+    public void showAlertDialog(Context context, String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setIcon(R.drawable.ic_launcher);
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialog.show();
+    }
 
 
     // Downloads the the first working DHT node
