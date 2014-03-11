@@ -73,11 +73,7 @@ public class AddFriendActivity extends ActionBarActivity {
          * As it is now, if you send an empty message it will cause jToxcore to throw an exception
          * so simply send a single character instead to stop this.
          */
-        String message = null;
-        if(friendMessage.getText().toString() == "")
-            message = "00";
-        else
-            message = friendMessage.getText().toString();
+        String message = friendMessage.getText().toString();
 
         String[] friendData = { friendID.getText().toString(), message};
 
