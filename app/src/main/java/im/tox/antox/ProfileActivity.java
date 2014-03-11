@@ -77,10 +77,12 @@ public class ProfileActivity extends ActionBarActivity {
          * adds onClickListener to the ImageButton to add share the QR
           * */
         ImageButton qrCode = (ImageButton) findViewById(R.id.qr_code);
+
         File file = getBaseContext().getFileStreamPath("userkey_qr.png");
         if(!file.exists()){
             generateQR(pref.getString("user_key", ""));
         }
+
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
         qrCode.setImageBitmap(bmp);
         qrCode.setOnClickListener(new View.OnClickListener() {
