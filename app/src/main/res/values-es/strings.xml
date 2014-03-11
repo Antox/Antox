@@ -16,16 +16,23 @@
     <string name="join_group">Unirse a grupo</string>
     <string name="search_friend">Buscar</string>
     <string name="action_profile">Perfil</string>
+    <string name="action_about">Acerca de</string>
+    <string name="add_to_group">Agregar a grupo</string>
 
     <!-- Main Activity -->
-    <string name="main_avatar">Avatar</string>
-    <string name="main_username">Nombre de usuario</string>
-    <string name="main_status">Estado</string>
     <string name="icon_description">Estado de conexión</string>
     <string name="main_no_friends">No tienes amigos</string>
     <string name="main_try_adding">Por que no intentas agregar algunos</string>
     <string name="main_friend_requests">Peticiones de amistad</string>
     <string name="main_friends">Amigos</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox es un cliente Android de Tox</string>
+    <string name="about_bugs">Para reportar un bug, porfavor visita nuestra pagina de GitHub y has clic en \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Estamos en Freenode on #tox-dev</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Enviar mensaje</string>
@@ -69,6 +76,8 @@
     <string name="status_online">Conectado</string>
     <string name="status_away">Ausente</string>
     <string name="status_busy">Ocupado</string>
+    <string name="profile_updated">Tu perfil ha sido actualizado</string>
+
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Aceptar</string>
