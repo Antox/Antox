@@ -262,9 +262,9 @@ public class ToxService extends IntentService {
             Log.d(TAG, "Constants.SEND_MESSAGE");
             String key = intent.getStringExtra("key");
             String message = intent.getStringExtra("message");
-            toxSingleton.mDbHelper.addMessage(-1, key, message, true, false);
             /* Send message */
             ToxFriend friend = null;
+            boolean sendingSucceeded = true;
             try {
                 friend = toxSingleton.friendsList.getById(key);
             } catch (Exception e) {
@@ -278,12 +278,17 @@ public class ToxService extends IntentService {
             } catch (ToxException e) {
                 Log.d(TAG, e.toString());
                 e.printStackTrace();
+                sendingSucceeded = false;
             }
-            /* Broadcast */
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.putExtra("action", Constants.UPDATE_MESSAGES);
-            notify.putExtra("key", key);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            if (sendingSucceeded) {
+            /* Add message to chatlog */
+                toxSingleton.mDbHelper.addMessage(-1, key, message, true, false);
+            /* Broadcast to update UI */
+                Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                notify.putExtra("action", Constants.UPDATE_MESSAGES);
+                notify.putExtra("key", key);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            }
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
             String key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
