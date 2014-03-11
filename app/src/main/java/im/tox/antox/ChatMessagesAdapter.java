@@ -53,10 +53,11 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.time.setGravity(Gravity.RIGHT);
             holder.layout.setGravity(Gravity.RIGHT);
             holder.row.setGravity(Gravity.RIGHT);
-            holder.background.setBackgroundColor(Color.parseColor("#ffffff"));
         } else {
-            /* keep default orientation and
-                color for friend */
+            holder.message.setGravity(Gravity.LEFT);
+            holder.time.setGravity(Gravity.LEFT);
+            holder.layout.setGravity(Gravity.LEFT);
+            holder.row.setGravity(Gravity.LEFT);
         }
         return row;
     }
