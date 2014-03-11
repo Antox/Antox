@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
             android:contentDescription="@string/icon_description"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_actionbar" />
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
