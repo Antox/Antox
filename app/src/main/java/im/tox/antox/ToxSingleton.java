@@ -1,5 +1,6 @@
 package im.tox.antox;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -31,13 +32,13 @@ public class ToxSingleton {
 
     }
 
-    public void initTox() {
+    public void initTox(Context ctx) {
         friendsList = new AntoxFriendList();
         toxStarted = true;
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
         try {
-            ToxDataFile dataFile = new ToxDataFile();
+            ToxDataFile dataFile = new ToxDataFile(ctx);
 
             /* Choose appropriate constructor depending on if data file exists */
             if(!dataFile.doesFileExist()) {

@@ -28,6 +28,7 @@ import com.google.zxing.WriterException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import im.tox.QR.Contents;
 import im.tox.QR.QRCodeEncode;
@@ -76,20 +77,21 @@ public class ProfileActivity extends ActionBarActivity {
          * adds onClickListener to the ImageButton to add share the QR
           * */
         ImageButton qrCode = (ImageButton) findViewById(R.id.qr_code);
-        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/");
+
+        File file = getBaseContext().getFileStreamPath("userkey_qr.png");
         if(!file.exists()){
-            file.mkdirs();
+            generateQR(pref.getString("user_key", ""));
         }
-        file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
-        generateQR(pref.getString("user_key", ""));
+
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
         qrCode.setImageBitmap(bmp);
         qrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                File file = getBaseContext().getFileStreamPath("userkey_qr.png");
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/userkey_qr.png")));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
                 shareIntent.setType("image/jpeg");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_with)));
             }
@@ -120,18 +122,21 @@ public class ProfileActivity extends ActionBarActivity {
     * generates the QR using the ZXING library (core.jar in libs folder)
      */
     private void generateQR(String userKey) {
-        String qrData = "tox://"+userKey;
-        int qrCodeSize= 500;
+        String qrData = "tox://" + userKey;
+        int qrCodeSize = 500;
         QRCodeEncode qrCodeEncoder = new QRCodeEncode(qrData, null,
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeSize);
         FileOutputStream out;
         try {
             Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-            out = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
-            bitmap.compress(Bitmap.CompressFormat.PNG,90,out);
+            out = openFileOutput("userkey_qr.png", Context.MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
         } catch (WriterException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
