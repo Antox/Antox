@@ -142,9 +142,11 @@ public class AntoxDB extends SQLiteOpenHelper {
                 + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
         mCount.moveToFirst();
         int count = mCount.getInt(0);
-        if(count > 0)
+        if(count > 0) {
+            mCount.close();
             return true;
-
+        }
+        mCount.close();
         return false;
     }
 
