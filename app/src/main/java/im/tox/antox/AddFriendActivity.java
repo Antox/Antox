@@ -94,6 +94,9 @@ public class AddFriendActivity extends ActionBarActivity {
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(this).sendBroadcast(update);
 
+        Intent i = new Intent();
+        setResult(RESULT_OK,i);
+
         // Close activity
         finish();
     }

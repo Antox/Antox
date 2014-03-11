@@ -309,7 +309,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private void addFriend() {
         Intent intent = new Intent(this, AddFriendActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
     }
 
     @Override
@@ -494,7 +494,11 @@ public class MainActivity extends ActionBarActivity {
             finish();
         }
     }
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==0 && resultCode==RESULT_OK){
+            updateLeftPane();
+        }
+    }
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override
