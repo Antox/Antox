@@ -309,7 +309,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private void addFriend() {
         Intent intent = new Intent(this, AddFriendActivity.class);
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
     @Override
@@ -495,7 +495,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==0 && resultCode==RESULT_OK){
+        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             updateLeftPane();
         }
     }
