@@ -59,7 +59,7 @@ public class ToxService extends IntentService {
 
             try {
                 Log.d(TAG, "Handling intent START_TOX");
-                toxSingleton.initTox();
+                toxSingleton.initTox(getApplicationContext());
                 toxSingleton.mDbHelper = new AntoxDB(getApplicationContext());
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
 

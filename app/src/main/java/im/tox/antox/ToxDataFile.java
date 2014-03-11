@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import android.app.Activity;
 import android.os.Environment;
+import android.content.Context;
 
 /**
  * Class for loading and saving the data file to be used by JTox(byte[] data,
@@ -20,8 +22,10 @@ public class ToxDataFile {
 	 * Other clients use the file name data so we shall as well
 	 */
 	private String fileName = "AntoxDataFile";
+    private Context ctx;
 
-	public ToxDataFile() {
+	public ToxDataFile(Context context) {
+        ctx = context;
 	}
 
 	/**
@@ -29,8 +33,7 @@ public class ToxDataFile {
 	 * @return
 	 */
 	public boolean doesFileExist() {
-		File myFile = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), fileName);
+		File myFile = ctx.getFileStreamPath(fileName);
 		return myFile.exists();
 	}
 
@@ -38,9 +41,7 @@ public class ToxDataFile {
 	 * Method for deleting the tox data file
 	 */
 	public void deleteFile() {
-		File file = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), fileName);
-		file.delete();
+		ctx.deleteFile(fileName);
 	}
 
     /**
@@ -48,11 +49,7 @@ public class ToxDataFile {
      * @return
      */
     public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
@@ -60,12 +57,7 @@ public class ToxDataFile {
      * @return
      */
     public boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
 	/**
@@ -76,8 +68,7 @@ public class ToxDataFile {
 	 */
 	public byte[] loadFile() {
 		FileInputStream fin = null;
-		final File file = new File(Environment.getExternalStorageDirectory()
-				.getAbsolutePath(), fileName);
+		final File file = ctx.getFileStreamPath(fileName);
 		byte[] data = null;
 		try {
 			fin = new FileInputStream(file);
@@ -108,8 +99,7 @@ public class ToxDataFile {
 	 * @param dataToBeSaved
 	 */
 	public void saveFile(byte[] dataToBeSaved) {
-		File myFile = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath(), fileName);
+		File myFile = ctx.getFileStreamPath(fileName);
 		try {
 			myFile.createNewFile();
 		} catch (IOException e1) {
