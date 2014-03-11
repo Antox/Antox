@@ -104,10 +104,10 @@ public class ChatFragment extends Fragment {
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
         String activeName = main_act.toxSingleton.friendsList.getById(main_act.activeFriendKey).getName();
         if(activeName.contains("(!)")) {
-            db.updateFriendName(main_act.activeFriendKey,activeName.substring(0,activeName.indexOf("(")-1));
+            db.updateFriendName(main_act.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
         }
         db.close();
-        
+
         return rootView;
     }
 }
