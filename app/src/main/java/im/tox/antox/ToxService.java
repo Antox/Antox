@@ -26,6 +26,7 @@ import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxFriend;
 import im.tox.jtoxcore.ToxUserStatus;
 
 public class ToxService extends IntentService {
@@ -104,6 +105,28 @@ public class ToxService extends IntentService {
                 notify.putExtra("action", Constants.UPDATE_FRIEND_REQUESTS);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
 
+                /* Populate tox friends list with saved friends in database */
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<Friend> friends = db.getFriendList();
+
+                toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
+
+                if(friends.size() > 0) {
+                        Log.d(TAG, "Adding friends to tox friendlist");
+                        for (int i = 0; i < friends.size(); i++) {
+                            try {
+                                toxSingleton.jTox.confirmRequest(friends.get(i).friendKey);
+                            } catch (Exception e) {
+
+                            }
+                            AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(i);
+                            friend.setId(friends.get(i).friendKey);
+                            friend.setName(friends.get(i).friendName);
+                            friend.setStatusMessage(friends.get(i).personalNote);
+                        }
+                        Log.d(TAG, "Size of tox friendlist: " + toxSingleton.friendsList.all().size());
+                }
+
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
                 AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(getApplicationContext());
                 AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(getApplicationContext());
@@ -129,17 +152,25 @@ public class ToxService extends IntentService {
 
 
                 try {
-                    if (DhtNode.port != null)
-                        toxSingleton.jTox.bootstrap(DhtNode.ipv4, Integer.parseInt(DhtNode.port), DhtNode.key);
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    toxSingleton.jTox.getSelfUserStatus();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    //If counter has reached max size set it back to zero and to try all nodes again
+                    if(DhtNode.counter >= DhtNode.ipv4.size())
+                        DhtNode.counter = 0;
 
+                    if (DhtNode.port.get(DhtNode.counter) != null
+                            || DhtNode.ipv4.get(DhtNode.counter) != null
+                            || DhtNode.key.get(DhtNode.counter) != null)
+
+                        toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
+                                Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
+
+                } catch (UnknownHostException e) {
+                    this.stopService(intent);
+                    DhtNode.counter++;
+                    Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                    restart.setAction(Constants.START_TOX);
+                    this.startService(restart);
+                    e.printStackTrace();
+                }
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
@@ -152,14 +183,13 @@ public class ToxService extends IntentService {
 
                 public void run() {
                     try {
-                        Log.v("Service", "do_tox");
                         toxS.jTox.doTox();
                     } catch (ToxException e) {
                         Log.d(TAG, e.getError().toString());
                         e.printStackTrace();
                     }
                 }
-            }, 0, 50, TimeUnit.MILLISECONDS);
+            }, 0, 10, TimeUnit.MILLISECONDS);
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();
@@ -202,11 +232,11 @@ public class ToxService extends IntentService {
         } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
             Log.d(TAG, "Constants.FRIEND_LIST");
             List<AntoxFriend> onlineFriends = toxSingleton.friendsList.getOnlineFriends();
-            if(onlineFriends.size() > 0) {
+            if (onlineFriends.size() > 0) {
                 Log.d(TAG, "Friends found in friendsList");
                 String[] names = new String[onlineFriends.size()];
                 String[] notes = new String[onlineFriends.size()];
-                for(int i = 0; i < onlineFriends.size(); i++) {
+                for (int i = 0; i < onlineFriends.size(); i++) {
                     names[i] = onlineFriends.get(i).getName();
                     notes[i] = onlineFriends.get(i).getStatusMessage();
                 }
@@ -217,7 +247,43 @@ public class ToxService extends IntentService {
                 notify.putExtra("notes", notes);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             }
-
+        } else if (intent.getAction().equals(Constants.ON_MESSAGE)) {
+            Log.d(TAG, "Constants.ON_MESSAGE");
+            String key = intent.getStringExtra(AntoxOnMessageCallback.KEY);
+            String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
+            int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
+            toxSingleton.mDbHelper.addMessage(-1, key, message, false, true);
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.UPDATE_MESSAGES);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+            Log.d(TAG, "Constants.SEND_MESSAGE");
+            String key = intent.getStringExtra("key");
+            String message = intent.getStringExtra("message");
+            toxSingleton.mDbHelper.addMessage(-1, key, message, true, false);
+            /* Send message */
+            ToxFriend friend = null;
+            try {
+                friend = toxSingleton.friendsList.getById(key);
+            } catch (Exception e) {
+                Log.d(TAG, e.toString());
+            }
+            try {
+                if (friend != null) {
+                    Log.d(TAG, "Sending message to " + friend.getName());
+                    toxSingleton.jTox.sendMessage(friend, message);
+                }
+            } catch (ToxException e) {
+                Log.d(TAG, e.toString());
+                e.printStackTrace();
+            }
+            /* Broadcast */
+            Intent notify = new Intent(Constants.BROADCAST_ACTION);
+            notify.putExtra("action", Constants.UPDATE_MESSAGES);
+            notify.putExtra("key", key);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         } else if (intent.getAction().equals(Constants.FRIEND_REQUEST)) {
             Log.d(TAG, "Constants.FRIEND_REQUEST");
             String key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
@@ -279,6 +345,31 @@ public class ToxService extends IntentService {
             String key = intent.getStringExtra("key");
             try {
                 toxSingleton.jTox.confirmRequest(key);
+
+                /* Add friend to tox friends list */
+                //This is so wasteful. Should pass the info in the intent with the key
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<Friend> friends = db.getFriendList();
+                //Long statement but just getting size of friends list and adding one for the friend number
+                AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
+                int pos = -1;
+                for(int i = 0; i < friends.size(); i++) {
+                    if(friends.get(i).friendKey == key) {
+                        pos = i;
+                        break;
+                    }
+                }
+                if(pos != -1) {
+                    friend.setId(key);
+                    friend.setName(friends.get(pos).friendName);
+                    friend.setStatusMessage(friends.get(pos).personalNote);
+                }
+
+                toxSingleton.jTox.save();
+                Log.d(TAG, "Saving request");
+
+                Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
+
             } catch (Exception e) {
 
             }

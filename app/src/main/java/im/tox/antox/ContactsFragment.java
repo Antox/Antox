@@ -14,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import im.tox.jtoxcore.ToxException;
 
 
 /**
@@ -42,6 +45,7 @@ public class ContactsFragment extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
         main_act.activeFriendRequestKey = key;
+        main_act.activeFriendKey = null;
     }
 
     public void onChangeContact(int position, String name) {
@@ -50,6 +54,7 @@ public class ContactsFragment extends Fragment {
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        main_act.activeFriendKey = main_act.leftPaneKeyList.get(position);
         main_act.activeFriendRequestKey = null;
     }
 
@@ -165,6 +170,20 @@ public class ContactsFragment extends Fragment {
                                             }
                                             db.deleteFriend(key);
                                             db.close();
+
+                                            /* Remove friend from tox friend list */
+                                            AntoxFriend friend = ((MainActivity)getActivity()).toxSingleton.friendsList.getById(key);
+                                            if(friend != null) {
+                                                ((MainActivity) getActivity()).toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
+                                                try {
+                                                    ((MainActivity) getActivity()).toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                                } catch (ToxException e) {
+                                                    Log.d("ContactsFragment", e.getError().toString());
+                                                    e.printStackTrace();
+                                                }
+                                                Log.d("ContactsFragment", "Friend deleted from tox list. New size: " + main_act.toxSingleton.friendsList.all().size());
+                                            }
+
                                             ((MainActivity)getActivity()).updateLeftPane();
                                             break;
                                         case 2:

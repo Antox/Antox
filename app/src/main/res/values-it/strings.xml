@@ -8,6 +8,7 @@
     <string name="title_activity_add_friend">Aggiungi Amico</string>
     <string name="title_activity_settings">Impostazioni</string>
     <string name="title_activity_profile">Profilo</string>
+    <string name="title_activity_about">Informazioni</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Impostazioni</string>
@@ -15,6 +16,8 @@
     <string name="add_friend">Aggiungi Amico</string>
     <string name="search_friend">Cerca Amici</string>
     <string name="action_profile">Profilo</string>
+    <string name="action_about">Informazioni</string>
+    <string name="add_to_group">Aggiungi Al Gruppo</string>
 
     <!-- Main Activity -->
     <string name="icon_description">Stato Connessione</string>
@@ -22,14 +25,20 @@
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
+    
+    <!-- About Activity -->
+    <string name="about_details">Antox è un client Android per Tox</string>
+    <string name="about_bugs">Per segnalare un bug, visita la pagina GitHub e clicca su \"Issues\"</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Siamo anche su Freenode, canale #tox-dev</string>
 
-
-    <!--  Chat Activity -->
+    <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
 
-
     <!-- Welcome Activity -->
-    <string name="about_string">Questo client è in fase pre-alpha.</string>
+    <string name="about_string">Questo client è in fase pre-alpha</string>
     <string name="getstarted_string">Inserisci il tuo nome</string>
     <string name="developer_string">Sviluppato da astonex\nirc.freenode.net#tox-dev</string>
 
@@ -54,12 +63,11 @@
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">ID inserito non valido</string>
 
-    <!--  Profile Activity -->
+    <!-- Profile Activity -->
     <string name="share_with">Condividi Con</string>
     <string name="status_online">Online</string>
     <string name="status_away">Assente</string>
     <string name="status_busy">Occupato</string>
-
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accetta</string>
@@ -70,6 +78,7 @@
     <string name="friend_action_delete">Rimuovi</string>
     <string name="friend_action_block">Blocca</string>
     <string name="group_action_leave">Lascia Gruppo</string>
-    <!--  Misc -->
+
+    <!-- Misc -->
 
 </resources>

@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     public SlidingPaneLayout pane;
-    private ChatFragment chat;
+    public ChatFragment chat;
     private ContactsFragment contacts;
     private IntentFilter filter;
 
@@ -73,6 +73,9 @@ public class MainActivity extends ActionBarActivity {
      */
     public String activeTitle = "Antox";
     public String activeFriendRequestKey = null;
+    public String activeFriendKey = null;
+
+    public ArrayList<String> leftPaneKeyList;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -117,6 +120,11 @@ public class MainActivity extends ActionBarActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
+                } else if (action == Constants.UPDATE_MESSAGES) {
+                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + activeFriendKey);
+                    if (intent.getStringExtra("key").equals(activeFriendKey)) {
+                        updateChat(activeFriendKey);
+                    }
                 } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
@@ -125,7 +133,7 @@ public class MainActivity extends ActionBarActivity {
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
                 } else if (action == Constants.FRIEND_LIST) {
-                    
+
                 } else if (action == Constants.UPDATE) {
                     updateLeftPane();
                 }
@@ -133,7 +141,11 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-
+    
+    void updateChat(String key) {
+        Log.d(TAG, "updating chat");
+        chat.updateChat(toxSingleton.mDbHelper.getMessageList(key));
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,13 +160,21 @@ public class MainActivity extends ActionBarActivity {
         {
             // Executes in a separate thread so UI experience isn't affected
            // Downloads the DHT node details
-            new DHTNodeDetails().execute();
+            if(DhtNode.ipv4.size() == 0)
+                new DHTNodeDetails().execute();
         } else {
 
         }
 
         /* If the tox service isn't already running, start it */
         if(!isToxServiceRunning()) {
+            /* If the service wasn't running then we wouldn't have gotten callbacks for a user
+            *  going offline so default everyone to offline and just wait for callbacks.
+            */
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.setAllOffline();
+            db.close();
+
             startToxIntent = new Intent(this, ToxService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
@@ -228,20 +248,26 @@ public class MainActivity extends ActionBarActivity {
 
         leftPaneAdapter = new LeftPaneAdapter(this);
 
+        leftPaneKeyList = new ArrayList<String>();
+
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
             leftPaneAdapter.addItem(friend_request_header);
+            leftPaneKeyList.add("");
             for (int i = 0; i < friend_requests_list.length; i++) {
                 LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
                 leftPaneAdapter.addItem(friend_request);
+                leftPaneKeyList.add(friend_requests_list[i].requestKey);
             }
         }
         if (friends_list.length > 0) {
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
             leftPaneAdapter.addItem(friends_header);
+            leftPaneKeyList.add("");
             for (int i = 0; i < friends_list.length; i++) {
                 LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].personalNote, friends_list[i].icon);
                 leftPaneAdapter.addItem(friend);
+                leftPaneKeyList.add(friends_list[i].friendKey);
             }
         }
 
@@ -417,13 +443,12 @@ public class MainActivity extends ActionBarActivity {
 
                     if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
                     {
-                        DhtNode.ipv4 = nodeDetails[0];
-                        DhtNode.ipv6 = nodeDetails[1];
-                        DhtNode.port = nodeDetails[2];
-                        DhtNode.key = nodeDetails[3];
-                        DhtNode.owner = nodeDetails[4];
-                        DhtNode.location = nodeDetails[5];
-                        break;
+                        DhtNode.ipv4.add(nodeDetails[0]);
+                        DhtNode.ipv6.add(nodeDetails[1]);
+                        DhtNode.port.add(nodeDetails[2]);
+                        DhtNode.key.add(nodeDetails[3]);
+                        DhtNode.owner.add(nodeDetails[4]);
+                        DhtNode.location.add(nodeDetails[5]);
                     }
                 }
             } catch (IOException e) {
