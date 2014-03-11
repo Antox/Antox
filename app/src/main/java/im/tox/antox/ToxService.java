@@ -156,12 +156,13 @@ public class ToxService extends IntentService {
                     if(DhtNode.counter >= DhtNode.ipv4.size())
                         DhtNode.counter = 0;
 
-                    if (DhtNode.port.get(DhtNode.counter) != null
-                            || DhtNode.ipv4.get(DhtNode.counter) != null
-                            || DhtNode.key.get(DhtNode.counter) != null)
-
+                    //DhtNode.port.get(DhtNode.counter) will give indexoutofbounds exception when nothing is downloaded
+                    if (DhtNode.port.size()>0 || DhtNode.ipv4.size()>0  || DhtNode.key.size()>0) {
                         toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                 Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
+                        DhtNode.connected = true;
+
+                    }
 
                 } catch (UnknownHostException e) {
                     this.stopService(intent);

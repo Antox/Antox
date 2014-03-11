@@ -463,6 +463,17 @@ public class MainActivity extends ActionBarActivity {
             }catch (NullPointerException e){
                 Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
             }
+            /**
+             * There is a chance that downloading finishes later than the bootstrapping call in the
+             * ToxService, because both are in separate threads. In that case to make sure the nodes
+             * are bootstrapped we restart the ToxService
+             */
+            if(!DhtNode.connected)
+            {
+                Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                restart.setAction(Constants.START_TOX);
+                getApplicationContext().startService(restart);
+            }
         }
     }
 
