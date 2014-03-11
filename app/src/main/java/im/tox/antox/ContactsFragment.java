@@ -157,10 +157,8 @@ public class ContactsFragment extends Fragment {
                                             Log.v("To implement", "" + items[0]);
                                             break;
                                         case 1:
-                                            //Delete friend
-                                            Log.d("ContactsFragment","Delete Friend selected");
-                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                            //Get friend key
                                             String key = "";
                                             for(int i = 0; i < tmp.size(); i++) {
                                                 if(item.first.equals(tmp.get(i).friendName)) {
@@ -168,23 +166,14 @@ public class ContactsFragment extends Fragment {
                                                     break;
                                                 }
                                             }
-                                            db.deleteFriend(key);
-                                            db.close();
-
-                                            /* Remove friend from tox friend list */
-                                            AntoxFriend friend = ((MainActivity)getActivity()).toxSingleton.friendsList.getById(key);
-                                            if(friend != null) {
-                                                ((MainActivity) getActivity()).toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
-                                                try {
-                                                    ((MainActivity) getActivity()).toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
-                                                } catch (ToxException e) {
-                                                    Log.d("ContactsFragment", e.getError().toString());
-                                                    e.printStackTrace();
-                                                }
-                                                Log.d("ContactsFragment", "Friend deleted from tox list. New size: " + main_act.toxSingleton.friendsList.all().size());
+                                            //Delete friend
+                                            Log.d("ContactsFragment","Delete Friend selected");
+                                            if (!key.equals("")) {
+                                                Intent intent = new Intent(getActivity(), ToxService.class);
+                                                intent.setAction(Constants.DELETE_FRIEND);
+                                                intent.putExtra("key", key);
+                                                getActivity().startService(intent);
                                             }
-
-                                            ((MainActivity)getActivity()).updateLeftPane();
                                             break;
                                         case 2:
                                             Log.v("To implement", "" + items[2]);

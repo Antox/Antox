@@ -23,7 +23,7 @@ public class ToxSingleton {
     public AntoxDB mDbHelper;
     SQLiteDatabase db;
     public boolean toxStarted = false;
-    AntoxFriendList friendsList;
+    public AntoxFriendList friendsList;
 
     private static volatile ToxSingleton instance = null;
 
