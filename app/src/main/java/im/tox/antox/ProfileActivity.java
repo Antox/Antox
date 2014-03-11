@@ -81,9 +81,7 @@ public class ProfileActivity extends ActionBarActivity {
             file.mkdirs();
         }
         file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
-        if(!file.exists()){
-            generateQR(pref.getString("user_key", ""));
-        }
+        generateQR(pref.getString("user_key", ""));
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
         qrCode.setImageBitmap(bmp);
         qrCode.setOnClickListener(new View.OnClickListener() {
