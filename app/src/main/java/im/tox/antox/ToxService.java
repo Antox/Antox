@@ -280,6 +280,7 @@ public class ToxService extends IntentService {
                     toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
                     // Delete friend from database
                     toxSingleton.mDbHelper.deleteFriend(key);
+                    toxSingleton.mDbHelper.deleteChat(key);
                     toxSingleton.mDbHelper.close();
                     //Broadcast to update left pane
                     Intent notify = new Intent(Constants.BROADCAST_ACTION);
