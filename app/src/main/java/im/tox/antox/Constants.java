@@ -43,6 +43,7 @@ public final class Constants {
     public static final String COLUMN_NAME_HAS_BEEN_RECEIVED ="has_been_received";
     public static final String COLUMN_NAME_ISONLINE = "isonline";
 
-
+    //Activity request code for onActivityResult methods
+    public static final int ADD_FRIEND_REQUEST_CODE=0;
 
 }
