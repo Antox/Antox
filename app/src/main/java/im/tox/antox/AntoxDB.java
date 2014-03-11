@@ -135,6 +135,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         return friendList;
     }
 
+    public boolean doesFriendExist(String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor mCount = db.rawQuery("SELECT count(*) FROM " + Constants.TABLE_FRIENDS
+                + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        mCount.moveToFirst();
+        int count = mCount.getInt(0);
+        if(count > 0)
+            return true;
+
+        return false;
+    }
+
     public void setAllOffline() {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();

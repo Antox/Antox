@@ -62,29 +62,29 @@ public class AddFriendActivity extends ActionBarActivity {
 
         /*validates key*/
         if(validateFriendKey(friendID.getText().toString())){
+            String message = friendMessage.getText().toString();
+
+            String[] friendData = { friendID.getText().toString(), message};
+
+            Intent addFriend = new Intent(this, ToxService.class);
+            addFriend.setAction(Constants.ADD_FRIEND);
+            addFriend.putExtra("friendData", friendData);
+            this.startService(addFriend);
+
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            if(!db.doesFriendExist(friendID.getText().toString())) {
+                db.addFriend(friendID.getText().toString(), "Friend Request Sent");
+            } else {
+                toast = Toast.makeText(context, "Friend already exists", Toast.LENGTH_SHORT);
+            }
+            db.close();
+
             toast.show();
         }else{
             toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
-
-        /* This is a temporary work around until jToxcore stops cutting off the last byte of a string.
-         * As it is now, if you send an empty message it will cause jToxcore to throw an exception
-         * so simply send a single character instead to stop this.
-         */
-        String message = friendMessage.getText().toString();
-
-        String[] friendData = { friendID.getText().toString(), message};
-
-        Intent addFriend = new Intent(this, ToxService.class);
-        addFriend.setAction(Constants.ADD_FRIEND);
-        addFriend.putExtra("friendData", friendData);
-        this.startService(addFriend);
-
-        AntoxDB db = new AntoxDB(getApplicationContext());
-        db.addFriend(friendID.getText().toString(), "Friend Request Sent");
-        db.close();
 
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
