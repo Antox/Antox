@@ -68,6 +68,7 @@
     <string name="status_online">Online</string>
     <string name="status_away">Assente</string>
     <string name="status_busy">Occupato</string>
+    <string name="profile_updated">Il tuo profilo è stato aggiornato</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accetta</string>
