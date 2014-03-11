@@ -19,10 +19,11 @@ public final class Constants {
     public static final String SEND_MESSAGE ="im.tox.antox.MESSAGE";
     public static final String UPDATE_MESSAGES ="im.tox.antox.UPDATE_MESSAGES";
     public static final String FRIEND_REQUEST = "im.tox.antox.REQUEST";
+    public static final String DELETE_FRIEND = "im.tox.antox.DELETE_FRIEND";
     public static final String ON_MESSAGE = "im.tox.antox.ON_MESSAGE";
     public static final String REJECT_FRIEND_REQUEST = "im.tox.antox.REJECT_REQUEST";
     public static final String ACCEPT_FRIEND_REQUEST = "im.tox.antox.ACCEPT_REQUEST";
-    public static final String UPDATE_FRIEND_REQUESTS= "im.tox.antox.UPDATE_REQUESTS";
+    public static final String UPDATE_LEFT_PANE = "im.tox.antox.UPDATE_REQUESTS";
     public static final String CONNECTION_STATUS = "im.tox.antox.CONNECTION_STATUS";
     public static final String UPDATE = "im.tox.antox.UPDATE";
 

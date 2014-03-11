@@ -1,8 +1,6 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -32,12 +29,6 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.ToxUserStatus;
@@ -111,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
                     Log.d("Notification lol", "Friend request notify");
                     friendRequest(intent);
                     */
-                } else if (action == Constants.UPDATE_FRIEND_REQUESTS) {
+                } else if (action == Constants.UPDATE_LEFT_PANE) {
                     updateLeftPane();
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
                     updateLeftPane();
