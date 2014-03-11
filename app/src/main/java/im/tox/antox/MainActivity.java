@@ -135,7 +135,9 @@ public class MainActivity extends ActionBarActivity {
     
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
-        chat.updateChat(toxSingleton.mDbHelper.getMessageList(key));
+        AntoxDB db = new AntoxDB(this);
+        chat.updateChat(db.getMessageList(key));
+        db.close();
     };
 
     @Override
