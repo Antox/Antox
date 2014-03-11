@@ -1,8 +1,10 @@
 package im.tox.antox;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -155,8 +157,10 @@ public class MainActivity extends ActionBarActivity {
            // Downloads the DHT node details
             if(DhtNode.ipv4.size() == 0)
                 new DHTNodeDetails().execute();
-        } else {
-
+        }
+        else {
+            showAlertDialog(MainActivity.this, "No Internet Connection",
+                    "You are not connected to the Internet");
         }
 
         /* If the tox service isn't already running, start it */
@@ -411,6 +415,17 @@ public class MainActivity extends ActionBarActivity {
         return toxSingleton.toxStarted;
     }
 
+    public void showAlertDialog(Context context, String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setIcon(R.drawable.ic_launcher);
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alertDialog.show();
+    }
 
 
     // Downloads the the first working DHT node
@@ -464,6 +479,17 @@ public class MainActivity extends ActionBarActivity {
                 System.out.println(DhtNode.location);
             }catch (NullPointerException e){
                 Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
+            }
+            /**
+             * There is a chance that downloading finishes later than the bootstrapping call in the
+             * ToxService, because both are in separate threads. In that case to make sure the nodes
+             * are bootstrapped we restart the ToxService
+             */
+            if(!DhtNode.connected)
+            {
+                Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                restart.setAction(Constants.START_TOX);
+                getApplicationContext().startService(restart);
             }
         }
     }
