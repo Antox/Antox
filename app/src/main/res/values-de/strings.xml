@@ -8,13 +8,16 @@
     <string name="title_activity_add_friend">Freund hinzufügen</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_about">Über Antox</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Einstellungen</string>
     <string name="action_exit">Beenden</string>
     <string name="add_friend">Freund hinzufügen</string>
     <string name="search_friend">Suchen</string>
-    <string name="action_profile">Profile</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_about">Über Antox</string>
+    <string name="add_to_group">Zu Gruppe hinzufügen</string>
 
     <!-- Main Activity -->
     <string name="icon_description">Verbindungsstatus</string>
@@ -23,6 +26,13 @@
     <string name="main_friend_requests">Freundschaftsanfragen</string>
     <string name="main_friends">Freunde</string>
 
+    <!-- About Activity -->
+    <string name="about_details">Antox ist ein Android Client für Tox</string>
+    <string name="about_bugs">Um Fehler zu melden, besuche uns auf GitHub und klicke auf \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Wir sind auf Freenode in #tox-dev</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Nachricht senden</string>
@@ -34,36 +44,37 @@
     <string name="developer_string">Entwickelt von astonex\nirc.freenode.net#tox-dev</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key_title">Dein Benutzerschlüssel</string>
-    <string name="settings_name_hint">gib deinen Namen ein</string>
-    <string name="settings_note_hint">gib eine Notiz ein</string>
-    <string name="settings_dht_ip">IP Addresse des Bootstrap-Servers (z.B.: 192.254.75.98)</string>
-    <string name="settings_dht_port">Port Nummer des Bootstrap-Servers (z.B.: 33445)</string>
-    <string name="settings_dht_key">Public Key des Bootstrap-Servers (z.B.: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Ändern</string>
+    <string name="settings_user_key_title">Deine Tox ID</string>
+    <string name="settings_name_hint">Gib deinen Namen ein</string>
+    <string name="settings_note_hint">Gib eine Notiz ein</string>
+    <string name="settings_dht_ip">IP Addresse des Bootstrap-Knotens (z.B.: 192.254.75.98)</string>
+    <string name="settings_dht_port">Port des Bootstrap-Knotens (z.B.: 33445)</string>
+    <string name="settings_dht_key">Tox ID des Bootstrap-Knotens (z.B.: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Anwenden</string>
     <string name="settings_updated">Die Einstellungen wurden geändert</string>
     <string name="settings_dht_spinner_title">Erweiterte Einstellungen</string>
     <string name="settings_status_title">Setze deinen Status</string>
-    <string name="settings_note_title">Schreibe deine Notiz</string>
+    <string name="settings_note_title">Setze deine Notiz</string>
     <string name="settings_username_title">Wähle deinen Benutzernamen</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Öffentlichen Schlüssel eines Freundes eingeben</string>
-    <string name="addfriend_friend_message">optionale Nachricht eingeben</string>
+    <string name="addfriend_friend_key">Tox ID eines Freundes eingeben</string>
+    <string name="addfriend_friend_message">Optionale Nachricht eingeben</string>
     <string name="addfriend_button">Freund hinzufügen</string>
     <string name="scanqr_button">QR-Code scannen</string>
-    <string name="invalid_friend_ID">Ungültige ID des Freundes</string>
+    <string name="invalid_friend_ID">Ungültige Tox ID</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Teilen mit</string>
     <string name="status_online">Online</string>
     <string name="status_away">Abwesend</string>
     <string name="status_busy">Beschäftigt</string>
+    <string name="profile_updated">Dein Profil wurde geändert</string>
 
 
     <!-- Friend request fragment -->
-    <string name="friendrequest_accept">Akzeptiert</string>
-    <string name="friendrequest_reject">Abgelehnt</string>
+    <string name="friendrequest_accept">Akzeptieren</string>
+    <string name="friendrequest_reject">Ablehnen</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Datei senden</string>
