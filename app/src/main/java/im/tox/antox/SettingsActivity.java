@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class SettingsActivity extends ActionBarActivity
     /**
      * Checkbox that inflates a DHTDialog where the user can enter their own DHT settings
      */
-    private CheckBox dhtBox;
+    private CheckBox dhtBox,deleteChat;
     /**
      * String that store's the user's DHT IP address entry
      */
@@ -66,9 +67,10 @@ public class SettingsActivity extends ActionBarActivity
 
 //        statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);
-
+        deleteChat = (CheckBox)findViewById(R.id.settings_delete_chat);
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
+        deleteChat.setChecked(pref.getBoolean("delete_chat",false));//set  it as checked if it is set
 
 		/* If the preferences aren't blank, then add them to text fields
          * otherwise it will display the predefined hints in strings.xml
@@ -142,6 +144,7 @@ public class SettingsActivity extends ActionBarActivity
             editor.putString("saved_dht_port", dhtPort);
             DhtNode.port.add(dhtPort);
         }
+        editor.putBoolean("delete_chat",deleteChat.isChecked());
 
         editor.commit();
 

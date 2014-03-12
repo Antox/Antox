@@ -29,6 +29,13 @@
             android:layout_gravity="center_horizontal|left"
             android:checked="false"
             android:onClick="onDhtBoxClicked"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete all chat while deleting a friend"
+            android:id="@+id/settings_delete_chat"
+            android:layout_gravity="center_horizontal|left"
+            android:checked="false"/>
 
 
 

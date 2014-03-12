@@ -280,7 +280,9 @@ public class ToxService extends IntentService {
                     toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
                     // Delete friend from database
                     toxSingleton.mDbHelper.deleteFriend(key);
-                    toxSingleton.mDbHelper.deleteChat(key);
+                    SharedPreferences pref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                    if(pref.getBoolean("delete_chat",false))
+                        toxSingleton.mDbHelper.deleteChat(key); //delete chat if the option is saved in settings
                     toxSingleton.mDbHelper.close();
                     //Broadcast to update left pane
                     Intent notify = new Intent(Constants.BROADCAST_ACTION);
