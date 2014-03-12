@@ -29,6 +29,7 @@ public class ToxSingleton {
     public String activeFriendRequestKey = null;
     public String activeFriendKey = null;
     public boolean rightPaneActive = false;
+    public boolean leftPaneActive = false;
     public NotificationManager mNotificationManager;
 
     private static volatile ToxSingleton instance = null;

@@ -92,21 +92,7 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
-                    /* Comment this out until I do something with it properly
-                    NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(context)
-                                    .setSmallIcon(R.drawable.ic_launcher)
-                                    .setContentTitle("Someone sent you a request")
-                                    .setContentText("isn't that rad!?");
-                    int NOTIFICATION_ID = 12345;
-                    Intent targetIntent = new Intent(context, MainActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(contentIntent);
-                    NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    nManager.notify(NOTIFICATION_ID, builder.build());
-                    Log.d("Notification lol", "Friend request notify");
-                    friendRequest(intent);
-                    */
+
                 } else if (action == Constants.UPDATE_LEFT_PANE) {
                     updateLeftPane();
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
@@ -169,6 +155,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
+
+        toxSingleton.leftPaneActive = true;
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -355,6 +343,7 @@ public class MainActivity extends ActionBarActivity {
         tempRightPaneActive = toxSingleton.rightPaneActive;
         toxSingleton.rightPaneActive = false;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        toxSingleton.leftPaneActive = false;
         super.onPause();
     }
 
@@ -561,8 +550,9 @@ public class MainActivity extends ActionBarActivity {
             MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
             af.setTitle(R.string.add_to_group);
-            toxSingleton.rightPaneActive =true;
+            toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
+            toxSingleton.leftPaneActive = false;
             clearUselessNotifications();
         }
 
