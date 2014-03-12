@@ -59,13 +59,15 @@ public class AntoxFriendList implements FriendList<AntoxFriend> {
 
 	@Override
 	public AntoxFriend getById(String id) {
-		synchronized (this.friends) {
-			for (AntoxFriend friend : this.friends) {
-				if (id.equals(friend.getId())) {
-					return friend;
-				}
-			}
-		}
+        if(id!=null) {
+            synchronized (this.friends) {
+                for (AntoxFriend friend : this.friends) {
+                    if (id.equals(friend.getId())) {
+                        return friend;
+                    }
+                }
+            }
+        }
 		return null;
 	}
 
