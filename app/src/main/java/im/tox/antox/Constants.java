@@ -21,6 +21,7 @@ public final class Constants {
     public static final String UPDATE_MESSAGES ="im.tox.antox.UPDATE_MESSAGES";
     public static final String FRIEND_REQUEST = "im.tox.antox.REQUEST";
     public static final String DELETE_FRIEND = "im.tox.antox.DELETE_FRIEND";
+    public static final String DELETE_FRIEND_AND_CHAT = "im.tox.antox.DELETE_FRIEND_AND_CHAT";
     public static final String ON_MESSAGE = "im.tox.antox.ON_MESSAGE";
     public static final String REJECT_FRIEND_REQUEST = "im.tox.antox.REJECT_REQUEST";
     public static final String ACCEPT_FRIEND_REQUEST = "im.tox.antox.ACCEPT_REQUEST";

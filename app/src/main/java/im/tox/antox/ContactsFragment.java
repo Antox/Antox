@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -173,10 +174,7 @@ public class ContactsFragment extends Fragment {
                                             //Delete friend
                                             Log.d("ContactsFragment","Delete Friend selected");
                                             if (!key.equals("")) {
-                                                Intent intent = new Intent(getActivity(), ToxService.class);
-                                                intent.setAction(Constants.DELETE_FRIEND);
-                                                intent.putExtra("key", key);
-                                                getActivity().startService(intent);
+                                                showAlertDialog(getActivity(),key);
                                             }
                                             break;
                                         case 2:
@@ -196,5 +194,34 @@ public class ContactsFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void showAlertDialog(Context context, String fkey) {
+        final String key= fkey;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Do you want to delete the chat also?")
+                .setCancelable(false)
+                .setPositiveButton("ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                Intent intent = new Intent(getActivity(), ToxService.class);
+                                intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
+                                intent.putExtra("key", key);
+                                getActivity().startService(intent);
+                            }
+                        })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+
+                                Intent intent = new Intent(getActivity(), ToxService.class);
+                                intent.setAction(Constants.DELETE_FRIEND);
+                                intent.putExtra("key", key);
+                                getActivity().startService(intent);
+                            }
+                        });
+        builder.show();
     }
 }

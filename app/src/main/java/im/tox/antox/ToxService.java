@@ -320,6 +320,36 @@ public class ToxService extends IntentService {
                     toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
                     // Delete friend from database
                     toxSingleton.mDbHelper.deleteFriend(key);
+                    toxSingleton.mDbHelper.close();
+                    //Broadcast to update left pane
+                    Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                    notify.putExtra("action", Constants.UPDATE_LEFT_PANE);
+                    notify.putExtra("key", key);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+                }
+            }
+        }else if(intent.getAction().equals((Constants.DELETE_FRIEND_AND_CHAT)))
+        {
+            Log.d(TAG, "Constants.DELETE_FRIEND");
+            String key = intent.getStringExtra("key");
+            boolean wasException = false;
+            // Remove friend from tox friend list
+            AntoxFriend friend = toxSingleton.friendsList.getById(key);
+            if(friend != null) {
+
+                try {
+                    toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                } catch (ToxException e) {
+                    wasException = true;
+                    Log.d(TAG, e.getError().toString());
+                    e.printStackTrace();
+                }
+                Log.d(TAG, "Friend deleted from tox list. New size: " + toxSingleton.friendsList.all().size());
+                if (!wasException) {
+                    //Delete friend from list
+                    toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
+                    // Delete friend from database
+                    toxSingleton.mDbHelper.deleteFriend(key);
                     toxSingleton.mDbHelper.deleteChat(key);
                     toxSingleton.mDbHelper.close();
                     //Broadcast to update left pane
@@ -329,7 +359,8 @@ public class ToxService extends IntentService {
                     LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
                 }
             }
-        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+        }
+        else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
             Log.d(TAG, "Constants.SEND_MESSAGE");
             String key = intent.getStringExtra("key");
             String message = intent.getStringExtra("message");

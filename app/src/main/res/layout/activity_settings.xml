@@ -30,8 +30,6 @@
             android:checked="false"
             android:onClick="onDhtBoxClicked"/>
 
-
-
         <Button
             android:id="@+id/updateSettings"
             android:layout_width="fill_parent"
