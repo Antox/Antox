@@ -25,6 +25,9 @@ public class ToxSingleton {
     SQLiteDatabase db;
     public boolean toxStarted = false;
     public AntoxFriendList friendsList;
+    public String activeFriendRequestKey = null;
+    public String activeFriendKey = null;
+    public boolean rightPaneActive = false;
 
     private static volatile ToxSingleton instance = null;
 
