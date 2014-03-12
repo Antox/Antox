@@ -263,19 +263,19 @@ public class ToxService extends IntentService {
             String name = toxSingleton.friendsList.getById(key).getName();
             int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
             toxSingleton.mDbHelper.addMessage(-1, key, message, false, true);
-            /* Update name if not talking to them */
-            if(!toxSingleton.activeFriendKey.equals(key)) {
-                AntoxDB db = new AntoxDB(getApplicationContext());
-                db.updateFriendName(key, name + " (!)");
-                db.close();
-            }
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.UPDATE_MESSAGES);
             notify.putExtra("key", key);
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-            /* Notification */
+            /* Notifications */
             if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))) {
+                Log.d(TAG, "right pane active = " + toxSingleton.rightPaneActive + ", activeFriendkey = " + toxSingleton.activeFriendKey + ", key = " + key);
+                /* Update name if not talking to them */
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                db.updateFriendName(key, name + " (!)");
+                db.close();
+                /* Notification */
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setSmallIcon(R.drawable.ic_launcher)
