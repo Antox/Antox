@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
+    private PaneListener paneListener;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -138,15 +139,22 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onNewIntent(Intent i) {
         if (i.getAction() == Constants.SWITCH_TO_FRIEND && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+            String key = i.getStringExtra("key");
+            String name = i.getStringExtra("name");
             Fragment newFragment = new ChatFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.right_pane, newFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-            toxSingleton.activeFriendKey = i.getStringExtra("key");
+            toxSingleton.activeFriendKey = key;
             toxSingleton.activeFriendRequestKey = null;
-            activeTitle = i.getStringExtra("name");
+            activeTitle = name;
             pane.closePane();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            setTitle(activeTitle);
+            tempRightPaneActive = true;
+            toxSingleton.rightPaneActive = true;
+            clearUselessNotifications();
         }
     }
 
@@ -154,6 +162,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        toxSingleton.activeFriendKey=null;
+        toxSingleton.activeFriendRequestKey=null;
         setContentView(R.layout.activity_main);
 
         toxSingleton.leftPaneActive = true;
@@ -220,12 +230,14 @@ public class MainActivity extends ActionBarActivity {
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        pane.setPanelSlideListener(new PaneListener());
+        paneListener = new PaneListener();
+        pane.setPanelSlideListener(paneListener);
         pane.openPane();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateLeftPane();
+        onNewIntent(getIntent());
     }
 
     @Override
