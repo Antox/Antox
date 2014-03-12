@@ -112,7 +112,7 @@ public class ChatFragment extends Fragment {
 
         if(activeName==null){
             main_act.pane.openPane();
-            Toast.makeText(main_act,"Cannot chat this person yet",Toast.LENGTH_SHORT).show();
+            Toast.makeText(main_act,"Please wait for Tox to finish loading",Toast.LENGTH_SHORT).show();
         }
         else if(activeName.contains("(!)")) {
             db.updateFriendName(toxSingleton.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
