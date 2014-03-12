@@ -2,6 +2,8 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -330,12 +332,20 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
+    private void clearUselessNotifications () {
+        if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null) {
+            AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
+            toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
+        }
+    }
+
     @Override
     public void onResume() {
         Log.i(TAG, "onResume");
         toxSingleton.rightPaneActive = tempRightPaneActive;
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        clearUselessNotifications();
         super.onResume();
     }
 
@@ -553,6 +563,7 @@ public class MainActivity extends ActionBarActivity {
             af.setTitle(R.string.add_to_group);
             toxSingleton.rightPaneActive =true;
             System.out.println("Panel closed");
+            clearUselessNotifications();
         }
 
         @Override

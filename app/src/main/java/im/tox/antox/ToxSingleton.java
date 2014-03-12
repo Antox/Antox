@@ -1,5 +1,6 @@
 package im.tox.antox;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class ToxSingleton {
     public String activeFriendRequestKey = null;
     public String activeFriendKey = null;
     public boolean rightPaneActive = false;
+    public NotificationManager mNotificationManager;
 
     private static volatile ToxSingleton instance = null;
 
@@ -40,6 +42,7 @@ public class ToxSingleton {
         toxStarted = true;
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
+
         try {
             ToxDataFile dataFile = new ToxDataFile(ctx);
 
