@@ -66,13 +66,12 @@ public class AddFriendActivity extends ActionBarActivity {
 
             String[] friendData = { friendID.getText().toString(), message};
 
-            Intent addFriend = new Intent(this, ToxService.class);
-            addFriend.setAction(Constants.ADD_FRIEND);
-            addFriend.putExtra("friendData", friendData);
-            this.startService(addFriend);
-
             AntoxDB db = new AntoxDB(getApplicationContext());
             if(!db.doesFriendExist(friendID.getText().toString())) {
+                Intent addFriend = new Intent(this, ToxService.class);
+                addFriend.setAction(Constants.ADD_FRIEND);
+                addFriend.putExtra("friendData", friendData);
+                this.startService(addFriend);
                 db.addFriend(friendID.getText().toString(), "Friend Request Sent");
             } else {
                 toast = Toast.makeText(context, "Friend already exists", Toast.LENGTH_SHORT);
@@ -80,6 +79,7 @@ public class AddFriendActivity extends ActionBarActivity {
             db.close();
 
             toast.show();
+
         }else{
             toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
             toast.show();
@@ -89,7 +89,6 @@ public class AddFriendActivity extends ActionBarActivity {
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(this).sendBroadcast(update);
-
         Intent i = new Intent();
         setResult(RESULT_OK,i);
 
