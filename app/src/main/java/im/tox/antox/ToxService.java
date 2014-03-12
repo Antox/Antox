@@ -263,6 +263,12 @@ public class ToxService extends IntentService {
             String name = toxSingleton.friendsList.getById(key).getName();
             int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
             toxSingleton.mDbHelper.addMessage(-1, key, message, false, true);
+            /* Update name if not talking to them */
+            if(!toxSingleton.activeFriendKey.equals(key)) {
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                db.updateFriendName(key, name + " (!)");
+                db.close();
+            }
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.UPDATE_MESSAGES);

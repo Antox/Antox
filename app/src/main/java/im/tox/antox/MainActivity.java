@@ -145,7 +145,6 @@ public class MainActivity extends ActionBarActivity {
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
             chat.updateChat(db.getMessageList(key));
-            db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
             db.close();
         }
     };
@@ -333,7 +332,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void clearUselessNotifications () {
-        if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null) {
+        if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
+                && toxSingleton.friendsList.all().size() > 0) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }

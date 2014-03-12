@@ -104,20 +104,16 @@ public class ChatFragment extends Fragment {
         main_act.chat = this;
         main_act.updateChat(toxSingleton.activeFriendKey);
 
-        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-
-        String activeName=null;
-        if(main_act.toxSingleton.friendsList.getById(toxSingleton.activeFriendKey)!=null)
-            activeName = main_act.toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
-
-        if(activeName==null){
-            main_act.pane.openPane();
-            Toast.makeText(main_act,"Please wait for Tox to finish loading",Toast.LENGTH_SHORT).show();
+        /* If active users name contains (!) then remove it */
+        if(toxSingleton.activeFriendKey != null && toxSingleton.friendsList != null
+                && toxSingleton.friendsList.all().size() > 0) {
+            if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName().contains(("(!)"))) {
+                AntoxDB db = new AntoxDB(main_act.getApplicationContext());
+                String name = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
+                db.updateFriendName(toxSingleton.activeFriendKey, name.substring(0, name.indexOf("(")));
+                db.close();
+            }
         }
-        else if(activeName.contains("(!)")) {
-            db.updateFriendName(toxSingleton.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
-        }
-        db.close();
 
         return rootView;
     }
