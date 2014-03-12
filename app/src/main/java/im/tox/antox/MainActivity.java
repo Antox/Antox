@@ -137,10 +137,12 @@ public class MainActivity extends ActionBarActivity {
     
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
-        AntoxDB db = new AntoxDB(this);
-        chat.updateChat(db.getMessageList(key));
-        db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
-        db.close();
+        if(toxSingleton.friendsList.getById(key)!=null) {
+            AntoxDB db = new AntoxDB(this);
+            chat.updateChat(db.getMessageList(key));
+            db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
+            db.close();
+        }
     };
 
     @Override
