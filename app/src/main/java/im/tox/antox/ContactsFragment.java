@@ -199,9 +199,9 @@ public class ContactsFragment extends Fragment {
     public void showAlertDialog(Context context, String fkey) {
         final String key= fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Do you want to delete the chat also?")
+        builder.setMessage("Do you want to clear the saved chat logs as well?")
                 .setCancelable(false)
-                .setPositiveButton("ok",
+                .setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
@@ -211,7 +211,7 @@ public class ContactsFragment extends Fragment {
                                 getActivity().startService(intent);
                             }
                         })
-                .setNegativeButton("cancel",
+                .setNegativeButton("No",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
