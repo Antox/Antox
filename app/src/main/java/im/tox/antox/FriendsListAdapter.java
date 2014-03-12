@@ -71,7 +71,6 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> implements
 		holder.friendName.setText(friend.friendName);
 		holder.imgIcon.setImageResource(friend.icon);
 		holder.friendStatus.setText(friend.friendStatus);
-
 		return row;
 	}
 

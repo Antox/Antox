@@ -99,6 +99,7 @@ public class ChatFragment extends Fragment {
                 sendMessage();
             }
         });
+
         main_act = (MainActivity) getActivity();
         main_act.chat = this;
         main_act.updateChat(toxSingleton.activeFriendKey);
