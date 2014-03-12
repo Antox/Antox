@@ -31,6 +31,7 @@ public class ChatFragment extends Fragment {
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
     private MainActivity main_act;
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
 
     public ChatFragment() {
@@ -47,7 +48,7 @@ public class ChatFragment extends Fragment {
         Intent intent = new Intent(main_act, ToxService.class);
         intent.setAction(Constants.SEND_MESSAGE);
         intent.putExtra("message", message.getText().toString());
-        intent.putExtra("key", main_act.activeFriendKey);
+        intent.putExtra("key", toxSingleton.activeFriendKey);
         message.setText("");
         getActivity().startService(intent);
     }
@@ -99,12 +100,12 @@ public class ChatFragment extends Fragment {
         });
         main_act = (MainActivity) getActivity();
         main_act.chat = this;
-        main_act.updateChat(main_act.activeFriendKey);
+        main_act.updateChat(toxSingleton.activeFriendKey);
 
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-        String activeName = main_act.toxSingleton.friendsList.getById(main_act.activeFriendKey).getName();
+        String activeName = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
         if(activeName.contains("(!)")) {
-            db.updateFriendName(main_act.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
+            db.updateFriendName(toxSingleton.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
         }
         db.close();
 
