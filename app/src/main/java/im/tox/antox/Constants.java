@@ -19,6 +19,7 @@ public final class Constants {
     public static final String SWITCH_TO_FRIEND = "im.tox.antox.SWITCH_TO_FRIEND";
     public static final String SEND_MESSAGE ="im.tox.antox.MESSAGE";
     public static final String UPDATE_MESSAGES ="im.tox.antox.UPDATE_MESSAGES";
+    public static final String CLEAR_NOTIFICATIONS_FOR_FRIENDNUMBER  = "im.tox.antox.CLEAR_NOTIFICATIONS_FOR_FRIENDNUMBER";
     public static final String FRIEND_REQUEST = "im.tox.antox.REQUEST";
     public static final String DELETE_FRIEND = "im.tox.antox.DELETE_FRIEND";
     public static final String DELETE_FRIEND_AND_CHAT = "im.tox.antox.DELETE_FRIEND_AND_CHAT";

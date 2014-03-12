@@ -41,6 +41,7 @@ public class ToxService extends IntentService {
     private ScheduledExecutorService scheduleTaskExecutor;
 
     private boolean toxStarted;
+    private ToxSingleton toxSingleton;
 
     public ToxService() {
         super("ToxService");
@@ -49,8 +50,10 @@ public class ToxService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         AntoxState state = AntoxState.getInstance();
-        ToxSingleton toxSingleton = ToxSingleton.getInstance();
         ArrayList<String> boundActivities = state.getBoundActivities();
+        toxSingleton = ToxSingleton.getInstance();
+        toxSingleton.mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (intent.getAction().equals(Constants.START_TOX)) {
 
@@ -295,9 +298,7 @@ public class ToxService extends IntentService {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
                 mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(friend_number, mBuilder.build());
+                toxSingleton.mNotificationManager.notify(friend_number, mBuilder.build());
             }
         } else if (intent.getAction().equals(Constants.DELETE_FRIEND)) {
             Log.d(TAG, "Constants.DELETE_FRIEND");
