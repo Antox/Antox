@@ -32,6 +32,9 @@ public class ContactsFragment extends Fragment {
      */
     private LeftPaneAdapter leftPaneAdapter;
 
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+
 
     public ContactsFragment() {
         main_act = (MainActivity) getActivity();
@@ -44,8 +47,8 @@ public class ContactsFragment extends Fragment {
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        main_act.activeFriendRequestKey = key;
-        main_act.activeFriendKey = null;
+        toxSingleton.activeFriendRequestKey = key;
+        toxSingleton.activeFriendKey = null;
     }
 
     public void onChangeContact(int position, String name) {
@@ -54,9 +57,10 @@ public class ContactsFragment extends Fragment {
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        main_act.activeFriendKey = main_act.leftPaneKeyList.get(position);
-        main_act.activeFriendRequestKey = null;
+        toxSingleton.activeFriendKey = main_act.leftPaneKeyList.get(position);
+        toxSingleton.activeFriendRequestKey = null;
     }
+
 
     public void updateLeftPane() {
         leftPaneAdapter = main_act.leftPaneAdapter;

@@ -17,6 +17,9 @@ public class FriendRequestFragment extends Fragment {
     private String key;
     private String message;
 
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+
     public FriendRequestFragment(String key, String message) {
         this.key = key;
         this.message = message;
@@ -47,7 +50,7 @@ public class FriendRequestFragment extends Fragment {
                 ((MainActivity) getActivity()).pane.openPane();
                 Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                 acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
-                acceptRequestIntent.putExtra("key", ((MainActivity) getActivity()).activeFriendRequestKey);
+                acceptRequestIntent.putExtra("key", toxSingleton.activeFriendRequestKey);
                 getActivity().startService(acceptRequestIntent);
             }
         });
@@ -59,7 +62,7 @@ public class FriendRequestFragment extends Fragment {
                 ((MainActivity) getActivity()).pane.openPane();
                 Intent rejectRequestIntent = new Intent(getActivity(), ToxService.class);
                 rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
-                rejectRequestIntent.putExtra("key", ((MainActivity) getActivity()).activeFriendRequestKey);
+                rejectRequestIntent.putExtra("key", toxSingleton.activeFriendRequestKey);
                 getActivity().startService(rejectRequestIntent);
             }
         });

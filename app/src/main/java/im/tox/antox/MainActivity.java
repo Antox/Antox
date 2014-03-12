@@ -12,6 +12,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -60,13 +62,13 @@ public class MainActivity extends ActionBarActivity {
     public ChatFragment chat;
     private ContactsFragment contacts;
     private IntentFilter filter;
+    private boolean tempRightPaneActive;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
      */
     public String activeTitle = "Antox";
-    public String activeFriendRequestKey = null;
-    public String activeFriendKey = null;
+
 
     public ArrayList<String> leftPaneKeyList;
 
@@ -78,7 +80,6 @@ public class MainActivity extends ActionBarActivity {
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
      */
     private Menu menu;
-    private boolean isInChat=false;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -114,9 +115,9 @@ public class MainActivity extends ActionBarActivity {
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
                 } else if (action == Constants.UPDATE_MESSAGES) {
-                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + activeFriendKey);
-                    if (intent.getStringExtra("key").equals(activeFriendKey)) {
-                        updateChat(activeFriendKey);
+                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
+                    if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
+                        updateChat(toxSingleton.activeFriendKey);
                     }
                 } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
                     updateLeftPane();
@@ -146,9 +147,24 @@ public class MainActivity extends ActionBarActivity {
     };
 
     @Override
+    protected void onNewIntent(Intent i) {
+        if (i.getAction() == Constants.SWITCH_TO_FRIEND && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+            Fragment newFragment = new ChatFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.right_pane, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+            toxSingleton.activeFriendKey = i.getStringExtra("key");
+            toxSingleton.activeFriendRequestKey = null;
+            activeTitle = i.getStringExtra("name");
+            pane.closePane();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreaye");
+        Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         /* Check if connected to the Internet */
@@ -315,6 +331,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         Log.i(TAG, "onResume");
+        toxSingleton.rightPaneActive = tempRightPaneActive;
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         super.onResume();
@@ -323,6 +340,8 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onPause() {
         Log.i(TAG, "onPause");
+        tempRightPaneActive = toxSingleton.rightPaneActive;
+        toxSingleton.rightPaneActive = false;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onPause();
     }
@@ -346,7 +365,7 @@ public class MainActivity extends ActionBarActivity {
                 openAbout();
                 return true;
             case R.id.add_friend:
-                if(isInChat)
+                if(toxSingleton.rightPaneActive)
                     addFriendToGroup();
                 else
                     addFriend();
@@ -530,7 +549,7 @@ public class MainActivity extends ActionBarActivity {
             MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
             af.setTitle(R.string.add_to_group);
-            isInChat=true;
+            toxSingleton.rightPaneActive =true;
             System.out.println("Panel closed");
         }
 
@@ -541,7 +560,7 @@ public class MainActivity extends ActionBarActivity {
             MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);
-            isInChat=false;
+            toxSingleton.rightPaneActive =false;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             /* This is causing a null pointer exception */
