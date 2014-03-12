@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,8 +103,15 @@ public class ChatFragment extends Fragment {
         main_act.updateChat(main_act.activeFriendKey);
 
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-        String activeName = main_act.toxSingleton.friendsList.getById(main_act.activeFriendKey).getName();
-        if(activeName.contains("(!)")) {
+        String activeName=null;
+        if(main_act.toxSingleton.friendsList.getById(main_act.activeFriendKey)!=null)
+            activeName = main_act.toxSingleton.friendsList.getById(main_act.activeFriendKey).getName();
+
+        if(activeName==null){
+            main_act.pane.openPane();
+            Toast.makeText(main_act,"Cannot chat this person yet",Toast.LENGTH_SHORT).show();
+        }
+        else if(activeName.contains("(!)")) {
             db.updateFriendName(main_act.activeFriendKey,activeName.substring(0,activeName.indexOf("(")));
         }
         db.close();
