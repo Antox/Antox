@@ -134,7 +134,7 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    
+
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
         AntoxDB db = new AntoxDB(this);
