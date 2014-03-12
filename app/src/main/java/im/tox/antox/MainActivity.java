@@ -139,13 +139,14 @@ public class MainActivity extends ActionBarActivity {
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
         //avoid changing name of pending request to "(null) !" if they are currently the active friend
-        if(toxSingleton.friendsList.getById(key)!=null
-                && toxSingleton.friendsList.getById(key).getName()!=null ){
-            AntoxDB db = new AntoxDB(this);
-            chat.updateChat(db.getMessageList(key));
-            db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
-            db.close();
-        }
+        if(toxSingleton.friendsList.getById(key)!=null)
+            if(toxSingleton.friendsList.getById(key).getName()!=null )
+            {
+                AntoxDB db = new AntoxDB(this);
+                chat.updateChat(db.getMessageList(key));
+                db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
+                db.close();
+             }
     };
 
     @Override
