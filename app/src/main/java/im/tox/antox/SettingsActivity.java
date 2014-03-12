@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -67,6 +66,7 @@ public class SettingsActivity extends ActionBarActivity
 
 //        statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);
+
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
 
