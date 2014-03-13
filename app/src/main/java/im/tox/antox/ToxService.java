@@ -415,17 +415,28 @@ public class ToxService extends IntentService {
                     null,
                     values);
             toxSingleton.mDbHelper.close();
-            /* Broadcast */
-            Intent notify = new Intent(Constants.BROADCAST_ACTION);
-            notify.putExtra("action", Constants.FRIEND_REQUEST);
-            notify.putExtra("key", key);
-            notify.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+
             /* Update friends list */
             Intent updateFriends = new Intent(this, ToxService.class);
             updateFriends.setAction(Constants.FRIEND_LIST);
             this.startService(updateFriends);
 
+            /* Notification */
+            if(!toxSingleton.leftPaneActive) {
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle("New Friend Request")
+                                .setContentText(message)
+                                .setAutoCancel(true)
+                                .setDefaults(Notification.DEFAULT_ALL);
+
+                int ID = toxSingleton.friend_requests.size();
+                Intent targetIntent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(contentIntent);
+                toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
+            }
         } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
             Log.d(TAG, "Constants.CONNECTION_STATUS");
         } else if (intent.getAction().equals(Constants.REJECT_FRIEND_REQUEST)) {
