@@ -144,7 +144,7 @@ public class ContactsFragment extends Fragment {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             db.addFriend(item.first, "Friend Accepted");
-                                            updateLeftPane();
+                                            main_act.updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                                             acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
                                             acceptRequestIntent.putExtra("key", item.first);
@@ -159,7 +159,7 @@ public class ContactsFragment extends Fragment {
                                                     Constants.COLUMN_NAME_KEY + "='" + item.first + "'",
                                                     null);
                                             toxSingleton.db.close();
-                                            updateLeftPane();
+                                            main_act.updateLeftPane();
                                             Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
                                             rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
                                             rejectRequestIntent.putExtra("key", item.first);
@@ -221,7 +221,7 @@ public class ContactsFragment extends Fragment {
                                 db.deleteChat(key);
                                 db.deleteFriend(key);
                                 db.close();
-                                updateLeftPane();
+                                main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
                                 intent.putExtra("key", key);
@@ -235,7 +235,7 @@ public class ContactsFragment extends Fragment {
                                 AntoxDB db = new AntoxDB(getActivity());
                                 db.deleteFriend(key);
                                 db.close();
-                                updateLeftPane();
+                                main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND);
                                 intent.putExtra("key", key);
