@@ -58,7 +58,7 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> implements
 			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 			row = inflater.inflate(layoutResourceId, parent, false);
 			holder = new FriendsListHolder();
-			holder.imgIcon = (ImageView) row.findViewById(R.id.imgIcon);
+			holder.icon = (TextView) row.findViewById(R.id.icon);
 			holder.friendName = (TextView) row.findViewById(R.id.friend_name);
 			holder.friendStatus = (TextView) row
 					.findViewById(R.id.friend_status);
@@ -69,14 +69,12 @@ public class FriendsListAdapter extends ArrayAdapter<Friend> implements
 
 		Friend friend = data.get(position);
 		holder.friendName.setText(friend.friendName);
-		holder.imgIcon.setImageResource(friend.icon);
 		holder.friendStatus.setText(friend.friendStatus);
-
 		return row;
 	}
 
 	static class FriendsListHolder {
-		ImageView imgIcon;
+		TextView icon;
 		TextView friendName;
 		TextView friendStatus;
 	}

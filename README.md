@@ -9,14 +9,16 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 3. Download the app <a href="https://play.google.com/store/apps/details?id=im.tox.antox">here</a>
 
 ###Known to work on
-* Samsung S3 running android 4.4 and cyanogenmod
-* Galaxy Nexus running android 4.4
-* Galaxy Note 3 running 4.3 (TouchWiz)
-* Galaxy Note 10.1 running 4.3 (TouchWiz)
-* Samsung Galaxy Tab 10.1 Wi-Fi running 4.0.4
-* Moto G running 4.4.2
-* Nexus 5 4.4.2 Stock
-* HTC One running 4.4.2
+| Brand    | Device                | System                   |
+|:--------:|:---------------------:|:------------------------:|
+| Samsung  | Galaxy S3             | Android 4.4, CyanogenMod |
+| Samsung  | Galaxy Nexus          | Android 4.4              |
+| Samsung  | Galaxy Note 3         | TouchWiz (Android 4.3)   |
+| Samsung  | Galaxy Note 10.1      | TouchWiz (Android 4.3)   |
+| Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4            |
+| Motorola | Moto G                | Android 4.4.2            |
+| LG       | Nexus 5               | Android 4.4.2            |
+| HTC      | One                   | Android 4.4.2            |
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
@@ -42,17 +44,10 @@ When submitting a bug report, please include the following:-
 - Friends list updates when a friend comes online / goes offline, or changes their other details at all.
 
 ###TODO
-- Check updating the users settings gets sent across the network
-- Check accepting friend requests then proceeds to update the users details in the friends list
-- Friends default status should be offline when starting the app instead of last known status
-- Start working on the chat
-- Check friendList for received/send requests so to avoid adding the same friend twice
-- Start adding fail-safes: Notify user when they're not connected to the internet, automatically try different DHT nodes if it can't connect to the first one, restart ToxService if it catches an exception, etc.
-- Implement a blocking list so that user never sees friend requests from a blocked ID (very low priority)
-- Add a 'paranoid' mode to the app so nothing at all is saved (very low priority)
+We now use Producteev, a web-based task management system to better keep track of all the needed changes. To get an invite, please send an email to mark [at] tox [dot] im
 
 ###Screenshots of progress
-<img src="http://vexx.us/Examples/Antox/device-2014-03-02-231541.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-02-231621.png" width="230px" height="400px"/><img src="http://markwinter.me/profile.png" width="230px" height="400px"/>
-<img src="http://vexx.us/Examples/Antox/device-2014-03-09-203434.png" width="690px" height=431px"/>
+<img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-48-00.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-39-10.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-12-215856.png" width="230px" height="400px"/>
+
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*

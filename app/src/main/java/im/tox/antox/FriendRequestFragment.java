@@ -17,6 +17,9 @@ public class FriendRequestFragment extends Fragment {
     private String key;
     private String message;
 
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+
     public FriendRequestFragment(String key, String message) {
         this.key = key;
         this.message = message;
@@ -40,14 +43,14 @@ public class FriendRequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().popBackStack();
-                AntoxDB db = new AntoxDB(getActivity());
+                AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                 db.addFriend(key, "Friend Accepted");
                 db.close();
                 ((MainActivity) getActivity()).updateLeftPane();
                 ((MainActivity) getActivity()).pane.openPane();
                 Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                 acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
-                acceptRequestIntent.putExtra("key", ((MainActivity) getActivity()).activeFriendRequestKey);
+                acceptRequestIntent.putExtra("key", toxSingleton.activeFriendRequestKey);
                 getActivity().startService(acceptRequestIntent);
             }
         });
@@ -55,11 +58,18 @@ public class FriendRequestFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!toxSingleton.db.isOpen())
+                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
+                toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
+                        Constants.COLUMN_NAME_KEY + "='" + key + "'",
+                        null);
+                toxSingleton.db.close();
                 getActivity().getSupportFragmentManager().popBackStack();
                 ((MainActivity) getActivity()).pane.openPane();
                 Intent rejectRequestIntent = new Intent(getActivity(), ToxService.class);
                 rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
-                rejectRequestIntent.putExtra("key", ((MainActivity) getActivity()).activeFriendRequestKey);
+                rejectRequestIntent.putExtra("key", toxSingleton.activeFriendRequestKey);
                 getActivity().startService(rejectRequestIntent);
             }
         });
