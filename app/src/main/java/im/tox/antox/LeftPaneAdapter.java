@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import im.tox.antox.Constants;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -117,11 +118,62 @@ public class LeftPaneAdapter extends BaseAdapter {
             } else {
                 holder.countText.setVisibility(View.GONE);
             }
-            holder.timeText.setText(item.timestamp.toString());
+            holder.timeText.setText(prettyTimestamp(item.timestamp));
             holder.icon.setBackgroundColor(Color.parseColor(iconColor(item.icon)));
         }
 
         return convertView;
+    }
+
+    private String prettyTimestamp(Timestamp t) {
+        java.util.Date date= new java.util.Date();
+        Timestamp current = new Timestamp(date.getTime());
+        String output;
+        String month = "";
+        if (current.toString().substring(0,10).equals(t.toString().substring(0,10))){
+            output = t.toString().substring(11,16);
+        } else {
+            switch (Integer.parseInt(t.toString().substring(5,7))) {
+                case 1:
+                    month = "Jan";
+                    break;
+                case 2:
+                    month = "Feb";
+                    break;
+                case 3:
+                    month = "Mar";
+                    break;
+                case 4:
+                    month = "Apr";
+                    break;
+                case 5:
+                    month = "May";
+                    break;
+                case 6:
+                    month = "Jun";
+                    break;
+                case 7:
+                    month = "Jul";
+                    break;
+                case 8:
+                    month = "Aug";
+                    break;
+                case 9:
+                    month = "Sep";
+                    break;
+                case 10:
+                    month = "Oct";
+                    break;
+                case 11:
+                    month = "Nov";
+                    break;
+                case 12:
+                    month = "Dec";
+                    break;
+            }
+            output = month + " " + t.toString().substring(8,10);
+        }
+        return output;
     }
 
     private String iconColor (int i) {
