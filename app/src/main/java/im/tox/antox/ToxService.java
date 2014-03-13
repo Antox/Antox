@@ -391,11 +391,6 @@ public class ToxService extends IntentService {
                     values);
             toxSingleton.mDbHelper.close();
 
-            /* Update friends list */
-            Intent update = new Intent(Constants.UPDATE);
-            update.setAction(Constants.UPDATE);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(update);
-
             /* Notification */
             if(!toxSingleton.leftPaneActive) {
                 NotificationCompat.Builder mBuilder =
@@ -412,6 +407,11 @@ public class ToxService extends IntentService {
                 mBuilder.setContentIntent(contentIntent);
                 toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
             }
+
+            /* Update friends list */
+            Intent update = new Intent(Constants.BROADCAST_ACTION);
+            update.putExtra("action", Constants.UPDATE);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(update);
         } else if (intent.getAction().equals(Constants.REJECT_FRIEND_REQUEST)) {
             String key = intent.getStringExtra("key");
             if (toxSingleton.friend_requests.size() != 0) {
