@@ -144,6 +144,7 @@ public class ContactsFragment extends Fragment {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             db.addFriend(item.first, "Friend Accepted");
+                                            updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                                             acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
                                             acceptRequestIntent.putExtra("key", item.first);
@@ -158,6 +159,7 @@ public class ContactsFragment extends Fragment {
                                                     Constants.COLUMN_NAME_KEY + "='" + item.first + "'",
                                                     null);
                                             toxSingleton.db.close();
+                                            updateLeftPane();
                                             Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
                                             rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
                                             rejectRequestIntent.putExtra("key", item.first);
