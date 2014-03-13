@@ -262,7 +262,7 @@ public class ToxService extends IntentService {
             String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
             String name = toxSingleton.friendsList.getById(key).getName();
             int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
-            toxSingleton.mDbHelper.addMessage(-1, key, message, false, true);
+            toxSingleton.mDbHelper.addMessage(-1, key, message, false, true, false);
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.UPDATE_MESSAGES);
@@ -271,10 +271,10 @@ public class ToxService extends IntentService {
             /* Notifications */
             if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))) {
                 Log.d(TAG, "right pane active = " + toxSingleton.rightPaneActive + ", activeFriendkey = " + toxSingleton.activeFriendKey + ", key = " + key);
-                /* Update name if not talking to them */
+                /* Update name if not talking to them *//*
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 db.updateFriendName(key, name + " (!)");
-                db.close();
+                db.close();*/
                 /* Notification */
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
@@ -391,7 +391,7 @@ public class ToxService extends IntentService {
             }
             if (sendingSucceeded) {
             /* Add message to chatlog */
-                toxSingleton.mDbHelper.addMessage(-1, key, message, true, false);
+                toxSingleton.mDbHelper.addMessage(-1, key, message, true, false, false);
             /* Broadcast to update UI */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);

@@ -32,7 +32,7 @@ public final class Constants {
 
     //All DB Constants
     public static final String DATABASE_NAME = "antoxdb";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "chat_logs";
     public static final String TABLE_FRIEND_REQUEST = "friend_request";
@@ -45,6 +45,7 @@ public final class Constants {
     public static final String COLUMN_NAME_MESSAGE_ID ="message_id";
     public static final String COLUMN_NAME_IS_OUTGOING ="is_outgoing";
     public static final String COLUMN_NAME_HAS_BEEN_RECEIVED ="has_been_received";
+    public static final String COLUMN_NAME_HAS_BEEN_READ ="has_been_read";
     public static final String COLUMN_NAME_ISONLINE = "isonline";
 
     //Activity request code for onActivityResult methods

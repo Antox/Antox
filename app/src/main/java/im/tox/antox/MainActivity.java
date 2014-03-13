@@ -35,6 +35,7 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.ToxUserStatus;
@@ -145,8 +146,12 @@ public class MainActivity extends ActionBarActivity {
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
+            if (toxSingleton.rightPaneActive) {
+                db.markIncomingMessagesRead(key);
+            }
             chat.updateChat(db.getMessageList(key));
             db.close();
+            updateLeftPane();
         }
     };
 
@@ -263,12 +268,36 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
     }
+    private Message mostRecentMessage(String key, ArrayList<Message> messages) {
+        for (int i=0; i<messages.size(); i++) {
+            if (key.equals(messages.get(i).key)) {
+                return messages.get(i);
+            }
+        }
+        return new Message(-1, key, "", false, true, true, new Timestamp(0,0,0,0,0,0,0));
+    }
 
+    private int countUnreadMessages(String key, ArrayList<Message> messages) {
+        int counter = 0;
+        Message m;
+        for (int i=0; i<messages.size(); i++) {
+            m = messages.get(i);
+            if (m.key.equals(key) && !m.is_outgoing) {
+                if (!m.has_been_read) {
+                    counter += 1;
+                } else {
+                    return counter;
+                }
+            }
+        }
+        return counter;
+    }
     public void updateLeftPane() {
 
         AntoxDB antoxDB = new AntoxDB(this);
 
         friendList = antoxDB.getFriendList();
+        ArrayList<Message> messageList = antoxDB.getMessageList("");
 
         /* Go through status strings and set appropriate resource image */
         Friend friends_list[] = new Friend[friendList.size()];
@@ -280,6 +309,8 @@ public class MainActivity extends ActionBarActivity {
         leftPaneAdapter = new LeftPaneAdapter(this);
 
         leftPaneKeyList = new ArrayList<String>();
+
+        Message msg;
 
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
@@ -296,7 +327,8 @@ public class MainActivity extends ActionBarActivity {
             leftPaneAdapter.addItem(friends_header);
             leftPaneKeyList.add("");
             for (int i = 0; i < friends_list.length; i++) {
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].personalNote, friends_list[i].icon);
+                msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
                 leftPaneAdapter.addItem(friend);
                 leftPaneKeyList.add(friends_list[i].friendKey);
             }

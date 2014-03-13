@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.JTox;
@@ -30,6 +31,8 @@ public class ToxSingleton {
     public String activeFriendKey = null;
     public boolean rightPaneActive = false;
     public NotificationManager mNotificationManager;
+    public ToxDataFile dataFile;
+    public File qrFile;
 
     private static volatile ToxSingleton instance = null;
 
@@ -44,7 +47,8 @@ public class ToxSingleton {
         callbackHandler = new CallbackHandler(antoxFriendList);
 
         try {
-            ToxDataFile dataFile = new ToxDataFile(ctx);
+            qrFile = ctx.getFileStreamPath("userkey_qr.png");
+            dataFile = new ToxDataFile(ctx);
 
             /* Choose appropriate constructor depending on if data file exists */
             if(!dataFile.doesFileExist()) {
@@ -52,10 +56,7 @@ public class ToxSingleton {
                 jTox = new JTox(antoxFriendList, callbackHandler);
             } else {
                 Log.d(TAG, "Data file has been found");
-                if(dataFile.isExternalStorageReadable())
-                    jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
-                else
-                    Log.d(TAG, "Data file wasn't available for reading");
+                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
             }
 
             if(UserDetails.username == null)
@@ -71,8 +72,7 @@ public class ToxSingleton {
             jTox.setUserStatus(UserDetails.status);
 
             /* Save data file */
-            if(dataFile.isExternalStorageWritable())
-                dataFile.saveFile(jTox.save());
+            dataFile.saveFile(jTox.save());
 
         } catch (ToxException e) {
             e.printStackTrace();

@@ -104,7 +104,7 @@ public class ChatFragment extends Fragment {
         main_act.chat = this;
         main_act.updateChat(toxSingleton.activeFriendKey);
 
-        /* If active users name contains (!) then remove it */
+        /* If active users name contains (!) then remove it *//*
         if(toxSingleton.activeFriendKey != null && toxSingleton.friendsList != null
                 && toxSingleton.friendsList.all().size() > 0) {
             if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName().contains(("(!)"))) {
@@ -113,7 +113,8 @@ public class ChatFragment extends Fragment {
                 db.updateFriendName(toxSingleton.activeFriendKey, name.substring(0, name.indexOf("(")));
                 db.close();
             }
-        }
+        }*/
+
 
         return rootView;
     }
