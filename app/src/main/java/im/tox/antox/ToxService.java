@@ -199,6 +199,7 @@ public class ToxService extends IntentService {
                     }
                 }
             }, 0, 50, TimeUnit.MILLISECONDS);
+            toxSingleton.toxStarted = true;
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();
@@ -251,7 +252,8 @@ public class ToxService extends IntentService {
             notify.putExtra("key", key);
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             /* Notifications */
-            if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))) {
+            if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
+                    && !(toxSingleton.leftPaneActive)) {
                 Log.d(TAG, "right pane active = " + toxSingleton.rightPaneActive + ", activeFriendkey = " + toxSingleton.activeFriendKey + ", key = " + key);
                 /* Update name if not talking to them *//*
                 AntoxDB db = new AntoxDB(getApplicationContext());
