@@ -425,7 +425,7 @@ public class ToxService extends IntentService {
             if(!toxSingleton.leftPaneActive) {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.ic_actionbar)
                                 .setContentTitle("New Friend Request")
                                 .setContentText(message)
                                 .setAutoCancel(true)
