@@ -78,20 +78,20 @@ public class ProfileActivity extends ActionBarActivity {
           * */
         ImageButton qrCode = (ImageButton) findViewById(R.id.qr_code);
 
-        File file = getBaseContext().getFileStreamPath("userkey_qr.png");
+        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/");
         if(!file.exists()){
-            generateQR(pref.getString("user_key", ""));
+            file.mkdirs();
         }
-
+        file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
+        generateQR(pref.getString("user_key", ""));
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
         qrCode.setImageBitmap(bmp);
         qrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = getBaseContext().getFileStreamPath("userkey_qr.png");
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/userkey_qr.png")));
                 shareIntent.setType("image/jpeg");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_with)));
             }
@@ -129,7 +129,7 @@ public class ProfileActivity extends ActionBarActivity {
         FileOutputStream out;
         try {
             Bitmap bitmap = qrCodeEncoder.encodeAsBitmap();
-            out = openFileOutput("userkey_qr.png", Context.MODE_PRIVATE);
+            out = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/antox/userkey_qr.png");
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.close();
         } catch (WriterException e) {
