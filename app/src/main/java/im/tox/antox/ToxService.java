@@ -16,7 +16,6 @@ import android.util.Log;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -398,7 +397,7 @@ public class ToxService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setSmallIcon(R.drawable.ic_actionbar)
-                                .setContentTitle("New Friend Request")
+                                .setContentTitle(getString(R.string.friend_request))
                                 .setContentText(message)
                                 .setAutoCancel(true)
                                 .setDefaults(Notification.DEFAULT_ALL);

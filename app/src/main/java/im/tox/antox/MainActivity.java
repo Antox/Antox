@@ -2,8 +2,6 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -100,7 +98,7 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
-                    String text = "Friend request deleted";
+                    String text = getString(R.string.friendrequest_deleted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
@@ -113,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
-                    String text = "Friend request accepted";
+                    String text = getString(R.string.friendrequest_accepted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
@@ -185,8 +183,8 @@ public class MainActivity extends ActionBarActivity {
                 new DHTNodeDetails().execute();
         }
         else {
-            showAlertDialog(MainActivity.this, "No Internet Connection",
-                    "You are not connected to the Internet");
+            showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
+                    getString(R.string.main_not_connected));
         }
 
         /* If the tox service isn't already running, start it */
@@ -545,7 +543,7 @@ public class MainActivity extends ActionBarActivity {
                 System.out.println(DhtNode.owner);
                 System.out.println(DhtNode.location);
             }catch (NullPointerException e){
-                Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
             }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
@@ -566,7 +564,7 @@ public class MainActivity extends ActionBarActivity {
         CharSequence msg = intent.getStringExtra("message");
         CharSequence key = intent.getStringExtra("key");
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctx, "Friend request received", duration);
+        Toast toast = Toast.makeText(ctx, getString(R.string.friendrequest_recieved), duration);
         toast.show();
         Log.d(TAG, toxSingleton.friend_requests.toString());
         updateLeftPane();

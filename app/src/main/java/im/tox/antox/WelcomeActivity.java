@@ -36,7 +36,7 @@ public class WelcomeActivity extends ActionBarActivity {
 
         if (usernameText.trim().equals("")) {
             Context context = getApplicationContext();
-            CharSequence text = "You must select a username";
+            CharSequence text = getString(R.string.welcome_must_select_username);
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();

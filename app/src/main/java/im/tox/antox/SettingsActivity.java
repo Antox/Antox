@@ -156,7 +156,7 @@ public class SettingsActivity extends ActionBarActivity
 
 
         Context context = getApplicationContext();
-        CharSequence text = "Settings updated";
+        CharSequence text = getString(R.string.settings_updated);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();

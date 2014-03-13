@@ -15,9 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import im.tox.jtoxcore.ToxException;
 
 
 /**
@@ -106,7 +103,7 @@ public class ContactsFragment extends Fragment {
                             String key = item.first;
                             String message = item.second;
                             onChangeFriendRequest(position, key, message);
-                            main_act.activeTitle = "Friend Request";
+                            main_act.activeTitle = main_act.getString(R.string.friendrequest);
                             main_act.pane.closePane();
                             toxSingleton.rightPaneActive = true;
                         }
@@ -133,7 +130,7 @@ public class ContactsFragment extends Fragment {
                             getResources().getString(R.string.friend_action_block)
                     };
                 }
-                builder.setTitle("Actions on " + item.first)
+                builder.setTitle(main_act.getString(R.string.contacts_actions_on) + item.first)
                         .setCancelable(true)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
@@ -211,9 +208,9 @@ public class ContactsFragment extends Fragment {
     public void showAlertDialog(Context context, String fkey) {
         final String key= fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Do you want to clear the saved chat logs as well?")
+        builder.setMessage(getResources().getString(R.string.contacts_clear_saved_logs))
                 .setCancelable(false)
-                .setPositiveButton("Yes",
+                .setPositiveButton(getResources().getString(R.string.button_yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
@@ -228,7 +225,7 @@ public class ContactsFragment extends Fragment {
                                 getActivity().startService(intent);
                             }
                         })
-                .setNegativeButton("No",
+                .setNegativeButton(getResources().getString(R.string.button_no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
@@ -241,7 +238,8 @@ public class ContactsFragment extends Fragment {
                                 intent.putExtra("key", key);
                                 getActivity().startService(intent);
                             }
-                        });
+                        }
+                );
         builder.show();
     }
 }
