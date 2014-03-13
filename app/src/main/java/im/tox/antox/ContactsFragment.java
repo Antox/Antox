@@ -215,6 +215,11 @@ public class ContactsFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
+                                AntoxDB db = new AntoxDB(getActivity());
+                                db.deleteChat(key);
+                                db.deleteFriend(key);
+                                db.close();
+                                updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
                                 intent.putExtra("key", key);
@@ -225,7 +230,10 @@ public class ContactsFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-
+                                AntoxDB db = new AntoxDB(getActivity());
+                                db.deleteFriend(key);
+                                db.close();
+                                updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND);
                                 intent.putExtra("key", key);
