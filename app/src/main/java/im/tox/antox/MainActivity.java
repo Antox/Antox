@@ -2,8 +2,6 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,7 +30,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -239,6 +236,7 @@ public class MainActivity extends ActionBarActivity {
         paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
+        getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 

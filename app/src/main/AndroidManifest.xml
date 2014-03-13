@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="im.tox.antox"
-          android:versionCode="1"
-          android:versionName="1.0">
+    package="im.tox.antox"
+    android:versionCode="1"
+    android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>    
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19"/>
+        android:targetSdkVersion="19" />
     <supports-screens
-        android:smallScreens="true"
         android:anyDensity="true"
+        android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:largeScreens="true"/>
+        android:smallScreens="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_actionbar"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme">
 
@@ -33,58 +33,62 @@
             android:name="im.tox.antox.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="im.tox.antox.SettingsActivity"
             android:label="@string/title_activity_settings"
+
             android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity"/>
+                android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.ProfileActivity"
             android:label="@string/title_activity_profile"
+
             android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity"/>
+                android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.AboutActivity"
             android:label="@string/title_activity_about"
+
             android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity"/>
+                android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.WelcomeActivity"
-            android:label="@string/title_activity_welcome" >
+
+            android:label="@string/title_activity_welcome">
             <!--android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.MainActivity"/>-->
-    </activity>
+        </activity>
         <activity
             android:name="im.tox.antox.AddFriendActivity"
             android:label="@string/title_activity_add_friend"
             android:parentActivityName="im.tox.antox.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity"/>
+                android:value="im.tox.antox.MainActivity" />
 
             <!--  Intent filter for handling tox:// links -->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tox"/>
+                <data android:scheme="tox" />
             </intent-filter>
         </activity>
     </application>
