@@ -44,11 +44,11 @@
                     android:id="@+id/message_text_date"
                     android:textStyle="italic"
                     android:text="Asdsd"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/gray_darker"
                     android:textSize="@dimen/text_small" />
             </LinearLayout>
             <LinearLayout
-                android:background="@android:color/darker_gray"
+                android:background="@color/gray_darker"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"></LinearLayout>
         </LinearLayout>

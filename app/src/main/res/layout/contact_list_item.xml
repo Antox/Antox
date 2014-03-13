@@ -11,7 +11,7 @@
             android:id="@+id/icon"
             android:layout_width="5dp"
             android:layout_height="match_parent"
-            android:background="#5ec245"
+            android:background="@color/green"
             android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:orientation="vertical"
@@ -34,7 +34,7 @@
                     android:id="@+id/last_message_timestamp"
                     android:text="10:00 PM"
                     android:textSize="@dimen/text_small"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/gray_darker"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:layout_weight="0.5">
                 <TextView
                     android:id="@+id/friend_status"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/gray_darker"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
@@ -58,13 +58,13 @@
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:layout_width="25dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
                     android:layout_height="25dp"
-                    android:background="#5ec245"/>
+                    android:background="@color/green"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

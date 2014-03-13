@@ -7,7 +7,7 @@
         android:id="@+id/chatMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#e5e5e5"
+        android:background="@color/white"
         android:layout_weight="1"
         android:layout_above="@+id/relativeLayoutSend"
         android:divider="@null"
@@ -16,7 +16,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutSend"
         android:layout_width="fill_parent"
-        android:background="#ffffff"
+        android:background="@color/white_absolute"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
 
@@ -24,7 +24,7 @@
             android:id="@+id/divider_comment"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@android:color/darker_gray" />
+            android:background="@color/gray_darker" />
         <EditText
             android:id="@+id/yourMessage"
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:inputType="textShortMessage|textCapSentences|textMultiLine"
             android:textSize="@dimen/text_medium"
             android:gravity="center_vertical"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:background="@android:color/transparent"
             android:layout_toLeftOf="@+id/sendMessageButton"
             android:hint="@string/chat_enter_message" />
