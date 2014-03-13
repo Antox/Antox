@@ -278,7 +278,7 @@ public class ToxService extends IntentService {
                 /* Notification */
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.ic_actionbar)
                                 .setContentTitle(name)
                                 .setContentText(message)
                                 .setDefaults(Notification.DEFAULT_ALL);
