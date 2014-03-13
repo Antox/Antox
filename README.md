@@ -47,7 +47,7 @@ When submitting a bug report, please include the following:-
 We now use Producteev, a web-based task management system to better keep track of all the needed changes. To get an invite, please send an email to mark [at] tox [dot] im
 
 ###Screenshots of progress
-<img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-48-00.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-39-10.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-12-215856.png" width="230px" height="400px"/>
+<img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-48-00.png" width="270px" height="480px"/><img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-39-10.png" width="270px" height="480px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-12-215856.png" width="270px" height="480px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
