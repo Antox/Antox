@@ -151,6 +151,13 @@ public class ContactsFragment extends Fragment {
                                             main_act.updateLeftPane();
                                             break;
                                         case 1:
+                                            if (!toxSingleton.db.isOpen())
+                                                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
+
+                                            toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
+                                                    Constants.COLUMN_NAME_KEY + "='" + item.first + "'",
+                                                    null);
+                                            toxSingleton.db.close();
                                             Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
                                             rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
                                             rejectRequestIntent.putExtra("key", item.first);
