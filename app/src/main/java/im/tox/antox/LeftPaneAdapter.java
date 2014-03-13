@@ -3,6 +3,7 @@ package im.tox.antox;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,7 +87,7 @@ public class LeftPaneAdapter extends BaseAdapter {
                     convertView = mInflater.inflate(R.layout.contact_list_item, null);
                     holder.firstText = (TextView)convertView.findViewById(R.id.friend_name);
                     holder.secondText = (TextView)convertView.findViewById(R.id.friend_status);
-                    holder.icon = (ImageView)convertView.findViewById(R.id.imgIcon);
+                    holder.icon = (TextView)convertView.findViewById(R.id.icon);
                     holder.countText = (TextView)convertView.findViewById(R.id.unread_messages_count);
                     holder.timeText = (TextView)convertView.findViewById(R.id.last_message_timestamp);
                     break;
@@ -117,16 +118,33 @@ public class LeftPaneAdapter extends BaseAdapter {
                 holder.countText.setVisibility(View.GONE);
             }
             holder.timeText.setText(item.timestamp.toString());
-            holder.icon.setImageResource(item.icon);
+            holder.icon.setBackgroundColor(Color.parseColor(iconColor(item.icon)));
         }
 
         return convertView;
     }
 
+    private String iconColor (int i) {
+        String color;
+        if (i == 0) {
+            color = "#B0B0B0"; //offline
+        } else if (i == 1) {
+            color = "#5ec245"; //online
+        } else if (i == 2) {
+            color = "#E5C885"; //away
+        } else if (i == 3) {
+            color = "#CF4D58"; //busy
+        } else {
+            color = "#FFFFFF";
+        }
+        Log.d("ICON", ""+i);
+        return color;
+    }
+
     private static class ViewHolder {
         public TextView firstText;
         public TextView secondText;
-        public ImageView icon;
+        public TextView icon;
         public TextView countText;
         public TextView timeText;
     }

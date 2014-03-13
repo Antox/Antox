@@ -135,15 +135,13 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String key = cursor.getString(1);
                 String status = cursor.getString(3);
                 String note = cursor.getString(4);
-                String online = (String) cursor.getString(5);
+                int online = cursor.getInt(5);
 
                 if(name.equals(""))
                     name = key.substring(0,7);
 
-                if(online.equals("1"))
-                    friendList.add(new Friend(R.drawable.ic_status_online,name,status,note, key));
-                else
-                    friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note, key));
+
+                friendList.add(new Friend(online,name,status,note, key));
             } while (cursor.moveToNext());
         }
 
