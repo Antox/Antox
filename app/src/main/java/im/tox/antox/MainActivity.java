@@ -126,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    
+
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
         //avoid changing name of pending request to "(null) !" if they are currently the active friend
