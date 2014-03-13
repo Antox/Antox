@@ -9,10 +9,10 @@
         android:orientation="vertical"
         android:id="@+id/message_text_layout"
         android:layout_width="300dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -25,10 +25,10 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium">
 
 
                 <TextView
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/message_text"
                     android:text="Asdsd"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_small" />
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -44,7 +44,8 @@
                     android:id="@+id/message_text_date"
                     android:textStyle="italic"
                     android:text="Asdsd"
-                    android:textSize="8sp" />
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/text_small" />
             </LinearLayout>
             <LinearLayout
                 android:background="@android:color/darker_gray"

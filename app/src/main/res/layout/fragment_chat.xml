@@ -29,14 +29,14 @@
             android:id="@+id/yourMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="12dp"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_medium"
             android:imeOptions="actionSend"
             android:minLines="2"
             android:maxLines="4"
             android:inputType="textShortMessage|textCapSentences|textMultiLine"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_medium"
             android:gravity="center_vertical"
             android:textColor="@android:color/black"
             android:background="@android:color/transparent"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:paddingRight="8dp"
+            android:paddingRight="@dimen/margin_medium"
             android:src="@drawable/ic_send" />
 
     </RelativeLayout>
