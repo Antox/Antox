@@ -39,11 +39,11 @@
 
     <!-- Welcome Activity -->
     <string name="about_string">Questo client è in fase pre-alpha</string>
-    <string name="getstarted_string">Inserisci il tuo nome</string>
-    <string name="developer_string">Sviluppato da astonex\nirc.freenode.net#tox-dev</string>
+    <string name="getstarted_string">Nickname</string>
+    <string name="developer_string">Sviluppato da astonex\n(irc.freenode.net#tox-dev)</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key_title">ID Utente</string>
+    <string name="settings_user_key_title">Il tuo ID</string>
     <string name="settings_name_hint">inserisci il tuo nome</string>
     <string name="settings_note_hint">inserisci le tue informazioni personali</string>
     <string name="settings_dht_ip">Indirizzo IP del server DHT (ex: 192.254.75.98)</string>
@@ -52,12 +52,12 @@
     <string name="settings_button">OK</string>
     <string name="settings_updated">Le impostazioni sono state aggiornate</string>
     <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
-    <string name="settings_status_title">Imposta il tuo stato</string>
-    <string name="settings_note_title">Imposta le tue informazioni personali</string>
-    <string name="settings_username_title">Imposta il tuo nickname</string>
+    <string name="settings_status_title">Stato</string>
+    <string name="settings_note_title">Informazioni personali</string>
+    <string name="settings_username_title">Nickname</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">inserisci l\'ID del tuo amico</string>
+    <string name="addfriend_friend_key">ID del tuo amico</string>
     <string name="addfriend_friend_message">messaggio opzionale da inviare insieme alla richiesta</string>
     <string name="addfriend_button">Aggiugni Amico</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
