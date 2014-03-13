@@ -288,7 +288,6 @@ public class MainActivity extends ActionBarActivity {
         friendList = antoxDB.getFriendList();
         ArrayList<Message> messageList = antoxDB.getMessageList("");
 
-        /* Go through status strings and set appropriate resource image */
         Friend friends_list[] = new Friend[friendList.size()];
         friends_list = friendList.toArray(friends_list);
 
