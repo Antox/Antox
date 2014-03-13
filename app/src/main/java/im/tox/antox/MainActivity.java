@@ -106,6 +106,7 @@ public class MainActivity extends ActionBarActivity {
                     toast.show();
                 } else if (action == Constants.UPDATE_MESSAGES) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
+                    updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
                     }
