@@ -198,7 +198,7 @@ public class ToxService extends IntentService {
                         e.printStackTrace();
                     }
                 }
-            }, 0, 10, TimeUnit.MILLISECONDS);
+            }, 0, 50, TimeUnit.MILLISECONDS);
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (scheduleTaskExecutor != null) {
                 scheduleTaskExecutor.shutdownNow();
