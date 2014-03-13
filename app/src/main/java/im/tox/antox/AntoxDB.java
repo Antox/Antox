@@ -5,22 +5,27 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.ToxUserStatus;
+import im.tox.antox.ToxSingleton;
 
 /**
  * Created by Aagam Shah on 7/3/14.
  */
 public class AntoxDB extends SQLiteOpenHelper {
 
+    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
             " ( _id integer primary key , key text, username text, status text,note text, isonline boolean)";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
-            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean)";
+            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean)";
 
     public String CREATE_TABLE_FRIEND_REQUEST = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIEND_REQUEST +
             " ( _id integer primary key, key text, message text)";
@@ -48,7 +53,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FRIENDS);
         db.execSQL(CREATE_TABLE_CHAT_LOGS);
         db.execSQL(CREATE_TABLE_FRIEND_REQUEST);
-
     }
 
     //Adding friend using his key.
@@ -68,7 +72,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received){
+    public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received, boolean has_been_read){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id);
@@ -76,6 +80,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_MESSAGE, message);
         values.put(Constants.COLUMN_NAME_IS_OUTGOING, is_outgoing);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
+        values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
@@ -83,7 +88,12 @@ public class AntoxDB extends SQLiteOpenHelper {
     public ArrayList<Message> getMessageList(String key) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        String selectQuery;
+        if (key == "") {
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
+        } else {
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        }
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -93,13 +103,21 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String m = cursor.getString(4);
                 boolean outgoing = cursor.getInt(5)>0;
                 boolean received = cursor.getInt(6)>0;
+                boolean read = cursor.getInt(7)>0;
                 Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, time));
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, time));
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         return messageList;
+    }
+
+    public void markIncomingMessagesRead(String key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ + "=1 WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=0";
+        db.execSQL(query);
+        Log.d("", "marked incoming messages as read");
     }
 
     public ArrayList<Friend> getFriendList() {
@@ -117,15 +135,13 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String key = cursor.getString(1);
                 String status = cursor.getString(3);
                 String note = cursor.getString(4);
-                String online = (String) cursor.getString(5);
+                int online = cursor.getInt(5);
 
                 if(name.equals(""))
                     name = key.substring(0,7);
 
-                if(online.equals("1"))
-                    friendList.add(new Friend(R.drawable.ic_status_online,name,status,note, key));
-                else
-                    friendList.add(new Friend(R.drawable.ic_status_offline,name,status,note, key));
+
+                friendList.add(new Friend(online,name,status,note, key));
             } while (cursor.moveToNext());
         }
 

@@ -2,6 +2,8 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +35,7 @@ import org.jsoup.select.Elements;
 
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import im.tox.jtoxcore.ToxUserStatus;
@@ -75,6 +78,7 @@ public class MainActivity extends ActionBarActivity {
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
+    private PaneListener paneListener;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -90,21 +94,7 @@ public class MainActivity extends ActionBarActivity {
             if (action != null) {
             Log.d(TAG, "action: " + action);
                 if (action == Constants.FRIEND_REQUEST) {
-                    /* Comment this out until I do something with it properly
-                    NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(context)
-                                    .setSmallIcon(R.drawable.ic_launcher)
-                                    .setContentTitle("Someone sent you a request")
-                                    .setContentText("isn't that rad!?");
-                    int NOTIFICATION_ID = 12345;
-                    Intent targetIntent = new Intent(context, MainActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(contentIntent);
-                    NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    nManager.notify(NOTIFICATION_ID, builder.build());
-                    Log.d("Notification lol", "Friend request notify");
-                    friendRequest(intent);
-                    */
+
                 } else if (action == Constants.UPDATE_LEFT_PANE) {
                     updateLeftPane();
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
@@ -116,6 +106,7 @@ public class MainActivity extends ActionBarActivity {
                     toast.show();
                 } else if (action == Constants.UPDATE_MESSAGES) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
+                    updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
                     }
@@ -135,32 +126,41 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    
+
     void updateChat(String key) {
         Log.d(TAG, "updating chat");
         //avoid changing name of pending request to "(null) !" if they are currently the active friend
-        if(toxSingleton.friendsList.getById(key)!=null)
-            if(toxSingleton.friendsList.getById(key).getName()!=null )
-            {
-                AntoxDB db = new AntoxDB(this);
-                chat.updateChat(db.getMessageList(key));
-                db.updateFriendName(key, toxSingleton.friendsList.getById(key).getName() + " (!)");
-                db.close();
-             }
+        if(toxSingleton.friendsList.getById(key)!=null
+                && toxSingleton.friendsList.getById(key).getName()!=null ){
+            AntoxDB db = new AntoxDB(this);
+            if (toxSingleton.rightPaneActive) {
+                db.markIncomingMessagesRead(key);
+            }
+            chat.updateChat(db.getMessageList(key));
+            db.close();
+            updateLeftPane();
+        }
     };
 
     @Override
     protected void onNewIntent(Intent i) {
         if (i.getAction() == Constants.SWITCH_TO_FRIEND && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+            String key = i.getStringExtra("key");
+            String name = i.getStringExtra("name");
             Fragment newFragment = new ChatFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.right_pane, newFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-            toxSingleton.activeFriendKey = i.getStringExtra("key");
+            toxSingleton.activeFriendKey = key;
             toxSingleton.activeFriendRequestKey = null;
-            activeTitle = i.getStringExtra("name");
+            activeTitle = name;
             pane.closePane();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            setTitle(activeTitle);
+            tempRightPaneActive = true;
+            toxSingleton.rightPaneActive = true;
+            clearUselessNotifications();
         }
     }
 
@@ -168,7 +168,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
+        toxSingleton.activeFriendKey=null;
+        toxSingleton.activeFriendRequestKey=null;
         setContentView(R.layout.activity_main);
+
+        toxSingleton.leftPaneActive = true;
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -232,12 +236,14 @@ public class MainActivity extends ActionBarActivity {
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        pane.setPanelSlideListener(new PaneListener());
+        paneListener = new PaneListener();
+        pane.setPanelSlideListener(paneListener);
         pane.openPane();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
         updateLeftPane();
+        onNewIntent(getIntent());
     }
 
     @Override
@@ -251,14 +257,37 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
     }
+    private Message mostRecentMessage(String key, ArrayList<Message> messages) {
+        for (int i=0; i<messages.size(); i++) {
+            if (key.equals(messages.get(i).key)) {
+                return messages.get(i);
+            }
+        }
+        return new Message(-1, key, "", false, true, true, new Timestamp(0,0,0,0,0,0,0));
+    }
 
+    private int countUnreadMessages(String key, ArrayList<Message> messages) {
+        int counter = 0;
+        Message m;
+        for (int i=0; i<messages.size(); i++) {
+            m = messages.get(i);
+            if (m.key.equals(key) && !m.is_outgoing) {
+                if (!m.has_been_read) {
+                    counter += 1;
+                } else {
+                    return counter;
+                }
+            }
+        }
+        return counter;
+    }
     public void updateLeftPane() {
 
         AntoxDB antoxDB = new AntoxDB(this);
 
         friendList = antoxDB.getFriendList();
+        ArrayList<Message> messageList = antoxDB.getMessageList("");
 
-        /* Go through status strings and set appropriate resource image */
         Friend friends_list[] = new Friend[friendList.size()];
         friends_list = friendList.toArray(friends_list);
 
@@ -268,6 +297,8 @@ public class MainActivity extends ActionBarActivity {
         leftPaneAdapter = new LeftPaneAdapter(this);
 
         leftPaneKeyList = new ArrayList<String>();
+
+        Message msg;
 
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
@@ -284,7 +315,8 @@ public class MainActivity extends ActionBarActivity {
             leftPaneAdapter.addItem(friends_header);
             leftPaneKeyList.add("");
             for (int i = 0; i < friends_list.length; i++) {
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].personalNote, friends_list[i].icon);
+                msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
                 leftPaneAdapter.addItem(friend);
                 leftPaneKeyList.add(friends_list[i].friendKey);
             }
@@ -331,12 +363,21 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
+    private void clearUselessNotifications () {
+        if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
+                && toxSingleton.friendsList.all().size() > 0) {
+            AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
+            toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
+        }
+    }
+
     @Override
     public void onResume() {
         Log.i(TAG, "onResume");
         toxSingleton.rightPaneActive = tempRightPaneActive;
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        clearUselessNotifications();
         super.onResume();
     }
 
@@ -346,6 +387,7 @@ public class MainActivity extends ActionBarActivity {
         tempRightPaneActive = toxSingleton.rightPaneActive;
         toxSingleton.rightPaneActive = false;
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        toxSingleton.leftPaneActive = false;
         super.onPause();
     }
 
@@ -552,8 +594,10 @@ public class MainActivity extends ActionBarActivity {
             MenuItem af = menu.findItem(R.id.add_friend);
             af.setIcon(R.drawable.ic_action_add_group);
             af.setTitle(R.string.add_to_group);
-            toxSingleton.rightPaneActive =true;
+            toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
+            toxSingleton.leftPaneActive = false;
+            clearUselessNotifications();
         }
 
         @Override

@@ -11,19 +11,21 @@ public class Message {
     public String message;
     public boolean is_outgoing;
     public boolean has_been_received;
+    public boolean has_been_read;
     public Timestamp timestamp;
 
     public Message() {
         super();
     }
 
-    public Message(int message_id, String k, String m, boolean outgoing, boolean received, Timestamp time) {
+    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, Timestamp time) {
         super();
         this.message_id = message_id;
         this.key = k;
         this.message = m;
         this.is_outgoing = outgoing;
         this.has_been_received = received;
+        this.has_been_read = read;
         this.timestamp = time;
     }
 

@@ -45,14 +45,6 @@ public class ToxDataFile {
 	}
 
     /**
-     * Check if external storage is available to read and write
-     * @return
-     */
-    public boolean isExternalStorageWritable() {
-        return true;
-    }
-
-    /**
      * Checks if external storage is available to read
      * @return
      */
