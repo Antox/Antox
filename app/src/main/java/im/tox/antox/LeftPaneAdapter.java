@@ -132,6 +132,8 @@ public class LeftPaneAdapter extends BaseAdapter {
         String month = "";
         if (current.toString().substring(0,10).equals(t.toString().substring(0,10))){
             output = t.toString().substring(11,16);
+        } else if (t.toString().substring(0,19).equals("0000-00-00 00:00:00")) {
+            output = "";
         } else {
             switch (Integer.parseInt(t.toString().substring(5,7))) {
                 case 1:
