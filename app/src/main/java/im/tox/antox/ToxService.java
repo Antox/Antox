@@ -238,24 +238,6 @@ public class ToxService extends IntentService {
                 e.printStackTrace();
             }
 
-        } else if (intent.getAction().equals(Constants.FRIEND_LIST)) {
-            Log.d(TAG, "Constants.FRIEND_LIST");
-            List<AntoxFriend> onlineFriends = toxSingleton.friendsList.getOnlineFriends();
-            if (onlineFriends.size() > 0) {
-                Log.d(TAG, "Friends found in friendsList");
-                String[] names = new String[onlineFriends.size()];
-                String[] notes = new String[onlineFriends.size()];
-                for (int i = 0; i < onlineFriends.size(); i++) {
-                    names[i] = onlineFriends.get(i).getName();
-                    notes[i] = onlineFriends.get(i).getStatusMessage();
-                }
-
-                Intent notify = new Intent(Constants.BROADCAST_ACTION);
-                notify.setAction(Constants.FRIEND_LIST);
-                notify.putExtra("names", names);
-                notify.putExtra("notes", notes);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-            }
         } else if (intent.getAction().equals(Constants.ON_MESSAGE)) {
             Log.d(TAG, "Constants.ON_MESSAGE");
             String key = intent.getStringExtra(AntoxOnMessageCallback.KEY);
@@ -325,9 +307,6 @@ public class ToxService extends IntentService {
                 if (!wasException) {
                     //Delete friend from list
                     toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
-                    // Delete friend from database
-                    toxSingleton.mDbHelper.deleteFriend(key);
-                    toxSingleton.mDbHelper.close();
                     //Broadcast to update left pane
                     Intent notify = new Intent(Constants.BROADCAST_ACTION);
                     notify.putExtra("action", Constants.UPDATE_LEFT_PANE);
@@ -355,10 +334,6 @@ public class ToxService extends IntentService {
                 if (!wasException) {
                     //Delete friend from list
                     toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
-                    // Delete friend from database
-                    toxSingleton.mDbHelper.deleteFriend(key);
-                    toxSingleton.mDbHelper.deleteChat(key);
-                    toxSingleton.mDbHelper.close();
                     //Broadcast to update left pane
                     Intent notify = new Intent(Constants.BROADCAST_ACTION);
                     notify.putExtra("action", Constants.UPDATE_LEFT_PANE);
@@ -417,9 +392,9 @@ public class ToxService extends IntentService {
             toxSingleton.mDbHelper.close();
 
             /* Update friends list */
-            Intent updateFriends = new Intent(this, ToxService.class);
-            updateFriends.setAction(Constants.FRIEND_LIST);
-            this.startService(updateFriends);
+            Intent update = new Intent(Constants.UPDATE);
+            update.setAction(Constants.UPDATE);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(update);
 
             /* Notification */
             if(!toxSingleton.leftPaneActive) {
@@ -437,8 +412,6 @@ public class ToxService extends IntentService {
                 mBuilder.setContentIntent(contentIntent);
                 toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
             }
-        } else if (intent.getAction().equals(Constants.CONNECTED_STATUS)) {
-            Log.d(TAG, "Constants.CONNECTION_STATUS");
         } else if (intent.getAction().equals(Constants.REJECT_FRIEND_REQUEST)) {
             String key = intent.getStringExtra("key");
             if (toxSingleton.friend_requests.size() != 0) {
