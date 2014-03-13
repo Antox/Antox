@@ -450,14 +450,6 @@ public class ToxService extends IntentService {
                         }
                     }
                 }
-
-                if (!toxSingleton.db.isOpen())
-                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
-                        Constants.COLUMN_NAME_KEY + "='" + key + "'",
-                        null);
-                toxSingleton.db.close();
             }
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
