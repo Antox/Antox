@@ -195,7 +195,7 @@ public class MainActivity extends ActionBarActivity {
             db.setAllOffline();
             db.close();
 
-            startToxIntent = new Intent(this, ToxService.class);
+            startToxIntent = new Intent(this, ToxDoService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
 
@@ -419,7 +419,7 @@ public class MainActivity extends ActionBarActivity {
                 pane.openPane();
                 return true;
             case R.id.action_exit:
-                Intent stopToxIntent = new Intent(this, ToxService.class);
+                Intent stopToxIntent = new Intent(this, ToxDoService.class);
                 stopToxIntent.setAction(Constants.STOP_TOX);
                 this.startService(stopToxIntent);
                 finish();
@@ -552,7 +552,7 @@ public class MainActivity extends ActionBarActivity {
              */
             if(!DhtNode.connected)
             {
-                Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
             }
