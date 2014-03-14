@@ -271,14 +271,16 @@ public class MainActivity extends ActionBarActivity {
 
     private int countUnreadMessages(String key, ArrayList<Message> messages) {
         int counter = 0;
-        Message m;
-        for (int i=0; i<messages.size(); i++) {
-            m = messages.get(i);
-            if (m.key.equals(key) && !m.is_outgoing) {
-                if (!m.has_been_read) {
-                    counter += 1;
-                } else {
-                    return counter;
+        if(key!=null) {
+            Message m;
+            for (int i = 0; i < messages.size(); i++) {
+                m = messages.get(i);
+                if (m.key.equals(key) && !m.is_outgoing) {
+                    if (!m.has_been_read) {
+                        counter += 1;
+                    } else {
+                        return counter;
+                    }
                 }
             }
         }
