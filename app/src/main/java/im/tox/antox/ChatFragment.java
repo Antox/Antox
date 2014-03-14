@@ -78,6 +78,7 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, new ChatMessages[0]);
@@ -101,22 +102,12 @@ public class ChatFragment extends Fragment {
                 sendMessage();
             }
         });
-
         main_act = (MainActivity) getActivity();
         main_act.chat = this;
         main_act.updateChat(toxSingleton.activeFriendKey);
-
-        /* If active users name contains (!) then remove it *//*
-        if(toxSingleton.activeFriendKey != null && toxSingleton.friendsList != null
-                && toxSingleton.friendsList.all().size() > 0) {
-            if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName().contains(("(!)"))) {
-                AntoxDB db = new AntoxDB(main_act.getApplicationContext());
-                String name = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
-                db.updateFriendName(toxSingleton.activeFriendKey, name.substring(0, name.indexOf("(")));
-                db.close();
-            }
-        }*/
-
+        main_act.activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
+        toxSingleton.rightPaneActive = true;
+        main_act.pane.closePane();
 
         return rootView;
     }

@@ -43,27 +43,23 @@ public class ContactsFragment extends Fragment {
     }
 
     public void onChangeFriendRequest(int position, String key, String message) {
+        toxSingleton.activeFriendRequestKey = key;
+        toxSingleton.activeFriendKey = null;
         Fragment newFragment = new FriendRequestFragment(key, message);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        toxSingleton.activeFriendRequestKey = key;
-        toxSingleton.activeFriendKey = null;
     }
 
-    public void onChangeContact(int position, String name) {
-        Fragment newFragment = new ChatFragment();
+    public void onChangeContact(int position) {
+        toxSingleton.activeFriendKey = main_act.leftPaneKeyList.get(position);
+        toxSingleton.activeFriendRequestKey = null;
+        ChatFragment newFragment = new ChatFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.right_pane, newFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        toxSingleton.activeFriendKey = main_act.leftPaneKeyList.get(position);
-        toxSingleton.activeFriendRequestKey = null;
-        main_act.activeTitle = name;
-        main_act.pane.closePane();
-        toxSingleton.rightPaneActive = true;
-        main_act.updateLeftPane();
     }
 
 
@@ -100,7 +96,7 @@ public class ContactsFragment extends Fragment {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
                         if (type == Constants.TYPE_CONTACT) {
-                            onChangeContact(position, item.first);
+                            onChangeContact(position);
                         } else if (type == Constants.TYPE_FRIEND_REQUEST) {
 
                             String key = item.first;

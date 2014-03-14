@@ -86,10 +86,6 @@ public class ToxService extends IntentService {
             if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
                     && !(toxSingleton.leftPaneActive)) {
                 Log.d(TAG, "right pane active = " + toxSingleton.rightPaneActive + ", activeFriendkey = " + toxSingleton.activeFriendKey + ", key = " + key);
-                /* Update name if not talking to them *//*
-                AntoxDB db = new AntoxDB(getApplicationContext());
-                db.updateFriendName(key, name + " (!)");
-                db.close();*/
                 /* Notification */
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
