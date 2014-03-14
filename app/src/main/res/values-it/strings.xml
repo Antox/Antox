@@ -25,6 +25,9 @@
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
+    <string name="main_no_internet">Nessuna connessione ad internet</string>
+    <string name="main_not_connected">Non sei connesso ad internet</string>
+    <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
     
     <!-- About Activity -->
     <string name="about_details">Antox è un client Android per Tox</string>
@@ -41,11 +44,13 @@
     <string name="about_string">Questo client è in fase pre-alpha</string>
     <string name="getstarted_string">Nickname</string>
     <string name="developer_string">Sviluppato da astonex\n(irc.freenode.net#tox-dev)</string>
+    <string name="welcome_must_select_username">Devi inserire un nickname</string>
 
     <!-- Settings Activity -->
     <string name="settings_user_key_title">Il tuo ID</string>
     <string name="settings_name_hint">inserisci il tuo nome</string>
     <string name="settings_note_hint">inserisci le tue informazioni personali</string>
+    <string name="settings_custom_dht">Impostazioni personalizzate per il server DHT</string>
     <string name="settings_dht_ip">Indirizzo IP del server DHT (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Porta usata dal server DHT (ex: 33445)</string>
     <string name="settings_dht_key">Chiave pubblica del server DHT (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
@@ -59,7 +64,9 @@
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">ID del tuo amico</string>
     <string name="addfriend_friend_message">messaggio opzionale da inviare insieme alla richiesta</string>
-    <string name="addfriend_button">Aggiugni Amico</string>
+    <string name="addfriend_button">Aggiungi Amico</string>
+    <string name="addfriend_friend_added">Amico aggiunto</string>
+    <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">ID inserito non valido</string>
 
@@ -73,13 +80,24 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accetta</string>
     <string name="friendrequest_reject">Rifiuta</string>
+    <string name="friendrequest_accepted">Richiesta d\'amicizia accettata</string>
+    <string name="friendrequest_deleted">Richiesta d\'amicizia cancellata</string>
+    <string name="friendrequest">Richiesta D\'Amicizia</string>
+    <string name="friendrequest_recieved">Ricevuta richiesta d\'amicizia</string>
+    <string name="friend_request">Nuova Richiesta D\'Amicizia</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi</string>
     <string name="friend_action_block">Blocca</string>
     <string name="group_action_leave">Lascia Gruppo</string>
+    <string name="contacts_actions_on">Azioni per </string>
+    <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
 
     <!-- Misc -->
+    <string name="button_confirm">OK</string>
+    <string name="button_cancel">Annulla</string>
+    <string name="button_yes">Sì</string>
+    <string name="button_no">No</string>
 
 </resources>

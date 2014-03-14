@@ -25,7 +25,7 @@ public class AntoxDB extends SQLiteOpenHelper {
             " ( _id integer primary key , key text, username text, status text,note text, isonline boolean)";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
-            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean)";
+            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
 
     public String CREATE_TABLE_FRIEND_REQUEST = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIEND_REQUEST +
             " ( _id integer primary key, key text, message text)";
@@ -72,7 +72,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received, boolean has_been_read){
+    public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received, boolean has_been_read, boolean successfully_sent){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id);
@@ -81,6 +81,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_IS_OUTGOING, is_outgoing);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
+        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
@@ -104,13 +105,28 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean outgoing = cursor.getInt(5)>0;
                 boolean received = cursor.getInt(6)>0;
                 boolean read = cursor.getInt(7)>0;
+                boolean sent = cursor.getInt(8)>0;
                 Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, time));
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
             } while (cursor.moveToNext());
         }
 
         cursor.close();
         return messageList;
+    }
+
+    public String setMessageReceived(int receipt) { //returns public key of who the message was sent to
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
+        db.execSQL(query);
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String k = "";
+        if (cursor.moveToFirst()) {
+            k = cursor.getString(3);
+        }
+        cursor.close();
+        return k;
     }
 
     public void markIncomingMessagesRead(String key) {

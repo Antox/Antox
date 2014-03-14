@@ -1,9 +1,12 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import im.tox.antox.AntoxFriend;
+import im.tox.antox.Constants;
+import im.tox.antox.ToxService;
 import im.tox.jtoxcore.callbacks.OnReadReceiptCallback;
 
 /**
@@ -20,6 +23,10 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
 
     @Override
     public void execute(AntoxFriend friend, int receipt) {
-        Log.d(TAG, "OnReadReceiptCallback received");
+        Log.d(TAG, "OnReadReceiptCallback received, receipt id = " + receipt);
+        Intent intent = new Intent(this.ctx, ToxService.class);
+        intent.setAction(Constants.DELIVERY_RECEIPT);
+        intent.putExtra("receipt", receipt);
+        this.ctx.startService(intent);
     }
 }

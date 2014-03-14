@@ -77,8 +77,8 @@ public class DHTDialogFragment extends DialogFragment{
             dhtKey.setText(key);
 
         // Configure the dialog and set up button Listeners
-        builder.setMessage("Custom DHT node Settings")
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setMessage(getResources().getString(R.string.settings_custom_dht))
+                .setPositiveButton(getResources().getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event and text entry back to the host activity
                         mListener.onDialogPositiveClick(DHTDialogFragment.this,
@@ -87,7 +87,7 @@ public class DHTDialogFragment extends DialogFragment{
                                 dhtKey.getText().toString());
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the negative button event back to the host activity
                         mListener.onDialogNegativeClick(DHTDialogFragment.this);

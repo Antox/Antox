@@ -3,11 +3,10 @@ package im.tox.antox;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +26,9 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -36,7 +38,7 @@ public class WelcomeActivity extends ActionBarActivity {
 
         if (usernameText.trim().equals("")) {
             Context context = getApplicationContext();
-            CharSequence text = "You must select a username";
+            CharSequence text = getString(R.string.welcome_must_select_username);
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();

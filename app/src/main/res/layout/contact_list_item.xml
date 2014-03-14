@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="6dip" >
+    android:padding="@dimen/margin_medium" >
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center"
@@ -11,8 +11,8 @@
             android:id="@+id/icon"
             android:layout_width="5dp"
             android:layout_height="match_parent"
-            android:background="#5ec245"
-            android:layout_marginRight="10dp"/>
+            android:background="@color/green"
+            android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -28,13 +28,13 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/last_message_timestamp"
                     android:text="10:00 PM"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textSize="@dimen/text_small"
+                    android:textColor="@color/gray_darker"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
@@ -47,24 +47,24 @@
                 android:layout_weight="0.5">
                 <TextView
                     android:id="@+id/friend_status"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/gray_darker"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
-                    android:textSize="18sp"/>
+                    android:textSize="@dimen/text_medium"/>
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:layout_width="25dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
                     android:layout_height="25dp"
-                    android:background="#5ec245"/>
+                    android:background="@color/green"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
