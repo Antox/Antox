@@ -3,6 +3,7 @@ package im.tox.antox;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -25,7 +26,9 @@ public class WelcomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

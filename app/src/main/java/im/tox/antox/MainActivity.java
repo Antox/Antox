@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -236,7 +237,9 @@ public class MainActivity extends ActionBarActivity {
         paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
-        getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 

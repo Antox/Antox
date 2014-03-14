@@ -2,6 +2,7 @@ package im.tox.antox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
@@ -56,7 +57,9 @@ public class SettingsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
 
 //        statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
         dhtBox = (CheckBox) findViewById(R.id.settings_dht_box);

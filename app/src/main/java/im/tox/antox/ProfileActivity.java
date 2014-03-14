@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -46,7 +47,9 @@ public class ProfileActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
