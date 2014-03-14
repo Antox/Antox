@@ -82,6 +82,8 @@ public class ChatFragment extends Fragment {
 
         adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, new ChatMessages[0]);
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
+        chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+        chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
