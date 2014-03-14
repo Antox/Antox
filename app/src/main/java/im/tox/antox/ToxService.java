@@ -172,8 +172,43 @@ public class ToxService extends IntentService {
                     LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
                 }
             }
-        }
-        else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
+        } else if (intent.getAction().equals(Constants.SEND_UNSENT_MESSAGES)) {
+            Log.d(TAG, "Constants.SEND_UNSENT_MESSAGES");
+            ArrayList<Message> unsentMessageList = toxSingleton.mDbHelper.getUnsentMessageList();
+            Log.d(TAG, "unsent message list size is " + unsentMessageList.size());
+            for (int i = 0; i<unsentMessageList.size(); i++) {
+                ToxFriend friend = null;
+                int id = unsentMessageList.get(i).message_id;
+                String key = unsentMessageList.get(i).key;
+                String message = unsentMessageList.get(i).message;
+                boolean sendingSucceeded = true;
+                try {
+                    friend = toxSingleton.friendsList.getById(key);
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+                try {
+                    if (friend != null) {
+                        Log.d(TAG, "Sending message to " + friend.getName());
+                        toxSingleton.jTox.sendMessage(friend, message, id);
+                    }
+                } catch (ToxException e) {
+                    Log.d(TAG, e.toString());
+                    e.printStackTrace();
+                    sendingSucceeded = false;
+                }
+                if (sendingSucceeded) {
+                    toxSingleton.mDbHelper.updateUnsentMessage(id);
+                }
+            }
+            if (toxSingleton.activeFriendKey != null) {
+            /* Broadcast to update UI */
+                Intent notify = new Intent(Constants.BROADCAST_ACTION);
+                notify.putExtra("action", Constants.UPDATE_MESSAGES);
+                notify.putExtra("key", toxSingleton.activeFriendKey);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
+            }
+        } else if (intent.getAction().equals(Constants.SEND_MESSAGE)) {
             Log.d(TAG, "Constants.SEND_MESSAGE");
             String key = intent.getStringExtra("key");
             String message = intent.getStringExtra("message");

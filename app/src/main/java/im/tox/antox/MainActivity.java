@@ -376,6 +376,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onResume() {
+        super.onResume();
         Log.i(TAG, "onResume");
         toxSingleton.rightPaneActive = tempRightPaneActive;
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
@@ -384,7 +385,7 @@ public class MainActivity extends ActionBarActivity {
             updateChat(toxSingleton.activeFriendKey);
         }
         clearUselessNotifications();
-        super.onResume();
+        updateLeftPane();
     }
 
     @Override
