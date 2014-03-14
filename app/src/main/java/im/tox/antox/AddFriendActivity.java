@@ -52,7 +52,7 @@ public class AddFriendActivity extends ActionBarActivity {
 
     public void addFriend(View view) {
         Context context = getApplicationContext();
-        CharSequence text = "Friend Added";
+        CharSequence text = getString(R.string.addfriend_friend_added);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
 
@@ -74,7 +74,7 @@ public class AddFriendActivity extends ActionBarActivity {
                 this.startService(addFriend);
                 db.addFriend(friendID.getText().toString(), "Friend Request Sent");
             } else {
-                toast = Toast.makeText(context, "Friend already exists", Toast.LENGTH_SHORT);
+                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
             }
             db.close();
 
