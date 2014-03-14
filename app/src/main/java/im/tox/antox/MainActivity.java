@@ -2,8 +2,6 @@ package im.tox.antox;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +10,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -33,7 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action == Constants.REJECT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
-                    String text = "Friend request deleted";
+                    String text = getString(R.string.friendrequest_deleted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
@@ -113,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
-                    String text = "Friend request accepted";
+                    String text = getString(R.string.friendrequest_accepted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
@@ -148,18 +149,15 @@ public class MainActivity extends ActionBarActivity {
             String key = i.getStringExtra("key");
             String name = i.getStringExtra("name");
             Fragment newFragment = new ChatFragment();
+            toxSingleton.activeFriendKey = key;
+            toxSingleton.activeFriendRequestKey = null;
+            tempRightPaneActive = true;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.right_pane, newFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-            toxSingleton.activeFriendKey = key;
-            toxSingleton.activeFriendRequestKey = null;
-            activeTitle = name;
-            pane.closePane();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
-            tempRightPaneActive = true;
-            toxSingleton.rightPaneActive = true;
             clearUselessNotifications();
         }
     }
@@ -185,8 +183,8 @@ public class MainActivity extends ActionBarActivity {
                 new DHTNodeDetails().execute();
         }
         else {
-            showAlertDialog(MainActivity.this, "No Internet Connection",
-                    "You are not connected to the Internet");
+            showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
+                    getString(R.string.main_not_connected));
         }
 
         /* If the tox service isn't already running, start it */
@@ -239,6 +237,9 @@ public class MainActivity extends ActionBarActivity {
         paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
@@ -263,19 +264,21 @@ public class MainActivity extends ActionBarActivity {
                 return messages.get(i);
             }
         }
-        return new Message(-1, key, "", false, true, true, new Timestamp(0,0,0,0,0,0,0));
+        return new Message(-1, key, "", false, true, true, true, new Timestamp(0,0,0,0,0,0,0));
     }
 
     private int countUnreadMessages(String key, ArrayList<Message> messages) {
         int counter = 0;
-        Message m;
-        for (int i=0; i<messages.size(); i++) {
-            m = messages.get(i);
-            if (m.key.equals(key) && !m.is_outgoing) {
-                if (!m.has_been_read) {
-                    counter += 1;
-                } else {
-                    return counter;
+        if(key!=null) {
+            Message m;
+            for (int i = 0; i < messages.size(); i++) {
+                m = messages.get(i);
+                if (m.key.equals(key) && !m.is_outgoing) {
+                    if (!m.has_been_read) {
+                        counter += 1;
+                    } else {
+                        return counter;
+                    }
                 }
             }
         }
@@ -545,7 +548,7 @@ public class MainActivity extends ActionBarActivity {
                 System.out.println(DhtNode.owner);
                 System.out.println(DhtNode.location);
             }catch (NullPointerException e){
-                Toast.makeText(MainActivity.this,"Error Downloading Nodes List",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
             }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
@@ -566,7 +569,7 @@ public class MainActivity extends ActionBarActivity {
         CharSequence msg = intent.getStringExtra("message");
         CharSequence key = intent.getStringExtra("key");
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctx, "Friend request received", duration);
+        Toast toast = Toast.makeText(ctx, getString(R.string.friendrequest_recieved), duration);
         toast.show();
         Log.d(TAG, toxSingleton.friend_requests.toString());
         updateLeftPane();
@@ -583,6 +586,12 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             updateLeftPane();
+        } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
+            Uri uri=  data.getData();
+            File pickedFile = new File(uri.getPath());
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            Log.d("file picked",""+pickedFile.getAbsolutePath() );
+            Log.d("file type",""+getContentResolver().getType(uri));
         }
     }
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
