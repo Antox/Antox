@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -32,7 +33,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -237,6 +237,9 @@ public class MainActivity extends ActionBarActivity {
         paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
@@ -508,7 +511,7 @@ public class MainActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             try {
                 // Connect to the web site
-                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").get();
+                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
                 Elements nodeRows = document.getElementsByTag("tr");
 
                 for(Element nodeRow : nodeRows)

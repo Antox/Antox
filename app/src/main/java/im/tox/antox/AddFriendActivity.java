@@ -3,6 +3,7 @@ package im.tox.antox;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
@@ -10,7 +11,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -30,7 +30,10 @@ public class AddFriendActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            getSupportActionBar().setIcon(R.drawable.ic_actionbar);
+        }
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         Intent intentURI = getIntent();
         Uri uri;
@@ -61,13 +64,13 @@ public class AddFriendActivity extends ActionBarActivity {
         EditText friendMessage = (EditText) findViewById(R.id.addfriend_message);
 
         /*validates key*/
-        if(validateFriendKey(friendID.getText().toString())){
+        if (validateFriendKey(friendID.getText().toString())) {
             String message = friendMessage.getText().toString();
 
-            String[] friendData = { friendID.getText().toString(), message};
+            String[] friendData = {friendID.getText().toString(), message};
 
             AntoxDB db = new AntoxDB(getApplicationContext());
-            if(!db.doesFriendExist(friendID.getText().toString())) {
+            if (!db.doesFriendExist(friendID.getText().toString())) {
                 Intent addFriend = new Intent(this, ToxService.class);
                 addFriend.setAction(Constants.ADD_FRIEND);
                 addFriend.putExtra("friendData", friendData);
@@ -80,7 +83,7 @@ public class AddFriendActivity extends ActionBarActivity {
 
             toast.show();
 
-        }else{
+        } else {
             toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
             toast.show();
             return;
@@ -90,23 +93,24 @@ public class AddFriendActivity extends ActionBarActivity {
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(this).sendBroadcast(update);
         Intent i = new Intent();
-        setResult(RESULT_OK,i);
+        setResult(RESULT_OK, i);
 
         // Close activity
         finish();
     }
+
     /*
     * handle intent to read a friend QR code
     * */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
-            if(scanResult.getContents()!=null){
-                EditText addFriendKey = (EditText)findViewById(R.id.addfriend_key);
-                String friendKey = (scanResult.getContents().contains("tox://")? scanResult.getContents().substring(6):scanResult.getContents());
-                if(validateFriendKey(friendKey)){
+            if (scanResult.getContents() != null) {
+                EditText addFriendKey = (EditText) findViewById(R.id.addfriend_key);
+                String friendKey = (scanResult.getContents().contains("tox://") ? scanResult.getContents().substring(6) : scanResult.getContents());
+                if (validateFriendKey(friendKey)) {
                     addFriendKey.setText(friendKey);
-                }else{
+                } else {
                     Context context = getApplicationContext();
                     Toast toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                     toast.show();
@@ -116,14 +120,14 @@ public class AddFriendActivity extends ActionBarActivity {
     }
 
     private boolean validateFriendKey(String friendKey) {
-        if(friendKey.length()!=76 || friendKey.matches("[[:xdigit:]]")){
+        if (friendKey.length() != 76 || friendKey.matches("[[:xdigit:]]")) {
             return false;
         }
-        int x=0;
-        for(int i=0;i<friendKey.length();i+=4){
-            x=x^Integer.valueOf(friendKey.substring(i, i+4),16);
+        int x = 0;
+        for (int i = 0; i < friendKey.length(); i += 4) {
+            x = x ^ Integer.valueOf(friendKey.substring(i, i + 4), 16);
         }
-        if(x!=0)
+        if (x != 0)
             return false;
         return true;
     }
