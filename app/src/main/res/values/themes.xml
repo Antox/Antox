@@ -12,9 +12,9 @@
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#54759e</item>
+        <item name="android:background">@drawable/ab_solid_example</item>
 
         <!-- Support library compatibility -->
-        <item name="background">@drawable/ab_solid</item>
+        <item name="background">@drawable/ab_solid_example</item>
     </style>
 </resources>
