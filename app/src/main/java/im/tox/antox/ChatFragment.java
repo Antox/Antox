@@ -66,7 +66,7 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "chat message size = " + messages.size());
         ChatMessages data[] = new ChatMessages[messages.size()];
         for (int i = 0; i<messages.size(); i++) {
-            data[i] = new ChatMessages(messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing);
+            data[i] = new ChatMessages(messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent);
         }
         adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, data);
         chatListView.setAdapter(adapter);

@@ -260,7 +260,7 @@ public class MainActivity extends ActionBarActivity {
                 return messages.get(i);
             }
         }
-        return new Message(-1, key, "", false, true, true, new Timestamp(0,0,0,0,0,0,0));
+        return new Message(-1, key, "", false, true, true, true, new Timestamp(0,0,0,0,0,0,0));
     }
 
     private int countUnreadMessages(String key, ArrayList<Message> messages) {
