@@ -117,9 +117,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public String setMessageReceived(int receipt) { //returns public key of who the message was sent to
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt;
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
         db.execSQL(query);
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt;
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
         Cursor cursor = db.rawQuery(selectQuery, null);
         String k = "";
         if (cursor.moveToFirst()) {

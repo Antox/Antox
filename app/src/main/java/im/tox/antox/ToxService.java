@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
@@ -188,7 +189,9 @@ public class ToxService extends IntentService {
             try {
                 if (friend != null) {
                     Log.d(TAG, "Sending message to " + friend.getName());
-                    id = toxSingleton.jTox.sendMessage(friend, message);
+                    Random generator = new Random();
+                    id = generator.nextInt();
+                    toxSingleton.jTox.sendMessage(friend, message, id);
                 }
             } catch (ToxException e) {
                 Log.d(TAG, e.toString());
@@ -273,6 +276,7 @@ public class ToxService extends IntentService {
                 toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
             String key = toxSingleton.mDbHelper.setMessageReceived(receipt);
             toxSingleton.mDbHelper.close();
+            Log.d("DELIVERY RECEIPT FOR KEY: ", key);
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.UPDATE_MESSAGES);

@@ -377,6 +377,9 @@ public class MainActivity extends ActionBarActivity {
         toxSingleton.rightPaneActive = tempRightPaneActive;
         filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+        if (toxSingleton.activeFriendKey != null) {
+            updateChat(toxSingleton.activeFriendKey);
+        }
         clearUselessNotifications();
         super.onResume();
     }
