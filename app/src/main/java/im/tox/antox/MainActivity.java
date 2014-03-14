@@ -145,18 +145,15 @@ public class MainActivity extends ActionBarActivity {
             String key = i.getStringExtra("key");
             String name = i.getStringExtra("name");
             Fragment newFragment = new ChatFragment();
+            toxSingleton.activeFriendKey = key;
+            toxSingleton.activeFriendRequestKey = null;
+            tempRightPaneActive = true;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.right_pane, newFragment);
             transaction.addToBackStack(null);
             transaction.commit();
-            toxSingleton.activeFriendKey = key;
-            toxSingleton.activeFriendRequestKey = null;
-            activeTitle = name;
-            pane.closePane();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
-            tempRightPaneActive = true;
-            toxSingleton.rightPaneActive = true;
             clearUselessNotifications();
         }
     }
