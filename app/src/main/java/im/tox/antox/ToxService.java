@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
+
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.jtoxcore.FriendExistsException;
@@ -234,7 +235,7 @@ public class ToxService extends IntentService {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
                                 .setSmallIcon(R.drawable.ic_actionbar)
-                                .setContentTitle("New Friend Request")
+                                .setContentTitle(getString(R.string.friend_request))
                                 .setContentText(message)
                                 .setAutoCancel(true)
                                 .setDefaults(Notification.DEFAULT_ALL);

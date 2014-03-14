@@ -25,6 +25,9 @@
     <string name="main_try_adding">Why not try adding some?</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
+    <string name="main_no_internet">No Internet Connection</string>
+    <string name="main_not_connected">You are not connected to the Internet</string>
+    <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
     <!-- About Activity -->
     <string name="about_details">Antox is an Android client for Tox</string>
@@ -41,6 +44,7 @@
     <!-- Welcome Activity -->
     <string name="about_string">This client is still in pre-alpha.</string>
     <string name="getstarted_string">Enter your desired username</string>
+    <string name="settings_custom_dht">Custom DHT node Settings</string>
     <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">enter your name</string>
     <string name="settings_note_hint">enter your personal note</string>
@@ -54,11 +58,15 @@
     <string name="settings_note_title">Set your personal note</string>
     <string name="settings_username_title">Set your username</string>
     <string name="developer_string">Developed by astonex &amp; co.</string>
+    <string name="welcome_must_select_username">You must select a username</string>
+
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
     <string name="addfriend_friend_message">Optional message</string>
     <string name="addfriend_button">Add Friend</string>
+    <string name="addfriend_friend_added">Friend Added</string>
+    <string name="addfriend_friend_exists">Friend already exists</string>
     <string name="scanqr_button">Scan a QR code</string>
     <string name="invalid_friend_ID">Invalid Tox ID</string>
 
@@ -73,12 +81,25 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
+    <string name="friendrequest_accepted">Friend request accepted</string>
+    <string name="friendrequest_deleted">Friend request deleted</string>
+    <string name="friendrequest">Friend Request</string>
+    <string name="friendrequest_recieved">Friend request received</string>
+    <string name="friend_request">New Friend Request</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Delete</string>
     <string name="friend_action_block">Block</string>
     <string name="group_action_leave">Leave Group</string>
+
+    <string name="contacts_actions_on">Actions on </string>
+    <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
+
     <!--  Misc -->
+    <string name="button_confirm">Confirm</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
 
 </resources>
