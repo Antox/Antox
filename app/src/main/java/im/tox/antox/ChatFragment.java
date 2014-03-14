@@ -104,9 +104,9 @@ public class ChatFragment extends Fragment {
         });
         main_act = (MainActivity) getActivity();
         main_act.chat = this;
+        toxSingleton.rightPaneActive = true;
         main_act.updateChat(toxSingleton.activeFriendKey);
         main_act.activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
-        toxSingleton.rightPaneActive = true;
         main_act.pane.closePane();
 
         return rootView;
