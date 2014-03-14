@@ -55,9 +55,11 @@ public class ToxSingleton {
             if(!dataFile.doesFileExist()) {
                 Log.d(TAG, "Data file not found");
                 jTox = new JTox(antoxFriendList, callbackHandler);
+                
             } else {
                 Log.d(TAG, "Data file has been found");
                 jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+
             }
 
             if(UserDetails.username == null)

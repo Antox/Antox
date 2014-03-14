@@ -505,7 +505,7 @@ public class MainActivity extends ActionBarActivity {
         protected Void doInBackground(Void... params) {
             try {
                 // Connect to the web site
-                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").get();
+                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
                 Elements nodeRows = document.getElementsByTag("tr");
 
                 for(Element nodeRow : nodeRows)
