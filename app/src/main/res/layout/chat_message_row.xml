@@ -32,7 +32,31 @@
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginRight="@dimen/margin_medium">
 
-
+                <ImageView
+                    android:id="@+id/message_sent_photo"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"
+                    android:visibility="gone"
+                />
+                <LinearLayout
+                    android:id="@+id/message_audio_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+                    <ImageView
+                        android:id="@+id/message_play_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_play"
+                        />
+                    <SeekBar
+                        android:id="@+id/message_audio_bar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

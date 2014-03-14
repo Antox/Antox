@@ -164,6 +164,9 @@ public class ContactsFragment extends Fragment {
                                 }else{
                                     switch (index){
                                         case 0:
+                                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                            intent.setType("image/* video/* audio/* file/*");
+                                            main_act.startActivityForResult(intent, Constants.SENDFILE_PICKEDFRIEND_CODE);
                                             Log.v("To implement", "" + items[0]);
                                             break;
                                         case 1:

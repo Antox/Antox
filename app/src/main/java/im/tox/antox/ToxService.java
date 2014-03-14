@@ -237,8 +237,7 @@ public class ToxService extends IntentService {
                                 .setSmallIcon(R.drawable.ic_actionbar)
                                 .setContentTitle(getString(R.string.friend_request))
                                 .setContentText(message)
-                                .setAutoCancel(true)
-                                .setDefaults(Notification.DEFAULT_ALL);
+                                .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
 
                 int ID = toxSingleton.friend_requests.size();
                 Intent targetIntent = new Intent(getApplicationContext(), MainActivity.class);
