@@ -22,7 +22,7 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_chat" /> -->
     <FrameLayout
-        android:background="#e5e5e5"
+        android:background="@color/white"
         android:id="@+id/right_pane"
         android:layout_width="350dp"
         android:layout_height="match_parent"
