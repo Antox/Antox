@@ -81,6 +81,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ChatMessagesHolder();
             holder.message = (TextView) row.findViewById(R.id.message_text);
+            holder.alignment = (LinearLayout) row.findViewById(R.id.message_alignment_box);
             holder.layout = (LinearLayout) row.findViewById(R.id.message_text_layout);
             holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
             holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
@@ -97,7 +98,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.time.setText(prettifyTimestamp(chatMessages.time));
 
         if (messages.IsMine()) {
-            holder.message.setGravity(Gravity.RIGHT);
+            holder.alignment.setGravity(Gravity.RIGHT);
             holder.time.setGravity(Gravity.RIGHT);
             holder.layout.setGravity(Gravity.RIGHT);
             holder.row.setGravity(Gravity.RIGHT);
@@ -113,7 +114,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 holder.halfcheck.setVisibility(View.GONE);
             }
         } else {
-            holder.message.setGravity(Gravity.LEFT);
+            holder.alignment.setGravity(Gravity.LEFT);
             holder.time.setGravity(Gravity.LEFT);
             holder.layout.setGravity(Gravity.LEFT);
             holder.row.setGravity(Gravity.LEFT);
@@ -127,6 +128,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         LinearLayout row;
         LinearLayout layout;
         LinearLayout background;
+        LinearLayout alignment;
         TextView message;
         TextView time;
         ImageView check;

@@ -22,7 +22,9 @@
             android:layout_height="match_parent"
             android:background="#ffffff">
             <LinearLayout
+                android:id="@+id/message_alignment_box"
                 android:orientation="vertical"
+                android:gravity="left"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
@@ -35,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/message_text"
-                    android:text="Afdsd dgfkjhadgadg adkfjhadf"
+                    android:text="Afd"
                     android:textSize="14sp" />
                 <LinearLayout
                     android:orientation="horizontal"
