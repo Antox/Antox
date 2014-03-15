@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -302,6 +303,14 @@ public class MainActivity extends ActionBarActivity {
         leftPaneKeyList = new ArrayList<String>();
 
         Message msg;
+
+        LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
+
+        if (friend_requests_list.length == 0 && friends_list.length == 0) {
+            noFriends.setVisibility(View.VISIBLE);
+        } else {
+            noFriends.setVisibility(View.GONE);
+        }
 
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
