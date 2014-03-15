@@ -21,8 +21,8 @@
 
     <!-- Main Activity -->
     <string name="icon_description">Connection Status</string>
-    <string name="main_no_friends">You have no friends</string>
-    <string name="main_try_adding">Why not try adding some?</string>
+    <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
+    <string name="main_try_adding">Get some friends you fucking loser</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
