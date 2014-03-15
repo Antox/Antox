@@ -8,10 +8,11 @@
     <!-- Left side pane. (Master) -->
     <fragment android:id="@+id/fragment_contacts"
         android:name="im.tox.antox.ContactsFragment"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginRight="30dp"
         android:layout_gravity="left"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_leftpane" />
 
     <!-- Right side page. (Slave)
     <fragment android:id="@+id/fragment_chat"
