@@ -23,7 +23,7 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
 
     @Override
     public void execute(AntoxFriend friend, int receipt) {
-        Log.d(TAG, "OnReadReceiptCallback received");
+        Log.d(TAG, "OnReadReceiptCallback received, receipt id = " + receipt);
         Intent intent = new Intent(this.ctx, ToxService.class);
         intent.setAction(Constants.DELIVERY_RECEIPT);
         intent.putExtra("receipt", receipt);

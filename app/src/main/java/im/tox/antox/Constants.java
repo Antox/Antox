@@ -29,6 +29,7 @@ public final class Constants {
     public static final String ACCEPT_FRIEND_REQUEST = "im.tox.antox.ACCEPT_REQUEST";
     public static final String UPDATE_LEFT_PANE = "im.tox.antox.UPDATE_REQUESTS";
     public static final String CONNECTION_STATUS = "im.tox.antox.CONNECTION_STATUS";
+    public static final String SEND_UNSENT_MESSAGES = "im.tox.antox.SEND_UNSENT_MESSAGES";
     public static final String UPDATE = "im.tox.antox.UPDATE";
 
     //All DB Constants

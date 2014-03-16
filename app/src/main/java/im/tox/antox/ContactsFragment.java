@@ -126,7 +126,7 @@ public class ContactsFragment extends Fragment {
                             getResources().getString(R.string.friend_action_block)
                     };
                 }
-                builder.setTitle(main_act.getString(R.string.contacts_actions_on) + item.first)
+                builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
                         .setCancelable(true)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {

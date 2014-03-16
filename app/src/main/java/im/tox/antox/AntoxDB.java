@@ -115,11 +115,43 @@ public class AntoxDB extends SQLiteOpenHelper {
         return messageList;
     }
 
+    public ArrayList<Message> getUnsentMessageList() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Message> messageList = new ArrayList<Message>();
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0 ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int m_id = cursor.getInt(2);
+                Log.d("UNSENT MESAGE ID: ", "" + m_id);
+                String k = cursor.getString(3);
+                String m = cursor.getString(4);
+                boolean outgoing = cursor.getInt(5)>0;
+                boolean received = cursor.getInt(6)>0;
+                boolean read = cursor.getInt(7)>0;
+                boolean sent = cursor.getInt(8)>0;
+                Timestamp time = Timestamp.valueOf(cursor.getString(1));
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return messageList;
+    }
+
+    public void updateUnsentMessage(int m_id) {
+        Log.d("UPDATE UNSENT MESSAGE - ID : ", "" + m_id);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1, " + Constants.COLUMN_NAME_TIMESTAMP + "=datetime('now', 'localtime') WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1");
+
+    }
+
     public String setMessageReceived(int receipt) { //returns public key of who the message was sent to
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt;
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
         db.execSQL(query);
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt;
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
         Cursor cursor = db.rawQuery(selectQuery, null);
         String k = "";
         if (cursor.moveToFirst()) {

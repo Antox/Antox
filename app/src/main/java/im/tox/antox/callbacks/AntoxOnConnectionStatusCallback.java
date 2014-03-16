@@ -34,5 +34,10 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);
+        if (online) {
+            Intent intent = new Intent(this.ctx, ToxService.class);
+            intent.setAction(Constants.SEND_UNSENT_MESSAGES);
+            this.ctx.startService(intent);
+        }
     }
 }

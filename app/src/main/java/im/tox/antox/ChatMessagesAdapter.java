@@ -3,6 +3,7 @@ package im.tox.antox;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 import java.util.ArrayList;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
@@ -28,6 +35,24 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     }
 
     private String prettifyTimestamp(String t) {
+        //Make a copy of t in case of an error.
+        String tCopy = t;
+
+        try {
+            //Set the date format.
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+            //Get the Date in UTC format.
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = dateFormat.parse(t);
+
+            //Adapt the date to the local timestamp.
+            dateFormat.setTimeZone(TimeZone.getDefault());
+            t = dateFormat.format(date).toString();
+        }
+        catch (Exception e) {
+            t = tCopy;
+        }
+
         String output = "";
         String month = "";
         switch (Integer.parseInt(t.substring(5, 7))) {
@@ -88,8 +113,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
             holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
             holder.time = (TextView) row.findViewById(R.id.message_text_date);
-            holder.check = (ImageView) row.findViewById(R.id.chat_row_check);
-            holder.halfcheck = (ImageView) row.findViewById(R.id.chat_row_halfcheck);
+            holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
+            holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
             row.setTag(holder);
         } else {
             holder = (ChatMessagesHolder) row.getTag();
@@ -105,23 +130,24 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.layout.setGravity(Gravity.RIGHT);
             holder.row.setGravity(Gravity.RIGHT);
             if (messages.sent) {
-                holder.check.setVisibility(View.VISIBLE);
+                holder.sent.setVisibility(View.VISIBLE);
                 if (messages.received) {
-                    holder.halfcheck.setVisibility(View.VISIBLE);
+                    holder.sent.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.VISIBLE);
                 } else {
-                    holder.halfcheck.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.GONE);
                 }
             } else {
-                holder.check.setVisibility(View.GONE);
-                holder.halfcheck.setVisibility(View.GONE);
+                holder.sent.setVisibility(View.GONE);
+                holder.received.setVisibility(View.GONE);
             }
         } else {
             holder.alignment.setGravity(Gravity.LEFT);
             holder.time.setGravity(Gravity.LEFT);
             holder.layout.setGravity(Gravity.LEFT);
             holder.row.setGravity(Gravity.LEFT);
-            holder.check.setVisibility(View.GONE);
-            holder.halfcheck.setVisibility(View.GONE);
+            holder.sent.setVisibility(View.GONE);
+            holder.received.setVisibility(View.GONE);
         }
         return row;
     }
@@ -133,8 +159,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         LinearLayout alignment;
         TextView message;
         TextView time;
-        ImageView check;
-        ImageView halfcheck;
+        ImageView sent;
+        ImageView received;
     }
 
 }

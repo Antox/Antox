@@ -51,6 +51,7 @@
     <string name="settings_name_hint">inserisci il tuo nome</string>
     <string name="settings_note_hint">inserisci le tue informazioni personali</string>
     <string name="settings_custom_dht">Impostazioni personalizzate per il server DHT</string>
+    <string name="settings_use_custom_dht">Usa impostazioni personalizzate per il server DHT</string>
     <string name="settings_dht_ip">Indirizzo IP del server DHT (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Porta usata dal server DHT (ex: 33445)</string>
     <string name="settings_dht_key">Chiave pubblica del server DHT (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
@@ -91,7 +92,7 @@
     <string name="friend_action_delete">Rimuovi</string>
     <string name="friend_action_block">Blocca</string>
     <string name="group_action_leave">Lascia Gruppo</string>
-    <string name="contacts_actions_on">Azioni per </string>
+    <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
 
     <!-- Misc -->
