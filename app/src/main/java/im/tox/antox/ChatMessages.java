@@ -1,6 +1,7 @@
 package im.tox.antox;
 
 public class ChatMessages {
+    public int message_id;
     public String message;
     public String time;
     public boolean ownMessage;
@@ -12,8 +13,9 @@ public class ChatMessages {
         super();
     }
 
-    public ChatMessages(String message, String time, boolean ownMessage, boolean received, boolean sent) {
+    public ChatMessages(int message_id,String message, String time, boolean ownMessage, boolean received, boolean sent) {
         super();
+        this.message_id=message_id;
         this.time = time;
         this.message = message;
         this.ownMessage = ownMessage;
