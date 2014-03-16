@@ -124,8 +124,13 @@ public class AddFriendActivity extends ActionBarActivity {
             return false;
         }
         int x = 0;
-        for (int i = 0; i < friendKey.length(); i += 4) {
-            x = x ^ Integer.valueOf(friendKey.substring(i, i + 4), 16);
+        try {
+            for (int i = 0; i < friendKey.length(); i += 4) {
+                x = x ^ Integer.valueOf(friendKey.substring(i, i + 4), 16);
+            }
+        }
+        catch (NumberFormatException e) {
+            return false;
         }
         if (x != 0)
             return false;
