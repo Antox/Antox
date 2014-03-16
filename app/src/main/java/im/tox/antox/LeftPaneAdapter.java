@@ -16,7 +16,11 @@ import android.widget.TextView;
 import im.tox.antox.Constants;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by ollie on 04/03/14.
@@ -126,16 +130,33 @@ public class LeftPaneAdapter extends BaseAdapter {
     }
 
     private String prettyTimestamp(Timestamp t) {
+        String tString = t.toString();
+
+        try {
+            //Set the date format.
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+            //Get the Date in UTC format.
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = dateFormat.parse(tString);
+
+            //Adapt the date to the local timestamp.
+            dateFormat.setTimeZone(TimeZone.getDefault());
+            tString = dateFormat.format(date).toString();
+        }
+        catch (Exception e) {
+            tString = t.toString();
+        }
+
         java.util.Date date= new java.util.Date();
         Timestamp current = new Timestamp(date.getTime());
         String output;
         String month = "";
-        if (current.toString().substring(0,10).equals(t.toString().substring(0,10))){
-            output = t.toString().substring(11,16);
-        } else if (t.toString().substring(0,10).equals("1899-12-31")) {
+        if (current.toString().substring(0,10).equals(tString.substring(0,10))){
+            output = tString.substring(11,16);
+        } else if (tString.substring(0,10).equals("1899-12-31")) {
             output = "";
         } else {
-            switch (Integer.parseInt(t.toString().substring(5,7))) {
+            switch (Integer.parseInt(tString.substring(5,7))) {
                 case 1:
                     month = "Jan";
                     break;
@@ -173,7 +194,7 @@ public class LeftPaneAdapter extends BaseAdapter {
                     month = "Dec";
                     break;
             }
-            output = month + " " + t.toString().substring(8,10);
+            output = month + " " + tString.substring(8,10);
         }
         return output;
     }

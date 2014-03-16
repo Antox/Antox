@@ -3,6 +3,7 @@ package im.tox.antox;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     Context context;
@@ -26,6 +34,24 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     }
 
     private String prettifyTimestamp(String t) {
+        //Make a copy of t in case of an error.
+        String tCopy = t;
+
+        try {
+            //Set the date format.
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+            //Get the Date in UTC format.
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = dateFormat.parse(t);
+
+            //Adapt the date to the local timestamp.
+            dateFormat.setTimeZone(TimeZone.getDefault());
+            t = dateFormat.format(date).toString();
+        }
+        catch (Exception e) {
+            t = tCopy;
+        }
+
         String output = "";
         String month = "";
         switch (Integer.parseInt(t.substring(5, 7))) {
