@@ -67,7 +67,7 @@ public class ChatFragment extends Fragment {
     public void updateChat(ArrayList<Message> messages) {
         Log.d(TAG, "updating chat");
         Log.d(TAG, "chat message size = " + messages.size());
-        ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(0);
+        ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(messages.size());
         for (int i = 0; i<messages.size(); i++) {
             data.add(new ChatMessages(messages.get(i).message_id,messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
         }
