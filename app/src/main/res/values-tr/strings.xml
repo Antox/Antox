@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Hoşgeldiniz</string>
+    <string name="title_activity_add_friend">Arkadaş Ekleyin</string>
+    <string name="title_activity_settings">Ayarlar</string>
+    <string name="title_activity_profile">Profil</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Ayarlar</string>
+    <string name="action_exit">Çıkış</string>
+    <string name="add_friend">Arkadaş Ekleyin</string>
+    <string name="search_friend">Ara</string>
+    <string name="action_profile">Profil</string>
+
+    <!-- Main Activity -->
+    <string name="icon_description">Bağlantı Durumu</string>
+    <string name="main_no_friends">Arkadaşınız yoktur</string>
+    <string name="main_try_adding">Eklemeye ne dersiniz?</string>
+    <string name="main_friend_requests">Arkadaşlık İstekleri</string>
+    <string name="main_friends">Arkadaşlar</string>
+
+
+    <!-- Chat Activity -->
+    <string name="chat_enter_message">İleti gönder</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="about_string">Bu app hala yapım aşamasındadır.</string>
+    <string name="getstarted_string">İstediğiniz kullanıcı adınızı giriniz</string>
+    <string name="developer_string">Geliştiricisi
+ astonex\nirc.freenode.net#tox-dev</string>
+
+    <!-- Settings Activity -->
+    <string name="settings_user_key_title">Kullanıcı anahtarınız</string>
+    <string name="settings_name_hint">isminizi giriniz</string>
+    <string name="settings_note_hint">kisişel notunuzu giriniz</string>
+    <string name="settings_dht_ip">Bootstrap'in IP adresini girin (ör: 192.254.75.98)</string>
+    <string name="settings_dht_port">Bootstrap'in port numarasını girin (ör: 33445)</string>
+    <string name="settings_dht_key">Bootstrap'in ID'sini girin(ör: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Güncelle</string>
+    <string name="settings_updated">Ayarlar Güncellenmiştir</string>
+    <string name="settings_dht_spinner_title">Gelişmiş Ayarlar</string>
+    <string name="settings_status_title">Durumunuzu girin</string>
+    <string name="settings_note_title">Kisişel notunuzu belirleyin</string>
+    <string name="settings_username_title">Kullanıcı adınızı belirleyin</string>
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">arkadaşınızın anahtarını giriniz</string>
+    <string name="addfriend_friend_message">istekle beraber isteğe bağlı göndermek istediğiniz mesaj</string>
+    <string name="addfriend_button">Arkadaş ekleyin</string>
+    <string name="scanqr_button">QR kodu tara</string>
+    <string name="invalid_friend_ID">Geçersiz Arkadaş ID'si</string>
+
+    <!-- Profile Activity -->
+    <string name="share_with">Paylaş</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Uzakta</string>
+    <string name="status_busy">Meşgul</string>
+
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Kabul et</string>
+    <string name="friendrequest_reject">Reddet</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Dosya Gönder</string>
+    <string name="friend_action_delete">Sil</string>
+    <string name="friend_action_block">Engelle</string>
+    <string name="group_action_leave">Gruptan Ayrıl</string>
+    <!-- Misc -->
+
+</resources>
