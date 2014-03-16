@@ -12,13 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     Context context;
     int layoutResourceId;
-    ChatMessages data[] = null;
+    ArrayList<ChatMessages> data = null;
 
     public ChatMessagesAdapter(Context context, int layoutResourceId,
-                               ChatMessages[] data) {
+                               ArrayList<ChatMessages> data) {
         super(context, layoutResourceId, data);
         this.context = context;
         this.layoutResourceId = layoutResourceId;
@@ -93,7 +95,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder = (ChatMessagesHolder) row.getTag();
         }
 
-        ChatMessages chatMessages = data[position];
+        ChatMessages chatMessages = data.get(position);
         holder.message.setText(chatMessages.message);
         holder.time.setText(prettifyTimestamp(chatMessages.time));
 
