@@ -86,8 +86,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
             holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
             holder.time = (TextView) row.findViewById(R.id.message_text_date);
-            holder.check = (ImageView) row.findViewById(R.id.chat_row_check);
-            holder.halfcheck = (ImageView) row.findViewById(R.id.chat_row_halfcheck);
+            holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
+            holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
             row.setTag(holder);
         } else {
             holder = (ChatMessagesHolder) row.getTag();
@@ -103,23 +103,24 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.layout.setGravity(Gravity.RIGHT);
             holder.row.setGravity(Gravity.RIGHT);
             if (messages.sent) {
-                holder.check.setVisibility(View.VISIBLE);
+                holder.sent.setVisibility(View.VISIBLE);
                 if (messages.received) {
-                    holder.halfcheck.setVisibility(View.VISIBLE);
+                    holder.sent.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.VISIBLE);
                 } else {
-                    holder.halfcheck.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.GONE);
                 }
             } else {
-                holder.check.setVisibility(View.GONE);
-                holder.halfcheck.setVisibility(View.GONE);
+                holder.sent.setVisibility(View.GONE);
+                holder.received.setVisibility(View.GONE);
             }
         } else {
             holder.alignment.setGravity(Gravity.LEFT);
             holder.time.setGravity(Gravity.LEFT);
             holder.layout.setGravity(Gravity.LEFT);
             holder.row.setGravity(Gravity.LEFT);
-            holder.check.setVisibility(View.GONE);
-            holder.halfcheck.setVisibility(View.GONE);
+            holder.sent.setVisibility(View.GONE);
+            holder.received.setVisibility(View.GONE);
         }
         return row;
     }
@@ -131,8 +132,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         LinearLayout alignment;
         TextView message;
         TextView time;
-        ImageView check;
-        ImageView halfcheck;
+        ImageView sent;
+        ImageView received;
     }
 
 }

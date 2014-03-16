@@ -80,23 +80,26 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/msg_check"
-                    android:layout_marginTop="0dp"
+                    android:src="@drawable/ic_message_sent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="-2dp"
+                    android:maxHeight="13dp"
+                    android:adjustViewBounds="true"
                     android:layout_marginLeft="4dp"
-                    android:layout_marginBottom="-10dp"
-                    android:layout_marginRight="0dp"
-                    android:id="@+id/chat_row_check"
+                    android:id="@+id/chat_row_sent"
                     android:visibility="visible"
                     android:layout_gravity="top"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/msg_halfcheck"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginLeft="-8dp"
-                    android:layout_marginBottom="-10dp"
-                    android:id="@+id/chat_row_halfcheck"
+                    android:src="@drawable/ic_message_received"
+                    android:layout_marginTop="1dp"
+                    android:maxHeight="13dp"
+                    android:layout_marginBottom="-2dp"
+                    android:adjustViewBounds="true"
+                    android:layout_marginLeft="6dp"
+                    android:id="@+id/chat_row_received"
                     android:visibility="visible"
                     android:layout_gravity="top"/>
                 </LinearLayout>
