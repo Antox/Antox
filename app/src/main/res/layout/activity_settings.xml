@@ -24,7 +24,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Use Custom DHT node settings"
+            android:text="@string/settings_use_custom_dht"
             android:id="@+id/settings_dht_box"
             android:layout_gravity="center_horizontal|left"
             android:checked="false"

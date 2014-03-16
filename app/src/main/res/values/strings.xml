@@ -22,7 +22,7 @@
     <!-- Main Activity -->
     <string name="icon_description">Connection Status</string>
     <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
-    <string name="main_try_adding">Get some friends you fucking loser</string>
+    <string name="main_try_adding">Add some friends to get started</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
@@ -45,6 +45,7 @@
     <string name="about_string">This client is still in pre-alpha.</string>
     <string name="getstarted_string">Enter your desired username</string>
     <string name="settings_custom_dht">Custom DHT node Settings</string>
+    <string name="settings_use_custom_dht">Use Custom DHT node settings</string>
     <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">enter your name</string>
     <string name="settings_note_hint">enter your personal note</string>
@@ -93,7 +94,7 @@
     <string name="friend_action_block">Block</string>
     <string name="group_action_leave">Leave Group</string>
 
-    <string name="contacts_actions_on">Actions on </string>
+    <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
 
     <!--  Misc -->
