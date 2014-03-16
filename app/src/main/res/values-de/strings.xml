@@ -25,6 +25,9 @@
     <string name="main_try_adding">Warum fügst du nicht welche hinzu?</string>
     <string name="main_friend_requests">Freundschaftsanfragen</string>
     <string name="main_friends">Freunde</string>
+    <string name="main_no_internet">Keine Internetverbindung</string>
+    <string name="main_not_connected">Du bist nicht mit dem Internet verbunden</string>
+    <string name="main_node_list_download_error">Fehler beim Herunterladen der Node List</string>
 
     <!-- About Activity -->
     <string name="about_details">Antox ist ein Android Client für Tox</string>
@@ -41,9 +44,8 @@
     <!-- Welcome Activity -->
     <string name="about_string">Dieses Programm ist noch Pre-Alpha.</string>
     <string name="getstarted_string">Gewünschten Benutzernamen eingeben</string>
-    <string name="developer_string">Entwickelt von astonex\nirc.freenode.net#tox-dev</string>
-
-    <!-- Settings Activity -->
+    <string name="settings_custom_dht">Erweiterte DHT Einstellungen</string>
+    <string name="settings_use_custom_dht">Erweiterte DHT Einstellungen benutzen</string>
     <string name="settings_user_key_title">Deine Tox ID</string>
     <string name="settings_name_hint">Gib deinen Namen ein</string>
     <string name="settings_note_hint">Gib eine Notiz ein</string>
@@ -56,11 +58,16 @@
     <string name="settings_status_title">Setze deinen Status</string>
     <string name="settings_note_title">Setze deine Notiz</string>
     <string name="settings_username_title">Wähle deinen Benutzernamen</string>
+    <string name="developer_string">Entwickelt von astonex\nirc.freenode.net#tox-dev</string>
+    <string name="welcome_must_select_username">Du musst einen Benutzernamen eingeben</string>
+
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID eines Freundes eingeben</string>
     <string name="addfriend_friend_message">Optionale Nachricht eingeben</string>
     <string name="addfriend_button">Freund hinzufügen</string>
+    <string name="addfriend_friend_added">Freund hinzugefügt</string>
+    <string name="addfriend_friend_exists">Freund existiert bereits</string>
     <string name="scanqr_button">QR-Code scannen</string>
     <string name="invalid_friend_ID">Ungültige Tox ID</string>
 
@@ -75,12 +82,25 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Akzeptieren</string>
     <string name="friendrequest_reject">Ablehnen</string>
+    <string name="friendrequest_accepted">Freundesanfrage akzeptiert</string>
+    <string name="friendrequest_deleted">Freundesanfrage gelöscht</string>
+    <string name="friendrequest">Freundesanfrage</string>
+    <string name="friendrequest_recieved">Freundesanfrage erhalten</string>
+    <string name="friend_request">Neue Freundesanfrage</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Datei senden</string>
     <string name="friend_action_delete">Löschen</string>
     <string name="friend_action_block">Blockieren</string>
     <string name="group_action_leave">Gruppe verlassen</string>
+
+    <string name="contacts_actions_on">Aktionen </string>
+    <string name="contacts_clear_saved_logs">Möchtest du den Chatverlauf ebenfalls löschen?</string>
+
     <!--  Misc -->
+    <string name="button_confirm">OK</string>
+    <string name="button_cancel">Abbrechen</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
 
 </resources>
