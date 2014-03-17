@@ -250,6 +250,7 @@ public class ContactsFragment extends Fragment {
                                 db.deleteChat(key);
                                 db.deleteFriend(key);
                                 db.close();
+                                clearChat(key);
                                 main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
@@ -264,6 +265,7 @@ public class ContactsFragment extends Fragment {
                                 AntoxDB db = new AntoxDB(getActivity());
                                 db.deleteFriend(key);
                                 db.close();
+                                clearChat(key);
                                 main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND);
@@ -273,5 +275,15 @@ public class ContactsFragment extends Fragment {
                         }
                 );
         builder.show();
+    }
+    public void clearChat(String key)
+    {
+        if(key.equals(toxSingleton.activeFriendKey))//check if the deleted friend was the active friend
+        {
+            toxSingleton.activeFriendKey=null;
+            getFragmentManager().beginTransaction().
+                    remove(getFragmentManager().findFragmentById(R.id.right_pane)).commit();
+            main_act.activeTitle="Antox";
+        }
     }
 }
