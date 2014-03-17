@@ -31,7 +31,7 @@
 
     <!-- About Activity -->
     <string name="about_details">Antox, Tox için bir Android uygulamasıdir</string>
-    <string name="about_bugs">Hata bildirmek için, lütfen Github sayfamıza ziyaret edin ve \"issues\"'e tıklayın.</string>
+    <string name="about_bugs">Hata bildirmek için, lütfen Github sayfamıza ziyaret edin ve \"issues\"\'e tıklayın.</string>
     <string name="about_github_url">https://github.com/Astonex/Antox</string>
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
@@ -51,7 +51,7 @@
     <string name="settings_note_hint">kisişel notunuzu giriniz</string>
     <string name="settings_dht_ip">Bootstrap\'in IP adresini girin (ör: 192.254.75.98)</string>
     <string name="settings_dht_port">Bootstrap\'in port numarasını girin (ör: 33445)</string>
-    <string name="settings_dht_key">Bootstrap\'in ID'sini girin(ör: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_dht_key">Bootstrap\'in ID\'sini girin(ör: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Güncelle</string>
     <string name="settings_updated">Ayarlar Güncellenmiştir</string>
     <string name="settings_dht_spinner_title">Gelişmiş Ayarlar</string>
