@@ -234,6 +234,13 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteMessage(int messageId)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_MESSAGE_ID + "='" + messageId + "'", null);
+        db.close();
+    }
+
     public void updateFriendName(String key, String newName) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();

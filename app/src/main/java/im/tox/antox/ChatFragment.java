@@ -1,6 +1,8 @@
 package im.tox.antox;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -64,9 +67,9 @@ public class ChatFragment extends Fragment {
     public void updateChat(ArrayList<Message> messages) {
         Log.d(TAG, "updating chat");
         Log.d(TAG, "chat message size = " + messages.size());
-        ChatMessages data[] = new ChatMessages[messages.size()];
+        ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(messages.size());
         for (int i = 0; i<messages.size(); i++) {
-            data[i] = new ChatMessages(messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent);
+            data.add(new ChatMessages(messages.get(i).message_id,messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
         }
         adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, data);
         chatListView.setAdapter(adapter);
@@ -80,12 +83,39 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-
-        adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, new ChatMessages[0]);
+        main_act = (MainActivity) getActivity();
+        adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, new ArrayList<ChatMessages>(0));
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
+        chatListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final CharSequence items[] = new CharSequence[]{"Delete"};//copy forward etc can be added here
+                final ChatMessages item = (ChatMessages) parent.getAdapter().getItem(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
+                builder.setCancelable(true)
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int index) {
+
+                                    switch (index){
+                                        case 0:
+                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                                            db.deleteMessage(item.message_id);
+                                            db.close();
+                                            ChatMessagesAdapter chatAdapter = (ChatMessagesAdapter)chatListView.getAdapter();
+                                            chatAdapter.data.remove(item);
+                                            chatAdapter.notifyDataSetChanged();
+                                            break;
+                                    }
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                return true;
+            }
+        });
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {

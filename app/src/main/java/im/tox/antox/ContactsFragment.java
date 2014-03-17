@@ -1,9 +1,11 @@
 package im.tox.antox;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -93,7 +95,38 @@ public class ContactsFragment extends Fragment {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
                         if (type == Constants.TYPE_CONTACT) {
-                            onChangeContact(position);
+                            if (toxSingleton.friendsList.all().size() == 0) {
+                                //Final copy of position so it can be used in the inner class.
+                                final int positionCopy = position;
+                                //ProgressDialog to alert the user that the data is not ready.
+                                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
+                                        "Loading...", "Please wait while we load your data", false, false);
+                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+                                //Build an async task that will cancel the dialog once the data is finished loading.
+                                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(String... strings) {
+                                        while (toxSingleton.friendsList.all().size() == 0) {
+                                            //while there are no friends, do nothing
+                                        }
+
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(String s) {
+                                      //When the friend list is populated then the dialog is canceled and the
+                                      //right panel can be loaded.
+                                      progressDialog.dismiss();
+                                      onChangeContact(positionCopy);
+                                    }
+                                };
+
+                                asyncTask.execute();
+                            } else {
+                                onChangeContact(position);
+                            }
                         } else if (type == Constants.TYPE_FRIEND_REQUEST) {
 
                             String key = item.first;
@@ -217,6 +250,7 @@ public class ContactsFragment extends Fragment {
                                 db.deleteChat(key);
                                 db.deleteFriend(key);
                                 db.close();
+                                clearChat(key);
                                 main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
@@ -231,6 +265,7 @@ public class ContactsFragment extends Fragment {
                                 AntoxDB db = new AntoxDB(getActivity());
                                 db.deleteFriend(key);
                                 db.close();
+                                clearChat(key);
                                 main_act.updateLeftPane();
                                 Intent intent = new Intent(getActivity(), ToxService.class);
                                 intent.setAction(Constants.DELETE_FRIEND);
@@ -240,5 +275,15 @@ public class ContactsFragment extends Fragment {
                         }
                 );
         builder.show();
+    }
+    public void clearChat(String key)
+    {
+        if(key.equals(toxSingleton.activeFriendKey))//check if the deleted friend was the active friend
+        {
+            toxSingleton.activeFriendKey=null;
+            getFragmentManager().beginTransaction().
+                    remove(getFragmentManager().findFragmentById(R.id.right_pane)).commit();
+            main_act.activeTitle="Antox";
+        }
     }
 }
