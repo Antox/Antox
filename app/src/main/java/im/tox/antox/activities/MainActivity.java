@@ -452,6 +452,7 @@ public class MainActivity extends ActionBarActivity {
                     addFriend();
                 return true;
             case R.id.search_friend:
+                getSupportActionBar().setIcon(R.drawable.ic_actionbar);
                 return true;
             case android.R.id.home:
                 pane.openPane();
