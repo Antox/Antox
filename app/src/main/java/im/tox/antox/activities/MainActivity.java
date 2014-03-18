@@ -139,6 +139,10 @@ public class MainActivity extends ActionBarActivity {
 
                 } else if (action == Constants.UPDATE) {
                     updateLeftPane();
+                    if (toxSingleton.rightPaneActive) {
+                        activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
+                        setTitle(activeTitle);
+                    }
                 }
             }
         }
