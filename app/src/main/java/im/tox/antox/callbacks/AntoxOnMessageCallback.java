@@ -1,8 +1,8 @@
 package im.tox.antox.callbacks;
 
-import im.tox.antox.Constants;
-import im.tox.antox.AntoxFriend;
-import im.tox.antox.ToxService;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.AntoxFriend;
+import im.tox.antox.tox.ToxService;
 import im.tox.jtoxcore.callbacks.OnMessageCallback;
 import android.content.Context;
 import android.content.Intent;
