@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:background="@color/white">
 
-    <fragment android:name="im.tox.antox.ChatFragment"
+    <fragment android:name="im.tox.antox.fragments.ChatFragment"
         android:id="@+id/chatMessages"
         android:layout_weight="1"
         android:layout_width="0dp"
