@@ -139,7 +139,9 @@ public class ChatFragment extends Fragment {
         main_act.chat = this;
         toxSingleton.rightPaneActive = true;
         main_act.updateChat(toxSingleton.activeFriendKey);
-        if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName() == null) {
+        if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey) == null) {
+            main_act.activeTitle = "Toxer";
+        } else if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName() == null) {
             if (toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getId() == null) {
                 main_act.activeTitle = "Toxer";
             }
