@@ -34,7 +34,6 @@ public class ToxService extends IntentService {
     private static final String TAG = "im.tox.antox.tox.ToxService";
     private ToxSingleton toxSingleton;
 
-
     public ToxService() {
         super("ToxService");
     }
@@ -222,7 +221,8 @@ public class ToxService extends IntentService {
             String message = intent.getStringExtra("message");
             /* Send message */
             ToxFriend friend = null;
-            int id = -1;
+            Random generator = new Random();
+            int id = generator.nextInt();
             boolean sendingSucceeded = true;
             try {
                 friend = toxSingleton.friendsList.getById(key);
@@ -232,8 +232,6 @@ public class ToxService extends IntentService {
             try {
                 if (friend != null) {
                     Log.d(TAG, "Sending message to " + friend.getName());
-                    Random generator = new Random();
-                    id = generator.nextInt();
                     toxSingleton.jTox.sendMessage(friend, message, id);
                 }
             } catch (ToxException e) {
@@ -251,7 +249,7 @@ public class ToxService extends IntentService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             } else {
                 /* Add message to chatlog */
-                toxSingleton.mDbHelper.addMessage(-1, key, message, true, false, false, false);
+                toxSingleton.mDbHelper.addMessage(id, key, message, true, false, false, false);
             /* Broadcast to update UI */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Random;
 
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
@@ -146,7 +147,14 @@ public class AntoxDB extends SQLiteOpenHelper {
     public void updateUnsentMessage(int m_id) {
         Log.d("UPDATE UNSENT MESSAGE - ID : ", "" + m_id);
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1, " + Constants.COLUMN_NAME_TIMESTAMP + "=datetime('now', 'localtime') WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1");
+        Random generator = new Random();
+        db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET "
+                + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1, "
+                + Constants.COLUMN_NAME_MESSAGE_ID + "=" + generator.nextInt() + ", "
+                + Constants.COLUMN_NAME_TIMESTAMP + "=datetime('now') WHERE "
+                + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND "
+                + Constants.COLUMN_NAME_IS_OUTGOING + "=1" + " AND "
+                + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0");
 
     }
 
