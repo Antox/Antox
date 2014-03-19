@@ -26,6 +26,9 @@ public class FriendRequestFragment extends Fragment {
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
+    public FriendRequestFragment() {
+
+    }
 
     public FriendRequestFragment(String key, String message) {
         this.key = key;
