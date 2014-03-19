@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
@@ -186,6 +187,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Fix for an android 4.1.x bug */
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+            );
+        }
+
         Log.i(TAG, "onCreate");
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
