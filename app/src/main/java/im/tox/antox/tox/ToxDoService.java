@@ -165,7 +165,7 @@ public class ToxDoService extends IntentService {
                         toxSingleton.jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                 Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
                         DhtNode.connected = true;
-
+                        Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
                     }
 
                 } catch (UnknownHostException e) {
