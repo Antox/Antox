@@ -38,6 +38,9 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -576,6 +579,52 @@ public class MainActivity extends ActionBarActivity {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            Log.d(TAG, "About to ping servers...");
+            /**
+            * Ping servers to find quickest connection
+            */
+            long shortestTime = 99999;
+            int pos = -1;
+            Socket socket = null;
+            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
+            for(int i = 0;i < DhtNode.ipv4.size(); i++) {
+                Log.d(TAG, "i = " + i);
+                try {
+                    long currentTime = System.currentTimeMillis();
+                    socket = new Socket(DhtNode.ipv4.get(i), 33445);
+                    long elapsedTime = System.currentTimeMillis() - currentTime;
+                    Log.d(TAG, "Elapsed time: " + elapsedTime);
+                    if (elapsedTime < shortestTime) {
+                        shortestTime = elapsedTime;
+                        pos = i;
+                        Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    e.printStackTrace();
+                }
+            }
+
+            if(socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+             /* Move quickest node to front of list */
+            if(pos != -1) {
+                DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
+                DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
+                DhtNode.port.add(0, DhtNode.port.get(pos));
+                DhtNode.key.add(0, DhtNode.key.get(pos));
+                DhtNode.owner.add(0, DhtNode.owner.get(pos));
+                DhtNode.location.add(0, DhtNode.location.get(pos));
+                Log.d(TAG, "DHT Nodes have been sorted");
             }
             return null;
         }
