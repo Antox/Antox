@@ -593,10 +593,10 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
-                    socket = new Socket(DhtNode.ipv4.get(i), 33445);
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(500);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
                     Log.d(TAG, "Elapsed time: " + elapsedTime);
-                    if (elapsedTime < shortestTime) {
+                    if (reachable && elapsedTime < shortestTime) {
                         shortestTime = elapsedTime;
                         pos = i;
                         Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
