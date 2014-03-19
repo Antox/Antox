@@ -15,6 +15,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    lintOptions {
+        abortOnError false
+        absolutePaths false
+        lintConfig file("lint.xml")
+    }
 }
 
 dependencies {
