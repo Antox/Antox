@@ -8,11 +8,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -25,18 +26,19 @@
         android:icon="@drawable/ic_launcher"
         android:logo="@drawable/ic_actionbar"
         android:label="@string/app_name"
-        android:theme="@style/CustomActionBarTheme">
+        android:theme="@style/CustomActionBarTheme"
+        android:hardwareAccelerated="false">
 
         <service
-            android:name=".ToxService"
+            android:name=".tox.ToxService"
             android:exported="false" />
 
         <service
-            android:name=".ToxDoService"
+            android:name=".tox.ToxDoService"
             android:exported="false" />
 
         <activity
-            android:name="im.tox.antox.MainActivity"
+            android:name="im.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
             <intent-filter>
@@ -45,34 +47,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="im.tox.antox.SettingsActivity"
+            android:name="im.tox.antox.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
 
-            android:parentActivityName="im.tox.antox.MainActivity">
+            android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
-            android:name="im.tox.antox.ProfileActivity"
+            android:name="im.tox.antox.activities.ProfileActivity"
             android:label="@string/title_activity_profile"
 
-            android:parentActivityName="im.tox.antox.MainActivity">
+            android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
-            android:name="im.tox.antox.AboutActivity"
+            android:name="im.tox.antox.activities.AboutActivity"
             android:label="@string/title_activity_about"
 
-            android:parentActivityName="im.tox.antox.MainActivity">
+            android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.MainActivity" />
         </activity>
         <activity
-            android:name="im.tox.antox.WelcomeActivity"
+            android:name="im.tox.antox.activities.WelcomeActivity"
 
             android:label="@string/title_activity_welcome">
             <!--android:parentActivityName="im.tox.antox.MainActivity">
@@ -81,9 +83,9 @@
                 android:value="im.tox.antox.MainActivity"/>-->
         </activity>
         <activity
-            android:name="im.tox.antox.AddFriendActivity"
+            android:name="im.tox.antox.activities.AddFriendActivity"
             android:label="@string/title_activity_add_friend"
-            android:parentActivityName="im.tox.antox.MainActivity">
+            android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.MainActivity" />
