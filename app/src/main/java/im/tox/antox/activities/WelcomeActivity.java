@@ -64,11 +64,6 @@ public class WelcomeActivity extends ActionBarActivity {
             UserDetails.username = usernameText;
             UserDetails.note = "";
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-            Context context = getApplicationContext();
-            CharSequence text = "Your details have been sent to the NSA";
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
 
 		/* Save the fact the user has seen the welcome message */
             SharedPreferences.Editor editorMain;
