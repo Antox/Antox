@@ -719,6 +719,7 @@ public class MainActivity extends ActionBarActivity {
             af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);
             toxSingleton.rightPaneActive =false;
+            toxSingleton.leftPaneActive = true;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             /* This is causing a null pointer exception */
