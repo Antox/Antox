@@ -1,6 +1,5 @@
 package im.tox.antox.activities;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -486,8 +485,6 @@ public class MainActivity extends ActionBarActivity {
         Log.v("Add friend to group method","To implement");
     }
 
-
-    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
