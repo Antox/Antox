@@ -625,6 +625,7 @@ public class MainActivity extends ActionBarActivity {
                 DhtNode.owner.add(0, DhtNode.owner.get(pos));
                 DhtNode.location.add(0, DhtNode.location.get(pos));
                 Log.d(TAG, "DHT Nodes have been sorted");
+                DhtNode.sorted = true;
             }
             return null;
         }
@@ -651,6 +652,13 @@ public class MainActivity extends ActionBarActivity {
              */
             if(!DhtNode.connected)
             {
+                Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
+                restart.setAction(Constants.START_TOX);
+                getApplicationContext().startService(restart);
+            }
+
+            /* Restart intent if it was connected before nodes were sorted */
+            if(DhtNode.connected && DhtNode.sorted == false) {
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
