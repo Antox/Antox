@@ -3,6 +3,8 @@
 
 Antox is an Android client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. Once ready, Antox will be available on Google Play and on F-Droid.
 
+[![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
+
 ###Want to get Antox on Google Play?
 1. Join the Google+ Alpha testing page <a href="https://plus.google.com/communities/112302171077600707137">here</a>.
 2. Join the Google Play Alpha group <a href="https://play.google.com/apps/testing/im.tox.antox">here</a>
