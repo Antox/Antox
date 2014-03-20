@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Welkom</string>
+    <string name="title_activity_add_friend">Voeg vriend toe</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="title_activity_profile">Profiel</string>
+    <string name="title_activity_about">Over</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Instellingen</string>
+    <string name="action_exit">Exit</string>
+    <string name="add_friend">Voeg vriend toe</string>
+    <string name="search_friend">Zoek</string>
+    <string name="action_profile">Profiel</string>
+    <string name="action_about">Over</string>
+    <string name="add_to_group">Voeg toe aan groep</string>
+
+    <!-- Main Activity -->
+    <string name="icon_description">Verbindingsstatus</string>
+    <string name="main_no_friends">Je hebt geen vrienden</string>
+    <string name="main_try_adding">Voeg wat vrienden toe om te beginnen</string>
+    <string name="main_friend_requests">Vriendschapsverzoeken</string>
+    <string name="main_friends">Vrienden</string>
+    <string name="main_no_internet">Geen internetverbinding</string>
+    <string name="main_not_connected">Niet verbonden met internet</string>
+    <string name="main_node_list_download_error">Kan nodelijst niet verkrijgen</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox is een Android client voor Tox</string>
+    <string name="about_bugs">Geef bugs door op GitHub, onder \"Issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">We zitten in #tox-dev op Freenode</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Verstuur bericht</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="about_string">Deze client is nog in een pre-alpha stadium.</string>
+    <string name="getstarted_string">Voer gewenste nickname in</string>
+    <string name="settings_custom_dht">Aangepaste DHT-node-instellingen</string>
+    <string name="settings_use_custom_dht">Gebruik aangepaste DHT-node-instellingen</string>
+    <string name="settings_user_key_title">Je TOX ID</string>
+    <string name="settings_name_hint">voer naam in</string>
+    <string name="settings_note_hint">voer hint in</string>
+    <string name="settings_dht_ip">IP-adres van een bootstrap (bijv: 192.254.75.98)</string>
+    <string name="settings_dht_port">Bootstrappoortnummer (bijv: 33445)</string>
+    <string name="settings_dht_key">Public Key-addres van een bootstrap (bijv: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Update</string>
+    <string name="settings_updated">Je instellingen zijn geupdatet</string>
+    <string name="settings_dht_spinner_title">Geadvanceerde instellingen</string>
+    <string name="settings_status_title">Stel status in</string>
+    <string name="settings_note_title">Stel persoonlijk bericht in</string>
+    <string name="settings_username_title">Stel gebruikersnaam in</string>
+    <string name="developer_string">Ontwikkeld door astonex &amp; co.</string>
+    <string name="welcome_must_select_username">Kies een gebruikersnaam</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Je vriend\'s ID</string>
+    <string name="addfriend_friend_message">Optioneel bericht</string>
+    <string name="addfriend_button">Voeg toe</string>
+    <string name="addfriend_friend_added">Toegevoegd aan vrienden</string>
+    <string name="addfriend_friend_exists">Is reeds toegevoegd</string>
+    <string name="scanqr_button">Scan een QR code</string>
+    <string name="invalid_friend_ID">Ongeldig ID</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Deel met</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Afwezig</string>
+    <string name="status_busy">Bezig</string>
+    <string name="profile_updated">Profiel is geupdated</string>
+
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Accepteer</string>
+    <string name="friendrequest_reject">Weiger</string>
+    <string name="friendrequest_accepted">Vriendsschapsverzoek geaccepteerd</string>
+    <string name="friendrequest_deleted">Vriendschapsverzoek verwijderd</string>
+    <string name="friendrequest">Vriendschapsverzoek</string>
+    <string name="friendrequest_recieved">Nieuw vriendschapsverzoek ontvangen</string>
+    <string name="friend_request">Nieuw vriendschapsverzoek</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Verstuur bestand</string>
+    <string name="friend_action_delete">Verwijder</string>
+    <string name="friend_action_block">Blokkeer</string>
+    <string name="group_action_leave">Verlaat groep</string>
+
+    <string name="contacts_actions_on">Acties aan</string>
+    <string name="contacts_clear_saved_logs">Moeten de opgeslagen chatlogs meeverwijderd worden?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Bevestig</string>
+    <string name="button_cancel">Annuleer</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nee</string>
+
+</resources>

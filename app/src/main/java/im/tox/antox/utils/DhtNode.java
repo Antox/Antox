@@ -15,4 +15,5 @@ public final class DhtNode {
     public static ArrayList<String> location = new ArrayList<String>();
     public static int counter = 0;
     public static boolean connected = false;
+    public static boolean sorted = false;
 }

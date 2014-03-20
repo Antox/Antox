@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.preview.support.wearable.notifications.*;
+import android.preview.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
@@ -65,9 +67,9 @@ public class ToxService extends IntentService {
                     toxSingleton.jTox.setName(newSettings[0]);
 
                 if (!newSettings[1].equals("")) {
-                    if (newSettings[1].equals("away"))
+                    if (newSettings[1].equals("Away"))
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_AWAY);
-                    else if (newSettings[1].equals("busy"))
+                    else if (newSettings[1].equals("Busy"))
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
                     else
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_NONE);

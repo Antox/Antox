@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,6 +51,16 @@ public class ProfileActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Fix for an android 4.1.x bug */
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+            );
+        }
+
         setContentView(R.layout.activity_profile);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
@@ -183,11 +194,11 @@ public class ProfileActivity extends ActionBarActivity {
             updatedSettings[2] = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        if (statusSpinner.getSelectedItem().toString().equals("online"))
+        if (statusSpinner.getSelectedItem().toString().equals("Online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (statusSpinner.getSelectedItem().toString().equals("away"))
+        if (statusSpinner.getSelectedItem().toString().equals("Away"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString().equals("busy"))
+        if (statusSpinner.getSelectedItem().toString().equals("Busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
         updatedSettings[1] = statusSpinner.getSelectedItem().toString();

@@ -1,6 +1,5 @@
 package im.tox.antox.activities;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.LinearLayout;
@@ -37,6 +37,9 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -139,6 +142,10 @@ public class MainActivity extends ActionBarActivity {
 
                 } else if (action == Constants.UPDATE) {
                     updateLeftPane();
+                    if (toxSingleton.rightPaneActive) {
+                        activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
+                        setTitle(activeTitle);
+                    }
                 }
             }
         }
@@ -182,6 +189,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Fix for an android 4.1.x bug */
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+            );
+        }
+
         Log.i(TAG, "onCreate");
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
@@ -418,7 +435,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onPause");
         tempRightPaneActive = toxSingleton.rightPaneActive;
         toxSingleton.rightPaneActive = false;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         toxSingleton.leftPaneActive = false;
         super.onPause();
     }
@@ -468,8 +485,6 @@ public class MainActivity extends ActionBarActivity {
         Log.v("Add friend to group method","To implement");
     }
 
-
-    @SuppressLint("NewApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -562,6 +577,53 @@ public class MainActivity extends ActionBarActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            Log.d(TAG, "About to ping servers...");
+            /**
+            * Ping servers to find quickest connection
+            */
+            long shortestTime = 99999;
+            int pos = -1;
+            Socket socket = null;
+            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
+            for(int i = 0;i < DhtNode.ipv4.size(); i++) {
+                Log.d(TAG, "i = " + i);
+                try {
+                    long currentTime = System.currentTimeMillis();
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(500);
+                    long elapsedTime = System.currentTimeMillis() - currentTime;
+                    Log.d(TAG, "Elapsed time: " + elapsedTime);
+                    if (reachable && elapsedTime < shortestTime) {
+                        shortestTime = elapsedTime;
+                        pos = i;
+                        Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    e.printStackTrace();
+                }
+            }
+
+            if(socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+             /* Move quickest node to front of list */
+            if(pos != -1) {
+                DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
+                DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
+                DhtNode.port.add(0, DhtNode.port.get(pos));
+                DhtNode.key.add(0, DhtNode.key.get(pos));
+                DhtNode.owner.add(0, DhtNode.owner.get(pos));
+                DhtNode.location.add(0, DhtNode.location.get(pos));
+                Log.d(TAG, "DHT Nodes have been sorted");
+                DhtNode.sorted = true;
+            }
             return null;
         }
 
@@ -587,6 +649,13 @@ public class MainActivity extends ActionBarActivity {
              */
             if(!DhtNode.connected)
             {
+                Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
+                restart.setAction(Constants.START_TOX);
+                getApplicationContext().startService(restart);
+            }
+
+            /* Restart intent if it was connected before nodes were sorted */
+            if(DhtNode.connected && DhtNode.sorted == false) {
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
@@ -636,6 +705,9 @@ public class MainActivity extends ActionBarActivity {
             toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
             toxSingleton.leftPaneActive = false;
+            if(toxSingleton.activeFriendKey!=null){
+                updateChat(toxSingleton.activeFriendKey);
+            }
             clearUselessNotifications();
         }
 
@@ -647,6 +719,7 @@ public class MainActivity extends ActionBarActivity {
             af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);
             toxSingleton.rightPaneActive =false;
+            toxSingleton.leftPaneActive = true;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             /* This is causing a null pointer exception */

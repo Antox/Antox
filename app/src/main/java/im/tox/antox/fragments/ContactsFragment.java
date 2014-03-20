@@ -164,9 +164,8 @@ public class ContactsFragment extends Fragment {
                     };
                 }else{
                     items= new CharSequence[]{
-                            getResources().getString(R.string.friend_action_sendfile),
-                            isGroupChat ? getResources().getString(R.string.group_action_leave) : getResources().getString(R.string.friend_action_delete),
-                            getResources().getString(R.string.friend_action_block),getResources().getString(R.string.friend_action_deletechat)
+                            getResources().getString(R.string.friend_action_delete),
+                            getResources().getString(R.string.friend_action_deletechat)
                     };
                 }
                 builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
@@ -207,12 +206,6 @@ public class ContactsFragment extends Fragment {
                                 }else{
                                     switch (index){
                                         case 0:
-                                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                                            intent.setType("image/* video/* audio/* file/*");
-                                            main_act.startActivityForResult(intent, Constants.SENDFILE_PICKEDFRIEND_CODE);
-                                            Log.v("To implement", "" + items[0]);
-                                            break;
-                                        case 1:
                                             ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
                                             //Get friend key
                                             String key = "";
@@ -228,10 +221,7 @@ public class ContactsFragment extends Fragment {
                                                 showAlertDialog(getActivity(),key);
                                             }
                                             break;
-                                        case 2:
-                                            Log.v("To implement", "" + items[2]);
-                                            break;
-                                        case 3:
+                                        case 1:
                                             ArrayList<Friend> tmp1 = ((MainActivity)getActivity()).friendList;
                                             //Get friend key
                                             String key1 = "";

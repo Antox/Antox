@@ -94,7 +94,7 @@
     <string name="friend_action_block">Blockieren</string>
     <string name="group_action_leave">Gruppe verlassen</string>
 
-    <string name="contacts_actions_on">Aktionen </string>
+    <string name="contacts_actions_on">Aktionen für</string>
     <string name="contacts_clear_saved_logs">Möchtest du den Chatverlauf ebenfalls löschen?</string>
 
     <!--  Misc -->
