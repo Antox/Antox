@@ -165,6 +165,7 @@ public class ContactsFragment extends Fragment {
                 }else{
                     items= new CharSequence[]{
                             getResources().getString(R.string.friend_action_delete),
+                            getResources().getString(R.string.friend_action_deletechat)
                     };
                 }
                 builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
@@ -219,6 +220,22 @@ public class ContactsFragment extends Fragment {
                                             if (!key.equals("")) {
                                                 showAlertDialog(getActivity(),key);
                                             }
+                                            break;
+                                        case 1:
+                                            ArrayList<Friend> tmp1 = ((MainActivity)getActivity()).friendList;
+                                            //Get friend key
+                                            String key1 = "";
+                                            for(int i = 0; i < tmp1.size(); i++) {
+                                                if(item.first.equals(tmp1.get(i).friendName)) {
+                                                    key1 = tmp1.get(i).friendKey;
+                                                    break;
+                                                }
+                                            }
+
+                                            AntoxDB db = new AntoxDB(getActivity());
+                                            db.deleteChat(key1);
+                                            main_act.updateLeftPane();
+                                            clearChat(key1);
                                             break;
                                     }
                                 }
