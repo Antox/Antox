@@ -90,7 +90,7 @@
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Send File</string>
-    <string name="friend_action_delete">Delete</string>
+    <string name="friend_action_delete">Remove Friend</string>
     <string name="friend_action_block">Block</string>
     <string name="group_action_leave">Leave Group</string>
 
