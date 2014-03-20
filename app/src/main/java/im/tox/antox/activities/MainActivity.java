@@ -435,7 +435,7 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onPause");
         tempRightPaneActive = toxSingleton.rightPaneActive;
         toxSingleton.rightPaneActive = false;
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         toxSingleton.leftPaneActive = false;
         super.onPause();
     }
