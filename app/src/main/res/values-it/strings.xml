@@ -89,7 +89,7 @@
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Invia File</string>
-    <string name="friend_action_delete">Rimuovi</string>
+    <string name="friend_action_delete">Rimuovi Amico</string>
     <string name="friend_action_block">Blocca</string>
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
