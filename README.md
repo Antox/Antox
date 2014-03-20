@@ -18,6 +18,7 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 | Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4            |
 | Motorola | Moto G                | Android 4.4.2            |
 | LG       | Nexus 5               | Android 4.4.2            |
+| LG       | Motion 4G             | Android 4.0.4            |
 | HTC      | One                   | Android 4.4.2            |
 
 ###Getting Started With Antox
