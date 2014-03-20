@@ -705,6 +705,9 @@ public class MainActivity extends ActionBarActivity {
             toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
             toxSingleton.leftPaneActive = false;
+            if(toxSingleton.activeFriendKey!=null){
+                updateChat(toxSingleton.activeFriendKey);
+            }
             clearUselessNotifications();
         }
 
