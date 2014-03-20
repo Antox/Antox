@@ -166,7 +166,7 @@ public class ContactsFragment extends Fragment {
                     items= new CharSequence[]{
                             getResources().getString(R.string.friend_action_sendfile),
                             isGroupChat ? getResources().getString(R.string.group_action_leave) : getResources().getString(R.string.friend_action_delete),
-                            getResources().getString(R.string.friend_action_block)
+                            getResources().getString(R.string.friend_action_block),getResources().getString(R.string.friend_action_deletechat)
                     };
                 }
                 builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
@@ -230,6 +230,22 @@ public class ContactsFragment extends Fragment {
                                             break;
                                         case 2:
                                             Log.v("To implement", "" + items[2]);
+                                            break;
+                                        case 3:
+                                            ArrayList<Friend> tmp1 = ((MainActivity)getActivity()).friendList;
+                                            //Get friend key
+                                            String key1 = "";
+                                            for(int i = 0; i < tmp1.size(); i++) {
+                                                if(item.first.equals(tmp1.get(i).friendName)) {
+                                                    key1 = tmp1.get(i).friendKey;
+                                                    break;
+                                                }
+                                            }
+
+                                            AntoxDB db = new AntoxDB(getActivity());
+                                            db.deleteChat(key1);
+                                            main_act.updateLeftPane();
+                                            clearChat(key1);
                                             break;
                                     }
                                 }
