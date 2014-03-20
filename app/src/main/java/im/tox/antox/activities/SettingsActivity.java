@@ -117,28 +117,11 @@ public class SettingsActivity extends ActionBarActivity
          */
         String[] updatedSettings = { null, null, null};
 
-        //EditText statusHintText = (EditText) findViewById(R.id.settings_status_hint);
-
 		/* Save settings to file */
 
         SharedPreferences pref = getSharedPreferences("settings",
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
-		/*
-		 * If the fields aren't equal to the default strings in strings.xml then
-		 * they contain user entered data so they need saving
-		 */
-
-//        editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-//        if (statusSpinner.getSelectedItem().toString().equals("online"))
-//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-//        if (statusSpinner.getSelectedItem().toString().equals("away"))
-//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-//        if (statusSpinner.getSelectedItem().toString().equals("busy"))
-//            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
-//
-//        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
 
         /* Also save DHT details to DhtNode class */
         editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
@@ -156,16 +139,6 @@ public class SettingsActivity extends ActionBarActivity
         }
 
         editor.commit();
-
-        /* Send an intent to ToxService notifying change of settings */
-        /* IF we send an intent the updatedSettings will always be null*/
-        /*
-        Intent updateSettings = new Intent(this, ToxService.class);
-        updateSettings.setAction(Constants.UPDATE_SETTINGS);
-        updateSettings.putExtra("newSettings", updatedSettings);
-        this.startService(updateSettings);
-        */
-
 
         Context context = getApplicationContext();
         CharSequence text = getString(R.string.settings_updated);

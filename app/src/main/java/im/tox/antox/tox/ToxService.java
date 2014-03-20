@@ -67,9 +67,9 @@ public class ToxService extends IntentService {
                     toxSingleton.jTox.setName(newSettings[0]);
 
                 if (!newSettings[1].equals("")) {
-                    if (newSettings[1].equals("away"))
+                    if (newSettings[1].equals("Away"))
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_AWAY);
-                    else if (newSettings[1].equals("busy"))
+                    else if (newSettings[1].equals("Busy"))
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
                     else
                         toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_NONE);
