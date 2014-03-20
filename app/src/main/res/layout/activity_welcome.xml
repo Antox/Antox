@@ -46,6 +46,8 @@
                android:layout_height="wrap_content"
                android:gravity="center"
                android:layout_marginTop="5dp"
+               android:inputType="text"
+               android:imeOptions="actionSend"
                android:hint="@string/settings_name_hint"
                />
 
