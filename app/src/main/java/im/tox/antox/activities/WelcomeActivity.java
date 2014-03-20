@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import im.tox.jtoxcore.ToxUserStatus;
 
 public class WelcomeActivity extends ActionBarActivity {
 
+    TextView username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,11 +45,24 @@ public class WelcomeActivity extends ActionBarActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
+        username = (EditText) findViewById(R.id.welcome_name_hint);
+        username.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
+                    updateSettings(v);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void updateSettings(View view) {
-        TextView username = (TextView) findViewById(R.id.welcome_name_hint);
+
         String usernameText = username.getText().toString();
 
         if (usernameText.trim().equals("")) {
