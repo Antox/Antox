@@ -118,6 +118,7 @@ public class ChatFragment extends Fragment {
                             }
                         });
                 AlertDialog alert = builder.create();
+                alert.show();
                 return true;
             }
         });
