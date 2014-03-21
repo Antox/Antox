@@ -189,6 +189,8 @@ public class ToxDoService extends IntentService {
                 public void run() {
                     try {
                         toxS.jTox.doTox();
+                        if(!toxS.jTox.isConnected())
+                            Log.d(TAG, "Disconnected from Tox network");
                     } catch (ToxException e) {
                         Log.d(TAG, e.getError().toString());
                         e.printStackTrace();
