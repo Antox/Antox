@@ -25,7 +25,7 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.1
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.2
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
 - Connect your phone in developer mode and click Run in Android Studio. It will install antox on to your phone and run it automatically.
