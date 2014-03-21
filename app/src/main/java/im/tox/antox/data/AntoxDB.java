@@ -103,7 +103,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(2);
+                int m_id = cursor.getInt(1);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
                 boolean outgoing = cursor.getInt(5)>0;
@@ -248,7 +248,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     public void deleteMessage(int messageId)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_MESSAGE_ID + "='" + messageId + "'", null);
+        db.delete(Constants.TABLE_CHAT_LOGS, "_id" + "='" + messageId + "'", null);
         db.close();
     }
 
