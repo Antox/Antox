@@ -38,7 +38,7 @@ import im.tox.jtoxcore.ToxException;
  */
 public class ToxDoService extends IntentService {
 
-    private static final String TAG = "im.tox.antox.tox.ToxService";
+    private static final String TAG = "im.tox.antox.tox.ToxDoService";
 
     private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
@@ -140,7 +140,7 @@ public class ToxDoService extends IntentService {
                 } catch (UnknownHostException e) {
                     this.stopService(intent);
                     DhtNode.counter++;
-                    Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                    Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                     restart.setAction(Constants.START_TOX);
                     this.startService(restart);
                     e.printStackTrace();
