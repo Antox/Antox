@@ -179,6 +179,7 @@ public class ContactsFragment extends Fragment {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             db.addFriend(item.first, "Friend Accepted");
+                                            db.close();
                                             main_act.updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
                                             acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
@@ -187,13 +188,9 @@ public class ContactsFragment extends Fragment {
                                             main_act.updateLeftPane();
                                             break;
                                         case 1:
-                                            if (!toxSingleton.db.isOpen())
-                                                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                                            toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
-                                                    Constants.COLUMN_NAME_KEY + "='" + item.first + "'",
-                                                    null);
-                                            toxSingleton.db.close();
+                                            AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                            antoxDB.deleteFriendRequest(item.first);
+                                            antoxDB.close();
                                             main_act.updateLeftPane();
                                             Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
                                             rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
@@ -234,6 +231,7 @@ public class ContactsFragment extends Fragment {
 
                                             AntoxDB db = new AntoxDB(getActivity());
                                             db.deleteChat(key1);
+                                            db.close();
                                             main_act.updateLeftPane();
                                             clearChat(key1);
                                             break;
