@@ -67,45 +67,10 @@ public class ToxDoService extends IntentService {
             try {
                 Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox(getApplicationContext());
-                toxSingleton.mDbHelper = new AntoxDB(getApplicationContext());
-                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
 
-                // Define a projection that specifies which columns from the database
-                // you will actually use after this query.
-                String[] projection = {
-                        Constants.COLUMN_NAME_KEY,
-                        Constants.COLUMN_NAME_MESSAGE
-                };
-
-                if (!toxSingleton.db.isOpen())
-                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                Cursor cursor = toxSingleton.db.query(
-                        Constants.TABLE_FRIEND_REQUEST,  // The table to query
-                        projection,                               // The columns to return
-                        null,                                // The columns for the WHERE clause
-                        null,                            // The values for the WHERE clause
-                        null,                                     // don't group the rows
-                        null,                                     // don't filter by row groups
-                        null                                 // The sort order
-                );
-                try {
-                    int count = cursor.getCount();
-                    cursor.moveToFirst();
-                    for (int i = 0; i < count; i++) {
-                        String key = cursor.getString(
-                                cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)
-                        );
-                        String message = cursor.getString(
-                                cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_MESSAGE)
-                        );
-                        toxSingleton.friend_requests.add(new FriendRequest(key, message));
-                        cursor.moveToNext();
-                    }
-                } finally {
-                    cursor.close();
-                }
-                toxSingleton.mDbHelper.close();
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<FriendRequest> friendRequests = db.getFriendRequestsList();
+                toxSingleton.friend_requests = friendRequests;
                 Log.d(TAG, "Loaded requests from database");
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -113,8 +78,9 @@ public class ToxDoService extends IntentService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
 
                 /* Populate tox friends list with saved friends in database */
-                AntoxDB db = new AntoxDB(getApplicationContext());
+                db = new AntoxDB(getApplicationContext());
                 ArrayList<Friend> friends = db.getFriendList();
+                db.close();
 
                 toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
 

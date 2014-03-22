@@ -68,13 +68,9 @@ public class FriendRequestFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!toxSingleton.db.isOpen())
-                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
-                        Constants.COLUMN_NAME_KEY + "='" + key + "'",
-                        null);
-                toxSingleton.db.close();
+                AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                db.deleteFriendRequest(key);
+                db.close();
                 getActivity().getSupportFragmentManager().popBackStack();
                 ((MainActivity) getActivity()).pane.openPane();
                 Intent rejectRequestIntent = new Intent(getActivity(), ToxService.class);
