@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Witaj</string>
+    <string name="title_activity_add_friend">Dodaj znajomego</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="title_activity_profile">Profil</string>
+    <string name="title_activity_about">O programie</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_exit">Wyjdź</string>
+    <string name="add_friend">Dodaj znajomego</string>
+    <string name="search_friend">Szukaj</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_about">O programie</string>
+    <string name="add_to_group">Dodaj do grupy</string>
+
+    <!-- Main Activity -->
+    <string name="icon_description">Status połączenia</string>
+    <string name="main_no_friends">Hej, spójrz, to nima-znajomych!</string>
+    <string name="main_try_adding">Dodaj znajomych by zacząć</string>
+    <string name="main_friend_requests">Zapytania znajomych</string>
+    <string name="main_friends">Znajomi</string>
+    <string name="main_no_internet">Brak połączenia z Internetem</string>
+    <string name="main_not_connected">Nie jesteś połączon(a/y) z Internetem</string>
+    <string name="main_node_list_download_error">Błąd pobierania listy węzłów</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox jest Androidowym klientem Toxa</string>
+    <string name="about_bugs">By zgłosić bug, proszę odwiedź naszą stronę na GitHubie i kliknij na \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Jesteśmy także na Freenode na #tox-dev</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Wyślij wiadomość</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="about_string">Ten klient to wciąż pre-alpha.</string>
+    <string name="getstarted_string">Wprowadź swą wymarzoną nazwę użytkownika</string>
+    <string name="settings_custom_dht">Własne ustawienia węzłów DHT</string>
+    <string name="settings_use_custom_dht">Użyj własnych ustawień węzłów DHT</string>
+    <string name="settings_user_key_title">Twój Tox ID</string>
+    <string name="settings_name_hint">wprowadź swoje imię</string>
+    <string name="settings_note_hint">wprowadź swoją osobistą notkę</string>
+    <string name="settings_dht_ip">Adres IP węzła bootstrap (przykład: 192.254.75.98)</string>
+    <string name="settings_dht_port">Port węzła bootstrap (przykład: 33445)</string>
+    <string name="settings_dht_key">Adres Klucza Publicznego węzła bootstrap (przykład: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Aktualizuj</string>
+    <string name="settings_updated">Twoje ustawienia zostały zaktualizowane</string>
+    <string name="settings_dht_spinner_title">Ustawienia zaawansowane</string>
+    <string name="settings_status_title">Ustaw swój status</string>
+    <string name="settings_note_title">Ustaw swoją osobistą notkę</string>
+    <string name="settings_username_title">Ustaw swoją nazwę użytkownika</string>
+    <string name="developer_string">Stworzone przez astonex &amp; spółkę.</string>
+    <string name="welcome_must_select_username">Musisz wybrać nazwę użytkownika</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Tox ID twojego znajomego</string>
+    <string name="addfriend_friend_message">Opcjonalna wiadomość</string>
+    <string name="addfriend_button">Dodaj znajomego</string>
+    <string name="addfriend_friend_added">Znajomy dodany</string>
+    <string name="addfriend_friend_exists">Znajomy już istnieje</string>
+    <string name="scanqr_button">Skanuj kod QR</string>
+    <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Podziel się z</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Nieobecny</string>
+    <string name="status_busy">Zajęty</string>
+    <string name="profile_updated">Twój profil został zaktualizowany</string>
+
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Zaakceptuj</string>
+    <string name="friendrequest_reject">Odrzuć</string>
+    <string name="friendrequest_accepted">Zapytanie o dodanie do znajomych zaakceptowane</string>
+    <string name="friendrequest_deleted">Zapytanie o dodanie do znajomych usunięte</string>
+    <string name="friendrequest">Zapytania znajomych</string>
+    <string name="friendrequest_recieved">Zapytanie o dodanie do znajomych otrzymane</string>
+    <string name="friend_request">Nowe zapytanie o dodanie do znajomych</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_sendfile">Wyślij plik</string>
+    <string name="friend_action_delete">Usuń znajomego</string>
+    <string name="friend_action_block">Blokuj</string>
+    <string name="group_action_leave">Opuść grupę</string>
+    <string name="friend_action_deletechat">Usuń cały czat</string>
+
+    <string name="contacts_actions_on">Actions on</string>
+    <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Potwierdź</string>
+    <string name="button_cancel">Anuluj</string>
+    <string name="button_yes">Tak</string>
+    <string name="button_no">Nie</string>
+
+</resources>
