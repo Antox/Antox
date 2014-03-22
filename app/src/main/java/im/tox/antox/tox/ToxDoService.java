@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.data.AntoxDB;
@@ -38,7 +40,7 @@ public class ToxDoService extends IntentService {
 
     private static final String TAG = "im.tox.antox.tox.ToxService";
 
-    private ScheduledExecutorService scheduleTaskExecutor;
+    private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
     private boolean toxStarted;
     private ToxSingleton toxSingleton;
@@ -50,6 +52,7 @@ public class ToxDoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         toxSingleton = ToxSingleton.getInstance();
+
 
         if (intent.getAction().equals(Constants.START_TOX)) {
 
@@ -180,29 +183,70 @@ public class ToxDoService extends IntentService {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
-            scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-            // This schedule a runnable task every 2 minutes
             Log.d("Service", "Start do_tox");
-            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                ToxSingleton toxS = ToxSingleton.getInstance();
-
-                public void run() {
-                    try {
-                        toxS.jTox.doTox();
-                        if(!toxS.jTox.isConnected())
-                            Log.d(TAG, "Disconnected from Tox network");
-                    } catch (ToxException e) {
-                        Log.d(TAG, e.getError().toString());
-                        e.printStackTrace();
-                    }
-                }
-            }, 0, 30, TimeUnit.MILLISECONDS);
+            toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
             toxSingleton.toxStarted = true;
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
-            if (scheduleTaskExecutor != null) {
-                scheduleTaskExecutor.shutdownNow();
+            if (toxScheduleTaskExecutor != null) {
+                toxScheduleTaskExecutor.shutdownNow();
             }
             stopSelf();
+        }
+    }
+
+    private class ToxScheduleTaskExecutor extends ScheduledThreadPoolExecutor {
+
+        public ToxScheduleTaskExecutor(int size) {
+            super(1);
+        }
+
+        @Override
+        public ScheduledFuture scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+            return super.scheduleAtFixedRate(wrapRunnable(command), initialDelay, period, unit);
+        }
+
+        @Override
+        public ScheduledFuture scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+            return super.scheduleWithFixedDelay(wrapRunnable(command), initialDelay, delay, unit);
+        }
+
+        private Runnable wrapRunnable(Runnable command) {
+            return new LogOnExceptionRunnable(command);
+        }
+
+        private class LogOnExceptionRunnable implements Runnable{
+            private Runnable theRunnable;
+            public LogOnExceptionRunnable(Runnable theRunnable) {
+                super();
+                this.theRunnable = theRunnable;
+            }
+            @Override
+            public void run() {
+                try {
+                    theRunnable.run();
+                } catch (Exception e) {
+                    Log.d(TAG, "Executor has caught an exception");
+                    e.printStackTrace();
+                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    private class DoTox implements Runnable {
+        @Override
+        public void run() {
+            /* Praise the sun */
+            try {
+                toxSingleton.jTox.doTox();
+                if(!toxSingleton.jTox.isConnected()) {
+                    Log.v(TAG, "not connected to tox");
+                }
+            } catch (ToxException e) {
+                Log.d(TAG, e.getError().toString());
+                e.printStackTrace();
+            }
         }
     }
 }
