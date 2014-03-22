@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -70,10 +69,6 @@ import im.tox.jtoxcore.ToxUserStatus;
 
 public class MainActivity extends ActionBarActivity {
 
-    /**
-     * Extra message to be passed with intents - Should be unique from every other app
-     */
-    public final static String EXTRA_MESSAGE = "im.tox.antox.MESSAGE";
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
 
@@ -96,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
 
     public ArrayList<String> leftPaneKeyList;
 
-    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+    private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
     private PaneListener paneListener;
@@ -106,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private Menu menu;
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -114,33 +109,33 @@ public class MainActivity extends ActionBarActivity {
             String action = intent.getStringExtra("action");
             if (action != null) {
             Log.d(TAG, "action: " + action);
-                if (action == Constants.FRIEND_REQUEST) {
+                if (action.equals(Constants.FRIEND_REQUEST)) {
 
-                } else if (action == Constants.UPDATE_LEFT_PANE) {
+                } else if (action.equals(Constants.UPDATE_LEFT_PANE)) {
                     updateLeftPane();
-                } else if (action == Constants.REJECT_FRIEND_REQUEST) {
+                } else if (action.equals(Constants.REJECT_FRIEND_REQUEST)) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
                     String text = getString(R.string.friendrequest_deleted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
-                } else if (action == Constants.UPDATE_MESSAGES) {
+                } else if (action.equals(Constants.UPDATE_MESSAGES)) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
                     updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
                     }
-                } else if (action == Constants.ACCEPT_FRIEND_REQUEST) {
+                } else if (action.equals(Constants.ACCEPT_FRIEND_REQUEST)) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
                     String text = getString(R.string.friendrequest_accepted);
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
-                } else if (action == Constants.FRIEND_LIST) {
+                } else if (action.equals(Constants.FRIEND_LIST)) {
 
-                } else if (action == Constants.UPDATE) {
+                } else if (action.equals(Constants.UPDATE)) {
                     updateLeftPane();
                     if (toxSingleton.rightPaneActive) {
                         activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
@@ -165,11 +160,11 @@ public class MainActivity extends ActionBarActivity {
             db.close();
             updateLeftPane();
         }
-    };
+    }
 
     @Override
     protected void onNewIntent(Intent i) {
-        if (i.getAction() == Constants.SWITCH_TO_FRIEND && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+        if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
             String key = i.getStringExtra("key");
             String name = i.getStringExtra("name");
             Fragment newFragment = new ChatFragment();
@@ -545,7 +540,7 @@ public class MainActivity extends ActionBarActivity {
 
     // Downloads the the first working DHT node
     private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
-       String nodeDetails[] = new String[7];
+       final String[] nodeDetails = new String[7];
 
 
 
@@ -656,24 +651,13 @@ public class MainActivity extends ActionBarActivity {
             }
 
             /* Restart intent if it was connected before nodes were sorted */
-            if(DhtNode.connected && DhtNode.sorted == false) {
+            if(DhtNode.connected && !DhtNode.sorted) {
                 Log.d(TAG, "Restarting START_TOX as DhtNode.sorted was false");
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
             }
         }
-    }
-
-    public void friendRequest(Intent intent) {
-        Context ctx = getApplicationContext();
-        CharSequence msg = intent.getStringExtra("message");
-        CharSequence key = intent.getStringExtra("key");
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctx, getString(R.string.friendrequest_recieved), duration);
-        toast.show();
-        Log.d(TAG, toxSingleton.friend_requests.toString());
-        updateLeftPane();
     }
 
     @Override
