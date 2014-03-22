@@ -11,17 +11,18 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 3. Download the app <a href="https://play.google.com/store/apps/details?id=im.tox.antox">here</a>
 
 ###Known to work on
-| Brand    | Device                | System                   |
-|:--------:|:---------------------:|:------------------------:|
-| Samsung  | Galaxy S3             | Android 4.4, CyanogenMod |
-| Samsung  | Galaxy Nexus          | Android 4.4              |
-| Samsung  | Galaxy Note 3         | TouchWiz (Android 4.3)   |
-| Samsung  | Galaxy Note 10.1      | TouchWiz (Android 4.3)   |
-| Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4            |
-| Motorola | Moto G                | Android 4.4.2            |
-| LG       | Nexus 5               | Android 4.4.2            |
-| LG       | Motion 4G             | Android 4.0.4            |
-| HTC      | One                   | Android 4.4.2            |
+| Brand    | Device                | System                      |
+|:--------:|:---------------------:|:---------------------------:|
+| Samsung  | Galaxy S3             | Android 4.4, CyanogenMod    |
+| Samsung  | Galaxy Nexus          | Android 4.4                 |
+| Samsung  | Galaxy Note 1         | Android 4.3, ParanoidAndroid|
+| Samsung  | Galaxy Note 3         | TouchWiz (Android 4.3)      |
+| Samsung  | Galaxy Note 10.1      | TouchWiz (Android 4.3)      |
+| Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4               |
+| Motorola | Moto G                | Android 4.4.2               |
+| LG       | Nexus 5               | Android 4.4.2               |
+| LG       | Motion 4G             | Android 4.0.4               |
+| HTC      | One                   | Android 4.4.2               |
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
