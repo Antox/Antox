@@ -649,6 +649,7 @@ public class MainActivity extends ActionBarActivity {
              */
             if(!DhtNode.connected)
             {
+                Log.d(TAG, "Restarting START_TOX as DhtNode.connected returned false");
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
@@ -656,6 +657,7 @@ public class MainActivity extends ActionBarActivity {
 
             /* Restart intent if it was connected before nodes were sorted */
             if(DhtNode.connected && DhtNode.sorted == false) {
+                Log.d(TAG, "Restarting START_TOX as DhtNode.sorted was false");
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
                 getApplicationContext().startService(restart);
