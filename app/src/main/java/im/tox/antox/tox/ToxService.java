@@ -87,7 +87,9 @@ public class ToxService extends IntentService {
             String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
             String name = toxSingleton.friendsList.getById(key).getName();
             int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
-            toxSingleton.mDbHelper.addMessage(-1, key, message, false, true, false, true);
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.addMessage(-1, key, message, false, true, false, true);
+            db.close();
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
             notify.putExtra("action", Constants.UPDATE_MESSAGES);
@@ -183,7 +185,8 @@ public class ToxService extends IntentService {
             }
         } else if (intent.getAction().equals(Constants.SEND_UNSENT_MESSAGES)) {
             Log.d(TAG, "Constants.SEND_UNSENT_MESSAGES");
-            ArrayList<Message> unsentMessageList = toxSingleton.mDbHelper.getUnsentMessageList();
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            ArrayList<Message> unsentMessageList = db.getUnsentMessageList();
             Log.d(TAG, "unsent message list size is " + unsentMessageList.size());
             for (int i = 0; i<unsentMessageList.size(); i++) {
                 ToxFriend friend = null;
@@ -207,9 +210,10 @@ public class ToxService extends IntentService {
                     sendingSucceeded = false;
                 }
                 if (sendingSucceeded) {
-                    toxSingleton.mDbHelper.updateUnsentMessage(id);
+                    db.updateUnsentMessage(id);
                 }
             }
+            db.close();
             if (toxSingleton.activeFriendKey != null) {
             /* Broadcast to update UI */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -241,9 +245,11 @@ public class ToxService extends IntentService {
                 e.printStackTrace();
                 sendingSucceeded = false;
             }
+            AntoxDB db = new AntoxDB(getApplicationContext());
             if (sendingSucceeded) {
             /* Add message to chatlog */
-                toxSingleton.mDbHelper.addMessage(id, key, message, true, false, false, true);
+                db.addMessage(id, key, message, true, false, false, true);
+                db.close();
             /* Broadcast to update UI */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);
@@ -251,7 +257,8 @@ public class ToxService extends IntentService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
             } else {
                 /* Add message to chatlog */
-                toxSingleton.mDbHelper.addMessage(id, key, message, true, false, false, false);
+                db.addMessage(id, key, message, true, false, false, false);
+                db.close();
             /* Broadcast to update UI */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);
@@ -265,16 +272,9 @@ public class ToxService extends IntentService {
             /* Add friend request to arraylist */
             toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
             /* Add friend request to database */
-            if (!toxSingleton.db.isOpen())
-                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(Constants.COLUMN_NAME_KEY, key);
-            values.put(Constants.COLUMN_NAME_MESSAGE, message);
-            toxSingleton.db.insert(
-                    Constants.TABLE_FRIEND_REQUEST,
-                    null,
-                    values);
-            toxSingleton.mDbHelper.close();
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.addFriendRequest(key, message);
+            db.close();
 
             /* Notification */
             if(!toxSingleton.leftPaneActive) {
@@ -315,10 +315,9 @@ public class ToxService extends IntentService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
         } else if (intent.getAction().equals(Constants.DELIVERY_RECEIPT)) {
             int receipt = intent.getIntExtra("receipt", -2);
-            if (!toxSingleton.db.isOpen())
-                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-            String key = toxSingleton.mDbHelper.setMessageReceived(receipt);
-            toxSingleton.mDbHelper.close();
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            String key = db.setMessageReceived(receipt);
+            db.close();
             Log.d("DELIVERY RECEIPT FOR KEY: ", key);
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -369,13 +368,9 @@ public class ToxService extends IntentService {
                     }
                 }
 
-                if (!toxSingleton.db.isOpen())
-                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                toxSingleton.db.delete(Constants.TABLE_FRIEND_REQUEST,
-                        Constants.COLUMN_NAME_KEY + "='" + key + "'",
-                        null);
-                toxSingleton.db.close();
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                db.deleteFriendRequest(key);
+                db.close();
 
                 /* Broadcast */
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
