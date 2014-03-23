@@ -147,9 +147,7 @@ public class AddFriendActivity extends ActionBarActivity {
         catch (NumberFormatException e) {
             return false;
         }
-        if (x != 0)
-            return false;
-        return true;
+        return x == 0;
     }
 
     @Override

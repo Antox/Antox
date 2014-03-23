@@ -11,21 +11,22 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 3. Download the app <a href="https://play.google.com/store/apps/details?id=im.tox.antox">here</a>
 
 ###Known to work on
-| Brand    | Device                | System                   |
-|:--------:|:---------------------:|:------------------------:|
-| Samsung  | Galaxy S3             | Android 4.4, CyanogenMod |
-| Samsung  | Galaxy Nexus          | Android 4.4              |
-| Samsung  | Galaxy Note 3         | TouchWiz (Android 4.3)   |
-| Samsung  | Galaxy Note 10.1      | TouchWiz (Android 4.3)   |
-| Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4            |
-| Motorola | Moto G                | Android 4.4.2            |
-| LG       | Nexus 5               | Android 4.4.2            |
-| LG       | Motion 4G             | Android 4.0.4            |
-| HTC      | One                   | Android 4.4.2            |
+| Brand    | Device                | System                      |
+|:--------:|:---------------------:|:---------------------------:|
+| Samsung  | Galaxy S3             | Android 4.4, CyanogenMod    |
+| Samsung  | Galaxy Nexus          | Android 4.4                 |
+| Samsung  | Galaxy Note 1         | Android 4.3, ParanoidAndroid|
+| Samsung  | Galaxy Note 3         | TouchWiz (Android 4.3)      |
+| Samsung  | Galaxy Note 10.1      | TouchWiz (Android 4.3)      |
+| Samsung  | Galaxy Tab 10.1 WiFi  | Android 4.0.4               |
+| Motorola | Moto G                | Android 4.4.2               |
+| LG       | Nexus 5               | Android 4.4.2               |
+| LG       | Motion 4G             | Android 4.0.4               |
+| HTC      | One                   | Android 4.4.2               |
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.1
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.2
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
 - Connect your phone in developer mode and click Run in Android Studio. It will install antox on to your phone and run it automatically.

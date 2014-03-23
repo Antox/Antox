@@ -112,6 +112,7 @@ public class ChatFragment extends Fragment {
                                         ChatMessagesAdapter chatAdapter = (ChatMessagesAdapter) chatListView.getAdapter();
                                         chatAdapter.data.remove(item);
                                         chatAdapter.notifyDataSetChanged();
+                                        main_act.updateLeftPane();
                                         break;
                                 }
                                 dialog.cancel();
