@@ -36,6 +36,7 @@
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
     <string name="about_irc">We\'re on Freenode on #tox-dev</string>
+    <string name="about_version">version</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
