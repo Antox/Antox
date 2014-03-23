@@ -33,3 +33,5 @@ local.properties
 *.swp
 app/build/
 build/
+app/libs/jToxcore.jar
+app/src/main/jniLibs

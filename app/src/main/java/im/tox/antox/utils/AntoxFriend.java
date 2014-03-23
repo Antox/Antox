@@ -26,6 +26,7 @@ public class AntoxFriend implements ToxFriend {
 	private transient ToxUserStatus status;
 	private transient String statusMessage;
 	private transient boolean online;
+    private transient boolean isTyping;
 
 	/*
 	 * Fields for Antox-specific implementation. These should be stored in local
@@ -77,6 +78,11 @@ public class AntoxFriend implements ToxFriend {
 		return this.online;
 	}
 
+    @Override
+    public boolean isTyping() {
+        return this.isTyping;
+    }
+
 	/**
 	 * @return this friend's nickname
 	 */
@@ -116,7 +122,12 @@ public class AntoxFriend implements ToxFriend {
 		this.statusMessage = statusMessage;
 	}
 
-	/**
+    @Override
+    public void setTyping(boolean isTyping) {
+        this.isTyping = isTyping;
+    }
+
+    /**
 	 * @param nickname
 	 *            the new nickname for this friend
 	 */
