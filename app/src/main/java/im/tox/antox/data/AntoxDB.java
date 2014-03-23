@@ -13,6 +13,7 @@ import java.util.Random;
 
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
+import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.antox.tox.ToxSingleton;
@@ -76,6 +77,15 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addFriendRequest(String key, String message) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_KEY, key);
+        values.put(Constants.COLUMN_NAME_MESSAGE, message);
+        db.insert(Constants.TABLE_FRIEND_REQUEST, null, values);
+        db.close();
+    }
+
     public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received, boolean has_been_read, boolean successfully_sent){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -103,7 +113,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(2);
+                int m_id = cursor.getInt(0);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
                 boolean outgoing = cursor.getInt(5)>0;
@@ -119,6 +129,48 @@ public class AntoxDB extends SQLiteOpenHelper {
         return messageList;
     }
 
+    public ArrayList<FriendRequest> getFriendRequestsList() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<FriendRequest> friendRequests = new ArrayList<FriendRequest>();
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                Constants.COLUMN_NAME_KEY,
+                Constants.COLUMN_NAME_MESSAGE
+        };
+
+        Cursor cursor = db.query(
+                Constants.TABLE_FRIEND_REQUEST,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                 // The sort order
+        );
+        try {
+            int count = cursor.getCount();
+            cursor.moveToFirst();
+            for (int i = 0; i < count; i++) {
+                String key = cursor.getString(
+                        cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)
+                );
+                String message = cursor.getString(
+                        cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_MESSAGE)
+                );
+                friendRequests.add(new FriendRequest(key, message));
+                cursor.moveToNext();
+            }
+        } finally {
+            cursor.close();
+        }
+
+        db.close();
+
+        return friendRequests;
+    }
+
     public ArrayList<Message> getUnsentMessageList() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
@@ -127,7 +179,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(2);
+                int m_id = cursor.getInt(0);
                 Log.d("UNSENT MESAGE ID: ", "" + m_id);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
@@ -239,6 +291,12 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteFriendRequest(String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(Constants.TABLE_FRIEND_REQUEST, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
+        db.close();
+    }
+
     public void deleteChat(String key) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
@@ -247,8 +305,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void deleteMessage(int messageId)
     {
+        System.out.println("%%"+messageId);
         SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_MESSAGE_ID + "='" + messageId + "'", null);
+        db.delete(Constants.TABLE_CHAT_LOGS, "_id" + "='" + messageId + "'", null);
         db.close();
     }
 

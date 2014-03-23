@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:hint="@string/addfriend_button"
+            android:text="@string/addfriend_button"
             android:onClick="addFriend" />
 
     </LinearLayout>

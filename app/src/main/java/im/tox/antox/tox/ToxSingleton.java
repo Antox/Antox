@@ -27,8 +27,6 @@ public class ToxSingleton {
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
     public ArrayList<FriendRequest> friend_requests = new ArrayList<FriendRequest>();
-    public AntoxDB mDbHelper;
-    public SQLiteDatabase db;
     public boolean toxStarted = false;
     public AntoxFriendList friendsList;
     public String activeFriendRequestKey = null;

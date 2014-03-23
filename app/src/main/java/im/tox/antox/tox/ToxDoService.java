@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.data.AntoxDB;
@@ -36,9 +38,9 @@ import im.tox.jtoxcore.ToxException;
  */
 public class ToxDoService extends IntentService {
 
-    private static final String TAG = "im.tox.antox.tox.ToxService";
+    private static final String TAG = "im.tox.antox.tox.ToxDoService";
 
-    private ScheduledExecutorService scheduleTaskExecutor;
+    private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
     private boolean toxStarted;
     private ToxSingleton toxSingleton;
@@ -50,6 +52,7 @@ public class ToxDoService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         toxSingleton = ToxSingleton.getInstance();
+
 
         if (intent.getAction().equals(Constants.START_TOX)) {
 
@@ -64,45 +67,10 @@ public class ToxDoService extends IntentService {
             try {
                 Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox(getApplicationContext());
-                toxSingleton.mDbHelper = new AntoxDB(getApplicationContext());
-                toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
 
-                // Define a projection that specifies which columns from the database
-                // you will actually use after this query.
-                String[] projection = {
-                        Constants.COLUMN_NAME_KEY,
-                        Constants.COLUMN_NAME_MESSAGE
-                };
-
-                if (!toxSingleton.db.isOpen())
-                    toxSingleton.db = toxSingleton.mDbHelper.getWritableDatabase();
-
-                Cursor cursor = toxSingleton.db.query(
-                        Constants.TABLE_FRIEND_REQUEST,  // The table to query
-                        projection,                               // The columns to return
-                        null,                                // The columns for the WHERE clause
-                        null,                            // The values for the WHERE clause
-                        null,                                     // don't group the rows
-                        null,                                     // don't filter by row groups
-                        null                                 // The sort order
-                );
-                try {
-                    int count = cursor.getCount();
-                    cursor.moveToFirst();
-                    for (int i = 0; i < count; i++) {
-                        String key = cursor.getString(
-                                cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)
-                        );
-                        String message = cursor.getString(
-                                cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_MESSAGE)
-                        );
-                        toxSingleton.friend_requests.add(new FriendRequest(key, message));
-                        cursor.moveToNext();
-                    }
-                } finally {
-                    cursor.close();
-                }
-                toxSingleton.mDbHelper.close();
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                ArrayList<FriendRequest> friendRequests = db.getFriendRequestsList();
+                toxSingleton.friend_requests = friendRequests;
                 Log.d(TAG, "Loaded requests from database");
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -110,8 +78,9 @@ public class ToxDoService extends IntentService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
 
                 /* Populate tox friends list with saved friends in database */
-                AntoxDB db = new AntoxDB(getApplicationContext());
+                db = new AntoxDB(getApplicationContext());
                 ArrayList<Friend> friends = db.getFriendList();
+                db.close();
 
                 toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
 
@@ -171,7 +140,7 @@ public class ToxDoService extends IntentService {
                 } catch (UnknownHostException e) {
                     this.stopService(intent);
                     DhtNode.counter++;
-                    Intent restart = new Intent(getApplicationContext(), ToxService.class);
+                    Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                     restart.setAction(Constants.START_TOX);
                     this.startService(restart);
                     e.printStackTrace();
@@ -180,29 +149,70 @@ public class ToxDoService extends IntentService {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
-            scheduleTaskExecutor = Executors.newScheduledThreadPool(5);
-            // This schedule a runnable task every 2 minutes
             Log.d("Service", "Start do_tox");
-            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                ToxSingleton toxS = ToxSingleton.getInstance();
-
-                public void run() {
-                    try {
-                        toxS.jTox.doTox();
-                        if(!toxS.jTox.isConnected())
-                            Log.d(TAG, "Disconnected from Tox network");
-                    } catch (ToxException e) {
-                        Log.d(TAG, e.getError().toString());
-                        e.printStackTrace();
-                    }
-                }
-            }, 0, 30, TimeUnit.MILLISECONDS);
+            toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
             toxSingleton.toxStarted = true;
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
-            if (scheduleTaskExecutor != null) {
-                scheduleTaskExecutor.shutdownNow();
+            if (toxScheduleTaskExecutor != null) {
+                toxScheduleTaskExecutor.shutdownNow();
             }
             stopSelf();
+        }
+    }
+
+    private class ToxScheduleTaskExecutor extends ScheduledThreadPoolExecutor {
+
+        public ToxScheduleTaskExecutor(int size) {
+            super(1);
+        }
+
+        @Override
+        public ScheduledFuture scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+            return super.scheduleAtFixedRate(wrapRunnable(command), initialDelay, period, unit);
+        }
+
+        @Override
+        public ScheduledFuture scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+            return super.scheduleWithFixedDelay(wrapRunnable(command), initialDelay, delay, unit);
+        }
+
+        private Runnable wrapRunnable(Runnable command) {
+            return new LogOnExceptionRunnable(command);
+        }
+
+        private class LogOnExceptionRunnable implements Runnable{
+            private Runnable theRunnable;
+            public LogOnExceptionRunnable(Runnable theRunnable) {
+                super();
+                this.theRunnable = theRunnable;
+            }
+            @Override
+            public void run() {
+                try {
+                    theRunnable.run();
+                } catch (Exception e) {
+                    Log.d(TAG, "Executor has caught an exception");
+                    e.printStackTrace();
+                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    private class DoTox implements Runnable {
+        @Override
+        public void run() {
+            /* Praise the sun */
+            try {
+                toxSingleton.jTox.doTox();
+                if(!toxSingleton.jTox.isConnected()) {
+                    Log.v(TAG, "not connected to tox");
+                }
+            } catch (ToxException e) {
+                Log.d(TAG, e.getError().toString());
+                e.printStackTrace();
+            }
         }
     }
 }
