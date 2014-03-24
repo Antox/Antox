@@ -21,11 +21,28 @@
             android:gravity="center"
             android:hint="@string/addfriend_friend_key" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:text="@string/addfriend_optional_title"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:hint="@string/addfriend_alias_hint" />
+
         <EditText
             android:id="@+id/addfriend_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:hint="@string/addfriend_friend_message" />
 
