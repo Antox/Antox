@@ -105,7 +105,7 @@
     <string name="friend_action_delete">Remove Friend</string>
     <string name="friend_action_block">Block</string>
     <string name="group_action_leave">Leave Group</string>
-    <string name="friend_action_deletechat">Delete chat logs</string>
+    <string name="friend_action_deletechat">Delete Chat Logs</string>
 
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
