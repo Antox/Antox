@@ -689,9 +689,10 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
-            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
             MenuItem ag= menu.add(666, 100, 100, R.string.add_to_group);
-            ag.setIcon(R.drawable.ic_action_add_group).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            ag.setIcon(R.drawable.ic_action_add_group);
+            MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
             ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -713,7 +714,8 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
             MenuItem af = menu.findItem(R.id.add_friend);
-            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             /*af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);*/
             menu.removeGroup(666);
