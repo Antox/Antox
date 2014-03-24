@@ -66,12 +66,14 @@
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
-    <string name="addfriend_friend_message">Optional message</string>
+    <string name="addfriend_friend_message">Send a message with your request</string>
     <string name="addfriend_button">Add Friend</string>
     <string name="addfriend_friend_added">Friend Added</string>
     <string name="addfriend_friend_exists">Friend already exists</string>
     <string name="scanqr_button">Scan a QR code</string>
     <string name="invalid_friend_ID">Invalid Tox ID</string>
+    <string name="addfriend_alias_hint">Set a nickname for your friend</string>
+    <string name="addfriend_optional_title">Optional Extras</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
@@ -80,6 +82,11 @@
     <string name="status_busy">Busy</string>
     <string name="profile_updated">Your Profile has been updated</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Name</string>
+    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_key">Tox Key</string>
+    <string name="friend_profile_note">Note</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>

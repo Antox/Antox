@@ -138,7 +138,7 @@ public class ProfileActivity extends ActionBarActivity {
      */
     private void generateQR(String userKey) {
         String qrData = "tox://" + userKey;
-        int qrCodeSize = 500;
+        int qrCodeSize = 400;
         QRCodeEncode qrCodeEncoder = new QRCodeEncode(qrData, null,
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeSize);
         FileOutputStream out;
