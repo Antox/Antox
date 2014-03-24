@@ -5,10 +5,15 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
+
+###Want to install Antox on your Android phone?
+1. Download the latest APK <a href="https://c1cf.https.cdn.softlayer.net/80C1CF/192.254.75.110:8080/job/Android-Antox/lastSuccessfulBuild/artifact/antox.apk">here</a>
+2. Sideload the APK to your phone, or just download the file from step 1 directly to your phone
+3. Ensure that you allow applications from unknown sources to be installed (Tick the option "Unkown Source", found in Settings>Security)
+4. Install the APK by either using a file manager or ADB.
+
 ###Want to get Antox on Google Play?
-1. Join the Google+ Alpha testing page <a href="https://plus.google.com/communities/112302171077600707137">here</a>.
-2. Join the Google Play Alpha group <a href="https://play.google.com/apps/testing/im.tox.antox">here</a>
-3. Download the app <a href="https://play.google.com/store/apps/details?id=im.tox.antox">here</a>
+For those who used to test Antox on GPlay, we apologize that we will no longer be pushing alpha updates to the Play Store. Once Antox nears a public release, you will be able to find it in GPlay. Thanks to everyone who helped out!
 
 ###Known to work on
 | Brand    | Device               | System                       |
