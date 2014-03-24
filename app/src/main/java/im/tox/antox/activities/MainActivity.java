@@ -454,10 +454,7 @@ public class MainActivity extends ActionBarActivity {
                 openAbout();
                 return true;
             case R.id.add_friend:
-                if(toxSingleton.rightPaneActive)
-                    addFriendToGroup();
-                else
-                    addFriend();
+                addFriend();
                 return true;
             case R.id.search_friend:
                 getSupportActionBar().setIcon(R.drawable.ic_actionbar);
@@ -686,8 +683,16 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
-            af.setIcon(R.drawable.ic_action_add_group);
-            af.setTitle(R.string.add_to_group);
+            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            MenuItem ag= menu.add(666, 100, 100, R.string.add_to_group);
+            ag.setIcon(R.drawable.ic_action_add_group).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    addFriendToGroup();
+                    return false;
+                }
+            });
             toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
             toxSingleton.leftPaneActive = false;
@@ -702,8 +707,10 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
             MenuItem af = menu.findItem(R.id.add_friend);
-            af.setIcon(R.drawable.ic_action_add_person);
-            af.setTitle(R.string.add_friend);
+            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            /*af.setIcon(R.drawable.ic_action_add_person);
+            af.setTitle(R.string.add_friend);*/
+            menu.removeGroup(666);
             toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
             InputMethodManager imm = (InputMethodManager)getSystemService(
