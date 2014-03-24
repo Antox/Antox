@@ -33,7 +33,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/addfriend_friendAlias"
             android:layout_marginTop="0dp"
             android:gravity="center"
             android:hint="@string/addfriend_alias_hint" />

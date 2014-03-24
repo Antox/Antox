@@ -104,6 +104,7 @@
         <activity
             android:name="im.tox.antox.activities.FriendProfileActivity"
             android:label="@string/title_activity_friend_profile"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -1,5 +1,6 @@
 package im.tox.antox.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -49,18 +51,15 @@ public class FriendProfileActivity extends ActionBarActivity {
 
         TextView editFriendName = (TextView) findViewById(R.id.friendNameText);
         editFriendName.setText(friendName);
-        editFriendName.setKeyListener(null);
 
         EditText editFriendAlias = (EditText) findViewById(R.id.friendAliasText);
         editFriendAlias.setText(friendAlias);
 
         TextView editFriendNote = (TextView) findViewById(R.id.friendNoteText);
         editFriendNote.setText(friendNote);
-        editFriendAlias.setKeyListener(null);
 
         TextView editFriendKey = (TextView) findViewById(R.id.friendKeyText);
         editFriendKey.setText(friendKey);
-        editFriendKey.setKeyListener(null);
 
         /* Looks for the userkey qr.png if it doesn't exist then it creates it with the generateQR method.
          * adds onClickListener to the ImageButton to add share the QR
@@ -89,6 +88,20 @@ public class FriendProfileActivity extends ActionBarActivity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
+    }
+
+    public void updateAlias(View view) {
+        AntoxDB db = new AntoxDB(this);
+        TextView friendKey = (TextView) findViewById(R.id.friendKeyText);
+        EditText friendAlias = (EditText) findViewById(R.id.friendAliasText);
+        db.updateAlias(friendAlias.getText().toString(), friendKey.getText().toString());
+        db.close();
+
+        Context context = getApplicationContext();
+        CharSequence text = getString(R.string.friend_profile_updated);
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
     private void generateQR(String userKey) {
