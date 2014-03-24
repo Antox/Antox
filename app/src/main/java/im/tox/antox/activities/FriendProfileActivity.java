@@ -49,8 +49,6 @@ public class FriendProfileActivity extends ActionBarActivity {
 
         setTitle(friendName+"'s Profile");
 
-        TextView editFriendName = (TextView) findViewById(R.id.friendNameText);
-        editFriendName.setText(friendName);
 
         EditText editFriendAlias = (EditText) findViewById(R.id.friendAliasText);
         editFriendAlias.setText(friendAlias);
