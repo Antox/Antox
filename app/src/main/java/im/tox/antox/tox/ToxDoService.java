@@ -206,7 +206,7 @@ public class ToxDoService extends IntentService {
             /* Praise the sun */
             try {
                 toxSingleton.jTox.doTox();
-                if(!toxSingleton.jTox.isConnected()) {
+                if(!toxSingleton.jTox.isConnected() && DhtNode.connected == true) {
                     Log.v(TAG, "not connected to tox");
                 }
             } catch (ToxException e) {

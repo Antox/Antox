@@ -196,6 +196,19 @@ public class MainActivity extends ActionBarActivity {
             );
         }
 
+        /* Check if first time ever running by checking the preferences */
+        SharedPreferences pref = getSharedPreferences("main",
+                Context.MODE_PRIVATE);
+
+        // If beenLoaded is 0, then never been run
+        if (pref.getInt("beenLoaded", 0) == 0) {
+            // Launch welcome activity which will run the user through initial
+            // settings
+            // and give a brief description of antox
+            Intent intent = new Intent(this, WelcomeActivity.class);
+            startActivity(intent);
+        }
+
         Log.i(TAG, "onCreate");
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
@@ -236,19 +249,6 @@ public class MainActivity extends ActionBarActivity {
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
-
-		/* Check if first time ever running by checking the preferences */
-        SharedPreferences pref = getSharedPreferences("main",
-                Context.MODE_PRIVATE);
-
-        // If beenLoaded is 0, then never been run
-        if (pref.getInt("beenLoaded", 0) == 0) {
-            // Launch welcome activity which will run the user through initial
-            // settings
-            // and give a brief description of antox
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
-        }
 
         /* Load user details */
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
@@ -584,7 +584,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(500);
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(300);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
                     Log.d(TAG, "Elapsed time: " + elapsedTime);
                     if (reachable && elapsedTime < shortestTime) {
