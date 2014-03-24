@@ -385,8 +385,10 @@ public class MainActivity extends ActionBarActivity {
                 leftPaneKeyList.add(friend_requests_list[i].requestKey);
             }
         }
+        List<String> list=null;
         serialized = pref.getString("PREF_KEY_STRINGS", null);
-        List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+        if(serialized!=null)
+            list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
         if (friends_list.length > 0) {
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
             leftPaneAdapter.addItem(friends_header);
@@ -627,10 +629,10 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(300);
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
                     Log.d(TAG, "Elapsed time: " + elapsedTime);
-                    if (reachable && elapsedTime < shortestTime) {
+                    if (reachable && (elapsedTime < shortestTime)) {
                         shortestTime = elapsedTime;
                         pos = i;
                         Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
