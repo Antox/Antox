@@ -123,9 +123,9 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
                     updateLeftPane();
-                    if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
-                        updateChat(toxSingleton.activeFriendKey);
-                    }
+                        if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
+                            updateChat(toxSingleton.activeFriendKey);
+                        }
                 } else if (action.equals(Constants.ACCEPT_FRIEND_REQUEST)) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
@@ -149,16 +149,20 @@ public class MainActivity extends ActionBarActivity {
 
    public void updateChat(String key) {
         Log.d(TAG, "updating chat");
-        //avoid changing name of pending request to "(null) !" if they are currently the active friend
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
             if (toxSingleton.rightPaneActive) {
                 db.markIncomingMessagesRead(key);
             }
-            chat.updateChat(db.getMessageList(key));
-            db.close();
-            updateLeftPane();
+            try {
+                chat.updateChat(db.getMessageList(key));
+                db.close();
+                updateLeftPane();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                Log.d(TAG, e.toString());
+            }
         }
     }
 
