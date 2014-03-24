@@ -87,6 +87,8 @@
     <string name="friend_profile_alias">Alias</string>
     <string name="friend_profile_key">Tox Key</string>
     <string name="friend_profile_note">Note</string>
+    <string name="friend_profile_button">Update Alias</string>
+    <string name="friend_profile_updated">Alias has been updated</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>
