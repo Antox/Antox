@@ -27,7 +27,7 @@ dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.android.support:appcompat-v7:+'
     compile files('libs/wearable-preview-support.jar')
-    compile files('libs/jToxcore-0.5.1.jar')
+    compile files('libs/jToxcore.jar')
     compile files('libs/core.jar')
     compile files('libs/jsoup-1.7.3.jar')
 }
