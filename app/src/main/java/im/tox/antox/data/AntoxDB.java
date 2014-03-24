@@ -64,7 +64,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     // Currently we are not able to fetch Note,username so keep it null.
     //So storing the received message as his/her personal note.
 
-    public void addFriend(String key, String message) {
+    public void addFriend(String key, String message, String alias) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -73,6 +73,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_NOTE, message);
         values.put(Constants.COLUMN_NAME_USERNAME, "");
         values.put(Constants.COLUMN_NAME_ISONLINE, false);
+        values.put(Constants.COLUMN_NAME_ALIAS, alias);
         db.insert(Constants.TABLE_FRIENDS, null, values);
         db.close();
     }
@@ -247,9 +248,15 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String key = cursor.getString(1);
                 String status = cursor.getString(3);
                 String note = cursor.getString(4);
+                String alias = cursor.getString(6);
                 int online = cursor.getInt(5);
 
-                if(name.equals(""))
+                if(alias == null)
+                    alias = "";
+
+                if(!alias.equals(""))
+                    name = alias;
+                else if(name.equals(""))
                     name = key.substring(0,7);
 
 
@@ -377,5 +384,11 @@ public class AntoxDB extends SQLiteOpenHelper {
         cursor.close();
 
         return details;
+    }
+
+    public void updateAlias(String alias, String key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ALIAS + "='" + alias + "' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        db.execSQL(query);
     }
 }
