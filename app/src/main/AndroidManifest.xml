@@ -54,7 +54,7 @@
             android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.ProfileActivity"
@@ -63,7 +63,7 @@
             android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.AboutActivity"
@@ -72,7 +72,7 @@
             android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.WelcomeActivity"
@@ -89,7 +89,7 @@
             android:parentActivityName="im.tox.antox.activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
 
             <!--  Intent filter for handling tox:// links -->
             <intent-filter>
