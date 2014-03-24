@@ -164,20 +164,22 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onNewIntent(Intent i) {
-        if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
-            String key = i.getStringExtra("key");
-            String name = i.getStringExtra("name");
-            Fragment newFragment = new ChatFragment();
-            toxSingleton.activeFriendKey = key;
-            toxSingleton.activeFriendRequestKey = null;
-            tempRightPaneActive = true;
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.right_pane, newFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle(activeTitle);
-            clearUselessNotifications();
+        if (i.getAction() != null) {
+            if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+                String key = i.getStringExtra("key");
+                String name = i.getStringExtra("name");
+                Fragment newFragment = new ChatFragment();
+                toxSingleton.activeFriendKey = key;
+                toxSingleton.activeFriendRequestKey = null;
+                tempRightPaneActive = true;
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.right_pane, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                setTitle(activeTitle);
+                clearUselessNotifications();
+            }
         }
     }
 
