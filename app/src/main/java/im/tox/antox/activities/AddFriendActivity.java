@@ -77,12 +77,15 @@ public class AddFriendActivity extends ActionBarActivity {
         /* Send intent to ToxService */
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         EditText friendMessage = (EditText) findViewById(R.id.addfriend_message);
+        EditText friendAlias = (EditText) findViewById(R.id.addfriend_friendAlias);
 
         /*validates key*/
         if (validateFriendKey(friendID.getText().toString())) {
+            String ID = friendID.getText().toString();
             String message = friendMessage.getText().toString();
+            String alias = friendAlias.getText().toString();
 
-            String[] friendData = {friendID.getText().toString(), message};
+            String[] friendData = {ID, message, alias};
 
             AntoxDB db = new AntoxDB(getApplicationContext());
             if (!db.doesFriendExist(friendID.getText().toString())) {
@@ -90,7 +93,11 @@ public class AddFriendActivity extends ActionBarActivity {
                 addFriend.setAction(Constants.ADD_FRIEND);
                 addFriend.putExtra("friendData", friendData);
                 this.startService(addFriend);
-                db.addFriend(friendID.getText().toString(), "Friend Request Sent");
+
+                if(!alias.equals(""))
+                    ID = alias;
+
+                db.addFriend(ID, "Friend Request Sent", alias);
             } else {
                 toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
             }
