@@ -70,7 +70,8 @@ public class ProfileActivity extends ActionBarActivity {
         statusSpinner = (Spinner) findViewById(R.id.settings_spinner_status);
 
         /* Add acceptable statuses to the drop down menu */
-        String[] statusItems = new String[]{ getResources().getString(R.string.status_online),
+        String[] statusItems = new String[]{
+                getResources().getString(R.string.status_online),
                 getResources().getString(R.string.status_away),
                 getResources().getString(R.string.status_busy)
         };

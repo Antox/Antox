@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
@@ -159,11 +160,13 @@ public class ContactsFragment extends Fragment {
                 final boolean isFriendRequest = item.viewType==Constants.TYPE_FRIEND_REQUEST;
                 final CharSequence items[];
                 if(isFriendRequest){
-                    items= new CharSequence[]{getResources().getString(R.string.friendrequest_accept),
+                    items= new CharSequence[]{
+                            getResources().getString(R.string.friendrequest_accept),
                             getResources().getString(R.string.friendrequest_reject)
                     };
                 }else{
                     items= new CharSequence[]{
+                            getResources().getString(R.string.friend_action_profile),
                             getResources().getString(R.string.friend_action_delete),
                             getResources().getString(R.string.friend_action_deletechat)
                     };
@@ -201,39 +204,36 @@ public class ContactsFragment extends Fragment {
                                             break;
                                     }
                                 }else{
+                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                    //Get friend key
+                                    String key = "";
+                                    for(int i = 0; i < tmp.size(); i++) {
+                                        if(item.first.equals(tmp.get(i).friendName)) {
+                                            key = tmp.get(i).friendKey;
+                                            break;
+                                        }
+                                    }
                                     switch (index){
                                         case 0:
-                                            ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
-                                            //Get friend key
-                                            String key = "";
-                                            for(int i = 0; i < tmp.size(); i++) {
-                                                if(item.first.equals(tmp.get(i).friendName)) {
-                                                    key = tmp.get(i).friendKey;
-                                                    break;
-                                                }
+                                            if(!key.equals("")) {
+                                                Intent profile = new Intent(main_act, FriendProfileActivity.class);
+                                                profile.putExtra("key", key);
+                                                startActivity(profile);
                                             }
+                                            break;
+                                        case 1:
                                             //Delete friend
                                             Log.d("ContactsFragment","Delete Friend selected");
                                             if (!key.equals("")) {
                                                 showAlertDialog(getActivity(),key);
                                             }
                                             break;
-                                        case 1:
-                                            ArrayList<Friend> tmp1 = ((MainActivity)getActivity()).friendList;
-                                            //Get friend key
-                                            String key1 = "";
-                                            for(int i = 0; i < tmp1.size(); i++) {
-                                                if(item.first.equals(tmp1.get(i).friendName)) {
-                                                    key1 = tmp1.get(i).friendKey;
-                                                    break;
-                                                }
-                                            }
-
+                                        case 2:
                                             AntoxDB db = new AntoxDB(getActivity());
-                                            db.deleteChat(key1);
+                                            db.deleteChat(key);
                                             db.close();
                                             main_act.updateLeftPane();
-                                            clearChat(key1);
+                                            clearChat(key);
                                             break;
                                     }
                                 }

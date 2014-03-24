@@ -27,7 +27,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
 
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
-            " ( _id integer primary key , key text, username text, status text,note text, isonline boolean)";
+            " ( _id integer primary key , key text, username text, status text, note text, isonline boolean, alias text)";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
@@ -347,5 +347,34 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_ISONLINE, online);
         db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
         db.close();
+    }
+
+    public String[] getFriendDetails(String key) {
+        String[] details = { null, null, null };
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        Log.d("DB", selectQuery);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(2);
+                String note = cursor.getString(4);
+                String alias = cursor.getString(6);
+
+                if(name.equals(""))
+                    name = key.substring(0,7);
+
+                details[0] = name;
+                details[1] = alias;
+                details[2] = note;
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return details;
     }
 }
