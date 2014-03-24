@@ -1,17 +1,19 @@
 package im.tox.antox.activities;
 
+import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import im.tox.antox.R;
 
 /**
- * Profile Activity where the user can change their username, status, and note.
+ * About activity where contact and version information is displayed
 
- * @author Mark Winter (Astonex) & David Lohle (Proplex)
+ * @author Mark Winter (Astonex) & David Lohle (Proplex) & sudden6
  */
 
 public class AboutActivity extends ActionBarActivity {
@@ -33,6 +35,20 @@ public class AboutActivity extends ActionBarActivity {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        /* Display version string in about section */
+        TextView version = (TextView)findViewById(R.id.version_string);
+        try {
+            PackageInfo pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String versionName = pinfo.versionName;
+            version.setText(getString(R.string.about_version)+ " " + versionName);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
