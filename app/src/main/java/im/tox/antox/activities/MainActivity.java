@@ -150,8 +150,8 @@ public class MainActivity extends ActionBarActivity {
 
     public void updateChat(String key) {
         Log.d(TAG, "updating chat");
-        if (toxSingleton.friendsList.getById(key) != null
-                && toxSingleton.friendsList.getById(key).getName() != null) {
+        if(toxSingleton.friendsList.getById(key)!=null
+                && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
             if (toxSingleton.rightPaneActive) {
                 db.markIncomingMessagesRead(key);
@@ -193,7 +193,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         /* Fix for an android 4.1.x bug */
-        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getWindow().setFlags(
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -215,8 +215,8 @@ public class MainActivity extends ActionBarActivity {
         }
 
         Log.i(TAG, "onCreate");
-        toxSingleton.activeFriendKey = null;
-        toxSingleton.activeFriendRequestKey = null;
+        toxSingleton.activeFriendKey=null;
+        toxSingleton.activeFriendRequestKey=null;
         setContentView(R.layout.activity_main);
 
         toxSingleton.leftPaneActive = true;
@@ -224,18 +224,20 @@ public class MainActivity extends ActionBarActivity {
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected())
+        {
             // Executes in a separate thread so UI experience isn't affected
             // Downloads the DHT node details
-            if (DhtNode.ipv4.size() == 0)
+            if(DhtNode.ipv4.size() == 0)
                 new DHTNodeDetails().execute();
-        } else {
+        }
+        else {
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
                     getString(R.string.main_not_connected));
         }
 
         /* If the tox service isn't already running, start it */
-        if (!isToxServiceRunning()) {
+        if(!isToxServiceRunning()) {
             /* If the service wasn't running then we wouldn't have gotten callbacks for a user
             *  going offline so default everyone to offline and just wait for callbacks.
             */
@@ -292,19 +294,18 @@ public class MainActivity extends ActionBarActivity {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
     }
-
     private Message mostRecentMessage(String key, ArrayList<Message> messages) {
-        for (int i = 0; i < messages.size(); i++) {
+        for (int i=0; i<messages.size(); i++) {
             if (key.equals(messages.get(i).key)) {
                 return messages.get(i);
             }
         }
-        return new Message(-1, key, "", false, true, true, true, new Timestamp(0, 0, 0, 0, 0, 0, 0));
+        return new Message(-1, key, "", false, true, true, true, new Timestamp(0,0,0,0,0,0,0));
     }
 
     private int countUnreadMessages(String key, ArrayList<Message> messages) {
         int counter = 0;
-        if (key != null) {
+        if(key!=null) {
             Message m;
             for (int i = 0; i < messages.size(); i++) {
                 m = messages.get(i);
@@ -319,7 +320,6 @@ public class MainActivity extends ActionBarActivity {
         }
         return counter;
     }
-
     public void updateLeftPane() {
 
         AntoxDB antoxDB = new AntoxDB(this);
@@ -382,7 +382,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
-
     /**
      * Starts a new intent to open the SettingsActivity class
      *
@@ -392,7 +391,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
-
     /**
      * Starts a new intent to open the AboutActivity class
      *
@@ -402,7 +400,6 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, AboutActivity.class);
         startActivity(intent);
     }
-
     /**
      * Starts a new intent to open the AddFriendActivity class
      *
@@ -413,7 +410,7 @@ public class MainActivity extends ActionBarActivity {
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
-    private void clearUselessNotifications() {
+    private void clearUselessNotifications () {
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
                 && toxSingleton.friendsList.all().size() > 0) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
@@ -484,7 +481,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void addFriendToGroup() {
-        Log.v("Add friend to group method", "To implement");
+        Log.v("Add friend to group method","To implement");
     }
 
     @Override
@@ -522,7 +519,7 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
         //the class menu property is now the initialized menu
-        this.menu = menu;
+        this.menu=menu;
 
         return true;
     }
@@ -552,6 +549,7 @@ public class MainActivity extends ActionBarActivity {
         final String[] nodeDetails = new String[7];
 
 
+
         @Override
         protected Void doInBackground(Void... params) {
             try {
@@ -559,14 +557,16 @@ public class MainActivity extends ActionBarActivity {
                 Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
                 Elements nodeRows = document.getElementsByTag("tr");
 
-                for (Element nodeRow : nodeRows) {
+                for(Element nodeRow : nodeRows)
+                {
                     Elements nodeElements = nodeRow.getElementsByTag("td");
                     int c = 0;
-                    for (Element nodeElement : nodeElements)
-                        nodeDetails[c++] = nodeElement.text();
+                    for(Element nodeElement : nodeElements)
+                        nodeDetails[c++]=nodeElement.text();
 
 
-                    if (nodeDetails[6] != null && nodeDetails[6].equals("WORK")) {
+                    if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
+                    {
                         DhtNode.ipv4.add(nodeDetails[0]);
                         DhtNode.ipv6.add(nodeDetails[1]);
                         DhtNode.port.add(nodeDetails[2]);
@@ -587,7 +587,7 @@ public class MainActivity extends ActionBarActivity {
             int pos = -1;
             Socket socket = null;
             Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-            for (int i = 0; i < DhtNode.ipv4.size(); i++) {
+            for(int i = 0;i < DhtNode.ipv4.size(); i++) {
                 Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
@@ -606,7 +606,7 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
 
-            if (socket != null) {
+            if(socket != null) {
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -615,7 +615,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
              /* Move quickest node to front of list */
-            if (pos != -1) {
+            if(pos != -1) {
                 DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
                 DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
                 DhtNode.port.add(0, DhtNode.port.get(pos));
@@ -629,7 +629,8 @@ public class MainActivity extends ActionBarActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(Void result)
+        {
             try {
                 //Checking the details
                 System.out.println("node details:");
@@ -639,15 +640,16 @@ public class MainActivity extends ActionBarActivity {
                 System.out.println(DhtNode.key);
                 System.out.println(DhtNode.owner);
                 System.out.println(DhtNode.location);
-            } catch (NullPointerException e) {
-                Toast.makeText(MainActivity.this, getString(R.string.main_node_list_download_error), Toast.LENGTH_SHORT).show();
+            }catch (NullPointerException e){
+                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
             }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
              * ToxService, because both are in separate threads. In that case to make sure the nodes
              * are bootstrapped we restart the ToxService
              */
-            if (!DhtNode.connected) {
+            if(!DhtNode.connected)
+            {
                 Log.d(TAG, "Restarting START_TOX as DhtNode.connected returned false");
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
@@ -655,7 +657,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             /* Restart intent if it was connected before nodes were sorted */
-            if (DhtNode.connected && !DhtNode.sorted) {
+            if(DhtNode.connected && !DhtNode.sorted) {
                 Log.d(TAG, "Restarting START_TOX as DhtNode.sorted was false");
                 Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
                 restart.setAction(Constants.START_TOX);
@@ -672,19 +674,17 @@ public class MainActivity extends ActionBarActivity {
             finish();
         }
     }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == RESULT_OK) {
+        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             updateLeftPane();
-        } else if (requestCode == Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
+        } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
+            Uri uri=  data.getData();
             File pickedFile = new File(uri.getPath());
             MimeTypeMap mime = MimeTypeMap.getSingleton();
-            Log.d("file picked", "" + pickedFile.getAbsolutePath());
-            Log.d("file type", "" + getContentResolver().getType(uri));
+            Log.d("file picked",""+pickedFile.getAbsolutePath() );
+            Log.d("file type",""+getContentResolver().getType(uri));
         }
     }
-
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override
@@ -692,9 +692,9 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
-            MenuItemCompat.setShowAsAction(af, MenuItem.SHOW_AS_ACTION_NEVER);
+            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
             ag.setVisible(true);
-            MenuItemCompat.setShowAsAction(ag, MenuItem.SHOW_AS_ACTION_ALWAYS);
+            MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
             ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -705,7 +705,7 @@ public class MainActivity extends ActionBarActivity {
             toxSingleton.rightPaneActive = true;
             System.out.println("Panel closed");
             toxSingleton.leftPaneActive = false;
-            if (toxSingleton.activeFriendKey != null) {
+            if(toxSingleton.activeFriendKey!=null){
                 updateChat(toxSingleton.activeFriendKey);
             }
             clearUselessNotifications();
@@ -716,15 +716,15 @@ public class MainActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
             MenuItem af = menu.findItem(R.id.add_friend);
-            MenuItemCompat.setShowAsAction(af, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 //            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             /*af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);*/
             menu.removeGroup(666);
             supportInvalidateOptionsMenu();
-            toxSingleton.rightPaneActive = false;
+            toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
-            InputMethodManager imm = (InputMethodManager) getSystemService(
+            InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             /* This is causing a null pointer exception */
             //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
