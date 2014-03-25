@@ -6,15 +6,20 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preview.support.wearable.notifications.*;
 import android.preview.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import im.tox.antox.data.AntoxDB;
@@ -275,7 +280,15 @@ public class ToxService extends IntentService {
             AntoxDB db = new AntoxDB(getApplicationContext());
             db.addFriendRequest(key, message);
             db.close();
-
+            SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
+            List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+            list.add(key);
+            editor.remove("PREF_KEY_STRINGS");
+            editor.commit();
+            editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", list));
+            editor.commit();
             /* Notification */
             if(!toxSingleton.leftPaneActive) {
                 NotificationCompat.Builder mBuilder =
@@ -354,6 +367,15 @@ public class ToxService extends IntentService {
                 Log.d(TAG, "Saving request");
 
                 Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
+                SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                String serialized = pref.getString("PREF_KEY_STRINGS", null);
+                List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+                list.add(key);
+                editor.remove("PREF_KEY_STRINGS");
+                editor.commit();
+                editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", list));
+                editor.commit();
 
             } catch (Exception e) {
 
