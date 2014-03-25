@@ -97,6 +97,15 @@ public class ProfileActivity extends ActionBarActivity {
         if(!file.exists()){
             file.mkdirs();
         }
+
+        File noMedia = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/",".nomedia");
+        if(!noMedia.exists()){
+            try {
+                noMedia.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
         generateQR(pref.getString("user_key", ""));
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
