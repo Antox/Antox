@@ -89,7 +89,7 @@
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
     <string name="friend_profile_alias">Alias</string>
-    <string name="friend_profile_key">Tox Key</string>
+    <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update Alias</string>
     <string name="friend_profile_updated">Alias has been updated</string>
