@@ -12,10 +12,12 @@
         android:layout_height="wrap_content"
         android:text="@string/friend_profile_note"
         android:id="@+id/friendNoteText"
-        android:textSize="30dp"
         android:textStyle="italic"
         android:textAlignment="center"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:textColor="#a0a2a2"
+        android:typeface="serif"
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
