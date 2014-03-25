@@ -20,6 +20,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -123,6 +127,21 @@ public class MainActivity extends ActionBarActivity {
                     toast.show();
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
+                    SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+                    String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
+                    if(serialized==null) {
+                        editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", friendList));
+                        editor.commit();
+                    }
+                    List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+                    String temp = intent.getStringExtra("key");
+                    list.remove(temp);
+                    list.add(0, temp);
+                    editor.remove("PREF_KEY_STRINGS");
+                    editor.commit();
+                    editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", list));
+                    editor.commit();
                     updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
@@ -325,6 +344,16 @@ public class MainActivity extends ActionBarActivity {
         AntoxDB antoxDB = new AntoxDB(this);
 
         friendList = antoxDB.getFriendList();
+        SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
+        if(serialized==null) {
+            List<String> friendListKey = new ArrayList<String>();
+            for(int i=0;i<friendList.size();i++)
+                friendListKey.add(friendList.get(i).friendKey);
+            editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", friendListKey));
+            editor.commit();
+        }
         ArrayList<Message> messageList = antoxDB.getMessageList("");
 
         Friend friends_list[] = new Friend[friendList.size()];
@@ -357,21 +386,33 @@ public class MainActivity extends ActionBarActivity {
                 leftPaneKeyList.add(friend_requests_list[i].requestKey);
             }
         }
+        List<String> list=null;
+        serialized = pref.getString("PREF_KEY_STRINGS", null);
+        if(serialized!=null)
+            list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
         if (friends_list.length > 0) {
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
             leftPaneAdapter.addItem(friends_header);
             leftPaneKeyList.add("");
-            for (int i = 0; i < friends_list.length; i++) {
-                msg = mostRecentMessage(friends_list[i].friendKey, messageList);
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
-                leftPaneAdapter.addItem(friend);
-                leftPaneKeyList.add(friends_list[i].friendKey);
+            for (int j = 0; j < friends_list.length; j++)
+            {
+                for(int i=0; i< friends_list.length; i++)
+                {
+                    if(list.get(j).equals(friends_list[i].friendKey)) {
+                        msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                        LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
+                        leftPaneAdapter.addItem(friend);
+                        leftPaneKeyList.add(friends_list[i].friendKey);
+                        break;
+                    }
+                }
             }
         }
 
         antoxDB.close();
         contacts.updateLeftPane();
     }
+
 
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -481,7 +522,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void addFriendToGroup() {
-        Log.v("Add friend to group method","To implement");
+        Log.v("Add friend to group method", "To implement");
     }
 
     @Override
@@ -591,10 +632,10 @@ public class MainActivity extends ActionBarActivity {
                 Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(300);
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
                     Log.d(TAG, "Elapsed time: " + elapsedTime);
-                    if (reachable && elapsedTime < shortestTime) {
+                    if (reachable && (elapsedTime < shortestTime)) {
                         shortestTime = elapsedTime;
                         pos = i;
                         Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
