@@ -82,6 +82,7 @@ public class MainActivity extends ActionBarActivity {
     private ContactsFragment contacts;
     private IntentFilter filter;
     private boolean tempRightPaneActive;
+    MenuItem ag;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
@@ -108,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
             Log.d(TAG, "broadcast received");
             String action = intent.getStringExtra("action");
             if (action != null) {
-            Log.d(TAG, "action: " + action);
+                Log.d(TAG, "action: " + action);
                 if (action.equals(Constants.FRIEND_REQUEST)) {
 
                 } else if (action.equals(Constants.UPDATE_LEFT_PANE)) {
@@ -123,9 +124,9 @@ public class MainActivity extends ActionBarActivity {
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
                     Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
                     updateLeftPane();
-                        if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
-                            updateChat(toxSingleton.activeFriendKey);
-                        }
+                    if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
+                        updateChat(toxSingleton.activeFriendKey);
+                    }
                 } else if (action.equals(Constants.ACCEPT_FRIEND_REQUEST)) {
                     updateLeftPane();
                     Context ctx = getApplicationContext();
@@ -147,7 +148,7 @@ public class MainActivity extends ActionBarActivity {
     };
 
 
-   public void updateChat(String key) {
+    public void updateChat(String key) {
         Log.d(TAG, "updating chat");
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
@@ -226,7 +227,7 @@ public class MainActivity extends ActionBarActivity {
         if (networkInfo != null && networkInfo.isConnected())
         {
             // Executes in a separate thread so UI experience isn't affected
-           // Downloads the DHT node details
+            // Downloads the DHT node details
             if(DhtNode.ipv4.size() == 0)
                 new DHTNodeDetails().execute();
         }
@@ -488,6 +489,8 @@ public class MainActivity extends ActionBarActivity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        ag = menu.add(666, 100, 100, R.string.add_to_group);
+        ag.setIcon(R.drawable.ic_action_add_group).setVisible(false);
         final MenuItem menuItem = menu.findItem(R.id.search_friend);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView
@@ -543,7 +546,7 @@ public class MainActivity extends ActionBarActivity {
 
     // Downloads the the first working DHT node
     private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
-       final String[] nodeDetails = new String[7];
+        final String[] nodeDetails = new String[7];
 
 
 
@@ -559,7 +562,7 @@ public class MainActivity extends ActionBarActivity {
                     Elements nodeElements = nodeRow.getElementsByTag("td");
                     int c = 0;
                     for(Element nodeElement : nodeElements)
-                         nodeDetails[c++]=nodeElement.text();
+                        nodeDetails[c++]=nodeElement.text();
 
 
                     if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
@@ -578,8 +581,8 @@ public class MainActivity extends ActionBarActivity {
 
             Log.d(TAG, "About to ping servers...");
             /**
-            * Ping servers to find quickest connection
-            */
+             * Ping servers to find quickest connection
+             */
             long shortestTime = 99999;
             int pos = -1;
             Socket socket = null;
@@ -690,8 +693,7 @@ public class MainActivity extends ActionBarActivity {
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
-            MenuItem ag= menu.add(666, 100, 100, R.string.add_to_group);
-            ag.setIcon(R.drawable.ic_action_add_group);
+            ag.setVisible(true);
             MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
             ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -719,6 +721,7 @@ public class MainActivity extends ActionBarActivity {
             /*af.setIcon(R.drawable.ic_action_add_person);
             af.setTitle(R.string.add_friend);*/
             menu.removeGroup(666);
+            supportInvalidateOptionsMenu();
             toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
             InputMethodManager imm = (InputMethodManager)getSystemService(
