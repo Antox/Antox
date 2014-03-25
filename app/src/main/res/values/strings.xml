@@ -21,13 +21,10 @@
     <string name="add_to_group">Add To Group</string>
 
     <!-- Main Activity -->
-<<<<<<< HEAD
-=======
     <string name="title">antox</string>
     <string name="main_avatar">Avatar</string>
     <string name="main_username">Username</string>
     <string name="main_status">Status</string>
->>>>>>> Proplex-master
     <string name="icon_description">Connection Status</string>
     <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
     <string name="main_try_adding">Add some friends to get started</string>

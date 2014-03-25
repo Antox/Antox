@@ -45,11 +45,11 @@
 
     <!-- Welcome Activity -->
     <string name="about_string">Ce client est encore en pre-alpha.</string>
-    <string name="getstarted_string">Entrer le nom d'\utilisateur désiré</string>
+    <string name="getstarted_string">Entrer le nom d\'utilisateur désiré</string>
     <string name="settings_custom_dht">Nœud DHT personnalisé</string>
     <string name="settings_use_custom_dht">Utiliser le nœud DHT personnalisé</string>
     <string name="settings_user_key_title">Votre identifiant Tox</string>
-    <string name="settings_name_hint">entrer votre nom d'\utilisateur</string>
+    <string name="settings_name_hint">entrer votre nom d\'utilisateur</string>
     <string name="settings_note_hint">entrer votre note personnelle</string>
     <string name="settings_dht_ip">Adresse IP d\’amorçage (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Numéro de port d\’amorçage (ex: 33445)</string>
