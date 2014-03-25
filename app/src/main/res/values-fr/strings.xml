@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Bienvenue</string>
+    <string name="title_activity_add_friend">Ajouter un ami</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_profile">Profil</string>
+    <string name="title_activity_about">À propos</string>
+    <string name="title_activity_friend_profile">Profil</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Paramètres</string>
+    <string name="action_exit">Sortir</string>
+    <string name="add_friend">Ajouter un ami</string>
+    <string name="search_friend">Rechercher</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_about">À propos</string>
+    <string name="add_to_group">Ajouter au groupe</string>
+
+    <!-- Main Activity -->
+    <string name="icon_description">Statut de la connexion</string>
+    <string name="main_no_friends">Hey! Vous n\'avez personne à qui parler!</string>
+    <string name="main_try_adding">Ajouter des amis pour commencer</string>
+    <string name="main_friend_requests">Demandes d\'amis</string>
+    <string name="main_friends">Amis</string>
+    <string name="main_no_internet">Pas de connexion internet</string>
+    <string name="main_not_connected">Vous n\'êtes pas connecté à internet</string>
+    <string name="main_node_list_download_error">Erreur lors du téléchargement de la liste des nœuds</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox est un client Android pour Tox</string>
+    <string name="about_bugs">Pour reporter un bogue, merci de visiter notre page GitHub et de cliquer sur \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Nous sommes sur Freenode sur le canal #tox-dev</string>
+    <string name="about_version">version</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Envoyer un message</string>
+
+
+    <!-- Welcome Activity -->
+    <string name="about_string">Ce client est encore en pre-alpha.</string>
+    <string name="getstarted_string">Entrer le nom d'\utilisateur désiré</string>
+    <string name="settings_custom_dht">Nœud DHT personnalisé</string>
+    <string name="settings_use_custom_dht">Utiliser le nœud DHT personnalisé</string>
+    <string name="settings_user_key_title">Votre identifiant Tox</string>
+    <string name="settings_name_hint">entrer votre nom d'\utilisateur</string>
+    <string name="settings_note_hint">entrer votre note personnelle</string>
+    <string name="settings_dht_ip">Adresse IP d\’amorçage (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Numéro de port d\’amorçage (ex: 33445)</string>
+    <string name="settings_dht_key">Clé publique d\’amorçage (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Mise à jour</string>
+    <string name="settings_updated">Vos paramètres ont été mis à jour</string>
+    <string name="settings_dht_spinner_title">Paramètres avancés</string>
+    <string name="settings_status_title">Définir votre statut</string>
+    <string name="settings_note_title">Définir votre note personnelle</string>
+    <string name="settings_username_title">Définir votre nom d\'utilisateur</string>
+    <string name="developer_string">Développé par astonex &amp; co.</string>
+    <string name="welcome_must_select_username">Vos devez sélectionner un nom d\'utilisateur</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Identifiant Tox de votre ami</string>
+    <string name="addfriend_friend_message">Joindre un message à votre demande</string>
+    <string name="addfriend_button">Ajout l\'ami</string>
+    <string name="addfriend_friend_added">Ami ajouté</string>
+    <string name="addfriend_friend_exists">L\'ami est déjà ajouté</string>
+    <string name="scanqr_button">Scanner un code QR</string>
+    <string name="invalid_friend_ID">Identifiant Tox invalide</string>
+    <string name="addfriend_alias_hint">Choisir un pseudo pour votre ami</string>
+    <string name="addfriend_optional_title">Infos supplémentaires</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Partager avec</string>
+    <string name="status_online">En ligne</string>
+    <string name="status_away">Absent</string>
+    <string name="status_busy">Occupé</string>
+    <string name="profile_updated">Votre profil a été mis à jour</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Nom</string>
+    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_key">Clé Tox</string>
+    <string name="friend_profile_note">Note</string>
+    <string name="friend_profile_button">Mettre l\'alias à jour</string>
+    <string name="friend_profile_updated">L\'alias a été mis à jour</string>
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Accepter</string>
+    <string name="friendrequest_reject">Rejeter</string>
+    <string name="friendrequest_accepted">Demande d\'ajout acceptée</string>
+    <string name="friendrequest_deleted">Demande d\'ajout refusée</string>
+    <string name="friendrequest">Demande d\'ajout</string>
+    <string name="friendrequest_recieved">Demande d\'ajout reçue</string>
+    <string name="friend_request">Nouvelle demande d\'ajout</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_sendfile">Envoyer fichier</string>
+    <string name="friend_action_delete">Supprimer l\'ami</string>
+    <string name="friend_action_block">Bloquer</string>
+    <string name="group_action_leave">Quitter groupe</string>
+    <string name="friend_action_deletechat">Vider l\'historique de chat</string>
+
+    <string name="contacts_actions_on">Actions</string>
+    <string name="contacts_clear_saved_logs">Voulez-vous également supprimer l\'historique de chat enregistré ?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Confirmer</string>
+    <string name="button_cancel">Annuler</string>
+    <string name="button_yes">Oui</string>
+    <string name="button_no">Non</string>
+
+</resources>
