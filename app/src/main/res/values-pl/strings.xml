@@ -9,6 +9,7 @@
     <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_about">O programie</string>
+    <string name="title_activity_friend_profile">Profil</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Ustawienia</string>
@@ -36,6 +37,7 @@
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
     <string name="about_irc">Jesteśmy także na Freenode na #tox-dev</string>
+    <string name="about_version">wersja</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Wyślij wiadomość</string>
@@ -64,12 +66,14 @@
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID twojego znajomego</string>
-    <string name="addfriend_friend_message">Opcjonalna wiadomość</string>
+    <string name="addfriend_friend_message">Wyślij wiadomość z zapytaniem</string>
     <string name="addfriend_button">Dodaj znajomego</string>
     <string name="addfriend_friend_added">Znajomy dodany</string>
     <string name="addfriend_friend_exists">Znajomy już istnieje</string>
     <string name="scanqr_button">Skanuj kod QR</string>
     <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
+    <string name="addfriend_alias_hint">Ustaw nick dla znajomego</string>
+    <string name="addfriend_optional_title">Dodatkowo</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Podziel się z</string>
@@ -78,6 +82,13 @@
     <string name="status_busy">Zajęty</string>
     <string name="profile_updated">Twój profil został zaktualizowany</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Nazwa</string>
+    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_key">Tox Key</string>
+    <string name="friend_profile_note">Notka</string>
+    <string name="friend_profile_button">Aktualizuj alias</string>
+    <string name="friend_profile_updated">Alias został zaktualizowany</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Zaakceptuj</string>
@@ -89,13 +100,14 @@
     <string name="friend_request">Nowe zapytanie o dodanie do znajomych</string>
 
     <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profil</string>
     <string name="friend_action_sendfile">Wyślij plik</string>
     <string name="friend_action_delete">Usuń znajomego</string>
     <string name="friend_action_block">Blokuj</string>
     <string name="group_action_leave">Opuść grupę</string>
-    <string name="friend_action_deletechat">Usuń cały czat</string>
+    <string name="friend_action_deletechat">Usuń logi czatu</string>
 
-    <string name="contacts_actions_on">Actions on</string>
+    <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
 
     <!--  Misc -->
