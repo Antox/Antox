@@ -16,6 +16,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
@@ -108,6 +109,7 @@ public class ToxDoService extends IntentService {
                 AntoxOnReadReceiptCallback antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(getApplicationContext());
                 AntoxOnStatusMessageCallback antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(getApplicationContext());
                 AntoxOnUserStatusCallback antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(getApplicationContext());
+                AntoxOnTypingChangeCallback antoxOnTypingChangeCallback = new AntoxOnTypingChangeCallback(getApplicationContext());
 
                 toxSingleton.callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
                 toxSingleton.callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
@@ -117,6 +119,7 @@ public class ToxDoService extends IntentService {
                 toxSingleton.callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback);
                 toxSingleton.callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback);
                 toxSingleton.callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
+                toxSingleton.callbackHandler.registerOnTypingChangeCallback(antoxOnTypingChangeCallback);
 
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settingsPref.edit();
