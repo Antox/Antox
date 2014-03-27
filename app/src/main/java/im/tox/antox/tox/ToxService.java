@@ -280,15 +280,7 @@ public class ToxService extends IntentService {
             AntoxDB db = new AntoxDB(getApplicationContext());
             db.addFriendRequest(key, message);
             db.close();
-            SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = pref.edit();
-            String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
-            Set<String> list = new LinkedHashSet<String>(Arrays.asList(TextUtils.split(serialized, ",")));
-            list.add(key);
-            editor.remove("PREF_KEY_STRINGS");
-            editor.commit();
-            editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", list));
-            editor.commit();
+
             /* Notification */
             if(!toxSingleton.leftPaneActive) {
                 NotificationCompat.Builder mBuilder =
@@ -367,15 +359,7 @@ public class ToxService extends IntentService {
                 Log.d(TAG, "Saving request");
 
                 Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
-                SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                String serialized = pref.getString("PREF_KEY_STRINGS", null);
-                Set<String> list = new LinkedHashSet(Arrays.asList(TextUtils.split(serialized, ",")));
-                list.add(key);
-                editor.remove("PREF_KEY_STRINGS");
-                editor.commit();
-                editor.putString("PREF_KEY_STRINGS", TextUtils.join(",", list));
-                editor.commit();
+
 
             } catch (Exception e) {
 
