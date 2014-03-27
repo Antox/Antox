@@ -25,7 +25,8 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
-
+    // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
+    // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
             " ( _id integer primary key , key text, username text, status text, note text,  alias text, isonline boolean)";
 
