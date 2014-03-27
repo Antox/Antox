@@ -251,8 +251,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String key = cursor.getString(1);
                 String status = cursor.getString(3);
                 String note = cursor.getString(4);
-                String alias = cursor.getString(6);
-                int online = cursor.getInt(5);
+                String alias = cursor.getString(5);
+                int online = cursor.getInt(6);
 
                 if(alias == null)
                     alias = "";
