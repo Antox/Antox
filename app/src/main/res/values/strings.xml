@@ -47,7 +47,7 @@
     <string name="chat_enter_message">Send a message</string>
 
 
-    <!-- Welcome Activity -->
+    <!-- Settings Activity -->
     <string name="about_string">This client is still in pre-alpha.</string>
     <string name="getstarted_string">Enter your desired username</string>
     <string name="settings_custom_dht">Custom DHT node Settings</string>
@@ -64,6 +64,8 @@
     <string name="settings_status_title">Set your status</string>
     <string name="settings_note_title">Set your personal note</string>
     <string name="settings_username_title">Set your username</string>
+    <string name="settings_empty_strings">You must fill out all fields</string>
+    <string name="settings_invalid_key">Invalid key given</string>
     <string name="developer_string">Developed by astonex &amp; co.</string>
     <string name="welcome_must_select_username">You must select a username</string>
 
