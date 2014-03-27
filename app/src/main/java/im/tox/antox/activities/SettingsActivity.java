@@ -15,6 +15,9 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import im.tox.antox.fragments.DHTDialogFragment;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.R;
@@ -125,6 +128,7 @@ public class SettingsActivity extends ActionBarActivity
 
         /* Also save DHT details to DhtNode class */
         editor.putBoolean("saved_custom_dht", dhtBox.isChecked());
+
         if (dhtBox.isChecked() && !dhtIP.equals(getString(R.id.settings_dht_ip))) {
             editor.putString("saved_dht_ip", dhtIP);
             DhtNode.ipv4.add(dhtIP);
@@ -178,6 +182,39 @@ public class SettingsActivity extends ActionBarActivity
         dhtIP = dhtIP_;
         dhtPort = dhtPort_;
         dhtKey = dhtKey_;
+
+        if(dhtIP.toString().equals("") || dhtPort.toString().equals("") || dhtKey.toString().equals("")) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.settings_empty_strings);
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            dhtBox.setChecked(false);
+        }
+        if(!validateKey(dhtKey)) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.settings_invalid_key);
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+            dhtBox.setChecked(false);
+        }
+    }
+
+    private boolean validateKey(String friendKey) {
+        if (friendKey.length() != 76 || friendKey.matches("[[:xdigit:]]")) {
+            return false;
+        }
+        int x = 0;
+        try {
+            for (int i = 0; i < friendKey.length(); i += 4) {
+                x = x ^ Integer.valueOf(friendKey.substring(i, i + 4), 16);
+            }
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+        return x == 0;
     }
 
     //Called when the DHT settings dialog is canceled
