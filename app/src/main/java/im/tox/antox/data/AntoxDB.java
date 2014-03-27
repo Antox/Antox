@@ -27,7 +27,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
 
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
-            " ( _id integer primary key , key text, username text, status text, note text, isonline boolean, alias text)";
+            " ( _id integer primary key , key text, username text, status text, note text,  alias text, isonline boolean)";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
@@ -127,6 +127,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
         return messageList;
     }
 
@@ -194,6 +195,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
         return messageList;
     }
 
@@ -208,7 +210,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                 + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND "
                 + Constants.COLUMN_NAME_IS_OUTGOING + "=1" + " AND "
                 + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0");
-
+        db.close();
     }
 
     public String setMessageReceived(int receipt) { //returns public key of who the message was sent to
@@ -222,6 +224,7 @@ public class AntoxDB extends SQLiteOpenHelper {
             k = cursor.getString(3);
         }
         cursor.close();
+        db.close();
         return k;
     }
 
@@ -279,9 +282,11 @@ public class AntoxDB extends SQLiteOpenHelper {
         int count = mCount.getInt(0);
         if(count > 0) {
             mCount.close();
+            db.close();
             return true;
         }
         mCount.close();
+        db.close();
         return false;
     }
 
@@ -382,6 +387,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        db.close();
 
         return details;
     }
@@ -390,5 +396,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ALIAS + "='" + alias + "' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
+        db.close();
     }
 }
