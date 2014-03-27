@@ -66,6 +66,8 @@
     <string name="settings_status_title">Stato</string>
     <string name="settings_note_title">Informazioni personali</string>
     <string name="settings_username_title">Nickname</string>
+    <string name="settings_empty_strings">Devi compilare tutti i campi</string>
+    <string name="settings_invalid_key">Valore non valido</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">ID del tuo amico</string>
