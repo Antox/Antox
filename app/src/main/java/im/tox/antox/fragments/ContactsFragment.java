@@ -17,11 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.data.AntoxDB;

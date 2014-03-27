@@ -17,9 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 import im.tox.antox.data.AntoxDB;
@@ -344,7 +341,7 @@ public class ToxService extends IntentService {
                 AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
                 int pos = -1;
                 for(int i = 0; i < friends.size(); i++) {
-                    if(friends.get(i).friendKey == key) {
+                    if(friends.get(i).friendKey.equals(key)) {
                         pos = i;
                         break;
                     }
