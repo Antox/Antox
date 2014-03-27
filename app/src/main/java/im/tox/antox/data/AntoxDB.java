@@ -394,7 +394,7 @@ public class AntoxDB extends SQLiteOpenHelper {
             do {
                 String name = cursor.getString(2);
                 String note = cursor.getString(4);
-                String alias = cursor.getString(6);
+                String alias = cursor.getString(5);
 
                 if(name.equals(""))
                     name = key.substring(0,7);
