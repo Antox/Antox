@@ -47,7 +47,7 @@
     <string name="chat_enter_message">Wyślij wiadomość</string>
 
 
-    <!-- Welcome Activity -->
+    <!-- Settings Activity -->
     <string name="about_string">Ten klient to wciąż pre-alpha.</string>
     <string name="getstarted_string">Wprowadź swą wymarzoną nazwę użytkownika</string>
     <string name="settings_custom_dht">Własne ustawienia węzłów DHT</string>
@@ -64,6 +64,8 @@
     <string name="settings_status_title">Ustaw swój status</string>
     <string name="settings_note_title">Ustaw swoją osobistą notkę</string>
     <string name="settings_username_title">Ustaw swoją nazwę użytkownika</string>
+    <string name="settings_empty_strings">Musisz wypełnić wszystkie pola</string>
+    <string name="settings_invalid_key">Podano nieprawidłowy klucz</string>
     <string name="developer_string">Stworzone przez astonex &amp; spółkę.</string>
     <string name="welcome_must_select_username">Musisz wybrać nazwę użytkownika</string>
 
