@@ -21,6 +21,10 @@
     <string name="add_to_group">Dodaj do grupy</string>
 
     <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Awatar</string>
+    <string name="main_username">Nazwa użytkownika</string>
+    <string name="main_status">Status</string>
     <string name="icon_description">Status połączenia</string>
     <string name="main_no_friends">Hej, spójrz, to nima-znajomych!</string>
     <string name="main_try_adding">Dodaj znajomych by zacząć</string>
@@ -85,8 +89,8 @@
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nazwa</string>
     <string name="friend_profile_alias">Alias</string>
-    <string name="friend_profile_key">Tox Key</string>
-    <string name="friend_profile_note">Notka</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Aktualizuj alias</string>
     <string name="friend_profile_updated">Alias został zaktualizowany</string>
 
