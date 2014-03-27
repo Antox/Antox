@@ -359,7 +359,7 @@ public class ToxService extends IntentService {
                 Log.d(TAG, "Saving request");
 
                 Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
-                
+
 
             } catch (Exception e) {
 
