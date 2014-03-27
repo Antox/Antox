@@ -20,6 +20,10 @@
     <string name="add_to_group">Aggiungi Al Gruppo</string>
 
     <!-- Main Activity -->
+    <string name="title">Antox</string>
+    <string name="main_avatar">Immagine Profilo</string>
+    <string name="main_username">Nickname</string>
+    <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
@@ -42,9 +46,9 @@
     <string name="chat_enter_message">Scrivi un messaggio</string>
 
     <!-- Welcome Activity -->
-    <string name="about_string">Questo client è in fase pre-alpha</string>
+    <string name="about_string">APPLICAZIONE IN FASE PRE-ALPHA</string>
     <string name="getstarted_string">Nickname</string>
-    <string name="developer_string">Sviluppato da astonex\n(irc.freenode.net#tox-dev)</string>
+    <string name="developer_string">Sviluppato da astonex</string>
     <string name="welcome_must_select_username">Devi inserire un nickname</string>
 
     <!-- Settings Activity -->
