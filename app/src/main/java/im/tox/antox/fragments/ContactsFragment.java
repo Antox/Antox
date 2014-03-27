@@ -20,8 +20,8 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.data.AntoxDB;
@@ -312,7 +312,7 @@ public class ContactsFragment extends Fragment {
         SharedPreferences pref = getActivity().getSharedPreferences("order", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
-        List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+        Set<String> list = new LinkedHashSet(Arrays.asList(TextUtils.split(serialized, ",")));
         list.remove(key);
         editor.remove("PREF_KEY_STRINGS");
         editor.commit();

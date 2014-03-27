@@ -18,9 +18,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Random;
+import java.util.Set;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -283,7 +283,7 @@ public class ToxService extends IntentService {
             SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
             String serialized = pref.getString("PREF_KEY_STRINGS", null);//if the list is null, add the same order as in DB
-            List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+            Set<String> list = new LinkedHashSet<String>(Arrays.asList(TextUtils.split(serialized, ",")));
             list.add(key);
             editor.remove("PREF_KEY_STRINGS");
             editor.commit();
@@ -352,7 +352,7 @@ public class ToxService extends IntentService {
                 AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
                 int pos = -1;
                 for(int i = 0; i < friends.size(); i++) {
-                    if(friends.get(i).friendKey == key) {
+                    if(friends.get(i).friendKey.equals(key)) {
                         pos = i;
                         break;
                     }
@@ -370,7 +370,7 @@ public class ToxService extends IntentService {
                 SharedPreferences pref = getSharedPreferences("order",Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 String serialized = pref.getString("PREF_KEY_STRINGS", null);
-                List<String> list = new LinkedList(Arrays.asList(TextUtils.split(serialized, ",")));
+                Set<String> list = new LinkedHashSet(Arrays.asList(TextUtils.split(serialized, ",")));
                 list.add(key);
                 editor.remove("PREF_KEY_STRINGS");
                 editor.commit();
