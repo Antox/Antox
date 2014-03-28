@@ -228,7 +228,6 @@ public class AntoxDB extends SQLiteOpenHelper {
                 + Constants.COLUMN_NAME_MESSAGE_ID + "=" + generator.nextInt() + ", "
                 + Constants.COLUMN_NAME_TIMESTAMP + "=datetime('now') WHERE "
                 + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND "
-                + Constants.COLUMN_NAME_IS_OUTGOING + "=1" + " AND "
                 + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0");
         db.close();
     }
