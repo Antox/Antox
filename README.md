@@ -56,11 +56,7 @@ When submitting a bug report, please include the following:-
 - Error report (please give as much information as possible, not just a couple lines from logcat)
 
 ###What Is Currently Working
-- Sending friend requests
-- Receiving friend requests
-- Profile, Settings and About Activities
-- Friends list updates when a friend comes online / goes offline, or changes their other details at all.
-- Offline message queue
+- Basic messaging - this does not include group chats
 
 ###TODO
 We now use Producteev, a web-based task management system to better keep track of all the needed changes. To get an invite, please send an email to mark [at] tox [dot] im
