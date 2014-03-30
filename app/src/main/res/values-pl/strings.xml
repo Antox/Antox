@@ -41,7 +41,7 @@
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
     <string name="about_irc">Jesteśmy także na Freenode na #tox-dev</string>
-    <string name="about_version">wersja</string>
+    <string name="about_version">Wersja</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Wyślij wiadomość</string>
@@ -53,19 +53,19 @@
     <string name="settings_custom_dht">Własne ustawienia węzłów DHT</string>
     <string name="settings_use_custom_dht">Użyj własnych ustawień węzłów DHT</string>
     <string name="settings_user_key_title">Twój Tox ID</string>
-    <string name="settings_name_hint">wprowadź swoje imię</string>
-    <string name="settings_note_hint">wprowadź swoją osobistą notkę</string>
+    <string name="settings_name_hint">Nazwa użytkownika</string>
+    <string name="settings_note_hint">Status</string>
     <string name="settings_dht_ip">Adres IP węzła bootstrap (przykład: 192.254.75.98)</string>
     <string name="settings_dht_port">Port węzła bootstrap (przykład: 33445)</string>
     <string name="settings_dht_key">Adres Klucza Publicznego węzła bootstrap (przykład: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Aktualizuj</string>
     <string name="settings_updated">Twoje ustawienia zostały zaktualizowane</string>
     <string name="settings_dht_spinner_title">Ustawienia zaawansowane</string>
-    <string name="settings_status_title">Ustaw swój status</string>
-    <string name="settings_note_title">Ustaw swoją osobistą notkę</string>
-    <string name="settings_username_title">Ustaw swoją nazwę użytkownika</string>
+    <string name="settings_status_title">Status</string>
+    <string name="settings_note_title">Status</string>
+    <string name="settings_username_title">Nazwa użytkownika</string>
     <string name="settings_empty_strings">Musisz wypełnić wszystkie pola</string>
-    <string name="settings_invalid_key">Podano nieprawidłowy klucz</string>
+    <string name="settings_invalid_key">Wprowadzono nieprawidłowy klucz</string>
     <string name="developer_string">Stworzone przez astonex &amp; spółkę.</string>
     <string name="welcome_must_select_username">Musisz wybrać nazwę użytkownika</string>
 
@@ -93,7 +93,7 @@
     <string name="friend_profile_alias">Alias</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
-    <string name="friend_profile_button">Aktualizuj alias</string>
+    <string name="friend_profile_button">Aktualizuj</string>
     <string name="friend_profile_updated">Alias został zaktualizowany</string>
 
     <!-- Friend request fragment -->
@@ -112,6 +112,10 @@
     <string name="friend_action_block">Blokuj</string>
     <string name="group_action_leave">Opuść grupę</string>
     <string name="friend_action_deletechat">Usuń logi czatu</string>
+    <string name="friend_action_block_confirmation">
+        Zablokowanie tego użytkownika usunie go z twojej lisy znajomych i zapytania o dodanie do znajomych
+        nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
+    </string>
 
     <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
