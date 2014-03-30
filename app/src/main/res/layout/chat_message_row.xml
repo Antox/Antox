@@ -62,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/message_text"
                     android:text="Afd"
-                    android:textSize="@dimen/text_small" />
+                    android:textSize="@dimen/text_small"
+                    android:textColor="@android:color/black" />
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
