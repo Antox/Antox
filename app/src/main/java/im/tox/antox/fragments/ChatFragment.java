@@ -75,9 +75,9 @@ public class ChatFragment extends Fragment {
             for (int i = 0; i < messages.size(); i++) {
                 data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
             }
-                adapter = new ChatMessagesAdapter(((MainActivity)getActivity()), R.layout.chat_message_row, data);
-                chatListView.setAdapter(adapter);
-                chatListView.setSelection(adapter.getCount() - 1);
+            adapter = new ChatMessagesAdapter(main_act.getApplicationContext(), R.layout.chat_message_row, data);
+            chatListView.setAdapter(adapter);
+            chatListView.setSelection(adapter.getCount() - 1);
         }
     }
 

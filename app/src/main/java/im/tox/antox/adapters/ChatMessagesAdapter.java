@@ -103,7 +103,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         ChatMessagesHolder holder = null;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            LayoutInflater inflater = LayoutInflater.from(context);
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ChatMessagesHolder();
             holder.message = (TextView) row.findViewById(R.id.message_text);

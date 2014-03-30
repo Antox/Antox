@@ -8,8 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
+import java.util.TimeZone;
 
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
@@ -201,7 +204,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(0);
+                int m_id = cursor.getInt(2);
                 Log.d("UNSENT MESAGE ID: ", "" + m_id);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
@@ -221,15 +224,17 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void updateUnsentMessage(int m_id) {
         Log.d("UPDATE UNSENT MESSAGE - ID : ", "" + m_id);
+        String messageId = m_id + "";
         SQLiteDatabase db = this.getWritableDatabase();
-        Random generator = new Random();
-        db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET "
-                + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1, "
-                + Constants.COLUMN_NAME_MESSAGE_ID + "=" + generator.nextInt() + ", "
-                + Constants.COLUMN_NAME_TIMESTAMP + "=datetime('now') WHERE "
-                + Constants.COLUMN_NAME_MESSAGE_ID + "=" + m_id + " AND "
-                + Constants.COLUMN_NAME_IS_OUTGOING + "=1" + " AND "
-                + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0");
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, "1");
+        values.put(Constants.COLUMN_NAME_IS_OUTGOING, "1");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = new Date();
+        values.put(Constants.COLUMN_NAME_TIMESTAMP, dateFormat.format(date));
+        db.update(Constants.TABLE_CHAT_LOGS, values, Constants.COLUMN_NAME_MESSAGE_ID + "=" + messageId
+                + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0", null);
         db.close();
     }
 
