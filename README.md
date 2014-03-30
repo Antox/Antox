@@ -18,15 +18,16 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 ###Known to work on
 | Brand    | Device               | System                       |
 |:--------:|:--------------------:|:----------------------------:|
+| HTC      | Desire               | Android 4.2.2                |
 | HTC      | One                  | Android 4.4.2                |
 | LG       | Motion 4G            | Android 4.0.4                |
 | LG       | Nexus 5              | Android 4.4.2                |
 | Motorola | Moto G               | Android 4.4.2                |
 | Samsung  | Galaxy Nexus         | Android 4.4                  |
-| Samsung  | Galaxy Note 1        | Android 4.3, ParanoidAndroid |
+| Samsung  | Galaxy Note 1        | Android 4.3 ParanoidAndroid  |
 | Samsung  | Galaxy Note 3        | TouchWiz (Android 4.3)       |
 | Samsung  | Galaxy Note 10.1     | TouchWiz (Android 4.3)       |
-| Samsung  | Galaxy S3            | Android 4.4, CyanogenMod     |
+| Samsung  | Galaxy S3            | Android 4.4 CyanogenMod      |
 | Samsung  | Galaxy Tab 10.1 WiFi | Android 4.0.4                |
 
 ###Getting Started With Antox
