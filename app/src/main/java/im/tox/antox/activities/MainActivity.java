@@ -23,6 +23,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -733,6 +734,10 @@ public class MainActivity extends ActionBarActivity{
                 updateChat(toxSingleton.activeFriendKey);
             }
             clearUselessNotifications();
+
+            //Hide group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }
 
         @Override
@@ -753,6 +758,10 @@ public class MainActivity extends ActionBarActivity{
             /* This is causing a null pointer exception */
             //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
+
+            //Show group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
 
         @Override

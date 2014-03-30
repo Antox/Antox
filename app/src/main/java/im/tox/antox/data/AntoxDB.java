@@ -66,8 +66,10 @@ public class AntoxDB extends SQLiteOpenHelper {
                     break;
                 }
             case 4:
-                db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
-                break;
+                if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ISBLOCKED)) {
+                    db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
+                    break;
+                }
         }
     }
 
