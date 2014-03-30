@@ -34,7 +34,7 @@ public final class Constants {
 
     //All DB Constants
     public static final String DATABASE_NAME = "antoxdb";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "chat_logs";
     public static final String TABLE_FRIEND_REQUEST = "friend_request";
