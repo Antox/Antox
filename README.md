@@ -12,6 +12,9 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 3. Ensure that you allow applications from unknown sources to be installed (Tick the option "Unkown Source", found in Settings>Security)
 4. Install the APK by either using a file manager or ADB.
 
+###Antox on F-Droid
+To get Antox on F-Droid, add http://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Manage Repos' in F-Droid.
+
 ###Want to get Antox on Google Play?
 For those who used to test Antox on GPlay, we apologize that we will no longer be pushing alpha updates to the Play Store. Once Antox nears a public release, you will be able to find it in GPlay. Thanks to everyone who helped out!
 
