@@ -1,5 +1,6 @@
 package im.tox.antox.activities;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,7 +29,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -255,6 +258,22 @@ public class MainActivity extends ActionBarActivity {
             this.startService(startToxIntent);
 
         }
+
+        SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actions,
+                R.layout.group_item);
+        ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
+            String[] items = getResources().getStringArray(R.array.actions);
+            @Override
+            public boolean onNavigationItemSelected(int i, long l) {
+                Log.d("NavigationItemSelected", items[i]);
+                //TODO: Filter friends list
+                return true;
+            }
+        };
+        ActionBar actions = getActionBar();
+        actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actions.setDisplayShowTitleEnabled(false);
+        actions.setListNavigationCallbacks(adapter, callback);
 
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
