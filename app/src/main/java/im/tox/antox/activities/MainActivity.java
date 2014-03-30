@@ -1,6 +1,5 @@
 package im.tox.antox.activities;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +20,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,8 +44,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import im.tox.antox.data.AntoxDB;
@@ -74,7 +71,7 @@ import im.tox.jtoxcore.ToxUserStatus;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
@@ -270,7 +267,7 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         };
-        ActionBar actions = getActionBar();
+        ActionBar actions = getSupportActionBar();
         actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actions.setDisplayShowTitleEnabled(false);
         actions.setListNavigationCallbacks(adapter, callback);
