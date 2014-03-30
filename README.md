@@ -30,6 +30,7 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 | Samsung  | Galaxy S3            | Android 4.4 CyanogenMod      |
 | Samsung  | Galaxy Tab 10.1 WiFi | Android 4.0.4                |
 
+
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.2
@@ -56,6 +57,7 @@ When submitting a bug report, please include the following:-
 - Receiving friend requests
 - Profile, Settings and About Activities
 - Friends list updates when a friend comes online / goes offline, or changes their other details at all.
+- Offline message queue
 
 ###TODO
 We now use Producteev, a web-based task management system to better keep track of all the needed changes. To get an invite, please send an email to mark [at] tox [dot] im
