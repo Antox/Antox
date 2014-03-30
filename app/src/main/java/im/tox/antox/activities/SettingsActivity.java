@@ -1,7 +1,9 @@
 package im.tox.antox.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 
 import im.tox.antox.fragments.DHTDialogFragment;
 import im.tox.antox.utils.DhtNode;
@@ -56,7 +59,10 @@ public class SettingsActivity extends ActionBarActivity
      * 2D string array to store DHT node details
      */
     String[][] downloadedDHTNodes;
-
+    /**
+     * Spinner for displaying available languages
+     */
+    private Spinner languageSpinner;
 
 
 
@@ -106,6 +112,37 @@ public class SettingsActivity extends ActionBarActivity
         if(pref.getBoolean("saved_custom_dht", false)) {
             dhtBox.setChecked(true);
         }
+
+        languageSpinner = (Spinner) findViewById(R.id.spinner_language_settings);
+        String lang = pref.getString("language", "");
+        switch (lang) {
+            case "English":
+                languageSpinner.setSelection(0);
+                break;
+            case "Deutsch":
+                languageSpinner.setSelection(1);
+                break;
+            case "Español":
+                languageSpinner.setSelection(2);
+                break;
+            case "Français":
+                languageSpinner.setSelection(3);
+                break;
+            case "Italiano":
+                languageSpinner.setSelection(4);
+                break;
+            case "Nederlands":
+                languageSpinner.setSelection(5);
+                break;
+            case "Polski":
+                languageSpinner.setSelection(6);
+                break;
+            case "Türkçe":
+                languageSpinner.setSelection(7);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -141,6 +178,52 @@ public class SettingsActivity extends ActionBarActivity
             editor.putString("saved_dht_port", dhtPort);
             DhtNode.port.add(dhtPort);
         }
+
+        //save the language
+        String language = languageSpinner.getSelectedItem().toString();
+        if(!pref.getString("language", "").equals(language)) {
+            setResult(RESULT_OK);
+            editor.putString("language", language);
+            //set the language
+            Locale locale = null;
+            switch (language) {
+                case "English":
+                    locale = new Locale("en");
+                    break;
+                case "Deutsch":
+                    locale = new Locale("de");
+                    break;
+                case "Español":
+                    locale = new Locale("es");
+                    break;
+                case "Français":
+                    locale = new Locale("fr");
+                    break;
+                case "Italiano":
+                    locale = new Locale("it");
+                    break;
+                case "Nederlands":
+                    locale = new Locale("nl");
+                    break;
+                case "Polski":
+                    locale = new Locale("pl");
+                    break;
+                case "Türkçe":
+                    locale = new Locale("tr");
+                    break;
+                default:
+                    break;
+            }
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
+        }
+        else {
+            //something different from RESULT_OK
+            setResult(RESULT_OK - 1);
+        }
+
 
         editor.commit();
 
