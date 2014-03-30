@@ -59,7 +59,7 @@ When submitting a bug report, please include the following:-
 - Basic messaging - this does not include group chats
 
 ###TODO
-Check the issues tab and filter by the tag 'To-Do' to see what needs to be done.No longer using Producteev as the invite system was a hassle.
+Check the issues tab and filter by the tag 'To-Do' to see what needs to be done. No longer using Producteev as the invite system was a hassle.
 
 ###Screenshots of progress
 <img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-48-00.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/Screenshot_2014-03-12-21-39-10.png" width="230px" height="400px"/><img src="http://vexx.us/Examples/Antox/device-2014-03-12-215856.png" width="230px" height="400px"/>
