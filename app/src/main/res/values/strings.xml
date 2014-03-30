@@ -65,7 +65,7 @@
     <string name="settings_note_title">Set your personal note</string>
     <string name="settings_username_title">Set your username</string>
     <string name="settings_empty_strings">You must fill out all fields</string>
-    <string name="settings_invalid_key">Invalid key given</string>
+    <string name="settings_invalid_key">Invalid key entered</string>
     <string name="developer_string">Developed by astonex &amp; co.</string>
     <string name="welcome_must_select_username">You must select a username</string>
 
@@ -93,7 +93,7 @@
     <string name="friend_profile_alias">Alias</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
-    <string name="friend_profile_button">Update Alias</string>
+    <string name="friend_profile_button">Update</string>
     <string name="friend_profile_updated">Alias has been updated</string>
 
     <!-- Friend request fragment -->
