@@ -31,7 +31,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
     // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
-            " ( _id integer primary key , key text, username text, status text, note text,  alias text, isonline boolean)";
+            " ( _id integer primary key , key text, username text, status text, note text,  alias text, isonline boolean, isblocked boolean)";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
@@ -55,13 +55,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         switch(oldVersion) {
             case 1:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN has_been_read boolean");
+                break;
             case 2:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN successfully_sent boolean");
+                break;
             case 3:
                 //There are some possibilities when in version 3 there is already the alis column
                 if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ALIAS)) {
                     db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN alias text");
+                    break;
                 }
+            case 4:
+                db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
+                break;
         }
     }
 
@@ -278,6 +284,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String note = cursor.getString(4);
                 String alias = cursor.getString(5);
                 int online = cursor.getInt(6);
+                boolean isBlocked = cursor.getInt(7)>0;
 
                 if(alias == null)
                     alias = "";
@@ -287,8 +294,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                 else if(name.equals(""))
                     name = key.substring(0,7);
 
-
-                friendList.add(new Friend(online,name,status,note, key));
+                if(!isBlocked)
+                    friendList.add(new Friend(online,name,status,note, key));
             } while (cursor.moveToNext());
         }
 
@@ -420,6 +427,33 @@ public class AntoxDB extends SQLiteOpenHelper {
     public void updateAlias(String alias, String key) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ALIAS + "='" + alias + "' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        db.execSQL(query);
+        db.close();
+    }
+
+    public boolean isFriendBlocked(String key) {
+        boolean isBlocked = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT isBlocked FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst()) {
+            isBlocked = cursor.getInt(0)>0;
+        }
+        cursor.close();
+        db.close();
+        return isBlocked;
+    }
+
+    public void blockUser(String key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='TRUE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void unblockUser(String key) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='FALSE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
         db.close();
     }

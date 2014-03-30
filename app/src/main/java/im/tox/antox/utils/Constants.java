@@ -51,6 +51,7 @@ public final class Constants {
     public static final String COLUMN_NAME_SUCCESSFULLY_SENT ="successfully_sent";
     public static final String COLUMN_NAME_ISONLINE = "isonline";
     public static final String COLUMN_NAME_ALIAS = "alias";
+    public static final String COLUMN_NAME_ISBLOCKED = "isblocked";
 
     //Activity request code for onActivityResult methods
     public static final int ADD_FRIEND_REQUEST_CODE=0;

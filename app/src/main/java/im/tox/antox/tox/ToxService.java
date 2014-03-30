@@ -90,7 +90,8 @@ public class ToxService extends IntentService {
             String name = toxSingleton.friendsList.getById(key).getName();
             int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
             AntoxDB db = new AntoxDB(getApplicationContext());
-            db.addMessage(-1, key, message, false, true, false, true);
+            if(!db.isFriendBlocked(key))
+                db.addMessage(-1, key, message, false, true, false, true);
             db.close();
             /* Broadcast */
             Intent notify = new Intent(Constants.BROADCAST_ACTION);
@@ -275,7 +276,8 @@ public class ToxService extends IntentService {
             toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
             /* Add friend request to database */
             AntoxDB db = new AntoxDB(getApplicationContext());
-            db.addFriendRequest(key, message);
+            if(!db.isFriendBlocked(key))
+                db.addFriendRequest(key, message);
             db.close();
 
             /* Notification */
