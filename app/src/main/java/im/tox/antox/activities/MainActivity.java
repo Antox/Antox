@@ -1,6 +1,5 @@
 package im.tox.antox.activities;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -23,9 +22,10 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,8 +47,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,7 +75,7 @@ import im.tox.jtoxcore.ToxUserStatus;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity{
 
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
@@ -273,7 +271,7 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         };
-        ActionBar actions = getActionBar();
+        ActionBar actions = getSupportActionBar();
         actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actions.setDisplayShowTitleEnabled(false);
         actions.setListNavigationCallbacks(adapter, callback);
@@ -791,6 +789,10 @@ public class MainActivity extends ActionBarActivity {
                 updateChat(toxSingleton.activeFriendKey);
             }
             clearUselessNotifications();
+
+            //Hide group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }
 
         @Override
@@ -811,6 +813,10 @@ public class MainActivity extends ActionBarActivity {
             /* This is causing a null pointer exception */
             //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             System.out.println("Panel opened");
+
+            //Show group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
 
         @Override
