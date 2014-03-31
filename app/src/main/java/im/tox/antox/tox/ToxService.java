@@ -338,7 +338,7 @@ public class ToxService extends IntentService {
                 /* Add friend to tox friends list */
                 //This is so wasteful. Should pass the info in the intent with the key
                 AntoxDB db = new AntoxDB(getApplicationContext());
-                ArrayList<Friend> friends = db.getFriendList();
+                ArrayList<Friend> friends = db.getFriendList(Constants.OPTION_ALL_FRIENDS);
                 //Long statement but just getting size of friends list and adding one for the friend number
                 AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
                 int pos = -1;

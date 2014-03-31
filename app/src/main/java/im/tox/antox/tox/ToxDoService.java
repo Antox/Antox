@@ -80,7 +80,7 @@ public class ToxDoService extends IntentService {
 
                 /* Populate tox friends list with saved friends in database */
                 db = new AntoxDB(getApplicationContext());
-                ArrayList<Friend> friends = db.getFriendList();
+                ArrayList<Friend> friends = db.getFriendList(Constants.OPTION_ALL_FRIENDS);
                 db.close();
 
                 toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
