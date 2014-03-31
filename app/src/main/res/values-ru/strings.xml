@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Добро пожаловать</string>
+    <string name="title_activity_add_friend">Добавить друга</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="title_activity_profile">Профиль</string>
+    <string name="title_activity_about">О программе</string>
+    <string name="title_activity_friend_profile">Профиль</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Настройки</string>
+    <string name="action_exit">Выход</string>
+    <string name="add_friend">Добавить друга</string>
+    <string name="search_friend">Поиск</string>
+    <string name="action_profile">Профиль</string>
+    <string name="action_about">О программе</string>
+    <string name="add_to_group">Добавить в группу</string>
+
+    <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Аватар</string>
+    <string name="main_username">Имя</string>
+    <string name="main_status">Статус</string>
+    <string name="icon_description">Статус подключения</string>
+    <string name="main_no_friends">Смотрите-ка, один-одинешенек!</string>
+    <string name="main_try_adding">Пригласите друзей к беседе</string>
+    <string name="main_friend_requests">Запросы друзей</string>
+    <string name="main_friends">Друзья</string>
+    <string name="main_no_internet">Нет Интернет-соединения</string>
+    <string name="main_not_connected">Вы не соединены с Интернетом</string>
+    <string name="main_node_list_download_error">Ошибка загрузки списка узлов</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox - это клиент Tox для Android</string>
+    <string name="about_bugs">Чтобы сообщить об ошибке, посетите нашу страницу на GitHub и выберите \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Мы на Freenode: #tox-dev</string>
+    <string name="about_version">Версия</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Отправить сообщение</string>
+
+
+    <!-- Settings Activity -->
+    <string name="about_string">Этот клиент все еще в статусе pre-alpha.</string>
+    <string name="getstarted_string">Введите желаемое имя</string>
+    <string name="settings_custom_dht">Настройки сторонних DHT-узлов</string>
+    <string name="settings_use_custom_dht">Использовать сторонние DHT-узлы</string>
+    <string name="settings_user_key_title">Ваш Tox ID</string>
+    <string name="settings_name_hint">Имя</string>
+    <string name="settings_note_hint">Настроение</string>
+    <string name="settings_dht_ip">IP-адрес bootstrap (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Адрес порта bootstrap (ex: 33445)</string>
+    <string name="settings_dht_key">Адрес публичного ключа bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Обновить</string>
+    <string name="settings_updated">Ваши настройки были обновлены</string>
+    <string name="settings_dht_spinner_title">Расширенные настройки</string>
+    <string name="settings_status_title">Статус</string>
+    <string name="settings_note_title">Настроение</string>
+    <string name="settings_username_title">Имя</string>
+    <string name="settings_empty_strings">Нужно заполнить все поля</string>
+    <string name="settings_invalid_key">Введен неверный ключ</string>
+    <string name="developer_string">Разработано astonex и Ко</string>
+    <string name="welcome_must_select_username">Вы должны выбрать имя</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Tox ID Вашего друга</string>
+    <string name="addfriend_friend_message">Отправить сообщение с Вашим запросом</string>
+    <string name="addfriend_button">Добавить друга</string>
+    <string name="addfriend_friend_added">Друг добавлен</string>
+    <string name="addfriend_friend_exists">Друг уже существует</string>
+    <string name="scanqr_button">Сканировать QR-код</string>
+    <string name="invalid_friend_ID">Неверный Tox ID</string>
+    <string name="addfriend_alias_hint">Задайте ник для друга</string>
+    <string name="addfriend_optional_title">Необязательные сведения</string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Поделиться с</string>
+    <string name="status_online">Онлайн</string>
+    <string name="status_away">Отошел</string>
+    <string name="status_busy">Занят</string>
+    <string name="profile_updated">Ваш профиль был обновлен</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Имя</string>
+    <string name="friend_profile_alias">Псевдоним</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Статус</string>
+    <string name="friend_profile_button">Обновить</string>
+    <string name="friend_profile_updated">Псевдоним был обновлен</string>
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Принять</string>
+    <string name="friendrequest_reject">Отклонить</string>
+    <string name="friendrequest_accepted">Запрос друга принят</string>
+    <string name="friendrequest_deleted">Запрос друга удален</string>
+    <string name="friendrequest">Запрос друга</string>
+    <string name="friendrequest_recieved">Запрос друга получен</string>
+    <string name="friend_request">Новый запрос друга</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Профиль</string>
+    <string name="friend_action_sendfile">Отправить файл</string>
+    <string name="friend_action_delete">Удалить друга</string>
+    <string name="friend_action_block">Заблокировать</string>
+    <string name="group_action_leave">Покинуть группу</string>
+    <string name="friend_action_deletechat">Удалить журналы чатов</string>
+    <string name="friend_action_block_confirmation">
+        Блокирование пользователя удалит его из списка друзей, и Вы больше не будете видеть запросы
+        от него. Для разблокировки, перейдите в Настройки. Вы уверены, что хотите продолжить?
+    </string>
+
+    <string name="contacts_actions_on">Действия включены</string>
+    <string name="contacts_clear_saved_logs">Вы хотите также очистить сохраненные журналы?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Подтвердить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Нет</string>
+
+</resources>
