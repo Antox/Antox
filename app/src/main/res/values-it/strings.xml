@@ -22,7 +22,7 @@
     <!-- Main Activity -->
     <string name="title">Antox</string>
     <string name="main_avatar">Immagine Profilo</string>
-    <string name="main_username">Nickname</string>
+    <string name="main_username">Nome Utente</string>
     <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
@@ -47,7 +47,7 @@
 
     <!-- Welcome Activity -->
     <string name="about_string">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="getstarted_string">Nickname</string>
+    <string name="getstarted_string">Nome Utente</string>
     <string name="developer_string">Sviluppato da astonex</string>
     <string name="welcome_must_select_username">Devi inserire un nickname</string>
 
@@ -65,19 +65,19 @@
     <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
     <string name="settings_status_title">Stato</string>
     <string name="settings_note_title">Informazioni personali</string>
-    <string name="settings_username_title">Nickname</string>
+    <string name="settings_username_title">Nome Utente</string>
     <string name="settings_empty_strings">Devi compilare tutti i campi</string>
     <string name="settings_invalid_key">Valore non valido</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">ID del tuo amico</string>
-    <string name="addfriend_friend_message">Invia un messaggio insieme alla richiesta</string>
+    <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
     <string name="addfriend_button">Aggiungi Amico</string>
     <string name="addfriend_friend_added">Amico aggiunto</string>
     <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">ID inserito non valido</string>
-    <string name="addfriend_alias_hint">Imposta un nickname per il tuo amico</string>
+    <string name="addfriend_alias_hint">Imposta un nome personalizzato per il tuo amico</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
 
     <!-- Profile Activity -->
@@ -89,9 +89,11 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
-    <string name="friend_profile_alias">Alias</string>
-    <string name="friend_profile_key">ID Tox</string>
+    <string name="friend_profile_alias">Nome Personalizzato</string>
+    <string name="friend_profile_key">ID</string>
     <string name="friend_profile_note">Note Personali</string>
+    <string name="friend_profile_button">Aggiorna</string>
+    <string name="friend_profile_updated">Il nome personalizzato è stato aggioranto</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
@@ -107,6 +109,11 @@
     <string name="friend_action_delete">Rimuovi Amico</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_deletechat">Elimina Chat</string>
+    <string name="friend_action_block_confirmation">
+        Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
+        richieste d\'amicizia da lui. Per sbloccare un utente, vai nelle Impostazioni.\n
+        Sei sicuro di voler continuare?
+    </string>
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
