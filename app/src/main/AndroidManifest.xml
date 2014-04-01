@@ -39,7 +39,7 @@
 
         <activity
             android:name="im.tox.antox.activities.MainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="locale|orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:label="@string/app_name">
             <intent-filter>

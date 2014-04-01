@@ -1,12 +1,14 @@
 package im.tox.antox.activities;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -46,6 +48,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -303,6 +306,13 @@ public class MainActivity extends ActionBarActivity{
         else
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
 
+        if (settingsPref.getString("language", "").equals("")) {
+            //set the current language
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putString("language", getCurrentLanguageOnStart());
+            editor.commit();
+        }
+
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
@@ -329,6 +339,40 @@ public class MainActivity extends ActionBarActivity{
     protected void onDestroy() {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
+    }
+
+    private String getCurrentLanguageOnStart() {
+        String currentLanguage = getResources().getConfiguration().locale.getCountry().toLowerCase();
+        String language;
+        switch (currentLanguage) {
+            case "en":
+                language = "English";
+                break;
+            case "de":
+                language = "Deutsch";
+                break;
+            case "es":
+                language = "Español";
+                break;
+            case "fr":
+                language = "Français";
+                break;
+            case "it":
+                language = "Italiano";
+                break;
+            case "nl":
+                language = "Nederlands";
+                break;
+            case "pl":
+                language = "Polski";
+                break;
+            case "tr":
+                language = "Türkçe";
+                break;
+            default:
+                language = "English";
+        }
+        return language;
     }
     private Message mostRecentMessage(String key, ArrayList<Message> messages) {
         for (int i=0; i<messages.size(); i++) {
@@ -420,7 +464,7 @@ public class MainActivity extends ActionBarActivity{
      */
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.UPDATE_SETTINGS_REQUEST_CODE);
     }
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -714,6 +758,14 @@ public class MainActivity extends ActionBarActivity{
             finish();
         }
     }
+
+    private void restartActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             updateLeftPane();
@@ -723,8 +775,11 @@ public class MainActivity extends ActionBarActivity{
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             Log.d("file picked",""+pickedFile.getAbsolutePath() );
             Log.d("file type",""+getContentResolver().getType(uri));
+        } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
+            restartActivity();
         }
     }
+
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override

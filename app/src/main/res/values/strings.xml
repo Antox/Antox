@@ -61,6 +61,7 @@
     <string name="settings_button">Update</string>
     <string name="settings_updated">Your Settings has been updated</string>
     <string name="settings_dht_spinner_title">Advanced Settings</string>
+    <string name="settings_language_title">Language</string>
     <string name="settings_status_title">Status</string>
     <string name="settings_note_title">Mood message</string>
     <string name="settings_username_title">Username</string>
@@ -125,5 +126,17 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+
+    <!-- Array -->
+    <string-array name="languages">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Nederlands</item>
+        <item>Polski</item>
+        <item>Türkçe</item>
+    </string-array>
 
 </resources>
