@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="NewApi" severity="ignore" />
+    <issue id="HardcodedText" severity="ignore" />
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="ValidFragment" severity="ignore" />
+    <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="ObsoleteLayoutParam" >
+        <ignore path="res/layout/" />
+    </issue>
+</lint>
