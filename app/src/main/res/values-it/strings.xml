@@ -8,6 +8,7 @@
     <string name="title_activity_add_friend">Aggiungi Amico</string>
     <string name="title_activity_settings">Impostazioni</string>
     <string name="title_activity_profile">Profilo</string>
+    <string name="title_activity_about">Informazioni</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Impostazioni</string>
@@ -15,61 +16,112 @@
     <string name="add_friend">Aggiungi Amico</string>
     <string name="search_friend">Cerca Amici</string>
     <string name="action_profile">Profilo</string>
+    <string name="action_about">Informazioni</string>
+    <string name="add_to_group">Aggiungi Al Gruppo</string>
 
     <!-- Main Activity -->
+    <string name="title">Antox</string>
+    <string name="main_avatar">Immagine Profilo</string>
+    <string name="main_username">Nome Utente</string>
+    <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
+    <string name="main_no_internet">Nessuna connessione ad internet</string>
+    <string name="main_not_connected">Non sei connesso ad internet</string>
+    <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
+    
+    <!-- About Activity -->
+    <string name="about_details">Antox è un client Android per Tox</string>
+    <string name="about_bugs">Per segnalare un bug, visita la pagina GitHub e clicca su \"Issues\"</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Siamo anche su Freenode, canale #tox-dev</string>
+    <string name="about_version">Versione</string>
 
-
-    <!--  Chat Activity -->
+    <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
 
-
     <!-- Welcome Activity -->
-    <string name="about_string">Questo client è in fase pre-alpha.</string>
-    <string name="getstarted_string">Inserisci il tuo nome</string>
-    <string name="developer_string">Sviluppato da astonex\nirc.freenode.net#tox-dev</string>
+    <string name="about_string">APPLICAZIONE IN FASE PRE-ALPHA</string>
+    <string name="getstarted_string">Nome Utente</string>
+    <string name="developer_string">Sviluppato da astonex</string>
+    <string name="welcome_must_select_username">Devi inserire un nickname</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key_title">ID Utente</string>
-    <string name="settings_name_hint">inserisci il tuo nome</string>
-    <string name="settings_note_hint">inserisci le tue informazioni personali</string>
-    <string name="settings_dht_ip">Indirizzo IP del server DHT (ex: 192.254.75.98)</string>
-    <string name="settings_dht_port">Porta usata dal server DHT (ex: 33445)</string>
-    <string name="settings_dht_key">Chiave pubblica del server DHT (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_user_key_title">Il tuo ID</string>
+    <string name="settings_name_hint">Inserisci il tuo nome</string>
+    <string name="settings_note_hint">Inserisci le tue informazioni personali</string>
+    <string name="settings_custom_dht">Impostazioni personalizzate per il server DHT</string>
+    <string name="settings_use_custom_dht">Usa impostazioni personalizzate per il server DHT</string>
+    <string name="settings_dht_ip">IP (es: 192.254.75.98)</string>
+    <string name="settings_dht_port">Porta (es: 33445)</string>
+    <string name="settings_dht_key">Chiave pubblica (es: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">OK</string>
     <string name="settings_updated">Le impostazioni sono state aggiornate</string>
     <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
-    <string name="settings_status_title">Imposta il tuo stato</string>
-    <string name="settings_note_title">Imposta le tue informazioni personali</string>
-    <string name="settings_username_title">Imposta il tuo nickname</string>
+    <string name="settings_status_title">Stato</string>
+    <string name="settings_note_title">Informazioni personali</string>
+    <string name="settings_username_title">Nome Utente</string>
+    <string name="settings_empty_strings">Devi compilare tutti i campi</string>
+    <string name="settings_invalid_key">Valore non valido</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">inserisci l\'ID del tuo amico</string>
-    <string name="addfriend_friend_message">messaggio opzionale da inviare insieme alla richiesta</string>
-    <string name="addfriend_button">Aggiugni Amico</string>
+    <string name="addfriend_friend_key">ID del tuo amico</string>
+    <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
+    <string name="addfriend_button">Aggiungi Amico</string>
+    <string name="addfriend_friend_added">Amico aggiunto</string>
+    <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">ID inserito non valido</string>
+    <string name="addfriend_alias_hint">Imposta un nome personalizzato per il tuo amico</string>
+    <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
 
-    <!--  Profile Activity -->
+    <!-- Profile Activity -->
     <string name="share_with">Condividi Con</string>
     <string name="status_online">Online</string>
     <string name="status_away">Assente</string>
     <string name="status_busy">Occupato</string>
+    <string name="profile_updated">Il tuo profilo è stato aggiornato</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Nome</string>
+    <string name="friend_profile_alias">Nome Personalizzato</string>
+    <string name="friend_profile_key">ID</string>
+    <string name="friend_profile_note">Note Personali</string>
+    <string name="friend_profile_button">Aggiorna</string>
+    <string name="friend_profile_updated">Il nome personalizzato è stato aggioranto</string>
 
-    <!-- Friend request fragment -->
+    <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
     <string name="friendrequest_reject">Rifiuta</string>
+    <string name="friendrequest_accepted">Richiesta d\'amicizia accettata</string>
+    <string name="friendrequest_deleted">Richiesta d\'amicizia cancellata</string>
+    <string name="friendrequest">Richiesta D\'Amicizia</string>
+    <string name="friendrequest_recieved">Ricevuta richiesta d\'amicizia</string>
+    <string name="friend_request">Nuova Richiesta D\'Amicizia</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_sendfile">Invia File</string>
-    <string name="friend_action_delete">Rimuovi</string>
+    <string name="friend_action_delete">Rimuovi Amico</string>
     <string name="friend_action_block">Blocca</string>
+    <string name="friend_action_deletechat">Elimina Chat</string>
+    <string name="friend_action_block_confirmation">
+        Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
+        richieste d\'amicizia da lui. Per sbloccare un utente, vai nelle Impostazioni.\n
+        Sei sicuro di voler continuare?
+    </string>
     <string name="group_action_leave">Lascia Gruppo</string>
-    <!--  Misc -->
+    <string name="contacts_actions_on">Azioni per</string>
+    <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
+
+    <!-- Misc -->
+    <string name="button_confirm">OK</string>
+    <string name="button_cancel">Annulla</string>
+    <string name="button_yes">Sì</string>
+    <string name="button_no">No</string>
 
 </resources>
