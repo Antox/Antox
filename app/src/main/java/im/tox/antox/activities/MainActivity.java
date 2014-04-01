@@ -257,14 +257,28 @@ public class MainActivity extends ActionBarActivity{
 
         }
 
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actions,
                 R.layout.group_item);
+        if (settingsPref.getInt("group_option", -1) == -1) {
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putInt("group_option", 0);
+            editor.commit();
+        }
+
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
             String[] items = getResources().getStringArray(R.array.actions);
             @Override
-            public boolean onNavigationItemSelected(int i, long l) {
-                Log.d("NavigationItemSelected", items[i]);
-                //TODO: Filter friends list
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                Log.d("NavigationItemSelected", items[itemPosition]);
+                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                if (itemPosition != settingsPref.getInt("group_option", -1)) {
+                    SharedPreferences.Editor editor = settingsPref.edit();
+                    editor.putInt("group_option", itemPosition);
+                    editor.commit();
+                    updateLeftPane();
+                }
                 return true;
             }
         };
@@ -272,13 +286,13 @@ public class MainActivity extends ActionBarActivity{
         actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actions.setDisplayShowTitleEnabled(false);
         actions.setListNavigationCallbacks(adapter, callback);
+        actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
 
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
         /* Load user details */
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
         if (settingsPref.getString("saved_status_hint", "").equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
@@ -346,7 +360,8 @@ public class MainActivity extends ActionBarActivity{
 
         AntoxDB antoxDB = new AntoxDB(this);
 
-        friendList = antoxDB.getFriendList();
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        friendList = antoxDB.getFriendList(settingsPref.getInt("group_option", 0));
 
         ArrayList<Message> messageList = antoxDB.getMessageList("");
 
@@ -364,7 +379,7 @@ public class MainActivity extends ActionBarActivity{
 
         LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
 
-        if (friend_requests_list.length == 0 && friends_list.length == 0) {
+        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0) {
             noFriends.setVisibility(View.VISIBLE);
         } else {
             noFriends.setVisibility(View.GONE);
@@ -714,6 +729,7 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         public void onPanelClosed(View view) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
@@ -742,6 +758,7 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         public void onPanelOpened(View view) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
             MenuItem af = menu.findItem(R.id.add_friend);
