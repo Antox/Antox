@@ -5,11 +5,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
         android:orientation="vertical"
         tools:context=".ProfileActivity">
 
@@ -63,6 +63,9 @@
             android:id="@+id/settings_spinner_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             android:spinnerMode="dropdown" />
 
         <TextView

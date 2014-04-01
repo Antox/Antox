@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import im.tox.antox.Constants;
-import im.tox.antox.FriendRequest;
-import im.tox.antox.ToxService;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.tox.ToxService;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
-import im.tox.antox.ToxSingleton;
 
 /**
  * Created by soft on 02/03/14.
