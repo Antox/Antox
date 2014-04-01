@@ -269,12 +269,27 @@ public class AntoxDB extends SQLiteOpenHelper {
         Log.d("", "marked incoming messages as read");
     }
 
-    public ArrayList<Friend> getFriendList() {
+    public ArrayList<Friend> getFriendList(int option) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ArrayList<Friend> friendList = new ArrayList<Friend>();
-        // Getting all friends
-        String selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
+        String selectQuery = "";
+        switch (option) {
+            case Constants.OPTION_ALL_FRIENDS:
+                selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
+                break;
+            case Constants.OPTION_ONLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=1";
+                break;
+            case Constants.OPTION_OFFLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=0";
+                break;
+            case Constants.OPTION_BLOCKED_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "=1";
+                break;
+            default:
+                break;
+        }
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 

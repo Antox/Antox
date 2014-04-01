@@ -73,7 +73,6 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-
     public void updateLeftPane() {
         leftPaneAdapter = main_act.leftPaneAdapter;
         leftPaneListView.setAdapter(leftPaneAdapter);
@@ -90,8 +89,6 @@ public class ContactsFragment extends Fragment {
          */
 
         main_act = (MainActivity) getActivity();
-
-
 
         View rootView = inflater.inflate(R.layout.fragment_leftpane, container, false);
         leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
