@@ -141,41 +141,6 @@ public class AddFriendActivity extends ActionBarActivity {
         finish();
     }
 
-    private void checkAndAdd(String key, String message, String alias) {
-
-        Context context = getApplicationContext();
-        CharSequence text = getString(R.string.addfriend_friend_added);
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-
-        if (validateFriendKey(key)) {
-            String[] friendData = {key, message, alias};
-
-            AntoxDB db = new AntoxDB(getApplicationContext());
-            if (!db.doesFriendExist(key)) {
-                Intent addFriend = new Intent(this, ToxService.class);
-                addFriend.setAction(Constants.ADD_FRIEND);
-                addFriend.putExtra("friendData", friendData);
-                this.startService(addFriend);
-
-                if (!alias.equals(""))
-                    key = alias;
-
-                db.addFriend(key, "Friend Request Sent", alias);
-            } else {
-                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
-            }
-            db.close();
-
-            toast.show();
-
-        } else {
-            toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-    }
-
     /*
     * handle intent to read a friend QR code
     * */
