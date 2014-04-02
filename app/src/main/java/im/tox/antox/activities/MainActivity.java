@@ -672,16 +672,13 @@ public class MainActivity extends ActionBarActivity{
             Socket socket = null;
             Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
             for(int i = 0;i < DhtNode.ipv4.size(); i++) {
-                Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
                     boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
-                    Log.d(TAG, "Elapsed time: " + elapsedTime);
                     if (reachable && (elapsedTime < shortestTime)) {
                         shortestTime = elapsedTime;
                         pos = i;
-                        Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
                     }
 
                 } catch (IOException e) {
