@@ -31,7 +31,7 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 | Samsung  | Galaxy Note 3        | TouchWiz (Android 4.3)       |
 | Samsung  | Galaxy Note 10.1     | TouchWiz (Android 4.3)       |
 | Samsung  | Galaxy S3            | Android 4.4, CyanogenMod     |
-| Samsung  | Galaxy S4            | Andriod 4.4.2, CyanogenMod   |
+| Samsung  | Galaxy S4            | Android 4.4.2, CyanogenMod   |
 | Samsung  | Galaxy Tab 10.1 WiFi | Android 4.0.4                |
 
 ###Getting Started With Antox
