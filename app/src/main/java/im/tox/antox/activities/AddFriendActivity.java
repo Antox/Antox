@@ -3,17 +3,24 @@ package im.tox.antox.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.xbill.DNS.Lookup;
+import org.xbill.DNS.Record;
+import org.xbill.DNS.TXTRecord;
+import org.xbill.DNS.Type;
 
 import im.tox.QR.IntentIntegrator;
 import im.tox.QR.IntentResult;
@@ -30,6 +37,8 @@ import im.tox.antox.tox.ToxService;
  */
 
 public class AddFriendActivity extends ActionBarActivity {
+
+    String _friendID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +83,23 @@ public class AddFriendActivity extends ActionBarActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
 
-        /* Send intent to ToxService */
         EditText friendID = (EditText) findViewById(R.id.addfriend_key);
         EditText friendMessage = (EditText) findViewById(R.id.addfriend_message);
         EditText friendAlias = (EditText) findViewById(R.id.addfriend_friendAlias);
 
-        /*validates key*/
+        if(friendID.getText().toString().contains("@")) {
+            // Get the first TXT record
+            try {
+                //.get() is a possible ui lag on very slow internet connections where dns lookup takes a long time
+                new DNSLookup().execute(friendID.getText().toString()).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(!_friendID.equals(""))
+            friendID.setText(_friendID);
+
         if (validateFriendKey(friendID.getText().toString())) {
             String ID = friendID.getText().toString();
             String message = friendMessage.getText().toString();
@@ -183,6 +203,42 @@ public class AddFriendActivity extends ActionBarActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DNSLookup extends AsyncTask<String, Void, Void> {
+        protected Void doInBackground(String... params) {
+
+            String user = params[0].substring(0, params[0].indexOf("@"));
+            String domain = params[0].substring(params[0].indexOf("@")+1);
+            String lookup = user + "._tox." + domain;
+            Log.d("DNSLOOKUP", lookup);
+
+            TXTRecord txt = null;
+            try {
+                Record[] records = new Lookup(lookup, Type.TXT).run();
+                txt = (TXTRecord) records[0];
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if(txt != null) {
+                String txtString = txt.toString().substring(txt.toString().indexOf('"'));
+                Log.d("DNSLOOKUP", txtString);
+
+                if(txtString.contains("tox1")) {
+                    String key = txtString.substring(11, txtString.length()-1);
+                    Log.d("DNSLOOKUP", key);
+                    _friendID = key;
+
+                } else if (txtString.contains("tox2")) {
+                    String key = txtString.substring(12, txtString.lastIndexOf(";"));
+                    Log.d("DNSLOOKUP", key);
+                    _friendID = key;
+                }
+            }
+
+            return null;
+        }
     }
 
 }

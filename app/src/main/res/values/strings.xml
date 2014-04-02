@@ -115,7 +115,7 @@
     <string name="friend_action_deletechat">Delete Chat Logs</string>
     <string name="friend_action_block_confirmation">
         Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. To unblock them, go to Settings. Are you sure you wish to continue?
+        requests from them. Are you sure you wish to continue?
     </string>
 
     <string name="contacts_actions_on">Actions on</string>
