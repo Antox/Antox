@@ -63,6 +63,7 @@
     <string name="settings_button">OK</string>
     <string name="settings_updated">Le impostazioni sono state aggiornate</string>
     <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
+    <string name="settings_language_title">Lingua</string>
     <string name="settings_status_title">Stato</string>
     <string name="settings_note_title">Informazioni personali</string>
     <string name="settings_username_title">Nome Utente</string>
