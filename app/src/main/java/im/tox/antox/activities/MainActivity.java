@@ -499,6 +499,7 @@ public class MainActivity extends ActionBarActivity{
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }
+        db.close();
     }
 
     @Override
@@ -711,18 +712,6 @@ public class MainActivity extends ActionBarActivity{
         @Override
         protected void onPostExecute(Void result)
         {
-            try {
-                //Checking the details
-                System.out.println("node details:");
-                System.out.println(DhtNode.ipv4);
-                System.out.println(DhtNode.ipv6);
-                System.out.println(DhtNode.port);
-                System.out.println(DhtNode.key);
-                System.out.println(DhtNode.owner);
-                System.out.println(DhtNode.location);
-            }catch (NullPointerException e){
-                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
-            }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
              * ToxService, because both are in separate threads. In that case to make sure the nodes
