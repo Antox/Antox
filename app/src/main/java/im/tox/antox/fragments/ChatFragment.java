@@ -48,16 +48,20 @@ public class ChatFragment extends Fragment {
 
 
     public void sendMessage() {
-        if(messageBox.getText().toString().length()==0){
-            return;
+        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+        if(!db.isFriendBlocked(toxSingleton.activeFriendKey)) {
+            if (messageBox.getText().toString().length() == 0) {
+                return;
+            }
+            EditText message = (EditText) getView().findViewById(R.id.yourMessage);
+            Intent intent = new Intent(main_act, ToxService.class);
+            intent.setAction(Constants.SEND_MESSAGE);
+            intent.putExtra("message", message.getText().toString());
+            intent.putExtra("key", toxSingleton.activeFriendKey);
+            message.setText("");
+            getActivity().startService(intent);
         }
-        EditText message = (EditText) getView().findViewById(R.id.yourMessage);
-        Intent intent = new Intent(main_act, ToxService.class);
-        intent.setAction(Constants.SEND_MESSAGE);
-        intent.putExtra("message", message.getText().toString());
-        intent.putExtra("key", toxSingleton.activeFriendKey);
-        message.setText("");
-        getActivity().startService(intent);
+        db.close();
     }
 
 
@@ -68,16 +72,17 @@ public class ChatFragment extends Fragment {
     }
 
     public void updateChat(ArrayList<Message> messages) {
-        Log.d(TAG, "updating chat");
-        Log.d(TAG, "chat message size = " + messages.size());
-        if(messages.size() >= 0 ) {
-            ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(messages.size());
-            for (int i = 0; i < messages.size(); i++) {
-                data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
+        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+        if(!db.isFriendBlocked(toxSingleton.activeFriendKey)) {
+            if (messages.size() >= 0) {
+                ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(messages.size());
+                for (int i = 0; i < messages.size(); i++) {
+                    data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
+                }
+                adapter = new ChatMessagesAdapter(main_act.getApplicationContext(), R.layout.chat_message_row, data);
+                chatListView.setAdapter(adapter);
+                chatListView.setSelection(adapter.getCount() - 1);
             }
-            adapter = new ChatMessagesAdapter(main_act.getApplicationContext(), R.layout.chat_message_row, data);
-            chatListView.setAdapter(adapter);
-            chatListView.setSelection(adapter.getCount() - 1);
         }
     }
 
