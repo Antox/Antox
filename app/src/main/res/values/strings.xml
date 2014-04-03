@@ -111,6 +111,7 @@
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
     <string name="friend_action_block">Block</string>
+    <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
     <string name="friend_action_deletechat">Delete Chat Logs</string>
     <string name="friend_action_block_confirmation">
