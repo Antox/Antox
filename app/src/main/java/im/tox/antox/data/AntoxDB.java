@@ -463,14 +463,14 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void blockUser(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='TRUE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='1' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
         db.close();
     }
 
     public void unblockUser(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='FALSE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='0' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
         db.close();
     }
