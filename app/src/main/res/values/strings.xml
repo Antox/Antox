@@ -81,6 +81,8 @@
     <string name="invalid_friend_ID">Invalid Tox ID</string>
     <string name="addfriend_alias_hint">Set a nickname for your friend</string>
     <string name="addfriend_optional_title">Optional Extras</string>
+    <string name="dialog_pin">Enter your friend\'s pin</string>
+    <string name="addfriend_invalid_pin">Invalid Pin</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
@@ -111,6 +113,7 @@
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
     <string name="friend_action_block">Block</string>
+    <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
     <string name="friend_action_deletechat">Delete Chat Logs</string>
     <string name="friend_action_block_confirmation">
