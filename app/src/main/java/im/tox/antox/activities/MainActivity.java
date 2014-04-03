@@ -420,7 +420,8 @@ public class MainActivity extends ActionBarActivity{
 
         LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
 
-        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0) {
+        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0
+                && antoxDB.getFriendList(Constants.OPTION_BLOCKED_FRIENDS).size() == 0) {
             noFriends.setVisibility(View.VISIBLE);
         } else {
             noFriends.setVisibility(View.GONE);
