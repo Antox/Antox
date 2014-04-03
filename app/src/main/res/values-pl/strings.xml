@@ -81,6 +81,8 @@
     <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
     <string name="addfriend_alias_hint">Ustaw nick dla znajomego</string>
     <string name="addfriend_optional_title">Dodatkowo</string>
+    <string name="dialog_pin">Wprowadź Pin znajomego</string>
+    <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Podziel się z</string>
