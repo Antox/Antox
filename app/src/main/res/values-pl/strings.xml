@@ -61,6 +61,7 @@
     <string name="settings_button">Aktualizuj</string>
     <string name="settings_updated">Twoje ustawienia zostały zaktualizowane</string>
     <string name="settings_dht_spinner_title">Ustawienia zaawansowane</string>
+    <string name="settings_language_title">Język</string>
     <string name="settings_status_title">Status</string>
     <string name="settings_note_title">Status</string>
     <string name="settings_username_title">Nazwa użytkownika</string>

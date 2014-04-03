@@ -1,14 +1,12 @@
 package im.tox.antox.activities;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -25,7 +23,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -423,7 +420,8 @@ public class MainActivity extends ActionBarActivity{
 
         LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
 
-        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0) {
+        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0
+                && antoxDB.getFriendList(Constants.OPTION_BLOCKED_FRIENDS).size() == 0) {
             noFriends.setVisibility(View.VISIBLE);
         } else {
             noFriends.setVisibility(View.GONE);
@@ -495,11 +493,13 @@ public class MainActivity extends ActionBarActivity{
     }
 
     private void clearUselessNotifications () {
+        AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
-                && toxSingleton.friendsList.all().size() > 0) {
+                && toxSingleton.friendsList.all().size() > 0 && !db.isFriendBlocked(toxSingleton.activeFriendKey)) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }
+        db.close();
     }
 
     @Override
@@ -672,16 +672,13 @@ public class MainActivity extends ActionBarActivity{
             Socket socket = null;
             Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
             for(int i = 0;i < DhtNode.ipv4.size(); i++) {
-                Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
                     boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
-                    Log.d(TAG, "Elapsed time: " + elapsedTime);
                     if (reachable && (elapsedTime < shortestTime)) {
                         shortestTime = elapsedTime;
                         pos = i;
-                        Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
                     }
 
                 } catch (IOException e) {
@@ -715,18 +712,6 @@ public class MainActivity extends ActionBarActivity{
         @Override
         protected void onPostExecute(Void result)
         {
-            try {
-                //Checking the details
-                System.out.println("node details:");
-                System.out.println(DhtNode.ipv4);
-                System.out.println(DhtNode.ipv6);
-                System.out.println(DhtNode.port);
-                System.out.println(DhtNode.key);
-                System.out.println(DhtNode.owner);
-                System.out.println(DhtNode.location);
-            }catch (NullPointerException e){
-                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
-            }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
              * ToxService, because both are in separate threads. In that case to make sure the nodes
