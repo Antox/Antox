@@ -33,6 +33,8 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 | Samsung  | Galaxy S3            | Android 4.4, CyanogenMod     |
 | Samsung  | Galaxy S4            | Android 4.4.2, CyanogenMod   |
 | Samsung  | Galaxy Tab 10.1 WiFi | Android 4.0.4                |
+| Xiaomi   | Mi2                  | Miui (Android 4.1.1)         |
+| Xiaomi   | Mi2s                 | Miui (Android 4.1.1)         |
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
