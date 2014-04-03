@@ -49,20 +49,20 @@
     <string name="about_string">APPLICAZIONE IN FASE PRE-ALPHA</string>
     <string name="getstarted_string">Nome Utente</string>
     <string name="developer_string">Sviluppato da astonex</string>
-    <string name="welcome_must_select_username">Devi inserire un nickname</string>
+    <string name="welcome_must_select_username">Devi inserire un nome utente</string>
 
     <!-- Settings Activity -->
-    <string name="settings_user_key_title">Il tuo ID</string>
+    <string name="settings_user_key_title">Il tuo Tox-ID</string>
     <string name="settings_name_hint">Inserisci il tuo nome</string>
     <string name="settings_note_hint">Inserisci le tue informazioni personali</string>
     <string name="settings_custom_dht">Impostazioni personalizzate per il server DHT</string>
-    <string name="settings_use_custom_dht">Usa impostazioni personalizzate per il server DHT</string>
+    <string name="settings_use_custom_dht">Usa server DHT personalizzato</string>
     <string name="settings_dht_ip">IP (es: 192.254.75.98)</string>
     <string name="settings_dht_port">Porta (es: 33445)</string>
     <string name="settings_dht_key">Chiave pubblica (es: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">OK</string>
-    <string name="settings_updated">Le impostazioni sono state aggiornate</string>
-    <string name="settings_dht_spinner_title">Impostazioni Avanzate</string>
+    <string name="settings_updated">Impostazioni aggiornate</string>
+    <string name="settings_dht_spinner_title">Impostazioni Server DHT</string>
     <string name="settings_language_title">Lingua</string>
     <string name="settings_status_title">Stato</string>
     <string name="settings_note_title">Informazioni personali</string>
@@ -71,30 +71,32 @@
     <string name="settings_invalid_key">Valore non valido</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">ID del tuo amico</string>
+    <string name="addfriend_friend_key">Tox-ID del tuo amico</string>
     <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
     <string name="addfriend_button">Aggiungi Amico</string>
     <string name="addfriend_friend_added">Amico aggiunto</string>
     <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
-    <string name="invalid_friend_ID">ID inserito non valido</string>
-    <string name="addfriend_alias_hint">Imposta un nome personalizzato per il tuo amico</string>
+    <string name="invalid_friend_ID">Tox-ID inserito non valido</string>
+    <string name="addfriend_alias_hint">Nome personalizzato per il tuo amico</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
+    <string name="dialog_pin">Inserisci il pin del tuo amico</string>
+    <string name="addfriend_invalid_pin">Pin non valido</string>
 
     <!-- Profile Activity -->
     <string name="share_with">Condividi Con</string>
     <string name="status_online">Online</string>
     <string name="status_away">Assente</string>
     <string name="status_busy">Occupato</string>
-    <string name="profile_updated">Il tuo profilo è stato aggiornato</string>
+    <string name="profile_updated">Profilo aggiornato</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
     <string name="friend_profile_alias">Nome Personalizzato</string>
-    <string name="friend_profile_key">ID</string>
+    <string name="friend_profile_key">Tox-ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Aggiorna</string>
-    <string name="friend_profile_updated">Il nome personalizzato è stato aggioranto</string>
+    <string name="friend_profile_updated">Nome personalizzato aggiornato</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
@@ -109,11 +111,11 @@
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi Amico</string>
     <string name="friend_action_block">Blocca</string>
+    <string name="friend_action_unblock">Sblocca</string>
     <string name="friend_action_deletechat">Elimina Chat</string>
     <string name="friend_action_block_confirmation">
         Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
-        richieste d\'amicizia da lui. Per sbloccare un utente, vai nelle Impostazioni.\n
-        Sei sicuro di voler continuare?
+        richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
     </string>
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
