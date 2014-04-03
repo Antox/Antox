@@ -298,9 +298,9 @@ public class ContactsFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                AntoxDB db = new AntoxDB(getActivity());
-                                db.blockUser(key);
-                                db.close();
+                                AntoxDB dbBlock = new AntoxDB(getActivity());
+                                dbBlock.blockUser(key);
+                                dbBlock.close();
                                 clearChat(key);
                                 main_act.updateLeftPane();
                             }
