@@ -276,19 +276,15 @@ public class AntoxDB extends SQLiteOpenHelper {
         String selectQuery = "";
         switch (option) {
             case Constants.OPTION_ALL_FRIENDS:
-                Log.d("DATABSE", "OPTION_ALL_FRIENDS");
                 selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
                 break;
             case Constants.OPTION_ONLINE_FRIENDS:
-                Log.d("DATABSE", "OPTION_ONLINE_FRIENDS");
                 selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=1 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
                 break;
             case Constants.OPTION_OFFLINE_FRIENDS:
-                Log.d("DATABSE", "OPTION_OFFLINE_FRIENDS");
                 selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=0 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
                 break;
             case Constants.OPTION_BLOCKED_FRIENDS:
-                Log.d("DATABSE", "OPTION_BLOCKED_FRIENDS");
                 selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "=1";
                 break;
             default:
