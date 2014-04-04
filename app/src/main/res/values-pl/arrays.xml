@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions">
+        <item>Wszyscy</item>
+        <item>Online</item>
+        <item>Offline</item>
+        <item>Zablokowani</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Nederlands</item>
+        <item>Polski</item>
+        <item>Türkçe</item>
+    </string-array>
+</resources>
