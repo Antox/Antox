@@ -217,7 +217,7 @@ public class MainActivity extends ActionBarActivity{
             // settings
             // and give a brief description of antox
             Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
         }
 
         Log.i(TAG, "onCreate");
@@ -762,6 +762,8 @@ public class MainActivity extends ActionBarActivity{
             Log.d("file type",""+getContentResolver().getType(uri));
         } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
             restartActivity();
+        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
+            finish();
         }
     }
 
