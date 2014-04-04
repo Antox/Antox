@@ -3,17 +3,12 @@ package im.tox.antox.tox;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preview.support.wearable.notifications.*;
-import android.preview.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,8 +27,6 @@ import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
-import im.tox.jtoxcore.ToxFriend;
-import im.tox.jtoxcore.ToxUserStatus;
 
 public class ToxService extends IntentService {
     private static final String TAG = "im.tox.antox.tox.ToxService";
