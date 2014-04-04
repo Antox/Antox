@@ -1,7 +1,6 @@
 package im.tox.antox.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -17,13 +16,11 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Locale;
 
+import im.tox.antox.R;
 import im.tox.antox.fragments.DHTDialogFragment;
 import im.tox.antox.utils.DhtNode;
-import im.tox.antox.R;
 
 /**
  * Settings Activity DHT nodes.
@@ -140,6 +137,12 @@ public class SettingsActivity extends ActionBarActivity
             case "Türkçe":
                 languageSpinner.setSelection(7);
                 break;
+            case "Русский":
+                languageSpinner.setSelection(8);
+                break;
+            case "Український":
+                languageSpinner.setSelection(9);
+                break;
             default:
                 break;
         }
@@ -210,6 +213,12 @@ public class SettingsActivity extends ActionBarActivity
                     break;
                 case "Türkçe":
                     locale = new Locale("tr");
+                    break;
+                case "Русский":
+                    locale = new Locale("ru");
+                    break;
+                case "Український":
+                    locale = new Locale("uk");
                     break;
                 default:
                     break;
