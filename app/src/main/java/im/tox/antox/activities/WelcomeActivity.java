@@ -89,13 +89,18 @@ public class WelcomeActivity extends ActionBarActivity {
             editorMain.putInt("beenLoaded", 1);
             editorMain.commit();
 
-            //Restart MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            //set result
+            setResult(RESULT_OK);
 
             // Close activity
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     @Override
