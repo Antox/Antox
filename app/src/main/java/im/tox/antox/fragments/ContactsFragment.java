@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,7 +72,6 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-
     public void updateLeftPane() {
         leftPaneAdapter = main_act.leftPaneAdapter;
         leftPaneListView.setAdapter(leftPaneAdapter);
@@ -90,8 +88,6 @@ public class ContactsFragment extends Fragment {
          */
 
         main_act = (MainActivity) getActivity();
-
-
 
         View rootView = inflater.inflate(R.layout.fragment_leftpane, container, false);
         leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
@@ -160,18 +156,27 @@ public class ContactsFragment extends Fragment {
                 boolean isGroupChat=false;
                 final boolean isFriendRequest = item.viewType==Constants.TYPE_FRIEND_REQUEST;
                 final CharSequence items[];
+
+                SharedPreferences settingsPref = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
+                final int option = settingsPref.getInt("group_option", 0);
+
                 if(isFriendRequest){
                     items= new CharSequence[]{
                             getResources().getString(R.string.friendrequest_accept),
                             getResources().getString(R.string.friendrequest_reject),
                             getResources().getString(R.string.friend_action_block)
                     };
-                }else{
+                } else if(option == 3) {
+                    items = new CharSequence[] {
+                            getResources().getString(R.string.friend_action_unblock),
+                            getResources().getString(R.string.friend_action_deletechat)
+                    };
+                } else {
                     items= new CharSequence[]{
-                            getResources().getString(R.string.friend_action_profile),
-                            getResources().getString(R.string.friend_action_delete),
-                            getResources().getString(R.string.friend_action_deletechat),
-                            getResources().getString(R.string.friend_action_block)
+                                getResources().getString(R.string.friend_action_profile),
+                                        getResources().getString(R.string.friend_action_delete),
+                                        getResources().getString(R.string.friend_action_deletechat),
+                                        getResources().getString(R.string.friend_action_block)
                     };
                 }
                 builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
@@ -184,7 +189,7 @@ public class ContactsFragment extends Fragment {
                                     switch (index){
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                            db.addFriend(item.first, "Friend Accepted", "");
+                                            db.addFriend(item.first, "Friend Accepted", "", "");
                                             db.close();
                                             main_act.updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
@@ -209,7 +214,31 @@ public class ContactsFragment extends Fragment {
                                             showBlockDialog(getActivity(),item.first);
                                             break;
                                     }
-                                }else{
+                                } else if(option == 3) {
+                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                    //Get friend key
+                                    String key = "";
+                                    for(int i = 0; i < tmp.size(); i++) {
+                                        if(item.first.equals(tmp.get(i).friendName)) {
+                                            key = tmp.get(i).friendKey;
+                                            break;
+                                        }
+                                    }
+                                    switch(index) {
+                                        case 0:
+                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                                            db.unblockUser(key);
+                                            db.close();
+                                            break;
+                                        case 1:
+                                            AntoxDB db2 = new AntoxDB(getActivity().getApplicationContext());
+                                            db2.deleteChat(key);
+                                            db2.close();
+                                            main_act.updateLeftPane();
+                                            clearChat(key);
+                                            break;
+                                    }
+                                } else {
                                     ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
                                     //Get friend key
                                     String key = "";
@@ -269,17 +298,11 @@ public class ContactsFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                AntoxDB db = new AntoxDB(getActivity());
-                                db.deleteChat(key);
-                                db.deleteFriend(key);
-                                db.blockUser(key);
-                                db.close();
+                                AntoxDB dbBlock = new AntoxDB(getActivity());
+                                dbBlock.blockUser(key);
+                                dbBlock.close();
                                 clearChat(key);
                                 main_act.updateLeftPane();
-                                Intent intent = new Intent(getActivity(), ToxService.class);
-                                intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
-                                intent.putExtra("key", key);
-                                getActivity().startService(intent);
                             }
                         })
                 .setNegativeButton(getResources().getString(R.string.button_no),

@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 import java.util.TimeZone;
 
 import im.tox.antox.utils.Constants;
@@ -95,14 +94,17 @@ public class AntoxDB extends SQLiteOpenHelper {
     // Currently we are not able to fetch Note,username so keep it null.
     //So storing the received message as his/her personal note.
 
-    public void addFriend(String key, String message, String alias) {
+    public void addFriend(String key, String message, String alias, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if(username.contains("@"))
+            username = username.substring(0, username.indexOf("@"));
 
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
         values.put(Constants.COLUMN_NAME_STATUS, "0");
         values.put(Constants.COLUMN_NAME_NOTE, message);
-        values.put(Constants.COLUMN_NAME_USERNAME, "");
+        values.put(Constants.COLUMN_NAME_USERNAME, username);
         values.put(Constants.COLUMN_NAME_ISONLINE, false);
         values.put(Constants.COLUMN_NAME_ALIAS, alias);
         db.insert(Constants.TABLE_FRIENDS, null, values);
@@ -269,12 +271,27 @@ public class AntoxDB extends SQLiteOpenHelper {
         Log.d("", "marked incoming messages as read");
     }
 
-    public ArrayList<Friend> getFriendList() {
+    public ArrayList<Friend> getFriendList(int option) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ArrayList<Friend> friendList = new ArrayList<Friend>();
-        // Getting all friends
-        String selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
+        String selectQuery = "";
+        switch (option) {
+            case Constants.OPTION_ALL_FRIENDS:
+                selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
+                break;
+            case Constants.OPTION_ONLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=1 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
+                break;
+            case Constants.OPTION_OFFLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=0 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
+                break;
+            case Constants.OPTION_BLOCKED_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "=1";
+                break;
+            default:
+                break;
+        }
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -296,8 +313,9 @@ public class AntoxDB extends SQLiteOpenHelper {
                 else if(name.equals(""))
                     name = key.substring(0,7);
 
-                if(!isBlocked)
-                    friendList.add(new Friend(online,name,status,note, key));
+                if(!(option == 0 && isBlocked))
+                    friendList.add(new Friend(online, name, status, note, key));
+
             } while (cursor.moveToNext());
         }
 
@@ -448,14 +466,14 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void blockUser(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='TRUE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='1' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
         db.close();
     }
 
     public void unblockUser(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='FALSE' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
+        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='0' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
         db.execSQL(query);
         db.close();
     }

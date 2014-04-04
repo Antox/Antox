@@ -61,6 +61,7 @@
     <string name="settings_button">Update</string>
     <string name="settings_updated">Your Settings has been updated</string>
     <string name="settings_dht_spinner_title">Advanced Settings</string>
+    <string name="settings_language_title">Language</string>
     <string name="settings_status_title">Status</string>
     <string name="settings_note_title">Mood</string>
     <string name="settings_username_title">Username</string>
@@ -80,6 +81,8 @@
     <string name="invalid_friend_ID">Invalid Tox ID</string>
     <string name="addfriend_alias_hint">Set a nickname for your friend</string>
     <string name="addfriend_optional_title">Optional Extras</string>
+    <string name="dialog_pin">Enter your friend\'s pin</string>
+    <string name="addfriend_invalid_pin">Invalid Pin</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
@@ -110,11 +113,12 @@
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
     <string name="friend_action_block">Block</string>
+    <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
     <string name="friend_action_deletechat">Delete Chat Logs</string>
     <string name="friend_action_block_confirmation">
         Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. To unblock them, go to Settings. Are you sure you wish to continue?
+        requests from them. Are you sure you wish to continue?
     </string>
 
     <string name="contacts_actions_on">Actions on</string>

@@ -23,7 +23,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -217,7 +216,7 @@ public class MainActivity extends ActionBarActivity{
             // settings
             // and give a brief description of antox
             Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
         }
 
         Log.i(TAG, "onCreate");
@@ -257,14 +256,28 @@ public class MainActivity extends ActionBarActivity{
 
         }
 
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actions,
                 R.layout.group_item);
+        if (settingsPref.getInt("group_option", -1) == -1) {
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putInt("group_option", 0);
+            editor.commit();
+        }
+
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
             String[] items = getResources().getStringArray(R.array.actions);
             @Override
-            public boolean onNavigationItemSelected(int i, long l) {
-                Log.d("NavigationItemSelected", items[i]);
-                //TODO: Filter friends list
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                Log.d("NavigationItemSelected", items[itemPosition]);
+                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                if (itemPosition != settingsPref.getInt("group_option", -1)) {
+                    SharedPreferences.Editor editor = settingsPref.edit();
+                    editor.putInt("group_option", itemPosition);
+                    editor.commit();
+                    updateLeftPane();
+                }
                 return true;
             }
         };
@@ -272,13 +285,13 @@ public class MainActivity extends ActionBarActivity{
         actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actions.setDisplayShowTitleEnabled(false);
         actions.setListNavigationCallbacks(adapter, callback);
+        actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
 
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
         /* Load user details */
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         UserDetails.username = settingsPref.getString("saved_name_hint", "");
         if (settingsPref.getString("saved_status_hint", "").equals("online"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
@@ -288,6 +301,13 @@ public class MainActivity extends ActionBarActivity{
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
         else
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+
+        if (settingsPref.getString("language", "").equals("")) {
+            //set the current language
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putString("language", getCurrentLanguageOnStart());
+            editor.commit();
+        }
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
@@ -315,6 +335,40 @@ public class MainActivity extends ActionBarActivity{
     protected void onDestroy() {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
+    }
+
+    private String getCurrentLanguageOnStart() {
+        String currentLanguage = getResources().getConfiguration().locale.getCountry().toLowerCase();
+        String language;
+        switch (currentLanguage) {
+            case "en":
+                language = "English";
+                break;
+            case "de":
+                language = "Deutsch";
+                break;
+            case "es":
+                language = "Español";
+                break;
+            case "fr":
+                language = "Français";
+                break;
+            case "it":
+                language = "Italiano";
+                break;
+            case "nl":
+                language = "Nederlands";
+                break;
+            case "pl":
+                language = "Polski";
+                break;
+            case "tr":
+                language = "Türkçe";
+                break;
+            default:
+                language = "English";
+        }
+        return language;
     }
     private Message mostRecentMessage(String key, ArrayList<Message> messages) {
         for (int i=0; i<messages.size(); i++) {
@@ -346,7 +400,8 @@ public class MainActivity extends ActionBarActivity{
 
         AntoxDB antoxDB = new AntoxDB(this);
 
-        friendList = antoxDB.getFriendList();
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        friendList = antoxDB.getFriendList(settingsPref.getInt("group_option", 0));
 
         ArrayList<Message> messageList = antoxDB.getMessageList("");
 
@@ -364,7 +419,8 @@ public class MainActivity extends ActionBarActivity{
 
         LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
 
-        if (friend_requests_list.length == 0 && friends_list.length == 0) {
+        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0
+                && antoxDB.getFriendList(Constants.OPTION_BLOCKED_FRIENDS).size() == 0) {
             noFriends.setVisibility(View.VISIBLE);
         } else {
             noFriends.setVisibility(View.GONE);
@@ -405,7 +461,7 @@ public class MainActivity extends ActionBarActivity{
      */
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.UPDATE_SETTINGS_REQUEST_CODE);
     }
     /**
      * Starts a new intent to open the SettingsActivity class
@@ -436,11 +492,13 @@ public class MainActivity extends ActionBarActivity{
     }
 
     private void clearUselessNotifications () {
+        AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
-                && toxSingleton.friendsList.all().size() > 0) {
+                && toxSingleton.friendsList.all().size() > 0 && !db.isFriendBlocked(toxSingleton.activeFriendKey)) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }
+        db.close();
     }
 
     @Override
@@ -613,16 +671,13 @@ public class MainActivity extends ActionBarActivity{
             Socket socket = null;
             Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
             for(int i = 0;i < DhtNode.ipv4.size(); i++) {
-                Log.d(TAG, "i = " + i);
                 try {
                     long currentTime = System.currentTimeMillis();
                     boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
                     long elapsedTime = System.currentTimeMillis() - currentTime;
-                    Log.d(TAG, "Elapsed time: " + elapsedTime);
                     if (reachable && (elapsedTime < shortestTime)) {
                         shortestTime = elapsedTime;
                         pos = i;
-                        Log.d(TAG, "Shortest time found: " + shortestTime + " at pos: " + pos);
                     }
 
                 } catch (IOException e) {
@@ -656,18 +711,6 @@ public class MainActivity extends ActionBarActivity{
         @Override
         protected void onPostExecute(Void result)
         {
-            try {
-                //Checking the details
-                System.out.println("node details:");
-                System.out.println(DhtNode.ipv4);
-                System.out.println(DhtNode.ipv6);
-                System.out.println(DhtNode.port);
-                System.out.println(DhtNode.key);
-                System.out.println(DhtNode.owner);
-                System.out.println(DhtNode.location);
-            }catch (NullPointerException e){
-                Toast.makeText(MainActivity.this,getString(R.string.main_node_list_download_error),Toast.LENGTH_SHORT).show();
-            }
             /**
              * There is a chance that downloading finishes later than the bootstrapping call in the
              * ToxService, because both are in separate threads. In that case to make sure the nodes
@@ -699,6 +742,14 @@ public class MainActivity extends ActionBarActivity{
             finish();
         }
     }
+
+    private void restartActivity() {
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             updateLeftPane();
@@ -708,12 +759,18 @@ public class MainActivity extends ActionBarActivity{
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             Log.d("file picked",""+pickedFile.getAbsolutePath() );
             Log.d("file type",""+getContentResolver().getType(uri));
+        } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
+            restartActivity();
+        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
+            finish();
         }
     }
+
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override
         public void onPanelClosed(View view) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
             MenuItem af = menu.findItem(R.id.add_friend);
@@ -742,6 +799,7 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         public void onPanelOpened(View view) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             setTitle(R.string.app_name);
             MenuItem af = menu.findItem(R.id.add_friend);

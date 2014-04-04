@@ -27,12 +27,14 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 | LG       | Nexus 5              | Android 4.4.2                |
 | Motorola | Moto G               | Android 4.4.2                |
 | Samsung  | Galaxy Nexus         | Android 4.4                  |
-| Samsung  | Galaxy Note 1        | Android 4.3 ParanoidAndroid  |
+| Samsung  | Galaxy Note 1        | Android 4.3, ParanoidAndroid |
 | Samsung  | Galaxy Note 3        | TouchWiz (Android 4.3)       |
 | Samsung  | Galaxy Note 10.1     | TouchWiz (Android 4.3)       |
-| Samsung  | Galaxy S3            | Android 4.4 CyanogenMod      |
+| Samsung  | Galaxy S3            | Android 4.4, CyanogenMod     |
+| Samsung  | Galaxy S4            | Android 4.4.2, CyanogenMod   |
 | Samsung  | Galaxy Tab 10.1 WiFi | Android 4.0.4                |
-
+| Xiaomi   | Mi2                  | Miui (Android 4.1.1)         |
+| Xiaomi   | Mi2s                 | Miui (Android 4.1.1)         |
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
@@ -40,7 +42,7 @@ For those who used to test Antox on GPlay, we apologize that we will no longer b
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.2 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
 - Connect your phone in developer mode and click Run in Android Studio. It will install antox on to your phone and run it automatically.
-- Download the current reference binaries from http://jenkins.tox.im/job/jToxcore_Android/45/artifact/artifacts/
+- Download the latest jToxcore binaries from http://jenkins.tox.im/job/jToxcore_Android/lastSuccessfulBuild/artifact/*zip*/archive.zip 
 - Copy the armeabi/, armeabi-v7a/, mips/ and x86/ folders to app/src/main/jniLibs/
 - Copy jToxcore.jar to app/libs/jToxcore.jar
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
