@@ -94,14 +94,17 @@ public class AntoxDB extends SQLiteOpenHelper {
     // Currently we are not able to fetch Note,username so keep it null.
     //So storing the received message as his/her personal note.
 
-    public void addFriend(String key, String message, String alias) {
+    public void addFriend(String key, String message, String alias, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if(username.contains("@"))
+            username = username.substring(0, username.indexOf("@"));
 
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
         values.put(Constants.COLUMN_NAME_STATUS, "0");
         values.put(Constants.COLUMN_NAME_NOTE, message);
-        values.put(Constants.COLUMN_NAME_USERNAME, "");
+        values.put(Constants.COLUMN_NAME_USERNAME, username);
         values.put(Constants.COLUMN_NAME_ISONLINE, false);
         values.put(Constants.COLUMN_NAME_ALIAS, alias);
         db.insert(Constants.TABLE_FRIENDS, null, values);
