@@ -54,7 +54,7 @@ public class FriendRequestFragment extends Fragment {
             public void onClick(View view) {
                 getActivity().getSupportFragmentManager().popBackStack();
                 AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                db.addFriend(key, "Friend Accepted", "");
+                db.addFriend(key, "Friend Accepted", "", "");
                 db.close();
                 ((MainActivity) getActivity()).updateLeftPane();
                 ((MainActivity) getActivity()).pane.openPane();

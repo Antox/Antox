@@ -56,5 +56,11 @@ public final class Constants {
     //Activity request code for onActivityResult methods
     public static final int ADD_FRIEND_REQUEST_CODE=0;
     public static final int SENDFILE_PICKEDFRIEND_CODE=1;
+    public static final int UPDATE_SETTINGS_REQUEST_CODE=2;
+    public static final int WELCOME_ACTIVITY_REQUEST_CODE = 3;
 
+    public static final int OPTION_ALL_FRIENDS = 0;
+    public static final int OPTION_ONLINE_FRIENDS = 1;
+    public static final int OPTION_OFFLINE_FRIENDS = 2;
+    public static final int OPTION_BLOCKED_FRIENDS = 3;
 }

@@ -9,6 +9,11 @@ android {
         targetSdkVersion 19
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     buildTypes {
         release {
             runProguard false
@@ -30,4 +35,5 @@ dependencies {
     compile files('libs/jToxcore.jar')
     compile files('libs/core.jar')
     compile files('libs/jsoup-1.7.3.jar')
+    compile files('libs/dnsjava-2.1.6.jar')
 }
