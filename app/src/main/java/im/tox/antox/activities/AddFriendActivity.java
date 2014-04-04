@@ -112,7 +112,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                         if (!alias.equals(""))
                             ID = alias;
 
-                        db.addFriend(ID, "Friend Request Sent", alias);
+                        db.addFriend(ID, "Friend Request Sent", alias, intent.getStringExtra("originalUsername"));
                     } else {
                         toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
                     }
@@ -197,7 +197,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                     if (!alias.equals(""))
                         ID = alias;
 
-                    db.addFriend(ID, "Friend Request Sent", alias);
+                    db.addFriend(ID, "Friend Request Sent", alias, _originalUsername);
                 } else {
                     toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
                 }
