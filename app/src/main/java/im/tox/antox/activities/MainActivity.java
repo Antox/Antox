@@ -291,17 +291,6 @@ public class MainActivity extends ActionBarActivity{
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
 
-        /* Load user details */
-        UserDetails.username = settingsPref.getString("saved_name_hint", "");
-        if (settingsPref.getString("saved_status_hint", "").equals("online"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        else if (settingsPref.getString("saved_status_hint", "").equals("away"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        else if (settingsPref.getString("saved_status_hint", "").equals("busy"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
-        else
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-
         if (settingsPref.getString("language", "").equals("")) {
             //set the current language
             SharedPreferences.Editor editor = settingsPref.edit();
