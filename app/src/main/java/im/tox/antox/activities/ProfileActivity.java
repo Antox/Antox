@@ -202,11 +202,11 @@ public class ProfileActivity extends ActionBarActivity {
             UserDetails.note = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
-        if (statusSpinner.getSelectedItem().toString().equals("Online"))
+        if (statusSpinner.getSelectedItem().toString().equals(getString(R.string.status_online)))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        if (statusSpinner.getSelectedItem().toString().equals("Away"))
+        if (statusSpinner.getSelectedItem().toString().equals(getString(R.string.status_away)))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString().equals("Busy"))
+        if (statusSpinner.getSelectedItem().toString().equals(R.string.status_busy))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
         editor.commit();

@@ -556,7 +556,7 @@ public class MainActivity extends ActionBarActivity{
         Log.v("Add friend to group method", "To implement");
     }
 
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

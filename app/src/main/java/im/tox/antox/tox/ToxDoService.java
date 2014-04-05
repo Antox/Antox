@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import im.tox.antox.R;
 import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -140,9 +141,9 @@ public class ToxDoService extends IntentService {
 
                         /* Load user details */
                         UserDetails.username = settingsPref.getString("saved_name_hint", "");
-                        if (settingsPref.getString("saved_status_hint", "").equals("Away"))
+                        if (settingsPref.getString("saved_status_hint", "").equals(getString(R.string.status_away)))
                             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-                        else if (settingsPref.getString("saved_status_hint", "").equals("Busy"))
+                        else if (settingsPref.getString("saved_status_hint", "").equals(getString(R.string.status_busy)))
                             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
                         else
                             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
