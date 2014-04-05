@@ -556,6 +556,7 @@ public class MainActivity extends ActionBarActivity{
         Log.v("Add friend to group method", "To implement");
     }
 
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -595,6 +596,7 @@ public class MainActivity extends ActionBarActivity{
 
         return true;
     }
+
 
     /**
      * Method to see if the tox service is already running so it isn't restarted
@@ -762,9 +764,21 @@ public class MainActivity extends ActionBarActivity{
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
+
+            // Hide add friend icon
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
-            ag.setVisible(true);
+
+            //Hide group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
+            // Hide search icon
+            MenuItem search = menu.findItem(R.id.search_friend);
+            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_NEVER);
+
+            //ag.setVisible(true);
+            /* Hide until functionality is implemented to avoid confusion
             MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
             ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -773,42 +787,40 @@ public class MainActivity extends ActionBarActivity{
                     return false;
                 }
             });
+            */
             toxSingleton.rightPaneActive = true;
-            System.out.println("Panel closed");
             toxSingleton.leftPaneActive = false;
             if(toxSingleton.activeFriendKey!=null){
                 updateChat(toxSingleton.activeFriendKey);
             }
             clearUselessNotifications();
-
-            //Hide group menu
-            ActionBar bar = MainActivity.this.getSupportActionBar();
-            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }
 
         @Override
         public void onPanelOpened(View view) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            setTitle(R.string.app_name);
+
+            // Show add friend icon
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//            af.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            /*af.setIcon(R.drawable.ic_action_add_person);
-            af.setTitle(R.string.add_friend);*/
-            menu.removeGroup(666);
+
+            //Show group dropdown
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+            // Show search icon
+            MenuItem search = menu.findItem(R.id.search_friend);
+            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            //menu.removeGroup(666);
+
             supportInvalidateOptionsMenu();
+
             toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            /* This is causing a null pointer exception */
-            //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-            System.out.println("Panel opened");
-
-            //Show group menu
-            ActionBar bar = MainActivity.this.getSupportActionBar();
-            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
 
         @Override
