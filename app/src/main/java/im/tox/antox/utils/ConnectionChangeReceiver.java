@@ -22,7 +22,7 @@ import im.tox.antox.activities.MainActivity;
 import im.tox.antox.tox.ToxDoService;
 
 /**
- * Created by dragos on 05.04.2014.
+ * Created by Dragos Corlatescu on 05.04.2014.
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
 
