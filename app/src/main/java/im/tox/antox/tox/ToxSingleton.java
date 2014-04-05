@@ -2,13 +2,11 @@ package im.tox.antox.tox;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.UserDetails;
