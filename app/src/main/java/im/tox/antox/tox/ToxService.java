@@ -3,17 +3,12 @@ package im.tox.antox.tox;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preview.support.wearable.notifications.*;
-import android.preview.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -29,10 +24,9 @@ import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
+import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
-import im.tox.jtoxcore.ToxFriend;
-import im.tox.jtoxcore.ToxUserStatus;
 
 public class ToxService extends IntentService {
     private static final String TAG = "im.tox.antox.tox.ToxService";
@@ -66,24 +60,10 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.UPDATE_SETTINGS:
-                String[] newSettings = intent.getStringArrayExtra("newSettings");
-
-                /* If not empty, update the users settings which is passed in intent from SettingsActivity */
                 try {
-                    if (!newSettings[0].equals(""))
-                        toxSingleton.jTox.setName(newSettings[0]);
-
-                    if (!newSettings[1].equals("")) {
-                        if (newSettings[1].equals("Away"))
-                            toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_AWAY);
-                        else if (newSettings[1].equals("Busy"))
-                            toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_BUSY);
-                        else
-                            toxSingleton.jTox.setUserStatus(ToxUserStatus.TOX_USERSTATUS_NONE);
-                    }
-
-                    if (!newSettings[2].equals(""))
-                        toxSingleton.jTox.setStatusMessage(newSettings[2]);
+                    toxSingleton.jTox.setName(UserDetails.username);
+                    toxSingleton.jTox.setUserStatus(UserDetails.status);
+                    toxSingleton.jTox.setStatusMessage(UserDetails.note);
                 } catch (ToxException e) {
                     e.printStackTrace();
                 }

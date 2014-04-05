@@ -1,7 +1,6 @@
 package im.tox.antox.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -89,13 +88,18 @@ public class WelcomeActivity extends ActionBarActivity {
             editorMain.putInt("beenLoaded", 1);
             editorMain.commit();
 
-            //Restart MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            //set result
+            setResult(RESULT_OK);
 
             // Close activity
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        super.onBackPressed();
     }
 
     @Override
