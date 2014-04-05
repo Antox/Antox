@@ -112,6 +112,7 @@
     <string name="friend_request">Nuova Richiesta D\'Amicizia</string>
 
     <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profilo</string>
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi Amico</string>
     <string name="friend_action_block">Blocca</string>
