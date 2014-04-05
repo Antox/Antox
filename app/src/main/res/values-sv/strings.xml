@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Välkommen</string>
+    <string name="title_activity_add_friend">Lägg Till Vän</string>
+    <string name="title_activity_settings">Inställningar</string>
+    <string name="title_activity_profile">Profil</string>
+    <string name="title_activity_about">Om</string>
+    <string name="title_activity_friend_profile">Profil</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Inställningar</string>
+    <string name="action_exit">Avsluta</string>
+    <string name="add_friend">Lägg Till Vän</string>
+    <string name="search_friend">Sök</string>
+    <string name="action_profile">Profil</string>
+    <string name="action_about">Om</string>
+    <string name="add_to_group">Lägg Till I Grupp</string>
+
+    <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Användarnamn</string>
+    <string name="main_status">Status</string>
+    <string name="icon_description">Anslutningsstatus</string>
+    <string name="main_no_friends">Du måste vara ny här.</string>
+    <string name="main_try_adding">Lägg till några vänner för att komma igång</string>
+    <string name="main_friend_requests">Vänförfrågningar</string>
+    <string name="main_friends">Vänner</string>
+    <string name="main_no_internet">Ingen Internetanslutning</string>
+    <string name="main_not_connected">
+        Ingen internetanslutning hittades. Utan internetanslutning har du begränsad funktionalitet.
+    </string>
+    <string name="main_node_list_download_error">Fel Vid Nedladdning Av Nodlista</string>
+
+    <!-- About Activity -->
+    <string name="about_details">Antox är en Androidklient för Tox</string>
+    <string name="about_bugs">För att rapportera en bug, gå till våran GitHub-sida och klicka på \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Vi finns på Freenode på #tox-dev</string>
+    <string name="about_version">Version</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Skicka ett meddelande</string>
+
+
+    <!-- Settings Activity -->
+    <string name="about_string">Den här klienten är fortfarande i pre-alpha.</string>
+    <string name="getstarted_string">Ange ditt önskade användarnamn</string>
+    <string name="settings_custom_dht">Egna DHT nodinställningar</string>
+    <string name="settings_use_custom_dht">Använd egna DHT nodinställningar</string>
+    <string name="settings_user_key_title">Ditt Tox ID</string>
+    <string name="settings_name_hint">ange ditt namn</string>
+    <string name="settings_note_hint">ange en personlig kommentar</string>
+    <string name="settings_dht_ip">Bootstrap IP-adress (t.ex.: 192.254.75.98)</string>
+    <string name="settings_dht_port">Bootstrap portnummer (t.ex.: 33445)</string>
+    <string name="settings_dht_key">Bootstrap Publik Nyckeadress (t.ex.: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Uppdatera</string>
+    <string name="settings_updated">Dina Inställningar har uppdaterats</string>
+    <string name="settings_dht_spinner_title">Avancerade Inställningar</string>
+    <string name="settings_language_title">Språk</string>
+    <string name="settings_status_title">Status</string>
+    <string name="settings_note_title">Humör</string>
+    <string name="settings_username_title">Användarnamn</string>
+    <string name="settings_empty_strings">Du måste fylla i alla fält</string>
+    <string name="settings_invalid_key">Ogiltig nyckel angiven</string>
+    <string name="developer_string">Utvecklad av astonex &amp; co.</string>
+    <string name="welcome_must_select_username">Du måste ange ett användarnamn</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Din väns Tox ID</string>
+    <string name="addfriend_friend_message">Frivilligt meddelande</string>
+    <string name="addfriend_button">Lägg Till Vän</string>
+    <string name="addfriend_friend_added">Vän Tillagd</string>
+    <string name="addfriend_friend_exists">Vännen finns redan</string>
+    <string name="scanqr_button">Skanna en QR-kod</string>
+    <string name="invalid_friend_ID">Ogiltigt Tox ID</string>
+    <string name="addfriend_alias_hint">Ange ett smeknamn för din vän</string>
+    <string name="addfriend_optional_title">Tillval</string>
+    <string name="dialog_pin">Ange din väns pin</string>
+    <string name="addfriend_invalid_pin">Ogiltig Pin</string>
+    <string name="addfriend_no_internet">Ingen anslutning till Tox-nätverket</string>
+    <string name="addfriend_no_internet_text">
+        Tyvärr är du inte ansluten till Tox-nätverket så du kan inte lägga till en vän just nu.
+        Försök starta om applikationen.
+    </string>
+
+    <!-- Profile Activity -->
+    <string name="share_with">Dela Med</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Borta</string>
+    <string name="status_busy">Upptagen</string>
+    <string name="profile_updated">Din Profil har uppdaterats</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Namn</string>
+    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Status</string>
+    <string name="friend_profile_button">Uppdatera</string>
+    <string name="friend_profile_updated">Alias har uppdaterats</string>
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Acceptera</string>
+    <string name="friendrequest_reject">Avvisa</string>
+    <string name="friendrequest_accepted">Vänföfrågan accepterad</string>
+    <string name="friendrequest_deleted">Vänförfrågan borttagen</string>
+    <string name="friendrequest">Vänförfrågan</string>
+    <string name="friendrequest_recieved">Vänförfrågan mottagen</string>
+    <string name="friend_request">Ny Vänförfrågan</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_sendfile">Skicka Fil</string>
+    <string name="friend_action_delete">Ta Bort Vän</string>
+    <string name="friend_action_block">Blocka</string>
+    <string name="friend_action_unblock">Avblockera</string>
+    <string name="group_action_leave">Lämna Grupp</string>
+    <string name="friend_action_deletechat">Ta bort Chatloggar</string>
+    <string name="friend_action_block_confirmation">
+        Om du blockerar den här användaren kommer hen tas bort från din kontaktlista och du kommer inte
+        längre kunna se vänförfrågningar från henom. Är du säker på att du vill fortsätta?
+    </string>
+
+    <string name="contacts_actions_on">Handlingar på</string>
+    <string name="contacts_clear_saved_logs">Vill du rensa de sparade chattloggarna också?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Bekräfta</string>
+    <string name="button_cancel">Avbryt</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nej</string>
+
+</resources>
