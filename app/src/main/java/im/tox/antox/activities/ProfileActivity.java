@@ -206,7 +206,7 @@ public class ProfileActivity extends ActionBarActivity {
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
         if (statusSpinner.getSelectedItem().toString().equals(getString(R.string.status_away)))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        if (statusSpinner.getSelectedItem().toString().equals(R.string.status_busy))
+        if (statusSpinner.getSelectedItem().toString().equals(getString(R.string.status_busy)))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
         editor.commit();
