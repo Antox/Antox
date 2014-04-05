@@ -29,7 +29,9 @@ import im.tox.antox.callbacks.AntoxOnNameChangeCallback;
 import im.tox.antox.callbacks.AntoxOnReadReceiptCallback;
 import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
+import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
 
 /**
  * Created by soft on 13/03/14.
@@ -135,6 +137,20 @@ public class ToxDoService extends IntentService {
                                 Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
                         DhtNode.connected = true;
                         Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
+
+                        /* Load user details */
+                        UserDetails.username = settingsPref.getString("saved_name_hint", "");
+                        if (settingsPref.getString("saved_status_hint", "").equals("Away"))
+                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
+                        else if (settingsPref.getString("saved_status_hint", "").equals("Busy"))
+                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
+                        else
+                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
+                        UserDetails.note = settingsPref.getString("saved_note_hint", "");
+
+                        toxSingleton.jTox.setName(UserDetails.username);
+                        toxSingleton.jTox.setStatusMessage(UserDetails.note);
+                        toxSingleton.jTox.setUserStatus(UserDetails.status);
                     }
 
                 } catch (UnknownHostException e) {
