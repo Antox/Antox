@@ -12,7 +12,20 @@
         android:paddingTop="@dimen/margin_large"
         android:orientation="vertical"
         tools:context=".SettingsActivity">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="@string/settings_language_title"
+            android:paddingTop="5sp"/>
 
+        <Spinner
+            android:id="@+id/spinner_language_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"
+            android:entries="@array/languages" />
         <TextView
             android:id="@+id/dhtSpinnerTitle"
             android:layout_width="fill_parent"
@@ -30,20 +43,6 @@
             android:checked="false"
             android:onClick="onDhtBoxClicked"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_language_title"
-            android:paddingTop="5sp"/>
-
-        <Spinner
-            android:id="@+id/spinner_language_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawSelectorOnTop="true"
-            android:entries="@array/languages" />
 
         <Button
             android:id="@+id/updateSettings"

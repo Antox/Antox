@@ -9,7 +9,7 @@
     <string name="title_activity_settings">Configuración</string>
     <string name="title_activity_profile">Perfil</string>
     <string name="title_activity_about">Acerca de</string>
-
+    <string name="title_activity_friend_profile">Perfil</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Configuración</string>
@@ -21,6 +21,10 @@
     <string name="add_to_group">Agregar a grupo</string>
 
     <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Nombre de Usuario</string>
+    <string name="main_status">Estado</string>
     <string name="icon_description">Estado de conexión</string>
     <string name="main_no_friends">No tienes amigos</string>
     <string name="main_try_adding">¿Por qué no intentas agregar algunos?</string>
@@ -28,7 +32,7 @@
     <string name="main_friends">Amigos</string>
     <string name="main_no_internet">No hay conexión al Internet</string>
     <string name="main_not_connected">No estás conectado al Internet</string>
-    <string name="main_node_list_download_error">Error Descargando la Lista de Nódulos</string>
+    <string name="main_node_list_download_error">Error Descargando la Lista de Nodos</string>
 
     <!-- About Activity -->
     <string name="about_details">Antox es un cliente Android de Tox</string>
@@ -45,10 +49,8 @@
     <!-- Welcome Activity -->
     <string name="about_string">El cliente aún esta en pre-alfa.</string>
     <string name="getstarted_string">Ingresa el nombre de usuario que deseas.</string>
-    <string name="developer_string">Desarrollado por astonex\nirc.freenode.net#tox-dev</string>
-    <string name="welcome_must_select_username">You must select a username</string>
-
-    <!-- Settings Activity -->
+    <string name="settings_custom_dht">Configuración de DHT customizado</string>
+    <string name="settings_use_custom_dht">Usar DHT customizado</string>
     <string name="settings_user_key_title">Tu clave de usuario</string>
     <string name="settings_name_hint">Ingresa tu nombre</string>
     <string name="settings_note_hint">Ingresa una nota personal</string>
@@ -61,19 +63,22 @@
     <string name="settings_status_title">Ingresa tu estado</string>
     <string name="settings_note_title">Ingresa tu nota personal</string>
     <string name="settings_username_title">Ingresa tu nombre de usuario</string>
-    <string name="settings_use_custom_dht">Usar DHT customizado</string>
-    <string name="settings_custom_dht">Configuración de DHT customizado</string>
-
+    <string name="developer_string">Desarrollado por astonex &amp; co.</string>
+    <string name="welcome_must_select_username">Debes elegir un nombre de usuario</string>
 
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Ingresa la clave de usuario de tu amigo</string>
     <string name="addfriend_friend_message">Mensaje opcional a enviar con la solicitud</string>
     <string name="addfriend_button">Agregar amigo</string>
-    <string name="scanqr_button">Escanear un código QR</string>
     <string name="addfriend_friend_added">Amigo Agregado</string>
     <string name="addfriend_friend_exists">Amigo ya existe</string>
+    <string name="scanqr_button">Escanear un código QR</string>
     <string name="invalid_friend_ID">ID de amigo inválida</string>
+    <string name="addfriend_alias_hint">Pon un apodo a tu amigo</string>
+    <string name="addfriend_optional_title">Extras opcionales</string>
+    <string name="dialog_pin">Ingresa el pin de tu amigo</string>
+    <string name="addfriend_invalid_pin">Pin invalido</string>
 
     <!--  Profile Activity -->
     <string name="share_with">Compartir con</string>
@@ -90,17 +95,24 @@
     <string name="friendrequest_deleted">Solicitud de amistad borrada</string>
     <string name="friendrequest">Solicitud de Amistad</string>
     <string name="friendrequest_recieved">Solicitud de amistad recibida</string>
-    <string name="friend_request">Solucitud de Amistad</string>
+    <string name="friend_request">Solicitud de Amistad</string>
 
     <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Perfil</string>
     <string name="friend_action_sendfile">Enviar Archivo</string>
-    <string name="friend_action_delete">Borrar</string>
+    <string name="friend_action_delete">Borrar amigo</string>
     <string name="friend_action_block">Bloquear</string>
+    <string name="friend_action_unblock">Desbloquear</string>
     <string name="group_action_leave">Salir del grupo</string>
+    <string name="friend_action_deletechat">Eliminar conversaciones</string>
+    <string name="friend_action_block_confirmation">
+        Bloquear a este usuario va a eliminarlo de tu lista de amigos y no podrás recibir solicitudes
+        de su parte. ¿Estas seguro que deseas continuar?
+    </string>
 
     <string name="contacts_actions_on">Acciones para</string>
     <string name="contacts_clear_saved_logs">¿También deseas borrar el historial de mensajes?</string>
-    <!--  Misc -->
+
 
     <!--  Misc -->
     <string name="button_confirm">Confirmar</string>
