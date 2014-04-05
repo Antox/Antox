@@ -32,7 +32,7 @@
     <string name="main_friends">Amigos</string>
     <string name="main_no_internet">No hay conexión al Internet</string>
     <string name="main_not_connected">No estás conectado al Internet</string>
-    <string name="main_node_list_download_error">Error Descargando la Lista de Nódos</string>
+    <string name="main_node_list_download_error">Error Descargando la Lista de Nodos</string>
 
     <!-- About Activity -->
     <string name="about_details">Antox es un cliente Android de Tox</string>
