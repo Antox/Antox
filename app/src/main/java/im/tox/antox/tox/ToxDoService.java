@@ -166,7 +166,7 @@ public class ToxDoService extends IntentService {
                 e.printStackTrace();
             }
             Log.d("Service", "Start do_tox");
-            toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
+            toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 20, TimeUnit.MILLISECONDS);
             toxSingleton.toxStarted = true;
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (toxScheduleTaskExecutor != null) {
@@ -209,7 +209,7 @@ public class ToxDoService extends IntentService {
                 } catch (Exception e) {
                     Log.d(TAG, "Executor has caught an exception");
                     e.printStackTrace();
-                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 5, TimeUnit.MILLISECONDS);
+                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 20, TimeUnit.MILLISECONDS);
                     throw new RuntimeException(e);
                 }
             }
