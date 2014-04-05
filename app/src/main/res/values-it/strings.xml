@@ -30,7 +30,7 @@
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
     <string name="main_no_internet">Nessuna connessione ad internet</string>
-    <string name="main_not_connected">Non sei connesso ad internet</string>
+    <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
     <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
     
     <!-- About Activity -->
@@ -82,6 +82,10 @@
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
     <string name="dialog_pin">Inserisci il pin del tuo amico</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
+    <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
+    <string name="addfriend_no_internet_text">Non puoi aggiungere amici in questo momento:
+        non sei connesso alla rete Tox.\nProva a riavviare l\'applicazione.
+    </string>
 
     <!-- Profile Activity -->
     <string name="share_with">Condividi Con</string>
