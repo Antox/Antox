@@ -31,7 +31,10 @@
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">You are not connected to the Internet</string>
+    <string name="main_not_connected">
+        No internet connection has been detected. Without an internet connection, you will have
+        limited functionality.
+    </string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
     <!-- About Activity -->
@@ -54,16 +57,16 @@
     <string name="settings_use_custom_dht">Use Custom DHT node settings</string>
     <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">Username</string>
-    <string name="settings_note_hint">Mood message</string>
+    <string name="settings_note_hint">Mood</string>
     <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
     <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Update</string>
-    <string name="settings_updated">Your Settings has been updated</string>
+    <string name="settings_updated">Your settings have been updated</string>
     <string name="settings_dht_spinner_title">Advanced Settings</string>
     <string name="settings_language_title">Language</string>
     <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Mood message</string>
+    <string name="settings_note_title">Mood</string>
     <string name="settings_username_title">Username</string>
     <string name="settings_empty_strings">You must fill out all fields</string>
     <string name="settings_invalid_key">Invalid key entered</string>
@@ -83,6 +86,11 @@
     <string name="addfriend_optional_title">Optional Extras</string>
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
+    <string name="addfriend_no_internet">No Tox network connection</string>
+    <string name="addfriend_no_internet_text">
+        Unfortunately you aren\'t connected to the Tox network so you cannot add a friend right now.
+        Try restarting the application.
+    </string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
