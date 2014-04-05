@@ -31,7 +31,10 @@
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">You are not connected to the Internet</string>
+    <string name="main_not_connected">
+        No internet connection has been detected. Without an internet connection, you will have
+        limited functionality.
+    </string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
     <!-- About Activity -->
@@ -83,6 +86,11 @@
     <string name="addfriend_optional_title">Optional Extras</string>
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
+    <string name="addfriend_no_internet">No Tox network connection</string>
+    <string name="addfriend_no_internet_text">
+        Unfortunately you aren\'t connected to the Tox network so you cannot add a friend right now.
+        Try restarting the application.
+    </string>
 
     <!--  Profile Activity -->
     <string name="share_with">Share With</string>
