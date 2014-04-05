@@ -45,7 +45,6 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -217,7 +216,7 @@ public class MainActivity extends ActionBarActivity{
             // settings
             // and give a brief description of antox
             Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
         }
 
         Log.i(TAG, "onCreate");
@@ -291,17 +290,6 @@ public class MainActivity extends ActionBarActivity{
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
-
-        /* Load user details */
-        UserDetails.username = settingsPref.getString("saved_name_hint", "");
-        if (settingsPref.getString("saved_status_hint", "").equals("online"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-        else if (settingsPref.getString("saved_status_hint", "").equals("away"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-        else if (settingsPref.getString("saved_status_hint", "").equals("busy"))
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
-        else
-            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
 
         if (settingsPref.getString("language", "").equals("")) {
             //set the current language
@@ -762,6 +750,8 @@ public class MainActivity extends ActionBarActivity{
             Log.d("file type",""+getContentResolver().getType(uri));
         } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
             restartActivity();
+        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
+            finish();
         }
     }
 

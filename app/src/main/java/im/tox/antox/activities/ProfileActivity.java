@@ -195,13 +195,11 @@ public class ProfileActivity extends ActionBarActivity {
         if (!nameHintText.getText().toString().equals(getString(R.id.settings_name_hint))) {
             editor.putString("saved_name_hint", nameHintText.getText().toString());
             UserDetails.username = nameHintText.getText().toString();
-            updatedSettings[0] = nameHintText.getText().toString();
         }
 
         if (!noteHintText.getText().toString().equals(getString(R.id.settings_note_hint))) {
             editor.putString("saved_note_hint", noteHintText.getText().toString());
             UserDetails.note = noteHintText.getText().toString();
-            updatedSettings[2] = noteHintText.getText().toString();
         }
         editor.putString("saved_status_hint", statusSpinner.getSelectedItem().toString());
         if (statusSpinner.getSelectedItem().toString().equals("Online"))
@@ -211,14 +209,11 @@ public class ProfileActivity extends ActionBarActivity {
         if (statusSpinner.getSelectedItem().toString().equals("Busy"))
             UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
 
-        updatedSettings[1] = statusSpinner.getSelectedItem().toString();
-
         editor.commit();
 
         /* Send an intent to ToxService notifying change of settings */
         Intent updateSettings = new Intent(this, ToxService.class);
         updateSettings.setAction(Constants.UPDATE_SETTINGS);
-        updateSettings.putExtra("newSettings", updatedSettings);
         this.startService(updateSettings);
 
         Context context = getApplicationContext();
