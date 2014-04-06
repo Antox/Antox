@@ -80,7 +80,7 @@
     <string name="scanqr_button">Scan een QR code</string>
     <string name="invalid_friend_ID">Ongeldig ID</string>
     <string name="addfriend_alias_hint">Zet een bijnaam voor je vriend</string>
-    <string name="addfriend_optional_title">Optionele extra's</string>
+    <string name="addfriend_optional_title">Optionele extra\'s</string>
     <string name="dialog_pin">Voer de pin van je vriend in</string>
     <string name="addfriend_invalid_pin">Ongeldige Pin</string>
     <string name="addfriend_no_internet">Geen Tox netwerkverbinding</string>
