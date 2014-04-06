@@ -351,6 +351,9 @@ public class MainActivity extends ActionBarActivity{
             case "pl":
                 language = "Polski";
                 break;
+            case "sv":
+                language = "Svenska";
+                break;
             case "tr":
                 language = "Türkçe";
                 break;

@@ -134,14 +134,17 @@ public class SettingsActivity extends ActionBarActivity
             case "Polski":
                 languageSpinner.setSelection(6);
                 break;
-            case "Türkçe":
+            case "Svenska":
                 languageSpinner.setSelection(7);
                 break;
-            case "Русский":
+            case "Türkçe":
                 languageSpinner.setSelection(8);
                 break;
-            case "Український":
+            case "Русский":
                 languageSpinner.setSelection(9);
+                break;
+            case "Український":
+                languageSpinner.setSelection(10);
                 break;
             default:
                 break;
@@ -210,6 +213,9 @@ public class SettingsActivity extends ActionBarActivity
                     break;
                 case "Polski":
                     locale = new Locale("pl");
+                    break;
+                case "Svenska":
+                    locale = new Locale("sv");
                     break;
                 case "Türkçe":
                     locale = new Locale("tr");
