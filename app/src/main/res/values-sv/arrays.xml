@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions">
+        <item>Alla</item>
+        <item>Online</item>
+        <item>Offline</item>
+        <item>Blockerade</item>
+    </string-array>
+
+</resources>
