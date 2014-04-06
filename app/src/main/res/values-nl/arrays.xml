@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="actions">
+        <item>Alle</item>
+        <item>Online</item>
+        <item>Offline</item>
+        <item>Geblokkeerde</item>
+    </string-array>
+</resources>

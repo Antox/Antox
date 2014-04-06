@@ -35,3 +35,4 @@ app/build/
 build/
 app/libs/jToxcore.jar
 app/src/main/jniLibs
+atlassian-ide-plugin.xml

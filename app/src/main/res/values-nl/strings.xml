@@ -9,6 +9,7 @@
     <string name="title_activity_settings">Instellingen</string>
     <string name="title_activity_profile">Profiel</string>
     <string name="title_activity_about">Over</string>
+    <string name="title_activity_friend_profile">Profiel</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Instellingen</string>
@@ -20,13 +21,17 @@
     <string name="add_to_group">Voeg toe aan groep</string>
 
     <!-- Main Activity -->
+
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Gebruikersnaam</string>
+    <string name="main_status">Status</string>
     <string name="icon_description">Verbindingsstatus</string>
     <string name="main_no_friends">Je hebt geen vrienden</string>
     <string name="main_try_adding">Voeg wat vrienden toe om te beginnen</string>
     <string name="main_friend_requests">Vriendschapsverzoeken</string>
     <string name="main_friends">Vrienden</string>
     <string name="main_no_internet">Geen internetverbinding</string>
-    <string name="main_not_connected">Niet verbonden met internet</string>
+    <string name="main_not_connected">Geen internetverbinding gevonden. Zonder een internetverbinding, zal je beperkte functionaliteit hebben.</string>
     <string name="main_node_list_download_error">Kan nodelijst niet verkrijgen</string>
 
     <!-- About Activity -->
@@ -36,12 +41,13 @@
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
     <string name="about_irc">We zitten in #tox-dev op Freenode</string>
+    <string name="about_version">Versie</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Verstuur bericht</string>
 
 
-    <!-- Welcome Activity -->
+    <!-- Settings Activity -->
     <string name="about_string">Deze client is nog in een pre-alpha stadium.</string>
     <string name="getstarted_string">Voer gewenste nickname in</string>
     <string name="settings_custom_dht">Aangepaste DHT-node-instellingen</string>
@@ -55,9 +61,12 @@
     <string name="settings_button">Update</string>
     <string name="settings_updated">Je instellingen zijn geupdatet</string>
     <string name="settings_dht_spinner_title">Geadvanceerde instellingen</string>
-    <string name="settings_status_title">Stel status in</string>
-    <string name="settings_note_title">Stel persoonlijk bericht in</string>
-    <string name="settings_username_title">Stel gebruikersnaam in</string>
+    <string name="settings_language_title">Taal</string>
+    <string name="settings_status_title">Status</string>
+    <string name="settings_note_title">Mood</string>
+    <string name="settings_username_title">Gebruikersnaam</string>
+    <string name="settings_empty_strings">You must fill out all fields</string>
+    <string name="settings_invalid_key">Invalid key entered</string>
     <string name="developer_string">Ontwikkeld door astonex &amp; co.</string>
     <string name="welcome_must_select_username">Kies een gebruikersnaam</string>
 
@@ -70,6 +79,15 @@
     <string name="addfriend_friend_exists">Is reeds toegevoegd</string>
     <string name="scanqr_button">Scan een QR code</string>
     <string name="invalid_friend_ID">Ongeldig ID</string>
+    <string name="addfriend_alias_hint">Zet een bijnaam voor je vriend</string>
+    <string name="addfriend_optional_title">Optionele extra's</string>
+    <string name="dialog_pin">Voer de pin van je vriend in</string>
+    <string name="addfriend_invalid_pin">Ongeldige Pin</string>
+    <string name="addfriend_no_internet">Geen Tox netwerkverbinding</string>
+    <string name="addfriend_no_internet_text">
+        Helaas bent u niet verbonden op het Tox netwerk, dus kunt je geen vrienden toevoegen op dit moment.
+        Probeer de applicatie opnieuw te starten.
+    </string>
 
     <!--  Profile Activity -->
     <string name="share_with">Deel met</string>
@@ -78,6 +96,13 @@
     <string name="status_busy">Bezig</string>
     <string name="profile_updated">Profiel is geupdated</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Naam</string>
+    <string name="friend_profile_alias">Bijnaam</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Status</string>
+    <string name="friend_profile_button">Update</string>
+    <string name="friend_profile_updated">Bijnaam is bijgewerkt</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accepteer</string>
@@ -89,10 +114,17 @@
     <string name="friend_request">Nieuw vriendschapsverzoek</string>
 
     <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profiel</string>
     <string name="friend_action_sendfile">Verstuur bestand</string>
     <string name="friend_action_delete">Verwijder</string>
     <string name="friend_action_block">Blokkeer</string>
+    <string name="friend_action_unblock">Deblokkeren</string>
     <string name="group_action_leave">Verlaat groep</string>
+    <string name="friend_action_deletechat">Chat logs verwijderen</string>
+    <string name="friend_action_block_confirmation">
+        Als u deze gebruiker blokkeerd, worden ze verwijdert van u vriendenlijst en u zal geen vriendverzoeking van hun krijgen.
+        Weet u zeker dat u wilt doorgaan?
+    </string>
 
     <string name="contacts_actions_on">Acties aan</string>
     <string name="contacts_clear_saved_logs">Moeten de opgeslagen chatlogs meeverwijderd worden?</string>
