@@ -1,0 +1,74 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:orientation="vertical"
+        android:weightSum="100"
+        tools:context=".WelcomeActivity" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/full_logo"
+            android:layout_gravity="center" />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_marginTop="5dp"
+               android:textSize="12sp"
+               android:text="@string/about_string"
+           />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:textSize="15sp"
+               android:layout_marginTop="60dp"
+               android:text="@string/getstarted_string"
+           />
+
+           <EditText
+               android:id="@+id/welcome_name_hint"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="center"
+               android:layout_marginTop="5dp"
+               android:inputType="text"
+               android:imeOptions="actionSend"
+               android:hint="@string/settings_name_hint"
+               />
+
+           <Button
+                android:id="@+id/updateSettings"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/settings_button"
+                android:layout_marginTop="20dp"
+                android:onClick="updateSettings" />
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="20dp"
+               android:gravity="center"
+               android:textSize="12sp"
+               android:layout_centerInParent="true"
+               android:text="@string/developer_string"
+               android:layout_weight="90" />
+    </LinearLayout>
+
+</ScrollView>

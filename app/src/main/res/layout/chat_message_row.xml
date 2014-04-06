@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/message_row_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/message_text_layout"
+        android:layout_width="300dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/message_text_background"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#ffffff">
+            <LinearLayout
+                android:id="@+id/message_alignment_box"
+                android:orientation="vertical"
+                android:gravity="left"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium">
+
+                <ImageView
+                    android:id="@+id/message_sent_photo"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"
+                    android:visibility="gone"
+                />
+                <LinearLayout
+                    android:id="@+id/message_audio_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+                    <ImageView
+                        android:id="@+id/message_play_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_play"
+                        />
+                    <SeekBar
+                        android:id="@+id/message_audio_bar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/message_text"
+                    android:text="Afd"
+                    android:textSize="@dimen/text_small"
+                    android:textColor="@android:color/black" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:id="@+id/message_text_date"
+                    android:textColor="@color/gray_darker"
+                    android:text="Asdsd"
+                    android:textSize="@dimen/text_tiny" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message_sent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="-2dp"
+                    android:maxHeight="13dp"
+                    android:adjustViewBounds="true"
+                    android:layout_marginLeft="4dp"
+                    android:id="@+id/chat_row_sent"
+                    android:visibility="visible"
+                    android:layout_gravity="top"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message_received"
+                    android:layout_marginTop="1dp"
+                    android:maxHeight="13dp"
+                    android:layout_marginBottom="-2dp"
+                    android:adjustViewBounds="true"
+                    android:layout_marginLeft="6dp"
+                    android:id="@+id/chat_row_received"
+                    android:visibility="visible"
+                    android:layout_gravity="top"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:background="@color/gray_darker"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
