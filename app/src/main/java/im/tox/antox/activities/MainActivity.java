@@ -351,6 +351,9 @@ public class MainActivity extends ActionBarActivity{
             case "pl":
                 language = "Polski";
                 break;
+            case "sv":
+                language = "Svenska";
+                break;
             case "tr":
                 language = "Türkçe";
                 break;
@@ -556,7 +559,7 @@ public class MainActivity extends ActionBarActivity{
         Log.v("Add friend to group method", "To implement");
     }
 
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
