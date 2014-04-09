@@ -101,6 +101,8 @@
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Aggiorna</string>
     <string name="friend_profile_updated">Nome personalizzato aggiornato</string>
+    <string name="friend_profile_copy">Copia Tox-ID</string>
+    <string name="friend_profile_copied">Tox-ID copiato</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
