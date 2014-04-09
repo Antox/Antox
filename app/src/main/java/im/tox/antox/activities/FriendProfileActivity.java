@@ -34,13 +34,14 @@ import im.tox.antox.data.AntoxDB;
 public class FriendProfileActivity extends ActionBarActivity {
 
     String friendName = null;
+    String friendKey = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_profile);
 
-        String friendKey = getIntent().getStringExtra("key");
+        friendKey = getIntent().getStringExtra("key");
         AntoxDB db = new AntoxDB(this);
         String[] friendDetails = db.getFriendDetails(friendKey);
         friendName = friendDetails[0];
@@ -129,4 +130,27 @@ public class FriendProfileActivity extends ActionBarActivity {
             e.printStackTrace();
         }
     }
+    @SuppressWarnings("deprecation")
+    public void copyID(View view)
+    {
+            Context context=getApplicationContext();
+            int sdk = android.os.Build.VERSION.SDK_INT;
+            if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB)
+            {
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
+                        .getSystemService(context.CLIPBOARD_SERVICE);
+                clipboard.setText(friendKey);
+            }
+            else
+            {
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context
+                        .getSystemService(context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData
+                        .newPlainText("friendKey", friendKey);
+                clipboard.setPrimaryClip(clip);
+            }
+            Toast.makeText(context,context.getResources().getString(R.string.friend_profile_copied),Toast.LENGTH_SHORT).show();
+
+    }
+
 }
