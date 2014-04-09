@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -45,6 +46,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -219,6 +221,61 @@ public class MainActivity extends ActionBarActivity{
             startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
         }
 
+        // Checks to see if a language is set in settings
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        String language = settingsPref.getString("language", "");
+        // If it has not, set it based on phone locale
+        if (language.equals("")){
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putString("language", getCurrentLanguageOnStart());
+            editor.commit();
+        }
+        // Otherwise, check which language has been selected and set it based on that
+        else{
+            Locale locale = null;
+            switch (language) {
+                case "English":
+                    locale = new Locale("en");
+                    break;
+                case "Deutsch":
+                    locale = new Locale("de");
+                    break;
+                case "Español":
+                    locale = new Locale("es");
+                    break;
+                case "Français":
+                    locale = new Locale("fr");
+                    break;
+                case "Italiano":
+                    locale = new Locale("it");
+                    break;
+                case "Nederlands":
+                    locale = new Locale("nl");
+                    break;
+                case "Polski":
+                    locale = new Locale("pl");
+                    break;
+                case "Svenska":
+                    locale = new Locale("sv");
+                    break;
+                case "Türkçe":
+                    locale = new Locale("tr");
+                    break;
+                case "Русский":
+                    locale = new Locale("ru");
+                    break;
+                case "Український":
+                    locale = new Locale("uk");
+                    break;
+                default:
+                    break;
+            }
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
+        }
+
         Log.i(TAG, "onCreate");
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
@@ -256,8 +313,6 @@ public class MainActivity extends ActionBarActivity{
 
         }
 
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actions,
                 R.layout.group_item);
         if (settingsPref.getInt("group_option", -1) == -1) {
@@ -290,13 +345,6 @@ public class MainActivity extends ActionBarActivity{
         Intent getFriendsList = new Intent(this, ToxService.class);
         getFriendsList.setAction(Constants.FRIEND_LIST);
         this.startService(getFriendsList);
-
-        if (settingsPref.getString("language", "").equals("")) {
-            //set the current language
-            SharedPreferences.Editor editor = settingsPref.edit();
-            editor.putString("language", getCurrentLanguageOnStart());
-            editor.commit();
-        }
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
