@@ -61,6 +61,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/qr_code"
         android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/friend_profile_copy"
+        android:id="@+id/copyId"
+        android:layout_gravity="center_horizontal"
+        android:onClick="copyID" />
 
 </LinearLayout>
 </ScrollView>
