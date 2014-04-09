@@ -31,7 +31,10 @@
     <string name="main_friend_requests">Zapytania znajomych</string>
     <string name="main_friends">Znajomi</string>
     <string name="main_no_internet">Brak połączenia z Internetem</string>
-    <string name="main_not_connected">Nie jesteś połączon(a/y) z Internetem</string>
+    <string name="main_not_connected">
+        Nie wykryto połączenia z internetem. Bez połączenia z internetem funkcjonalność
+        będzie ograniczona.
+    </string>
     <string name="main_node_list_download_error">Błąd pobierania listy węzłów</string>
 
     <!-- About Activity -->
@@ -83,6 +86,11 @@
     <string name="addfriend_optional_title">Dodatkowo</string>
     <string name="dialog_pin">Wprowadź Pin znajomego</string>
     <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
+    <string name="addfriend_no_internet">Nie połączono z siecią Tox</string>
+    <string name="addfriend_no_internet_text">
+        Niestety nie jesteś połączon(a/y) do sieci Tox, więc nie możesz dodać znajomego w tym momencie.
+        Spróbuj zrestartować aplikację.
+    </string>
 
     <!--  Profile Activity -->
     <string name="share_with">Podziel się z</string>
@@ -113,6 +121,7 @@
     <string name="friend_action_sendfile">Wyślij plik</string>
     <string name="friend_action_delete">Usuń znajomego</string>
     <string name="friend_action_block">Blokuj</string>
+    <string name="friend_action_unblock">Odblokuj</string>
     <string name="group_action_leave">Opuść grupę</string>
     <string name="friend_action_deletechat">Usuń logi czatu</string>
     <string name="friend_action_block_confirmation">
