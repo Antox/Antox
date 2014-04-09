@@ -106,6 +106,8 @@
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
     <string name="friend_profile_updated">Alias has been updated</string>
+    <string name="friend_profile_copy">Copy ID</string>
+    <string name="friend_profile_copied">ID Copied</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>
