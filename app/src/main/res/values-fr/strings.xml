@@ -72,7 +72,7 @@
     <string name="addfriend_friend_exists">L\'ami est déjà ajouté</string>
     <string name="scanqr_button">Scanner un code QR</string>
     <string name="invalid_friend_ID">Identifiant Tox invalide</string>
-    <string name="addfriend_alias_hint">Choisir un pseudo pour votre ami</string>
+    <string name="addfriend_nick_hint">Choisir un pseudo pour votre ami</string>
     <string name="addfriend_optional_title">Infos supplémentaires</string>
 
     <!--  Profile Activity -->
@@ -84,7 +84,7 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nom</string>
-    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_nick">Alias</string>
     <string name="friend_profile_key">Clé Tox</string>
     <string name="friend_profile_note">Note</string>
     <string name="friend_profile_button">Mettre l\'alias à jour</string>
