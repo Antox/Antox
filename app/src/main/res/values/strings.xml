@@ -52,12 +52,12 @@
 
     <!-- Settings Activity -->
     <string name="about_string">This client is still in pre-alpha.</string>
-    <string name="getstarted_string">Enter your desired username</string>
+    <string name="getstarted_string">Enter your desired name</string>
     <string name="settings_custom_dht">Custom DHT node Settings</string>
     <string name="settings_use_custom_dht">Use Custom DHT node settings</string>
     <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">Username</string>
-    <string name="settings_note_hint">Mood</string>
+    <string name="settings_note_hint">Status message</string>
     <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
     <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
     <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
@@ -70,8 +70,8 @@
     <string name="settings_username_title">Username</string>
     <string name="settings_empty_strings">You must fill out all fields</string>
     <string name="settings_invalid_key">Invalid key entered</string>
-    <string name="developer_string">Developed by astonex &amp; co.</string>
-    <string name="welcome_must_select_username">You must select a username</string>
+    <string name="developer_string">Made with love by the Tox Development Team</string>
+    <string name="welcome_must_select_username">You must set a name</string>
 
 
     <!-- Add Friend Activity -->
@@ -86,9 +86,9 @@
     <string name="addfriend_optional_title">Optional Extras</string>
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
-    <string name="addfriend_no_internet">No Tox network connection</string>
+    <string name="addfriend_no_internet">No Tox Network connection</string>
     <string name="addfriend_no_internet_text">
-        Unfortunately you aren\'t connected to the Tox network so you cannot add a friend right now.
+        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
         Try restarting the application.
     </string>
 
@@ -139,5 +139,6 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
 
 </resources>
