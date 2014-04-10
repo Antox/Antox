@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/friend_profile_alias"
+        android:text="@string/friend_profile_nick"
         android:layout_marginTop="20dp"
         android:id="@+id/friendAlias"
         android:textSize="20dp"

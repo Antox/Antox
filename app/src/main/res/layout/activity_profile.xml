@@ -71,15 +71,6 @@
             android:paddingBottom="0dp"
             android:spinnerMode="dropdown" />
 
-        <TextView
-            android:id="@+id/settings_note_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:text="@string/settings_note_title" />
-
         <EditText
             android:id="@+id/settings_note_hint"
             android:layout_width="fill_parent"
