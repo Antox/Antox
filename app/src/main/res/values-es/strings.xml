@@ -75,7 +75,7 @@
     <string name="addfriend_friend_exists">Amigo ya existe</string>
     <string name="scanqr_button">Escanear un código QR</string>
     <string name="invalid_friend_ID">ID de amigo inválida</string>
-    <string name="addfriend_alias_hint">Pon un apodo a tu amigo</string>
+    <string name="addfriend_nick_hint">Pon un apodo a tu amigo</string>
     <string name="addfriend_optional_title">Extras opcionales</string>
     <string name="dialog_pin">Ingresa el pin de tu amigo</string>
     <string name="addfriend_invalid_pin">Pin invalido</string>
