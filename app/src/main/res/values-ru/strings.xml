@@ -78,7 +78,7 @@
     <string name="addfriend_friend_exists">Друг уже существует</string>
     <string name="scanqr_button">Сканировать QR-код</string>
     <string name="invalid_friend_ID">Неверный Tox ID</string>
-    <string name="addfriend_alias_hint">Задайте ник для друга</string>
+    <string name="addfriend_nick_hint">Задайте ник для друга</string>
     <string name="addfriend_optional_title">Необязательные сведения</string>
 
     <!--  Profile Activity -->
@@ -90,7 +90,7 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Имя</string>
-    <string name="friend_profile_alias">Псевдоним</string>
+    <string name="friend_profile_nick">Псевдоним</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Статус</string>
     <string name="friend_profile_button">Обновить</string>

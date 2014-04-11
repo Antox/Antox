@@ -82,7 +82,7 @@
     <string name="addfriend_friend_exists">Friend already exists</string>
     <string name="scanqr_button">Scan a QR code</string>
     <string name="invalid_friend_ID">Invalid Tox ID</string>
-    <string name="addfriend_alias_hint">Set a nickname for your friend</string>
+    <string name="addfriend_nick_hint">Set a nickname for your friend</string>
     <string name="addfriend_optional_title">Optional Extras</string>
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
@@ -101,11 +101,11 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
-    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_nick">Nickname</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
-    <string name="friend_profile_updated">Alias has been updated</string>
+    <string name="friend_profile_updated">Nickname has been updated</string>
     <string name="friend_profile_copy">Copy ID</string>
     <string name="friend_profile_copied">ID Copied</string>
 
