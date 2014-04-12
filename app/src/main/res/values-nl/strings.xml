@@ -79,7 +79,7 @@
     <string name="addfriend_friend_exists">Is reeds toegevoegd</string>
     <string name="scanqr_button">Scan een QR code</string>
     <string name="invalid_friend_ID">Ongeldig ID</string>
-    <string name="addfriend_alias_hint">Zet een bijnaam voor je vriend</string>
+    <string name="addfriend_nick_hint">Zet een bijnaam voor je vriend</string>
     <string name="addfriend_optional_title">Optionele extra\'s</string>
     <string name="dialog_pin">Voer de pin van je vriend in</string>
     <string name="addfriend_invalid_pin">Ongeldige Pin</string>
@@ -98,7 +98,7 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Naam</string>
-    <string name="friend_profile_alias">Bijnaam</string>
+    <string name="friend_profile_nick">Bijnaam</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
