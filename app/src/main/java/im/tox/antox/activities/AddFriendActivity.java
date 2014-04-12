@@ -84,7 +84,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             alertDialog.setTitle(R.string.addfriend_no_internet);
             alertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
             alertDialog.setIcon(R.drawable.ic_launcher);
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            alertDialog.setButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     finish();
                 }
