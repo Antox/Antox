@@ -100,11 +100,13 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Namn</string>
-    <string name="friend_profile_nick">Alias</string>
+    <string name="friend_profile_nick">Smeknamn</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Uppdatera</string>
-    <string name="friend_profile_updated">Alias har uppdaterats</string>
+    <string name="friend_profile_updated">Smeknamn har uppdaterats</string>
+    <string name="firend_profile_copy">Kopiera ID</string>
+    <string name="friend_profile_copied">ID Kopierat</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Acceptera</string>
