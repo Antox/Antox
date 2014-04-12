@@ -24,7 +24,10 @@
         <TextView
             android:id="@+id/settings_user_key"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:ellipsize="end"
+            android:paddingBottom="5dp"
+            android:singleLine="true"
             android:layout_marginLeft="10dp"
             android:textIsSelectable="true"
             android:textSize="12sp" />

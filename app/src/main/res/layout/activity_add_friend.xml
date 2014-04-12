@@ -36,7 +36,7 @@
             android:id="@+id/addfriend_friendAlias"
             android:layout_marginTop="0dp"
             android:gravity="center"
-            android:hint="@string/addfriend_alias_hint" />
+            android:hint="@string/addfriend_nick_hint" />
 
         <EditText
             android:id="@+id/addfriend_message"
