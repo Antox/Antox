@@ -80,16 +80,23 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
         // Check to see if user is connected to dht first
         if(!DhtNode.connected) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle(R.string.addfriend_no_internet);
-            alertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
-            alertDialog.setIcon(R.drawable.ic_launcher);
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            AlertDialog notConnectedalertDialog = new AlertDialog.Builder(this).create();
+            notConnectedalertDialog.setTitle(R.string.addfriend_no_internet);
+            notConnectedalertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
+            notConnectedalertDialog.setIcon(R.drawable.ic_launcher);
+            notConnectedalertDialog.setButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     finish();
                 }
             });
-            alertDialog.show();
+            notConnectedalertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    finish();
+                }
+            });
+
+            notConnectedalertDialog.show();
         }
 
         context = getApplicationContext();
@@ -168,7 +175,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             return -1;
         }
     }
-
     /*
     * method is outside so that the intent can be passed this object
      */
