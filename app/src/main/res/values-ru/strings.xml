@@ -31,7 +31,9 @@
     <string name="main_friend_requests">Запросы друзей</string>
     <string name="main_friends">Друзья</string>
     <string name="main_no_internet">Нет Интернет-соединения</string>
-    <string name="main_not_connected">Вы не соединены с Интернетом</string>
+    <string name="main_not_connected">
+        Не обнаружено соединения с Интернетом. В отсутствии Интернета функциональность ограничена.
+    </string>
     <string name="main_node_list_download_error">Ошибка загрузки списка узлов</string>
 
     <!-- About Activity -->
@@ -55,12 +57,13 @@
     <string name="settings_user_key_title">Ваш Tox ID</string>
     <string name="settings_name_hint">Имя</string>
     <string name="settings_note_hint">Настроение</string>
-    <string name="settings_dht_ip">IP-адрес bootstrap (ex: 192.254.75.98)</string>
-    <string name="settings_dht_port">Адрес порта bootstrap (ex: 33445)</string>
-    <string name="settings_dht_key">Адрес публичного ключа bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_dht_ip">IP-адрес bootstrap (пример: 192.254.75.98)</string>
+    <string name="settings_dht_port">Адрес порта bootstrap (пример: 33445)</string>
+    <string name="settings_dht_key">Адрес публичного ключа bootstrap (пример: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Обновить</string>
     <string name="settings_updated">Ваши настройки были обновлены</string>
     <string name="settings_dht_spinner_title">Расширенные настройки</string>
+    <string name="settings_language_title">Язык</string>
     <string name="settings_status_title">Статус</string>
     <string name="settings_note_title">Настроение</string>
     <string name="settings_username_title">Имя</string>
@@ -80,6 +83,14 @@
     <string name="invalid_friend_ID">Неверный Tox ID</string>
     <string name="addfriend_nick_hint">Задайте ник для друга</string>
     <string name="addfriend_optional_title">Необязательные сведения</string>
+    <string name="dialog_pin">Введите pin Вашего друга</string>
+    <string name="addfriend_invalid_pin">Неверный pin</string>
+    <string name="addfriend_no_internet">Нет соединения с сетью Tox</string>
+    <string name="addfriend_no_internet_text">
+        К сожалению, в данный момент Вы не подключены к сети Tox, поэтому не можете добавить друга.
+        Попробуйте перезапустить приложение.
+    </string>
+
 
     <!--  Profile Activity -->
     <string name="share_with">Поделиться с</string>
@@ -95,6 +106,8 @@
     <string name="friend_profile_note">Статус</string>
     <string name="friend_profile_button">Обновить</string>
     <string name="friend_profile_updated">Псевдоним был обновлен</string>
+    <string name="friend_profile_copy">Копировать ID</string>
+    <string name="friend_profile_copied">ID скопирован</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Принять</string>
@@ -110,11 +123,12 @@
     <string name="friend_action_sendfile">Отправить файл</string>
     <string name="friend_action_delete">Удалить друга</string>
     <string name="friend_action_block">Заблокировать</string>
+    <string name="friend_action_unblock">Разблокировать</string>
     <string name="group_action_leave">Покинуть группу</string>
     <string name="friend_action_deletechat">Удалить журналы чатов</string>
     <string name="friend_action_block_confirmation">
-        Блокирование пользователя удалит его из списка друзей, и Вы больше не будете видеть запросы
-        от него. Для разблокировки, перейдите в Настройки. Вы уверены, что хотите продолжить?
+        Блокирование этого пользователя удалит его из списка друзей, и Вы больше не будете видеть запросы
+        от него. Вы уверены, что хотите продолжить?
     </string>
 
     <string name="contacts_actions_on">Действия включены</string>
