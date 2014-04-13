@@ -35,6 +35,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -207,6 +208,7 @@ public class MainActivity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         /* Fix for an android 4.1.x bug */
         if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
@@ -220,6 +222,8 @@ public class MainActivity extends ActionBarActivity{
         /* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
+
+        SharedPreferences settings = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -287,22 +291,7 @@ public class MainActivity extends ActionBarActivity{
 
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
-        setContentView(R.layout.activity_main);
         toxSingleton.leftPaneActive = true;
-
-        // Check for a theme - currently this isn't very expandable to allow for user created themes
-        // but works for just setting a dark theme
-        if(settingsPref.getString("theme", "").equals("Dark")) {
-            // CHAT FRAGMENT - BACKGROUND COLOR
-            FrameLayout chatLayout = (FrameLayout) findViewById(R.id.right_pane);
-            chatLayout.setBackgroundColor(Color.rgb(64,64,64)); // zoo lane
-
-            // ACTION BAR - BACKGROUND COLOR
-            ActionBar bar = getSupportActionBar();
-            bar.setBackgroundDrawable(new ColorDrawable(Color.rgb(13,13,13)));
-
-
-        }
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

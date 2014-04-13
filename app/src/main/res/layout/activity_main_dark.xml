@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SlidingPaneLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/slidingpane_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- Left side pane. (Master) -->
+    <fragment android:id="@+id/fragment_contacts"
+        android:name="im.tox.antox.fragments.ContactsFragment"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="30dp"
+        android:layout_gravity="left"
+        tools:layout="@layout/fragment_leftpane" />
+
+    <FrameLayout
+        android:background="#262626"
+        android:id="@+id/right_pane"
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        />
+
+</android.support.v4.widget.SlidingPaneLayout>
