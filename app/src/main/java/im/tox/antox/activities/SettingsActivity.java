@@ -300,7 +300,7 @@ public class SettingsActivity extends ActionBarActivity
     }
 
     private boolean validateKey(String friendKey) {
-        if (friendKey.length() != 76 || friendKey.matches("[[:xdigit:]]")) {
+        if (friendKey.length() != 64 || friendKey.matches("[[:xdigit:]]")) {
             return false;
         }
         int x = 0;
