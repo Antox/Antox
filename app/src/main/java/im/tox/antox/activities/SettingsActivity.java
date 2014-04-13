@@ -289,7 +289,7 @@ public class SettingsActivity extends ActionBarActivity
             toast.show();
             dhtBox.setChecked(false);
         }
-        if(!validateKey(dhtKey)) {
+        if(!validateDHTKey(dhtKey)) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.settings_invalid_key);
             int duration = Toast.LENGTH_SHORT;
@@ -300,7 +300,7 @@ public class SettingsActivity extends ActionBarActivity
     }
 
     private boolean validateKey(String friendKey) {
-        if (friendKey.length() != 64 || friendKey.matches("[[:xdigit:]]")) {
+        if (friendKey.length() != 76 || friendKey.matches("[[:xdigit:]]")) {
             return false;
         }
         int x = 0;
@@ -313,6 +313,14 @@ public class SettingsActivity extends ActionBarActivity
             return false;
         }
         return x == 0;
+    }
+
+    private boolean validateDHTKey(String DHTKey) {
+        if (DHTKey.length() != 64 || DHTKey.matches("[[:xdigit:]]")) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //Called when the DHT settings dialog is canceled
