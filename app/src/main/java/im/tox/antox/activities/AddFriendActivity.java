@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,13 +19,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import im.tox.QR.IntentIntegrator;
 import im.tox.QR.IntentResult;
@@ -35,6 +42,7 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
+import im.tox.antox.utils.GroupItem;
 
 /**
  * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
@@ -59,6 +67,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     EditText friendID;
     EditText friendMessage;
     EditText friendAlias;
+    Spinner  friendGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +88,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         }
 
         // Check to see if user is connected to dht first
-        if(!DhtNode.connected) {
+        /*if(!DhtNode.connected) {
             AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle(R.string.addfriend_no_internet);
             alertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
@@ -90,7 +99,24 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 }
             });
             alertDialog.show();
+        }*/
+
+        //set the spinner
+        friendGroup = (Spinner) findViewById(R.id.spinner_add_friend_group);
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(getResources().getString(R.string.manage_groups_friends));
+        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+        if (!sharedPreferences.getAll().isEmpty()) {
+            Map<String,?> keys = sharedPreferences.getAll();
+
+            for(Map.Entry<String,?> entry : keys.entrySet()){
+                String groupName = entry.getValue().toString();
+                spinnerArray.add(groupName);
+            }
         }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        friendGroup.setAdapter(spinnerAdapter);
 
         context = getApplicationContext();
         text = getString(R.string.addfriend_friend_added);
@@ -158,7 +184,8 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 if (!alias.equals(""))
                     ID = alias;
 
-                db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
+                String group = friendGroup.getSelectedItem().toString();
+                db.addFriend(ID, "Friend Request Sent", alias, originalUsername, group);
             } else {
                 return -2;
             }
@@ -204,6 +231,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             finalFriendKey = _friendID;
 
         if(!isV2) {
+
             if(checkAndSend(finalFriendKey, "") == 0) {
                 toast = Toast.makeText(context, text, duration);
                 toast.show();

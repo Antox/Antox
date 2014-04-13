@@ -45,8 +45,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -313,8 +316,18 @@ public class MainActivity extends ActionBarActivity{
 
         }
 
-        SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.actions,
-                R.layout.group_item);
+        final ArrayList<String> groups = new ArrayList<String>();
+        Collections.addAll(groups, getResources().getStringArray(R.array.actions));
+        groups.add(getResources().getString(R.string.manage_groups_friends));
+        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+        if (!sharedPreferences.getAll().isEmpty()) {
+            Map<String, ?> keys = sharedPreferences.getAll();
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                groups.add(entry.getValue().toString());
+            }
+        }
+
+        SpinnerAdapter adapter = new ArrayAdapter<String>(this, R.layout.group_item, groups);
         if (settingsPref.getInt("group_option", -1) == -1) {
             SharedPreferences.Editor editor = settingsPref.edit();
             editor.putInt("group_option", 0);
@@ -322,14 +335,15 @@ public class MainActivity extends ActionBarActivity{
         }
 
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
-            String[] items = getResources().getStringArray(R.array.actions);
+            //String[] items = getResources().getStringArray(R.array.actions);
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.d("NavigationItemSelected", items[itemPosition]);
+                Log.d("NavigationItemSelected", groups.get(itemPosition));
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 if (itemPosition != settingsPref.getInt("group_option", -1)) {
                     SharedPreferences.Editor editor = settingsPref.edit();
                     editor.putInt("group_option", itemPosition);
+                    editor.putString("group_option_name", groups.get(itemPosition));
                     editor.commit();
                     updateLeftPane();
                 }
@@ -436,12 +450,122 @@ public class MainActivity extends ActionBarActivity{
         }
         return counter;
     }
+
+    public void updateGroupsList() {
+        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+
+        ArrayList<String> groups = new ArrayList<String>();
+        Collections.addAll(groups, getResources().getStringArray(R.array.actions));
+        groups.add(getResources().getString(R.string.manage_groups_friends));
+        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+        if (!sharedPreferences.getAll().isEmpty()) {
+            Map<String, ?> keys = sharedPreferences.getAll();
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                groups.add(entry.getValue().toString());
+            }
+        }
+        SpinnerAdapter adapter = new ArrayAdapter<String>(this, R.layout.group_item, groups);
+
+        if (settingsPref.contains("group_option_name")) {
+            //check if the group previous selected still exists
+            boolean ok = false;
+            int pos = -1;
+            for (String group : groups) {
+                if (group.equals(settingsPref.getString("group_option_name", "Default"))) {
+                    ok = true;
+                    pos = groups.indexOf(group);
+                    break;
+                }
+            }
+
+            SharedPreferences.Editor editor = settingsPref.edit();
+            if (ok) {
+                editor.putInt("group_option", pos);
+                editor.commit();
+            }
+            else {
+                editor.putInt("group_option", 0);
+                editor.putString("group_option_name", "All");
+                editor.commit();
+            }
+        }
+        else {
+            SharedPreferences.Editor editor = settingsPref.edit();
+            editor.putInt("group_option", 0);
+            editor.putString("group_option_name", "All");
+            editor.commit();
+        }
+
+        final ArrayList<String> groupsClone = groups;
+
+        ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                Log.d("NavigationItemSelected", groupsClone.get(itemPosition));
+                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                if (itemPosition != settingsPref.getInt("group_option", -1)) {
+                    SharedPreferences.Editor editor = settingsPref.edit();
+                    editor.putInt("group_option", itemPosition);
+                    editor.putString("group_option_name", groupsClone.get(itemPosition));
+                    editor.commit();
+                    updateLeftPane();
+                }
+                return true;
+            }
+        };
+        ActionBar actions = getSupportActionBar();
+        actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actions.setListNavigationCallbacks(adapter, callback);
+        actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
+
+        if (toxSingleton.rightPaneActive) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            setTitle(activeTitle);
+
+            // Hide add friend icon
+            MenuItem af = menu.findItem(R.id.add_friend);
+            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
+
+            //Hide group menu
+            ActionBar bar = MainActivity.this.getSupportActionBar();
+            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+
+            // Hide search icon
+            MenuItem search = menu.findItem(R.id.search_friend);
+            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_NEVER);
+
+            //ag.setVisible(true);
+            /* Hide until functionality is implemented to avoid confusion
+            MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
+            ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    addFriendToGroup();
+                    return false;
+                }
+            });
+            */
+            toxSingleton.rightPaneActive = true;
+            toxSingleton.leftPaneActive = false;
+            if(toxSingleton.activeFriendKey!=null){
+                updateChat(toxSingleton.activeFriendKey);
+            }
+            clearUselessNotifications();
+        }
+    }
+
     public void updateLeftPane() {
 
         AntoxDB antoxDB = new AntoxDB(this);
-
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-        friendList = antoxDB.getFriendList(settingsPref.getInt("group_option", 0));
+        int option = settingsPref.getInt("group_option", 0);
+        if (option <= 3) {
+            friendList = antoxDB.getFriendList(option);
+        }
+        else {
+            friendList = antoxDB.getFriendsInAGroup(settingsPref.getString("group_option_name", "Friends"));
+        }
 
         ArrayList<Message> messageList = antoxDB.getMessageList("");
 
@@ -476,17 +600,58 @@ public class MainActivity extends ActionBarActivity{
                 leftPaneKeyList.add(friend_requests_list[i].requestKey);
             }
         }
-        List<String> list=null;
 
         if (friends_list.length > 0) {
-            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
-            leftPaneAdapter.addItem(friends_header);
-            leftPaneKeyList.add("");
-            for (int i = 0; i < friends_list.length; i++) {
-                msg = mostRecentMessage(friends_list[i].friendKey, messageList);
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
-                leftPaneAdapter.addItem(friend);
-                leftPaneKeyList.add(friends_list[i].friendKey);
+            if (option > 3) {
+                ArrayList<String> groups = new ArrayList<String>();
+                groups.add("Friends");
+                SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+                if (!sharedPreferences.getAll().isEmpty()) {
+                    Map<String, ?> keys = sharedPreferences.getAll();
+
+                    for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                        String groupName = entry.getValue().toString();
+                        groups.add(groupName);
+                    }
+                }
+                Collections.sort(groups);
+
+                for (String group : groups) {
+                    boolean exists = false;
+                    for (int i = 0; i < friends_list.length; i++) {
+                        if (friends_list[i].friendGroup.equals(group)) {
+                            if (exists == false) {
+                                LeftPaneItem friends_header;
+                                if (group.equals("Friends")) {
+                                    friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
+                                } else {
+                                    friends_header = new LeftPaneItem(Constants.TYPE_HEADER, group, null, 0);
+                                }
+                                leftPaneAdapter.addItem(friends_header);
+                                leftPaneKeyList.add("");
+                                exists = true;
+                            }
+                            msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                            LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
+                            leftPaneAdapter.addItem(friend);
+                            leftPaneKeyList.add(friends_list[i].friendKey);
+                        }
+                    }
+                }
+            }
+            else {
+                String[] array = getResources().getStringArray(R.array.actions);
+
+                //add the header corresponding to the option: All Online Offline Blocked
+                LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, array[option], null, 0);
+                leftPaneAdapter.addItem(friends_header);
+                leftPaneKeyList.add("");
+                for (int i = 0; i < friends_list.length; i++) {
+                    msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                    LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
+                    leftPaneAdapter.addItem(friend);
+                    leftPaneKeyList.add(friends_list[i].friendKey);
+                }
             }
         }
         antoxDB.close();
@@ -531,6 +696,11 @@ public class MainActivity extends ActionBarActivity{
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
+    private void openGroupManagement() {
+        Intent intent = new Intent(this, ManageGroupsActivity.class);
+        startActivity(intent);
+    }
+
     private void clearUselessNotifications () {
         AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
@@ -552,6 +722,7 @@ public class MainActivity extends ActionBarActivity{
             updateChat(toxSingleton.activeFriendKey);
         }
         clearUselessNotifications();
+        updateGroupsList();
         updateLeftPane();
     }
 
@@ -579,6 +750,9 @@ public class MainActivity extends ActionBarActivity{
                 return true;
             case R.id.action_profile:
                 openProfile();
+                return true;
+            case R.id.action_manage_group:
+                openGroupManagement();
                 return true;
             case R.id.action_about:
                 openAbout();
