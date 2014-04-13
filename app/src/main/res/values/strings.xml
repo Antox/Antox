@@ -123,7 +123,7 @@
     <string name="manage_groups_dialog_add_button">Add</string>
     <string name="manage_groups_dialog_rename_button">Rename</string>
     <string name="manage_groups_dialog_cancel_button">Cancel</string>
-    <string name="manage_groups_no_delete_friends">The group "Friends" is the default group. It can not be modify.</string>
+    <string name="manage_groups_no_delete_friends">The group "Friends" is the default group. It can not be modified.</string>
     <string name="manage_groups_rename_group">Rename</string>
     <string name="manage_groups_delete_group">Delete</string>
     <string name="manage_groups_action_on">Action on</string>
