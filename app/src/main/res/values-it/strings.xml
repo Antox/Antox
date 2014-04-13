@@ -9,6 +9,8 @@
     <string name="title_activity_settings">Impostazioni</string>
     <string name="title_activity_profile">Profilo</string>
     <string name="title_activity_about">Informazioni</string>
+    <string name="title_activity_friend_profile">Profilo</string>
+    <string name="title_activity_manage_groups">Gestisci Gruppi</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Impostazioni</string>
@@ -18,6 +20,7 @@
     <string name="action_profile">Profilo</string>
     <string name="action_about">Informazioni</string>
     <string name="add_to_group">Aggiungi Al Gruppo</string>
+    <string name="manage_groups">Gestisci Gruppi</string>
 
     <!-- Main Activity -->
     <string name="title">Antox</string>
@@ -97,12 +100,33 @@
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
     <string name="friend_profile_nick">Nome Personalizzato</string>
+    <string name="friend_profile_group">Gruppo</string>
     <string name="friend_profile_key">Tox-ID</string>
     <string name="friend_profile_note">Note Personali</string>
-    <string name="friend_profile_button">Aggiorna</string>
-    <string name="friend_profile_updated">Nome personalizzato aggiornato</string>
+    <string name="friend_profile_button">Salva</string>
+    <string name="friend_profile_updated">Profilo dell\'amico salvato</string>
     <string name="friend_profile_copy">Copia Tox-ID</string>
     <string name="friend_profile_copied">Tox-ID copiato</string>
+
+    <!-- Manage Groups Activity -->
+    <string name="manage_groups_add_group">Crea Gruppo</string>
+    <string name="manage_groups_number_of_members">Numero membri: </string>
+    <string name="manage_groups_none">Nessuno</string>
+    <string name="manage_groups_dialog_add_group">Nuovo gruppo</string>
+    <string name="manage_groups_dialog_rename_group">Rinomina gruppo</string>
+    <string name="manage_groups_no_name">Inserisci un nome per il gruppo</string>
+    <string name="manage_groups_already_exits">Gruppo già esistente</string>
+    <string name="manage_groups_dialog_add_button">Nuovo</string>
+    <string name="manage_groups_dialog_rename_button">Rinomina</string>
+    <string name="manage_groups_dialog_cancel_button">Annulla</string>
+    <string name="manage_groups_no_delete_friends">Il gruppo "Amici" è quello di default e non può essere modificato.</string>
+    <string name="manage_groups_rename_group">Rinomina</string>
+    <string name="manage_groups_delete_group">Elimina</string>
+    <string name="manage_groups_action_on">Azioni per</string>
+    <string name="manage_groups_friends">Amici</string>
+    <string name="manage_groups_toast_deleted">Gruppo eliminato con successo. Membri spostati nel gruppo "Amici".</string>
+    <string name="manage_groups_toast_renamed">Gruppo rinominato con successo</string>
+    <string name="manage_groups_toast_added">Gruppo creato con successo</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
@@ -117,6 +141,7 @@
     <string name="friend_action_profile">Profilo</string>
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi Amico</string>
+    <string name="friend_action_move_to_group">Sposta nel Gruppo</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_unblock">Sblocca</string>
     <string name="friend_action_deletechat">Elimina Chat</string>
@@ -124,14 +149,16 @@
         Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
         richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
     </string>
+    <string name="toast_succ_move_user">Spostamento riuscito</string>
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
 
     <!-- Misc -->
-    <string name="button_confirm">OK</string>
+    <string name="button_confirm">Applica</string>
     <string name="button_cancel">Annulla</string>
     <string name="button_yes">Sì</string>
     <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
 
 </resources>
