@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    
+    <TextView
+        android:id="@+id/text_view_group_name_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/text_view_label_nr_of_members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_group_name_label"
+        android:layout_alignParentLeft="true"
+        android:paddingRight="10sp"
+        android:text="@string/manage_groups_number_of_members"
+        />
+
+    <TextView
+        android:id="@+id/text_view_number_of_members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_group_name_label"
+        android:layout_toRightOf="@id/text_view_label_nr_of_members"
+        android:text="@string/manage_groups_none"
+        />
+
+</RelativeLayout>

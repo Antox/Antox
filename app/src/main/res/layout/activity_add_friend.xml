@@ -16,7 +16,8 @@
         <EditText
             android:id="@+id/addfriend_key"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:singleLine="true"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:hint="@string/addfriend_friend_key" />
@@ -36,7 +37,7 @@
             android:id="@+id/addfriend_friendAlias"
             android:layout_marginTop="0dp"
             android:gravity="center"
-            android:hint="@string/addfriend_alias_hint" />
+            android:hint="@string/addfriend_nick_hint" />
 
         <EditText
             android:id="@+id/addfriend_message"
@@ -45,6 +46,13 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:hint="@string/addfriend_friend_message" />
+
+        <Spinner
+            android:id="@+id/spinner_add_friend_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawSelectorOnTop="true" />
 
         <Button
             android:id="@+id/addFriend"
