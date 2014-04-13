@@ -2,6 +2,7 @@ package im.tox.antox.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,8 +11,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import im.tox.QR.Contents;
 import im.tox.QR.QRCodeEncode;
@@ -35,6 +40,7 @@ public class FriendProfileActivity extends ActionBarActivity {
 
     String friendName = null;
     String friendKey = null;
+    String friendGroup = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,7 @@ public class FriendProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_friend_profile);
 
         friendKey = getIntent().getStringExtra("key");
+        friendGroup = getIntent().getStringExtra("group");
         AntoxDB db = new AntoxDB(this);
         String[] friendDetails = db.getFriendDetails(friendKey);
         friendName = friendDetails[0];
@@ -59,6 +66,28 @@ public class FriendProfileActivity extends ActionBarActivity {
 
         TextView editFriendKey = (TextView) findViewById(R.id.friendKeyText);
         editFriendKey.setText(friendKey);
+
+        //set the spinner
+        Spinner friendGroupSpinner = (Spinner) findViewById(R.id.spinner_friend_profile_group);
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(getResources().getString(R.string.manage_groups_friends));
+        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+        int position = 0;
+        if (!sharedPreferences.getAll().isEmpty()) {
+            Map<String,?> keys = sharedPreferences.getAll();
+
+            for(Map.Entry<String,?> entry : keys.entrySet()){
+                String groupName = entry.getValue().toString();
+                spinnerArray.add(groupName);
+                if (groupName.equals(friendGroup)) {
+                    position = spinnerArray.size() - 1;
+                }
+            }
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        friendGroupSpinner.setAdapter(spinnerAdapter);
+        friendGroupSpinner.setSelection(position);
 
         /* Looks for the userkey qr.png if it doesn't exist then it creates it with the generateQR method.
          * adds onClickListener to the ImageButton to add share the QR
@@ -99,9 +128,14 @@ public class FriendProfileActivity extends ActionBarActivity {
 
     public void updateAlias(View view) {
         AntoxDB db = new AntoxDB(this);
-        TextView friendKey = (TextView) findViewById(R.id.friendKeyText);
+        TextView friendKeyText = (TextView) findViewById(R.id.friendKeyText);
         EditText friendAlias = (EditText) findViewById(R.id.friendAliasText);
-        db.updateAlias(friendAlias.getText().toString(), friendKey.getText().toString());
+        db.updateAlias(friendAlias.getText().toString(), friendKeyText.getText().toString());
+
+        Spinner friendGroupSpinner = (Spinner) findViewById(R.id.spinner_friend_profile_group);
+        String group = friendGroupSpinner.getSelectedItem().toString();
+        db.moveUserToOtherGroup(friendKey, group);
+
         db.close();
 
         Context context = getApplicationContext();
