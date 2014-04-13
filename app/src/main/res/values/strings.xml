@@ -56,7 +56,7 @@
     <string name="about_string">This client is still in pre-alpha.</string>
     <string name="getstarted_string">Enter your desired name</string>
     <string name="settings_custom_dht">Custom Tox Node Settings</string>
-    <string name="settings_use_custom_dht">Use Custom DHT node settings</string>
+    <string name="settings_use_custom_dht">Use Custom Tox node settings</string>
     <string name="settings_user_key_title">Your Tox ID</string>
     <string name="settings_name_hint">Username</string>
     <string name="settings_note_hint">Status message</string>
@@ -110,8 +110,8 @@
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
     <string name="friend_profile_updated">The profile has been updated</string>
-    <string name="friend_profile_copy">Copy ID</string>
-    <string name="friend_profile_copied">ID Copied</string>
+    <string name="friend_profile_copy">Copy Tox ID</string>
+    <string name="friend_profile_copied">Tox ID Copied</string>
 
     <!-- Manage Groups Activity -->
     <string name="manage_groups_add_group">Add Group</string>
@@ -124,7 +124,7 @@
     <string name="manage_groups_dialog_add_button">Add</string>
     <string name="manage_groups_dialog_rename_button">Rename</string>
     <string name="manage_groups_dialog_cancel_button">Cancel</string>
-    <string name="manage_groups_no_delete_friends">The group "Friends" is the default group. It can not be modified.</string>
+    <string name="manage_groups_no_delete_friends">The group “Friends” is the default group. It can not be modified.</string>
     <string name="manage_groups_rename_group">Rename</string>
     <string name="manage_groups_delete_group">Delete</string>
     <string name="manage_groups_action_on">Action on</string>
