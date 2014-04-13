@@ -16,7 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.data.AntoxDB;
@@ -152,7 +155,7 @@ public class ContactsFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View itemView, int index, long id) {
                 final LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(index);
-                AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
                 boolean isGroupChat=false;
                 final boolean isFriendRequest = item.viewType==Constants.TYPE_FRIEND_REQUEST;
                 final CharSequence items[];
@@ -173,10 +176,11 @@ public class ContactsFragment extends Fragment {
                     };
                 } else {
                     items= new CharSequence[]{
-                                getResources().getString(R.string.friend_action_profile),
-                                        getResources().getString(R.string.friend_action_delete),
-                                        getResources().getString(R.string.friend_action_deletechat),
-                                        getResources().getString(R.string.friend_action_block)
+                            getResources().getString(R.string.friend_action_profile),
+                            getResources().getString(R.string.friend_action_move_to_group),
+                            getResources().getString(R.string.friend_action_delete),
+                            getResources().getString(R.string.friend_action_deletechat),
+                            getResources().getString(R.string.friend_action_block)
                     };
                 }
                 builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
@@ -189,7 +193,8 @@ public class ContactsFragment extends Fragment {
                                     switch (index){
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                            db.addFriend(item.first, "Friend Accepted", "", "");
+                                            //When accepting a friend request from long click it will be automatically assigned to "Friends" group
+                                            db.addFriend(item.first, "Friend Accepted", "", "", "Friends");
                                             db.close();
                                             main_act.updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
@@ -242,9 +247,11 @@ public class ContactsFragment extends Fragment {
                                     ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
                                     //Get friend key
                                     String key = "";
+                                    String group = "";
                                     for(int i = 0; i < tmp.size(); i++) {
                                         if(item.first.equals(tmp.get(i).friendName)) {
                                             key = tmp.get(i).friendKey;
+                                            group = tmp.get(i).friendGroup;
                                             break;
                                         }
                                     }
@@ -253,24 +260,54 @@ public class ContactsFragment extends Fragment {
                                             if(!key.equals("")) {
                                                 Intent profile = new Intent(main_act, FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
+                                                profile.putExtra("group", group);
                                                 startActivity(profile);
                                             }
                                             break;
                                         case 1:
+                                            //move to group
+                                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                                            ArrayList<String> groups = new ArrayList<String>();
+                                            groups.add(getResources().getString(R.string.manage_groups_friends));
+                                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("groups", Context.MODE_PRIVATE);
+                                            if (!sharedPreferences.getAll().isEmpty()) {
+                                                Map<String, ?> keys = sharedPreferences.getAll();
+                                                for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                                                    groups.add(entry.getValue().toString());
+                                                }
+                                            }
+                                            final CharSequence[] cs = groups.toArray(new CharSequence[groups.size()]);
+                                            final String userKey = key;
+
+                                            dialogBuilder.setTitle("Choose a group");
+                                            dialogBuilder.setItems(cs, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    AntoxDB db = new AntoxDB(getActivity());
+                                                    db.moveUserToOtherGroup(userKey, cs[i].toString());
+                                                    main_act.updateLeftPane();
+                                                    Toast.makeText(getActivity(), getActivity().getString(R.string.toast_succ_move_user),
+                                                            Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                            builder.create().cancel();
+                                            dialogBuilder.show();
+                                            break;
+                                        case 2:
                                             //Delete friend
                                             Log.d("ContactsFragment","Delete Friend selected");
                                             if (!key.equals("")) {
                                                 showAlertDialog(getActivity(),key);
                                             }
                                             break;
-                                        case 2:
+                                        case 3:
                                             AntoxDB db = new AntoxDB(getActivity());
                                             db.deleteChat(key);
                                             db.close();
                                             main_act.updateLeftPane();
                                             clearChat(key);
                                             break;
-                                        case 3:
+                                        case 4:
                                             showBlockDialog(getActivity(),key);
                                             break;
                                     }

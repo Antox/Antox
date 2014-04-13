@@ -7,6 +7,6 @@
         android:id="@+id/pin"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_small" />
+        android:textSize="@dimen/text_small"/>
 
 </LinearLayout>

@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import org.xbill.DNS.CNAMERecord;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
     // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
-            " ( _id integer primary key , key text, username text, status text, note text,  alias text, isonline boolean, isblocked boolean)";
+            " ( _id integer primary key , key text, username text, status text, note text, alias text, isonline boolean, isblocked boolean, usergroup text);";
 
     public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
@@ -69,6 +71,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                     db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
                     break;
                 }
+            case 5:
+                db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN usergroup text");
         }
     }
 
@@ -94,7 +98,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     // Currently we are not able to fetch Note,username so keep it null.
     //So storing the received message as his/her personal note.
 
-    public void addFriend(String key, String message, String alias, String username) {
+    public void addFriend(String key, String message, String alias, String username, String usergroup) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         if(username.contains("@"))
@@ -107,6 +111,8 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_USERNAME, username);
         values.put(Constants.COLUMN_NAME_ISONLINE, false);
         values.put(Constants.COLUMN_NAME_ALIAS, alias);
+        values.put(Constants.COLUMN_NAME_GROUP, usergroup);
+        values.put(Constants.COLUMN_NAME_ISBLOCKED, false);
         db.insert(Constants.TABLE_FRIENDS, null, values);
         db.close();
     }
@@ -131,6 +137,39 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
+        db.close();
+    }
+
+    public int getNumberOfFriendsInAGroup(String groupName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_GROUP + " = '" + groupName + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        int nr = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return nr;
+    }
+
+    public void moveUserToOtherGroup(String userKey, String newGroup) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_GROUP, newGroup);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + userKey + "'", null);
+        /*String replaceQuery = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_GROUP + " = '" + newGroup + "'"
+                + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + userKey + "'";
+        db.rawQuery(replaceQuery, null);*/
+
+        db.close();
+    }
+
+    public void moveAllUsersFromAGroupToOtherGroup(String oldGroup, String newGroup) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_GROUP, newGroup);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_GROUP + "='" + oldGroup + "'", null);
+
         db.close();
     }
 
@@ -271,27 +310,11 @@ public class AntoxDB extends SQLiteOpenHelper {
         Log.d("", "marked incoming messages as read");
     }
 
-    public ArrayList<Friend> getFriendList(int option) {
+    public ArrayList<Friend> getFriendsInAGroup(String groupName) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ArrayList<Friend> friendList = new ArrayList<Friend>();
-        String selectQuery = "";
-        switch (option) {
-            case Constants.OPTION_ALL_FRIENDS:
-                selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
-                break;
-            case Constants.OPTION_ONLINE_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=1 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
-                break;
-            case Constants.OPTION_OFFLINE_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "=0 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
-                break;
-            case Constants.OPTION_BLOCKED_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "=1";
-                break;
-            default:
-                break;
-        }
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_GROUP + " = '" + groupName + "'";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -304,6 +327,63 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String alias = cursor.getString(5);
                 int online = cursor.getInt(6);
                 boolean isBlocked = cursor.getInt(7)>0;
+                String group = cursor.getString(8);
+
+                if(alias == null)
+                    alias = "";
+
+                if(!alias.equals(""))
+                    name = alias;
+                else if(name.equals(""))
+                    name = key.substring(0,7);
+
+                if(!isBlocked) {
+                    friendList.add(new Friend(online, name, status, note, key, group));
+                }
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return friendList;
+    }
+
+    public ArrayList<Friend> getFriendList(int option) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ArrayList<Friend> friendList = new ArrayList<Friend>();
+        String selectQuery = "";
+        switch (option) {
+            case Constants.OPTION_ALL_FRIENDS:
+                selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
+                break;
+            case Constants.OPTION_ONLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "= 1 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
+                break;
+            case Constants.OPTION_OFFLINE_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "= 0 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
+                break;
+            case Constants.OPTION_BLOCKED_FRIENDS:
+                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "= 1";
+                break;
+            default:
+                break;
+        }
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(2);
+                String key = cursor.getString(1);
+                String status = cursor.getString(3);
+                String note = cursor.getString(4);
+                String alias = cursor.getString(5);
+                int online = cursor.getInt(6);
+                Log.d("DB", online + "");
+                boolean isBlocked = cursor.getInt(7)>0;
+                String group = cursor.getString(8);
 
                 if(alias == null)
                     alias = "";
@@ -314,7 +394,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                     name = key.substring(0,7);
 
                 if(!(option == 0 && isBlocked))
-                    friendList.add(new Friend(online, name, status, note, key));
+                    friendList.add(new Friend(online, name, status, note, key, group));
 
             } while (cursor.moveToNext());
         }

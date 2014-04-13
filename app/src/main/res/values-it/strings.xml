@@ -78,7 +78,7 @@
     <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">Tox-ID inserito non valido</string>
-    <string name="addfriend_alias_hint">Nome personalizzato per il tuo amico</string>
+    <string name="addfriend_nick_hint">Nome personalizzato per il tuo amico</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
     <string name="dialog_pin">Inserisci il pin del tuo amico</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
@@ -96,7 +96,7 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
-    <string name="friend_profile_alias">Nome Personalizzato</string>
+    <string name="friend_profile_nick">Nome Personalizzato</string>
     <string name="friend_profile_key">Tox-ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Aggiorna</string>

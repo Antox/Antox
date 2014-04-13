@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,13 +19,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import im.tox.QR.IntentIntegrator;
 import im.tox.QR.IntentResult;
@@ -35,6 +42,7 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
+import im.tox.antox.utils.GroupItem;
 
 /**
  * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
@@ -49,11 +57,17 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     String _friendCHECK = "";
     String _originalUsername = "";
 
+    boolean isV2 = false;
+
+    Context context;
+    CharSequence text;
+    int duration = Toast.LENGTH_SHORT;
+    Toast toast;
+
     EditText friendID;
     EditText friendMessage;
     EditText friendAlias;
-
-    boolean isV2 = false;
+    Spinner  friendGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,18 +88,52 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         }
 
         // Check to see if user is connected to dht first
+
         if(!DhtNode.connected) {
-            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-            alertDialog.setTitle(R.string.addfriend_no_internet);
-            alertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
-            alertDialog.setIcon(R.drawable.ic_launcher);
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            AlertDialog notConnectedAlertDialog = new AlertDialog.Builder(this).create();
+            notConnectedAlertDialog.setTitle(R.string.addfriend_no_internet);
+            notConnectedAlertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
+            notConnectedAlertDialog.setIcon(R.drawable.ic_launcher);
+            notConnectedAlertDialog.setButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
+
                 public void onClick(DialogInterface dialog, int which) {
                     finish();
                 }
             });
-            alertDialog.show();
+
+            notConnectedAlertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    finish();
+                }
+            });
+            notConnectedAlertDialog.show();
         }
+
+        //set the spinner
+        friendGroup = (Spinner) findViewById(R.id.spinner_add_friend_group);
+        ArrayList<String> spinnerArray = new ArrayList<String>();
+        spinnerArray.add(getResources().getString(R.string.manage_groups_friends));
+        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
+        if (!sharedPreferences.getAll().isEmpty()) {
+            Map<String,?> keys = sharedPreferences.getAll();
+
+            for(Map.Entry<String,?> entry : keys.entrySet()){
+                String groupName = entry.getValue().toString();
+                spinnerArray.add(groupName);
+            }
+
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        friendGroup.setAdapter(spinnerAdapter);
+
+        context = getApplicationContext();
+        text = getString(R.string.addfriend_friend_added);
+
+        friendID = (EditText) findViewById(R.id.addfriend_key);
+        friendMessage = (EditText) findViewById(R.id.addfriend_message);
+        friendAlias = (EditText) findViewById(R.id.addfriend_friendAlias);
 
         Intent intent = getIntent();
         //If coming from tox uri link
@@ -96,63 +144,67 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             uri = intent.getData();
             if (uri != null)
                 friendID.setText(uri.getHost());
+            //TODO: ACCEPT DNS LOOKUPS FROM URI
+
         } else if (intent.getAction() == "toxv2") {
             //else if it came from toxv2 restart
-            friendID = (EditText) findViewById(R.id.addfriend_key);
-            friendMessage = (EditText) findViewById(R.id.addfriend_message);
-            friendAlias = (EditText) findViewById(R.id.addfriend_friendAlias);
 
             friendID.setText(intent.getStringExtra("originalUsername"));
             friendAlias.setText(intent.getStringExtra("alias"));
             friendMessage.setText(intent.getStringExtra("message"));
 
-            Context context = getApplicationContext();
-            CharSequence text = getString(R.string.addfriend_friend_added);
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context, text, duration);
+            if(checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) == 0) {
+                toast = Toast.makeText(context, text, duration);
+                toast.show();
+            } else if (checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) == -1) {
+                toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            } else if (checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) == -2) {
+                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+                toast.show();
+            }
 
-                if (validateFriendKey(intent.getStringExtra("key"))) {
-                    String ID = intent.getStringExtra("key");
-                    String message = friendMessage.getText().toString();
-                    String alias = friendAlias.getText().toString();
+            Intent update = new Intent(Constants.BROADCAST_ACTION);
+            update.putExtra("action", Constants.UPDATE);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(update);
+            Intent i = new Intent();
+            setResult(RESULT_OK, i);
 
-                    String[] friendData = {ID, message, alias};
-
-                    AntoxDB db = new AntoxDB(getApplicationContext());
-                    if (!db.doesFriendExist(friendID.getText().toString())) {
-                        Intent addFriend = new Intent(this, ToxService.class);
-                        addFriend.setAction(Constants.ADD_FRIEND);
-                        addFriend.putExtra("friendData", friendData);
-                        this.startService(addFriend);
-
-                        if (!alias.equals(""))
-                            ID = alias;
-
-                        db.addFriend(ID, "Friend Request Sent", alias, intent.getStringExtra("originalUsername"));
-                    } else {
-                        toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
-                    }
-                    db.close();
-
-                    toast.show();
-
-                } else {
-                    toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-
-                Intent update = new Intent(Constants.BROADCAST_ACTION);
-                update.putExtra("action", Constants.UPDATE);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(update);
-                Intent i = new Intent();
-                setResult(RESULT_OK, i);
-
-                // Close activity
-                finish();
+            // Close activity
+            finish();
         }
     }
 
+    private int checkAndSend(String key, String originalUsername) {
+        if(validateFriendKey(key)) {
+            String ID = key;
+            String message = friendMessage.getText().toString();
+            String alias = friendAlias.getText().toString();
+
+            String[] friendData = {ID, message, alias};
+
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            if (!db.doesFriendExist(friendID.getText().toString())) {
+                Intent addFriend = new Intent(this, ToxService.class);
+                addFriend.setAction(Constants.ADD_FRIEND);
+                addFriend.putExtra("friendData", friendData);
+                this.startService(addFriend);
+
+                if (!alias.equals(""))
+                    ID = alias;
+
+                String group = friendGroup.getSelectedItem().toString();
+                db.addFriend(ID, "Friend Request Sent", alias, originalUsername, group);
+            } else {
+                return -2;
+            }
+            db.close();
+            return 0;
+        } else {
+            return -1;
+        }
+    }
     /*
     * method is outside so that the intent can be passed this object
      */
@@ -162,14 +214,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     }
 
     public void addFriend(View view) {
-        Context context = getApplicationContext();
-        CharSequence text = getString(R.string.addfriend_friend_added);
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-
-        friendID = (EditText) findViewById(R.id.addfriend_key);
-        friendMessage = (EditText) findViewById(R.id.addfriend_message);
-        friendAlias = (EditText) findViewById(R.id.addfriend_friendAlias);
 
         if(friendID.getText().toString().contains("@")) {
             _originalUsername = friendID.getText().toString();
@@ -196,32 +240,17 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             finalFriendKey = _friendID;
 
         if(!isV2) {
-            if (validateFriendKey(finalFriendKey)) {
-                String ID = finalFriendKey;
-                String message = friendMessage.getText().toString();
-                String alias = friendAlias.getText().toString();
 
-                String[] friendData = {ID, message, alias};
-
-                AntoxDB db = new AntoxDB(getApplicationContext());
-                if (!db.doesFriendExist(friendID.getText().toString())) {
-                    Intent addFriend = new Intent(this, ToxService.class);
-                    addFriend.setAction(Constants.ADD_FRIEND);
-                    addFriend.putExtra("friendData", friendData);
-                    this.startService(addFriend);
-
-                    db.addFriend(ID, "Friend Request Sent", alias, _originalUsername);
-                } else {
-                    toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
-                }
-                db.close();
-
+            if(checkAndSend(finalFriendKey, "") == 0) {
+                toast = Toast.makeText(context, text, duration);
                 toast.show();
-
-            } else {
+            } else if(checkAndSend(finalFriendKey, "") == -1) {
                 toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
+            } else if(checkAndSend(finalFriendKey, "") == -2) {
+                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+                toast.show();
             }
 
             Intent update = new Intent(Constants.BROADCAST_ACTION);
@@ -240,12 +269,12 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         //Base64 to Bytes
         try {
             byte[] decoded = Base64.decode(pin, Base64.DEFAULT);
+
             //Bytes to Hex
             StringBuilder sb = new StringBuilder();
             for(byte b: decoded)
                 sb.append(String.format("%02x", b&0xff));
             String encodedString = sb.toString();
-            //XOR key and pin to verify
 
             //Finally set the correct ID to add
             _friendID = _friendID + encodedString + _friendCHECK;

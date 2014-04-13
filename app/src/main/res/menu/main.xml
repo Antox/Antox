@@ -23,6 +23,13 @@
         android:title="@string/add_friend"/>
 
     <item
+        android:id="@+id/action_manage_group"
+        android:orderInCategory="60"
+        android:showAsAction="never"
+        antonx:showAsAction="never"
+        android:title="@string/manage_groups"/>
+
+    <item
         android:id="@+id/action_profile"
         android:orderInCategory="27"
         android:showAsAction="never"
