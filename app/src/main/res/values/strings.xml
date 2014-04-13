@@ -10,6 +10,7 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_friend_profile">Profile</string>
+    <string name="title_activity_manage_groups">Manage Groups</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Settings</string>
@@ -19,6 +20,7 @@
     <string name="action_profile">Profile</string>
     <string name="action_about">About</string>
     <string name="add_to_group">Add To Group</string>
+    <string name="manage_groups">Manage Groups</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -101,13 +103,34 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
-    <string name="friend_profile_nick">Nickname</string>
+    <string name="friend_profile_alias">Nickname</string>
+    <string name="friend_profile_group">Group</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
-    <string name="friend_profile_updated">Nickname has been updated</string>
+    <string name="friend_profile_updated">The profile has been updated</string>
     <string name="friend_profile_copy">Copy ID</string>
     <string name="friend_profile_copied">ID Copied</string>
+
+    <!-- Manage Groups Activity -->
+    <string name="manage_groups_add_group">Add Group</string>
+    <string name="manage_groups_number_of_members">Number of members: </string>
+    <string name="manage_groups_none">None</string>
+    <string name="manage_groups_dialog_add_group">Add a group</string>
+    <string name="manage_groups_dialog_rename_group">Rename group</string>
+    <string name="manage_groups_no_name">Please name your group</string>
+    <string name="manage_groups_already_exits">Group already exists</string>
+    <string name="manage_groups_dialog_add_button">Add</string>
+    <string name="manage_groups_dialog_rename_button">Rename</string>
+    <string name="manage_groups_dialog_cancel_button">Cancel</string>
+    <string name="manage_groups_no_delete_friends">The group "Friends" is the default group. It can not be modify.</string>
+    <string name="manage_groups_rename_group">Rename</string>
+    <string name="manage_groups_delete_group">Delete</string>
+    <string name="manage_groups_action_on">Action on</string>
+    <string name="manage_groups_friends">Friends</string>
+    <string name="manage_groups_toast_deleted">Group successfully deleted. All group users moved to Friends.</string>
+    <string name="manage_groups_toast_renamed">Group successfully renamed</string>
+    <string name="manage_groups_toast_added">Group successfully added</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>
@@ -122,6 +145,7 @@
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
+    <string name="friend_action_move_to_group">Move to Group</string>
     <string name="friend_action_block">Block</string>
     <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
@@ -130,6 +154,7 @@
         Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them. Are you sure you wish to continue?
     </string>
+    <string name="toast_succ_move_user">Move successfully achieved</string>
 
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
