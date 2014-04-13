@@ -9,26 +9,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:textSize="18sp"
-        />
-
-    <TextView
-        android:id="@+id/text_view_label_nr_of_members"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_group_name_label"
-        android:layout_alignParentLeft="true"
-        android:paddingRight="10sp"
-        android:text="@string/manage_groups_number_of_members"
-        />
-
-    <TextView
-        android:id="@+id/text_view_number_of_members"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_group_name_label"
-        android:layout_toRightOf="@id/text_view_label_nr_of_members"
-        android:text="@string/manage_groups_none"
-        />
+        android:textSize="@dimen/text_large"
+        android:textStyle="bold"
+        android:text="Test Group"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="3dp"/>
 
 </RelativeLayout>
