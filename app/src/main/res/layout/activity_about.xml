@@ -22,14 +22,15 @@
             android:layout_gravity="center"
             android:src="@drawable/full_logo" />
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:gravity="center"
-               android:layout_marginTop="5dp"
-               android:textSize="12sp"
-               android:text="@string/about_string"
-           />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_centerInParent="true"
+            android:text="@string/developer_string"
+            android:layout_weight="90" />
 
         <TextView
             android:layout_width="match_parent"
@@ -38,15 +39,6 @@
             android:textSize="12sp"
             android:id="@+id/version_string" />
 
-        <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginBottom="20dp"
-               android:gravity="center"
-               android:textSize="12sp"
-               android:layout_centerInParent="true"
-               android:text="@string/developer_string"
-               android:layout_weight="90" />
 
         <LinearLayout
             android:orientation="horizontal"
