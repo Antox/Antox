@@ -34,8 +34,6 @@ public class GroupsListAdapter extends ArrayAdapter<GroupItem> {
             row = inflater.inflate(R.layout.manage_groups_item, null);
             holder = new GroupsHolder();
             holder.nameLabel = (TextView) row.findViewById(R.id.text_view_group_name_label);
-            holder.numberLabel = (TextView) row.findViewById(R.id.text_view_label_nr_of_members);
-            holder.numberOfMembers = (TextView) row.findViewById(R.id.text_view_number_of_members);
             row.setTag(holder);
         }
         else {
@@ -43,8 +41,7 @@ public class GroupsListAdapter extends ArrayAdapter<GroupItem> {
         }
 
         GroupItem groupItem = this.getItem(position);
-        holder.nameLabel.setText(groupItem.getGroupName());
-        holder.numberOfMembers.setText(groupItem.getNumberOfMembers() + "");
+        holder.nameLabel.setText(groupItem.getGroupName() + " (" + groupItem.getNumberOfMembers() + ")");
 
         return row;
     }
