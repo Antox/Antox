@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
-    android:padding="10dp"
+    android:padding="6dp"
     android:singleLine="true"
     android:textColor="#ffffff"
-    android:textSize="17sp"
+    android:textSize="18sp"
     android:textAlignment="inherit" />

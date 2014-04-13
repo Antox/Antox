@@ -81,7 +81,7 @@
     <string name="addfriend_friend_exists">Vännen finns redan</string>
     <string name="scanqr_button">Skanna en QR-kod</string>
     <string name="invalid_friend_ID">Ogiltigt Tox ID</string>
-    <string name="addfriend_alias_hint">Ange ett smeknamn för din vän</string>
+    <string name="addfriend_nick_hint">Ange ett smeknamn för din vän</string>
     <string name="addfriend_optional_title">Tillval</string>
     <string name="dialog_pin">Ange din väns pin</string>
     <string name="addfriend_invalid_pin">Ogiltig Pin</string>
@@ -100,11 +100,13 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Namn</string>
-    <string name="friend_profile_alias">Alias</string>
+    <string name="friend_profile_nick">Smeknamn</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Uppdatera</string>
-    <string name="friend_profile_updated">Alias har uppdaterats</string>
+    <string name="friend_profile_updated">Smeknamn har uppdaterats</string>
+    <string name="firend_profile_copy">Kopiera ID</string>
+    <string name="friend_profile_copied">ID Kopierat</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Acceptera</string>
