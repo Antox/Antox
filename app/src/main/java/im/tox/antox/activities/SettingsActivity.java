@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +27,6 @@ import im.tox.antox.utils.DhtNode;
  * Settings Activity DHT nodes.
  * Allows the user to specify their own DHT Node, or to pick one from a downloaded list of known
  * working nodes.
- *
- * @author Mark Winter (Astonex)
  */
 
 public class SettingsActivity extends ActionBarActivity
@@ -60,6 +59,11 @@ public class SettingsActivity extends ActionBarActivity
      * Spinner for displaying available languages
      */
     private Spinner languageSpinner;
+
+    /**
+     * Spinner for displaying themes
+     */
+    private Spinner themeSpinner;
 
 
 
@@ -108,6 +112,19 @@ public class SettingsActivity extends ActionBarActivity
         dhtBox.setChecked(pref.getBoolean("saved_custom_dht", false));
         if(pref.getBoolean("saved_custom_dht", false)) {
             dhtBox.setChecked(true);
+        }
+
+        themeSpinner = (Spinner) findViewById(R.id.spinner_theme_options);
+        String theme = pref.getString("theme", "");
+        switch (theme) {
+            case "Light":
+                themeSpinner.setSelection(0);
+                break;
+            case "Dark":
+                themeSpinner.setSelection(1);
+                break;
+            default:
+                themeSpinner.setSelection(0);
         }
 
         languageSpinner = (Spinner) findViewById(R.id.spinner_language_settings);
@@ -183,6 +200,12 @@ public class SettingsActivity extends ActionBarActivity
         if (dhtBox.isChecked() && !dhtPort.equals(getString(R.id.settings_dht_port))) {
             editor.putString("saved_dht_port", dhtPort);
             DhtNode.port.add(dhtPort);
+        }
+
+        // Save the theme
+        String theme = themeSpinner.getSelectedItem().toString();
+        if(!pref.getString("theme", "").equals(theme)) {
+            editor.putString("theme", theme);
         }
 
         //save the language
