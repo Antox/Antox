@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:drawSelectorOnTop="true"
             android:entries="@array/languages" />
+
         <TextView
             android:id="@+id/dhtSpinnerTitle"
             android:layout_width="fill_parent"
