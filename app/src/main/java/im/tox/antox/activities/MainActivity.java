@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -22,6 +24,7 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +33,11 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -43,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -201,6 +208,7 @@ public class MainActivity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         /* Fix for an android 4.1.x bug */
         if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
@@ -214,6 +222,8 @@ public class MainActivity extends ActionBarActivity{
         /* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
+
+        SharedPreferences settings = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -279,11 +289,8 @@ public class MainActivity extends ActionBarActivity{
             getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
         }
 
-        Log.i(TAG, "onCreate");
         toxSingleton.activeFriendKey=null;
         toxSingleton.activeFriendRequestKey=null;
-        setContentView(R.layout.activity_main);
-
         toxSingleton.leftPaneActive = true;
 
         /* Check if connected to the Internet */
@@ -856,16 +863,14 @@ public class MainActivity extends ActionBarActivity{
                 Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
                 Elements nodeRows = document.getElementsByTag("tr");
 
-                for(Element nodeRow : nodeRows)
-                {
+                for (Element nodeRow : nodeRows) {
                     Elements nodeElements = nodeRow.getElementsByTag("td");
                     int c = 0;
-                    for(Element nodeElement : nodeElements)
-                        nodeDetails[c++]=nodeElement.text();
+                    for (Element nodeElement : nodeElements)
+                        nodeDetails[c++] = nodeElement.text();
 
 
-                    if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK"))
-                    {
+                    if (nodeDetails[6] != null && nodeDetails[6].equals("WORK")) {
                         DhtNode.ipv4.add(nodeDetails[0]);
                         DhtNode.ipv6.add(nodeDetails[1]);
                         DhtNode.port.add(nodeDetails[2]);
@@ -874,13 +879,33 @@ public class MainActivity extends ActionBarActivity{
                         DhtNode.location.add(nodeDetails[5]);
                     }
                 }
+            } catch (UnknownHostException e) {
+                // If for some reason website is down, add some known values
+                DhtNode.ipv4.add("192.254.75.98");
+                DhtNode.ipv4.add("107.161.21.13");
+                DhtNode.ipv4.add("144.76.60.215");
+                DhtNode.port.add("33445");
+                DhtNode.port.add("33445");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
+                DhtNode.key.add("5848E6344856921AAF28DAB860C5816780FE0C8873AAC415C1B7FA7FAA4EF046");
+                DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
+                DhtNode.ipv6.add("");
+                DhtNode.ipv6.add("");
+                DhtNode.ipv6.add("");
+                DhtNode.owner.add("");
+                DhtNode.owner.add("");
+                DhtNode.owner.add("");
+                DhtNode.location.add("");
+                DhtNode.location.add("");
+                DhtNode.location.add("");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             Log.d(TAG, "About to ping servers...");
             /**
-             * Ping servers to find quickest connection
+             * Ping servers to find quickest connection - Threading this would be goood
              */
             long shortestTime = 99999;
             int pos = -1;
