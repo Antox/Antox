@@ -20,4 +20,9 @@
         <item>Русский</item>
         <item>Український</item>
     </string-array>
+
+    <string-array name="themes">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
 </resources>

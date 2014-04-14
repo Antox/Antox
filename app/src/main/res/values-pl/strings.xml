@@ -10,6 +10,7 @@
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_about">O programie</string>
     <string name="title_activity_friend_profile">Profil</string>
+    <string name="title_activity_manage_groups">Zarządzaj Grupami</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Ustawienia</string>
@@ -19,6 +20,7 @@
     <string name="action_profile">Profil</string>
     <string name="action_about">O programie</string>
     <string name="add_to_group">Dodaj do grupy</string>
+    <string name="manage_groups">Zarządzaj Grupami</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -52,8 +54,8 @@
 
     <!-- Settings Activity -->
     <string name="about_string">Ten klient to wciąż pre-alpha.</string>
-    <string name="getstarted_string">Wprowadź swą wymarzoną nazwę użytkownika</string>
-    <string name="settings_custom_dht">Własne ustawienia węzłów DHT</string>
+    <string name="getstarted_string">Wprowadź swą wymarzoną nazwę</string>
+    <string name="settings_custom_dht">Własne ustawienia węzłów Tox</string>
     <string name="settings_use_custom_dht">Użyj własnych ustawień węzłów DHT</string>
     <string name="settings_user_key_title">Twój Tox ID</string>
     <string name="settings_name_hint">Nazwa użytkownika</string>
@@ -70,8 +72,8 @@
     <string name="settings_username_title">Nazwa użytkownika</string>
     <string name="settings_empty_strings">Musisz wypełnić wszystkie pola</string>
     <string name="settings_invalid_key">Wprowadzono nieprawidłowy klucz</string>
-    <string name="developer_string">Stworzone przez astonex &amp; spółkę.</string>
-    <string name="welcome_must_select_username">Musisz wybrać nazwę użytkownika</string>
+    <string name="developer_string">Stworzone z miłością przez Tox Developement Team.</string>
+    <string name="welcome_must_select_username">Musisz ustawić nazwę</string>
 
 
     <!-- Add Friend Activity -->
@@ -101,11 +103,34 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nazwa</string>
-    <string name="friend_profile_nick">Alias</string>
+    <string name="friend_profile_nick">Nick</string>
+    <string name="friend_profile_group">Grupa</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Aktualizuj</string>
-    <string name="friend_profile_updated">Alias został zaktualizowany</string>
+    <string name="friend_profile_updated">Profil został zaktualizowany</string>
+    <string name="friend_profile_copy">Kopiuj ID</string>
+    <string name="friend_profile_copied">ID skopiowane</string>
+
+    <!-- Manage Groups Activity -->
+    <string name="manage_groups_add_group">Dodaj Grupę</string>
+    <string name="manage_groups_number_of_members">Liczba członków: </string>
+    <string name="manage_groups_none">Brak</string>
+    <string name="manage_groups_dialog_add_group">Dodaj grupę</string>
+    <string name="manage_groups_dialog_rename_group">Zmień nazwę grupy</string>
+    <string name="manage_groups_no_name">Proszę, nazwij swą grupę</string>
+    <string name="manage_groups_already_exits">Grupa już istnieje</string>
+    <string name="manage_groups_dialog_add_button">Dodaj</string>
+    <string name="manage_groups_dialog_rename_button">Zmień nazwę</string>
+    <string name="manage_groups_dialog_cancel_button">Anuluj</string>
+    <string name="manage_groups_no_delete_friends">Grupa „Znajomi” jest domyślną grupą. Nie może zostać zmodyfikowana.</string>
+    <string name="manage_groups_rename_group">Zmień nazwę</string>
+    <string name="manage_groups_delete_group">Usuń</string>
+    <string name="manage_groups_action_on">Działanie na</string>
+    <string name="manage_groups_friends">Znajomi</string>
+    <string name="manage_groups_toast_deleted">Udało się usunąć grupę. Jej członkowie przeniesieni do Znajomych.</string>
+    <string name="manage_groups_toast_renamed">Udało się zmienić nazwę grupy</string>
+    <string name="manage_groups_toast_added">Udało się dodać grupę</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Zaakceptuj</string>
@@ -120,6 +145,7 @@
     <string name="friend_action_profile">Profil</string>
     <string name="friend_action_sendfile">Wyślij plik</string>
     <string name="friend_action_delete">Usuń znajomego</string>
+    <string name="friend_action_move_to_group">Przenieś do grupy</string>
     <string name="friend_action_block">Blokuj</string>
     <string name="friend_action_unblock">Odblokuj</string>
     <string name="group_action_leave">Opuść grupę</string>
@@ -128,6 +154,7 @@
         Zablokowanie tego użytkownika usunie go z twojej lisy znajomych i zapytania o dodanie do znajomych
         nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
     </string>
+    <string name="toast_succ_move_user">Udało się przenieść</string>
 
     <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
@@ -137,5 +164,6 @@
     <string name="button_cancel">Anuluj</string>
     <string name="button_yes">Tak</string>
     <string name="button_no">Nie</string>
+    <string name="button_ok">OK</string>
 
 </resources>
