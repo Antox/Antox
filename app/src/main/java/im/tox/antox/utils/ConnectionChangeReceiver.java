@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.tox.ToxDoService;
@@ -54,14 +55,14 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                 Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
                 Elements nodeRows = document.getElementsByTag("tr");
 
-                for(Element nodeRow : nodeRows) {
+                for (Element nodeRow : nodeRows) {
                     Elements nodeElements = nodeRow.getElementsByTag("td");
                     int c = 0;
-                    for(Element nodeElement : nodeElements)
-                        nodeDetails[c++]=nodeElement.text();
+                    for (Element nodeElement : nodeElements)
+                        nodeDetails[c++] = nodeElement.text();
 
 
-                    if(nodeDetails[6]!=null && nodeDetails[6].equals("WORK")) {
+                    if (nodeDetails[6] != null && nodeDetails[6].equals("WORK")) {
                         DhtNode.ipv4.add(nodeDetails[0]);
                         DhtNode.ipv6.add(nodeDetails[1]);
                         DhtNode.port.add(nodeDetails[2]);
@@ -70,6 +71,25 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                         DhtNode.location.add(nodeDetails[5]);
                     }
                 }
+            } catch (UnknownHostException e) {
+                DhtNode.ipv4.add("192.254.75.98");
+                DhtNode.ipv4.add("107.161.21.13");
+                DhtNode.ipv4.add("144.76.60.215");
+                DhtNode.port.add("33445");
+                DhtNode.port.add("33445");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
+                DhtNode.key.add("5848E6344856921AAF28DAB860C5816780FE0C8873AAC415C1B7FA7FAA4EF046");
+                DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
+                DhtNode.ipv6.add("");
+                DhtNode.ipv6.add("");
+                DhtNode.ipv6.add("");
+                DhtNode.owner.add("");
+                DhtNode.owner.add("");
+                DhtNode.owner.add("");
+                DhtNode.location.add("");
+                DhtNode.location.add("");
+                DhtNode.location.add("");
             } catch (IOException e) {
                 e.printStackTrace();
             }
