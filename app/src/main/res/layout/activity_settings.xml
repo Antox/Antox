@@ -28,11 +28,29 @@
             android:entries="@array/languages" />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:text="@string/settings_theme_title"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_theme_options"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:drawSelectorOnTop="true"
+            android:entries="@array/themes"
+            />
+
+        <TextView
             android:id="@+id/dhtSpinnerTitle"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:paddingTop="10dp"
             android:text="@string/settings_dht_spinner_title" />
 
         <CheckBox

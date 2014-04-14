@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:antonx="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/add_new_group"
+        android:showAsAction="always"
+        antonx:showAsAction="always"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/manage_groups_add_group"
+        />
+</menu>
