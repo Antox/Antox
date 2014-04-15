@@ -69,6 +69,7 @@
     <string name="settings_language_title">Język</string>
     <string name="settings_status_title">Status</string>
     <string name="settings_note_title">Status</string>
+    <string name="settings_theme_title">Motyw</string>
     <string name="settings_username_title">Nazwa użytkownika</string>
     <string name="settings_empty_strings">Musisz wypełnić wszystkie pola</string>
     <string name="settings_invalid_key">Wprowadzono nieprawidłowy klucz</string>

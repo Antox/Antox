@@ -6,4 +6,9 @@
         <item>Offline</item>
         <item>Zablokowani</item>
     </string-array>
+
+    <string-array name="themes">
+        <item>Jasny</item>
+        <item>Ciemny</item>
+    </string-array>
 </resources>
