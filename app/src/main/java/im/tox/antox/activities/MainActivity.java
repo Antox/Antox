@@ -890,12 +890,12 @@ public class MainActivity extends ActionBarActivity{
                 DhtNode.key.add("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
                 DhtNode.key.add("5848E6344856921AAF28DAB860C5816780FE0C8873AAC415C1B7FA7FAA4EF046");
                 DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
-                DhtNode.ipv6.add("");
-                DhtNode.ipv6.add("");
-                DhtNode.ipv6.add("");
-                DhtNode.owner.add("");
-                DhtNode.owner.add("");
-                DhtNode.owner.add("");
+                DhtNode.ipv6.add("2607:5600:284::2");
+                DhtNode.ipv6.add("2604:180::c381:9831");
+                DhtNode.ipv6.add("2604:180::abd5:e69");
+                DhtNode.owner.add("stqism");
+                DhtNode.owner.add("NSA");
+                DhtNode.owner.add("Proplex");
                 DhtNode.location.add("");
                 DhtNode.location.add("");
                 DhtNode.location.add("");
