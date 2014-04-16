@@ -124,7 +124,7 @@
     <string name="manage_groups_dialog_add_button">Add</string>
     <string name="manage_groups_dialog_rename_button">Rename</string>
     <string name="manage_groups_dialog_cancel_button">Cancel</string>
-    <string name="manage_groups_no_delete_friends">The group “Friends” is the default group. It can not be modified.</string>
+    <string name="manage_groups_no_delete_friends">The group “Friends” is the default group. It cannot be modified.</string>
     <string name="manage_groups_rename_group">Rename</string>
     <string name="manage_groups_delete_group">Delete</string>
     <string name="manage_groups_action_on">Action on</string>
@@ -138,7 +138,7 @@
     <string name="friendrequest_reject">Reject</string>
     <string name="friendrequest_accepted">Friend request accepted</string>
     <string name="friendrequest_deleted">Friend request deleted</string>
-    <string name="friendrequest">Friend Request</string>
+    <string name="friendrequest">Friend Requests</string>
     <string name="friendrequest_recieved">Friend request received</string>
     <string name="friend_request">New Friend Request</string>
 
@@ -155,7 +155,7 @@
         Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them. Are you sure you wish to continue?
     </string>
-    <string name="toast_succ_move_user">Move successfully achieved</string>
+    <string name="toast_succ_move_user">The user has been moved successfully</string>
 
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
