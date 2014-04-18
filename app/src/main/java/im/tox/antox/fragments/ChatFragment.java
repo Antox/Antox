@@ -1,6 +1,7 @@
 package im.tox.antox.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -86,7 +88,7 @@ public class ChatFragment extends Fragment {
     }
 
 
-
+    @SuppressWarnings("deprecation")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class ChatFragment extends Fragment {
         chatListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                final CharSequence items[] = new CharSequence[]{"Delete"};//copy forward etc can be added here
+                final CharSequence items[] = new CharSequence[]{"Delete","Copy"};//copy forward etc can be added here
                 final ChatMessages item = (ChatMessages) parent.getAdapter().getItem(position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
                 builder.setCancelable(true)
@@ -117,6 +119,24 @@ public class ChatFragment extends Fragment {
                                         chatAdapter.data.remove(item);
                                         chatAdapter.notifyDataSetChanged();
                                         main_act.updateLeftPane();
+                                        break;
+                                    case 1:
+                                        Context context=getActivity().getApplicationContext();
+                                        int sdk = android.os.Build.VERSION.SDK_INT;
+                                        if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB)
+                                        {
+                                            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
+                                                    .getSystemService(context.CLIPBOARD_SERVICE);
+                                            clipboard.setText(item.message);
+                                        }
+                                        else
+                                        {
+                                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context
+                                                    .getSystemService(context.CLIPBOARD_SERVICE);
+                                            android.content.ClipData clip = android.content.ClipData
+                                                    .newPlainText("friendKey", item.message);
+                                            clipboard.setPrimaryClip(clip);
+                                        }
                                         break;
                                 }
                                 dialog.cancel();
