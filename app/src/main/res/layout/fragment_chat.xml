@@ -35,7 +35,7 @@
             android:imeOptions="actionSend"
             android:minLines="2"
             android:maxLines="4"
-            android:inputType="textShortMessage|textCapSentences|textMultiLine"
+            android:inputType="textShortMessage|textCapSentences|textMultiLine|textAutoCorrect"
             android:textSize="@dimen/text_medium"
             android:gravity="center_vertical"
             android:textColor="@color/black"
