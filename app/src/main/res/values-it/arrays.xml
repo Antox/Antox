@@ -6,4 +6,9 @@
         <item>Offline</item>
         <item>Bloccati</item>
     </string-array>
+    
+    <string-array name="themes">
+        <item>Normale</item>
+        <item>Scuro (per schermi AMOLED)</item>
+    </string-array>
 </resources>
