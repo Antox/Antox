@@ -30,7 +30,6 @@ import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import im.tox.QR.IntentIntegrator;
@@ -42,7 +41,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
-import im.tox.antox.utils.GroupItem;
 
 /**
  * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public

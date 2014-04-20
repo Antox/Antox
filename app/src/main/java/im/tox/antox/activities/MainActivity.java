@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,7 +22,6 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,11 +30,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -48,12 +42,9 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -63,8 +54,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -82,7 +71,6 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
-import im.tox.jtoxcore.ToxUserStatus;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -96,17 +84,13 @@ public class MainActivity extends ActionBarActivity{
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
 
-    private Intent startToxIntent;
-
     public LeftPaneAdapter leftPaneAdapter;
 
 
     public SlidingPaneLayout pane;
     public ChatFragment chat;
     private ContactsFragment contacts;
-    private IntentFilter filter;
     private boolean tempRightPaneActive;
-    MenuItem ag;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
@@ -119,7 +103,6 @@ public class MainActivity extends ActionBarActivity{
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
-    private PaneListener paneListener;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -325,7 +308,7 @@ public class MainActivity extends ActionBarActivity{
             db.setAllOffline();
             db.close();
 
-            startToxIntent = new Intent(this, ToxDoService.class);
+            Intent startToxIntent = new Intent(this, ToxDoService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
 
@@ -378,7 +361,7 @@ public class MainActivity extends ActionBarActivity{
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        paneListener = new PaneListener();
+        PaneListener paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -466,7 +449,7 @@ public class MainActivity extends ActionBarActivity{
         return counter;
     }
 
-    public void updateGroupsList() {
+    void updateGroupsList() {
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         ArrayList<String> groups = new ArrayList<String>();
@@ -635,7 +618,7 @@ public class MainActivity extends ActionBarActivity{
                     boolean exists = false;
                     for (int i = 0; i < friends_list.length; i++) {
                         if (friends_list[i].friendGroup.equals(group)) {
-                            if (exists == false) {
+                            if (!exists) {
                                 LeftPaneItem friends_header;
                                 if (group.equals("Friends")) {
                                     friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
@@ -731,7 +714,7 @@ public class MainActivity extends ActionBarActivity{
         super.onResume();
         Log.i(TAG, "onResume");
         toxSingleton.rightPaneActive = tempRightPaneActive;
-        filter = new IntentFilter(Constants.BROADCAST_ACTION);
+        IntentFilter filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         if (toxSingleton.activeFriendKey != null) {
             updateChat(toxSingleton.activeFriendKey);
@@ -792,17 +775,12 @@ public class MainActivity extends ActionBarActivity{
         }
     }
 
-    private void addFriendToGroup() {
-        Log.v("Add friend to group method", "To implement");
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        ag = menu.add(666, 100, 100, R.string.add_to_group);
+        MenuItem ag = menu.add(666, 100, 100, R.string.add_to_group);
         ag.setIcon(R.drawable.ic_action_add_group).setVisible(false);
         final MenuItem menuItem = menu.findItem(R.id.search_friend);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -845,7 +823,7 @@ public class MainActivity extends ActionBarActivity{
         return toxSingleton.toxStarted;
     }
 
-    public void showAlertDialog(Context context, String title, String message) {
+    void showAlertDialog(Context context, String title, String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
@@ -861,8 +839,6 @@ public class MainActivity extends ActionBarActivity{
     // Downloads the the first working DHT node
     private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
         final String[] nodeDetails = new String[7];
-
-
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -995,7 +971,7 @@ public class MainActivity extends ActionBarActivity{
         }
 
         private class PingServers implements Callable<int[]> {
-            int number;
+            final int number;
 
             public PingServers(int i) {
                 this.number = i;
