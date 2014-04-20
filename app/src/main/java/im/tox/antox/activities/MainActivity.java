@@ -512,6 +512,8 @@ public class MainActivity extends ActionBarActivity{
         actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
 
         if (toxSingleton.rightPaneActive) {
+            supportInvalidateOptionsMenu();
+
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
