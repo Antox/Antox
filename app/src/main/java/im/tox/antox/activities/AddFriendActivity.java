@@ -372,7 +372,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             String user = params[0].substring(0, params[0].indexOf("@"));
             String domain = params[0].substring(params[0].indexOf("@")+1);
             String lookup = user + "._tox." + domain;
-            Log.d("DNSLOOKUP", lookup);
 
             TXTRecord txt = null;
             try {
@@ -384,19 +383,15 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
             if(txt != null) {
                 String txtString = txt.toString().substring(txt.toString().indexOf('"'));
-                Log.d("DNSLOOKUP", txtString);
 
                 if(txtString.contains("tox1")) {
                     String key = txtString.substring(11, txtString.length()-1);
-                    Log.d("DNSLOOKUP", "V1KEY: " + key);
                     _friendID = key;
 
                 } else if (txtString.contains("tox2")) {
                     isV2 = true;
                     String key = txtString.substring(12, 12+64);
                     String check = txtString.substring(12+64+7,12+64+7+4);
-                    Log.d("DNSLOOKUP", "V2KEY: " + key);
-                    Log.d("DNSLOOKUP", "V2CHECK: " + check);
                     _friendID = key;
                     _friendCHECK = check;
                 }
