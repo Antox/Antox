@@ -64,13 +64,6 @@ public class ChatFragment extends Fragment {
         db.close();
     }
 
-
-    public void setContact(int position, String contact) {
-        if (contact != null) {
-
-        }
-    }
-
     public void updateChat(ArrayList<Message> messages) {
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
         if(!db.isFriendBlocked(toxSingleton.activeFriendKey)) {
@@ -85,7 +78,6 @@ public class ChatFragment extends Fragment {
             }
         }
     }
-
 
     @SuppressWarnings("deprecation")
     @Override
