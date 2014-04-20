@@ -213,7 +213,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
     public void addFriend(View view) {
 
-        if(friendID.getText().toString().contains("@")) {
+        if(friendID.getText().toString().contains("@") || friendID.getText().length() != 76) {
             _originalUsername = friendID.getText().toString();
             // Get the first TXT record
             try {
@@ -369,9 +369,17 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     private class DNSLookup extends AsyncTask<String, Void, Void> {
         protected Void doInBackground(String... params) {
 
-            String user = params[0].substring(0, params[0].indexOf("@"));
-            String domain = params[0].substring(params[0].indexOf("@")+1);
-            String lookup = user + "._tox." + domain;
+            // If just a username was passed and not a full domain
+            String user, domain, lookup;
+            if(!params[0].contains("@")) {
+                user = params[0];
+                domain = "toxme.se";
+                lookup = user + "._tox." + domain;
+            } else {
+                user = params[0].substring(0, params[0].indexOf("@"));
+                domain = params[0].substring(params[0].indexOf("@") + 1);
+                lookup = user + "._tox." + domain;
+            }
 
             TXTRecord txt = null;
             try {
