@@ -23,7 +23,6 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 
 	@Override
 	public void execute(AntoxFriend friend, String message) {
-        Log.d(TAG, "OnMessageCallback received");
 		Intent intent = new Intent(this.ctx, ToxService.class);
         intent.setAction(Constants.ON_MESSAGE);
 		intent.putExtra(MESSAGE, message);

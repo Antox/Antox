@@ -187,7 +187,6 @@ public class ContactsFragment extends Fragment {
                         .setCancelable(true)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
-                                Log.d("picked", "" + items[index]);
                                 //item.first equals the key
                                 if(isFriendRequest){
                                     switch (index){
@@ -295,7 +294,6 @@ public class ContactsFragment extends Fragment {
                                             break;
                                         case 2:
                                             //Delete friend
-                                            Log.d("ContactsFragment","Delete Friend selected");
                                             if (!key.equals("")) {
                                                 showAlertDialog(getActivity(),key);
                                             }

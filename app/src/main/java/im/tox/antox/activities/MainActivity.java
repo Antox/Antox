@@ -129,8 +129,6 @@ public class MainActivity extends ActionBarActivity{
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
-                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
-
                     updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
@@ -157,7 +155,6 @@ public class MainActivity extends ActionBarActivity{
 
 
     public void updateChat(String key) {
-        Log.d(TAG, "updating chat");
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
@@ -336,7 +333,6 @@ public class MainActivity extends ActionBarActivity{
             //String[] items = getResources().getStringArray(R.array.actions);
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.d("NavigationItemSelected", groups.get(itemPosition));
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 if (itemPosition != settingsPref.getInt("group_option", -1)) {
                     SharedPreferences.Editor editor = settingsPref.edit();
@@ -499,7 +495,6 @@ public class MainActivity extends ActionBarActivity{
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.d("NavigationItemSelected", groupsClone.get(itemPosition));
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 if (itemPosition != settingsPref.getInt("group_option", -1)) {
                     SharedPreferences.Editor editor = settingsPref.edit();
@@ -912,8 +907,6 @@ public class MainActivity extends ActionBarActivity{
             }
 
             Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-            Log.d(TAG, "About to ping servers...");
-
             /**
              * Ping servers to find quickest connection - Threading this would be goood
              */

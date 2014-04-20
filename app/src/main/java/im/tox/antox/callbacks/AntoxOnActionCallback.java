@@ -20,7 +20,6 @@ public class AntoxOnActionCallback implements OnActionCallback<AntoxFriend> {
 
     @Override
     public void execute(AntoxFriend friend, String action) {
-        Log.d(TAG, "OnActionCallback received");
     }
 
 }

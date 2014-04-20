@@ -381,7 +381,6 @@ public class AntoxDB extends SQLiteOpenHelper {
                 String note = cursor.getString(4);
                 String alias = cursor.getString(5);
                 int online = cursor.getInt(6);
-                Log.d("DB", online + "");
                 boolean isBlocked = cursor.getInt(7)>0;
                 String group = cursor.getString(8);
 
@@ -499,7 +498,6 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         String selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
-        Log.d("DB", selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {

@@ -117,7 +117,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
 
-            Log.d(TAG, "About to ping servers...");
             /**
              * Ping servers to find quickest connection
              */
