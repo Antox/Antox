@@ -53,10 +53,18 @@ import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -927,39 +935,51 @@ public class MainActivity extends ActionBarActivity{
                 e.printStackTrace();
             }
 
+            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
             Log.d(TAG, "About to ping servers...");
+
             /**
              * Ping servers to find quickest connection - Threading this would be goood
              */
-            long shortestTime = 99999;
+            int times[][] = new int[DhtNode.ipv4.size()][1];
+
+            // Initialise array
+            for(int i = 0; i < DhtNode.ipv4.size(); i++)
+                    times[i][0] = 500;
+
+            final ExecutorService service;
+            // Create a thread pool equal to the amount of nodes
+            service = Executors.newFixedThreadPool(DhtNode.ipv4.size());
+            List<Future<int[]>> list = new ArrayList<Future<int[]>>();
+            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                Callable<int[]> worker = new PingServers(i);
+                Future<int[]> submit = service.submit(worker);
+                list.add(submit);
+            }
+
+            // Get all the times back from the threads
+            for(Future<int[]> future : list) {
+                try {
+                    int tmp[] = future.get();
+                    times[tmp[0]][0] = tmp[1];
+                } catch(ExecutionException e) {
+                    e.printStackTrace();
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Find shortest time
+            int shortest = 500;
             int pos = -1;
-            Socket socket = null;
-            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-            for(int i = 0;i < DhtNode.ipv4.size(); i++) {
-                try {
-                    long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
-                    long elapsedTime = System.currentTimeMillis() - currentTime;
-                    if (reachable && (elapsedTime < shortestTime)) {
-                        shortestTime = elapsedTime;
-                        pos = i;
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    e.printStackTrace();
+            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                if(times[i][0] < shortest) {
+                    shortest = times[i][0];
+                    pos = i;
                 }
             }
 
-            if(socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-             /* Move quickest node to front of list */
+            // Move shortest node to front
             if(pos != -1) {
                 DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
                 DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
@@ -970,7 +990,32 @@ public class MainActivity extends ActionBarActivity{
                 Log.d(TAG, "DHT Nodes have been sorted");
                 DhtNode.sorted = true;
             }
+
             return null;
+        }
+
+        private class PingServers implements Callable<int[]> {
+            int number;
+
+            public PingServers(int i) {
+                this.number = i;
+            }
+
+            public int[] call() {
+                int result[] = { number, 500 };
+                try {
+                    long currentTime = System.currentTimeMillis();
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(number)).isReachable(400);
+                    long elapsedTime = System.currentTimeMillis() - currentTime;
+                    if(reachable)
+                        result[1] = (int)elapsedTime;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    e.printStackTrace();
+                }
+
+                return result;
+            }
         }
 
         @Override
