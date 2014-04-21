@@ -165,6 +165,9 @@ public class SettingsActivity extends ActionBarActivity
             case "Український":
                 languageSpinner.setSelection(10);
                 break;
+            case "Português":
+                languageSpinner.setSelection(11);
+                break;
             default:
                 break;
         }
@@ -257,6 +260,9 @@ public class SettingsActivity extends ActionBarActivity
                     break;
                 case "Український":
                     locale = new Locale("uk");
+                    break;
+                case "Português":
+                    locale = new Locale("pt");
                     break;
                 default:
                     break;
