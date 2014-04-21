@@ -30,7 +30,6 @@ import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import im.tox.QR.IntentIntegrator;
@@ -42,7 +41,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
-import im.tox.antox.utils.GroupItem;
 
 /**
  * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
@@ -215,7 +213,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
     public void addFriend(View view) {
 
-        if(friendID.getText().toString().contains("@")) {
+        if(friendID.getText().toString().contains("@") || friendID.getText().length() != 76) {
             _originalUsername = friendID.getText().toString();
             // Get the first TXT record
             try {
@@ -371,10 +369,17 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     private class DNSLookup extends AsyncTask<String, Void, Void> {
         protected Void doInBackground(String... params) {
 
-            String user = params[0].substring(0, params[0].indexOf("@"));
-            String domain = params[0].substring(params[0].indexOf("@")+1);
-            String lookup = user + "._tox." + domain;
-            Log.d("DNSLOOKUP", lookup);
+            // If just a username was passed and not a full domain
+            String user, domain, lookup;
+            if(!params[0].contains("@")) {
+                user = params[0];
+                domain = "toxme.se";
+                lookup = user + "._tox." + domain;
+            } else {
+                user = params[0].substring(0, params[0].indexOf("@"));
+                domain = params[0].substring(params[0].indexOf("@") + 1);
+                lookup = user + "._tox." + domain;
+            }
 
             TXTRecord txt = null;
             try {
@@ -386,19 +391,15 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
             if(txt != null) {
                 String txtString = txt.toString().substring(txt.toString().indexOf('"'));
-                Log.d("DNSLOOKUP", txtString);
 
                 if(txtString.contains("tox1")) {
                     String key = txtString.substring(11, txtString.length()-1);
-                    Log.d("DNSLOOKUP", "V1KEY: " + key);
                     _friendID = key;
 
                 } else if (txtString.contains("tox2")) {
                     isV2 = true;
                     String key = txtString.substring(12, 12+64);
                     String check = txtString.substring(12+64+7,12+64+7+4);
-                    Log.d("DNSLOOKUP", "V2KEY: " + key);
-                    Log.d("DNSLOOKUP", "V2CHECK: " + check);
                     _friendID = key;
                     _friendCHECK = check;
                 }

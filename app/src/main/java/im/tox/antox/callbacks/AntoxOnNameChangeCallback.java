@@ -24,11 +24,9 @@ public class AntoxOnNameChangeCallback implements OnNameChangeCallback<AntoxFrie
 
     @Override
     public void execute(AntoxFriend friend, String newName) {
-        Log.d(TAG, "OnNameChangeCallback received");
         AntoxDB db = new AntoxDB(ctx);
         db.updateFriendName(friend.getId(), newName);
         db.close();
-        Log.d(TAG, "OnNameChangeCallback id: " + friend.getId() + " name: " + newName);
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);

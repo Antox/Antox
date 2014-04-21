@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,7 +22,6 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.app.ActionBar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,11 +30,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.Jsoup;
@@ -48,15 +42,18 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -74,7 +71,6 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
-import im.tox.jtoxcore.ToxUserStatus;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -88,17 +84,13 @@ public class MainActivity extends ActionBarActivity{
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
 
-    private Intent startToxIntent;
-
     public LeftPaneAdapter leftPaneAdapter;
 
 
     public SlidingPaneLayout pane;
     public ChatFragment chat;
     private ContactsFragment contacts;
-    private IntentFilter filter;
     private boolean tempRightPaneActive;
-    MenuItem ag;
 
     /**
      * Stores all friend details and used by the contactsAdapter for displaying
@@ -111,7 +103,6 @@ public class MainActivity extends ActionBarActivity{
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
-    private PaneListener paneListener;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -138,8 +129,6 @@ public class MainActivity extends ActionBarActivity{
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
-                    Log.d(TAG, "UPDATE_MESSAGES, intent key = " + intent.getStringExtra("key") + ", activeFriendKey = " + toxSingleton.activeFriendKey);
-
                     updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
@@ -166,7 +155,6 @@ public class MainActivity extends ActionBarActivity{
 
 
     public void updateChat(String key) {
-        Log.d(TAG, "updating chat");
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
@@ -317,7 +305,7 @@ public class MainActivity extends ActionBarActivity{
             db.setAllOffline();
             db.close();
 
-            startToxIntent = new Intent(this, ToxDoService.class);
+            Intent startToxIntent = new Intent(this, ToxDoService.class);
             startToxIntent.setAction(Constants.START_TOX);
             this.startService(startToxIntent);
 
@@ -345,7 +333,6 @@ public class MainActivity extends ActionBarActivity{
             //String[] items = getResources().getStringArray(R.array.actions);
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.d("NavigationItemSelected", groups.get(itemPosition));
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 if (itemPosition != settingsPref.getInt("group_option", -1)) {
                     SharedPreferences.Editor editor = settingsPref.edit();
@@ -370,7 +357,7 @@ public class MainActivity extends ActionBarActivity{
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-        paneListener = new PaneListener();
+        PaneListener paneListener = new PaneListener();
         pane.setPanelSlideListener(paneListener);
         pane.openPane();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
@@ -458,7 +445,7 @@ public class MainActivity extends ActionBarActivity{
         return counter;
     }
 
-    public void updateGroupsList() {
+    void updateGroupsList() {
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         ArrayList<String> groups = new ArrayList<String>();
@@ -508,7 +495,6 @@ public class MainActivity extends ActionBarActivity{
         ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
             @Override
             public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                Log.d("NavigationItemSelected", groupsClone.get(itemPosition));
                 SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
                 if (itemPosition != settingsPref.getInt("group_option", -1)) {
                     SharedPreferences.Editor editor = settingsPref.edit();
@@ -526,6 +512,8 @@ public class MainActivity extends ActionBarActivity{
         actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
 
         if (toxSingleton.rightPaneActive) {
+            supportInvalidateOptionsMenu();
+
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(activeTitle);
@@ -627,7 +615,7 @@ public class MainActivity extends ActionBarActivity{
                     boolean exists = false;
                     for (int i = 0; i < friends_list.length; i++) {
                         if (friends_list[i].friendGroup.equals(group)) {
-                            if (exists == false) {
+                            if (!exists) {
                                 LeftPaneItem friends_header;
                                 if (group.equals("Friends")) {
                                     friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
@@ -723,7 +711,7 @@ public class MainActivity extends ActionBarActivity{
         super.onResume();
         Log.i(TAG, "onResume");
         toxSingleton.rightPaneActive = tempRightPaneActive;
-        filter = new IntentFilter(Constants.BROADCAST_ACTION);
+        IntentFilter filter = new IntentFilter(Constants.BROADCAST_ACTION);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
         if (toxSingleton.activeFriendKey != null) {
             updateChat(toxSingleton.activeFriendKey);
@@ -784,17 +772,12 @@ public class MainActivity extends ActionBarActivity{
         }
     }
 
-    private void addFriendToGroup() {
-        Log.v("Add friend to group method", "To implement");
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        ag = menu.add(666, 100, 100, R.string.add_to_group);
+        MenuItem ag = menu.add(666, 100, 100, R.string.add_to_group);
         ag.setIcon(R.drawable.ic_action_add_group).setVisible(false);
         final MenuItem menuItem = menu.findItem(R.id.search_friend);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
@@ -837,7 +820,7 @@ public class MainActivity extends ActionBarActivity{
         return toxSingleton.toxStarted;
     }
 
-    public void showAlertDialog(Context context, String title, String message) {
+    void showAlertDialog(Context context, String title, String message) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
@@ -853,8 +836,6 @@ public class MainActivity extends ActionBarActivity{
     // Downloads the the first working DHT node
     private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
         final String[] nodeDetails = new String[7];
-
-
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -882,60 +863,94 @@ public class MainActivity extends ActionBarActivity{
             } catch (UnknownHostException e) {
                 // If for some reason website is down, add some known values
                 DhtNode.ipv4.add("192.254.75.98");
-                DhtNode.ipv4.add("107.161.21.13");
-                DhtNode.ipv4.add("144.76.60.215");
-                DhtNode.port.add("33445");
-                DhtNode.port.add("33445");
+                DhtNode.ipv6.add("2607:5600:284::2");
+                DhtNode.location.add("US");
+                DhtNode.owner.add("stqism");
                 DhtNode.port.add("33445");
                 DhtNode.key.add("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
-                DhtNode.key.add("5848E6344856921AAF28DAB860C5816780FE0C8873AAC415C1B7FA7FAA4EF046");
+
+                DhtNode.ipv4.add("144.76.60.215");
+                DhtNode.ipv6.add("2a01:4f8:191:64d6::1");
+                DhtNode.location.add("DE");
+                DhtNode.owner.add("sonofra");
+                DhtNode.port.add("33445");
                 DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
+
+                DhtNode.ipv4.add("37.187.46.132");
+                DhtNode.ipv6.add("2001:41d0:0052:0300::0507");
+                DhtNode.location.add("FR");
+                DhtNode.owner.add("mouseym");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("C021232F9AC83914A45DFCF242129B216FED5ED34683F385D932A66BC9178270");
+
+                DhtNode.ipv4.add("109.169.46.133");
                 DhtNode.ipv6.add("");
+                DhtNode.location.add("UK");
+                DhtNode.owner.add("astonex");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("7F31BFC93B8E4016A902144D0B110C3EA97CB7D43F1C4D21BCAE998A7C838821");
+
+                DhtNode.ipv4.add("54.199.139.199");
                 DhtNode.ipv6.add("");
+                DhtNode.location.add("JP");
+                DhtNode.owner.add("aitjcize");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("7F9C31FE850E97CEFD4C4591DF93FC757C7C12549DDD55F8EEAECC34FE76C029");
+
+                DhtNode.ipv4.add("31.192.105.19");
                 DhtNode.ipv6.add("");
-                DhtNode.owner.add("");
-                DhtNode.owner.add("");
-                DhtNode.owner.add("");
-                DhtNode.location.add("");
-                DhtNode.location.add("");
-                DhtNode.location.add("");
+                DhtNode.location.add("RU");
+                DhtNode.owner.add("zlacki");
+                DhtNode.port.add("33445");
+                DhtNode.key.add("D59F99384592DE4C8AB9D534D5197DB90F4755CC9E975ED0C565E18468A1445B");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            Log.d(TAG, "About to ping servers...");
+            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
             /**
              * Ping servers to find quickest connection - Threading this would be goood
              */
-            long shortestTime = 99999;
+            int times[][] = new int[DhtNode.ipv4.size()][1];
+
+            // Initialise array
+            for(int i = 0; i < DhtNode.ipv4.size(); i++)
+                    times[i][0] = 500;
+
+            final ExecutorService service;
+            // Create a thread pool equal to the amount of nodes
+            service = Executors.newFixedThreadPool(DhtNode.ipv4.size());
+            List<Future<int[]>> list = new ArrayList<Future<int[]>>();
+            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                Callable<int[]> worker = new PingServers(i);
+                Future<int[]> submit = service.submit(worker);
+                list.add(submit);
+            }
+
+            // Get all the times back from the threads
+            for(Future<int[]> future : list) {
+                try {
+                    int tmp[] = future.get();
+                    times[tmp[0]][0] = tmp[1];
+                } catch(ExecutionException e) {
+                    e.printStackTrace();
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Find shortest time
+            int shortest = 500;
             int pos = -1;
-            Socket socket = null;
-            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-            for(int i = 0;i < DhtNode.ipv4.size(); i++) {
-                try {
-                    long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(i)).isReachable(400);
-                    long elapsedTime = System.currentTimeMillis() - currentTime;
-                    if (reachable && (elapsedTime < shortestTime)) {
-                        shortestTime = elapsedTime;
-                        pos = i;
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    e.printStackTrace();
+            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                if(times[i][0] < shortest) {
+                    shortest = times[i][0];
+                    pos = i;
                 }
             }
 
-            if(socket != null) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-             /* Move quickest node to front of list */
+            // Move shortest node to front
             if(pos != -1) {
                 DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
                 DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
@@ -946,7 +961,32 @@ public class MainActivity extends ActionBarActivity{
                 Log.d(TAG, "DHT Nodes have been sorted");
                 DhtNode.sorted = true;
             }
+
             return null;
+        }
+
+        private class PingServers implements Callable<int[]> {
+            final int number;
+
+            public PingServers(int i) {
+                this.number = i;
+            }
+
+            public int[] call() {
+                int result[] = { number, 500 };
+                try {
+                    long currentTime = System.currentTimeMillis();
+                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(number)).isReachable(400);
+                    long elapsedTime = System.currentTimeMillis() - currentTime;
+                    if(reachable)
+                        result[1] = (int)elapsedTime;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    e.printStackTrace();
+                }
+
+                return result;
+            }
         }
 
         @Override
