@@ -66,13 +66,11 @@ public class ToxDoService extends IntentService {
             }
 
             try {
-                Log.d(TAG, "Handling intent START_TOX");
                 toxSingleton.initTox(getApplicationContext());
 
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 ArrayList<FriendRequest> friendRequests = db.getFriendRequestsList();
                 toxSingleton.friend_requests = friendRequests;
-                Log.d(TAG, "Loaded requests from database");
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_LEFT_PANE);
@@ -86,7 +84,6 @@ public class ToxDoService extends IntentService {
                 toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
 
                 if(friends.size() > 0) {
-                    Log.d(TAG, "Adding friends to tox friendlist");
                     for (int i = 0; i < friends.size(); i++) {
                         try {
                             toxSingleton.jTox.confirmRequest(friends.get(i).friendKey);
@@ -166,7 +163,6 @@ public class ToxDoService extends IntentService {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
             }
-            Log.d("Service", "Start do_tox");
             toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 20, TimeUnit.MILLISECONDS);
             toxSingleton.toxStarted = true;
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
