@@ -24,11 +24,9 @@ public class AntoxOnStatusMessageCallback implements OnStatusMessageCallback<Ant
 
     @Override
     public void execute(AntoxFriend friend, String newStatus) {
-        Log.d(TAG, "OnStatusMessageCallback received");
         AntoxDB db = new AntoxDB(ctx);
         db.updateStatusMessage(friend.getId(), newStatus);
         db.close();
-        Log.d(TAG, "OnStatusMessageCallback id: " + friend.getId() + " status: " + newStatus);
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);

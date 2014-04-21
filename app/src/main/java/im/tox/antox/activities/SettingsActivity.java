@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,7 +64,10 @@ public class SettingsActivity extends ActionBarActivity
      */
     private Spinner themeSpinner;
 
-
+    /**
+     * Checkbox for sending typing indicators
+     */
+    private CheckBox indicatorBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,13 @@ public class SettingsActivity extends ActionBarActivity
             default:
                 break;
         }
+
+        indicatorBox = (CheckBox) findViewById(R.id.settings_typing_indicators_box);
+        String indicators = pref.getString("indicators", "");
+        if(indicators.equals("0"))
+            indicatorBox.setChecked(false);
+        else
+            indicatorBox.setChecked(true);
     }
 
     /**
@@ -262,6 +271,12 @@ public class SettingsActivity extends ActionBarActivity
             setResult(RESULT_OK - 1);
         }
 
+        // Update typing indicators
+        boolean indicators = indicatorBox.isChecked();
+        if(indicators)
+            editor.putString("indicators", "1");
+        else
+            editor.putString("indicators", "0");
 
         editor.commit();
 

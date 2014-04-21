@@ -70,7 +70,6 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.ON_MESSAGE:
-                Log.d(TAG, "Constants.ON_MESSAGE");
                 String key = intent.getStringExtra(AntoxOnMessageCallback.KEY);
                 String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
                 String name = toxSingleton.friendsList.getById(key).getName();
@@ -87,7 +86,7 @@ public class ToxService extends IntentService {
             /* Notifications */
                 if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
                         && !(toxSingleton.leftPaneActive)) {
-                    Log.d(TAG, "right pane active = " + toxSingleton.rightPaneActive + ", activeFriendkey = " + toxSingleton.activeFriendKey + ", key = " + key);
+
                 /* Notification */
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
@@ -122,7 +121,6 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.DELETE_FRIEND:
-                Log.d(TAG, "Constants.DELETE_FRIEND");
                 key = intent.getStringExtra("key");
                 boolean wasException = false;
                 // Remove friend from tox friend list
@@ -136,7 +134,6 @@ public class ToxService extends IntentService {
                         Log.d(TAG, e.getError().toString());
                         e.printStackTrace();
                     }
-                    Log.d(TAG, "Friend deleted from tox list. New size: " + toxSingleton.friendsList.all().size());
                     if (!wasException) {
                         //Delete friend from list
                         toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
@@ -150,7 +147,6 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.DELETE_FRIEND_AND_CHAT:
-                Log.d(TAG, "Constants.DELETE_FRIEND");
                 key = intent.getStringExtra("key");
                 wasException = false;
                 // Remove friend from tox friend list
@@ -164,7 +160,6 @@ public class ToxService extends IntentService {
                         Log.d(TAG, e.getError().toString());
                         e.printStackTrace();
                     }
-                    Log.d(TAG, "Friend deleted from tox list. New size: " + toxSingleton.friendsList.all().size());
                     if (!wasException) {
                         //Delete friend from list
                         toxSingleton.friendsList.removeFriend(friend.getFriendnumber());
@@ -178,10 +173,8 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.SEND_UNSENT_MESSAGES:
-                Log.d(TAG, "Constants.SEND_UNSENT_MESSAGES");
                 db = new AntoxDB(getApplicationContext());
                 ArrayList<Message> unsentMessageList = db.getUnsentMessageList();
-                Log.d(TAG, "unsent message list size is " + unsentMessageList.size());
                 for (int i = 0; i<unsentMessageList.size(); i++) {
                     friend = null;
                     int id = unsentMessageList.get(i).message_id;
@@ -195,7 +188,6 @@ public class ToxService extends IntentService {
                     }
                     try {
                         if (friend != null) {
-                            Log.d(TAG, "Sending message to " + friend.getName());
                             toxSingleton.jTox.sendMessage(friend, message, id);
                         }
                     } catch (ToxException e) {
@@ -218,7 +210,6 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.SEND_MESSAGE:
-                Log.d(TAG, "Constants.SEND_MESSAGE");
                 key = intent.getStringExtra("key");
                 message = intent.getStringExtra("message");
             /* Send message */
@@ -233,7 +224,6 @@ public class ToxService extends IntentService {
                 }
                 try {
                     if (friend != null) {
-                        Log.d(TAG, "Sending message to " + friend.getName());
                         toxSingleton.jTox.sendMessage(friend, message, id);
                     }
                 } catch (ToxException e) {
@@ -264,7 +254,6 @@ public class ToxService extends IntentService {
                 break;
 
             case Constants.FRIEND_REQUEST:
-                Log.d(TAG, "Constants.FRIEND_REQUEST");
                 key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
                 message = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
             /* Add friend request to arraylist */
@@ -321,7 +310,6 @@ public class ToxService extends IntentService {
                 db = new AntoxDB(getApplicationContext());
                 key = db.setMessageReceived(receipt);
                 db.close();
-                Log.d("DELIVERY RECEIPT FOR KEY: ", key);
             /* Broadcast */
                 notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);
@@ -354,11 +342,6 @@ public class ToxService extends IntentService {
                     }
 
                     toxSingleton.jTox.save();
-                    Log.d(TAG, "Saving request");
-
-                    Log.d(TAG, "Tox friend list updated. New size: " + toxSingleton.friendsList.all().size());
-
-
                 } catch (Exception e) {
 
                 }

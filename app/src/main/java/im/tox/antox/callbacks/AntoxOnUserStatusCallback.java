@@ -25,11 +25,9 @@ public class AntoxOnUserStatusCallback implements OnUserStatusCallback<AntoxFrie
 
     @Override
     public void execute(AntoxFriend friend, ToxUserStatus newStatus) {
-        Log.d(TAG, "OnUserStatusCallback received");
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserStatus(friend.getId(), newStatus);
         db.close();
-        Log.d(TAG, "OnUserStatusCallback id: " + friend.getId() + " userStatus: " + newStatus.toString());
         Intent update = new Intent(Constants.BROADCAST_ACTION);
         update.putExtra("action", Constants.UPDATE);
         LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);

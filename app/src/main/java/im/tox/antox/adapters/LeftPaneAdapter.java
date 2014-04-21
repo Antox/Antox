@@ -211,7 +211,6 @@ public class LeftPaneAdapter extends BaseAdapter {
         } else {
             color = "#FFFFFF";
         }
-        Log.d("ICON", ""+i);
         return color;
     }
 

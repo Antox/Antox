@@ -13,20 +13,20 @@ Antox is an Android client for Tox. It aims to bring the full multimedia support
 4. Install the APK by either using a file manager or ADB.
 
 ###Antox on F-Droid
-To get Antox on F-Droid, add http://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Manage Repos' in F-Droid.
+To get Antox on F-Droid, add http://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Repositories' in F-Droid and click the '+' symbol in the action bar.
 
 ###Want to get Antox on Google Play?
-For those who used to test Antox on GPlay, we apologize that we will no longer be pushing alpha updates to the Play Store. Once Antox nears a public release, you will be able to find it in GPlay. Thanks to everyone who helped out!
+For those who used to test Antox on Google Play, we apologize that we will no longer be pushing alpha updates to the Play Store. Once Antox nears a public release, you will be able to find it in Google Play. Thanks to everyone who helped out!
 
 ###Known to work on
-For a list of what devices currently run Antox, visit our <a href="http://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a>
+For a list of which devices currently run Antox, visit our <a href="http://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a>
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest AS is 0.5.4
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.5.5
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.2 and 19.0.3 respectively as of writing)
-- To import the project, go to File>Import Project. Select the build.gradle file in the root of the antox folder
-- Connect your phone in developer mode and click Run in Android Studio. It will install antox on to your phone and run it automatically.
+- To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
+- Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 - Download the latest jToxcore binaries from http://jenkins.tox.im/job/jToxcore_Android/lastSuccessfulBuild/artifact/*zip*/archive.zip
 - Copy the armeabi/, armeabi-v7a/, mips/ and x86/ folders to app/src/main/jniLibs/
 - Copy jToxcore.jar to app/libs/jToxcore.jar
@@ -36,7 +36,7 @@ For a list of what devices currently run Antox, visit our <a href="http://wiki.t
 - We ask that all pull requests are well documented so that we may better understand your commits. Requests that lack documentation may be rejected.
 
 ###Submitting Bug Reports
-When submitting a bug report, please include the following:-
+When submitting a bug report, please include the following:
 - Phone Model
 - Android Version
 - Custom ROM?
