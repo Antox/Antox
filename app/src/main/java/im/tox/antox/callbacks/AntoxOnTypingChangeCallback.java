@@ -17,6 +17,5 @@ public class AntoxOnTypingChangeCallback implements OnTypingChangeCallback<Antox
     public AntoxOnTypingChangeCallback(Context ctx) { this.ctx = ctx; };
 
     public void execute(AntoxFriend friend, boolean typing) {
-        Log.d(TAG, "Typing Callback received from: " + friend.getName() + " value: " + typing);
     }
 }
