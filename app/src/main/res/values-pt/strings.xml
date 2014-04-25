@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_welcome">Bem-vindo</string>
+    <string name="title_activity_add_friend">Adicionar amigo</string>
+    <string name="title_activity_settings">Definições</string>
+    <string name="title_activity_profile">Perfil</string>
+    <string name="title_activity_about">Sobre</string>
+    <string name="title_activity_friend_profile">Perfil</string>
+    <string name="title_activity_manage_groups">Gerir grupos</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="action_settings">Definições</string>
+    <string name="action_exit">Sair</string>
+    <string name="add_friend">Adicionar amigo</string>
+    <string name="search_friend">Procurar</string>
+    <string name="action_profile">Perfil</string>
+    <string name="action_about">Sobre</string>
+    <string name="add_to_group">Adicionar a um grupo</string>
+    <string name="manage_groups">Gerir grupos</string>
+
+    <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Nome de utilizador</string>
+    <string name="main_status">Estado</string>
+    <string name="icon_description">Estado da ligação</string>
+    <string name="main_no_friends">Não tem nenhum amigo!</string>
+    <string name="main_try_adding">Adicione alguns amigos para começar</string>
+    <string name="main_friend_requests">Pedidos de amigo</string>
+    <string name="main_friends">Amigos</string>
+    <string name="main_no_internet">Sem ligação à Internet</string>
+    <string name="main_not_connected">
+        Nenhuma ligação à Internet foi detetada. Sem uma ligação à Internet estará limitado em
+        termos de funcionalidades.
+    </string>
+    <string name="main_node_list_download_error">Erro ao descarregar a lista de nós.</string>
+
+    <!-- About Activity -->
+    <string name="about_details">O Antox é um cliente Android para o Tox</string>
+    <string name="about_bugs">Para reportar um bug, por favor visite a nossa página GitHub e clique em \"issues\".</string>
+    <string name="about_github_url">https://github.com/Astonex/Antox</string>
+    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
+    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
+    <string name="about_irc">Nós estamos no Freenode no canal #tox-dev</string>
+    <string name="about_version">Versão</string>
+
+    <!--  Chat Activity -->
+    <string name="chat_enter_message">Enviar uma mensagem</string>
+
+
+    <!-- Settings Activity -->
+    <string name="about_string">Este cliente ainda está em pre-alpha.</string>
+    <string name="getstarted_string">Insira o nome desejado</string>
+    <string name="settings_custom_dht">Definições personalizadas DHT</string>
+    <string name="settings_use_custom_dht">Usar definições personalizadas DHT</string>
+    <string name="settings_user_key_title">O teu ID Tox</string>
+    <string name="settings_name_hint">Nome de utilizador</string>
+    <string name="settings_note_hint">Mensagem de estado</string>
+    <string name="settings_dht_ip">Endereço IP do nó inicial (ex: 192.254.75.98)</string>
+    <string name="settings_dht_port">Endereço do Porto do nó inicial (ex: 33445)</string>
+    <string name="settings_dht_key">Chave pública do nó inicial (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_button">Atualizar</string>
+    <string name="settings_updated">As suas definições foram atualizadas</string>
+    <string name="settings_dht_spinner_title">Definições avançadas</string>
+    <string name="settings_language_title">Língua</string>
+    <string name="settings_status_title">Estado</string>
+    <string name="settings_note_title">Estado de espírito</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_username_title">Nome de utilizador</string>
+    <string name="settings_empty_strings">Tem que preencher todos os campos</string>
+    <string name="settings_invalid_key">A chave inserida é inválida</string>
+    <string name="settings_send_typing_indicators">Enviar indicador de escrita</string>
+    <string name="developer_string">Criado com amor pela equipa de desenvolvimento Tox</string>
+    <string name="welcome_must_select_username">Tem que definir um nome</string>
+
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">Insira o Tox ID do seu amigo</string>
+    <string name="addfriend_friend_message">Enviar uma mensagem com o seu pedido</string>
+    <string name="addfriend_button">Adicionar amigo</string>
+    <string name="addfriend_friend_added">Amigo adicionado</string>
+    <string name="addfriend_friend_exists">O amigo que deseja adicionar já existe</string>
+    <string name="scanqr_button">Fazer Scan a um código QR</string>
+    <string name="invalid_friend_ID">Tox ID inválido</string>
+    <string name="addfriend_nick_hint">Defina um nickname para o seu amigo</string>
+    <string name="addfriend_optional_title">Extras opcionais</string>
+    <string name="dialog_pin">Insira o pin do seu amigo</string>
+    <string name="addfriend_invalid_pin">Pin inválido</string>
+    <string name="addfriend_no_internet">Sem ligação à rede Tox</string>
+    <string name="addfriend_no_internet_text">
+        Infelizmente você não está conectado à rede Tox, logo não é possível adicionar amigos de
+        momento. Tente reiniciar a sua aplicação.
+    </string>
+
+    <!--  Profile Activity -->
+    <string name="share_with">Partilhar com</string>
+    <string name="status_online">Online</string>
+    <string name="status_away">Ausente</string>
+    <string name="status_busy">Ocupado</string>
+    <string name="profile_updated">O seu perfil foi atualizado.</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Nome</string>
+    <string name="friend_profile_nick">Nickname</string>
+    <string name="friend_profile_group">Grupo</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Estado</string>
+    <string name="friend_profile_button">Atualizar</string>
+    <string name="friend_profile_updated">O perfil foi atualizado</string>
+    <string name="friend_profile_copy">Copiar Tox ID</string>
+    <string name="friend_profile_copied">Tox ID copiado</string>
+
+    <!-- Manage Groups Activity -->
+    <string name="manage_groups_add_group">Adicionar grupo</string>
+    <string name="manage_groups_number_of_members">Número de membros: </string>
+    <string name="manage_groups_none">Nenhum</string>
+    <string name="manage_groups_dialog_add_group">Adicionar um grupo</string>
+    <string name="manage_groups_dialog_rename_group">Renomear grupo</string>
+    <string name="manage_groups_no_name">Por favor insira o nome do grupo</string>
+    <string name="manage_groups_already_exits">O grupo já existe</string>
+    <string name="manage_groups_dialog_add_button">Adicionar</string>
+    <string name="manage_groups_dialog_rename_button">Renomear</string>
+    <string name="manage_groups_dialog_cancel_button">Cancelar</string>
+    <string name="manage_groups_no_delete_friends">O grupo "Amigos" é o grupo por defeito. Este não pode ser modificado.</string>
+    <string name="manage_groups_rename_group">Renomear</string>
+    <string name="manage_groups_delete_group">Apagar</string>
+    <string name="manage_groups_action_on">Ação para</string>
+    <string name="manage_groups_friends">Amigos</string>
+    <string name="manage_groups_toast_deleted">O grupo foi apagado com sucesso. Todos os utilizadores do grupo foram movidos para os Amigos.</string>
+    <string name="manage_groups_toast_renamed">O grupo foi renomeado com sucesso</string>
+    <string name="manage_groups_toast_added">O grupo foi adicionado com sucesso</string>
+
+    <!-- Friend request fragment -->
+    <string name="friendrequest_accept">Aceitar</string>
+    <string name="friendrequest_reject">Rejeitar</string>
+    <string name="friendrequest_accepted">Pedido de amigo aceite</string>
+    <string name="friendrequest_deleted">Pedido de amigo apagado</string>
+    <string name="friendrequest">Pedidos de amigo</string>
+    <string name="friendrequest_recieved">Pedido de amigo recebido</string>
+    <string name="friend_request">Novo pedido de amigo</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Perfil</string>
+    <string name="friend_action_sendfile">Enviar ficheiro</string>
+    <string name="friend_action_delete">Remover amigo</string>
+    <string name="friend_action_move_to_group">Mover para o grupo</string>
+    <string name="friend_action_block">Bloquear</string>
+    <string name="friend_action_unblock">Desbloquear</string>
+    <string name="group_action_leave">Abandonar grupo</string>
+    <string name="friend_action_deletechat">Apagar logs do chat</string>
+    <string name="friend_action_block_confirmation">
+        Ao bloquear este utilizador, este será removido da lista de amigos e não receberá mais pedidos de amigo dele.
+        De certeza que deseja continuar?
+    </string>
+    <string name="toast_succ_move_user">O utilizador foi movido com sucesso</string>
+
+    <string name="contacts_actions_on">Ações para</string>
+    <string name="contacts_clear_saved_logs">Deseja limpar os logs guardados do chat também?</string>
+
+    <!--  Misc -->
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="button_yes">Sim</string>
+    <string name="button_no">Não</string>
+    <string name="button_ok">OK</string>
+</resources>
