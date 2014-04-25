@@ -117,9 +117,7 @@ public class MainActivity extends ActionBarActivity{
             String action = intent.getStringExtra("action");
             if (action != null) {
                 Log.d(TAG, "action: " + action);
-                if (action.equals(Constants.FRIEND_REQUEST)) {
-
-                } else if (action.equals(Constants.UPDATE_LEFT_PANE)) {
+                if (action.equals(Constants.UPDATE_LEFT_PANE)) {
                     updateLeftPane();
                 } else if (action.equals(Constants.REJECT_FRIEND_REQUEST)) {
                     updateLeftPane();
@@ -140,8 +138,6 @@ public class MainActivity extends ActionBarActivity{
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
-                } else if (action.equals(Constants.FRIEND_LIST)) {
-
                 } else if (action.equals(Constants.UPDATE)) {
                     updateLeftPane();
                     if (toxSingleton.rightPaneActive) {
@@ -177,7 +173,6 @@ public class MainActivity extends ActionBarActivity{
         if (i.getAction() != null) {
             if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
                 String key = i.getStringExtra("key");
-                String name = i.getStringExtra("name");
                 Fragment newFragment = new ChatFragment();
                 toxSingleton.activeFriendKey = key;
                 toxSingleton.activeFriendRequestKey = null;
@@ -210,8 +205,6 @@ public class MainActivity extends ActionBarActivity{
         /* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
-
-        SharedPreferences settings = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -705,7 +698,7 @@ public class MainActivity extends ActionBarActivity{
     private void clearUselessNotifications () {
         AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
-                && toxSingleton.friendsList.all().size() > 0 && !db.isFriendBlocked(toxSingleton.activeFriendKey)) {
+                && toxSingleton.friendsList.all().size() > 0) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }
@@ -1043,7 +1036,6 @@ public class MainActivity extends ActionBarActivity{
         } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
             Uri uri=  data.getData();
             File pickedFile = new File(uri.getPath());
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
             Log.d("file picked",""+pickedFile.getAbsolutePath() );
             Log.d("file type",""+getContentResolver().getType(uri));
         } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
@@ -1115,8 +1107,6 @@ public class MainActivity extends ActionBarActivity{
 
             toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
-            InputMethodManager imm = (InputMethodManager)getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
         }
 
         @Override
