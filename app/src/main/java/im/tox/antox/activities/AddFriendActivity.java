@@ -389,8 +389,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 e.printStackTrace();
             }
 
-            Log.d("DNS", txt.toString());
-
             if(txt != null) {
                 String txtString = txt.toString().substring(txt.toString().indexOf('"'));
 

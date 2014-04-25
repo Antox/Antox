@@ -509,11 +509,9 @@ public class AntoxDB extends SQLiteOpenHelper {
                 if(name == null)
                     name = "";
 
-                if(name.equals("")) {
-                    int length = 7 > name.length() ? name.length() : 7;
-                    name = key.substring(0, length);
-                }
-
+                if(name.equals(""))
+                    name = key.substring(0, 7);
+                
                 details[0] = name;
                 details[1] = alias;
                 details[2] = note;
