@@ -268,6 +268,9 @@ public class MainActivity extends ActionBarActivity{
                 case "Український":
                     locale = new Locale("uk");
                     break;
+                case "Português":
+                    locale = new Locale("pt");
+                    break;
                 default:
                     break;
             }
@@ -412,6 +415,9 @@ public class MainActivity extends ActionBarActivity{
                 break;
             case "tr":
                 language = "Türkçe";
+                break;
+            case "pt":
+                language = "Português";
                 break;
             default:
                 language = "English";
