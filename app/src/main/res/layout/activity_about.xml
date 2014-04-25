@@ -1,140 +1,84 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:foregroundGravity="center_vertical">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center_vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
-        android:orientation="vertical"
-        android:weightSum="100"
-        tools:context=".WelcomeActivity" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/full_logo" />
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:paddingBottom="@dimen/margin_large"
+                  android:paddingLeft="@dimen/margin_large"
+                  android:paddingRight="@dimen/margin_large"
+                  android:paddingTop="@dimen/margin_large"
+                  android:weightSum="100"
+                  tools:context=".WelcomeActivity">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:layout_weight="90"
+            android:drawableTop="@drawable/full_logo"
             android:gravity="center"
-            android:textSize="12sp"
-            android:layout_centerInParent="true"
             android:text="@string/developer_string"
-            android:layout_weight="90" />
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/version_string"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:autoLink="web"
+            android:drawableLeft="@drawable/ic_action_github"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_github_url"
+            android:textAlignment="center"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:id="@+id/version_string" />
+            android:layout_gravity="center"
+            android:autoLink="web"
+            android:drawableLeft="@drawable/ic_action_twitter"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_twitter_url"
+            android:textAlignment="center"/>
 
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_github" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_centerInParent="true"
-                android:text="@string/about_github_url"
-                android:autoLink="web"
-                android:textAlignment="center"
-                android:layout_gravity="center" />
-            </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:autoLink="web"
+            android:drawableLeft="@drawable/ic_action_facebook"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_facebook_url"
+            android:textAlignment="center"/>
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_twitter" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_centerInParent="true"
-                android:text="@string/about_twitter_url"
-                android:autoLink="web"
-                android:textAlignment="center"
-                android:layout_gravity="center" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_action_monolog"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_irc"
+            android:textAlignment="center"/>
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_facebook" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_centerInParent="true"
-                android:text="@string/about_facebook_url"
-                android:autoLink="web"
-                android:textAlignment="center"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_monolog" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_centerInParent="true"
-                android:text="@string/about_irc"
-                android:textAlignment="center"
-                android:layout_gravity="center" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_bug" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_centerInParent="true"
-                android:text="@string/about_bugs"
-                android:textAlignment="center"
-                android:layout_gravity="bottom" />
-
-        </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:drawableLeft="@drawable/ic_action_bug"
+            android:gravity="left|center_vertical"
+            android:text="@string/about_bugs"
+            android:textAlignment="center"/>
     </LinearLayout>
-
-
 </ScrollView>
