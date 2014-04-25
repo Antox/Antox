@@ -389,11 +389,13 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 e.printStackTrace();
             }
 
+            Log.d("DNS", txt.toString());
+
             if(txt != null) {
                 String txtString = txt.toString().substring(txt.toString().indexOf('"'));
 
                 if(txtString.contains("tox1")) {
-                    String key = txtString.substring(11, txtString.length()-1);
+                    String key = txtString.substring(11, 11+76);
                     _friendID = key;
 
                 } else if (txtString.contains("tox2")) {
