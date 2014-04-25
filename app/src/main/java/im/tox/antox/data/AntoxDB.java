@@ -511,7 +511,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
                 if(name.equals(""))
                     name = key.substring(0, 7);
-                
+
                 details[0] = name;
                 details[1] = alias;
                 details[2] = note;
