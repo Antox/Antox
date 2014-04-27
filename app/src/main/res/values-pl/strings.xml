@@ -10,7 +10,7 @@
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_about">O programie</string>
     <string name="title_activity_friend_profile">Profil</string>
-    <string name="title_activity_manage_groups">Zarządzaj Grupami</string>
+    <string name="title_activity_manage_groups">Zarządzaj grupami</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Ustawienia</string>
@@ -20,7 +20,7 @@
     <string name="action_profile">Profil</string>
     <string name="action_about">O programie</string>
     <string name="add_to_group">Dodaj do grupy</string>
-    <string name="manage_groups">Zarządzaj Grupami</string>
+    <string name="manage_groups">Zarządzaj grupami</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -28,7 +28,7 @@
     <string name="main_username">Nazwa użytkownika</string>
     <string name="main_status">Status</string>
     <string name="icon_description">Status połączenia</string>
-    <string name="main_no_friends">Hej, spójrz, to nima-znajomych!</string>
+    <string name="main_no_friends">Brak znajomych</string>
     <string name="main_try_adding">Dodaj znajomych by zacząć</string>
     <string name="main_friend_requests">Zapytania znajomych</string>
     <string name="main_friends">Znajomi</string>
@@ -41,11 +41,11 @@
 
     <!-- About Activity -->
     <string name="about_details">Antox jest Androidowym klientem Toxa</string>
-    <string name="about_bugs">By zgłosić bug, proszę odwiedź naszą stronę na GitHubie i kliknij na \"issues\".</string>
+    <string name="about_bugs">Aby zgłosić błąd, odwiedź naszą stronę na GitHubie i kliknij na \"issues\".</string>
     <string name="about_github_url">https://github.com/Astonex/Antox</string>
     <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
     <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Jesteśmy także na Freenode na #tox-dev</string>
+    <string name="about_irc">Możesz nas także znaleźć w sieci Freenode na kanale #tox-dev</string>
     <string name="about_version">Wersja</string>
 
     <!--  Chat Activity -->
@@ -53,7 +53,7 @@
 
 
     <!-- Settings Activity -->
-    <string name="about_string">Ten klient to wciąż pre-alpha.</string>
+    <string name="about_string">Ten klient wciąż jest w wersji pre-alpha.</string>
     <string name="getstarted_string">Wprowadź swą wymarzoną nazwę</string>
     <string name="settings_custom_dht">Własne ustawienia węzłów Tox</string>
     <string name="settings_use_custom_dht">Użyj własnych ustawień węzłów DHT</string>
@@ -62,7 +62,7 @@
     <string name="settings_note_hint">Status</string>
     <string name="settings_dht_ip">Adres IP węzła bootstrap (przykład: 192.254.75.98)</string>
     <string name="settings_dht_port">Port węzła bootstrap (przykład: 33445)</string>
-    <string name="settings_dht_key">Adres Klucza Publicznego węzła bootstrap (przykład: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
+    <string name="settings_dht_key">Adres klucza publicznego węzła bootstrap (przykład: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Aktualizuj</string>
     <string name="settings_updated">Twoje ustawienia zostały zaktualizowane</string>
     <string name="settings_dht_spinner_title">Ustawienia zaawansowane</string>
@@ -78,10 +78,10 @@
 
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Tox ID twojego znajomego</string>
-    <string name="addfriend_friend_message">Wyślij wiadomość z zapytaniem</string>
+    <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
+    <string name="addfriend_friend_message">Wyślij prośbę o dodanie do znajomych</string>
     <string name="addfriend_button">Dodaj znajomego</string>
-    <string name="addfriend_friend_added">Znajomy dodany</string>
+    <string name="addfriend_friend_added">Dodano znajomego</string>
     <string name="addfriend_friend_exists">Znajomy już istnieje</string>
     <string name="scanqr_button">Skanuj kod QR</string>
     <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
@@ -136,11 +136,11 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Zaakceptuj</string>
     <string name="friendrequest_reject">Odrzuć</string>
-    <string name="friendrequest_accepted">Zapytanie o dodanie do znajomych zaakceptowane</string>
-    <string name="friendrequest_deleted">Zapytanie o dodanie do znajomych usunięte</string>
-    <string name="friendrequest">Zapytania znajomych</string>
-    <string name="friendrequest_recieved">Zapytanie o dodanie do znajomych otrzymane</string>
-    <string name="friend_request">Nowe zapytanie o dodanie do znajomych</string>
+    <string name="friendrequest_accepted">Prośba o dodanie do znajomych zaakceptowana</string>
+    <string name="friendrequest_deleted">Prośba o dodanie do znajomych usunięta</string>
+    <string name="friendrequest">Prośby o dodanie do znajomych</string>
+    <string name="friendrequest_recieved">Otrzymano prośbę o dodanie do znajomych</string>
+    <string name="friend_request">Nowa prośba o dodanie do znajomych</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profil</string>
@@ -152,7 +152,7 @@
     <string name="group_action_leave">Opuść grupę</string>
     <string name="friend_action_deletechat">Usuń logi czatu</string>
     <string name="friend_action_block_confirmation">
-        Zablokowanie tego użytkownika usunie go z twojej lisy znajomych i zapytania o dodanie do znajomych
+        Zablokowanie tego użytkownika usunie go z Twojej lisy znajomych i prośby o dodanie do znajomych
         nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
     </string>
     <string name="toast_succ_move_user">Udało się przenieść</string>
