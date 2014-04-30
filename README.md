@@ -23,7 +23,7 @@ For a list of which devices currently run Antox, visit our <a href="http://wiki.
 
 ###Getting Started With Antox
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.5.5
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.5.7
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.2 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
