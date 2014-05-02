@@ -71,7 +71,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                         DhtNode.location.add(nodeDetails[5]);
                     }
                 }
-            } catch (UnknownHostException e) {
+            } catch (Exception e) {
                 DhtNode.ipv4.add("192.254.75.98");
                 DhtNode.ipv6.add("2607:5600:284::2");
                 DhtNode.location.add("US");
@@ -113,8 +113,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                 DhtNode.owner.add("zlacki");
                 DhtNode.port.add("33445");
                 DhtNode.key.add("D59F99384592DE4C8AB9D534D5197DB90F4755CC9E975ED0C565E18468A1445B");
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
             /**
