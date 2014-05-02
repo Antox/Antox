@@ -187,11 +187,6 @@ public class SettingsActivity extends ActionBarActivity
      * @param view
      */
     public void updateSettings(View view) {
-        /**
-         * String array to store updated details to be passed by intent to ToxService
-         */
-        String[] updatedSettings = { null, null, null};
-
 		/* Save settings to file */
 
         SharedPreferences pref = getSharedPreferences("settings",
