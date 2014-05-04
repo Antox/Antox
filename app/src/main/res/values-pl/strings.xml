@@ -120,7 +120,7 @@
     <string name="manage_groups_dialog_add_group">Dodaj grupę</string>
     <string name="manage_groups_dialog_rename_group">Zmień nazwę grupy</string>
     <string name="manage_groups_no_name">Proszę, nazwij swą grupę</string>
-    <string name="manage_groups_already_exits">Grupa już istnieje</string>
+    <string name="manage_groups_already_exists">Grupa już istnieje</string>
     <string name="manage_groups_dialog_add_button">Dodaj</string>
     <string name="manage_groups_dialog_rename_button">Zmień nazwę</string>
     <string name="manage_groups_dialog_cancel_button">Anuluj</string>
