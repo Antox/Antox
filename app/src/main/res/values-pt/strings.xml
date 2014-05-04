@@ -121,7 +121,7 @@
     <string name="manage_groups_dialog_add_group">Adicionar um grupo</string>
     <string name="manage_groups_dialog_rename_group">Renomear grupo</string>
     <string name="manage_groups_no_name">Por favor insira o nome do grupo</string>
-    <string name="manage_groups_already_exits">O grupo já existe</string>
+    <string name="manage_groups_already_exists">O grupo já existe</string>
     <string name="manage_groups_dialog_add_button">Adicionar</string>
     <string name="manage_groups_dialog_rename_button">Renomear</string>
     <string name="manage_groups_dialog_cancel_button">Cancelar</string>
