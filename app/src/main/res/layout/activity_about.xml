@@ -16,12 +16,16 @@
                   android:weightSum="100"
                   tools:context=".WelcomeActivity">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/full_logo" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_weight="90"
-            android:drawableTop="@drawable/full_logo"
             android:gravity="center"
             android:text="@string/developer_string"
             android:textSize="12sp"/>
