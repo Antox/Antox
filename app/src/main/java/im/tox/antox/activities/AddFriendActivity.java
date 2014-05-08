@@ -239,14 +239,14 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
         if(!isV2) {
 
-            if(checkAndSend(finalFriendKey, "") == 0) {
+            if(checkAndSend(finalFriendKey, _originalUsername) == 0) {
                 toast = Toast.makeText(context, text, duration);
                 toast.show();
-            } else if(checkAndSend(finalFriendKey, "") == -1) {
+            } else if(checkAndSend(finalFriendKey, _originalUsername) == -1) {
                 toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
-            } else if(checkAndSend(finalFriendKey, "") == -2) {
+            } else if(checkAndSend(finalFriendKey, _originalUsername) == -2) {
                 toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
                 toast.show();
             }
