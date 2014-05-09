@@ -8,12 +8,6 @@ import java.io.IOException;
 
 import android.content.Context;
 
-/**
- * Class for loading and saving the data file to be used by JTox(byte[] data,
- * ...)
- * 
- * @author Mark Winter (astonex)
- */
 public class ToxDataFile {
 
 	/**

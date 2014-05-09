@@ -42,13 +42,6 @@ import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
 
-/**
- * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
- * keys from tox:// links. See AndroidManifest.xml for more information on the URI handler.
- *
- * @author Mark Winter (Astonex)
- */
-
 public class AddFriendActivity extends ActionBarActivity implements PinDialogFragment.PinDialogListener {
 
     String _friendID = "";

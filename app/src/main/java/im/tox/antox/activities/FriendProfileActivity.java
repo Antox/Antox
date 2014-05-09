@@ -33,9 +33,6 @@ import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 
-/**
- * Created by soft on 24/03/14.
- */
 public class FriendProfileActivity extends ActionBarActivity {
 
     String friendName = null;
