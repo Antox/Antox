@@ -12,9 +12,6 @@ import android.widget.EditText;
 
 import im.tox.antox.R;
 
-/**
- * Created by soft on 03/04/14.
- */
 public class PinDialogFragment extends DialogFragment {
     public interface PinDialogListener {
         public void onDialogPositiveClick(DialogFragment dialog, String pin);

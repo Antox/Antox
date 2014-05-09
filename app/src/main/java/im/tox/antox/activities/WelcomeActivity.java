@@ -20,13 +20,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.ToxUserStatus;
 
-/**
- * Welcome Activity is displayed when the user is using the app for the very first time to get
- * some required details such as a username.
- *
- * @author Mark Winter (Astonex)
- */
-
 public class WelcomeActivity extends ActionBarActivity {
 
     TextView username;

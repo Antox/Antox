@@ -32,7 +32,6 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 
-
 /**
  * Created by ollie on 28/02/14.
  */

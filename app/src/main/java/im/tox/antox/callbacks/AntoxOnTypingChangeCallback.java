@@ -6,9 +6,6 @@ import android.util.Log;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnTypingChangeCallback;
 
-/**
- * Created by soft on 27/03/14.
- */
 public class AntoxOnTypingChangeCallback implements OnTypingChangeCallback<AntoxFriend> {
 
     private static final String TAG = "OnTypingChangeCallback";
