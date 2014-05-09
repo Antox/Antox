@@ -69,6 +69,11 @@ public class SettingsActivity extends ActionBarActivity
      */
     private CheckBox indicatorBox;
 
+    /**
+     * Checkbox for turning off notifications
+     */
+    private CheckBox notificationsBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +183,13 @@ public class SettingsActivity extends ActionBarActivity
             indicatorBox.setChecked(false);
         else
             indicatorBox.setChecked(true);
+
+        notificationsBox = (CheckBox) findViewById(R.id.settings_notifications_box);
+        String notifications = pref.getString("notifications", "");
+        if(notifications.equals("1"))
+            notificationsBox.setChecked(true);
+        else
+            notificationsBox.setChecked(false);
     }
 
     /**
@@ -278,6 +290,12 @@ public class SettingsActivity extends ActionBarActivity
             editor.putString("indicators", "1");
         else
             editor.putString("indicators", "0");
+
+        boolean notifications = notificationsBox.isChecked();
+        if(notifications)
+            editor.putString("notifications", "1");
+        else
+            editor.putString("notifications", "0");
 
         editor.commit();
 

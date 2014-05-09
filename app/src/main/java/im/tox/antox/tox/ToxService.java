@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
@@ -42,6 +43,8 @@ public class ToxService extends IntentService {
         toxSingleton = ToxSingleton.getInstance();
         toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        SharedPreferences pref = getSharedPreferences("settings",
+                Context.MODE_PRIVATE);
 
         String action = intent.getAction();
 
@@ -83,40 +86,43 @@ public class ToxService extends IntentService {
                 notify.putExtra("action", Constants.UPDATE_MESSAGES);
                 notify.putExtra("key", key);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-            /* Notifications */
-                if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
-                        && !(toxSingleton.leftPaneActive)) {
 
-                /* Notification */
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(this)
-                                    .setSmallIcon(R.drawable.ic_actionbar)
-                                    .setContentTitle(name)
-                                    .setContentText(message)
-                                    .setDefaults(Notification.DEFAULT_ALL);
-                    // Creates an explicit intent for an Activity in your app
-                    Intent resultIntent = new Intent(this, MainActivity.class);
-                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    resultIntent.setAction(Constants.SWITCH_TO_FRIEND);
-                    resultIntent.putExtra("key", key);
-                    resultIntent.putExtra("name", name);
+                if(pref.getString("notifications", "") != "1") {
+                    /* Notifications */
+                    if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
+                            && !(toxSingleton.leftPaneActive)) {
 
-                    // The stack builder object will contain an artificial back stack for the
-                    // started Activity.
-                    // This ensures that navigating backward from the Activity leads out of
-                    // your application to the Home screen.
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                    // Adds the back stack for the Intent (but not the Intent itself)
-                    stackBuilder.addParentStack(MainActivity.class);
-                    // Adds the Intent that starts the Activity to the top of the stack
-                    stackBuilder.addNextIntent(resultIntent);
-                    PendingIntent resultPendingIntent =
-                            stackBuilder.getPendingIntent(
-                                    0,
-                                    PendingIntent.FLAG_UPDATE_CURRENT
-                            );
-                    mBuilder.setContentIntent(resultPendingIntent);
-                    toxSingleton.mNotificationManager.notify(friend_number, mBuilder.build());
+                        /* Notification */
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(this)
+                                        .setSmallIcon(R.drawable.ic_actionbar)
+                                        .setContentTitle(name)
+                                        .setContentText(message)
+                                        .setDefaults(Notification.DEFAULT_ALL);
+                        // Creates an explicit intent for an Activity in your app
+                        Intent resultIntent = new Intent(this, MainActivity.class);
+                        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        resultIntent.setAction(Constants.SWITCH_TO_FRIEND);
+                        resultIntent.putExtra("key", key);
+                        resultIntent.putExtra("name", name);
+
+                        // The stack builder object will contain an artificial back stack for the
+                        // started Activity.
+                        // This ensures that navigating backward from the Activity leads out of
+                        // your application to the Home screen.
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack for the Intent (but not the Intent itself)
+                        stackBuilder.addParentStack(MainActivity.class);
+                        // Adds the Intent that starts the Activity to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(
+                                        0,
+                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                );
+                        mBuilder.setContentIntent(resultPendingIntent);
+                        toxSingleton.mNotificationManager.notify(friend_number, mBuilder.build());
+                    }
                 }
                 break;
 
@@ -264,23 +270,25 @@ public class ToxService extends IntentService {
                     db.addFriendRequest(key, message);
                 db.close();
 
-            /* Notification */
-                if(!toxSingleton.leftPaneActive) {
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(this)
-                                    .setSmallIcon(R.drawable.ic_actionbar)
-                                    .setContentTitle(getString(R.string.friend_request))
-                                    .setContentText(message)
-                                    .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
+                if(pref.getString("notifications", "") != "1") {
+                /* Notification */
+                    if (!toxSingleton.leftPaneActive) {
+                        NotificationCompat.Builder mBuilder =
+                                new NotificationCompat.Builder(this)
+                                        .setSmallIcon(R.drawable.ic_actionbar)
+                                        .setContentTitle(getString(R.string.friend_request))
+                                        .setContentText(message)
+                                        .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
 
-                    int ID = toxSingleton.friend_requests.size();
-                    Intent targetIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    mBuilder.setContentIntent(contentIntent);
-                    toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
+                        int ID = toxSingleton.friend_requests.size();
+                        Intent targetIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mBuilder.setContentIntent(contentIntent);
+                        toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
+                    }
                 }
 
-            /* Update friends list */
+                /* Update friends list */
                 Intent update = new Intent(Constants.BROADCAST_ACTION);
                 update.putExtra("action", Constants.UPDATE);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(update);
