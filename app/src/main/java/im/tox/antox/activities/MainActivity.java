@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -39,7 +40,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -55,11 +63,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.net.ssl.SSLHandshakeException;
+
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.fragments.ContactsFragment;
+import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
@@ -117,9 +128,7 @@ public class MainActivity extends ActionBarActivity{
             String action = intent.getStringExtra("action");
             if (action != null) {
                 Log.d(TAG, "action: " + action);
-                if (action.equals(Constants.FRIEND_REQUEST)) {
-
-                } else if (action.equals(Constants.UPDATE_LEFT_PANE)) {
+                if (action.equals(Constants.UPDATE_LEFT_PANE)) {
                     updateLeftPane();
                 } else if (action.equals(Constants.REJECT_FRIEND_REQUEST)) {
                     updateLeftPane();
@@ -140,8 +149,6 @@ public class MainActivity extends ActionBarActivity{
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(ctx, text, duration);
                     toast.show();
-                } else if (action.equals(Constants.FRIEND_LIST)) {
-
                 } else if (action.equals(Constants.UPDATE)) {
                     updateLeftPane();
                     if (toxSingleton.rightPaneActive) {
@@ -177,7 +184,6 @@ public class MainActivity extends ActionBarActivity{
         if (i.getAction() != null) {
             if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
                 String key = i.getStringExtra("key");
-                String name = i.getStringExtra("name");
                 Fragment newFragment = new ChatFragment();
                 toxSingleton.activeFriendKey = key;
                 toxSingleton.activeFriendRequestKey = null;
@@ -210,8 +216,6 @@ public class MainActivity extends ActionBarActivity{
         /* Check if first time ever running by checking the preferences */
         SharedPreferences pref = getSharedPreferences("main",
                 Context.MODE_PRIVATE);
-
-        SharedPreferences settings = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
         // If beenLoaded is 0, then never been run
         if (pref.getInt("beenLoaded", 0) == 0) {
@@ -268,6 +272,9 @@ public class MainActivity extends ActionBarActivity{
                 case "Український":
                     locale = new Locale("uk");
                     break;
+                case "Português":
+                    locale = new Locale("pt");
+                    break;
                 default:
                     break;
             }
@@ -289,7 +296,7 @@ public class MainActivity extends ActionBarActivity{
             // Executes in a separate thread so UI experience isn't affected
             // Downloads the DHT node details
             if(DhtNode.ipv4.size() == 0)
-                new DHTNodeDetails().execute();
+                new DHTNodeDetails(getApplicationContext()).execute();
         }
         else {
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
@@ -412,6 +419,9 @@ public class MainActivity extends ActionBarActivity{
                 break;
             case "tr":
                 language = "Türkçe";
+                break;
+            case "pt":
+                language = "Português";
                 break;
             default:
                 language = "English";
@@ -699,7 +709,7 @@ public class MainActivity extends ActionBarActivity{
     private void clearUselessNotifications () {
         AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
-                && toxSingleton.friendsList.all().size() > 0 && !db.isFriendBlocked(toxSingleton.activeFriendKey)) {
+                && toxSingleton.friendsList.all().size() > 0) {
             AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
             toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
         }
@@ -832,189 +842,6 @@ public class MainActivity extends ActionBarActivity{
         alertDialog.show();
     }
 
-
-    // Downloads the the first working DHT node
-    private class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
-        final String[] nodeDetails = new String[7];
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                // Connect to the web site
-                Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
-                Elements nodeRows = document.getElementsByTag("tr");
-
-                for (Element nodeRow : nodeRows) {
-                    Elements nodeElements = nodeRow.getElementsByTag("td");
-                    int c = 0;
-                    for (Element nodeElement : nodeElements)
-                        nodeDetails[c++] = nodeElement.text();
-
-
-                    if (nodeDetails[6] != null && nodeDetails[6].equals("WORK")) {
-                        DhtNode.ipv4.add(nodeDetails[0]);
-                        DhtNode.ipv6.add(nodeDetails[1]);
-                        DhtNode.port.add(nodeDetails[2]);
-                        DhtNode.key.add(nodeDetails[3]);
-                        DhtNode.owner.add(nodeDetails[4]);
-                        DhtNode.location.add(nodeDetails[5]);
-                    }
-                }
-            } catch (UnknownHostException e) {
-                // If for some reason website is down, add some known values
-                DhtNode.ipv4.add("192.254.75.98");
-                DhtNode.ipv6.add("2607:5600:284::2");
-                DhtNode.location.add("US");
-                DhtNode.owner.add("stqism");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B");
-
-                DhtNode.ipv4.add("144.76.60.215");
-                DhtNode.ipv6.add("2a01:4f8:191:64d6::1");
-                DhtNode.location.add("DE");
-                DhtNode.owner.add("sonofra");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
-
-                DhtNode.ipv4.add("37.187.46.132");
-                DhtNode.ipv6.add("2001:41d0:0052:0300::0507");
-                DhtNode.location.add("FR");
-                DhtNode.owner.add("mouseym");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("C021232F9AC83914A45DFCF242129B216FED5ED34683F385D932A66BC9178270");
-
-                DhtNode.ipv4.add("109.169.46.133");
-                DhtNode.ipv6.add("");
-                DhtNode.location.add("UK");
-                DhtNode.owner.add("astonex");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("7F31BFC93B8E4016A902144D0B110C3EA97CB7D43F1C4D21BCAE998A7C838821");
-
-                DhtNode.ipv4.add("54.199.139.199");
-                DhtNode.ipv6.add("");
-                DhtNode.location.add("JP");
-                DhtNode.owner.add("aitjcize");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("7F9C31FE850E97CEFD4C4591DF93FC757C7C12549DDD55F8EEAECC34FE76C029");
-
-                DhtNode.ipv4.add("31.192.105.19");
-                DhtNode.ipv6.add("");
-                DhtNode.location.add("RU");
-                DhtNode.owner.add("zlacki");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("D59F99384592DE4C8AB9D534D5197DB90F4755CC9E975ED0C565E18468A1445B");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-            /**
-             * Ping servers to find quickest connection - Threading this would be goood
-             */
-            int times[][] = new int[DhtNode.ipv4.size()][1];
-
-            // Initialise array
-            for(int i = 0; i < DhtNode.ipv4.size(); i++)
-                    times[i][0] = 500;
-
-            final ExecutorService service;
-            // Create a thread pool equal to the amount of nodes
-            service = Executors.newFixedThreadPool(DhtNode.ipv4.size());
-            List<Future<int[]>> list = new ArrayList<Future<int[]>>();
-            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
-                Callable<int[]> worker = new PingServers(i);
-                Future<int[]> submit = service.submit(worker);
-                list.add(submit);
-            }
-
-            // Get all the times back from the threads
-            for(Future<int[]> future : list) {
-                try {
-                    int tmp[] = future.get();
-                    times[tmp[0]][0] = tmp[1];
-                } catch(ExecutionException e) {
-                    e.printStackTrace();
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Find shortest time
-            int shortest = 500;
-            int pos = -1;
-            for(int i = 0; i < DhtNode.ipv4.size(); i++) {
-                if(times[i][0] < shortest) {
-                    shortest = times[i][0];
-                    pos = i;
-                }
-            }
-
-            // Move shortest node to front
-            if(pos != -1) {
-                DhtNode.ipv4.add(0, DhtNode.ipv4.get(pos));
-                DhtNode.ipv6.add(0, DhtNode.ipv6.get(pos));
-                DhtNode.port.add(0, DhtNode.port.get(pos));
-                DhtNode.key.add(0, DhtNode.key.get(pos));
-                DhtNode.owner.add(0, DhtNode.owner.get(pos));
-                DhtNode.location.add(0, DhtNode.location.get(pos));
-                Log.d(TAG, "DHT Nodes have been sorted");
-                DhtNode.sorted = true;
-            }
-
-            return null;
-        }
-
-        private class PingServers implements Callable<int[]> {
-            final int number;
-
-            public PingServers(int i) {
-                this.number = i;
-            }
-
-            public int[] call() {
-                int result[] = { number, 500 };
-                try {
-                    long currentTime = System.currentTimeMillis();
-                    boolean reachable = InetAddress.getByName(DhtNode.ipv4.get(number)).isReachable(400);
-                    long elapsedTime = System.currentTimeMillis() - currentTime;
-                    if(reachable)
-                        result[1] = (int)elapsedTime;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    e.printStackTrace();
-                }
-
-                return result;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result)
-        {
-            /**
-             * There is a chance that downloading finishes later than the bootstrapping call in the
-             * ToxService, because both are in separate threads. In that case to make sure the nodes
-             * are bootstrapped we restart the ToxService
-             */
-            if(!DhtNode.connected)
-            {
-                Log.d(TAG, "Restarting START_TOX as DhtNode.connected returned false");
-                Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
-                restart.setAction(Constants.START_TOX);
-                getApplicationContext().startService(restart);
-            }
-
-            /* Restart intent if it was connected before nodes were sorted */
-            if(DhtNode.connected && !DhtNode.sorted) {
-                Log.d(TAG, "Restarting START_TOX as DhtNode.sorted was false");
-                Intent restart = new Intent(getApplicationContext(), ToxDoService.class);
-                restart.setAction(Constants.START_TOX);
-                getApplicationContext().startService(restart);
-            }
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (!pane.isOpen()) {
@@ -1037,7 +864,6 @@ public class MainActivity extends ActionBarActivity{
         } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
             Uri uri=  data.getData();
             File pickedFile = new File(uri.getPath());
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
             Log.d("file picked",""+pickedFile.getAbsolutePath() );
             Log.d("file type",""+getContentResolver().getType(uri));
         } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
@@ -1109,8 +935,6 @@ public class MainActivity extends ActionBarActivity{
 
             toxSingleton.rightPaneActive =false;
             toxSingleton.leftPaneActive = true;
-            InputMethodManager imm = (InputMethodManager)getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
         }
 
         @Override

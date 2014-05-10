@@ -76,6 +76,7 @@
     <string name="settings_send_typing_indicators">Send Typing Indicators</string>
     <string name="developer_string">Made with love by the Tox Development Team</string>
     <string name="welcome_must_select_username">You must set a name</string>
+    <string name="settings_notifications">Turn off notifications</string>
 
 
     <!-- Add Friend Activity -->
@@ -121,7 +122,7 @@
     <string name="manage_groups_dialog_add_group">Add a group</string>
     <string name="manage_groups_dialog_rename_group">Rename group</string>
     <string name="manage_groups_no_name">Please name your group</string>
-    <string name="manage_groups_already_exits">Group already exists</string>
+    <string name="manage_groups_already_exists">Group already exists</string>
     <string name="manage_groups_dialog_add_button">Add</string>
     <string name="manage_groups_dialog_rename_button">Rename</string>
     <string name="manage_groups_dialog_cancel_button">Cancel</string>

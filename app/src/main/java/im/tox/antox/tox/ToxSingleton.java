@@ -15,9 +15,6 @@ import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 
-/**
- * Created by soft on 01/03/14.
- */
 public class ToxSingleton {
 
     private static final String TAG = "im.tox.antox.tox.ToxSingleton";
