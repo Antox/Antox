@@ -35,12 +35,6 @@ import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.ToxUserStatus;
 
-/**
- * Profile Activity where the user can change their username, status, and note.
-
- * @author Mark Winter (Astonex) & David Lohle (Proplex)
- */
-
 public class ProfileActivity extends ActionBarActivity {
     /**
      * Spinner for displaying acceptable statuses (online/away/busy) to the users

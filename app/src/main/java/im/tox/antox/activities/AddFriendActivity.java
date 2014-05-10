@@ -42,13 +42,6 @@ import im.tox.antox.R;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.DhtNode;
 
-/**
- * Activity to allow the user to add a friend. Also as a URI handler to automatically insert public
- * keys from tox:// links. See AndroidManifest.xml for more information on the URI handler.
- *
- * @author Mark Winter (Astonex)
- */
-
 public class AddFriendActivity extends ActionBarActivity implements PinDialogFragment.PinDialogListener {
 
     String _friendID = "";
@@ -239,14 +232,14 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
         if(!isV2) {
 
-            if(checkAndSend(finalFriendKey, "") == 0) {
+            if(checkAndSend(finalFriendKey, _originalUsername) == 0) {
                 toast = Toast.makeText(context, text, duration);
                 toast.show();
-            } else if(checkAndSend(finalFriendKey, "") == -1) {
+            } else if(checkAndSend(finalFriendKey, _originalUsername) == -1) {
                 toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
-            } else if(checkAndSend(finalFriendKey, "") == -2) {
+            } else if(checkAndSend(finalFriendKey, _originalUsername) == -2) {
                 toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -393,7 +386,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 String txtString = txt.toString().substring(txt.toString().indexOf('"'));
 
                 if(txtString.contains("tox1")) {
-                    String key = txtString.substring(11, txtString.length()-1);
+                    String key = txtString.substring(11, 11+76);
                     _friendID = key;
 
                 } else if (txtString.contains("tox2")) {
