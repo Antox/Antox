@@ -8,9 +8,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.tox.ToxService;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
 
-/**
- * Created by soft on 02/03/14.
- */
 public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
 
     private static final String TAG = "im.tox.antox.TAG";

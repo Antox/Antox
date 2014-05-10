@@ -69,6 +69,11 @@ public class SettingsActivity extends ActionBarActivity
      */
     private CheckBox indicatorBox;
 
+    /**
+     * Checkbox for turning off notifications
+     */
+    private CheckBox notificationsBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,6 +170,9 @@ public class SettingsActivity extends ActionBarActivity
             case "Український":
                 languageSpinner.setSelection(10);
                 break;
+            case "Português":
+                languageSpinner.setSelection(11);
+                break;
             default:
                 break;
         }
@@ -175,6 +183,13 @@ public class SettingsActivity extends ActionBarActivity
             indicatorBox.setChecked(false);
         else
             indicatorBox.setChecked(true);
+
+        notificationsBox = (CheckBox) findViewById(R.id.settings_notifications_box);
+        String notifications = pref.getString("notifications", "");
+        if(notifications.equals("1"))
+            notificationsBox.setChecked(true);
+        else
+            notificationsBox.setChecked(false);
     }
 
     /**
@@ -184,11 +199,6 @@ public class SettingsActivity extends ActionBarActivity
      * @param view
      */
     public void updateSettings(View view) {
-        /**
-         * String array to store updated details to be passed by intent to ToxService
-         */
-        String[] updatedSettings = { null, null, null};
-
 		/* Save settings to file */
 
         SharedPreferences pref = getSharedPreferences("settings",
@@ -258,6 +268,9 @@ public class SettingsActivity extends ActionBarActivity
                 case "Український":
                     locale = new Locale("uk");
                     break;
+                case "Português":
+                    locale = new Locale("pt");
+                    break;
                 default:
                     break;
             }
@@ -277,6 +290,12 @@ public class SettingsActivity extends ActionBarActivity
             editor.putString("indicators", "1");
         else
             editor.putString("indicators", "0");
+
+        boolean notifications = notificationsBox.isChecked();
+        if(notifications)
+            editor.putString("notifications", "1");
+        else
+            editor.putString("notifications", "0");
 
         editor.commit();
 

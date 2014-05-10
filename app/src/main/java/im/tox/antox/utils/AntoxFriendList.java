@@ -13,9 +13,9 @@ import java.util.Locale;
 
 /**
  * Wrapper class for the Tox Friendlist.
- * 
+ *
  * @author sonOfRa
- * 
+ *
  */
 public class AntoxFriendList implements FriendList<AntoxFriend> {
 

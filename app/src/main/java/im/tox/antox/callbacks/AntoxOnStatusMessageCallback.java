@@ -10,9 +10,6 @@ import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.callbacks.OnStatusMessageCallback;
 
-/**
- * Created by soft on 03/03/14.
- */
 public class AntoxOnStatusMessageCallback implements OnStatusMessageCallback<AntoxFriend> {
 
     private final static String TAG = "im.tox.antox.TAG";
