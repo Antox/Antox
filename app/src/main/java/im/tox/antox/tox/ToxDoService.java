@@ -34,9 +34,6 @@ import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 
-/**
- * Created by soft on 13/03/14.
- */
 public class ToxDoService extends IntentService {
 
     private static final String TAG = "im.tox.antox.tox.ToxDoService";

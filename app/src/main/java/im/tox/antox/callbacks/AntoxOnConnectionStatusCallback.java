@@ -11,9 +11,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.tox.ToxService;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
 
-/**
- * Created by soft on 03/03/14.
- */
 public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallback<AntoxFriend> {
 
     private final static String TAG = "im.tox.antox.TAG";

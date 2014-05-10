@@ -10,12 +10,6 @@ import android.widget.TextView;
 
 import im.tox.antox.R;
 
-/**
- * About activity where contact and version information is displayed
-
- * @author Mark Winter (Astonex) & David Lohle (Proplex) & sudden6
- */
-
 public class AboutActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -70,6 +70,14 @@
             android:layout_gravity="center_horizontal|left"
             android:id="@+id/settings_typing_indicators_box"/>
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_notifications"
+            android:checked="false"
+            android:layout_gravity="center_horizontal|left"
+            android:id="@+id/settings_notifications_box"/>
+
         <Button
             android:id="@+id/updateSettings"
             android:layout_width="fill_parent"

@@ -146,7 +146,7 @@ public class ManageGroupsActivity extends ActionBarActivity {
                         for (Map.Entry<String, ?> entry : keys.entrySet()) {
                             String groupName = entry.getValue().toString();
                             if (groupName.equals(name)) {
-                                Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exits),
+                                Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exists),
                                         Toast.LENGTH_SHORT).show();
                                 okToSave = false;
                                 break;
@@ -156,7 +156,7 @@ public class ManageGroupsActivity extends ActionBarActivity {
                         //check if the name is Friends
                         if (getResources().getString(R.string.manage_groups_friends).equals(name)) {
                             okToSave = false;
-                            Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exits),
+                            Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exists),
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -219,7 +219,7 @@ public class ManageGroupsActivity extends ActionBarActivity {
                         for (Map.Entry<String, ?> entry : keys.entrySet()) {
                             String groupName = entry.getValue().toString();
                             if (groupName.equals(name) && !groupName.equals(originalName)) {
-                                Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exits),
+                                Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exists),
                                         Toast.LENGTH_SHORT).show();
                                 okToSave = false;
                                 break;
@@ -229,7 +229,7 @@ public class ManageGroupsActivity extends ActionBarActivity {
                         //check if the name is Friends
                         if (getResources().getString(R.string.manage_groups_friends).equals(name)) {
                             okToSave = false;
-                            Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exits),
+                            Toast.makeText(dialog.getContext(), getResources().getString(R.string.manage_groups_already_exists),
                                     Toast.LENGTH_SHORT).show();
                         }
 
