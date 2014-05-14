@@ -121,7 +121,7 @@
     <string name="manage_groups_dialog_add_group">Lägg till en grupp</string>
     <string name="manage_groups_dialog_rename_group">Byt namn på grupp</string>
     <string name="manage_groups_no_name">Var vänlig döp din grupp</string>
-    <string name="manage_groups_already_exits">Gruppen finns redan</string>
+    <string name="manage_groups_already_exists">Gruppen finns redan</string>
     <string name="manage_groups_dialog_add_button">Lägg till</string>
     <string name="manage_groups_dialog_rename_button">Byt namn</string>
     <string name="manage_groups_dialog_cancel_button">Avbryt</string>
