@@ -73,9 +73,10 @@
     <string name="settings_username_title">Användarnamn</string>
     <string name="settings_empty_strings">Du måste fylla i alla fält</string>
     <string name="settings_invalid_key">Ogiltig nyckel angiven</string>
-    <string name="settings_send_typing_indicators">Indikera När Någon Skriver</string>
+    <string name="settings_send_typing_indicators">Visa när någon skriver</string>
     <string name="developer_string">Utvecklad med kärlek av Tox Utvecklingsteam</string>
     <string name="welcome_must_select_username">Du måste ange ett användarnamn</string>
+    <string name="settings_notifications">Stäng av aviseringar</string>
 
 
     <!-- Add Friend Activity -->
@@ -121,7 +122,7 @@
     <string name="manage_groups_dialog_add_group">Lägg till en grupp</string>
     <string name="manage_groups_dialog_rename_group">Byt namn på grupp</string>
     <string name="manage_groups_no_name">Var vänlig döp din grupp</string>
-    <string name="manage_groups_already_exits">Gruppen finns redan</string>
+    <string name="manage_groups_already_exists">Gruppen finns redan</string>
     <string name="manage_groups_dialog_add_button">Lägg till</string>
     <string name="manage_groups_dialog_rename_button">Byt namn</string>
     <string name="manage_groups_dialog_cancel_button">Avbryt</string>
