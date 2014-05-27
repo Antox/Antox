@@ -683,15 +683,6 @@ public class MainActivity extends ActionBarActivity{
         startActivity(intent);
     }
     /**
-     * Starts a new intent to open the AboutActivity class
-     *
-     * @see im.tox.antox.activities.AboutActivity
-     */
-    private void openAbout() {
-        Intent intent = new Intent(this, AboutActivity.class);
-        startActivity(intent);
-    }
-    /**
      * Starts a new intent to open the AddFriendActivity class
      *
      * @see im.tox.antox.activities.AddFriendActivity
@@ -758,9 +749,6 @@ public class MainActivity extends ActionBarActivity{
                 return true;
             case R.id.action_manage_group:
                 openGroupManagement();
-                return true;
-            case R.id.action_about:
-                openAbout();
                 return true;
             case R.id.add_friend:
                 addFriend();
