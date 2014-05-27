@@ -20,7 +20,7 @@
     <string name="action_profile">Profilo</string>
     <string name="action_about">Informazioni</string>
     <string name="add_to_group">Aggiungi Al Gruppo</string>
-    <string name="manage_groups">Gestisci Gruppi</string>
+    <string name="manage_groups">Gruppi</string>
 
     <!-- Main Activity -->
     <string name="title">Antox</string>
@@ -74,6 +74,7 @@
     <string name="settings_empty_strings">Devi compilare tutti i campi</string>
     <string name="settings_invalid_key">Valore non valido</string>
     <string name="settings_send_typing_indicators">Mostra quando sto scrivendo</string>
+    <string name="settings_notifications">Disabilita notifiche</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox-ID del tuo amico</string>
@@ -118,7 +119,7 @@
     <string name="manage_groups_dialog_rename_group">Rinomina gruppo</string>
     <string name="manage_groups_no_name">Inserisci un nome per il gruppo</string>
     <string name="manage_groups_already_exists">Gruppo già esistente</string>
-    <string name="manage_groups_dialog_add_button">Nuovo</string>
+    <string name="manage_groups_dialog_add_button">Crea</string>
     <string name="manage_groups_dialog_rename_button">Rinomina</string>
     <string name="manage_groups_dialog_cancel_button">Annulla</string>
     <string name="manage_groups_no_delete_friends">Il gruppo "Amici" è quello di default e non può essere modificato.</string>
