@@ -111,7 +111,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
                 DhtNode.location.add("FR");
                 DhtNode.owner.add("mouseym");
                 DhtNode.port.add("33445");
-                DhtNode.key.add("C021232F9AC83914A45DFCF242129B216FED5ED34683F385D932A66BC9178270");
+                DhtNode.key.add("A9D98212B3F972BD11DA52BEB0658C326FCCC1BFD49F347F9C2D3D8B61E1B927");
 
                 DhtNode.ipv4.add("109.169.46.133");
                 DhtNode.ipv6.add("");
@@ -126,13 +126,6 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
                 DhtNode.owner.add("aitjcize");
                 DhtNode.port.add("33445");
                 DhtNode.key.add("7F9C31FE850E97CEFD4C4591DF93FC757C7C12549DDD55F8EEAECC34FE76C029");
-
-                DhtNode.ipv4.add("31.192.105.19");
-                DhtNode.ipv6.add("");
-                DhtNode.location.add("RU");
-                DhtNode.owner.add("zlacki");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("D59F99384592DE4C8AB9D534D5197DB90F4755CC9E975ED0C565E18468A1445B");
             }
         }
 
