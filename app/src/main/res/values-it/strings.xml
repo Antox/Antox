@@ -10,7 +10,7 @@
     <string name="title_activity_profile">Profilo</string>
     <string name="title_activity_about">Informazioni</string>
     <string name="title_activity_friend_profile">Profilo</string>
-    <string name="title_activity_manage_groups">Gestisci Gruppi</string>
+    <string name="title_activity_manage_groups">Gruppi</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Impostazioni</string>
@@ -35,15 +35,6 @@
     <string name="main_no_internet">Nessuna connessione ad internet</string>
     <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
     <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
-    
-    <!-- About Activity -->
-    <string name="about_details">Antox è un client Android per Tox</string>
-    <string name="about_bugs">Per segnalare un bug, visita la pagina GitHub e clicca su \"Issues\"</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Siamo anche su Freenode, canale #tox-dev</string>
-    <string name="about_version">Versione</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
@@ -144,7 +135,7 @@
     <string name="friend_action_profile">Profilo</string>
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi Amico</string>
-    <string name="friend_action_move_to_group">Sposta nel Gruppo</string>
+    <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_unblock">Sblocca</string>
     <string name="friend_action_deletechat">Elimina Chat</string>
