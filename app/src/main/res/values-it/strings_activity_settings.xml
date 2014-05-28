@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Impostazioni</string>
 
     <!-- Profile -->
     <string name="pref_header_profile">Profilo</string>
