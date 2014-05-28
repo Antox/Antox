@@ -6,8 +6,6 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Witaj</string>
     <string name="title_activity_add_friend">Dodaj znajomego</string>
-    <string name="title_activity_settings">Ustawienia</string>
-    <string name="title_activity_profile">Profil</string>
     <string name="title_activity_about">O programie</string>
     <string name="title_activity_friend_profile">Profil</string>
     <string name="title_activity_manage_groups">Zarządzaj grupami</string>
@@ -21,6 +19,14 @@
     <string name="action_about">O programie</string>
     <string name="add_to_group">Dodaj do grupy</string>
     <string name="manage_groups">Zarządzaj grupami</string>
+
+    <!-- Welcome Activity -->
+    <string name="welcome_must_select_username">Musisz ustawić nazwę</string>
+    <string name="welcome_alpha_warning">Ten klient to wciąż pre-alpha.</string>
+    <string name="welcome_getstarted_string">Wprowadź nazwę wyświetlaną dla twoich znajomych</string>
+    <string name="welcome_name_hint">nick</string>
+    <string name="welcome_button">Start</string>
+    <string name="welcome_developer_string">Stworzone z miłością przez the Tox Development Team</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -39,43 +45,8 @@
     </string>
     <string name="main_node_list_download_error">Błąd pobierania listy węzłów</string>
 
-    <!-- About Activity -->
-    <string name="about_details">Antox jest Androidowym klientem Toxa</string>
-    <string name="about_bugs">Aby zgłosić błąd, odwiedź naszą stronę na GitHubie i kliknij na \"issues\".</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Możesz nas także znaleźć w sieci Freenode na kanale #tox-dev</string>
-    <string name="about_version">Wersja</string>
-
     <!--  Chat Activity -->
     <string name="chat_enter_message">Wyślij wiadomość</string>
-
-
-    <!-- Settings Activity -->
-    <string name="about_string">Ten klient wciąż jest w wersji pre-alpha.</string>
-    <string name="getstarted_string">Wprowadź swą wymarzoną nazwę</string>
-    <string name="settings_custom_dht">Własne ustawienia węzłów Tox</string>
-    <string name="settings_use_custom_dht">Użyj własnych ustawień węzłów DHT</string>
-    <string name="settings_user_key_title">Twój Tox ID</string>
-    <string name="settings_name_hint">Nazwa użytkownika</string>
-    <string name="settings_note_hint">Status</string>
-    <string name="settings_dht_ip">Adres IP węzła bootstrap (przykład: 192.254.75.98)</string>
-    <string name="settings_dht_port">Port węzła bootstrap (przykład: 33445)</string>
-    <string name="settings_dht_key">Adres klucza publicznego węzła bootstrap (przykład: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Aktualizuj</string>
-    <string name="settings_updated">Twoje ustawienia zostały zaktualizowane</string>
-    <string name="settings_dht_spinner_title">Ustawienia zaawansowane</string>
-    <string name="settings_language_title">Język</string>
-    <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Status</string>
-    <string name="settings_theme_title">Motyw</string>
-    <string name="settings_username_title">Nazwa użytkownika</string>
-    <string name="settings_empty_strings">Musisz wypełnić wszystkie pola</string>
-    <string name="settings_invalid_key">Wprowadzono nieprawidłowy klucz</string>
-    <string name="developer_string">Stworzone z miłością przez Tox Developement Team.</string>
-    <string name="welcome_must_select_username">Musisz ustawić nazwę</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
@@ -89,18 +60,11 @@
     <string name="addfriend_optional_title">Dodatkowo</string>
     <string name="dialog_pin">Wprowadź Pin znajomego</string>
     <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
-    <string name="addfriend_no_internet">Nie połączono z siecią Tox</string>
+    <string name="addfriend_no_internet">Brak połączenia z siecią Tox</string>
     <string name="addfriend_no_internet_text">
         Niestety nie jesteś połączon(a/y) do sieci Tox, więc nie możesz dodać znajomego w tym momencie.
         Spróbuj zrestartować aplikację.
     </string>
-
-    <!--  Profile Activity -->
-    <string name="share_with">Podziel się z</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Nieobecny</string>
-    <string name="status_busy">Zajęty</string>
-    <string name="profile_updated">Twój profil został zaktualizowany</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nazwa</string>
@@ -155,7 +119,7 @@
         Zablokowanie tego użytkownika usunie go z Twojej lisy znajomych i prośby o dodanie do znajomych
         nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
     </string>
-    <string name="toast_succ_move_user">Udało się przenieść</string>
+    <string name="toast_succ_move_user">Udało się przenieść kontakt</string>
 
     <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
