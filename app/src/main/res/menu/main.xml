@@ -1,23 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:antonx="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/settings_activity"
+        android:orderInCategory="90"
+        antonx:showAsAction="never"
+        android:title="@string/title_activity_settings" />
+
+    <item
         android:id="@+id/action_exit"
         android:orderInCategory="100"
-        android:showAsAction="never"
         antonx:showAsAction="never"
         android:title="@string/action_exit"/>
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="90"
-        android:showAsAction="never"
-        antonx:showAsAction="never"
-        android:title="@string/action_settings"/>
-
-    <item
         android:id="@+id/add_friend"
         android:orderInCategory="50"
-        android:showAsAction="ifRoom"
         antonx:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_add_person"
         android:title="@string/add_friend"/>
@@ -25,21 +22,12 @@
     <item
         android:id="@+id/action_manage_group"
         android:orderInCategory="60"
-        android:showAsAction="never"
         antonx:showAsAction="never"
         android:title="@string/manage_groups"/>
 
     <item
-        android:id="@+id/action_profile"
-        android:orderInCategory="27"
-        android:showAsAction="never"
-        antonx:showAsAction="never"
-        android:title="@string/action_profile"/>
-
-    <item
         android:id="@+id/search_friend"
         android:orderInCategory="25"
-        android:showAsAction="collapseActionView|ifRoom"
         antonx:showAsAction="collapseActionView|ifRoom"
         android:icon="@drawable/ic_action_search"
         android:title="@string/search_friend"

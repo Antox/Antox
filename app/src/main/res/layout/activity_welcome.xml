@@ -27,8 +27,17 @@
                android:gravity="center"
                android:layout_marginTop="5dp"
                android:textSize="12sp"
-               android:text="@string/about_string"
+               android:text="@string/welcome_alpha_warning"
            />
+
+            <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_centerInParent="true"
+            android:text="@string/welcome_developer_string" />
 
            <TextView
                android:layout_width="match_parent"
@@ -36,7 +45,7 @@
                android:gravity="center"
                android:textSize="15sp"
                android:layout_marginTop="60dp"
-               android:text="@string/getstarted_string"
+               android:text="@string/welcome_getstarted_string"
            />
 
            <EditText
@@ -47,7 +56,7 @@
                android:layout_marginTop="5dp"
                android:inputType="text"
                android:imeOptions="actionSend"
-               android:hint="@string/settings_name_hint"
+               android:hint="@string/welcome_name_hint"
                />
 
            <Button
@@ -55,18 +64,9 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/settings_button"
+                android:text="@string/welcome_button"
                 android:layout_marginTop="20dp"
                 android:onClick="updateSettings" />
-
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="20dp"
-               android:gravity="center"
-               android:textSize="12sp"
-               android:layout_centerInParent="true"
-               android:text="@string/developer_string" />
     </LinearLayout>
 
 </ScrollView>
