@@ -10,15 +10,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
+import java.sql.Timestamp;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
@@ -30,6 +34,9 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.LeftPaneItem;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by ollie on 28/02/14.
@@ -46,11 +53,10 @@ public class ContactsFragment extends Fragment {
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
-
+    private Subscription sub;
+    private View rootView;
 
     public ContactsFragment() {
-        main_act = (MainActivity) getActivity();
-
     }
 
     public void onChangeFriendRequest(int position, String key, String message) {
@@ -73,13 +79,57 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-    public void updateContacts() {
-        leftPaneAdapter = main_act.leftPaneAdapter;
+    public void updateContacts(ArrayList<Friend> friendsList) {
+
+        //If you have no friends, display the no friends message
+        LinearLayout noFriends = (LinearLayout) getView().findViewById(R.id.contacts_no_friends);
+        if (friendsList.size() == 0) {
+            noFriends.setVisibility(View.VISIBLE);
+        } else {
+            noFriends.setVisibility(View.GONE);
+        }
+
+
+        leftPaneAdapter = new LeftPaneAdapter(getActivity());
+
+        Friend friends_list[] = new Friend[friendsList.size()];
+        friends_list = friendsList.toArray(friends_list);
+        if (friends_list.length > 0) {
+            //add the header corresponding to the option: All Online Offline Blocked
+            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Contacts", null, 0);
+            leftPaneAdapter.addItem(friends_header);
+            for (int i = 0; i < friends_list.length; i++) {
+                //msg = mostRecentMessage(friends_list[i].friendKey, messageList);
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, "Placeholder" /*msg.message*/, friends_list[i].icon, 0/*countUnreadMessages(friends_list[i].friendKey, messageList)*/, new Timestamp(0,0,0,0,0,0,0)/*msg.timestamp*/);
+                leftPaneAdapter.addItem(friend);
+            }
+        }
+
         contactsListView.setAdapter(leftPaneAdapter);
         System.out.println("updated left pane");
     }
 
     private MainActivity main_act;
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        sub = toxSingleton.friendListSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ArrayList<Friend>>() {
+                    @Override
+                    public void call(ArrayList<Friend> friends_list) {
+                        Log.d("UPDATED FRIENDS LIST BITCH", Integer.toString(friends_list.size()));
+                        updateContacts(friends_list);
+                    }
+                });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        sub.unsubscribe();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,7 +143,6 @@ public class ContactsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
 
-        //updateContacts();
 
         contactsListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {

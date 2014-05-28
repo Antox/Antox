@@ -57,6 +57,7 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -344,15 +345,10 @@ public class MainActivity extends ActionBarActivity{
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-
+        //Initialize the friends list Subject in tox singleton;
         toxSingleton.initFriendsList(this);
-        toxSingleton.friendListSubject.subscribe(new Action1<ArrayList<Friend>>() {
-            @Override
-            public void call(ArrayList<Friend> al) {
-                Log.d("UPDATED FRIENDS LIST BITCH", Integer.toString(al.size()));
-            }
-        });
-        Subscription friendslistsub = toxSingleton.updateFriendsList(this);
+        //Grab the friends list from the database and send it to all listeners of the friends list Subject
+        toxSingleton.updateFriendsList(this);
 
         onNewIntent(getIntent());
     }
@@ -640,9 +636,6 @@ public class MainActivity extends ActionBarActivity{
             }
         }
         antoxDB.close();
-        if (contacts != null) {
-            contacts.updateContacts();
-        }
     }
 
     /**

@@ -19,6 +19,7 @@
                     android:dividerHeight="1dp" />
                 <LinearLayout
                     android:id="@+id/contacts_no_friends"
+                    android:visibility="gone"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
