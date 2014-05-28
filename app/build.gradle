@@ -37,4 +37,6 @@ dependencies {
     compile files('libs/dnsjava-2.1.6.jar')
     compile 'com.android.support:support-v4:19.+'
     compile 'com.android.support:appcompat-v7:+'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.netflix.rxjava:rxjava-android:0.18.3'
 }

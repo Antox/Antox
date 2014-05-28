@@ -40,10 +40,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.fragments.ContactsFragment;
+import im.tox.antox.fragments.LeftPaneFragment;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.fragments.ContactsFragment;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
@@ -56,6 +57,8 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -320,7 +323,7 @@ public class MainActivity extends ActionBarActivity{
                     editor.putInt("group_option", itemPosition);
                     editor.putString("group_option_name", groups.get(itemPosition));
                     editor.commit();
-                    updateLeftPane();
+       //             updateLeftPane();
                 }
                 return true;
             }
@@ -330,10 +333,6 @@ public class MainActivity extends ActionBarActivity{
         actions.setDisplayShowTitleEnabled(false);
         actions.setListNavigationCallbacks(adapter, callback);
         actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
-
-        Intent getFriendsList = new Intent(this, ToxService.class);
-        getFriendsList.setAction(Constants.FRIEND_LIST);
-        this.startService(getFriendsList);
 
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
@@ -345,9 +344,17 @@ public class MainActivity extends ActionBarActivity{
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        contacts = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
 
-        updateLeftPane();
+
+        toxSingleton.initFriendsList(this);
+        toxSingleton.friendListSubject.subscribe(new Action1<ArrayList<Friend>>() {
+            @Override
+            public void call(ArrayList<Friend> al) {
+                Log.d("UPDATED FRIENDS LIST BITCH", Integer.toString(al.size()));
+            }
+        });
+        Subscription friendslistsub = toxSingleton.updateFriendsList(this);
+
         onNewIntent(getIntent());
     }
 
@@ -634,7 +641,9 @@ public class MainActivity extends ActionBarActivity{
             }
         }
         antoxDB.close();
-        contacts.updateLeftPane();
+        if (contacts != null) {
+            contacts.updateContacts();
+        }
     }
 
     /**
@@ -674,7 +683,9 @@ public class MainActivity extends ActionBarActivity{
         }
         clearUselessNotifications();
         updateGroupsList();
-        updateLeftPane();
+        if (contacts != null) {
+            updateLeftPane();
+        }
     }
 
     @Override

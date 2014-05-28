@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <ListView
+                    android:id="@+id/left_pane_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_absolute"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@color/white"
+                    android:dividerHeight="1dp" />
+                <LinearLayout
+                    android:id="@+id/left_pane_no_friends"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/text_large"
+                        android:text="@string/main_no_friends"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_medium"
+                        android:text="@string/main_try_adding"/>
+                    </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+
