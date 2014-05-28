@@ -9,18 +9,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.astuetz.PagerSlidingTabStrip;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -43,7 +38,7 @@ public class ContactsFragment extends Fragment {
     /**
      * List View for displaying all the friends in a scrollable list
      */
-    private ListView leftPaneListView;
+    private ListView contactsListView;
     /**
      * Adapter for the friendListView
      */
@@ -80,7 +75,7 @@ public class ContactsFragment extends Fragment {
 
     public void updateContacts() {
         leftPaneAdapter = main_act.leftPaneAdapter;
-        leftPaneListView.setAdapter(leftPaneAdapter);
+        contactsListView.setAdapter(leftPaneAdapter);
         System.out.println("updated left pane");
     }
 
@@ -96,11 +91,11 @@ public class ContactsFragment extends Fragment {
         main_act = (MainActivity) getActivity();
 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
-        leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
+        contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
 
-        updateContacts();
+        //updateContacts();
 
-        leftPaneListView
+        contactsListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -130,10 +125,10 @@ public class ContactsFragment extends Fragment {
 
                                     @Override
                                     protected void onPostExecute(String s) {
-                                      //When the friend list is populated then the dialog is canceled and the
-                                      //right panel can be loaded.
-                                      progressDialog.dismiss();
-                                      onChangeContact(positionCopy);
+                                        //When the friend list is populated then the dialog is canceled and the
+                                        //right panel can be loaded.
+                                        progressDialog.dismiss();
+                                        onChangeContact(positionCopy);
                                     }
                                 };
 
@@ -153,32 +148,32 @@ public class ContactsFragment extends Fragment {
                     }
                 });
 
-        leftPaneListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        contactsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View itemView, int index, long id) {
                 final LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(index);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
-                boolean isGroupChat=false;
-                final boolean isFriendRequest = item.viewType==Constants.TYPE_FRIEND_REQUEST;
+                boolean isGroupChat = false;
+                final boolean isFriendRequest = item.viewType == Constants.TYPE_FRIEND_REQUEST;
                 final CharSequence items[];
 
                 SharedPreferences settingsPref = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
                 final int option = settingsPref.getInt("group_option", 0);
 
-                if(isFriendRequest){
-                    items= new CharSequence[]{
+                if (isFriendRequest) {
+                    items = new CharSequence[]{
                             getResources().getString(R.string.friendrequest_accept),
                             getResources().getString(R.string.friendrequest_reject),
                             getResources().getString(R.string.friend_action_block)
                     };
-                } else if(option == 3) {
-                    items = new CharSequence[] {
+                } else if (option == 3) {
+                    items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_unblock),
                             getResources().getString(R.string.friend_action_deletechat)
                     };
                 } else {
-                    items= new CharSequence[]{
+                    items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
                             getResources().getString(R.string.friend_action_move_to_group),
                             getResources().getString(R.string.friend_action_delete),
@@ -191,8 +186,8 @@ public class ContactsFragment extends Fragment {
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
                                 //item.first equals the key
-                                if(isFriendRequest){
-                                    switch (index){
+                                if (isFriendRequest) {
+                                    switch (index) {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             //When accepting a friend request from long click it will be automatically assigned to "Friends" group
@@ -218,20 +213,20 @@ public class ContactsFragment extends Fragment {
                                             //rejectRequest(item.first);
                                             break;
                                         case 2:
-                                            showBlockDialog(getActivity(),item.first);
+                                            showBlockDialog(getActivity(), item.first);
                                             break;
                                     }
-                                } else if(option == 3) {
-                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                } else if (option == 3) {
+                                    ArrayList<Friend> tmp = ((MainActivity) getActivity()).friendList;
                                     //Get friend key
                                     String key = "";
-                                    for(int i = 0; i < tmp.size(); i++) {
-                                        if(item.first.equals(tmp.get(i).friendName)) {
+                                    for (int i = 0; i < tmp.size(); i++) {
+                                        if (item.first.equals(tmp.get(i).friendName)) {
                                             key = tmp.get(i).friendKey;
                                             break;
                                         }
                                     }
-                                    switch(index) {
+                                    switch (index) {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             db.unblockUser(key);
@@ -246,20 +241,20 @@ public class ContactsFragment extends Fragment {
                                             break;
                                     }
                                 } else {
-                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
+                                    ArrayList<Friend> tmp = ((MainActivity) getActivity()).friendList;
                                     //Get friend key
                                     String key = "";
                                     String group = "";
-                                    for(int i = 0; i < tmp.size(); i++) {
-                                        if(item.first.equals(tmp.get(i).friendName)) {
+                                    for (int i = 0; i < tmp.size(); i++) {
+                                        if (item.first.equals(tmp.get(i).friendName)) {
                                             key = tmp.get(i).friendKey;
                                             group = tmp.get(i).friendGroup;
                                             break;
                                         }
                                     }
-                                    switch (index){
+                                    switch (index) {
                                         case 0:
-                                            if(!key.equals("")) {
+                                            if (!key.equals("")) {
                                                 Intent profile = new Intent(main_act, FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
                                                 profile.putExtra("group", group);
@@ -298,7 +293,7 @@ public class ContactsFragment extends Fragment {
                                         case 2:
                                             //Delete friend
                                             if (!key.equals("")) {
-                                                showAlertDialog(getActivity(),key);
+                                                showAlertDialog(getActivity(), key);
                                             }
                                             break;
                                         case 3:
@@ -309,7 +304,7 @@ public class ContactsFragment extends Fragment {
                                             clearChat(key);
                                             break;
                                         case 4:
-                                            showBlockDialog(getActivity(),key);
+                                            showBlockDialog(getActivity(), key);
                                             break;
                                     }
                                 }
@@ -317,7 +312,7 @@ public class ContactsFragment extends Fragment {
                             }
                         });
                 AlertDialog alert = builder.create();
-                if(item.viewType!=Constants.TYPE_HEADER){
+                if (item.viewType != Constants.TYPE_HEADER) {
                     alert.show();
                 }
                 return true;

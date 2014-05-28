@@ -41,7 +41,7 @@ import java.util.Map;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ContactsFragment;
-import im.tox.antox.fragments.LeftPaneFragment;
+import im.tox.antox.fragments.SettingsFragment;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.utils.Constants;
@@ -54,7 +54,6 @@ import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.Message;
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxDoService;
-import im.tox.antox.tox.ToxService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
 import rx.Subscription;
@@ -567,7 +566,7 @@ public class MainActivity extends ActionBarActivity{
 
         Message msg;
 
-        LinearLayout noFriends = (LinearLayout) findViewById(R.id.left_pane_no_friends);
+        LinearLayout noFriends = (LinearLayout) findViewById(R.id.contacts_no_friends);
 
         if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0
                 && antoxDB.getFriendList(Constants.OPTION_BLOCKED_FRIENDS).size() == 0) {
@@ -705,7 +704,7 @@ public class MainActivity extends ActionBarActivity{
     }
 
     private void opensettings() {
-        Intent activity = new Intent(this, SettingsActivity.class);
+        Intent activity = new Intent(this, SettingsFragment.class);
         startActivity(activity);
     }
 

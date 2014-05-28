@@ -1,4 +1,4 @@
-package im.tox.antox.activities;
+package im.tox.antox.fragments;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -43,13 +43,13 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends com.github.machinarius.preferencefragment.PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
      * as a master/detail two-pane view on tablets. When true, a single pane is
      * shown on tablets.
-     */
+     *
     private static final boolean ALWAYS_SIMPLE_PREFS = false;
 
 
@@ -63,7 +63,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * Shows the simplified settings UI if the device configuration if the
      * device configuration dictates that a simplified, single-pane UI should be
      * shown.
-     */
+     *
     private void setupSimplePreferencesScreen() {
         if (!isSimplePreferences(this)) {
             return;
@@ -98,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         bindPreferenceSummaryToValue(findPreference("tox_id"));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc} *
     @Override
     public boolean onIsMultiPane() {
         return isXLargeTablet(this) && !isSimplePreferences(this);
@@ -107,7 +107,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     /**
      * Helper method to determine if the device has an extra-large screen. For
      * example, 10" tablets are extra-large.
-     */
+     *
     private static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
         & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
@@ -115,18 +115,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     /**
      * Determines whether the simplified settings UI should be shown. This is
-     * true if this is forced via {@link #ALWAYS_SIMPLE_PREFS}, or the device
+     * true if this is forced via {@link #//ALWAYS_SIMPLE_PREFS}, or the device
      * doesn't have newer APIs like {@link PreferenceFragment}, or the device
      * doesn't have an extra-large screen. In these cases, a single-pane
      * "simplified" settings UI should be shown.
-     */
+     *
     private static boolean isSimplePreferences(Context context) {
         return ALWAYS_SIMPLE_PREFS
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
                 || !isXLargeTablet(context);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc} *
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
@@ -138,7 +138,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
-     */
+     *
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -194,8 +194,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
+     * @see #////////////////sBindPreferenceSummaryToValueListener
+     *
     private static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
@@ -211,7 +211,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane settings UI.
-     */
+     *
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
         @Override
@@ -223,16 +223,24 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
+            /*
             bindPreferenceSummaryToValue(findPreference("nickname"));
             bindPreferenceSummaryToValue(findPreference("status"));
             bindPreferenceSummaryToValue(findPreference("status_message"));
+            *
         }
+    }*/
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.pref_profile);
     }
+
 
     /**
      * This fragment shows notification preferences only. It is used when the
      * activity is showing a two-pane settings UI.
-     */
+     *
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
         @Override
@@ -251,7 +259,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     /**
      * This fragment shows other preferences only. It is used when the
      * activity is showing a two-pane settings UI.
-     */
+     *
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DataSyncPreferenceFragment extends PreferenceFragment {
         @Override
@@ -266,17 +274,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             bindPreferenceSummaryToValue(findPreference("language"));
         }
     }
+    */
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+//        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+ //       getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     /* Callback will handle updating the new settings on the tox network */
@@ -322,10 +331,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         }
     }
-
+/*
     private void copyToxID() {
 
-        /* Copy ID to clipboard */
+        // Copy ID to clipboard
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Context context = getApplicationContext();
@@ -334,7 +343,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         clipboard.setText(sharedPreferences.getString("tox_id", ""));
 
 
-        /* Create toast to notify the user */
+        // Create toast to notify the user
         CharSequence text = "Tox ID copied to clipboard";
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, text, duration);
@@ -357,4 +366,5 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         return super.onOptionsItemSelected(item);
     }
+    */
 }

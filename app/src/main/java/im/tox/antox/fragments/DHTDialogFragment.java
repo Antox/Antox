@@ -16,7 +16,7 @@ import im.tox.antox.R;
  * Created by Garrett on 2/27/14.
  *
  * Settings Dialog for user-set DHT node settings
- * Called by SettingsActivity
+ * Called by SettingsFragment
  */
 public class DHTDialogFragment extends DialogFragment{
     /* The activity that creates an instance of this dialog fragment must
