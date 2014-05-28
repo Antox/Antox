@@ -2,18 +2,34 @@ package im.tox.antox.tox;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Observable;
 
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
+import im.tox.antox.utils.LeftPaneItem;
+import im.tox.antox.utils.Message;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
+import rx.subscriptions.Subscriptions;
 
 public class ToxSingleton {
 
@@ -31,12 +47,50 @@ public class ToxSingleton {
     public NotificationManager mNotificationManager;
     public ToxDataFile dataFile;
     public File qrFile;
+    public BehaviorSubject<ArrayList<Friend>> friendListSubject;
+    public rx.Observable<ArrayList<Friend>> friendListObservable(final Context ctx) {
+        return rx.Observable.create(new rx.Observable.OnSubscribeFunc<ArrayList<Friend>>() {
+            @Override
+            public Subscription onSubscribe(Observer<? super ArrayList<Friend>> observer) {
+                try {
+                    AntoxDB antoxDB = new AntoxDB(ctx);
+
+                    ArrayList<Friend> friendList = antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS);
+
+                    antoxDB.close();
+
+                    observer.onNext(friendList);
+                    observer.onCompleted();
+                } catch (Exception e) {
+                    observer.onError(e);
+                }
+                return Subscriptions.empty();
+            }
+        });
+    };
 
     private static volatile ToxSingleton instance = null;
 
     private ToxSingleton() {
 
     }
+
+    public Subscription updateFriendsList(Context ctx) {
+        return friendListObservable(ctx)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Action1<ArrayList<Friend>>(){
+                @Override
+                public void call(ArrayList<Friend> fl) {
+                    Log.d("FRIENDS LIST SHIT HAPPENING","");
+                    friendListSubject.onNext(fl);
+                }
+            });
+    }
+    public void initFriendsList(Context ctx){
+        ArrayList<Friend> fl = new ArrayList<Friend>();
+        friendListSubject = BehaviorSubject.create(fl);
+    };
 
     public void initTox(Context ctx) {
         friendsList = new AntoxFriendList();

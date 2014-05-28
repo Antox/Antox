@@ -9,8 +9,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,19 +20,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import java.util.ArrayList;
 import java.util.Map;
 
+import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
+import im.tox.antox.activities.MainActivity;
+import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxService;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.LeftPaneItem;
-import im.tox.antox.R;
-import im.tox.antox.tox.ToxService;
-import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.activities.MainActivity;
-import im.tox.antox.adapters.LeftPaneAdapter;
 
 /**
  * Created by ollie on 28/02/14.
@@ -74,7 +78,7 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-    public void updateLeftPane() {
+    public void updateContacts() {
         leftPaneAdapter = main_act.leftPaneAdapter;
         leftPaneListView.setAdapter(leftPaneAdapter);
         System.out.println("updated left pane");
@@ -91,10 +95,10 @@ public class ContactsFragment extends Fragment {
 
         main_act = (MainActivity) getActivity();
 
-        View rootView = inflater.inflate(R.layout.fragment_leftpane, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
 
-        updateLeftPane();
+        updateContacts();
 
         leftPaneListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
