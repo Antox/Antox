@@ -6,11 +6,9 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Benvenuto</string>
     <string name="title_activity_add_friend">Aggiungi Amico</string>
-    <string name="title_activity_settings">Impostazioni</string>
-    <string name="title_activity_profile">Profilo</string>
     <string name="title_activity_about">Informazioni</string>
     <string name="title_activity_friend_profile">Profilo</string>
-    <string name="title_activity_manage_groups">Gestisci Gruppi</string>
+    <string name="title_activity_manage_groups">Gruppi</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Impostazioni</string>
@@ -35,46 +33,17 @@
     <string name="main_no_internet">Nessuna connessione ad internet</string>
     <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
     <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
-    
-    <!-- About Activity -->
-    <string name="about_details">Antox è un client Android per Tox</string>
-    <string name="about_bugs">Per segnalare un bug, visita la pagina GitHub e clicca su \"Issues\"</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Siamo anche su Freenode, canale #tox-dev</string>
-    <string name="about_version">Versione</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
 
     <!-- Welcome Activity -->
-    <string name="about_string">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="getstarted_string">Nome Utente</string>
-    <string name="developer_string">Sviluppato da astonex</string>
     <string name="welcome_must_select_username">Devi inserire un nome utente</string>
-
-    <!-- Settings Activity -->
-    <string name="settings_user_key_title">Il tuo Tox-ID</string>
-    <string name="settings_name_hint">Inserisci il tuo nome</string>
-    <string name="settings_note_hint">Inserisci le tue informazioni personali</string>
-    <string name="settings_custom_dht">Impostazioni personalizzate per il server DHT</string>
-    <string name="settings_use_custom_dht">Usa server DHT personalizzato</string>
-    <string name="settings_dht_ip">IP (es: 192.254.75.98)</string>
-    <string name="settings_dht_port">Porta (es: 33445)</string>
-    <string name="settings_dht_key">Chiave pubblica (es: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">OK</string>
-    <string name="settings_updated">Impostazioni aggiornate</string>
-    <string name="settings_dht_spinner_title">Impostazioni Server DHT</string>
-    <string name="settings_language_title">Lingua</string>
-    <string name="settings_status_title">Stato</string>
-    <string name="settings_note_title">Informazioni personali</string>
-    <string name="settings_theme_title">Tema</string>
-    <string name="settings_username_title">Nome Utente</string>
-    <string name="settings_empty_strings">Devi compilare tutti i campi</string>
-    <string name="settings_invalid_key">Valore non valido</string>
-    <string name="settings_send_typing_indicators">Mostra quando sto scrivendo</string>
-    <string name="settings_notifications">Disabilita notifiche</string>
+    <string name="welcome_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
+    <string name="welcome_getstarted_string">Nome Utente</string>
+    <string name="welcome_name_hint">nickname</string>
+    <string name="welcome_button">Avanti</string>
+    <string name="welcome_developer_string">Sviluppato da astonex</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox-ID del tuo amico</string>
@@ -92,13 +61,6 @@
     <string name="addfriend_no_internet_text">Non puoi aggiungere amici in questo momento:
         non sei connesso alla rete Tox.\nProva a riavviare l\'applicazione.
     </string>
-
-    <!-- Profile Activity -->
-    <string name="share_with">Condividi Con</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Assente</string>
-    <string name="status_busy">Occupato</string>
-    <string name="profile_updated">Profilo aggiornato</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
@@ -144,7 +106,7 @@
     <string name="friend_action_profile">Profilo</string>
     <string name="friend_action_sendfile">Invia File</string>
     <string name="friend_action_delete">Rimuovi Amico</string>
-    <string name="friend_action_move_to_group">Sposta nel Gruppo</string>
+    <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_unblock">Sblocca</string>
     <string name="friend_action_deletechat">Elimina Chat</string>
