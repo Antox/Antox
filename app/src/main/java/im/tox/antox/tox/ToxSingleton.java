@@ -29,6 +29,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
 public class ToxSingleton {
@@ -48,43 +49,24 @@ public class ToxSingleton {
     public ToxDataFile dataFile;
     public File qrFile;
     public BehaviorSubject<ArrayList<Friend>> friendListSubject;
-    public rx.Observable<ArrayList<Friend>> friendListObservable(final Context ctx) {
-        return rx.Observable.create(new rx.Observable.OnSubscribeFunc<ArrayList<Friend>>() {
-            @Override
-            public Subscription onSubscribe(Observer<? super ArrayList<Friend>> observer) {
-                try {
-                    AntoxDB antoxDB = new AntoxDB(ctx);
-
-                    ArrayList<Friend> friendList = antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS);
-
-                    antoxDB.close();
-
-                    observer.onNext(friendList);
-                    observer.onCompleted();
-                } catch (Exception e) {
-                    observer.onError(e);
-                }
-                return Subscriptions.empty();
-            }
-        });
-    };
 
     public void initFriendsList(Context ctx){
-        ArrayList<Friend> fl = new ArrayList<Friend>();
-        friendListSubject = BehaviorSubject.create(fl);
+        friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
+        friendListSubject.subscribeOn(Schedulers.io());
     };
 
-    public Subscription updateFriendsList(Context ctx) {
-        return friendListObservable(ctx)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ArrayList<Friend>>(){
-                    @Override
-                    public void call(ArrayList<Friend> fl) {
-                        Log.d("FRIENDS LIST SHIT HAPPENING","");
-                        friendListSubject.onNext(fl);
-                    }
-                });
+    public void updateFriendsList(Context ctx) {
+        try {
+            AntoxDB antoxDB = new AntoxDB(ctx);
+
+            ArrayList<Friend> friendList = antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS);
+
+            antoxDB.close();
+
+            friendListSubject.onNext(friendList);
+        } catch (Exception e) {
+            friendListSubject.onError(e);
+        }
     }
 
     private static volatile ToxSingleton instance = null;
