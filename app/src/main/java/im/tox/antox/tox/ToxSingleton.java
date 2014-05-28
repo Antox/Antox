@@ -69,28 +69,28 @@ public class ToxSingleton {
         });
     };
 
-    private static volatile ToxSingleton instance = null;
-
-    private ToxSingleton() {
-
-    }
-
-    public Subscription updateFriendsList(Context ctx) {
-        return friendListObservable(ctx)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Action1<ArrayList<Friend>>(){
-                @Override
-                public void call(ArrayList<Friend> fl) {
-                    Log.d("FRIENDS LIST SHIT HAPPENING","");
-                    friendListSubject.onNext(fl);
-                }
-            });
-    }
     public void initFriendsList(Context ctx){
         ArrayList<Friend> fl = new ArrayList<Friend>();
         friendListSubject = BehaviorSubject.create(fl);
     };
+
+    public Subscription updateFriendsList(Context ctx) {
+        return friendListObservable(ctx)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ArrayList<Friend>>(){
+                    @Override
+                    public void call(ArrayList<Friend> fl) {
+                        Log.d("FRIENDS LIST SHIT HAPPENING","");
+                        friendListSubject.onNext(fl);
+                    }
+                });
+    }
+
+    private static volatile ToxSingleton instance = null;
+
+    private ToxSingleton() {
+    }
 
     public void initTox(Context ctx) {
         friendsList = new AntoxFriendList();

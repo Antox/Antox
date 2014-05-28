@@ -95,7 +95,7 @@
         </receiver>
 
         <activity
-            android:name="im.tox.antox.activities.SettingsActivity"
+            android:name=".fragments.SettingsFragment"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>

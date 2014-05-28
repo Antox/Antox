@@ -39,4 +39,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.netflix.rxjava:rxjava-android:0.18.3'
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
 }

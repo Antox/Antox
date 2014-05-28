@@ -35,6 +35,7 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Connection Status</string>
     <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
+    <string name="main_recent_no">No recent conversations</string>
     <string name="main_try_adding">Add some friends to get started</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
