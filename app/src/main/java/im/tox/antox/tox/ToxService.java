@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
@@ -43,8 +44,7 @@ public class ToxService extends IntentService {
         toxSingleton = ToxSingleton.getInstance();
         toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        SharedPreferences pref = getSharedPreferences("settings",
-                Context.MODE_PRIVATE);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         String action = intent.getAction();
 
@@ -58,16 +58,6 @@ public class ToxService extends IntentService {
                     e.printStackTrace();
                 } catch (ToxException e) {
                     Log.d(TAG, "ToxException: " + e.getError().toString());
-                    e.printStackTrace();
-                }
-                break;
-
-            case Constants.UPDATE_SETTINGS:
-                try {
-                    toxSingleton.jTox.setName(UserDetails.username);
-                    toxSingleton.jTox.setUserStatus(UserDetails.status);
-                    toxSingleton.jTox.setStatusMessage(UserDetails.note);
-                } catch (ToxException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -87,7 +77,8 @@ public class ToxService extends IntentService {
                 notify.putExtra("key", key);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
 
-                if(pref.getString("notifications", "") != "1") {
+                if(preferences.getBoolean("notifications_enable_notifications", true) != false
+                       && preferences.getBoolean("notifications_new_message", true) != false) {
                     /* Notifications */
                     if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(key))
                             && !(toxSingleton.leftPaneActive)) {
@@ -270,7 +261,8 @@ public class ToxService extends IntentService {
                     db.addFriendRequest(key, message);
                 db.close();
 
-                if(pref.getString("notifications", "") != "1") {
+                if(preferences.getBoolean("notifications_enable_notifications", true) != false
+                        && preferences.getBoolean("notifications_friend_request", true) != false) {
                 /* Notification */
                     if (!toxSingleton.leftPaneActive) {
                         NotificationCompat.Builder mBuilder =
@@ -278,6 +270,7 @@ public class ToxService extends IntentService {
                                         .setSmallIcon(R.drawable.ic_actionbar)
                                         .setContentTitle(getString(R.string.friend_request))
                                         .setContentText(message)
+
                                         .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
 
                         int ID = toxSingleton.friend_requests.size();

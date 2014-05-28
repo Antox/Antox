@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -115,9 +116,9 @@ public class ToxDoService extends IntentService {
                 toxSingleton.callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
                 toxSingleton.callbackHandler.registerOnTypingChangeCallback(antoxOnTypingChangeCallback);
 
-                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
+                SharedPreferences settingsPref = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = settingsPref.edit();
-                editor.putString("user_key", toxSingleton.jTox.getAddress());
+                editor.putString("tox_id", toxSingleton.jTox.getAddress());
                 editor.commit();
 
 
@@ -134,18 +135,20 @@ public class ToxDoService extends IntentService {
                         Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
 
                         /* Load user details */
-                        UserDetails.username = settingsPref.getString("saved_name_hint", "");
-                        if (settingsPref.getString("saved_status_hint", "").equals(getString(R.string.status_away)))
-                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_AWAY;
-                        else if (settingsPref.getString("saved_status_hint", "").equals(getString(R.string.status_busy)))
-                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_BUSY;
-                        else
-                            UserDetails.status = ToxUserStatus.TOX_USERSTATUS_NONE;
-                        UserDetails.note = settingsPref.getString("saved_note_hint", "");
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-                        toxSingleton.jTox.setName(UserDetails.username);
-                        toxSingleton.jTox.setStatusMessage(UserDetails.note);
-                        toxSingleton.jTox.setUserStatus(UserDetails.status);
+                        toxSingleton.jTox.setName(preferences.getString("nickname", ""));
+
+                        toxSingleton.jTox.setStatusMessage(preferences.getString("status_message", ""));
+
+                        ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
+                        String newStatusString = preferences.getString("status", "");
+                        if(newStatusString.equals("2"))
+                            newStatus = ToxUserStatus.TOX_USERSTATUS_AWAY;
+                        if(newStatusString.equals("3"))
+                            newStatus = ToxUserStatus.TOX_USERSTATUS_BUSY;
+
+                        toxSingleton.jTox.setUserStatus(newStatus);
                     }
 
                 } catch (UnknownHostException e) {

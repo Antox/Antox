@@ -11,10 +11,9 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,42 +27,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import javax.net.ssl.SSLHandshakeException;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
@@ -227,10 +201,10 @@ public class MainActivity extends ActionBarActivity{
         }
 
         // Checks to see if a language is set in settings
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-        String language = settingsPref.getString("language", "");
+        SharedPreferences settingsPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = settingsPref.getString("language", "-1");
         // If it has not, set it based on phone locale
-        if (language.equals("")){
+        if (language.equals("-1")){
             SharedPreferences.Editor editor = settingsPref.edit();
             editor.putString("language", getCurrentLanguageOnStart());
             editor.commit();
@@ -663,25 +637,6 @@ public class MainActivity extends ActionBarActivity{
         contacts.updateLeftPane();
     }
 
-
-    /**
-     * Starts a new intent to open the SettingsActivity class
-     *
-     * @see im.tox.antox.activities.SettingsActivity
-     */
-    private void openSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivityForResult(intent, Constants.UPDATE_SETTINGS_REQUEST_CODE);
-    }
-    /**
-     * Starts a new intent to open the SettingsActivity class
-     *
-     * @see im.tox.antox.activities.ProfileActivity
-     */
-    private void openProfile() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
     /**
      * Starts a new intent to open the AddFriendActivity class
      *
@@ -738,14 +693,16 @@ public class MainActivity extends ActionBarActivity{
         super.onStop();
     }
 
+    private void opensettings() {
+        Intent activity = new Intent(this, SettingsActivity.class);
+        startActivity(activity);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
-                openSettings();
-                return true;
-            case R.id.action_profile:
-                openProfile();
+            case R.id.settings_activity:
+                opensettings();
                 return true;
             case R.id.action_manage_group:
                 openGroupManagement();

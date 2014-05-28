@@ -1,0 +1,47 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <EditTextPreference
+        android:key="nickname"
+        android:title="@string/pref_title_nickname"
+        android:defaultValue="@string/pref_default_nickname"
+        android:selectAllOnFocus="true"
+        android:inputType="textCapWords"
+        android:capitalize="words"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <ListPreference
+        android:key="status"
+        android:title="@string/pref_title_status"
+        android:defaultValue="1"
+        android:entries="@array/pref_status_list_titles"
+        android:entryValues="@array/pref_status_list_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
+    <EditTextPreference
+        android:key="status_message"
+        android:title="@string/pref_title_status_message"
+        android:defaultValue="@string/pref_default_status_message"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <EditTextPreference
+        android:key="tox_id"
+        android:title="@string/pref_title_tox_id"
+        android:defaultValue="@string/pref_default_tox_id"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:enabled="false"
+        android:editable="false"
+        android:textIsSelectable="true"
+        android:maxLines="1" />
+
+
+</PreferenceScreen>
