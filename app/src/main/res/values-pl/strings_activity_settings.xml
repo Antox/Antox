@@ -1,0 +1,47 @@
+<resources>
+    <string name="title_activity_settings">Ustawienia</string>
+
+    <!-- Profile -->
+    <string name="pref_header_profile">Profil</string>
+
+    <string name="pref_title_nickname">Nazwa</string>
+    <string name="pref_default_nickname">Użytkownik Antoxa</string>
+
+    <string name="pref_title_status">Status</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Nieobecny</item>
+        <item>Zajęty</item>
+    </string-array>
+    <string-array name="pref_status_list_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_title_status_message">Status Message</string>
+    <string name="pref_default_status_message">Hej! Używam Antoxa</string>
+
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Domyślny Tox ID - Nie powinno tego widać</string>
+
+    <!-- Notifications -->
+    <string name="pref_header_notifications">Powiadomienia</string>
+
+    <string name="pref_title_enable_notifications">Odblokuj powiadomienia</string>
+    <string name="pref_title_new_message_notifications">Powiadomienia o wiadomościach</string>
+    <string name="pref_title_new_friend_notifications">Powiadomienia o zapytania znajomych</string>
+
+    <string name="pref_title_ringtone">Dzwonek</string>
+    <string name="pref_ringtone_silent">Cichy</string>
+
+    <string name="pref_title_vibrate">Wibracja</string>
+
+    <!-- Other -->
+    <string name="pref_header_other">Inne</string>
+
+    <string name="pref_title_language">Język</string>
+
+    <!-- Menu strings -->
+    <string name="copy_tox_id">Kopiuj Tox ID</string>
+</resources>
