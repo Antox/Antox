@@ -345,10 +345,14 @@ public class MainActivity extends ActionBarActivity{
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        //Initialize the friends list Subject in tox singleton;
-        toxSingleton.initFriendsList(this);
+        //Initialize the RxJava Subjects in tox singleton;
+        toxSingleton.initSubjects(this);
+
         //Grab the friends list from the database and send it to all listeners of the friends list Subject
         toxSingleton.updateFriendsList(this);
+        //Do the same for the last message map and unread count map subjects
+        toxSingleton.updateLastMessageMap(this);
+        toxSingleton.updateUnreadCountMap(this);
 
         onNewIntent(getIntent());
     }
@@ -538,6 +542,10 @@ public class MainActivity extends ActionBarActivity{
 
     public void updateLeftPane() {
 
+        toxSingleton.updateFriendsList(getApplicationContext());
+        toxSingleton.updateMessages(getApplicationContext());
+
+        /*
         AntoxDB antoxDB = new AntoxDB(this);
         SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
         int option = settingsPref.getInt("group_option", 0);
@@ -562,14 +570,6 @@ public class MainActivity extends ActionBarActivity{
 
         Message msg;
 
-        LinearLayout noFriends = (LinearLayout) findViewById(R.id.contacts_no_friends);
-
-        if (friend_requests_list.length == 0 && antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS).size() == 0
-                && antoxDB.getFriendList(Constants.OPTION_BLOCKED_FRIENDS).size() == 0) {
-            noFriends.setVisibility(View.VISIBLE);
-        } else {
-            noFriends.setVisibility(View.GONE);
-        }
 
         if (friend_requests_list.length > 0) {
             LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
@@ -636,6 +636,7 @@ public class MainActivity extends ActionBarActivity{
             }
         }
         antoxDB.close();
+        */
     }
 
     /**

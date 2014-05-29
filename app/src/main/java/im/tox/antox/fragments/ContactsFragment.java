@@ -33,6 +33,7 @@ import im.tox.antox.tox.ToxService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
+import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.LeftPaneItem;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -79,7 +80,7 @@ public class ContactsFragment extends Fragment {
         transaction.commit();
     }
 
-    public void updateContacts(ArrayList<Friend> friendsList) {
+    public void updateContacts(ArrayList<FriendInfo> friendsList) {
 
         //If you have no friends, display the no friends message
         LinearLayout noFriends = (LinearLayout) getView().findViewById(R.id.contacts_no_friends);
@@ -92,15 +93,14 @@ public class ContactsFragment extends Fragment {
 
         leftPaneAdapter = new LeftPaneAdapter(getActivity());
 
-        Friend friends_list[] = new Friend[friendsList.size()];
+        FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
             //add the header corresponding to the option: All Online Offline Blocked
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Contacts", null, 0);
             leftPaneAdapter.addItem(friends_header);
             for (int i = 0; i < friends_list.length; i++) {
-                //msg = mostRecentMessage(friends_list[i].friendKey, messageList);
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, "Placeholder" /*msg.message*/, friends_list[i].icon, 0/*countUnreadMessages(friends_list[i].friendKey, messageList)*/, new Timestamp(0,0,0,0,0,0,0)/*msg.timestamp*/);
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, new Timestamp(0,0,0,0,0,0,0)/*msg.timestamp*/);
                 leftPaneAdapter.addItem(friend);
             }
         }
@@ -114,10 +114,10 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        sub = toxSingleton.friendListSubject.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ArrayList<Friend>>() {
+        sub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ArrayList<FriendInfo>>() {
                     @Override
-                    public void call(ArrayList<Friend> friends_list) {
+                    public void call(ArrayList<FriendInfo> friends_list) {
                         Log.d("UPDATED FRIENDS LIST BITCH", Integer.toString(friends_list.size()));
                         updateContacts(friends_list);
                     }

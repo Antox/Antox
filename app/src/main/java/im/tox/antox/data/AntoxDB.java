@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import im.tox.antox.utils.Constants;
@@ -31,14 +32,18 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
     // and also update the onUpgrade method
-    public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIENDS +
-            " ( _id integer primary key , key text, username text, status text, note text, alias text, isonline boolean, isblocked boolean, usergroup text);";
+    public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends" +
+            " (tox_key text primary key, username text, status text, note text, alias text," +
+            " isonline boolean, isblocked boolean, usergroup text);";
 
-    public String CREATE_TABLE_CHAT_LOGS = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_CHAT_LOGS +
-            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, message_id integer, key text, message text, is_outgoing boolean, has_been_received boolean, has_been_read boolean, successfully_sent boolean)";
+    public String CREATE_TABLE_MESSAGES = "CREATE TABLE IF NOT EXISTS messages" +
+            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+            "message_id integer, tox_key text, message text, is_outgoing boolean, " +
+            "has_been_received boolean, has_been_read boolean, successfully_sent boolean, " +
+            "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))";
 
-    public String CREATE_TABLE_FRIEND_REQUEST = "CREATE TABLE IF NOT EXISTS " + Constants.TABLE_FRIEND_REQUEST +
-            " ( _id integer primary key, key text, message text)";
+    public String CREATE_TABLE_FRIEND_REQUESTS = "CREATE TABLE IF NOT EXISTS friend_requests" +
+            " ( _id integer primary key, tox_key text, message text)";
 
     public AntoxDB(Context ctx) {
         super(ctx, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
@@ -47,8 +52,8 @@ public class AntoxDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_FRIENDS);
-        db.execSQL(CREATE_TABLE_FRIEND_REQUEST);
-        db.execSQL(CREATE_TABLE_CHAT_LOGS);
+        db.execSQL(CREATE_TABLE_FRIEND_REQUESTS);
+        db.execSQL(CREATE_TABLE_MESSAGES);
     }
 
     @Override
@@ -150,6 +155,47 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
 
         return nr;
+    }
+
+    public HashMap getUnreadCounts() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        HashMap map = new HashMap();
+        String selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " +
+                "FROM messages " +
+                "JOIN friends ON friends.tox_key = messages.tox_key " +
+                "WHERE messages.has_been_read == 0 AND messages.is_outgoing == 0 " +
+                "GROUP BY friends.tox_key";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String key = cursor.getString(0);
+                int count = cursor.getInt(1);
+                map.put(key, count);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return map;
+    };
+
+    public HashMap getLastMessages() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        HashMap map = new HashMap();
+        String selectQuery = "SELECT tox_key, message FROM messages WHERE _id IN (" +
+                "SELECT MAX(_id) " +
+                "FROM messages " +
+                "GROUP BY tox_key)";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String key = cursor.getString(0);
+                String message = cursor.getString(1);
+                map.put(key, message);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return map;
     }
 
     public void moveUserToOtherGroup(String userKey, String newGroup) {
