@@ -55,7 +55,6 @@ public class ContactsFragment extends Fragment {
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     private Subscription sub;
-    private View rootView;
 
     public ContactsFragment() {
     }
