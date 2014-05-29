@@ -29,9 +29,9 @@ public final class Constants {
     public static final String DATABASE_NAME = "antoxdb";
     public static final int DATABASE_VERSION = 6;
     public static final String TABLE_FRIENDS = "friends";
-    public static final String TABLE_CHAT_LOGS = "chat_logs";
-    public static final String TABLE_FRIEND_REQUEST = "friend_request";
-    public static final String COLUMN_NAME_KEY ="key";
+    public static final String TABLE_CHAT_LOGS = "messages";
+    public static final String TABLE_FRIEND_REQUEST = "friend_requests";
+    public static final String COLUMN_NAME_KEY ="tox_key";
     public static final String COLUMN_NAME_MESSAGE ="message";
     public static final String COLUMN_NAME_USERNAME ="username";
     public static final String COLUMN_NAME_TIMESTAMP ="timestamp";
