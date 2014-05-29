@@ -20,6 +20,7 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.antox.tox.ToxSingleton;
 
@@ -181,7 +182,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     public HashMap getLastMessages() {
         SQLiteDatabase db = this.getReadableDatabase();
         HashMap map = new HashMap();
-        String selectQuery = "SELECT tox_key, message FROM messages WHERE _id IN (" +
+        String selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
                 "SELECT MAX(_id) " +
                 "FROM messages " +
                 "GROUP BY tox_key)";
@@ -190,7 +191,8 @@ public class AntoxDB extends SQLiteOpenHelper {
             do {
                 String key = cursor.getString(0);
                 String message = cursor.getString(1);
-                map.put(key, message);
+                Timestamp timestamp = Timestamp.valueOf(cursor.getString(2));
+                map.put(key, new Tuple<String,Timestamp>(message,timestamp));
             } while (cursor.moveToNext());
         }
         cursor.close();
