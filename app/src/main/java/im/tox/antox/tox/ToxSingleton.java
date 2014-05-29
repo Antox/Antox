@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
@@ -21,6 +22,7 @@ import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
@@ -72,18 +74,21 @@ public class ToxSingleton {
                 ArrayList<FriendInfo> fi = new ArrayList<FriendInfo>();
                 for (Friend f : fl) {
                     String lastMessage;
+                    Timestamp lastMessageTimestamp;
                     int unreadCount;
                     if (lm.containsKey(f.friendKey)) {
-                        lastMessage = (String) lm.get(f.friendKey);
+                        lastMessage = (String) ((Tuple<String,Timestamp>) lm.get(f.friendKey)).x;
+                        lastMessageTimestamp = (Timestamp) ((Tuple<String,Timestamp>) lm.get(f.friendKey)).y;
                     } else {
                         lastMessage = "";
+                        lastMessageTimestamp = new Timestamp(0,0,0,0,0,0,0);
                     }
                     if (uc.containsKey(f.friendKey)) {
                         unreadCount = (Integer) uc.get(f.friendKey);
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, f.friendGroup, lastMessage, unreadCount));
+                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, f.friendGroup, lastMessage, lastMessageTimestamp, unreadCount));
                 }
                 return fi;
             }

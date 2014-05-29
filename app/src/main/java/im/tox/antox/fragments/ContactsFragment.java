@@ -100,7 +100,7 @@ public class ContactsFragment extends Fragment {
             LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Contacts", null, 0);
             leftPaneAdapter.addItem(friends_header);
             for (int i = 0; i < friends_list.length; i++) {
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, new Timestamp(0,0,0,0,0,0,0)/*msg.timestamp*/);
+                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
         }
