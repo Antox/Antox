@@ -400,35 +400,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ArrayList<Friend> friendList = new ArrayList<Friend>();
-        String selectQuery = "";
-        switch (option) {
-            case Constants.OPTION_ALL_FRIENDS:
-                selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
-                break;
-            case Constants.OPTION_ONLINE_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "= 1 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
-                break;
-            case Constants.OPTION_OFFLINE_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISONLINE + "= 0 AND " + Constants.COLUMN_NAME_ISBLOCKED + "=0";
-                break;
-            case Constants.OPTION_BLOCKED_FRIENDS:
-                selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " + Constants.COLUMN_NAME_ISBLOCKED + "= 1";
-                break;
-            default:
-                break;
-        }
+        String selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             do {
-                String name = cursor.getString(2);
-                String key = cursor.getString(1);
-                String status = cursor.getString(3);
-                String note = cursor.getString(4);
-                String alias = cursor.getString(5);
-                int online = cursor.getInt(6);
-                boolean isBlocked = cursor.getInt(7)>0;
-                String group = cursor.getString(8);
+                String name = cursor.getString(1);
+                String key = cursor.getString(0);
+                String status = cursor.getString(2);
+                String note = cursor.getString(3);
+                String alias = cursor.getString(4);
+                int online = cursor.getInt(5);
+                boolean isBlocked = cursor.getInt(6)>0;
+                String group = cursor.getString(7);
 
                 if(alias == null)
                     alias = "";
