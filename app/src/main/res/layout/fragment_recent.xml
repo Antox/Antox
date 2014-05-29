@@ -9,8 +9,17 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+                <ListView
+                    android:id="@+id/conversations_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_absolute"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:divider="@color/white"
+                    android:dividerHeight="1dp" />
                 <LinearLayout
                     android:id="@+id/recent_no_conversations"
+                    android:visibility="gone"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
