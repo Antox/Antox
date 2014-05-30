@@ -431,7 +431,11 @@ public class MainActivity extends ActionBarActivity{
                         String activeKey = activeKeyAndIfFriend.x;
                         boolean isFriend = activeKeyAndIfFriend.y;
                         if (isFriend) {
-                            updateChat(activeKey);
+                            ChatFragment newFragment = new ChatFragment();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.right_pane, newFragment);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
                         }
                     }
                 });

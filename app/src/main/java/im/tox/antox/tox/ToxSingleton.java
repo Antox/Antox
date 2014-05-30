@@ -14,12 +14,15 @@ import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
+import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
+import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
@@ -88,10 +91,9 @@ public class ToxSingleton {
             @Override
             public Tuple<String,Boolean> call (String key, ArrayList<Friend> fl) {
                 boolean isFriend;
-                isFriend = isKeyFriend(key,fl);
+                isFriend = isKeyFriend(key, fl);
                 return new Tuple<String,Boolean>(key, isFriend);
             }
-
         });
     };
 
