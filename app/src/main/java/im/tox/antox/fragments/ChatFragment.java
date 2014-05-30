@@ -32,6 +32,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ollie on 28/02/14.
@@ -57,7 +58,7 @@ public class ChatFragment extends Fragment {
     public void onResume(){
         super.onResume();
         Observable<Tuple<String,Boolean>> activeKeyAndIsFriendAndMessagesSubject = toxSingleton.activeKeyAndIsFriendSubject;
-        activeKeyAndIsFriendAndMessagesSubject.map(new Func1<Tuple<String, Boolean>, Triple<String, Boolean, ArrayList<Message>>>() {
+        activeKeySub = activeKeyAndIsFriendAndMessagesSubject.map(new Func1<Tuple<String, Boolean>, Triple<String, Boolean, ArrayList<Message>>>() {
             @Override
             public Triple<String, Boolean, ArrayList<Message>> call(Tuple<String, Boolean> tup) {
                 String key = tup.x;
