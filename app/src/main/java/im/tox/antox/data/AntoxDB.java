@@ -19,6 +19,7 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.PrettyTimestamp;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxUserStatus;
 
@@ -98,6 +99,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
     }
 
+
     //Adding friend using his key.
     // Currently we are not able to fetch Note,username so keep it null.
     //So storing the received message as his/her personal note.
@@ -163,6 +165,23 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
         return map;
     };
+
+    public boolean isKeyInFriends(String key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT count(*) FROM friends WHERE tox_key == '" + key + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        int count;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        } else {
+            count = 0;
+        }
+        if (count > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public HashMap getLastMessages() {
         SQLiteDatabase db = this.getReadableDatabase();

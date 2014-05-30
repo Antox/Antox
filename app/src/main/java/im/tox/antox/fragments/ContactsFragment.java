@@ -51,7 +51,7 @@ public class ContactsFragment extends Fragment {
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
-    private Subscription sub;
+    private Subscription friendInfoSub;
 
     public ContactsFragment() {
     }
@@ -93,16 +93,16 @@ public class ContactsFragment extends Fragment {
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
             //add the header corresponding to the option: All Online Offline Blocked
-            LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, "Contacts", null, 0);
+            LeftPaneItem friends_header = new LeftPaneItem("Contacts");
             leftPaneAdapter.addItem(friends_header);
             for (int i = 0; i < friends_list.length; i++) {
-                LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
+                LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
         }
 
         contactsListView.setAdapter(leftPaneAdapter);
-        System.out.println("updated left pane");
+        System.out.println("updated contacts");
     }
 
     private MainActivity main_act;
@@ -110,11 +110,10 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        sub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
+        friendInfoSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<ArrayList<FriendInfo>>() {
                     @Override
                     public void call(ArrayList<FriendInfo> friends_list) {
-                        Log.d("UPDATED FRIENDS LIST BITCH", Integer.toString(friends_list.size()));
                         updateContacts(friends_list);
                     }
                 });
@@ -123,7 +122,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        sub.unsubscribe();
+        friendInfoSub.unsubscribe();
     }
 
     @Override
@@ -148,6 +147,11 @@ public class ContactsFragment extends Fragment {
                                             long id) {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
+                        String key = item.key;
+                        if (key != "") {
+                            toxSingleton.activeKeySubject.onNext(key);
+                        }
+                        /*
                         if (type == Constants.TYPE_CONTACT) {
                             if (toxSingleton.friendsList.all().size() == 0) {
                                 //Final copy of position so it can be used in the inner class.
@@ -190,6 +194,7 @@ public class ContactsFragment extends Fragment {
                             main_act.pane.closePane();
                             toxSingleton.rightPaneActive = true;
                         }
+                        */
                     }
                 });
 

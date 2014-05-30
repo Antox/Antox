@@ -45,7 +45,11 @@ import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -64,7 +68,6 @@ public class MainActivity extends ActionBarActivity{
 
     public SlidingPaneLayout pane;
     public ChatFragment chat;
-    private ContactsFragment contacts;
     private boolean tempRightPaneActive;
 
     /**
@@ -78,6 +81,7 @@ public class MainActivity extends ActionBarActivity{
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
+    Subscription activeKeySub;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -126,6 +130,7 @@ public class MainActivity extends ActionBarActivity{
 
 
     public void updateChat(String key) {
+        /*
         if(toxSingleton.friendsList.getById(key)!=null
                 && toxSingleton.friendsList.getById(key).getName()!=null ){
             AntoxDB db = new AntoxDB(this);
@@ -141,6 +146,7 @@ public class MainActivity extends ActionBarActivity{
                 Log.d(TAG, e.toString());
             }
         }
+        */
     }
 
     @Override
@@ -416,6 +422,28 @@ public class MainActivity extends ActionBarActivity{
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Tuple<String,Boolean>>() {
+                    @Override
+                    public void call(Tuple<String,Boolean> activeKeyAndIfFriend) {
+                        String activeKey = activeKeyAndIfFriend.x;
+                        boolean isFriend = activeKeyAndIfFriend.y;
+                        if (isFriend) {
+                            updateChat(activeKey);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        activeKeySub.unsubscribe();
+    }
+    /*
+    @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
@@ -426,9 +454,6 @@ public class MainActivity extends ActionBarActivity{
             updateChat(toxSingleton.activeFriendKey);
         }
         clearUselessNotifications();
-        if (contacts != null) {
-            updateLeftPane();
-        }
     }
 
     @Override
@@ -440,6 +465,7 @@ public class MainActivity extends ActionBarActivity{
         toxSingleton.leftPaneActive = false;
         super.onPause();
     }
+    */
 
     @Override
     public void onStop() {
