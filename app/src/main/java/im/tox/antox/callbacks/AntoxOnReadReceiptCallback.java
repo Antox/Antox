@@ -2,11 +2,10 @@ package im.tox.antox.callbacks;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
+import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.tox.ToxService;
 import im.tox.jtoxcore.callbacks.OnReadReceiptCallback;
 
 public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFriend> {

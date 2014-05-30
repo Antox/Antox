@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import org.xbill.DNS.CNAMERecord;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,13 +14,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
 
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxUserStatus;
-import im.tox.antox.tox.ToxSingleton;
 
 /**
  * Created by Aagam Shah on 7/3/14.
@@ -35,7 +33,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends" +
             " (tox_key text primary key, username text, status text, note text, alias text," +
-            " isonline boolean, isblocked boolean, usergroup text);";
+            " isonline boolean, isblocked boolean);";
 
     public String CREATE_TABLE_MESSAGES = "CREATE TABLE IF NOT EXISTS messages" +
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +

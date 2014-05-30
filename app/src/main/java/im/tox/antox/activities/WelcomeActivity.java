@@ -1,15 +1,12 @@
 package im.tox.antox.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.audiofx.BassBoost;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -17,8 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import im.tox.antox.R;
-import im.tox.antox.tox.ToxService;
-import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.ToxUserStatus;
 
