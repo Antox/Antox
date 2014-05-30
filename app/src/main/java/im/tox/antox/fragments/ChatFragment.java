@@ -15,15 +15,15 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
+import im.tox.antox.adapters.ChatMessagesAdapter;
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxService;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Message;
-import im.tox.antox.R;
-import im.tox.antox.tox.ToxService;
-import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.activities.*;
-import im.tox.antox.adapters.ChatMessagesAdapter;
 
 /**
  * Created by ollie on 28/02/14.

@@ -20,45 +20,32 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Map;
 
+import im.tox.antox.R;
+import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.fragments.ContactsFragment;
-import im.tox.antox.fragments.SettingsFragment;
-import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.fragments.ChatFragment;
+import im.tox.antox.fragments.ContactsFragment;
+import im.tox.antox.tox.ToxDoService;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.FriendRequest;
-import im.tox.antox.adapters.LeftPaneAdapter;
-import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.Message;
-import im.tox.antox.R;
-import im.tox.antox.tox.ToxDoService;
-import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
