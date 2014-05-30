@@ -10,7 +10,6 @@ public final class Constants {
     public static final String STOP_TOX = "im.tox.antox.STOP_TOX";
     public static final String BROADCAST_ACTION = "im.tox.antox.BROADCAST";
     public static final String ADD_FRIEND = "im.tox.antox.ADD";
-    public static final String FRIEND_LIST = "im.tox.antox.FRIENDS";
     public static final String SWITCH_TO_FRIEND = "im.tox.antox.SWITCH_TO_FRIEND";
     public static final String SEND_MESSAGE ="im.tox.antox.MESSAGE";
     public static final String UPDATE_MESSAGES ="im.tox.antox.UPDATE_MESSAGES";
@@ -45,16 +44,10 @@ public final class Constants {
     public static final String COLUMN_NAME_ISONLINE = "isonline";
     public static final String COLUMN_NAME_ALIAS = "alias";
     public static final String COLUMN_NAME_ISBLOCKED = "isblocked";
-    public static final String COLUMN_NAME_GROUP = "usergroup";
 
     //Activity request code for onActivityResult methods
     public static final int ADD_FRIEND_REQUEST_CODE=0;
     public static final int SENDFILE_PICKEDFRIEND_CODE=1;
     public static final int UPDATE_SETTINGS_REQUEST_CODE=2;
     public static final int WELCOME_ACTIVITY_REQUEST_CODE = 3;
-
-    public static final int OPTION_ALL_FRIENDS = 0;
-    public static final int OPTION_ONLINE_FRIENDS = 1;
-    public static final int OPTION_OFFLINE_FRIENDS = 2;
-    public static final int OPTION_BLOCKED_FRIENDS = 3;
 }

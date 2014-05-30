@@ -1,37 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:antonx="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings_activity"
-        android:orderInCategory="90"
-        antonx:showAsAction="never"
-        android:title="@string/title_activity_settings" />
-
-    <item
-        android:id="@+id/action_exit"
-        android:orderInCategory="100"
-        antonx:showAsAction="never"
-        android:title="@string/action_exit"/>
-
-    <item
         android:id="@+id/add_friend"
         android:orderInCategory="50"
         antonx:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_add_person"
         android:title="@string/add_friend"/>
-
-    <item
-        android:id="@+id/action_manage_group"
-        android:orderInCategory="60"
-        antonx:showAsAction="never"
-        android:title="@string/manage_groups"/>
-
-    <item
-        android:id="@+id/search_friend"
-        android:orderInCategory="25"
-        antonx:showAsAction="collapseActionView|ifRoom"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/search_friend"
-        android:actionViewClass="android.widget.SearchView"
-        antonx:actionViewClass="android.support.v7.widget.SearchView"/>
-
 </menu>

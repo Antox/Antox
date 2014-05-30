@@ -3,25 +3,19 @@ package im.tox.antox.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import im.tox.antox.R;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.IconColor;
 import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.PrettyTimestamp;
-import im.tox.antox.R;
-
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by ollie on 04/03/14.

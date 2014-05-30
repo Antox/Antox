@@ -20,45 +20,32 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
-import java.util.Map;
 
+import im.tox.antox.R;
+import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.fragments.ContactsFragment;
-import im.tox.antox.fragments.SettingsFragment;
-import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.fragments.ChatFragment;
+import im.tox.antox.fragments.ContactsFragment;
+import im.tox.antox.tox.ToxDoService;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.FriendRequest;
-import im.tox.antox.adapters.LeftPaneAdapter;
-import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.Message;
-import im.tox.antox.R;
-import im.tox.antox.tox.ToxDoService;
-import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.UserDetails;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -295,45 +282,6 @@ public class MainActivity extends ActionBarActivity{
 
         }
 
-        final ArrayList<String> groups = new ArrayList<String>();
-        Collections.addAll(groups, getResources().getStringArray(R.array.actions));
-        groups.add(getResources().getString(R.string.manage_groups_friends));
-        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getAll().isEmpty()) {
-            Map<String, ?> keys = sharedPreferences.getAll();
-            for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                groups.add(entry.getValue().toString());
-            }
-        }
-
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, R.layout.group_item, groups);
-        if (settingsPref.getInt("group_option", -1) == -1) {
-            SharedPreferences.Editor editor = settingsPref.edit();
-            editor.putInt("group_option", 0);
-            editor.commit();
-        }
-
-        ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
-            //String[] items = getResources().getStringArray(R.array.actions);
-            @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-                if (itemPosition != settingsPref.getInt("group_option", -1)) {
-                    SharedPreferences.Editor editor = settingsPref.edit();
-                    editor.putInt("group_option", itemPosition);
-                    editor.putString("group_option_name", groups.get(itemPosition));
-                    editor.commit();
-       //             updateLeftPane();
-                }
-                return true;
-            }
-        };
-        ActionBar actions = getSupportActionBar();
-        actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actions.setDisplayShowTitleEnabled(false);
-        actions.setListNavigationCallbacks(adapter, callback);
-        actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
-
         UserDetails.note = settingsPref.getString("saved_note_hint", "");
 
         pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
@@ -344,6 +292,7 @@ public class MainActivity extends ActionBarActivity{
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().hide();
 
         //Initialize the RxJava Subjects in tox singleton;
         toxSingleton.initSubjects(this);
@@ -435,208 +384,11 @@ public class MainActivity extends ActionBarActivity{
         return counter;
     }
 
-    void updateGroupsList() {
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-
-        ArrayList<String> groups = new ArrayList<String>();
-        Collections.addAll(groups, getResources().getStringArray(R.array.actions));
-        groups.add(getResources().getString(R.string.manage_groups_friends));
-        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getAll().isEmpty()) {
-            Map<String, ?> keys = sharedPreferences.getAll();
-            for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                groups.add(entry.getValue().toString());
-            }
-        }
-        SpinnerAdapter adapter = new ArrayAdapter<String>(this, R.layout.group_item, groups);
-
-        if (settingsPref.contains("group_option_name")) {
-            //check if the group previous selected still exists
-            boolean ok = false;
-            int pos = -1;
-            for (String group : groups) {
-                if (group.equals(settingsPref.getString("group_option_name", "Default"))) {
-                    ok = true;
-                    pos = groups.indexOf(group);
-                    break;
-                }
-            }
-
-            SharedPreferences.Editor editor = settingsPref.edit();
-            if (ok) {
-                editor.putInt("group_option", pos);
-                editor.commit();
-            }
-            else {
-                editor.putInt("group_option", 0);
-                editor.putString("group_option_name", "All");
-                editor.commit();
-            }
-        }
-        else {
-            SharedPreferences.Editor editor = settingsPref.edit();
-            editor.putInt("group_option", 0);
-            editor.putString("group_option_name", "All");
-            editor.commit();
-        }
-
-        final ArrayList<String> groupsClone = groups;
-
-        ActionBar.OnNavigationListener callback = new ActionBar.OnNavigationListener() {
-            @Override
-            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-                SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-                if (itemPosition != settingsPref.getInt("group_option", -1)) {
-                    SharedPreferences.Editor editor = settingsPref.edit();
-                    editor.putInt("group_option", itemPosition);
-                    editor.putString("group_option_name", groupsClone.get(itemPosition));
-                    editor.commit();
-                    updateLeftPane();
-                }
-                return true;
-            }
-        };
-        ActionBar actions = getSupportActionBar();
-        actions.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actions.setListNavigationCallbacks(adapter, callback);
-        actions.setSelectedNavigationItem(settingsPref.getInt("group_option", 0));
-
-        if (toxSingleton.rightPaneActive) {
-            supportInvalidateOptionsMenu();
-
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle(activeTitle);
-
-            // Hide add friend icon
-            MenuItem af = menu.findItem(R.id.add_friend);
-            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
-
-            //Hide group menu
-            ActionBar bar = MainActivity.this.getSupportActionBar();
-            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
-            // Hide search icon
-            MenuItem search = menu.findItem(R.id.search_friend);
-            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_NEVER);
-
-            //ag.setVisible(true);
-            /* Hide until functionality is implemented to avoid confusion
-            MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
-            ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    addFriendToGroup();
-                    return false;
-                }
-            });
-            */
-            toxSingleton.rightPaneActive = true;
-            toxSingleton.leftPaneActive = false;
-            if(toxSingleton.activeFriendKey!=null){
-                updateChat(toxSingleton.activeFriendKey);
-            }
-            clearUselessNotifications();
-        }
-    }
-
     public void updateLeftPane() {
 
         toxSingleton.updateFriendsList(getApplicationContext());
         toxSingleton.updateMessages(getApplicationContext());
 
-        /*
-        AntoxDB antoxDB = new AntoxDB(this);
-        SharedPreferences settingsPref = getSharedPreferences("settings", Context.MODE_PRIVATE);
-        int option = settingsPref.getInt("group_option", 0);
-        if (option <= 3) {
-            friendList = antoxDB.getFriendList(option);
-        }
-        else {
-            friendList = antoxDB.getFriendsInAGroup(settingsPref.getString("group_option_name", "Friends"));
-        }
-
-        ArrayList<Message> messageList = antoxDB.getMessageList("");
-
-        Friend friends_list[] = new Friend[friendList.size()];
-        friends_list = friendList.toArray(friends_list);
-
-        FriendRequest friend_requests_list[] = new FriendRequest[toxSingleton.friend_requests.size()];
-        friend_requests_list = toxSingleton.friend_requests.toArray(friend_requests_list);
-
-        leftPaneAdapter = new LeftPaneAdapter(this);
-
-        leftPaneKeyList = new ArrayList<String>();
-
-        Message msg;
-
-
-        if (friend_requests_list.length > 0) {
-            LeftPaneItem friend_request_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friend_requests), null, 0);
-            leftPaneAdapter.addItem(friend_request_header);
-            leftPaneKeyList.add("");
-            for (int i = 0; i < friend_requests_list.length; i++) {
-                LeftPaneItem friend_request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, friend_requests_list[i].requestKey, friend_requests_list[i].requestMessage, 0);
-                leftPaneAdapter.addItem(friend_request);
-                leftPaneKeyList.add(friend_requests_list[i].requestKey);
-            }
-        }
-
-        if (friends_list.length > 0) {
-            if (option > 3) {
-                ArrayList<String> groups = new ArrayList<String>();
-                groups.add("Friends");
-                SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
-                if (!sharedPreferences.getAll().isEmpty()) {
-                    Map<String, ?> keys = sharedPreferences.getAll();
-
-                    for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                        String groupName = entry.getValue().toString();
-                        groups.add(groupName);
-                    }
-                }
-                Collections.sort(groups);
-
-                for (String group : groups) {
-                    boolean exists = false;
-                    for (int i = 0; i < friends_list.length; i++) {
-                        if (friends_list[i].friendGroup.equals(group)) {
-                            if (!exists) {
-                                LeftPaneItem friends_header;
-                                if (group.equals("Friends")) {
-                                    friends_header = new LeftPaneItem(Constants.TYPE_HEADER, getResources().getString(R.string.main_friends), null, 0);
-                                } else {
-                                    friends_header = new LeftPaneItem(Constants.TYPE_HEADER, group, null, 0);
-                                }
-                                leftPaneAdapter.addItem(friends_header);
-                                leftPaneKeyList.add("");
-                                exists = true;
-                            }
-                            msg = mostRecentMessage(friends_list[i].friendKey, messageList);
-                            LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
-                            leftPaneAdapter.addItem(friend);
-                            leftPaneKeyList.add(friends_list[i].friendKey);
-                        }
-                    }
-                }
-            }
-            else {
-                String[] array = getResources().getStringArray(R.array.actions);
-
-                //add the header corresponding to the option: All Online Offline Blocked
-                LeftPaneItem friends_header = new LeftPaneItem(Constants.TYPE_HEADER, array[option], null, 0);
-                leftPaneAdapter.addItem(friends_header);
-                leftPaneKeyList.add("");
-                for (int i = 0; i < friends_list.length; i++) {
-                    msg = mostRecentMessage(friends_list[i].friendKey, messageList);
-                    LeftPaneItem friend = new LeftPaneItem(Constants.TYPE_CONTACT, friends_list[i].friendName, msg.message, friends_list[i].icon, countUnreadMessages(friends_list[i].friendKey, messageList), msg.timestamp);
-                    leftPaneAdapter.addItem(friend);
-                    leftPaneKeyList.add(friends_list[i].friendKey);
-                }
-            }
-        }
-        antoxDB.close();
-        */
     }
 
     /**
@@ -647,11 +399,6 @@ public class MainActivity extends ActionBarActivity{
     private void addFriend() {
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
-    }
-
-    private void openGroupManagement() {
-        Intent intent = new Intent(this, ManageGroupsActivity.class);
-        startActivity(intent);
     }
 
     private void clearUselessNotifications () {
@@ -675,7 +422,6 @@ public class MainActivity extends ActionBarActivity{
             updateChat(toxSingleton.activeFriendKey);
         }
         clearUselessNotifications();
-        updateGroupsList();
         if (contacts != null) {
             updateLeftPane();
         }
@@ -697,34 +443,14 @@ public class MainActivity extends ActionBarActivity{
         super.onStop();
     }
 
-    private void opensettings() {
-        Intent activity = new Intent(this, SettingsFragment.class);
-        startActivity(activity);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings_activity:
-                opensettings();
-                return true;
-            case R.id.action_manage_group:
-                openGroupManagement();
-                return true;
             case R.id.add_friend:
                 addFriend();
                 return true;
-            case R.id.search_friend:
-                getSupportActionBar().setIcon(R.drawable.ic_actionbar);
-                return true;
             case android.R.id.home:
                 pane.openPane();
-                return true;
-            case R.id.action_exit:
-                Intent stopToxIntent = new Intent(this, ToxDoService.class);
-                stopToxIntent.setAction(Constants.STOP_TOX);
-                this.startService(stopToxIntent);
-                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -736,35 +462,6 @@ public class MainActivity extends ActionBarActivity{
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem ag = menu.add(666, 100, 100, R.string.add_to_group);
-        ag.setIcon(R.drawable.ic_action_add_group).setVisible(false);
-        final MenuItem menuItem = menu.findItem(R.id.search_friend);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-        searchView
-                .setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-                    @Override
-                    public boolean onQueryTextSubmit(String query) {
-                        // do nothing
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String newText) {
-                        //MainActivity.this.contactsAdapter.getFilter().filter(
-                        //        newText);
-                        return true;
-                    }
-                });
-        searchView
-                .setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        MenuItemCompat.collapseActionView(menuItem);
-
-                    }
-                });
         //the class menu property is now the initialized menu
         this.menu=menu;
 
@@ -834,30 +531,12 @@ public class MainActivity extends ActionBarActivity{
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
 
-            //Hide group menu
-            ActionBar bar = MainActivity.this.getSupportActionBar();
-            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-
-            // Hide search icon
-            MenuItem search = menu.findItem(R.id.search_friend);
-            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_NEVER);
-
-            //ag.setVisible(true);
-            /* Hide until functionality is implemented to avoid confusion
-            MenuItemCompat.setShowAsAction(ag,MenuItem.SHOW_AS_ACTION_ALWAYS);
-            ag.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    addFriendToGroup();
-                    return false;
-                }
-            });
-            */
             toxSingleton.rightPaneActive = true;
             toxSingleton.leftPaneActive = false;
             if(toxSingleton.activeFriendKey!=null){
                 updateChat(toxSingleton.activeFriendKey);
             }
+
             clearUselessNotifications();
         }
 
@@ -869,16 +548,6 @@ public class MainActivity extends ActionBarActivity{
             // Show add friend icon
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-            //Show group dropdown
-            ActionBar bar = MainActivity.this.getSupportActionBar();
-            bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-            // Show search icon
-            MenuItem search = menu.findItem(R.id.search_friend);
-            MenuItemCompat.setShowAsAction(search, MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            //menu.removeGroup(666);
 
             supportInvalidateOptionsMenu();
 

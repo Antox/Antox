@@ -1,7 +1,6 @@
 package im.tox.antox.tox;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,15 +13,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import im.tox.antox.R;
-import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
-import im.tox.antox.data.AntoxDB;
-import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.AntoxFriendList;
-import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.DhtNode;
-import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.callbacks.AntoxOnActionCallback;
 import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
@@ -30,8 +20,15 @@ import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.antox.callbacks.AntoxOnNameChangeCallback;
 import im.tox.antox.callbacks.AntoxOnReadReceiptCallback;
 import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
+import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
-import im.tox.antox.utils.UserDetails;
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.utils.AntoxFriend;
+import im.tox.antox.utils.AntoxFriendList;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.DhtNode;
+import im.tox.antox.utils.Friend;
+import im.tox.antox.utils.FriendRequest;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 
@@ -76,7 +73,7 @@ public class ToxDoService extends IntentService {
 
                 /* Populate tox friends list with saved friends in database */
                 db = new AntoxDB(getApplicationContext());
-                ArrayList<Friend> friends = db.getFriendList(Constants.OPTION_ALL_FRIENDS);
+                ArrayList<Friend> friends = db.getFriendList();
                 db.close();
 
                 toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
