@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.IconColor;
 import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.PrettyTimestamp;
 import im.tox.antox.R;
@@ -123,27 +124,12 @@ public class LeftPaneAdapter extends BaseAdapter {
                 holder.countText.setVisibility(View.GONE);
             }
             holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp));
-            holder.icon.setBackgroundColor(Color.parseColor(iconColor(item.icon)));
+            holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(item.icon)));
         }
 
         return convertView;
     }
 
-    private String iconColor (int i) {
-        String color;
-        if (i == 0) {
-            color = "#B0B0B0"; //offline
-        } else if (i == 1) {
-            color = "#5ec245"; //online
-        } else if (i == 2) {
-            color = "#E5C885"; //away
-        } else if (i == 3) {
-            color = "#CF4D58"; //busy
-        } else {
-            color = "#FFFFFF";
-        }
-        return color;
-    }
 
     private static class ViewHolder {
         public TextView firstText;
