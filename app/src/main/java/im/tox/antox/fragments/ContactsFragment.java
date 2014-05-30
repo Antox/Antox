@@ -223,7 +223,6 @@ public class ContactsFragment extends Fragment {
                 } else {
                     items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
-                            getResources().getString(R.string.friend_action_move_to_group),
                             getResources().getString(R.string.friend_action_delete),
                             getResources().getString(R.string.friend_action_deletechat),
                             getResources().getString(R.string.friend_action_block)
@@ -239,7 +238,7 @@ public class ContactsFragment extends Fragment {
                                         case 0:
                                             AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                             //When accepting a friend request from long click it will be automatically assigned to "Friends" group
-                                            db.addFriend(item.first, "Friend Accepted", "", "", "Friends");
+                                            db.addFriend(item.first, "Friend Accepted", "", "");
                                             db.close();
                                             main_act.updateLeftPane();
                                             Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
@@ -296,7 +295,6 @@ public class ContactsFragment extends Fragment {
                                     for (int i = 0; i < tmp.size(); i++) {
                                         if (item.first.equals(tmp.get(i).friendName)) {
                                             key = tmp.get(i).friendKey;
-                                            group = tmp.get(i).friendGroup;
                                             break;
                                         }
                                     }
@@ -305,53 +303,24 @@ public class ContactsFragment extends Fragment {
                                             if (!key.equals("")) {
                                                 Intent profile = new Intent(main_act, FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
-                                                profile.putExtra("group", group);
                                                 startActivity(profile);
                                             }
                                             break;
-                                        case 1:
-                                            //move to group
-                                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                                            ArrayList<String> groups = new ArrayList<String>();
-                                            groups.add(getResources().getString(R.string.manage_groups_friends));
-                                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("groups", Context.MODE_PRIVATE);
-                                            if (!sharedPreferences.getAll().isEmpty()) {
-                                                Map<String, ?> keys = sharedPreferences.getAll();
-                                                for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                                                    groups.add(entry.getValue().toString());
-                                                }
-                                            }
-                                            final CharSequence[] cs = groups.toArray(new CharSequence[groups.size()]);
-                                            final String userKey = key;
 
-                                            dialogBuilder.setTitle("Choose a group");
-                                            dialogBuilder.setItems(cs, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    AntoxDB db = new AntoxDB(getActivity());
-                                                    db.moveUserToOtherGroup(userKey, cs[i].toString());
-                                                    main_act.updateLeftPane();
-                                                    Toast.makeText(getActivity(), getActivity().getString(R.string.toast_succ_move_user),
-                                                            Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                            builder.create().cancel();
-                                            dialogBuilder.show();
-                                            break;
-                                        case 2:
+                                        case 1:
                                             //Delete friend
                                             if (!key.equals("")) {
                                                 showAlertDialog(getActivity(), key);
                                             }
                                             break;
-                                        case 3:
+                                        case 2:
                                             AntoxDB db = new AntoxDB(getActivity());
                                             db.deleteChat(key);
                                             db.close();
                                             main_act.updateLeftPane();
                                             clearChat(key);
                                             break;
-                                        case 4:
+                                        case 3:
                                             showBlockDialog(getActivity(), key);
                                             break;
                                     }

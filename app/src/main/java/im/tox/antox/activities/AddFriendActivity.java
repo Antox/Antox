@@ -101,24 +101,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             notConnectedAlertDialog.show();
         }
 
-        //set the spinner
-        friendGroup = (Spinner) findViewById(R.id.spinner_add_friend_group);
-        ArrayList<String> spinnerArray = new ArrayList<String>();
-        spinnerArray.add(getResources().getString(R.string.manage_groups_friends));
-        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getAll().isEmpty()) {
-            Map<String,?> keys = sharedPreferences.getAll();
-
-            for(Map.Entry<String,?> entry : keys.entrySet()){
-                String groupName = entry.getValue().toString();
-                spinnerArray.add(groupName);
-            }
-
-        }
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        friendGroup.setAdapter(spinnerAdapter);
-
         context = getApplicationContext();
         text = getString(R.string.addfriend_friend_added);
 
@@ -187,7 +169,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
                 String group = friendGroup.getSelectedItem().toString();
                 Log.d("AddFriendActivity","Adding friend to database");
-                db.addFriend(ID, "Friend Request Sent", alias, originalUsername, group);
+                db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
             } else {
                 return -2;
             }

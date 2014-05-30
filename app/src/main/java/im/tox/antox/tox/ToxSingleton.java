@@ -88,7 +88,7 @@ public class ToxSingleton {
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, f.friendGroup, lastMessage, lastMessageTimestamp, unreadCount));
+                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount));
                 }
                 return fi;
             }
@@ -99,7 +99,7 @@ public class ToxSingleton {
         try {
             AntoxDB antoxDB = new AntoxDB(ctx);
 
-            ArrayList<Friend> friendList = antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS);
+            ArrayList<Friend> friendList = antoxDB.getFriendList();
 
             antoxDB.close();
 
