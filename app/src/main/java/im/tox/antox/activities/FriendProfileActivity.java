@@ -128,11 +128,6 @@ public class FriendProfileActivity extends ActionBarActivity {
         TextView friendKeyText = (TextView) findViewById(R.id.friendKeyText);
         EditText friendAlias = (EditText) findViewById(R.id.friendAliasText);
         db.updateAlias(friendAlias.getText().toString(), friendKeyText.getText().toString());
-
-        Spinner friendGroupSpinner = (Spinner) findViewById(R.id.spinner_friend_profile_group);
-        String group = friendGroupSpinner.getSelectedItem().toString();
-        db.moveUserToOtherGroup(friendKey, group);
-
         db.close();
 
         Context context = getApplicationContext();
