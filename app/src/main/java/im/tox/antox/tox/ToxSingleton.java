@@ -2,41 +2,27 @@ package im.tox.antox.tox;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
-import android.view.View;
 
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
-import java.util.concurrent.Future;
 
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
-import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
-import im.tox.antox.utils.LeftPaneItem;
-import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
-import rx.subscriptions.Subscriptions;
 
 import static rx.Observable.combineLatest;
 
@@ -88,7 +74,7 @@ public class ToxSingleton {
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, f.friendGroup, lastMessage, lastMessageTimestamp, unreadCount));
+                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount));
                 }
                 return fi;
             }
@@ -99,7 +85,7 @@ public class ToxSingleton {
         try {
             AntoxDB antoxDB = new AntoxDB(ctx);
 
-            ArrayList<Friend> friendList = antoxDB.getFriendList(Constants.OPTION_ALL_FRIENDS);
+            ArrayList<Friend> friendList = antoxDB.getFriendList();
 
             antoxDB.close();
 

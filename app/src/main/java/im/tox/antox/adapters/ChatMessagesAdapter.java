@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.ArrayList;
 
-import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.R;
+import im.tox.antox.utils.ChatMessages;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     Context context;

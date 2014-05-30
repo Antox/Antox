@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="actions">
-        <item>All</item>
-        <item>Online</item>
-        <item>Offline</item>
-        <item>Blocked</item>
-    </string-array>
-
     <string-array name="languages">
         <item>English</item>
         <item>Deutsch</item>

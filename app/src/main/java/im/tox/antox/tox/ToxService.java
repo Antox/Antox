@@ -1,6 +1,7 @@
 package im.tox.antox.tox;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.app.Notification;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -16,17 +16,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Random;
 
+import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
+import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
+import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
-import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
-import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
-import im.tox.antox.callbacks.AntoxOnMessageCallback;
-import im.tox.antox.utils.UserDetails;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
 
@@ -323,10 +322,9 @@ public class ToxService extends IntentService {
                 try {
                     toxSingleton.jTox.confirmRequest(key);
 
-                /* Add friend to tox friends list */
                     //This is so wasteful. Should pass the info in the intent with the key
                     db = new AntoxDB(getApplicationContext());
-                    ArrayList<Friend> friends = db.getFriendList(Constants.OPTION_ALL_FRIENDS);
+                    ArrayList<Friend> friends = db.getFriendList();
                     //Long statement but just getting size of friends list and adding one for the friend number
                     friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
                     int pos = -1;
