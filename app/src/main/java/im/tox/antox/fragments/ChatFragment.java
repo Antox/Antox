@@ -24,6 +24,9 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Message;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by ollie on 28/02/14.
@@ -39,6 +42,7 @@ public class ChatFragment extends Fragment {
     private EditText messageBox;
     private MainActivity main_act;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
+    Subscription activeKeySub;
 
 
     public ChatFragment() {
@@ -46,6 +50,27 @@ public class ChatFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        activeKeySub = toxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String activeKey) {
+                        changeActiveContact(activeKey);
+                    }
+                });
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        activeKeySub.unsubscribe();
+    }
+
+    private void changeActiveContact(String activeKey) {
+
+    }
 
     public void sendMessage() {
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
@@ -100,7 +125,6 @@ public class ChatFragment extends Fragment {
                 builder.setCancelable(true)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
-
                                 switch (index) {
                                     case 0:
                                         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());

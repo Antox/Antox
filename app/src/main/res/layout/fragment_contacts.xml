@@ -42,7 +42,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#5555ff">
+        android:orientation="horizontal"
+        android:background="#54759e">
+        <ImageButton
+            android:id="@+id/contacts_start_group_conversation"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_add_group"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:id="@+id/contacts_search"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_search"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
         <ImageButton
             android:id="@+id/contacts_add_friend"
             android:layout_width="48dp"
@@ -50,7 +71,6 @@
             android:background="@android:color/transparent"
             android:onClick="onClickAddFriend"
             android:src="@drawable/ic_action_add_person"/>
-
     </LinearLayout>
 </LinearLayout>
 

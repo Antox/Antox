@@ -20,6 +20,7 @@ import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
+import rx.functions.Func2;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -45,7 +46,9 @@ public class ToxSingleton {
     public BehaviorSubject<ArrayList<Friend>> friendListSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
+    public BehaviorSubject<String> activeKeySubject;
     public rx.Observable friendInfoListSubject;
+    public rx.Observable activeKeyAndIsFriendSubject;
 
     public void initSubjects(Context ctx){
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
@@ -54,6 +57,8 @@ public class ToxSingleton {
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
         unreadCountsSubject.subscribeOn(Schedulers.io());
+        activeKeySubject = BehaviorSubject.create(new String());
+        activeKeySubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
             @Override
             public ArrayList<FriendInfo> call(ArrayList<Friend> fl, HashMap lm, HashMap uc) {
@@ -79,6 +84,24 @@ public class ToxSingleton {
                 return fi;
             }
         });
+        activeKeyAndIsFriendSubject = combineLatest(activeKeySubject, friendListSubject, new Func2<String, ArrayList<Friend>, Tuple<String,Boolean>> () {
+            @Override
+            public Tuple<String,Boolean> call (String key, ArrayList<Friend> fl) {
+                boolean isFriend;
+                isFriend = isKeyFriend(key,fl);
+                return new Tuple<String,Boolean>(key, isFriend);
+            }
+
+        });
+    };
+
+    private boolean isKeyFriend(String key, ArrayList<Friend> fl) {
+        for(Friend f: fl) {
+            if (f.friendKey == key) {
+                return true;
+            }
+        }
+        return false;
     };
 
     public void updateFriendsList(Context ctx) {

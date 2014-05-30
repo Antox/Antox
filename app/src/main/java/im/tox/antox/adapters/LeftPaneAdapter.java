@@ -61,6 +61,10 @@ public class LeftPaneAdapter extends BaseAdapter {
         return mData.get(position);
     }
 
+    public String getKey(int position) {
+        return getItem(position).key;
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -100,7 +104,7 @@ public class LeftPaneAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder)convertView.getTag();
         }
-        LeftPaneItem item = mData.get(position);
+        LeftPaneItem item = getItem(position);
 
         if (type == Constants.TYPE_FRIEND_REQUEST) {
             holder.firstText.setText(SplitKey(item.first));
@@ -134,5 +138,3 @@ public class LeftPaneAdapter extends BaseAdapter {
     }
 
 }
-
-
