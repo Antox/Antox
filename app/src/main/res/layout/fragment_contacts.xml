@@ -8,7 +8,8 @@
     android:orientation="vertical" >
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
                 <ListView
                     android:id="@+id/contacts_list"
                     android:layout_width="match_parent"
@@ -38,5 +39,18 @@
                         android:text="@string/main_try_adding"/>
                     </LinearLayout>
     </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#5555ff">
+        <ImageButton
+            android:id="@+id/contacts_add_friend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:onClick="onClickAddFriend"
+            android:src="@drawable/ic_action_add_person"/>
+
+    </LinearLayout>
 </LinearLayout>
 

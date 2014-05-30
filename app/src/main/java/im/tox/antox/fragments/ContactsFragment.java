@@ -21,6 +21,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.AddFriendActivity;
 import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
