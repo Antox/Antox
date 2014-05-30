@@ -9,4 +9,5 @@
     <color name="gray_darker">@android:color/darker_gray</color>
 
     <color name="green">#99cc00</color>
+    <color name="blue">#5555ff</color>
 </resources>

@@ -401,6 +401,10 @@ public class MainActivity extends ActionBarActivity{
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
 
+    public void onClickAddFriend(View v) {
+        Intent intent = new Intent(this, AddFriendActivity.class);
+        startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
+    }
     private void clearUselessNotifications () {
         AntoxDB db = new AntoxDB(getApplicationContext());
         if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
