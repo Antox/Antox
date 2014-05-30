@@ -2,6 +2,8 @@ package im.tox.antox.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import java.util.Locale;
 import im.tox.antox.R;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
+import im.tox.antox.utils.IconColor;
+import im.tox.antox.utils.PrettyTimestamp;
 
 public class RecentAdapter extends ArrayAdapter<FriendInfo> {
 	Context context;
@@ -70,6 +74,14 @@ public class RecentAdapter extends ArrayAdapter<FriendInfo> {
 		FriendInfo friend = data.get(position);
 		holder.friendName.setText(friend.friendName);
 		holder.friendStatus.setText(friend.lastMessage);
+        holder.unreadCount.setText(Integer.toString(friend.unreadCount));
+        holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(friend.lastMessageTimestamp));
+        holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(friend.icon)));
+        if (friend.unreadCount == 0) {
+            holder.unreadCount.setVisibility(View.GONE);
+        } else {
+            holder.unreadCount.setVisibility(View.VISIBLE);
+        }
 		return row;
 	}
 
