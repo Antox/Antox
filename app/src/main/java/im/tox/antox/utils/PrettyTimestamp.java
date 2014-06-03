@@ -12,7 +12,6 @@ import java.util.TimeZone;
 public class PrettyTimestamp {
     public static String prettyTimestamp(Timestamp t) {
         String tString = t.toString();
-
         try {
             //Set the date format.
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
@@ -27,7 +26,10 @@ public class PrettyTimestamp {
         catch (Exception e) {
             tString = t.toString();
         }
+        return prettyTimestamp(tString);
+    }
 
+    public static String prettyTimestamp(String tString) {
         java.util.Date date= new java.util.Date();
         Timestamp current = new Timestamp(date.getTime());
         String output;
