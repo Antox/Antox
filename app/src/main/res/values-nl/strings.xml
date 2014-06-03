@@ -52,14 +52,14 @@
     <string name="getstarted_string">Voer gewenste nickname in</string>
     <string name="settings_custom_dht">Aangepaste DHT-node-instellingen</string>
     <string name="settings_use_custom_dht">Gebruik aangepaste DHT-node-instellingen</string>
-    <string name="settings_user_key_title">Je TOX ID</string>
+    <string name="settings_user_key_title">Je Tox ID</string>
     <string name="settings_name_hint">voer naam in</string>
     <string name="settings_note_hint">voer hint in</string>
     <string name="settings_dht_ip">IP-adres van een bootstrap (bijv: 192.254.75.98)</string>
     <string name="settings_dht_port">Bootstrappoortnummer (bijv: 33445)</string>
     <string name="settings_dht_key">Public Key-addres van een bootstrap (bijv: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
     <string name="settings_button">Update</string>
-    <string name="settings_updated">Je instellingen zijn geupdatet</string>
+    <string name="settings_updated">Je instellingen zijn geüpdatet</string>
     <string name="settings_dht_spinner_title">Geadvanceerde instellingen</string>
     <string name="settings_language_title">Taal</string>
     <string name="settings_status_title">Status</string>
@@ -78,12 +78,12 @@
     <string name="addfriend_friend_added">Toegevoegd aan vrienden</string>
     <string name="addfriend_friend_exists">Is reeds toegevoegd</string>
     <string name="scanqr_button">Scan een QR code</string>
-    <string name="invalid_friend_ID">Ongeldig ID</string>
-    <string name="addfriend_nick_hint">Zet een bijnaam voor je vriend</string>
+    <string name="invalid_friend_ID">Ongeldige ID</string>
+    <string name="addfriend_nick_hint">Stel een bijnaam in voor je vriend</string>
     <string name="addfriend_optional_title">Optionele extra\'s</string>
     <string name="dialog_pin">Voer de pin van je vriend in</string>
     <string name="addfriend_invalid_pin">Ongeldige Pin</string>
-    <string name="addfriend_no_internet">Geen Tox netwerkverbinding</string>
+    <string name="addfriend_no_internet">Geen Tox-netwerkverbinding</string>
     <string name="addfriend_no_internet_text">
         Helaas bent u niet verbonden op het Tox netwerk, dus kunt je geen vrienden toevoegen op dit moment.
         Probeer de applicatie opnieuw te starten.
@@ -94,7 +94,7 @@
     <string name="status_online">Online</string>
     <string name="status_away">Afwezig</string>
     <string name="status_busy">Bezig</string>
-    <string name="profile_updated">Profiel is geupdated</string>
+    <string name="profile_updated">Profiel is geüpdatet</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Naam</string>
@@ -107,7 +107,7 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accepteer</string>
     <string name="friendrequest_reject">Weiger</string>
-    <string name="friendrequest_accepted">Vriendsschapsverzoek geaccepteerd</string>
+    <string name="friendrequest_accepted">Vriendschapsverzoek geaccepteerd</string>
     <string name="friendrequest_deleted">Vriendschapsverzoek verwijderd</string>
     <string name="friendrequest">Vriendschapsverzoek</string>
     <string name="friendrequest_recieved">Nieuw vriendschapsverzoek ontvangen</string>
@@ -120,9 +120,9 @@
     <string name="friend_action_block">Blokkeer</string>
     <string name="friend_action_unblock">Deblokkeren</string>
     <string name="group_action_leave">Verlaat groep</string>
-    <string name="friend_action_deletechat">Chat logs verwijderen</string>
+    <string name="friend_action_deletechat">Chatlogs verwijderen</string>
     <string name="friend_action_block_confirmation">
-        Als u deze gebruiker blokkeerd, worden ze verwijdert van u vriendenlijst en u zal geen vriendverzoeking van hun krijgen.
+        Als u deze gebruiker blokkeert, worden ze verwijderd van u vriendenlijst en u zal geen vriendverzoeking van hun ontvangen.
         Weet u zeker dat u wilt doorgaan?
     </string>
 
