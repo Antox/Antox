@@ -85,7 +85,7 @@
     <string name="addfriend_invalid_pin">Ongeldige Pin</string>
     <string name="addfriend_no_internet">Geen Tox-netwerkverbinding</string>
     <string name="addfriend_no_internet_text">
-        Helaas bent u niet verbonden op het Tox netwerk, dus kunt je geen vrienden toevoegen op dit moment.
+        Je bent niet verbonden met het Tox-netwerk, dus kunt je geen vrienden toevoegen op dit moment.
         Probeer de applicatie opnieuw te starten.
     </string>
 
