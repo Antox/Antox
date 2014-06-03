@@ -64,7 +64,6 @@ public class ToxService extends IntentService {
             case Constants.ON_MESSAGE:
                 String key = intent.getStringExtra(AntoxOnMessageCallback.KEY);
                 String message = intent.getStringExtra(AntoxOnMessageCallback.MESSAGE);
-                String name = toxSingleton.friendsList.getById(key).getName();
                 int friend_number = intent.getIntExtra(AntoxOnMessageCallback.FRIEND_NUMBER, -1);
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 if(!db.isFriendBlocked(key))
@@ -86,7 +85,7 @@ public class ToxService extends IntentService {
                         NotificationCompat.Builder mBuilder =
                                 new NotificationCompat.Builder(this)
                                         .setSmallIcon(R.drawable.ic_actionbar)
-                                        .setContentTitle(name)
+                                        .setContentTitle(key)
                                         .setContentText(message)
                                         .setDefaults(Notification.DEFAULT_ALL);
                         // Creates an explicit intent for an Activity in your app
@@ -94,7 +93,6 @@ public class ToxService extends IntentService {
                         resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         resultIntent.setAction(Constants.SWITCH_TO_FRIEND);
                         resultIntent.putExtra("key", key);
-                        resultIntent.putExtra("name", name);
 
                         // The stack builder object will contain an artificial back stack for the
                         // started Activity.
@@ -168,6 +166,7 @@ public class ToxService extends IntentService {
                 }
                 break;
 
+            /*
             case Constants.SEND_UNSENT_MESSAGES:
                 db = new AntoxDB(getApplicationContext());
                 ArrayList<Message> unsentMessageList = db.getUnsentMessageList();
@@ -197,57 +196,14 @@ public class ToxService extends IntentService {
                 }
                 db.close();
                 if (toxSingleton.activeFriendKey != null) {
-            /* Broadcast to update UI */
+            /* Broadcast to update UI *
                     notify = new Intent(Constants.BROADCAST_ACTION);
                     notify.putExtra("action", Constants.UPDATE_MESSAGES);
                     notify.putExtra("key", toxSingleton.activeFriendKey);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
                 }
                 break;
-
-            case Constants.SEND_MESSAGE:
-                key = intent.getStringExtra("key");
-                message = intent.getStringExtra("message");
-            /* Send message */
-                friend = null;
-                Random generator = new Random();
-                int id = generator.nextInt();
-                boolean sendingSucceeded = true;
-                try {
-                    friend = toxSingleton.friendsList.getById(key);
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-                try {
-                    if (friend != null) {
-                        toxSingleton.jTox.sendMessage(friend, message, id);
-                    }
-                } catch (ToxException e) {
-                    Log.d(TAG, e.toString());
-                    e.printStackTrace();
-                    sendingSucceeded = false;
-                }
-                db = new AntoxDB(getApplicationContext());
-                if (sendingSucceeded) {
-            /* Add message to chatlog */
-                    db.addMessage(id, key, message, true, false, false, true);
-                    db.close();
-            /* Broadcast to update UI */
-                    notify = new Intent(Constants.BROADCAST_ACTION);
-                    notify.putExtra("action", Constants.UPDATE_MESSAGES);
-                    notify.putExtra("key", key);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-                } else {
-                /* Add message to chatlog */
-                    db.addMessage(id, key, message, true, false, false, false);
-                    db.close();
-            /* Broadcast to update UI */
-                    notify = new Intent(Constants.BROADCAST_ACTION);
-                    notify.putExtra("action", Constants.UPDATE_MESSAGES);
-                    notify.putExtra("key", key);
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(notify);
-                }
-                break;
+        */
 
             case Constants.FRIEND_REQUEST:
                 key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);

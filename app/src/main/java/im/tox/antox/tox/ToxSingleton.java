@@ -50,8 +50,10 @@ public class ToxSingleton {
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public BehaviorSubject<String> activeKeySubject;
+    public BehaviorSubject<Boolean> newMessageSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
+    public rx.Observable activeKeyAndIsFriendNewMessageSubject;
 
     public void initSubjects(Context ctx){
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
@@ -62,6 +64,8 @@ public class ToxSingleton {
         unreadCountsSubject.subscribeOn(Schedulers.io());
         activeKeySubject = BehaviorSubject.create(new String());
         activeKeySubject.subscribeOn(Schedulers.io());
+        newMessageSubject = BehaviorSubject.create(new Boolean(true));
+        newMessageSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
             @Override
             public ArrayList<FriendInfo> call(ArrayList<Friend> fl, HashMap lm, HashMap uc) {
@@ -93,6 +97,12 @@ public class ToxSingleton {
                 boolean isFriend;
                 isFriend = isKeyFriend(key, fl);
                 return new Tuple<String,Boolean>(key, isFriend);
+            }
+        });
+        activeKeyAndIsFriendNewMessageSubject = combineLatest(activeKeyAndIsFriendSubject, newMessageSubject, new Func2<Tuple<String,Boolean>, Boolean, Tuple<String,Boolean>> () {
+            @Override
+            public Tuple<String,Boolean> call (Tuple<String,Boolean> output, Boolean newmsg) {
+                return output;
             }
         });
     };
