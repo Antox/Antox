@@ -122,8 +122,8 @@
     <string name="group_action_leave">Verlaat groep</string>
     <string name="friend_action_deletechat">Chatlogs verwijderen</string>
     <string name="friend_action_block_confirmation">
-        Als u deze gebruiker blokkeert, worden ze verwijderd van u vriendenlijst en u zal geen vriendverzoeking van hun ontvangen.
-        Weet u zeker dat u wilt doorgaan?
+        Als je deze gebruiker blokkeert, worden ze verwijderd van je vriendenlijst en je zal geen vriendschapsverzoek meer van hen kunnen zien.
+        Weet je zeker dat je wilt doorgaan?
     </string>
 
     <string name="contacts_actions_on">Acties aan</string>
