@@ -65,8 +65,8 @@
     <string name="settings_status_title">Status</string>
     <string name="settings_note_title">Mood</string>
     <string name="settings_username_title">Gebruikersnaam</string>
-    <string name="settings_empty_strings">You must fill out all fields</string>
-    <string name="settings_invalid_key">Invalid key entered</string>
+    <string name="settings_empty_strings">Je moet alle velden invullen</string>
+    <string name="settings_invalid_key">Verkeerde key ingevuld</string>
     <string name="developer_string">Ontwikkeld door astonex &amp; co.</string>
     <string name="welcome_must_select_username">Kies een gebruikersnaam</string>
 
