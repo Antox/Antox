@@ -18,6 +18,7 @@ import java.util.TimeZone;
 
 import im.tox.antox.R;
 import im.tox.antox.utils.ChatMessages;
+import im.tox.antox.utils.PrettyTimestamp;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     Context context;
@@ -30,69 +31,6 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
         this.data = data;
-    }
-
-    private String prettifyTimestamp(String t) {
-        //Make a copy of t in case of an error.
-        String tCopy = t;
-
-        try {
-            //Set the date format.
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-            //Get the Date in UTC format.
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date date = dateFormat.parse(t);
-
-            //Adapt the date to the local timestamp.
-            dateFormat.setTimeZone(TimeZone.getDefault());
-            t = dateFormat.format(date).toString();
-        }
-        catch (Exception e) {
-            t = tCopy;
-        }
-
-        String output = "";
-        String month = "";
-        switch (Integer.parseInt(t.substring(5, 7))) {
-            case 1:
-                month = "Jan";
-                break;
-            case 2:
-                month = "Feb";
-                break;
-            case 3:
-                month = "Mar";
-                break;
-            case 4:
-                month = "Apr";
-                break;
-            case 5:
-                month = "May";
-                break;
-            case 6:
-                month = "Jun";
-                break;
-            case 7:
-                month = "Jul";
-                break;
-            case 8:
-                month = "Aug";
-                break;
-            case 9:
-                month = "Sep";
-                break;
-            case 10:
-                month = "Oct";
-                break;
-            case 11:
-                month = "Nov";
-                break;
-            case 12:
-                month = "Dec";
-                break;
-        }
-        output = month + " " + Integer.parseInt(t.substring(8,10)) + " " + t.substring(11,16);
-        return output;
     }
 
     @Override
@@ -120,7 +58,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
         ChatMessages chatMessages = data.get(position);
         holder.message.setText(chatMessages.message);
-        holder.time.setText(prettifyTimestamp(chatMessages.time));
+        holder.time.setText(PrettyTimestamp.prettyTimestamp(chatMessages.time));
 
         if (messages.IsMine()) {
             holder.alignment.setGravity(Gravity.RIGHT);
