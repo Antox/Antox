@@ -424,7 +424,7 @@ public class MainActivity extends ActionBarActivity{
     @Override
     public void onResume(){
         super.onResume();
-        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.observeOn(AndroidSchedulers.mainThread())
+        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Tuple<String,Boolean>>() {
                     @Override
                     public void call(Tuple<String,Boolean> activeKeyAndIfFriend) {
@@ -436,6 +436,7 @@ public class MainActivity extends ActionBarActivity{
                             transaction.replace(R.id.right_pane, newFragment);
                             transaction.addToBackStack(null);
                             transaction.commit();
+                            pane.closePane();
                         }
                     }
                 });

@@ -144,17 +144,13 @@ public class ChatFragment extends Fragment {
 
     public void updateChat(ArrayList<Message> messages) {
         if (messages.size() >= 0) {
-            ArrayList<ChatMessages> data = new ArrayList<ChatMessages>(messages.size());
+            adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
+                adapter.data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
             }
             Log.d("ChatFragment", "Updating chat");
-            adapter.clear();
-            adapter.addAll(data);
-            //adapter = new ChatMessagesAdapter(main_act.getApplicationContext(), R.layout.chat_message_row, data);
-            //chatListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            //chatListView.setSelection(adapter.getCount() - 1);
+            chatListView.setSelection(adapter.getCount() - 1);
         }
     }
 
