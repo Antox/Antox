@@ -56,26 +56,6 @@ public class ContactsFragment extends Fragment {
     public ContactsFragment() {
     }
 
-    public void onChangeFriendRequest(int position, String key, String message) {
-        toxSingleton.activeFriendRequestKey = key;
-        toxSingleton.activeFriendKey = null;
-        Fragment newFragment = new FriendRequestFragment(key, message);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.right_pane, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    public void onChangeContact(int position) {
-        toxSingleton.activeFriendKey = main_act.leftPaneKeyList.get(position);
-        toxSingleton.activeFriendRequestKey = null;
-        ChatFragment newFragment = new ChatFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.right_pane, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
     public void updateContacts(ArrayList<FriendInfo> friendsList) {
 
         //If you have no friends, display the no friends message
