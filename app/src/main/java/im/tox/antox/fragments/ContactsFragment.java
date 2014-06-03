@@ -151,50 +151,6 @@ public class ContactsFragment extends Fragment {
                         if (key != "") {
                             toxSingleton.activeKeySubject.onNext(key);
                         }
-                        /*
-                        if (type == Constants.TYPE_CONTACT) {
-                            if (toxSingleton.friendsList.all().size() == 0) {
-                                //Final copy of position so it can be used in the inner class.
-                                final int positionCopy = position;
-                                //ProgressDialog to alert the user that the data is not ready.
-                                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
-                                        "Loading...", "Please wait while we load your data", false, false);
-                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-                                //Build an async task that will cancel the dialog once the data is finished loading.
-                                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
-                                    @Override
-                                    protected String doInBackground(String... strings) {
-                                        while (toxSingleton.friendsList.all().size() == 0) {
-                                            //while there are no friends, do nothing
-                                        }
-
-                                        return null;
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(String s) {
-                                        //When the friend list is populated then the dialog is canceled and the
-                                        //right panel can be loaded.
-                                        progressDialog.dismiss();
-                                        onChangeContact(positionCopy);
-                                    }
-                                };
-
-                                asyncTask.execute();
-                            } else {
-                                onChangeContact(position);
-                            }
-                        } else if (type == Constants.TYPE_FRIEND_REQUEST) {
-
-                            String key = item.first;
-                            String message = item.second;
-                            onChangeFriendRequest(position, key, message);
-                            main_act.activeTitle = main_act.getString(R.string.friendrequest);
-                            main_act.pane.closePane();
-                            toxSingleton.rightPaneActive = true;
-                        }
-                        */
                     }
                 });
 
