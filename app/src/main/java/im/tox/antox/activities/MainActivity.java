@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -16,7 +15,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -25,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -36,7 +33,6 @@ import im.tox.antox.R;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
-import im.tox.antox.fragments.ContactsFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
@@ -98,25 +94,11 @@ public class MainActivity extends ActionBarActivity{
                 Log.d(TAG, "action: " + action);
                 if (action.equals(Constants.UPDATE_LEFT_PANE)) {
                     updateLeftPane();
-                } else if (action.equals(Constants.REJECT_FRIEND_REQUEST)) {
-                    updateLeftPane();
-                    Context ctx = getApplicationContext();
-                    String text = getString(R.string.friendrequest_deleted);
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(ctx, text, duration);
-                    toast.show();
                 } else if (action.equals(Constants.UPDATE_MESSAGES)) {
                     updateLeftPane();
                     if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
                         updateChat(toxSingleton.activeFriendKey);
                     }
-                } else if (action.equals(Constants.ACCEPT_FRIEND_REQUEST)) {
-                    updateLeftPane();
-                    Context ctx = getApplicationContext();
-                    String text = getString(R.string.friendrequest_accepted);
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(ctx, text, duration);
-                    toast.show();
                 } else if (action.equals(Constants.UPDATE)) {
                     updateLeftPane();
                     if (toxSingleton.rightPaneActive) {

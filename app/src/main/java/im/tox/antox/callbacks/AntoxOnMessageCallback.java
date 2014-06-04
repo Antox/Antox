@@ -1,14 +1,5 @@
 package im.tox.antox.callbacks;
 
-import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
-import im.tox.antox.data.AntoxDB;
-import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.tox.ToxService;
-import im.tox.jtoxcore.callbacks.OnMessageCallback;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,13 +9,17 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
+
+import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.AntoxFriend;
+import im.tox.antox.utils.Constants;
+import im.tox.jtoxcore.callbacks.OnMessageCallback;
 
 public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 	public static final String TAG = "AntoxOnMessageCallback";
-	public static final String MESSAGE = "im.tox.antox.AntoxOnMessageCallback.MESSAGE";
-	public static final String KEY = "im.tox.antox.AntoxOnMessageCallback.KEY";
-	public static final String FRIEND_NUMBER = "im.tox.antox.AntoxOnMessageCallback.FRIEND_NUMBER";
 
 	private Context ctx;
 
@@ -36,13 +31,6 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 
 	@Override
 	public void execute(AntoxFriend friend, String message) {
-		Intent intent = new Intent(this.ctx, ToxService.class);
-        intent.setAction(Constants.ON_MESSAGE);
-		intent.putExtra(MESSAGE, message);
-		intent.putExtra(FRIEND_NUMBER, friend.getFriendnumber());
-		intent.putExtra(KEY, friend.getId());
-		this.ctx.startService(intent);
-
         /* Add message to database */
         AntoxDB db = new AntoxDB(this.ctx);
         if(!db.isFriendBlocked(friend.getId()))

@@ -19,7 +19,6 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
-import im.tox.antox.utils.PrettyTimestamp;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxUserStatus;
 

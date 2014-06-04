@@ -11,7 +11,6 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
