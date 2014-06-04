@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.xbill.DNS.Lookup;
@@ -27,15 +26,13 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
 
-
 import im.tox.QR.IntentIntegrator;
 import im.tox.QR.IntentResult;
+import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
-
 import im.tox.antox.fragments.PinDialogFragment;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.R;
 import im.tox.antox.utils.DhtNode;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
@@ -56,7 +53,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     EditText friendID;
     EditText friendMessage;
     EditText friendAlias;
-    Spinner  friendGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,7 +165,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 if (!alias.equals(""))
                     ID = alias;
 
-                String group = friendGroup.getSelectedItem().toString();
                 Log.d("AddFriendActivity","Adding friend to database");
                 db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
             } else {

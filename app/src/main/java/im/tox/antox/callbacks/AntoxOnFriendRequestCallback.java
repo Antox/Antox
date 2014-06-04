@@ -8,14 +8,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.tox.ToxService;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
 
