@@ -165,6 +165,7 @@ public class ContactsFragment extends Fragment {
                                     switch (index) {
                                         case 0:
                                             class AcceptFriendRequest extends AsyncTask<Void, Void, Void> {
+                                                @Override
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                                     db.addFriend(item.first, "Friend Accepted", "", "");
@@ -212,7 +213,8 @@ public class ContactsFragment extends Fragment {
                                                     return null;
                                                 }
 
-                                                protected void onPostExecute() {
+                                                @Override
+                                                protected void onPostExecute(Void result) {
                                                     main_act.updateLeftPane();
                                                 }
                                             }
@@ -222,6 +224,7 @@ public class ContactsFragment extends Fragment {
                                             break;
                                         case 1:
                                             class RejectFriendRequest extends AsyncTask<Void, Void, Void> {
+                                                @Override
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
                                                     antoxDB.deleteFriendRequest(item.first);
@@ -241,7 +244,8 @@ public class ContactsFragment extends Fragment {
                                                     return null;
                                                 }
 
-                                                protected void onPostExecute(Long result) {
+                                                @Override
+                                                protected void onPostExecute(Void result) {
                                                     main_act.updateLeftPane();
                                                 }
 
@@ -341,6 +345,7 @@ public class ContactsFragment extends Fragment {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
                                 class DeleteFriendAndChat extends AsyncTask<Void, Void, Void> {
+                                    @Override
                                     protected Void doInBackground(Void... params) {
                                         AntoxDB db = new AntoxDB(getActivity());
                                         db.deleteChat(key);
@@ -367,8 +372,8 @@ public class ContactsFragment extends Fragment {
 
                                         return null;
                                     }
-
-                                    protected void onPostExecute() {
+                                    @Override
+                                    protected void onPostExecute(Void result) {
                                         main_act.updateLeftPane();
                                     }
                                 }
@@ -382,6 +387,7 @@ public class ContactsFragment extends Fragment {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
                                 class DeleteFriend extends AsyncTask<Void, Void, Void> {
+                                    @Override
                                     protected Void doInBackground(Void... params) {
                                         AntoxDB db = new AntoxDB(getActivity());
                                         db.deleteFriend(key);
@@ -407,8 +413,8 @@ public class ContactsFragment extends Fragment {
 
                                         return null;
                                     }
-
-                                    protected void onPostExecute() {
+                                    @Override
+                                    protected void onPostExecute(Void result) {
                                         main_act.updateLeftPane();
                                     }
                                 }

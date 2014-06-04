@@ -56,6 +56,7 @@ public class FriendRequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 class AcceptFriendRequest extends AsyncTask<Void, Void, Void> {
+                    @Override
                     protected Void doInBackground(Void... params) {
                         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                         db.addFriend(key, "Friend Accepted", "", "");
@@ -102,8 +103,8 @@ public class FriendRequestFragment extends Fragment {
 
                         return null;
                     }
-
-                    protected void onPostExecute() {
+                    @Override
+                    protected void onPostExecute(Void result) {
                         ((MainActivity) getActivity()).pane.openPane();
                         ((MainActivity) getActivity()).updateLeftPane();
                     }
@@ -119,6 +120,7 @@ public class FriendRequestFragment extends Fragment {
                 ((MainActivity) getActivity()).pane.openPane();
 
                 class RejectFriendRequest extends AsyncTask<Void, Void, Void> {
+                    @Override
                     protected Void doInBackground(Void... params) {
                         AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
                         antoxDB.deleteFriendRequest(key);
@@ -137,8 +139,8 @@ public class FriendRequestFragment extends Fragment {
 
                         return null;
                     }
-
-                    protected void onPostExecute(Long result) {
+                    @Override
+                    protected void onPostExecute(Void result) {
                         ((MainActivity) getActivity()).updateLeftPane();
                     }
 
