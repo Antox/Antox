@@ -22,20 +22,20 @@ For those who used to test Antox on Google Play, we apologize that we will no lo
 ###Directly Installing Antox
 PLEASE NOTE this app is still alpha and will contain bugs and missing features (compared to other Tox clients)
 
-1. Download the latest APK <a href="https://c1cf.https.cdn.softlayer.net/80C1CF/192.254.75.110:8080/job/Android-Antox/lastSuccessfulBuild/artifact/antox.apk">here</a>
+1. Download the latest APK <a href="https://jenkins.libtoxcore.so/job/Android-Antox/lastSuccessfulBuild/artifact/antox.apk">here</a>
 2. Sideload the APK to your phone, or just download the file from step 1 directly to your phone
 3. Ensure that you allow applications from unknown sources to be installed (Tick the option "Unkown Source", found in Settings>Security)
 4. Install the APK by either using a file manager or ADB.
 
 ###Known To Work On
-For a list of which devices currently run Antox, visit our <a href="http://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a> Antox should support Android 2.2+. Please open an issue if you find yourself unable to so it can be fixed.
+For a list of which devices currently run Antox, visit our <a href="https://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a> Antox should support Android 2.2+. Please open an issue if you find yourself unable to so it can be fixed.
 
 ###Compiling Antox From Source
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.5.8
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.3 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
-- Download the latest jToxcore binaries from http://jenkins.libtoxcore.so/job/jToxcore_Android/lastSuccessfulBuild/artifact/*zip*/archive.zip
+- Download the latest jToxcore binaries from https://jenkins.libtoxcore.so/job/jToxcore_Android/lastSuccessfulBuild/artifact/*zip*/archive.zip
 - Copy the armeabi/, armeabi-v7a/, mips/ and x86/ folders to app/src/main/jniLibs/
 - Copy jToxcore.jar to app/libs/jToxcore.jar
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed

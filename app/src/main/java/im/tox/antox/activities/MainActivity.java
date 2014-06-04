@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity{
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ArrayList<Friend> friendList;
-    Subscription activeKeySub;
+    private Subscription activeKeySub;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
