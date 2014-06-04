@@ -41,7 +41,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         try {
             // Connect to the web site
-            Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
+            Document document = Jsoup.connect("https://wiki.tox.im/Nodes").timeout(10000).get();
             Elements nodeRows = document.getElementsByTag("tr");
 
             File folder = new File(Environment.getExternalStorageDirectory() + "/Antox");
@@ -130,9 +130,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
         }
 
         Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-        /**
-         * Ping servers to find quickest connection - Threading this would be goood
-         */
+
         int times[][] = new int[DhtNode.ipv4.size()][1];
 
         // Initialise array
