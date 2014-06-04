@@ -104,43 +104,6 @@ public class ToxService extends IntentService {
                 }
                 break;
 
-            case Constants.FRIEND_REQUEST:
-                key = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_KEY);
-                String message = intent.getStringExtra(AntoxOnFriendRequestCallback.FRIEND_MESSAGE);
-            /* Add friend request to arraylist */
-                toxSingleton.friend_requests.add(new FriendRequest((String) key, (String) message));
-            /* Add friend request to database */
-                db = new AntoxDB(getApplicationContext());
-                if(!db.isFriendBlocked(key))
-                    db.addFriendRequest(key, message);
-                db.close();
-
-                if(preferences.getBoolean("notifications_enable_notifications", true) != false
-                        && preferences.getBoolean("notifications_friend_request", true) != false) {
-                /* Notification */
-                    if (!toxSingleton.leftPaneActive) {
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(this)
-                                        .setSmallIcon(R.drawable.ic_actionbar)
-                                        .setContentTitle(getString(R.string.friend_request))
-                                        .setContentText(message)
-
-                                        .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
-
-                        int ID = toxSingleton.friend_requests.size();
-                        Intent targetIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        mBuilder.setContentIntent(contentIntent);
-                        toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
-                    }
-                }
-
-                /* Update friends list */
-                Intent update = new Intent(Constants.BROADCAST_ACTION);
-                update.putExtra("action", Constants.UPDATE);
-                LocalBroadcastManager.getInstance(this).sendBroadcast(update);
-                break;
-
             case Constants.REJECT_FRIEND_REQUEST:
                 key = intent.getStringExtra("key");
                 if (toxSingleton.friend_requests.size() != 0) {
