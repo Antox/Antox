@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import im.tox.antox.adapters.RecentAdapter;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
+import im.tox.antox.utils.LeftPaneItem;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -43,6 +45,19 @@ public class RecentFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
         conversationListView = (ListView) rootView.findViewById(R.id.conversations_list);
+
+
+        conversationListView
+                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position,
+                                            long id) {
+                        FriendInfo item = (FriendInfo) parent.getAdapter().getItem(position);
+                        String key = item.friendKey;
+                        toxSingleton.activeKeySubject.onNext(key);
+                    }
+                });
         return rootView;
     }
 
