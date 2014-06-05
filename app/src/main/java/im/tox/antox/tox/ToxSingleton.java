@@ -20,6 +20,7 @@ import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
+import rx.Observable;
 import rx.functions.Func2;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
@@ -44,6 +45,7 @@ public class ToxSingleton {
     public ToxDataFile dataFile;
     public File qrFile;
     public BehaviorSubject<ArrayList<Friend>> friendListSubject;
+    public BehaviorSubject<ArrayList<FriendRequest>> friendRequestSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public BehaviorSubject<String> activeKeySubject;
@@ -51,10 +53,13 @@ public class ToxSingleton {
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public rx.Observable activeKeyAndIsFriendNewMessageSubject;
+    public Observable friendListAndRequestsSubject;
 
     public void initSubjects(Context ctx){
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
         friendListSubject.subscribeOn(Schedulers.io());
+        friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
+        friendRequestSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
@@ -88,6 +93,12 @@ public class ToxSingleton {
                 return fi;
             }
         });
+        friendListAndRequestsSubject = combineLatest(friendInfoListSubject, friendRequestSubject, new Func2<ArrayList<FriendInfo>, ArrayList<FriendRequest>, Tuple<ArrayList<FriendInfo>, ArrayList<FriendRequest>>>() {
+                    @Override
+                    public Tuple<ArrayList<FriendInfo>, ArrayList<FriendRequest>> call (ArrayList<FriendInfo> fl, ArrayList<FriendRequest> fr) {
+                        return new Tuple(fl,fr);
+                    }
+                });
         activeKeyAndIsFriendSubject = combineLatest(activeKeySubject, friendListSubject, new Func2<String, ArrayList<Friend>, Tuple<String,Boolean>> () {
             @Override
             public Tuple<String,Boolean> call (String key, ArrayList<Friend> fl) {
@@ -124,6 +135,17 @@ public class ToxSingleton {
             friendListSubject.onNext(friendList);
         } catch (Exception e) {
             friendListSubject.onError(e);
+        }
+    }
+
+    public void updateFriendRequests(Context ctx) {
+        try {
+            AntoxDB antoxDB = new AntoxDB(ctx);
+            ArrayList<FriendRequest> friendRequest = antoxDB.getFriendRequestsList();
+            antoxDB.close();
+            friendRequestSubject.onNext(friendRequest);
+        } catch (Exception e) {
+            friendRequestSubject.onError(e);
         }
     }
 
