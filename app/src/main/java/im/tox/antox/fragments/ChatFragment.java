@@ -103,7 +103,7 @@ public class ChatFragment extends Fragment {
                                 Random generator = new Random();
                                 int id = generator.nextInt();
                                 try {
-                                    friend = toxSingleton.friendsList.getById(key);
+                                    friend = toxSingleton.getAntoxFriend(key);
                                 } catch (Exception e) {
                                     Log.d(TAG, e.toString());
                                 }
@@ -121,7 +121,7 @@ public class ChatFragment extends Fragment {
                                     db.addMessage(id, key, msg, true, false, false, sendingSucceeded);
                                     db.close();
                                     /* update UI */
-                                    toxSingleton.newMessageSubject.onNext(true);
+                                    toxSingleton.updatedMessagesSubject.onNext(true);
                                 }
                                 subscriber.onCompleted();
                             } catch (Exception e) {

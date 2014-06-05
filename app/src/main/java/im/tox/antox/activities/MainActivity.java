@@ -86,61 +86,12 @@ public class MainActivity extends ActionBarActivity{
      */
     private Menu menu;
 
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "broadcast received");
-            String action = intent.getStringExtra("action");
-            if (action != null) {
-                Log.d(TAG, "action: " + action);
-                if (action.equals(Constants.UPDATE_LEFT_PANE)) {
-                    updateLeftPane();
-                } else if (action.equals(Constants.UPDATE_MESSAGES)) {
-                    updateLeftPane();
-                    if (intent.getStringExtra("key").equals(toxSingleton.activeFriendKey)) {
-                        updateChat(toxSingleton.activeFriendKey);
-                    }
-                } else if (action.equals(Constants.UPDATE)) {
-                    updateLeftPane();
-                    if (toxSingleton.rightPaneActive) {
-                        activeTitle = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey).getName();
-                        setTitle(activeTitle);
-                    }
-                }
-            }
-        }
-    };
-
-
-    public void updateChat(String key) {
-        /*
-        if(toxSingleton.friendsList.getById(key)!=null
-                && toxSingleton.friendsList.getById(key).getName()!=null ){
-            AntoxDB db = new AntoxDB(this);
-            if (toxSingleton.rightPaneActive) {
-                db.markIncomingMessagesRead(key);
-            }
-            try {
-                chat.updateChat(db.getMessageList(key));
-                db.close();
-                updateLeftPane();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                Log.d(TAG, e.toString());
-            }
-        }
-        */
-    }
-
     @Override
     protected void onNewIntent(Intent i) {
         if (i.getAction() != null) {
-            if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.friendsList.getById(i.getStringExtra("key")) != null) {
+            if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.getAntoxFriend(i.getStringExtra("key")) != null) {
                 String key = i.getStringExtra("key");
                 Fragment newFragment = new ChatFragment();
-                toxSingleton.activeFriendKey = key;
-                toxSingleton.activeFriendRequestKey = null;
                 tempRightPaneActive = true;
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.right_pane, newFragment);
@@ -237,10 +188,6 @@ public class MainActivity extends ActionBarActivity{
             config.locale = locale;
             getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
         }
-
-        toxSingleton.activeFriendKey=null;
-        toxSingleton.activeFriendRequestKey=null;
-        toxSingleton.leftPaneActive = true;
 
         /* Check if connected to the Internet */
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -397,11 +344,7 @@ public class MainActivity extends ActionBarActivity{
     }
     private void clearUselessNotifications () {
         AntoxDB db = new AntoxDB(getApplicationContext());
-        if (toxSingleton.rightPaneActive && toxSingleton.activeFriendKey != null
-                && toxSingleton.friendsList.all().size() > 0) {
-            AntoxFriend friend = toxSingleton.friendsList.getById(toxSingleton.activeFriendKey);
-            toxSingleton.mNotificationManager.cancel(friend.getFriendnumber());
-        }
+        //todo: clear notifications if rightpane active
         db.close();
     }
 
@@ -564,12 +507,6 @@ public class MainActivity extends ActionBarActivity{
             MenuItem af = menu.findItem(R.id.add_friend);
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
 
-            toxSingleton.rightPaneActive = true;
-            toxSingleton.leftPaneActive = false;
-            if(toxSingleton.activeFriendKey!=null){
-                updateChat(toxSingleton.activeFriendKey);
-            }
-
             clearUselessNotifications();
         }
 
@@ -583,9 +520,6 @@ public class MainActivity extends ActionBarActivity{
             MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
             supportInvalidateOptionsMenu();
-
-            toxSingleton.rightPaneActive =false;
-            toxSingleton.leftPaneActive = true;
         }
 
         @Override

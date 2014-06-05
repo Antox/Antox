@@ -41,7 +41,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                 int id = unsentMessageList.get(i).message_id;
                 boolean sendingSucceeded = true;
                 try {
-                    friend = toxSingleton.friendsList.getById(unsentMessageList.get(i).key);
+                    friend = toxSingleton.getAntoxFriend(unsentMessageList.get(i).key);
                 } catch (Exception e) {
                     Log.d(TAG, e.toString());
                 }
@@ -58,7 +58,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                     db.updateUnsentMessage(id);
                 }
             }
-            toxSingleton.newMessageSubject.onNext(true);
+            toxSingleton.updatedMessagesSubject.onNext(true);
         }
 
         db.close();

@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
@@ -38,7 +37,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
         db.close();
 
         /* Broadcast to main activity to tell it to refresh */
-        toxSingleton.newMessageSubject.onNext(true);
+        toxSingleton.updatedMessagesSubject.onNext(true);
 
         /* Notifications for messages */
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx);
@@ -47,11 +46,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
         if(preferences.getBoolean("notifications_enable_notifications", true) != false
                 && preferences.getBoolean("notifications_new_message", true) != false) {
 
-            /* Check user isn't actively looking at the friends list or the user's chat */
-            if (!(toxSingleton.rightPaneActive && toxSingleton.activeFriendKey.equals(friend.getId()))
-                    && !(toxSingleton.leftPaneActive)) {
-
-                String name = toxSingleton.friendsList.getById(friend.getId()).getName();
+                String name = toxSingleton.getAntoxFriend(friend.getId()).getName();
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this.ctx)
@@ -82,7 +77,6 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
                         );
                 mBuilder.setContentIntent(resultPendingIntent);
                 toxSingleton.mNotificationManager.notify(friend.getFriendnumber(), mBuilder.build());
-            }
         }
 	}
 }
