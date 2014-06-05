@@ -58,14 +58,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                     db.updateUnsentMessage(id);
                 }
             }
-
-            if (toxSingleton.activeFriendKey != null) {
-                /* Broadcast to update UI */
-                Intent notify = new Intent(Constants.BROADCAST_ACTION);
-                notify.putExtra("action", Constants.UPDATE_MESSAGES);
-                notify.putExtra("key", toxSingleton.activeFriendKey);
-                LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(notify);
-            }
+            toxSingleton.newMessageSubject.onNext(true);
         }
 
         db.close();
