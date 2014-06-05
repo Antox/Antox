@@ -26,6 +26,7 @@ import rx.functions.Func2;
 import rx.functions.Func3;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 import static rx.Observable.combineLatest;
 
@@ -43,11 +44,10 @@ public class ToxSingleton {
     public BehaviorSubject<ArrayList<FriendRequest>> friendRequestSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
-    public BehaviorSubject<String> activeKeySubject;
+    public PublishSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
-    public rx.Observable activeKeyAndIsFriendNewMessageSubject;
     public Observable friendListAndRequestsSubject;
 
     public AntoxFriend getAntoxFriend(String key) {
@@ -63,7 +63,7 @@ public class ToxSingleton {
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
         unreadCountsSubject.subscribeOn(Schedulers.io());
-        activeKeySubject = BehaviorSubject.create(new String());
+        activeKeySubject = PublishSubject.create();
         activeKeySubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
         updatedMessagesSubject.subscribeOn(Schedulers.io());
@@ -104,12 +104,6 @@ public class ToxSingleton {
                 boolean isFriend;
                 isFriend = isKeyFriend(key, fl);
                 return new Tuple<String,Boolean>(key, isFriend);
-            }
-        });
-        activeKeyAndIsFriendNewMessageSubject = combineLatest(activeKeyAndIsFriendSubject, updatedMessagesSubject, new Func2<Tuple<String,Boolean>, Boolean, Tuple<String,Boolean>> () {
-            @Override
-            public Tuple<String,Boolean> call (Tuple<String,Boolean> output, Boolean newmsg) {
-                return output;
             }
         });
     };

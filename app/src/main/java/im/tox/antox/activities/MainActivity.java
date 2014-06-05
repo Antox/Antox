@@ -365,7 +365,7 @@ public class MainActivity extends ActionBarActivity{
                             }
                         } else {
                             if (isFriend) {
-                                ChatFragment newFragment = new ChatFragment();
+                                ChatFragment newFragment = new ChatFragment(activeKey);
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.right_pane, newFragment);
                                 transaction.addToBackStack(null);
