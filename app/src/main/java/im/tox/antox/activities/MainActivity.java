@@ -33,6 +33,7 @@ import im.tox.antox.R;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
+import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
@@ -40,6 +41,7 @@ import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
+import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
@@ -412,12 +414,26 @@ public class MainActivity extends ActionBarActivity{
                     public void call(Tuple<String,Boolean> activeKeyAndIfFriend) {
                         String activeKey = activeKeyAndIfFriend.x;
                         boolean isFriend = activeKeyAndIfFriend.y;
-                        if (isFriend) {
-                            ChatFragment newFragment = new ChatFragment();
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.right_pane, newFragment);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
+                        if (activeKey.equals("")) {
+                            pane.openPane();
+                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
+                            if (fragment != null) {
+                                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                            }
+                        } else {
+                            if (isFriend) {
+                                ChatFragment newFragment = new ChatFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.right_pane, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            } else {
+                                FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.right_pane, newFragment);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
                             pane.closePane();
                         }
                     }

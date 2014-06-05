@@ -414,6 +414,21 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public String getFriendRequestMessage(String key) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT message FROM " + Constants.TABLE_FRIEND_REQUEST + " WHERE tox_key='" + key + "'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String message = "";
+        if (cursor.moveToFirst()) {
+            message = cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+
+        return message;
+    }
+
     public void deleteChat(String key) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
