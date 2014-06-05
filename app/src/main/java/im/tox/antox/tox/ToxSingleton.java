@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
@@ -34,13 +35,7 @@ public class ToxSingleton {
     public JTox jTox;
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
-    public ArrayList<FriendRequest> friend_requests = new ArrayList<FriendRequest>();
     public boolean toxStarted = false;
-    public AntoxFriendList friendsList;
-    public String activeFriendRequestKey = null;
-    public String activeFriendKey = null;
-    public boolean rightPaneActive = false;
-    public boolean leftPaneActive = false;
     public NotificationManager mNotificationManager;
     public ToxDataFile dataFile;
     public File qrFile;
@@ -49,11 +44,15 @@ public class ToxSingleton {
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public BehaviorSubject<String> activeKeySubject;
-    public BehaviorSubject<Boolean> newMessageSubject;
+    public BehaviorSubject<Boolean> updatedMessagesSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public rx.Observable activeKeyAndIsFriendNewMessageSubject;
     public Observable friendListAndRequestsSubject;
+
+    public AntoxFriend getAntoxFriend(String key) {
+        return antoxFriendList.getById(key);
+    }
 
     public void initSubjects(Context ctx){
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
@@ -66,8 +65,8 @@ public class ToxSingleton {
         unreadCountsSubject.subscribeOn(Schedulers.io());
         activeKeySubject = BehaviorSubject.create(new String());
         activeKeySubject.subscribeOn(Schedulers.io());
-        newMessageSubject = BehaviorSubject.create(new Boolean(true));
-        newMessageSubject.subscribeOn(Schedulers.io());
+        updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
+        updatedMessagesSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
             @Override
             public ArrayList<FriendInfo> call(ArrayList<Friend> fl, HashMap lm, HashMap uc) {
@@ -107,7 +106,7 @@ public class ToxSingleton {
                 return new Tuple<String,Boolean>(key, isFriend);
             }
         });
-        activeKeyAndIsFriendNewMessageSubject = combineLatest(activeKeyAndIsFriendSubject, newMessageSubject, new Func2<Tuple<String,Boolean>, Boolean, Tuple<String,Boolean>> () {
+        activeKeyAndIsFriendNewMessageSubject = combineLatest(activeKeyAndIsFriendSubject, updatedMessagesSubject, new Func2<Tuple<String,Boolean>, Boolean, Tuple<String,Boolean>> () {
             @Override
             public Tuple<String,Boolean> call (Tuple<String,Boolean> output, Boolean newmsg) {
                 return output;
@@ -186,7 +185,6 @@ public class ToxSingleton {
     }
 
     public void initTox(Context ctx) {
-        friendsList = new AntoxFriendList();
         toxStarted = true;
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);

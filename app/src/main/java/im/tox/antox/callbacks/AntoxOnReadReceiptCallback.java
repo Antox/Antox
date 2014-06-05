@@ -1,13 +1,10 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.callbacks.OnReadReceiptCallback;
 
 public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFriend> {
@@ -27,6 +24,6 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
         db.close();
 
         /* Broadcast */
-        toxSingleton.newMessageSubject.onNext(true);
+        toxSingleton.updatedMessagesSubject.onNext(true);
     }
 }

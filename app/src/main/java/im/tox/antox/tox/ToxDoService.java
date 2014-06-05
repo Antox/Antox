@@ -65,7 +65,6 @@ public class ToxDoService extends IntentService {
 
                 AntoxDB db = new AntoxDB(getApplicationContext());
                 ArrayList<FriendRequest> friendRequests = db.getFriendRequestsList();
-                toxSingleton.friend_requests = friendRequests;
 
                 Intent notify = new Intent(Constants.BROADCAST_ACTION);
                 notify.putExtra("action", Constants.UPDATE_LEFT_PANE);
@@ -76,21 +75,13 @@ public class ToxDoService extends IntentService {
                 ArrayList<Friend> friends = db.getFriendList();
                 db.close();
 
-                toxSingleton.friendsList = (AntoxFriendList) toxSingleton.jTox.getFriendList();
-
                 if(friends.size() > 0) {
                     for (int i = 0; i < friends.size(); i++) {
                         try {
                             toxSingleton.jTox.confirmRequest(friends.get(i).friendKey);
                         } catch (Exception e) {
-
                         }
-                        AntoxFriend friend = toxSingleton.friendsList.addFriendIfNotExists(i);
-                        friend.setId(friends.get(i).friendKey);
-                        friend.setName(friends.get(i).friendName);
-                        friend.setStatusMessage(friends.get(i).personalNote);
                     }
-                    Log.d(TAG, "Size of tox friendlist: " + toxSingleton.friendsList.all().size());
                 }
 
                 AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(getApplicationContext());
