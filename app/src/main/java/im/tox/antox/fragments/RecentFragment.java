@@ -9,12 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import im.tox.antox.R;
 import im.tox.antox.adapters.RecentAdapter;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.FriendInfo;
+import im.tox.antox.utils.FriendRequest;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -49,9 +53,28 @@ public class RecentFragment extends Fragment {
                 .subscribe(new Action1<ArrayList<FriendInfo>>() {
                     @Override
                     public void call(ArrayList<FriendInfo> friends_list) {
-                        updateRecentConversations(friends_list);
+                        updateRecentConversations(filterSortRecent(friends_list));
                     }
                 });
+    }
+
+    private ArrayList<FriendInfo> filterSortRecent(ArrayList<FriendInfo> input) {
+        ArrayList<FriendInfo> temp = new ArrayList<FriendInfo>();
+        for (FriendInfo f: input) {
+            if (!f.lastMessageTimestamp.equals(new Timestamp(0,0,0,0,0,0,0))) {
+                temp.add(f);
+            }
+        }
+        class CustomComparator implements Comparator<FriendInfo> {
+            @Override
+            public int compare(FriendInfo o1, FriendInfo o2) {
+                return o2.lastMessageTimestamp.compareTo(o1.lastMessageTimestamp);
+            }
+        }
+
+        Collections.sort(temp, new CustomComparator());
+
+        return temp;
     }
 
     @Override

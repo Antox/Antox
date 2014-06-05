@@ -150,9 +150,7 @@ public class ToxSingleton {
     public void updateLastMessageMap(Context ctx) {
         try {
             AntoxDB antoxDB = new AntoxDB(ctx);
-
             HashMap map = antoxDB.getLastMessages();
-
             antoxDB.close();
 
             lastMessagesSubject.onNext(map);
@@ -163,9 +161,7 @@ public class ToxSingleton {
     public void updateUnreadCountMap(Context ctx) {
         try {
             AntoxDB antoxDB = new AntoxDB(ctx);
-
             HashMap map = antoxDB.getUnreadCounts();
-
             antoxDB.close();
 
             unreadCountsSubject.onNext(map);

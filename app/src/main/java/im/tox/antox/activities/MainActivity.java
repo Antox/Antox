@@ -388,30 +388,6 @@ public class MainActivity extends ActionBarActivity{
         super.onPause();
         activeKeySub.unsubscribe();
     }
-    /*
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume");
-        toxSingleton.rightPaneActive = tempRightPaneActive;
-        IntentFilter filter = new IntentFilter(Constants.BROADCAST_ACTION);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
-        if (toxSingleton.activeFriendKey != null) {
-            updateChat(toxSingleton.activeFriendKey);
-        }
-        clearUselessNotifications();
-    }
-
-    @Override
-    public void onPause() {
-        Log.i(TAG, "onPause");
-        tempRightPaneActive = toxSingleton.rightPaneActive;
-        toxSingleton.rightPaneActive = false;
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        toxSingleton.leftPaneActive = false;
-        super.onPause();
-    }
-    */
 
     @Override
     public void onStop() {
@@ -435,7 +411,6 @@ public class MainActivity extends ActionBarActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         //the class menu property is now the initialized menu
