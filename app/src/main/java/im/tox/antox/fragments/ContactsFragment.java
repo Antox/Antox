@@ -27,7 +27,9 @@ import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
+import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.LeftPaneItem;
+import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,23 +55,31 @@ public class ContactsFragment extends Fragment {
     public ContactsFragment() {
     }
 
-    public void updateContacts(ArrayList<FriendInfo> friendsList) {
+    public void updateContacts(Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>> friendstuple) {
+        ArrayList<FriendInfo> friendsList = friendstuple.x;
+        ArrayList<FriendRequest> friendRequests = friendstuple.y;
 
-        //If you have no friends, display the no friends message
+        //If you have no friends or friend requests, display the no friends message
         LinearLayout noFriends = (LinearLayout) getView().findViewById(R.id.contacts_no_friends);
-        if (friendsList.size() == 0) {
+        if (friendsList.size() == 0 && friendRequests.size() == 0) {
             noFriends.setVisibility(View.VISIBLE);
         } else {
             noFriends.setVisibility(View.GONE);
         }
 
-
         leftPaneAdapter = new LeftPaneAdapter(getActivity());
-
+        FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
+        friend_requests = friendRequests.toArray(friend_requests);
+        if (friend_requests.length > 0) {
+            leftPaneAdapter.addItem(new LeftPaneItem("Requests"));
+            for (int i = 0; i < friend_requests.length; i++) {
+                LeftPaneItem request = new LeftPaneItem(friend_requests[i].requestKey, friend_requests[i].requestMessage);
+                leftPaneAdapter.addItem(request);
+            }
+        }
         FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
-            //add the header corresponding to the option: All Online Offline Blocked
             LeftPaneItem friends_header = new LeftPaneItem("Contacts");
             leftPaneAdapter.addItem(friends_header);
             for (int i = 0; i < friends_list.length; i++) {
@@ -87,11 +97,11 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        friendInfoSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ArrayList<FriendInfo>>() {
+        friendInfoSub = toxSingleton.friendListAndRequestsSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>>>() {
                     @Override
-                    public void call(ArrayList<FriendInfo> friends_list) {
-                        updateContacts(friends_list);
+                    public void call(Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>> friendstuple) {
+                        updateContacts(friendstuple);
                     }
                 });
     }

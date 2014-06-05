@@ -34,8 +34,7 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
     @Override
     public void execute(String publicKey, String message){
 
-        toxSingleton.friend_requests.add(new FriendRequest(publicKey, message));
-            /* Add friend request to database */
+        /* Add friend request to database */
         AntoxDB db = new AntoxDB(this.ctx);
         if(!db.isFriendBlocked(publicKey))
             db.addFriendRequest(publicKey, message);
@@ -63,10 +62,6 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
                 toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
             }
         }
-
-                /* Update friends list */
-        Intent update = new Intent(Constants.BROADCAST_ACTION);
-        update.putExtra("action", Constants.UPDATE);
-        LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(update);
+        toxSingleton.updateFriendRequests(this.ctx);
     }
 }

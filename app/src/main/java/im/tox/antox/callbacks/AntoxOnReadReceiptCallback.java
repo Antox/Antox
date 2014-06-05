@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.callbacks.OnReadReceiptCallback;
@@ -13,6 +14,7 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
 
     private final static String TAG = "im.tox.antox.TAG";
     private Context ctx;
+    ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public AntoxOnReadReceiptCallback(Context ctx) {
         this.ctx = ctx;
@@ -25,10 +27,6 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
         db.close();
 
         /* Broadcast */
-        Intent notify;
-        notify = new Intent(Constants.BROADCAST_ACTION);
-        notify.putExtra("action", Constants.UPDATE_MESSAGES);
-        notify.putExtra("key", key);
-        LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(notify);
+        toxSingleton.newMessageSubject.onNext(true);
     }
 }
