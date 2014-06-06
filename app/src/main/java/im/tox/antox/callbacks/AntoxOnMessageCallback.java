@@ -49,10 +49,10 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 
                 String name = toxSingleton.getAntoxFriend(friend.getId()).getName();
 
+                long[] vibratePattern = {0, 500}; // Start immediately and vibrate for 500ms
+
                 if(preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
-                    Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
-                    // Turn off the vibrator
-                    vibrator.cancel();
+                    vibratePattern[1] = 0; // Set vibrate to 0ms
                 }
 
                 NotificationCompat.Builder mBuilder =
@@ -60,6 +60,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
                                 .setSmallIcon(R.drawable.ic_actionbar)
                                 .setContentTitle(name)
                                 .setContentText(message)
+                                .setVibrate(vibratePattern)
                                 .setDefaults(Notification.DEFAULT_ALL);
                 // Creates an explicit intent for an Activity in your app
                 Intent resultIntent = new Intent(this.ctx, MainActivity.class);
