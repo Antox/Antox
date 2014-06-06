@@ -30,13 +30,11 @@
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">
-        No internet connection has been detected. Without an internet connection, you will have
-        limited functionality.
-    </string>
+    <string name="main_not_connected">        No internet connection has been detected. Without an internet connection, you will have
+        limited functionality.</string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
-    <!--  Chat Activity -->
+    <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
 
     <!-- Add Friend Activity -->
@@ -52,10 +50,8 @@
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
     <string name="addfriend_no_internet">No Tox Network connection</string>
-    <string name="addfriend_no_internet_text">
-        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
-        Try restarting the application.
-    </string>
+    <string name="addfriend_no_internet_text">        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
+        Try restarting the application.</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
@@ -86,20 +82,21 @@
     <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
     <string name="friend_action_deletechat">Delete Chat Logs</string>
-    <string name="friend_action_block_confirmation">
-        Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. Are you sure you wish to continue?
-    </string>
+    <string name="friend_action_block_confirmation">        Blocking this user will remove them from your friends list and you will no longer see friend
+        requests from them. Are you sure you wish to continue?</string>
     <string name="toast_succ_move_user">Contact has been moved successfully</string>
-
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
 
-    <!--  Misc -->
+    <!-- Misc -->
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
+    <string name="share_with">Share with</string>
+
 
 </resources>

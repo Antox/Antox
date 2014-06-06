@@ -67,6 +67,6 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
                 mBuilder.setContentIntent(contentIntent);
                 toxSingleton.mNotificationManager.notify(0, mBuilder.build()); // TODO: number currently points at first in list, should be pointing at the specific friend request in question
             }
-        toxSingleton.updateFriendRequests(ctx);
+            toxSingleton.updateFriendRequests(ctx);
         }
 }

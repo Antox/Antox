@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -21,17 +25,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import im.tox.QR.Contents;
+import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
+import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
+import im.tox.antox.fragments.PinDialogFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
@@ -52,7 +67,7 @@ import rx.functions.Action1;
  * @author Mark Winter (Astonex)
  */
 
-public class MainActivity extends ActionBarActivity{
+public class MainActivity extends ActionBarActivity implements DialogToxID.DialogToxIDListener {
 
     private static final String TAG = "im.tox.antox.activities.MainActivity";
 
@@ -478,5 +493,20 @@ public class MainActivity extends ActionBarActivity{
 
     }
 
+    /* Needed for Tox ID dialog in settings fragment */
+    @Override
+    public void onDialogClick(DialogFragment fragment) {
 
+    }
+
+    /* Method for the Tox ID copy button in settings fragment */
+    public void copyToxID(View view) {
+        /* Copy ID to clipboard */
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Context context = getApplicationContext();
+        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
+                .getSystemService(context.CLIPBOARD_SERVICE);
+        clipboard.setText(sharedPreferences.getString("tox_id", ""));
+    }
 }

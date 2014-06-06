@@ -29,6 +29,7 @@ android {
 }
 
 
+
 dependencies {
     compile files('libs/wearable-preview-support.jar')
     compile files('libs/jToxcore.jar')
@@ -40,4 +41,5 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.netflix.rxjava:rxjava-android:0.18.3'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'com.android.support:support-v4:19.+'
 }
