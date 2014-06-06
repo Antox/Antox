@@ -268,8 +268,7 @@ public class ContactsFragment extends Fragment {
                                                 AntoxDB db = new AntoxDB(getActivity());
                                                 db.deleteChat(key);
                                                 db.close();
-                                                toxSingleton.updatedMessagesSubject.onNext(true);
-                                                toxSingleton.updateLastMessageMap(getActivity());
+                                                toxSingleton.updateMessages(getActivity());
                                                 break;
                                             case 3:
                                                 showBlockDialog(getActivity(), key);
@@ -337,7 +336,7 @@ public class ContactsFragment extends Fragment {
                                     @Override
                                     protected void onPostExecute(Void result) {
                                         toxSingleton.updateFriendsList(getActivity());
-                                        toxSingleton.updatedMessagesSubject.onNext(true);
+                                        toxSingleton.updateMessages(getActivity());
                                     }
                                 }
 
