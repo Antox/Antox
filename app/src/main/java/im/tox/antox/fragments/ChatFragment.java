@@ -82,6 +82,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void sendMessage() {
+        Log.d("ChatFragment","sendMessage");
         if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
             return;
         }
