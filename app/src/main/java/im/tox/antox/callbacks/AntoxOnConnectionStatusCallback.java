@@ -58,7 +58,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                     db.updateUnsentMessage(id);
                 }
             }
-            toxSingleton.updatedMessagesSubject.onNext(true);
+            toxSingleton.updateMessages(ctx);
         }
 
         db.close();

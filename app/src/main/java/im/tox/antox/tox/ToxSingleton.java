@@ -143,6 +143,7 @@ public class ToxSingleton {
     }
 
     public void updateMessages(Context ctx) {
+        updatedMessagesSubject.onNext(true);
         updateLastMessageMap(ctx);
         updateUnreadCountMap(ctx);
     }
