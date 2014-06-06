@@ -109,7 +109,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         if(username.contains("@"))
             username = username.substring(0, username.indexOf("@"));
 
-        if(username == NULL || username.length() == 0)
+        if(username == null || username.length() == 0)
             username = key.substring(0,7);
 
         ContentValues values = new ContentValues();
