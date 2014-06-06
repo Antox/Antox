@@ -25,6 +25,7 @@ import im.tox.jtoxcore.ToxException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -59,14 +60,16 @@ public class ChatFragment extends Fragment {
         messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
             @Override
             public ArrayList<Message> call(Boolean input) {
+                Log.d("ChatFragment","updatedMessageSubject map");
                 AntoxDB antoxDB = new AntoxDB(getActivity());
                 ArrayList<Message> messageList = antoxDB.getMessageList(activeKey);
                 antoxDB.close();
                 return messageList;
             }
-        }).subscribe(new Action1<ArrayList<Message>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
             @Override
             public void call(ArrayList<Message> messages) {
+                Log.d("ChatFragment", "updatedMessageSubject subscription");
                 updateChat(messages);
             }
         });
