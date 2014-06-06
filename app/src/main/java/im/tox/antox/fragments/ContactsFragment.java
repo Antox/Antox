@@ -29,6 +29,7 @@ import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.LeftPaneItem;
+import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
@@ -51,6 +52,9 @@ public class ContactsFragment extends Fragment {
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     private Subscription friendInfoSub;
+    private Subscription keySub;
+
+    private String activeKey;
 
     public ContactsFragment() {
     }
@@ -87,9 +91,20 @@ public class ContactsFragment extends Fragment {
                 leftPaneAdapter.addItem(friend);
             }
         }
-
         contactsListView.setAdapter(leftPaneAdapter);
+        setSelectionToKey(activeKey);
         System.out.println("updated contacts");
+    }
+
+    private void setSelectionToKey(String key) {
+        if (key != null && !key.equals("")) {
+            for (int i = 0; i < leftPaneAdapter.getCount(); i++) {
+                if (leftPaneAdapter.getKey(i).equals(key)) {
+                    contactsListView.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -102,12 +117,21 @@ public class ContactsFragment extends Fragment {
                         updateContacts(friendstuple);
                     }
                 });
+        keySub = toxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        activeKey = s;
+                        setSelectionToKey(activeKey);
+                    }
+                });
     }
 
     @Override
     public void onPause(){
         super.onPause();
         friendInfoSub.unsubscribe();
+        keySub.unsubscribe();
     }
 
     @Override
@@ -120,6 +144,7 @@ public class ContactsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
+        contactsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 
         contactsListView
@@ -132,6 +157,7 @@ public class ContactsFragment extends Fragment {
                         int type = item.viewType;
                         String key = item.key;
                         if (key != "") {
+                            setSelectionToKey(key);
                             toxSingleton.activeKeySubject.onNext(key);
                         }
                     }

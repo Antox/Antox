@@ -35,6 +35,8 @@ public class RecentFragment extends Fragment {
     private ListView conversationListView;
     private ArrayAdapter<FriendInfo> conversationAdapter;
     private Subscription sub;
+    private String activeKey;
+    private Subscription keySub;
 
     public RecentFragment() {
     }
@@ -45,6 +47,7 @@ public class RecentFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
         conversationListView = (ListView) rootView.findViewById(R.id.conversations_list);
+        conversationListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 
         conversationListView
@@ -55,6 +58,9 @@ public class RecentFragment extends Fragment {
                                             long id) {
                         FriendInfo item = (FriendInfo) parent.getAdapter().getItem(position);
                         String key = item.friendKey;
+                        view.getFocusables(position);
+                        view.setSelected(true);
+                        setSelectionToKey(activeKey);
                         toxSingleton.activeKeySubject.onNext(key);
                     }
                 });
@@ -69,8 +75,28 @@ public class RecentFragment extends Fragment {
                     @Override
                     public void call(ArrayList<FriendInfo> friends_list) {
                         updateRecentConversations(filterSortRecent(friends_list));
+                        setSelectionToKey(activeKey);
                     }
                 });
+        keySub = toxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        activeKey = s;
+                        setSelectionToKey(activeKey);
+                    }
+                });
+    }
+
+    private void setSelectionToKey(String key) {
+        if (key != null && !key.equals("")) {
+            for (int i = 0; i < conversationAdapter.getCount(); i++) {
+                if (conversationAdapter.getItem(i).friendKey.equals(key)) {
+                    conversationListView.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
     private ArrayList<FriendInfo> filterSortRecent(ArrayList<FriendInfo> input) {
@@ -96,6 +122,7 @@ public class RecentFragment extends Fragment {
     public void onPause(){
         super.onPause();
         sub.unsubscribe();
+        keySub.unsubscribe();
     }
 
     public void updateRecentConversations(ArrayList<FriendInfo> friendsList) {
