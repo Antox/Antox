@@ -1,7 +1,6 @@
 package im.tox.antox.activities;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -36,12 +34,10 @@ import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
@@ -73,13 +69,10 @@ public class MainActivity extends ActionBarActivity{
      */
     public String activeTitle = "Antox";
 
-
-    public ArrayList<String> leftPaneKeyList;
-
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
-    public ArrayList<Friend> friendList;
     Subscription activeKeySub;
+    Subscription chatActiveSub;
 
     /*
      * Allows menu to be accessed from menu unrelated subroutines such as the pane opened
@@ -294,38 +287,10 @@ public class MainActivity extends ActionBarActivity{
         }
         return language;
     }
-    private Message mostRecentMessage(String key, ArrayList<Message> messages) {
-        for (int i=0; i<messages.size(); i++) {
-            if (key.equals(messages.get(i).key)) {
-                return messages.get(i);
-            }
-        }
-        return new Message(-1, key, "", false, true, true, true, new Timestamp(0,0,0,0,0,0,0));
-    }
-
-    private int countUnreadMessages(String key, ArrayList<Message> messages) {
-        int counter = 0;
-        if(key!=null) {
-            Message m;
-            for (int i = 0; i < messages.size(); i++) {
-                m = messages.get(i);
-                if (m.key.equals(key) && !m.is_outgoing) {
-                    if (!m.has_been_read) {
-                        counter += 1;
-                    } else {
-                        return counter;
-                    }
-                }
-            }
-        }
-        return counter;
-    }
 
     public void updateLeftPane() {
-
         toxSingleton.updateFriendsList(getApplicationContext());
         toxSingleton.updateMessages(getApplicationContext());
-
     }
 
     /**
@@ -351,6 +316,23 @@ public class MainActivity extends ActionBarActivity{
     @Override
     public void onResume(){
         super.onResume();
+        Log.d("MainActivity","onResume");
+        chatActiveSub = toxSingleton.chatActiveAndKey.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Tuple<String,Boolean>>() {
+                               @Override
+                               public void call(Tuple<String,Boolean> t) {
+                                   String activeKey = t.x;
+                                   boolean chatActive = t.y;
+                                   if (chatActive) {
+                                       AntoxDB db = new AntoxDB(getApplicationContext());
+                                       db.markIncomingMessagesRead(activeKey);
+                                       db.close();
+                                       toxSingleton.updateMessages(getApplicationContext());
+                                       toxSingleton.updateFriendsList(getApplicationContext());
+                                   }
+
+                               }
+                           });
         activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Tuple<String,Boolean>>() {
                     @Override
@@ -386,7 +368,9 @@ public class MainActivity extends ActionBarActivity{
     @Override
     public void onPause(){
         super.onPause();
+        Log.d("MainActivity", "onPause");
         activeKeySub.unsubscribe();
+        chatActiveSub.unsubscribe();
     }
 
     @Override
@@ -474,25 +458,14 @@ public class MainActivity extends ActionBarActivity{
 
         @Override
         public void onPanelClosed(View view) {
-            getSupportActionBar().setDisplayShowTitleEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            setTitle(activeTitle);
-
-            // Hide add friend icon
-            MenuItem af = menu.findItem(R.id.add_friend);
-            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_NEVER);
+            toxSingleton.rightPaneOpen.onNext(true);
 
             clearUselessNotifications();
         }
 
         @Override
         public void onPanelOpened(View view) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-            // Show add friend icon
-            MenuItem af = menu.findItem(R.id.add_friend);
-            MenuItemCompat.setShowAsAction(af,MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            toxSingleton.rightPaneOpen.onNext(false);
 
             supportInvalidateOptionsMenu();
         }
