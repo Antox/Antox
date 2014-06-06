@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -47,6 +48,12 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
                 && preferences.getBoolean("notifications_new_message", true) != false) {
 
                 String name = toxSingleton.getAntoxFriend(friend.getId()).getName();
+
+                if(preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
+                    Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
+                    // Turn off the vibrator
+                    vibrator.cancel();
+                }
 
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this.ctx)
