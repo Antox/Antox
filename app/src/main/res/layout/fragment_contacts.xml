@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
-        android:background="#54759e">
+        android:background="@color/blue">
         <ImageButton
             android:id="@+id/contacts_start_group_conversation"
             android:layout_width="48dp"

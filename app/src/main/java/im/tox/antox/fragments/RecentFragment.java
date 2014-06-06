@@ -2,6 +2,7 @@ package im.tox.antox.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,6 +83,7 @@ public class RecentFragment extends Fragment {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
+                        Log.d("RecentFragment", "key subject");
                         activeKey = s;
                         setSelectionToKey(activeKey);
                     }

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,6 +122,7 @@ public class ContactsFragment extends Fragment {
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String s) {
+                        Log.d("ContactsFragment", "key subject");
                         activeKey = s;
                         setSelectionToKey(activeKey);
                     }
