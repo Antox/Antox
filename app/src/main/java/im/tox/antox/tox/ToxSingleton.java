@@ -110,12 +110,10 @@ public class ToxSingleton {
                 return new Tuple<String,Boolean>(key, isFriend);
             }
         });
-        chatActiveAndKey = combineLatest(rightPaneOpen, activeKeyAndIsFriendSubject, new Func2<Boolean, Tuple<String,Boolean>, Tuple<String,Boolean>>(){
+        chatActiveAndKey = combineLatest(rightPaneOpen, activeKeySubject, new Func2<Boolean, String, Tuple<String,Boolean>>(){
             @Override
-            public Tuple<String,Boolean> call (Boolean rightActive, Tuple<String,Boolean> tup) {
-                String key = tup.x;
-                Boolean isFriend = tup.y;
-                return new Tuple<String, Boolean>(key, isFriend && rightActive);
+            public Tuple<String,Boolean> call (Boolean rightActive, String key) {
+                return new Tuple<String, Boolean>(key, rightActive);
             }
 
         });
@@ -123,7 +121,7 @@ public class ToxSingleton {
 
     private boolean isKeyFriend(String key, ArrayList<Friend> fl) {
         for(Friend f: fl) {
-            if (f.friendKey == key) {
+            if (f.friendKey.equals(key)) {
                 return true;
             }
         }

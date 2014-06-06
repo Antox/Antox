@@ -347,12 +347,14 @@ public class MainActivity extends ActionBarActivity{
                             }
                         } else {
                             if (isFriend) {
+                                Log.d("MainActivity","chat fragment creation, isFriend: " + isFriend);
                                 ChatFragment newFragment = new ChatFragment(activeKey);
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.right_pane, newFragment);
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                             } else {
+                                Log.d("MainActivity","friend request fragment creation, isFriend: " + isFriend);
                                 FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.right_pane, newFragment);
