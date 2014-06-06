@@ -47,10 +47,10 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
         if(preferences.getBoolean("notifications_enable_notifications", true) != false
                 && preferences.getBoolean("notifications_friend_request", true) != false) {
 
+                long[] vibratePattern = {0, 500}; // Start immediately and vibrate for 500ms
+
                 if(preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
-                    Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
-                    // Turn off the vibrator
-                    vibrator.cancel();
+                    vibratePattern[1] = 0; // Set vibrate to 0ms
                 }
 
                 /* Notification */
@@ -59,7 +59,7 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
                                 .setSmallIcon(R.drawable.ic_actionbar)
                                 .setContentTitle(this.ctx.getString(R.string.friend_request))
                                 .setContentText(message)
-
+                                .setVibrate(vibratePattern)
                                 .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
 
                 Intent targetIntent = new Intent(this.ctx, MainActivity.class);
