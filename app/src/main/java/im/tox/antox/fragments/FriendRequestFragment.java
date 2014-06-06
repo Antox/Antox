@@ -32,6 +32,10 @@ public class FriendRequestFragment extends Fragment {
 
     }
 
+    public FriendRequestFragment(String key) {
+        this.key = key;
+    }
+
     public FriendRequestFragment(String key, String message) {
         this.key = key;
         this.message = message;
@@ -44,14 +48,19 @@ public class FriendRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (key != null && message == null) {
+            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+            this.message = db.getFriendRequestMessage(key);
+            db.close();
+        }
         View rootView = inflater.inflate(R.layout.fragment_friendrequest, container, false);
         TextView k = (TextView) rootView.findViewById(R.id.requestfragment_key);
         k.setText(SplitKey(key));
         TextView m = (TextView) rootView.findViewById(R.id.requestfragment_message);
         m.setText(message);
-
         Button accept = (Button) rootView.findViewById(R.id.acceptFriendRequest);
         Button reject = (Button) rootView.findViewById(R.id.rejectFriendRequest);
+
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,50 +72,20 @@ public class FriendRequestFragment extends Fragment {
                         db.close();
                         try {
                             toxSingleton.jTox.confirmRequest(key);
-
-                            //This is so wasteful. Should pass the info in the intent with the key
-                            db = new AntoxDB(getActivity().getApplicationContext());
-                            ArrayList<Friend> friends = db.getFriendList();
-                            //Long statement but just getting size of friends list and adding one for the friend number
-                            AntoxFriend friend = toxSingleton.friendsList.addFriend(toxSingleton.friendsList.all().size()+1);
-                            int pos = -1;
-                            for(int i = 0; i < friends.size(); i++) {
-                                if(friends.get(i).friendKey.equals(key)) {
-                                    pos = i;
-                                    break;
-                                }
-                            }
-                            if(pos != -1) {
-                                friend.setId(key);
-                                friend.setName(friends.get(pos).friendName);
-                                friend.setStatusMessage(friends.get(pos).personalNote);
-                            }
-
                             toxSingleton.jTox.save();
                         } catch (Exception e) {
-
                         }
-
-                        if (toxSingleton.friend_requests.size() != 0) {
-
-                            for (int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                                if (key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
-                                    toxSingleton.friend_requests.remove(i);
-                                    break;
-                                }
-                            }
-
-                            db = new AntoxDB(getActivity().getApplicationContext());
-                            db.deleteFriendRequest(key);
-                            db.close();
-                        }
+                        db = new AntoxDB(getActivity().getApplicationContext());
+                        db.deleteFriendRequest(key);
+                        db.close();
 
                         return null;
                     }
                     @Override
                     protected void onPostExecute(Void result) {
-                        ((MainActivity) getActivity()).pane.openPane();
-                        ((MainActivity) getActivity()).updateLeftPane();
+                        toxSingleton.updateFriendsList(getActivity());
+                        toxSingleton.updateFriendRequests(getActivity());
+                        toxSingleton.activeKeySubject.onNext("");
                     }
                 }
 
@@ -117,31 +96,18 @@ public class FriendRequestFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).pane.openPane();
-
                 class RejectFriendRequest extends AsyncTask<Void, Void, Void> {
                     @Override
                     protected Void doInBackground(Void... params) {
                         AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
                         antoxDB.deleteFriendRequest(key);
                         antoxDB.close();
-
-                        if (toxSingleton.friend_requests.size() != 0) {
-                            for (int j = 0; j < toxSingleton.friend_requests.size(); j++) {
-                                for (int i = 0; i < toxSingleton.friend_requests.size(); i++) {
-                                    if (key.equalsIgnoreCase(toxSingleton.friend_requests.get(i).requestKey)) {
-                                        toxSingleton.friend_requests.remove(i);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
                         return null;
                     }
                     @Override
                     protected void onPostExecute(Void result) {
-                        ((MainActivity) getActivity()).updateLeftPane();
+                        toxSingleton.updateFriendRequests(getActivity());
+                        toxSingleton.activeKeySubject.onNext("");
                     }
 
                 }

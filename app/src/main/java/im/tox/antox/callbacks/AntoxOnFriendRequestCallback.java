@@ -34,8 +34,7 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
     @Override
     public void execute(String publicKey, String message){
 
-        toxSingleton.friend_requests.add(new FriendRequest(publicKey, message));
-            /* Add friend request to database */
+        /* Add friend request to database */
         AntoxDB db = new AntoxDB(this.ctx);
         if(!db.isFriendBlocked(publicKey))
             db.addFriendRequest(publicKey, message);
@@ -47,7 +46,6 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
         if(preferences.getBoolean("notifications_enable_notifications", true) != false
                 && preferences.getBoolean("notifications_friend_request", true) != false) {
                 /* Notification */
-            if (!toxSingleton.leftPaneActive) {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this.ctx)
                                 .setSmallIcon(R.drawable.ic_actionbar)
@@ -56,17 +54,11 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
 
                                 .setDefaults(Notification.DEFAULT_ALL).setAutoCancel(true);
 
-                int ID = toxSingleton.friend_requests.size();
                 Intent targetIntent = new Intent(this.ctx, MainActivity.class);
                 PendingIntent contentIntent = PendingIntent.getActivity(this.ctx, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 mBuilder.setContentIntent(contentIntent);
-                toxSingleton.mNotificationManager.notify(ID, mBuilder.build());
+                toxSingleton.mNotificationManager.notify(0, mBuilder.build()); // TODO: number currently points at first in list, should be pointing at the specific friend request in question
             }
+        toxSingleton.updateFriendRequests(ctx);
         }
-
-                /* Update friends list */
-        Intent update = new Intent(Constants.BROADCAST_ACTION);
-        update.putExtra("action", Constants.UPDATE);
-        LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(update);
-    }
 }
