@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -30,7 +30,6 @@ import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.LeftPaneItem;
-import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
@@ -202,14 +201,10 @@ public class ContactsFragment extends Fragment {
                                                 @Override
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                                    db.addFriend(item.first, "Friend Accepted", "", "");
+                                                    db.addFriend(item.key, "Friend Accepted", "", "");
                                                     db.close();
                                                     try {
-                                                        toxSingleton.jTox.confirmRequest(item.first);
-
-                                                        //This is so wasteful. Should pass the info in the intent with the key
-                                                        db = new AntoxDB(getActivity().getApplicationContext());
-                                                        ArrayList<Friend> friends = db.getFriendList();
+                                                        toxSingleton.jTox.confirmRequest(item.key);
                                                         toxSingleton.jTox.save();
                                                     } catch (Exception e) {
 
@@ -232,7 +227,7 @@ public class ContactsFragment extends Fragment {
                                                 @Override
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                                    antoxDB.deleteFriendRequest(item.first);
+                                                    antoxDB.deleteFriendRequest(item.key);
                                                     antoxDB.close();
                                                     return null;
                                                 }
@@ -249,43 +244,37 @@ public class ContactsFragment extends Fragment {
 
                                             break;
                                         case 2:
-                                            showBlockDialog(getActivity(), item.first);
+                                            showBlockDialog(getActivity(), item.key);
                                             break;
                                     }
                                 } else {
-                                    ArrayList<Friend> tmp = ((MainActivity) getActivity()).friendList;
-                                    //Get friend key
-                                    String key = "";
-                                    for (int i = 0; i < tmp.size(); i++) {
-                                        if (item.first.equals(tmp.get(i).friendName)) {
-                                            key = tmp.get(i).friendKey;
-                                            break;
-                                        }
-                                    }
-                                    switch (index) {
-                                        case 0:
-                                            if (!key.equals("")) {
+                                    String key = item.key;
+                                    if (!key.equals("")) {
+                                        switch (index) {
+                                            case 0:
+                                                //todo: implement profiles
+                                                Toast.makeText(getActivity(),"To be implemented",Toast.LENGTH_SHORT).show();
+                                                /*
                                                 Intent profile = new Intent(getActivity(), FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
                                                 startActivity(profile);
-                                            }
-                                            break;
-
-                                        case 1:
-                                            //Delete friend
-                                            if (!key.equals("")) {
-                                                showAlertDialog(getActivity(), key);
-                                            }
-                                            break;
-                                        case 2:
-                                            AntoxDB db = new AntoxDB(getActivity());
-                                            db.deleteChat(key);
-                                            db.close();
-                                            toxSingleton.updatedMessagesSubject.onNext(true);
-                                            break;
-                                        case 3:
-                                            showBlockDialog(getActivity(), key);
-                                            break;
+                                                */
+                                                break;
+                                            case 1:
+                                                //Delete friend
+                                                showDeleteFriendDialog(getActivity(), key);
+                                                break;
+                                            case 2:
+                                                AntoxDB db = new AntoxDB(getActivity());
+                                                db.deleteChat(key);
+                                                db.close();
+                                                toxSingleton.updatedMessagesSubject.onNext(true);
+                                                toxSingleton.updateLastMessageMap(getActivity());
+                                                break;
+                                            case 3:
+                                                showBlockDialog(getActivity(), key);
+                                                break;
+                                        }
                                     }
                                 }
                                 dialog.cancel();
@@ -327,7 +316,7 @@ public class ContactsFragment extends Fragment {
         builder.show();
     }
 
-    public void showAlertDialog(Context context, String fkey) {
+    public void showDeleteFriendDialog(Context context, String fkey) {
         final String key= fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(getResources().getString(R.string.contacts_clear_saved_logs))
