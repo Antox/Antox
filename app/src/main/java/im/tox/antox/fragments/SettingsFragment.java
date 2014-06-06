@@ -1,19 +1,40 @@
 package im.tox.antox.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import im.tox.QR.Contents;
+import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
@@ -31,7 +52,6 @@ import im.tox.jtoxcore.ToxUserStatus;
  */
 public class SettingsFragment extends com.github.machinarius.preferencefragment.PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,17 +83,33 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
+
+        /* Override the Tox ID click functionality to display a dialog with the qr image
+         * and copy to clipboard button
+         */
+        Preference toxIDPreference = (Preference) findPreference("tox_id");
+        toxIDPreference.setOnPreferenceClickListener(new EditTextPreference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                DialogFragment dialog = new DialogToxID();
+                Bundle bundle = new Bundle();
+                bundle.putString("Enter Friend's Pin", "Enter Friend's Pin");
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "NoticeDialogFragment");
+                return true;
+            }
+        });
     }
 
     /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
-     * immediately updated upon calling this method. The exact display format is
-     * dependent on the type of preference.
-     *
-     * @see #sBindPreferenceSummaryToValueListener
-     */
+    * Binds a preference's summary to its value. More specifically, when the
+    * preference's value is changed, its summary (line of text below the
+    * preference title) is updated to reflect the value. The summary is also
+    * immediately updated upon calling this method. The exact display format is
+    * dependent on the type of preference.
+    *
+    * @see #sBindPreferenceSummaryToValueListener
+    */
     private static void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
