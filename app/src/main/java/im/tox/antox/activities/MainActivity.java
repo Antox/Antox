@@ -319,20 +319,20 @@ public class MainActivity extends ActionBarActivity{
         Log.d("MainActivity","onResume");
         chatActiveSub = toxSingleton.chatActiveAndKey.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Tuple<String,Boolean>>() {
-                               @Override
-                               public void call(Tuple<String,Boolean> t) {
-                                   String activeKey = t.x;
-                                   boolean chatActive = t.y;
-                                   if (chatActive) {
-                                       AntoxDB db = new AntoxDB(getApplicationContext());
-                                       db.markIncomingMessagesRead(activeKey);
-                                       db.close();
-                                       toxSingleton.updateMessages(getApplicationContext());
-                                       toxSingleton.updateFriendsList(getApplicationContext());
-                                   }
+                    @Override
+                    public void call(Tuple<String,Boolean> t) {
+                        String activeKey = t.x;
+                        boolean chatActive = t.y;
+                        if (chatActive) {
+                            AntoxDB db = new AntoxDB(getApplicationContext());
+                            db.markIncomingMessagesRead(activeKey);
+                            db.close();
+                            toxSingleton.updateMessages(getApplicationContext());
+                            toxSingleton.updateFriendsList(getApplicationContext());
+                        }
 
-                               }
-                           });
+                    }
+                });
         activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Tuple<String,Boolean>>() {
                     @Override

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -45,6 +46,13 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
         /* Check user accepts friend request notifcations in their settings */
         if(preferences.getBoolean("notifications_enable_notifications", true) != false
                 && preferences.getBoolean("notifications_friend_request", true) != false) {
+
+                if(preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
+                    Vibrator vibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
+                    // Turn off the vibrator
+                    vibrator.cancel();
+                }
+
                 /* Notification */
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this.ctx)
