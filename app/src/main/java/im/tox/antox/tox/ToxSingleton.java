@@ -46,9 +46,11 @@ public class ToxSingleton {
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public PublishSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
+    public BehaviorSubject<Boolean> rightPaneOpen;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
+    public Observable chatActiveAndKey;
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -57,6 +59,8 @@ public class ToxSingleton {
     public void initSubjects(Context ctx){
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
         friendListSubject.subscribeOn(Schedulers.io());
+        rightPaneOpen = BehaviorSubject.create(new Boolean(false));
+        rightPaneOpen.subscribeOn(Schedulers.io());
         friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
         friendRequestSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
@@ -105,6 +109,15 @@ public class ToxSingleton {
                 isFriend = isKeyFriend(key, fl);
                 return new Tuple<String,Boolean>(key, isFriend);
             }
+        });
+        chatActiveAndKey = combineLatest(rightPaneOpen, activeKeyAndIsFriendSubject, new Func2<Boolean, Tuple<String,Boolean>, Tuple<String,Boolean>>(){
+            @Override
+            public Tuple<String,Boolean> call (Boolean rightActive, Tuple<String,Boolean> tup) {
+                String key = tup.x;
+                Boolean isFriend = tup.y;
+                return new Tuple<String, Boolean>(key, isFriend && rightActive);
+            }
+
         });
     };
 
