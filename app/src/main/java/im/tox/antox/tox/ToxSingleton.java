@@ -97,11 +97,11 @@ public class ToxSingleton {
             }
         });
         friendListAndRequestsSubject = combineLatest(friendInfoListSubject, friendRequestSubject, new Func2<ArrayList<FriendInfo>, ArrayList<FriendRequest>, Tuple<ArrayList<FriendInfo>, ArrayList<FriendRequest>>>() {
-                    @Override
-                    public Tuple<ArrayList<FriendInfo>, ArrayList<FriendRequest>> call (ArrayList<FriendInfo> fl, ArrayList<FriendRequest> fr) {
-                        return new Tuple(fl,fr);
-                    }
-                });
+            @Override
+            public Tuple<ArrayList<FriendInfo>, ArrayList<FriendRequest>> call (ArrayList<FriendInfo> fl, ArrayList<FriendRequest> fr) {
+                return new Tuple(fl,fr);
+            }
+        });
         activeKeyAndIsFriendSubject = combineLatest(activeKeySubject, friendListSubject, new Func2<String, ArrayList<Friend>, Tuple<String,Boolean>> () {
             @Override
             public Tuple<String,Boolean> call (String key, ArrayList<Friend> fl) {
@@ -200,7 +200,7 @@ public class ToxSingleton {
             /* Choose appropriate constructor depending on if data file exists */
             if(!dataFile.doesFileExist()) {
                 jTox = new JTox(antoxFriendList, callbackHandler);
-                
+
             } else {
                 jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
 
