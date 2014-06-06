@@ -37,7 +37,7 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
         db.close();
 
         /* Broadcast to main activity to tell it to refresh */
-        toxSingleton.updatedMessagesSubject.onNext(true);
+        toxSingleton.updateMessages(ctx);
 
         /* Notifications for messages */
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx);

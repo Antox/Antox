@@ -24,6 +24,6 @@ public class AntoxOnReadReceiptCallback implements OnReadReceiptCallback<AntoxFr
         db.close();
 
         /* Broadcast */
-        toxSingleton.updatedMessagesSubject.onNext(true);
+        toxSingleton.updateMessages(ctx);
     }
 }
