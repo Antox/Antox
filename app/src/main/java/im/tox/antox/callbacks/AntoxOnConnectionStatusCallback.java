@@ -41,7 +41,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                 int id = unsentMessageList.get(i).message_id;
                 boolean sendingSucceeded = true;
                 try {
-                    friend = toxSingleton.friendsList.getById(unsentMessageList.get(i).key);
+                    friend = toxSingleton.getAntoxFriend(unsentMessageList.get(i).key);
                 } catch (Exception e) {
                     Log.d(TAG, e.toString());
                 }
@@ -58,14 +58,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
                     db.updateUnsentMessage(id);
                 }
             }
-
-            if (toxSingleton.activeFriendKey != null) {
-                /* Broadcast to update UI */
-                Intent notify = new Intent(Constants.BROADCAST_ACTION);
-                notify.putExtra("action", Constants.UPDATE_MESSAGES);
-                notify.putExtra("key", toxSingleton.activeFriendKey);
-                LocalBroadcastManager.getInstance(this.ctx).sendBroadcast(notify);
-            }
+            toxSingleton.updatedMessagesSubject.onNext(true);
         }
 
         db.close();

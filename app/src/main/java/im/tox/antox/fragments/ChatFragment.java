@@ -25,6 +25,7 @@ import im.tox.jtoxcore.ToxException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -41,36 +42,35 @@ public class ChatFragment extends Fragment {
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
-    Subscription activeKeySub;
-    private String activeFriendKey;
+    Subscription messagesSub;
     private ArrayList<ChatMessages> chatMessages;
+    private String activeKey;
 
 
     public ChatFragment() {
     }
 
+    public ChatFragment(String key) {
+        this.activeKey = key;
+    }
+
     @Override
     public void onResume(){
         super.onResume();
-        activeKeySub = toxSingleton.activeKeyAndIsFriendNewMessageSubject.map(new Func1<Tuple<String, Boolean>, Triple<String, Boolean, ArrayList<Message>>>() {
+        messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
             @Override
-            public Triple<String, Boolean, ArrayList<Message>> call(Tuple<String, Boolean> tup) {
-                String key = tup.x;
-                boolean isFriend = tup.y;
+            public ArrayList<Message> call(Boolean input) {
+                Log.d("ChatFragment","updatedMessageSubject map");
                 AntoxDB antoxDB = new AntoxDB(getActivity());
-                ArrayList<Message> messageList = antoxDB.getMessageList(key);
+                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey);
                 antoxDB.close();
-                return new Triple<String, Boolean, ArrayList<Message>>(key, isFriend, messageList);
+                return messageList;
             }
-        }).subscribe(new Action1<Triple<String, Boolean, ArrayList<Message>>>() {
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
             @Override
-            public void call(Triple<String, Boolean, ArrayList<Message>> trip) {
-                if (trip.y) {
-                    activeFriendKey = trip.x;
-                } else {
-                    activeFriendKey = null;
-                }
-                updateChat(trip.z);
+            public void call(ArrayList<Message> messages) {
+                Log.d("ChatFragment", "updatedMessageSubject subscription");
+                updateChat(messages);
             }
         });
     }
@@ -78,7 +78,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        activeKeySub.unsubscribe();
+        messagesSub.unsubscribe();
     }
 
     public void sendMessage() {
@@ -91,7 +91,7 @@ public class ChatFragment extends Fragment {
         } else {
             msg = "";
         }
-        final String key = activeFriendKey;
+        final String key = activeKey;
         messageBox.setText("");
         Observable<Boolean> send = Observable.create(
                 new Observable.OnSubscribe<Boolean>() {
@@ -103,7 +103,7 @@ public class ChatFragment extends Fragment {
                                 Random generator = new Random();
                                 int id = generator.nextInt();
                                 try {
-                                    friend = toxSingleton.friendsList.getById(key);
+                                    friend = toxSingleton.getAntoxFriend(key);
                                 } catch (Exception e) {
                                     Log.d(TAG, e.toString());
                                 }
@@ -121,7 +121,7 @@ public class ChatFragment extends Fragment {
                                     db.addMessage(id, key, msg, true, false, false, sendingSucceeded);
                                     db.close();
                                     /* update UI */
-                                    toxSingleton.newMessageSubject.onNext(true);
+                                    toxSingleton.updatedMessagesSubject.onNext(true);
                                 }
                                 subscriber.onCompleted();
                             } catch (Exception e) {
