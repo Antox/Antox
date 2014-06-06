@@ -121,7 +121,7 @@ public class ChatFragment extends Fragment {
                                     db.addMessage(id, key, msg, true, false, false, sendingSucceeded);
                                     db.close();
                                     /* update UI */
-                                    toxSingleton.updatedMessagesSubject.onNext(true);
+                                    toxSingleton.updateMessages(getActivity());
                                 }
                                 subscriber.onCompleted();
                             } catch (Exception e) {
