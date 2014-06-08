@@ -15,6 +15,7 @@
         tools:context=".WelcomeActivity" >
 
         <ImageView
+            android:contentDescription="Antox Logo"
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +37,6 @@
             android:layout_marginTop="0dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:layout_centerInParent="true"
             android:text="@string/welcome_developer_string" />
 
            <TextView

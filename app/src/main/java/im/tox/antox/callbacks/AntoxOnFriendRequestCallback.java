@@ -5,17 +5,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.FriendRequest;
 import im.tox.jtoxcore.callbacks.OnFriendRequestCallback;
 
 public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
@@ -66,7 +62,8 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
                 PendingIntent contentIntent = PendingIntent.getActivity(this.ctx, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 mBuilder.setContentIntent(contentIntent);
                 toxSingleton.mNotificationManager.notify(0, mBuilder.build()); // TODO: number currently points at first in list, should be pointing at the specific friend request in question
-            }
-            toxSingleton.updateFriendRequests(ctx);
         }
+
+        toxSingleton.updateFriendRequests(ctx);
+    }
 }

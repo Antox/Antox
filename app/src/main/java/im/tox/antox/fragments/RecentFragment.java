@@ -20,8 +20,6 @@ import im.tox.antox.R;
 import im.tox.antox.adapters.RecentAdapter;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.FriendInfo;
-import im.tox.antox.utils.FriendRequest;
-import im.tox.antox.utils.LeftPaneItem;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;

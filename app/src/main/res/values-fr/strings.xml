@@ -6,16 +6,10 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Bienvenue</string>
     <string name="title_activity_add_friend">Ajouter un ami</string>
-    <string name="title_activity_settings">Paramètres</string>
-    <string name="title_activity_profile">Profil</string>
-    <string name="title_activity_about">À propos</string>
-    <string name="title_activity_friend_profile">Profil</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Paramètres</string>
-    <string name="action_exit">Sortir</string>
     <string name="add_friend">Ajouter un ami</string>
-    <string name="search_friend">Rechercher</string>
     <string name="action_profile">Profil</string>
     <string name="action_about">À propos</string>
     <string name="add_to_group">Ajouter au groupe</string>

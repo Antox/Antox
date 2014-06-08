@@ -6,17 +6,10 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Willkommen</string>
     <string name="title_activity_add_friend">Freund hinzufügen</string>
-    <string name="title_activity_settings">Einstellungen</string>
-    <string name="title_activity_profile">Profil</string>
-    <string name="title_activity_about">Über Antox</string>
-    <string name="title_activity_friend_profile">Profil</string>
-    <string name="title_activity_manage_groups">Gruppen verwalten</string>
-    
+
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Einstellungen</string>
-    <string name="action_exit">Beenden</string>
     <string name="add_friend">Freund hinzufügen</string>
-    <string name="search_friend">Suchen</string>
     <string name="action_profile">Profil</string>
     <string name="action_about">Über Antox</string>
     <string name="add_to_group">Zur Gruppe hinzufügen</string>

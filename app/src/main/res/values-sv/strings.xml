@@ -6,17 +6,10 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Välkommen</string>
     <string name="title_activity_add_friend">Lägg Till Vän</string>
-    <string name="title_activity_settings">Inställningar</string>
-    <string name="title_activity_profile">Profil</string>
-    <string name="title_activity_about">Om</string>
-    <string name="title_activity_friend_profile">Profil</string>
-    <string name="title_activity_manage_groups">Hantera Grupper</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Inställningar</string>
-    <string name="action_exit">Avsluta</string>
     <string name="add_friend">Lägg Till Vän</string>
-    <string name="search_friend">Sök</string>
     <string name="action_profile">Profil</string>
     <string name="action_about">Om</string>
     <string name="add_to_group">Lägg Till I Grupp</string>

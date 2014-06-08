@@ -19,8 +19,6 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Message;
-import im.tox.antox.utils.Triple;
-import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
 import rx.Subscriber;

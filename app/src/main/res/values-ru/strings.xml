@@ -6,16 +6,10 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Добро пожаловать</string>
     <string name="title_activity_add_friend">Добавить друга</string>
-    <string name="title_activity_settings">Настройки</string>
-    <string name="title_activity_profile">Профиль</string>
-    <string name="title_activity_about">О программе</string>
-    <string name="title_activity_friend_profile">Профиль</string>
 
     <!-- Navigation / Action Bar -->
     <string name="action_settings">Настройки</string>
-    <string name="action_exit">Выход</string>
     <string name="add_friend">Добавить друга</string>
-    <string name="search_friend">Поиск</string>
     <string name="action_profile">Профиль</string>
     <string name="action_about">О программе</string>
     <string name="add_to_group">Добавить в группу</string>

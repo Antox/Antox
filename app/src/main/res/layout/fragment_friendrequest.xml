@@ -29,7 +29,7 @@
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:gravity="center"
-                android:layout_height="wrap_content" />
+                android:layout_height="0dip" />
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"

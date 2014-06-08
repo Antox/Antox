@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white_absolute">#ffffff</color>
-    <color name="black_absolute">#000000</color>
 
     <color name="white">#f0f0f0</color>
     <color name="black">#222222</color>
@@ -10,6 +9,5 @@
 
     <color name="green">#5ec245</color>
     <color name="blue">#4c689d</color>
-    <color name="blue_light">#ADCEE0</color>
     <color name="grey_light">#EAEAEA</color>
 </resources>

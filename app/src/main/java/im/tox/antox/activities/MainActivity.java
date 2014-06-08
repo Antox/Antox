@@ -6,14 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -25,35 +22,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Locale;
 
-import im.tox.QR.Contents;
-import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
-import im.tox.antox.fragments.PinDialogFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DHTNodeDetails;
 import im.tox.antox.utils.DhtNode;
-import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserDetails;
 import rx.Subscription;
@@ -399,9 +382,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_friend:
-                addFriend();
-                return true;
             case android.R.id.home:
                 pane.openPane();
                 return true;
@@ -409,17 +389,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        //the class menu property is now the initialized menu
-        this.menu=menu;
-
-        return true;
-    }
-
 
     /**
      * Method to see if the tox service is already running so it isn't restarted
