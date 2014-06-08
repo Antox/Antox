@@ -28,6 +28,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
 
     @Override
     public void execute(AntoxFriend friend, boolean online) {
+        Log.d(TAG, "Connection Status Callback");
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserOnline(friend.getId(), online);
         Intent update = new Intent(Constants.BROADCAST_ACTION);
