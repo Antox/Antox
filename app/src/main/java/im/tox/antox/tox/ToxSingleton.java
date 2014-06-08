@@ -15,9 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
-import im.tox.antox.R;
 import im.tox.antox.callbacks.AntoxOnActionCallback;
 import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
@@ -56,7 +54,6 @@ public class ToxSingleton {
     public JTox jTox;
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
-    public boolean toxStarted = false;
     public NotificationManager mNotificationManager;
     public ToxDataFile dataFile;
     public File qrFile;
@@ -71,6 +68,7 @@ public class ToxSingleton {
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
     public Observable chatActiveAndKey;
+    public boolean isRunning = false;
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -346,8 +344,6 @@ public class ToxSingleton {
         Intent startToxIntent = new Intent(ctx, ToxDoService.class);
         startToxIntent.setAction(Constants.START_TOX);
         ctx.startService(startToxIntent);
-
-        toxStarted = true;
     }
 
     public static ToxSingleton getInstance() {

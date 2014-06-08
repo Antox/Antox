@@ -1,5 +1,6 @@
 package im.tox.antox.activities;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,8 +34,6 @@ import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.DHTNodeDetails;
-import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Tuple;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -123,7 +123,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             }
 
             /* If the tox service isn't already running, start it */
-            if (!toxSingleton.toxStarted) {
+            if (!toxSingleton.isRunning) {
+                //new InitToxAsync(getApplicationContext()).execute();
                 toxSingleton.initTox(getApplicationContext());
             }
 
@@ -301,5 +302,18 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
                 .getSystemService(context.CLIPBOARD_SERVICE);
         clipboard.setText(sharedPreferences.getString("tox_id", ""));
+    }
+
+    private class InitToxAsync extends AsyncTask<Void, Void, Void> {
+
+        private Context ctx;
+
+        public InitToxAsync(Context ctx) { this.ctx = ctx; }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            toxSingleton.initTox(ctx);
+            return null;
+        }
     }
 }

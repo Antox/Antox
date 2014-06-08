@@ -83,6 +83,7 @@ public class ToxDoService extends IntentService {
             /* Praise the sun */
             try {
                 toxSingleton.jTox.doTox();
+                toxSingleton.isRunning = true;
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
