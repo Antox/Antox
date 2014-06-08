@@ -8,12 +8,7 @@
     <string name="title_activity_add_friend">Dodaj znajomego</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Ustawienia</string>
     <string name="add_friend">Dodaj znajomego</string>
-    <string name="action_profile">Profil</string>
-    <string name="action_about">O programie</string>
-    <string name="add_to_group">Dodaj do grupy</string>
-    <string name="manage_groups">Zarządzaj grupami</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_must_select_username">Musisz ustawić nazwę</string>
@@ -71,26 +66,6 @@
     <string name="friend_profile_updated">Profil został zaktualizowany</string>
     <string name="friend_profile_copy">Kopiuj ID</string>
     <string name="friend_profile_copied">ID skopiowane</string>
-
-    <!-- Manage Groups Activity -->
-    <string name="manage_groups_add_group">Dodaj Grupę</string>
-    <string name="manage_groups_number_of_members">Liczba członków: </string>
-    <string name="manage_groups_none">Brak</string>
-    <string name="manage_groups_dialog_add_group">Dodaj grupę</string>
-    <string name="manage_groups_dialog_rename_group">Zmień nazwę grupy</string>
-    <string name="manage_groups_no_name">Proszę, nazwij swą grupę</string>
-    <string name="manage_groups_already_exists">Grupa już istnieje</string>
-    <string name="manage_groups_dialog_add_button">Dodaj</string>
-    <string name="manage_groups_dialog_rename_button">Zmień nazwę</string>
-    <string name="manage_groups_dialog_cancel_button">Anuluj</string>
-    <string name="manage_groups_no_delete_friends">Grupa „Znajomi” jest domyślną grupą. Nie może zostać zmodyfikowana.</string>
-    <string name="manage_groups_rename_group">Zmień nazwę</string>
-    <string name="manage_groups_delete_group">Usuń</string>
-    <string name="manage_groups_action_on">Działanie na</string>
-    <string name="manage_groups_friends">Znajomi</string>
-    <string name="manage_groups_toast_deleted">Udało się usunąć grupę. Jej członkowie przeniesieni do Znajomych.</string>
-    <string name="manage_groups_toast_renamed">Udało się zmienić nazwę grupy</string>
-    <string name="manage_groups_toast_added">Udało się dodać grupę</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Zaakceptuj</string>
