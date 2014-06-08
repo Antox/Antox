@@ -1,8 +1,6 @@
 package im.tox.antox.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -33,7 +31,6 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.PinDialogFragment;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.DhtNode;
 import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
 
@@ -70,29 +67,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         setContentView(R.layout.activity_add_friend);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
-        }
-
-        // Check to see if user is connected to dht first
-
-        if(!DhtNode.connected) {
-            AlertDialog notConnectedAlertDialog = new AlertDialog.Builder(this).create();
-            notConnectedAlertDialog.setTitle(R.string.addfriend_no_internet);
-            notConnectedAlertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
-            notConnectedAlertDialog.setIcon(R.drawable.ic_launcher);
-            notConnectedAlertDialog.setButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-
-            notConnectedAlertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    finish();
-                }
-            });
-            notConnectedAlertDialog.show();
         }
 
         context = getApplicationContext();

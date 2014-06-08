@@ -31,8 +31,10 @@
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">        No internet connection has been detected. Without an internet connection, you will have
-        limited functionality.</string>
+    <string name="main_not_connected">
+        No internet connection has been detected. Without an internet connection, you will have
+        limited functionality unless you are using Antox for LAN only
+    </string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
     <!-- Chat Activity -->
