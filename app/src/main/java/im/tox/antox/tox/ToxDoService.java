@@ -23,8 +23,6 @@ import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
@@ -207,9 +205,6 @@ public class ToxDoService extends IntentService {
             /* Praise the sun */
             try {
                 toxSingleton.jTox.doTox();
-                if(!toxSingleton.jTox.isConnected() && DhtNode.connected == true) {
-                    Log.v(TAG, "not connected to tox");
-                }
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();

@@ -1,13 +1,10 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.callbacks.OnStatusMessageCallback;
 
 public class AntoxOnStatusMessageCallback implements OnStatusMessageCallback<AntoxFriend> {

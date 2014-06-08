@@ -1,15 +1,10 @@
 package im.tox.antox.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -19,22 +14,8 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageButton;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import im.tox.QR.Contents;
-import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;

@@ -45,6 +45,7 @@
         android:orientation="horizontal"
         android:background="@color/blue">
         <ImageButton
+            android:contentDescription="Start Group Conversation"
             android:id="@+id/contacts_start_group_conversation"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -55,6 +56,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
         <ImageButton
+            android:contentDescription="Search Contacts"
             android:id="@+id/contacts_search"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -65,6 +67,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
         <ImageButton
+            android:contentDescription="Add Friend"
             android:id="@+id/contacts_add_friend"
             android:layout_width="48dp"
             android:layout_height="48dp"

@@ -9,14 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.Friend;
 
 /**
  * Created by ollie on 28/02/14.
