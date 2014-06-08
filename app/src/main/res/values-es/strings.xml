@@ -8,11 +8,7 @@
     <string name="title_activity_add_friend">Agregar amigo</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Configuración</string>
     <string name="add_friend">Agregar amigo</string>
-    <string name="action_profile">Perfil</string>
-    <string name="action_about">Acerca de</string>
-    <string name="add_to_group">Agregar a grupo</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -28,38 +24,11 @@
     <string name="main_not_connected">No estás conectado al Internet</string>
     <string name="main_node_list_download_error">Error Descargando la Lista de Nodos</string>
 
-    <!-- About Activity -->
-    <string name="about_details">Antox es un cliente Android de Tox</string>
-    <string name="about_bugs">Para reportar un bug, porfavor visita nuestra página de GitHub y has clic en \"issues\".</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Estamos en Freenode en #tox-dev</string>
-
     <!--  Chat Activity -->
     <string name="chat_enter_message">Enviar mensaje</string>
 
-
     <!-- Welcome Activity -->
-    <string name="about_string">El cliente aún esta en pre-alfa.</string>
-    <string name="getstarted_string">Ingresa el nombre de usuario que deseas.</string>
-    <string name="settings_custom_dht">Configuración de DHT customizado</string>
-    <string name="settings_use_custom_dht">Usar DHT customizado</string>
-    <string name="settings_user_key_title">Tu clave de usuario</string>
-    <string name="settings_name_hint">Ingresa tu nombre</string>
-    <string name="settings_note_hint">Ingresa una nota personal</string>
-    <string name="settings_dht_ip">Dirección IP de un nodo inicial (ej: 192.254.75.98)</string>
-    <string name="settings_dht_port">Puerto del nodo inicial (ej: 33445)</string>
-    <string name="settings_dht_key">Llave pública de un nodo inicial (ej: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Actualizar</string>
-    <string name="settings_updated">La  configuración ha sido actualizada</string>
-    <string name="settings_dht_spinner_title">Configuración avanzada</string>
-    <string name="settings_status_title">Ingresa tu estado</string>
-    <string name="settings_note_title">Ingresa tu nota personal</string>
-    <string name="settings_username_title">Ingresa tu nombre de usuario</string>
-    <string name="developer_string">Desarrollado por astonex &amp; co.</string>
     <string name="welcome_must_select_username">Debes elegir un nombre de usuario</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Ingresa la clave de usuario de tu amigo</string>
@@ -73,14 +42,6 @@
     <string name="addfriend_optional_title">Extras opcionales</string>
     <string name="dialog_pin">Ingresa el pin de tu amigo</string>
     <string name="addfriend_invalid_pin">Pin invalido</string>
-
-    <!--  Profile Activity -->
-    <string name="share_with">Compartir con</string>
-    <string name="status_online">Conectado</string>
-    <string name="status_away">Ausente</string>
-    <string name="status_busy">Ocupado</string>
-    <string name="profile_updated">Tu perfil ha sido actualizado</string>
-
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Aceptar</string>

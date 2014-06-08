@@ -8,12 +8,7 @@
     <string name="title_activity_add_friend">Freund hinzufügen</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Einstellungen</string>
     <string name="add_friend">Freund hinzufügen</string>
-    <string name="action_profile">Profil</string>
-    <string name="action_about">Über Antox</string>
-    <string name="add_to_group">Zur Gruppe hinzufügen</string>
-    <string name="manage_groups">Gruppen verwalten</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -32,44 +27,8 @@
     </string>
     <string name="main_node_list_download_error">Fehler beim Herunterladen der Node Liste</string>
 
-    <!-- About Activity -->
-    <string name="about_details">Antox ist ein Android Client für Tox</string>
-    <string name="about_bugs">Um Fehler zu melden, besuche uns auf GitHub und klicke auf \"issues\".</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Wir sind auf Freenode in #tox-dev</string>
-    <string name="about_version">Version</string>
-
     <!--  Chat Activity -->
     <string name="chat_enter_message">Nachricht senden</string>
-
-
-    <!-- Settings Activity -->
-    <string name="about_string">Diese App ist noch Pre-Alpha</string>
-    <string name="getstarted_string">Gebe deinen gewünschten Benutzernamen ein</string>
-    <string name="settings_custom_dht">Erweiterte DHT Einstellungen</string>
-    <string name="settings_use_custom_dht">Erweiterte DHT Einstellungen benutzen</string>
-    <string name="settings_user_key_title">Deine Tox ID</string>
-    <string name="settings_name_hint">Benutzername</string>
-    <string name="settings_note_hint">Statusnachricht</string>
-    <string name="settings_dht_ip">IP Addresse des Bootstrap-Knotens (z.B.: 192.254.75.98)</string>
-    <string name="settings_dht_port">Port des Bootstrap-Knotens (z.B.: 33445)</string>
-    <string name="settings_dht_key">Tox ID des Bootstrap-Knotens (z.B.: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Anwenden</string>
-    <string name="settings_updated">Die Einstellungen wurden geändert</string>
-    <string name="settings_dht_spinner_title">Erweiterte Einstellungen</string>
-    <string name="settings_language_title">Sprache</string>
-    <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Stimmung</string>
-    <string name="settings_theme_title">Theme</string>
-    <string name="settings_username_title">Benutzername</string>
-    <string name="settings_empty_strings">Du musst alle Felder ausfüllen</string>
-    <string name="settings_invalid_key">Ungültiger Key</string>
-    <string name="settings_send_typing_indicators">Schreibaktivität anziegen</string>
-    <string name="developer_string">Diese App wurde mit Liebe vom Tox Entwicklungsteam erstellt</string>
-    <string name="welcome_must_select_username">Du musst einen Benutzernamen eingeben</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID eines Freundes eingeben</string>
@@ -79,7 +38,6 @@
     <string name="addfriend_friend_exists">Freund existiert bereits</string>
     <string name="scanqr_button">QR-Code scannen</string>
     <string name="invalid_friend_ID">Ungültige Tox ID</string>
-    <string name="addfriend_alias_hint">Gebe deinen Freund einen Spitznamen</string>
     <string name="addfriend_optional_title">Weitere Angaben</string>
     <string name="dialog_pin">Gib die Pin deines Freundes ein</string>
     <string name="addfriend_invalid_pin">Ungültige Pin</string>
@@ -88,13 +46,6 @@
         Du bist zur Zeit nicht mit dem Tox Netzwerk verbunden und kannst daher keine Freunde hinzufügen.
         Versuche die App neu zu starten.
     </string>
-
-    <!--  Profile Activity -->
-    <string name="share_with">Teilen mit</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Abwesend</string>
-    <string name="status_busy">Beschäftigt</string>
-    <string name="profile_updated">Dein Profil wurde geändert</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
@@ -106,26 +57,6 @@
     <string name="friend_profile_updated">Das Profil wurde aktualisiert</string>
     <string name="friend_profile_copy">Tox ID kopieren</string>
     <string name="friend_profile_copied">Tox ID kopiert</string>
-
-    <!-- Manage Groups Activity -->
-    <string name="manage_groups_add_group">Gruppe hinzufügen</string>
-    <string name="manage_groups_number_of_members">Anzahl der Mitglieder: </string>
-    <string name="manage_groups_none">Keine</string>
-    <string name="manage_groups_dialog_add_group">Eine Gruppe hinzufügen</string>
-    <string name="manage_groups_dialog_rename_group">Gruppe umbenennen</string>
-    <string name="manage_groups_no_name">Bitte gebe deiner Gruppe einen Namen</string>
-    <string name="manage_groups_already_exists">Diese Gruppe existiert bereits</string>
-    <string name="manage_groups_dialog_add_button">Hinzufügen</string>
-    <string name="manage_groups_dialog_rename_button">Umbenennen</string>
-    <string name="manage_groups_dialog_cancel_button">Abbrechen</string>
-    <string name="manage_groups_no_delete_friends">Die Gruppe “Freunde” ist die Standardgruppe. Diese kann nicht verändert werden.</string>
-    <string name="manage_groups_rename_group">Umbenennen</string>
-    <string name="manage_groups_delete_group">Löschen</string>
-    <string name="manage_groups_action_on">Aktion für</string>
-    <string name="manage_groups_friends">Freunde</string>
-    <string name="manage_groups_toast_deleted">Gruppe erfolgreich gelöscht. Alle Benutzer diese Gruppe wurden nach "Freunde" verschoben.</string>
-    <string name="manage_groups_toast_renamed">Gruppe erfolgreich umbenannt</string>
-    <string name="manage_groups_toast_added">Gruppe erfolgreich hinzugefügt</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Akzeptieren</string>
