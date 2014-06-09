@@ -1,0 +1,76 @@
+<resources>
+    <string name="title_activity_settings">Impostazioni</string>
+
+    <!-- Profile -->
+    <string name="pref_header_profile">Profilo</string>
+
+    <string name="pref_title_nickname">Nome</string>
+    <string name="pref_default_nickname">Utente Antox</string>
+
+    <string name="pref_title_status">Stato</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Assente</item>
+        <item>Occupato</item>
+    </string-array>
+    <string-array name="pref_status_list_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_title_status_message">Messaggio di Stato</string>
+    <string name="pref_default_status_message">Hey! Sto usando Antox</string>
+
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
+
+    <!-- Notifications -->
+    <string name="pref_header_notifications">Notifiche</string>
+
+    <string name="pref_title_enable_notifications">Abilita notifiche</string>
+    <string name="pref_title_new_message_notifications">Notifiche per i nuovi messaggi</string>
+    <string name="pref_title_new_friend_notifications">Notifiche per le richieste d\'amicizia</string>
+
+    <string name="pref_title_ringtone">Suoneria</string>
+    <string name="pref_ringtone_silent">Silenzioso</string>
+
+    <string name="pref_title_vibrate">Vibrazione</string>
+
+    <!-- Other -->
+    <string name="pref_header_other">Altro</string>
+
+    <string name="pref_title_language">Lingua</string>
+    <string-array name="pref_language_list_titles">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Nederlands</item>
+        <item>Polski</item>
+        <item>Svenska</item>
+        <item>Türkçe</item>
+        <item>Русский</item>
+        <item>Український</item>
+        <item>Português</item>
+    </string-array>
+    <string-array name="pref_language_list_values">
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>Nederlands</item>
+        <item>Polski</item>
+        <item>Svenska</item>
+        <item>Türkçe</item>
+        <item>Русский</item>
+        <item>Український</item>
+        <item>Português</item>
+    </string-array>
+
+
+    <!-- Menu strings -->
+    <string name="copy_tox_id">Copia Tox ID</string>
+</resources>

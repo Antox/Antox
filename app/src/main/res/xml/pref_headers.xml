@@ -1,0 +1,17 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="im.tox.antox.fragments.SettingsFragment$GeneralPreferenceFragment"
+        android:title="@string/pref_header_profile" />
+
+    <header
+        android:fragment="im.tox.antox.fragments.SettingsFragment$NotificationPreferenceFragment"
+        android:title="@string/pref_header_notifications" />
+
+    <header
+        android:fragment="im.tox.antox.fragments.SettingsFragment$DataSyncPreferenceFragment"
+        android:title="@string/pref_header_other" />
+
+</preference-headers>
