@@ -6,6 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Benvenuto</string>
     <string name="title_activity_add_friend">Aggiungi Amico</string>
+    <string name="title_activity_friend_profile">Profilo</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Aggiungi Amico</string>
@@ -17,6 +18,7 @@
     <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
+    <string name="main_recent_no">Nessuna coversazione recente</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
@@ -30,19 +32,19 @@
     <!-- Welcome Activity -->
     <string name="welcome_must_select_username">Devi inserire un nome utente</string>
     <string name="welcome_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="welcome_getstarted_string">Nome Utente</string>
+    <string name="welcome_getstarted_string">Nome</string>
     <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Avanti</string>
+    <string name="welcome_button">Inizia ad usare Antox!</string>
     <string name="welcome_developer_string">Sviluppato da astonex</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Tox-ID del tuo amico</string>
+    <string name="addfriend_friend_key">Tox ID del tuo amico</string>
     <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
     <string name="addfriend_button">Aggiungi Amico</string>
     <string name="addfriend_friend_added">Amico aggiunto</string>
     <string name="addfriend_friend_exists">Amico già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
-    <string name="invalid_friend_ID">Tox-ID inserito non valido</string>
+    <string name="invalid_friend_ID">Tox ID inserito non valido</string>
     <string name="addfriend_nick_hint">Nome personalizzato per il tuo amico</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
     <string name="dialog_pin">Inserisci il pin del tuo amico</string>
@@ -56,12 +58,12 @@
     <string name="friend_profile_name">Nome</string>
     <string name="friend_profile_nick">Nome Personalizzato</string>
     <string name="friend_profile_group">Gruppo</string>
-    <string name="friend_profile_key">Tox-ID</string>
+    <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Salva</string>
     <string name="friend_profile_updated">Profilo dell\'amico salvato</string>
-    <string name="friend_profile_copy">Copia Tox-ID</string>
-    <string name="friend_profile_copied">Tox-ID copiato</string>
+    <string name="friend_profile_copy">Copia Tox ID</string>
+    <string name="friend_profile_copied">Tox ID copiato</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
@@ -95,5 +97,8 @@
     <string name="button_yes">Sì</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Ciao fragment vuoto</string>
+    <string name="dialog_tox_id">Copia Tox ID negli appunti</string>
+    <string name="share_with">Condividi con</string>
 
 </resources>
