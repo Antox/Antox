@@ -256,10 +256,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
         );
-        try {
-            int count = cursor.getCount();
-            cursor.moveToFirst();
-            for (int i = 0; i < count; i++) {
+        if (cursor.moveToFirst()) {
+            do {
                 String key = cursor.getString(
                         cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)
                 );
@@ -267,12 +265,10 @@ public class AntoxDB extends SQLiteOpenHelper {
                         cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_MESSAGE)
                 );
                 friendRequests.add(new FriendRequest(key, message));
-                cursor.moveToNext();
-            }
-        } finally {
-            cursor.close();
+            } while (cursor.moveToNext()) ;
         }
 
+        cursor.close();
         db.close();
 
         return friendRequests;

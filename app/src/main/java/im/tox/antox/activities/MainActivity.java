@@ -136,18 +136,16 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
+            
+            updateLeftPane();
 
-            //Grab the friends list from the database and send it to all listeners of the friends list Subject
-            toxSingleton.updateFriendsList(this);
-            //Do the same for the last message map and unread count map subjects
-            toxSingleton.updateLastMessageMap(this);
-            toxSingleton.updateUnreadCountMap(this);
 
             onNewIntent(getIntent());
         }
     }
 
     public void updateLeftPane() {
+        toxSingleton.updateFriendRequests(getApplicationContext());
         toxSingleton.updateFriendsList(getApplicationContext());
         toxSingleton.updateMessages(getApplicationContext());
     }
