@@ -41,7 +41,7 @@
     <string name="pref_header_other">Other</string>
 
     <string name="pref_title_language">Language</string>
-    <string-array name="pref_language_list_titles">
+    <string-array name="pref_language_list_titles" translatable="false">
         <item>English</item>
         <item>Deutsch</item>
         <item>Español</item>
@@ -55,7 +55,7 @@
         <item>Український</item>
         <item>Português</item>
     </string-array>
-    <string-array name="pref_language_list_values">
+    <string-array name="pref_language_list_values" translatable="false">
         <item>en</item>
         <item>de</item>
         <item>es</item>
