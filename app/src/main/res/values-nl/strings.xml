@@ -33,14 +33,14 @@
     <string name="addfriend_friend_added">Toegevoegd aan vrienden</string>
     <string name="addfriend_friend_exists">Is reeds toegevoegd</string>
     <string name="scanqr_button">Scan een QR code</string>
-    <string name="invalid_friend_ID">Ongeldig ID</string>
-    <string name="addfriend_nick_hint">Zet een bijnaam voor je vriend</string>
+    <string name="invalid_friend_ID">Ongeldige ID</string>
+    <string name="addfriend_nick_hint">Stel een bijnaam in voor je vriend</string>
     <string name="addfriend_optional_title">Optionele extra\'s</string>
     <string name="dialog_pin">Voer de pin van je vriend in</string>
     <string name="addfriend_invalid_pin">Ongeldige Pin</string>
-    <string name="addfriend_no_internet">Geen Tox netwerkverbinding</string>
+    <string name="addfriend_no_internet">Geen Tox-netwerkverbinding</string>
     <string name="addfriend_no_internet_text">
-        Helaas bent u niet verbonden op het Tox netwerk, dus kunt je geen vrienden toevoegen op dit moment.
+        Je bent niet verbonden met het Tox-netwerk, dus kunt je geen vrienden toevoegen op dit moment.
         Probeer de applicatie opnieuw te starten.
     </string>
 
@@ -55,7 +55,7 @@
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accepteer</string>
     <string name="friendrequest_reject">Weiger</string>
-    <string name="friendrequest_accepted">Vriendsschapsverzoek geaccepteerd</string>
+    <string name="friendrequest_accepted">Vriendschapsverzoek geaccepteerd</string>
     <string name="friendrequest_deleted">Vriendschapsverzoek verwijderd</string>
     <string name="friendrequest">Vriendschapsverzoek</string>
     <string name="friendrequest_recieved">Nieuw vriendschapsverzoek ontvangen</string>
@@ -68,10 +68,10 @@
     <string name="friend_action_block">Blokkeer</string>
     <string name="friend_action_unblock">Deblokkeren</string>
     <string name="group_action_leave">Verlaat groep</string>
-    <string name="friend_action_deletechat">Chat logs verwijderen</string>
+    <string name="friend_action_deletechat">Chatlogs verwijderen</string>
     <string name="friend_action_block_confirmation">
-        Als u deze gebruiker blokkeerd, worden ze verwijdert van u vriendenlijst en u zal geen vriendverzoeking van hun krijgen.
-        Weet u zeker dat u wilt doorgaan?
+        Als je deze gebruiker blokkeert, worden ze verwijderd van je vriendenlijst en je zal geen vriendschapsverzoek meer van hen kunnen zien.
+        Weet je zeker dat je wilt doorgaan?
     </string>
 
     <string name="contacts_actions_on">Acties aan</string>
