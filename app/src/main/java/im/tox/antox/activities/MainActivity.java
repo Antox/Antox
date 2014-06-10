@@ -157,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
     private void clearUselessNotifications (String key) {
+        if (key != null && !key.equals(""))
         toxSingleton.mNotificationManager.cancel(toxSingleton.getAntoxFriend(key).getFriendnumber());
     }
 
