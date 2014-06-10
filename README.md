@@ -6,7 +6,8 @@ Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia su
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
 ###Current development
-The development branch of Antox was recently merged into main brining a new UI and a code base restructure. Please let us know of any issues/bugs this caused and we welcome any feedback and suggestions on the changes. 
+The development branch of Antox was recently merged into master bringing a new UI and a code base restructure. 
+Please let us know of any issues/bugs this caused. We welcome any feedback and suggestions on the new changes too.
 Work is now being done on jToxcore so that more functions can be added to Antox.
 
 ###Antox On F-Droid
