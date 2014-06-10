@@ -7,7 +7,7 @@
         android:id="@+id/chatMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="@color/white_absolute"
         android:layout_weight="1"
         android:divider="@null"
         android:dividerHeight="0dp" />
