@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Used for storing either the downloaded node details or the details of a node the user has entered
- * themselves in SettingsActivity
+ * themselves in SettingsFragment
  */
 public final class DhtNode {
     public static ArrayList<String> ipv4 = new ArrayList<String>();

@@ -32,13 +32,12 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <EditTextPreference
+    <Preference
         android:key="tox_id"
         android:title="@string/pref_title_tox_id"
         android:defaultValue="@string/pref_default_tox_id"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:enabled="false"
         android:editable="false"
         android:textIsSelectable="true"
         android:maxLines="1" />

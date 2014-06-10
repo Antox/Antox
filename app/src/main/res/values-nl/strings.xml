@@ -6,22 +6,11 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Welkom</string>
     <string name="title_activity_add_friend">Voeg vriend toe</string>
-    <string name="title_activity_settings">Instellingen</string>
-    <string name="title_activity_profile">Profiel</string>
-    <string name="title_activity_about">Over</string>
-    <string name="title_activity_friend_profile">Profiel</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Instellingen</string>
-    <string name="action_exit">Exit</string>
     <string name="add_friend">Voeg vriend toe</string>
-    <string name="search_friend">Zoek</string>
-    <string name="action_profile">Profiel</string>
-    <string name="action_about">Over</string>
-    <string name="add_to_group">Voeg toe aan groep</string>
 
     <!-- Main Activity -->
-
     <string name="main_avatar">Avatar</string>
     <string name="main_username">Gebruikersnaam</string>
     <string name="main_status">Status</string>
@@ -34,42 +23,8 @@
     <string name="main_not_connected">Geen internetverbinding gevonden. Zonder een internetverbinding, zal je beperkte functionaliteit hebben.</string>
     <string name="main_node_list_download_error">Kan nodelijst niet verkrijgen</string>
 
-    <!-- About Activity -->
-    <string name="about_details">Antox is een Android client voor Tox</string>
-    <string name="about_bugs">Geef bugs door op GitHub, onder \"Issues\".</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">We zitten in #tox-dev op Freenode</string>
-    <string name="about_version">Versie</string>
-
     <!--  Chat Activity -->
     <string name="chat_enter_message">Verstuur bericht</string>
-
-
-    <!-- Settings Activity -->
-    <string name="about_string">Deze client is nog in een pre-alpha stadium.</string>
-    <string name="getstarted_string">Voer gewenste nickname in</string>
-    <string name="settings_custom_dht">Aangepaste DHT-node-instellingen</string>
-    <string name="settings_use_custom_dht">Gebruik aangepaste DHT-node-instellingen</string>
-    <string name="settings_user_key_title">Je Tox ID</string>
-    <string name="settings_name_hint">voer naam in</string>
-    <string name="settings_note_hint">voer hint in</string>
-    <string name="settings_dht_ip">IP-adres van een bootstrap (bijv: 192.254.75.98)</string>
-    <string name="settings_dht_port">Bootstrappoortnummer (bijv: 33445)</string>
-    <string name="settings_dht_key">Public Key-addres van een bootstrap (bijv: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Update</string>
-    <string name="settings_updated">Je instellingen zijn geüpdatet</string>
-    <string name="settings_dht_spinner_title">Geadvanceerde instellingen</string>
-    <string name="settings_language_title">Taal</string>
-    <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Mood</string>
-    <string name="settings_username_title">Gebruikersnaam</string>
-    <string name="settings_empty_strings">Je moet alle velden invullen</string>
-    <string name="settings_invalid_key">Verkeerde key ingevuld</string>
-    <string name="developer_string">Ontwikkeld door astonex &amp; co.</string>
-    <string name="welcome_must_select_username">Kies een gebruikersnaam</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Je vriend\'s ID</string>
@@ -88,13 +43,6 @@
         Je bent niet verbonden met het Tox-netwerk, dus kunt je geen vrienden toevoegen op dit moment.
         Probeer de applicatie opnieuw te starten.
     </string>
-
-    <!--  Profile Activity -->
-    <string name="share_with">Deel met</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Afwezig</string>
-    <string name="status_busy">Bezig</string>
-    <string name="profile_updated">Profiel is geüpdatet</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Naam</string>
