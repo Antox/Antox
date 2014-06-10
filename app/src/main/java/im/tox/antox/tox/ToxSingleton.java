@@ -353,15 +353,12 @@ public class ToxSingleton {
                 while (DhtNode.connected == false && networkInfo.isConnected()) {
                     try {
                         if (DhtNode.ipv4.size() > 0) {
-
                             try {
                                 jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                         Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
                             } catch (ToxException e) {
 
                             }
-
-                            DhtNode.connected = true;
 
                             Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
                             DhtNode.connected = true;

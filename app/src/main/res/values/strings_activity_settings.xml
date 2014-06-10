@@ -72,4 +72,11 @@
 
     <!-- Menu strings -->
     <string name="copy_tox_id">Copy Tox ID</string>
+
+    <!-- Dht strings -->
+    <string name="dht">DHT Node</string>
+    <string name="dht_ip">IP Address</string>
+    <string name="dht_port">Port</string>
+    <string name="dht_key">Key</string>
+
 </resources>
