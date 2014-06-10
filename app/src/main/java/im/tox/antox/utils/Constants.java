@@ -10,14 +10,11 @@ public final class Constants {
     public static final String STOP_TOX = "im.tox.antox.STOP_TOX";
     public static final String BROADCAST_ACTION = "im.tox.antox.BROADCAST";
     public static final String SWITCH_TO_FRIEND = "im.tox.antox.SWITCH_TO_FRIEND";
-    public static final String UPDATE_MESSAGES ="im.tox.antox.UPDATE_MESSAGES";
-    public static final String ON_MESSAGE = "im.tox.antox.ON_MESSAGE";
-    public static final String UPDATE_LEFT_PANE = "im.tox.antox.UPDATE_REQUESTS";
     public static final String UPDATE = "im.tox.antox.UPDATE";
 
     //All DB Constants
     public static final String DATABASE_NAME = "antoxdb";
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "messages";
     public static final String TABLE_FRIEND_REQUEST = "friend_requests";
