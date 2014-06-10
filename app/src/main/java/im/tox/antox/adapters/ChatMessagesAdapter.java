@@ -21,6 +21,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     Context context;
     int layoutResourceId;
     public ArrayList<ChatMessages> data = null;
+    private int density;
+    private int paddingscale = 8;
 
     public ChatMessagesAdapter(Context context, int layoutResourceId,
                                ArrayList<ChatMessages> data) {
@@ -28,6 +30,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         this.context = context;
         this.layoutResourceId = layoutResourceId;
         this.data = data;
+        density = (int) context.getResources().getDisplayMetrics().density;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
             holder.row.setGravity(Gravity.RIGHT);
             holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
-            holder.background.setPadding(16, 4, 24, 8);
+            holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
             if (messages.sent) {
                 holder.sent.setVisibility(View.VISIBLE);
                 if (messages.received) {
@@ -80,7 +83,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         } else {
             holder.message.setTextColor(context.getResources().getColor(R.color.black));
             holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
-            holder.background.setPadding(24, 4, 16, 8);
+            holder.background.setPadding(6*density + 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale);
             holder.alignment.setGravity(Gravity.LEFT);
             holder.time.setGravity(Gravity.LEFT);
             holder.layout.setGravity(Gravity.LEFT);
