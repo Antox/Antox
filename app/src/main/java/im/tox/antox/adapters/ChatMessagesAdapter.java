@@ -55,7 +55,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
         ChatMessages chatMessages = data.get(position);
         holder.message.setText(chatMessages.message);
-        holder.time.setText(PrettyTimestamp.prettyTimestamp(chatMessages.time));
+        holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
 
         if (messages.IsMine()) {
             holder.alignment.setGravity(Gravity.RIGHT);
