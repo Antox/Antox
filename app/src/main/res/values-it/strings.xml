@@ -6,6 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Benvenuto</string>
     <string name="title_activity_add_friend">Aggiungi Amico</string>
+    <string name="title_activity_friend_profile">Profilo</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Aggiungi Amico</string>
@@ -17,6 +18,7 @@
     <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Non hai amici</string>
+    <string name="main_recent_no">Nessuna coversazione recente</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
     <string name="main_friends">Amici</string>
@@ -32,7 +34,7 @@
     <string name="welcome_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
     <string name="welcome_getstarted_string">Nome</string>
     <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Inizia ad usare Antox</string>
+    <string name="welcome_button">Inizia ad usare Antox!</string>
     <string name="welcome_developer_string">Sviluppato da astonex</string>
 
     <!-- Add Friend Activity -->
@@ -95,5 +97,8 @@
     <string name="button_yes">Sì</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Ciao fragment vuoto</string>
+    <string name="dialog_tox_id">Copia Tox ID negli appunti</string>
+    <string name="share_with">Condividi con</string>
 
 </resources>
