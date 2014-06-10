@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
@@ -37,6 +38,9 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
             db.addFriendRequest(publicKey, message);
         db.close();
 
+        toxSingleton.updateFriendRequests(ctx);
+        Log.d("FriendRequestCallback","");
+
         /* Notifications for friend requests */
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx);
         /* Check user accepts friend request notifcations in their settings */
@@ -64,6 +68,5 @@ public class AntoxOnFriendRequestCallback implements OnFriendRequestCallback {
                 toxSingleton.mNotificationManager.notify(0, mBuilder.build()); // TODO: number currently points at first in list, should be pointing at the specific friend request in question
         }
 
-        toxSingleton.updateFriendRequests(ctx);
     }
 }

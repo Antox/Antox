@@ -106,11 +106,7 @@ public class LeftPaneAdapter extends BaseAdapter {
         }
         LeftPaneItem item = getItem(position);
 
-        if (type == Constants.TYPE_FRIEND_REQUEST) {
-            holder.firstText.setText(SplitKey(item.first));
-        } else {
-            holder.firstText.setText(item.first);
-        }
+        holder.firstText.setText(item.first);
         if (type != Constants.TYPE_HEADER) {
             holder.secondText.setText(item.second);
         }
