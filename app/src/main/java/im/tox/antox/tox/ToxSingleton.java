@@ -62,7 +62,7 @@ public class ToxSingleton {
     public BehaviorSubject<ArrayList<FriendRequest>> friendRequestSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
-    public PublishSubject<String> activeKeySubject;
+    public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
     public BehaviorSubject<Boolean> rightPaneOpenSubject;
     public rx.Observable friendInfoListSubject;
@@ -90,7 +90,7 @@ public class ToxSingleton {
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
         unreadCountsSubject.subscribeOn(Schedulers.io());
-        activeKeySubject = PublishSubject.create();
+        activeKeySubject = BehaviorSubject.create("");
         activeKeySubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
         updatedMessagesSubject.subscribeOn(Schedulers.io());
