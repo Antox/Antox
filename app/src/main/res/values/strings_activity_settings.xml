@@ -56,21 +56,27 @@
         <item>Português</item>
     </string-array>
     <string-array name="pref_language_list_values">
-        <item>English</item>
-        <item>Deutsch</item>
-        <item>Español</item>
-        <item>Français</item>
-        <item>Italiano</item>
-        <item>Nederlands</item>
-        <item>Polski</item>
-        <item>Svenska</item>
-        <item>Türkçe</item>
-        <item>Русский</item>
-        <item>Український</item>
-        <item>Português</item>
+        <item>en</item>
+        <item>de</item>
+        <item>es</item>
+        <item>fr</item>
+        <item>it</item>
+        <item>nl</item>
+        <item>pl</item>
+        <item>sv</item>
+        <item>tr</item>
+        <item>ru</item>
+        <item>uk</item>
+        <item>pt</item>
     </string-array>
-
 
     <!-- Menu strings -->
     <string name="copy_tox_id">Copy Tox ID</string>
+
+    <!-- Dht strings -->
+    <string name="dht">DHT Node</string>
+    <string name="dht_ip">IP Address</string>
+    <string name="dht_port">Port</string>
+    <string name="dht_key">Key</string>
+
 </resources>

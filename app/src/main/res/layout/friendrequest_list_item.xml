@@ -17,6 +17,8 @@
             android:id="@+id/request_key"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:textSize="@dimen/text_small"
             android:textStyle="bold" />
         <TextView
