@@ -168,6 +168,10 @@ public class ToxSingleton {
             friendListSubject.onError(e);
         }
     }
+    public void clearUselessNotifications (String key) {
+        if (key != null && !key.equals(""))
+            mNotificationManager.cancel(getAntoxFriend(key).getFriendnumber());
+    }
 
     public void sendUnsentMessages(Context ctx) {
             AntoxDB db = new AntoxDB(ctx);

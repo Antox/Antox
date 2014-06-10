@@ -37,6 +37,7 @@ import im.tox.antox.utils.Tuple;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
@@ -156,30 +157,24 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
-    private void clearUselessNotifications (String key) {
-        if (key != null && !key.equals(""))
-        toxSingleton.mNotificationManager.cancel(toxSingleton.getAntoxFriend(key).getFriendnumber());
-    }
 
     @Override
     public void onResume(){
         super.onResume();
-        chatActiveSub = toxSingleton.chatActiveAndKey.observeOn(AndroidSchedulers.mainThread())
+        chatActiveSub = toxSingleton.chatActiveAndKey.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
                 .subscribe(new Action1<Tuple<String,Boolean>>() {
                     @Override
                     public void call(Tuple<String,Boolean> t) {
+                        AntoxDB antoxDB = new AntoxDB(getApplicationContext());
                         String activeKey = t.x;
                         boolean chatActive = t.y;
                         toxSingleton.chatActive = chatActive;
-                        if (chatActive) {
-                            AntoxDB db = new AntoxDB(getApplicationContext());
-                            db.markIncomingMessagesRead(activeKey);
-                            db.close();
-                            clearUselessNotifications(activeKey);
+                        if (toxSingleton.chatActive) {
+                            antoxDB.markIncomingMessagesRead(activeKey);
+                            toxSingleton.clearUselessNotifications(activeKey);
                             toxSingleton.updateMessages(getApplicationContext());
-                            toxSingleton.updateFriendsList(getApplicationContext());
                         }
-
+                        antoxDB.close();
                     }
                 });
         activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
@@ -211,14 +206,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                     transaction.addToBackStack(null);
                                     transaction.commit();
                                 }
-                                pane.closePane();
                             }
+                            pane.closePane();
                         }
                         toxSingleton.activeKey = activeKey;
                     }
                 });
         if (toxSingleton.activeKey != null) {
-            clearUselessNotifications(toxSingleton.activeKey);
+            toxSingleton.clearUselessNotifications(toxSingleton.activeKey);
         }
     }
 
