@@ -29,9 +29,6 @@
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/CustomActionBarTheme" >
         <service
-            android:name="im.tox.antox.tox.ToxService"
-            android:exported="false" />
-        <service
             android:name="im.tox.antox.tox.ToxDoService"
             android:exported="false" />
 
@@ -77,15 +74,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
         </activity>
-        <activity
-            android:name="im.tox.antox.activities.ManageGroupsActivity"
-            android:label="@string/title_activity_manage_groups"
-            android:parentActivityName="im.tox.antox.activities.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
-        </activity>
-
         <receiver
             android:name="im.tox.antox.utils.ConnectionChangeReceiver"
             android:label="NetworkConnection" >
@@ -93,11 +81,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name="im.tox.antox.activities.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>

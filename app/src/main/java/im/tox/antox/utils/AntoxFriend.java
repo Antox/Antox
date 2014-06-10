@@ -1,10 +1,10 @@
 package im.tox.antox.utils;
 
+import java.util.ArrayList;
+
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxFriend;
 import im.tox.jtoxcore.ToxUserStatus;
-
-import java.util.ArrayList;
 
 /**
  * Class that represents a Friend in Antox. When things are stored to local disk

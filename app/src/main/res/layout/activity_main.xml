@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!-- Left side pane. (Master) -->
-    <fragment android:id="@+id/fragment_contacts"
-        android:name="im.tox.antox.fragments.ContactsFragment"
+    <fragment android:id="@+id/fragment_leftpane"
+        android:name="im.tox.antox.fragments.LeftPaneFragment"
         android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_marginRight="30dp"
