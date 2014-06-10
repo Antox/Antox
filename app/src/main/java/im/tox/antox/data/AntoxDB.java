@@ -77,6 +77,14 @@ public class AntoxDB extends SQLiteOpenHelper {
                 }
             case 5:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN usergroup text");
+                break;
+
+            case 6:
+                /* Just drop all tables and recreate them */
+                db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS);
+                db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS);
+                db.execSQL("DROP TABLE IF EXISTS" + Constants.TABLE_FRIEND_REQUEST);
+                onCreate(db);
         }
     }
 
