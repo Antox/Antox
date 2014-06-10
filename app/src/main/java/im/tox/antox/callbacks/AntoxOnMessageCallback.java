@@ -32,8 +32,13 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
 	public void execute(AntoxFriend friend, String message) {
         /* Add message to database */
         AntoxDB db = new AntoxDB(this.ctx);
-        if(!db.isFriendBlocked(friend.getId()))
-            db.addMessage(-1, friend.getId(), message, false, true, false, true);
+        if(!db.isFriendBlocked(friend.getId())) {
+            if (!(toxSingleton.chatActive && (toxSingleton.activeKey.equals(friend.getId())))) {
+                db.addMessage(-1, friend.getId(), message, false, true, false, true);
+            } else {
+                db.addMessage(-1, friend.getId(), message, false, true, true, true);
+            }
+        }
         db.close();
 
         /* Broadcast to main activity to tell it to refresh */
@@ -46,44 +51,47 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
         if(preferences.getBoolean("notifications_enable_notifications", true) != false
                 && preferences.getBoolean("notifications_new_message", true) != false) {
 
-                String name = toxSingleton.getAntoxFriend(friend.getId()).getName();
+                if (!(toxSingleton.chatActive && (toxSingleton.activeKey.equals(friend.getId())))) {
 
-                long[] vibratePattern = {0, 500}; // Start immediately and vibrate for 500ms
+                    String name = toxSingleton.getAntoxFriend(friend.getId()).getName();
 
-                if(preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
-                    vibratePattern[1] = 0; // Set vibrate to 0ms
+                    long[] vibratePattern = {0, 500}; // Start immediately and vibrate for 500ms
+
+                    if (preferences.getBoolean("notifications_new_message_vibrate", true) == false) {
+                        vibratePattern[1] = 0; // Set vibrate to 0ms
+                    }
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this.ctx)
+                                    .setSmallIcon(R.drawable.ic_actionbar)
+                                    .setContentTitle(name)
+                                    .setContentText(message)
+                                    .setVibrate(vibratePattern)
+                                    .setDefaults(Notification.DEFAULT_ALL);
+                    // Creates an explicit intent for an Activity in your app
+                    Intent resultIntent = new Intent(this.ctx, MainActivity.class);
+                    resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    resultIntent.setAction(Constants.SWITCH_TO_FRIEND);
+                    resultIntent.putExtra("key", friend.getId());
+                    resultIntent.putExtra("name", name);
+
+                    // The stack builder object will contain an artificial back stack for the
+                    // started Activity.
+                    // This ensures that navigating backward from the Activity leads out of
+                    // your application to the Home screen.
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.ctx);
+                    // Adds the back stack for the Intent (but not the Intent itself)
+                    stackBuilder.addParentStack(MainActivity.class);
+                    // Adds the Intent that starts the Activity to the top of the stack
+                    stackBuilder.addNextIntent(resultIntent);
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(
+                                    0,
+                                    PendingIntent.FLAG_UPDATE_CURRENT
+                            );
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    toxSingleton.mNotificationManager.notify(friend.getFriendnumber(), mBuilder.build());
                 }
-
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(this.ctx)
-                                .setSmallIcon(R.drawable.ic_actionbar)
-                                .setContentTitle(name)
-                                .setContentText(message)
-                                .setVibrate(vibratePattern)
-                                .setDefaults(Notification.DEFAULT_ALL);
-                // Creates an explicit intent for an Activity in your app
-                Intent resultIntent = new Intent(this.ctx, MainActivity.class);
-                resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                resultIntent.setAction(Constants.SWITCH_TO_FRIEND);
-                resultIntent.putExtra("key", friend.getId());
-                resultIntent.putExtra("name", name);
-
-                // The stack builder object will contain an artificial back stack for the
-                // started Activity.
-                // This ensures that navigating backward from the Activity leads out of
-                // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.ctx);
-                // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(MainActivity.class);
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(
-                                0,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                        );
-                mBuilder.setContentIntent(resultPendingIntent);
-                toxSingleton.mNotificationManager.notify(friend.getFriendnumber(), mBuilder.build());
         }
 	}
 }

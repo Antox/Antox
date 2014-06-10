@@ -1,7 +1,7 @@
 package im.tox.antox.activities;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +31,6 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
-import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Tuple;
@@ -68,7 +67,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                 transaction.addToBackStack(null);
                 transaction.commit();
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                clearUselessNotifications();
             }
         }
     }
@@ -133,6 +131,10 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             pane.setPanelSlideListener(paneListener);
             pane.openPane();
 
+            toxSingleton.mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
@@ -154,10 +156,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
     }
-    private void clearUselessNotifications () {
-        AntoxDB db = new AntoxDB(getApplicationContext());
-        //todo: clear notifications if rightpane active
-        db.close();
+    private void clearUselessNotifications (String key) {
+        toxSingleton.mNotificationManager.cancel(toxSingleton.getAntoxFriend(key).getFriendnumber());
     }
 
     @Override
@@ -169,10 +169,13 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                     public void call(Tuple<String,Boolean> t) {
                         String activeKey = t.x;
                         boolean chatActive = t.y;
+                        toxSingleton.activeKey = activeKey;
+                        toxSingleton.chatActive = chatActive;
                         if (chatActive) {
                             AntoxDB db = new AntoxDB(getApplicationContext());
                             db.markIncomingMessagesRead(activeKey);
                             db.close();
+                            clearUselessNotifications(activeKey);
                             toxSingleton.updateMessages(getApplicationContext());
                             toxSingleton.updateFriendsList(getApplicationContext());
                         }
@@ -267,14 +270,12 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
         @Override
         public void onPanelClosed(View view) {
-            toxSingleton.rightPaneOpen.onNext(true);
-
-            clearUselessNotifications();
+            toxSingleton.rightPaneOpenSubject.onNext(true);
         }
 
         @Override
         public void onPanelOpened(View view) {
-            toxSingleton.rightPaneOpen.onNext(false);
+            toxSingleton.rightPaneOpenSubject.onNext(false);
 
             supportInvalidateOptionsMenu();
         }
