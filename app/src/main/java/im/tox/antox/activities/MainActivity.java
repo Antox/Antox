@@ -214,6 +214,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         }
                     }
                 });
+        if (toxSingleton.activeKey != null) {
+            clearUselessNotifications(toxSingleton.activeKey);
+        }
     }
 
     @Override
@@ -221,6 +224,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         super.onPause();
         activeKeySub.unsubscribe();
         chatActiveSub.unsubscribe();
+        toxSingleton.chatActive = false;
     }
 
     void showAlertDialog(Context context, String title, String message) {

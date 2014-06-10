@@ -1,6 +1,7 @@
 package im.tox.antox.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +61,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.alignment.setGravity(Gravity.RIGHT);
             holder.time.setGravity(Gravity.RIGHT);
             holder.layout.setGravity(Gravity.RIGHT);
+            holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
             holder.row.setGravity(Gravity.RIGHT);
+            holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
+            holder.background.setPadding(16, 4, 24, 8);
             if (messages.sent) {
                 holder.sent.setVisibility(View.VISIBLE);
                 if (messages.received) {
@@ -74,6 +78,9 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 holder.received.setVisibility(View.GONE);
             }
         } else {
+            holder.message.setTextColor(context.getResources().getColor(R.color.black));
+            holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
+            holder.background.setPadding(24, 4, 16, 8);
             holder.alignment.setGravity(Gravity.LEFT);
             holder.time.setGravity(Gravity.LEFT);
             holder.layout.setGravity(Gravity.LEFT);
