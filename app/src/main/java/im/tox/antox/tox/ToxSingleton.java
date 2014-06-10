@@ -376,12 +376,6 @@ public class ToxSingleton {
                 e.printStackTrace();
             }
         }
-
-        /* Start tox_do() service */
-        /* Starting it without checking for internet in case of LAN usage */
-        Intent startToxIntent = new Intent(ctx, ToxDoService.class);
-        startToxIntent.setAction(Constants.START_TOX);
-        ctx.startService(startToxIntent);
     }
 
     public static ToxSingleton getInstance() {

@@ -31,6 +31,7 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
+import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Tuple;
@@ -123,8 +124,10 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             /* If the tox service isn't already running, start it */
             if (!toxSingleton.isRunning) {
-                //new InitToxAsync(getApplicationContext()).execute();
-                toxSingleton.initTox(getApplicationContext());
+                /* Start without checking for internet connection in case of LAN usage */
+                Intent startToxIntent = new Intent(getApplicationContext(), ToxDoService.class);
+                startToxIntent.setAction(Constants.START_TOX);
+                getApplicationContext().startService(startToxIntent);
             }
 
             pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
@@ -303,18 +306,5 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context
                 .getSystemService(context.CLIPBOARD_SERVICE);
         clipboard.setText(sharedPreferences.getString("tox_id", ""));
-    }
-
-    private class InitToxAsync extends AsyncTask<Void, Void, Void> {
-
-        private Context ctx;
-
-        public InitToxAsync(Context ctx) { this.ctx = ctx; }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            toxSingleton.initTox(ctx);
-            return null;
-        }
     }
 }

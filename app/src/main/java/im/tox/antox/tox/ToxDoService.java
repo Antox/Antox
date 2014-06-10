@@ -1,8 +1,12 @@
 package im.tox.antox.tox;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
+
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -25,9 +29,8 @@ public class ToxDoService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         if (intent.getAction().equals(Constants.START_TOX)) {
-
-            toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
-
+                toxSingleton.initTox(getApplicationContext());
+                toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
         } else if (intent.getAction().equals(Constants.STOP_TOX)) {
             if (toxScheduleTaskExecutor != null) {
                 toxScheduleTaskExecutor.shutdownNow();
