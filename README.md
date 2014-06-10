@@ -6,11 +6,8 @@ Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia su
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
 ###Current development
-Active development is being done at the moment to restructure the antox base using RxJava. This is to better organise the current code to cut down
-on any inefficiencies and to simply make it easier to develop for. The UI is also getting a complete change, drawing inspiration from Hangouts and 
-Messenger. The goal of the new UI is to use more fragments and less activities so you feel closer to your contacts and chats at all times, as well as
-to make it easier for you to create groupchats and find your contacts. The right pane is used solely for your current chat so that you're always just
-one flick away from the chat regardless of what else you may be doing in the app.
+The development branch of Antox was recently merged into main brining a new UI and a code base restructure. Please let us know of any issues/bugs this caused and we welcome any feedback and suggestions on the changes. 
+Work is now being done on jToxcore so that more functions can be added to Antox.
 
 ###Antox On F-Droid
 To get Antox on F-Droid, add https://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Repositories' in F-Droid and click the '+' symbol in the action bar. PLEASE NOTE this app is still alpha and
