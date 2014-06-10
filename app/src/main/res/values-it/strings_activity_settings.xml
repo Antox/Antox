@@ -20,7 +20,7 @@
     </string-array>
 
     <string name="pref_title_status_message">Messaggio di Stato</string>
-    <string name="pref_default_status_message">Hey! Sto usando Antox</string>
+    <string name="pref_default_status_message">Hey! Sto usando Antox!</string>
 
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
