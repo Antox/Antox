@@ -41,7 +41,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         try {
             // Connect to the web site
-            Document document = Jsoup.connect("http://wiki.tox.im/Nodes").timeout(10000).get();
+            Document document = Jsoup.connect("https://wiki.tox.im/Nodes").timeout(10000).get();
             Elements nodeRows = document.getElementsByTag("tr");
 
             File folder = new File(Environment.getExternalStorageDirectory() + "/Antox");
@@ -130,9 +130,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
         }
 
         Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
-        /**
-         * Ping servers to find quickest connection - Threading this would be goood
-         */
+
         int times[][] = new int[DhtNode.ipv4.size()][1];
 
         // Initialise array
@@ -207,31 +205,6 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
             }
 
             return result;
-        }
-    }
-
-    @Override
-    protected void onPostExecute(Void result)
-    {
-        /**
-         * There is a chance that downloading finishes later than the bootstrapping call in the
-         * ToxService, because both are in separate threads. In that case to make sure the nodes
-         * are bootstrapped we restart the ToxService
-         */
-        if(!DhtNode.connected)
-        {
-            Log.d(TAG, "Restarting START_TOX as DhtNode.connected returned false");
-            Intent restart = new Intent(ctx, ToxDoService.class);
-            restart.setAction(Constants.START_TOX);
-            ctx.startService(restart);
-        }
-
-            /* Restart intent if it was connected before nodes were sorted */
-        if(DhtNode.connected && !DhtNode.sorted) {
-            Log.d(TAG, "Restarting START_TOX as DhtNode.sorted was false");
-            Intent restart = new Intent(ctx, ToxDoService.class);
-            restart.setAction(Constants.START_TOX);
-            ctx.startService(restart);
         }
     }
 }

@@ -1,10 +1,7 @@
 package im.tox.antox.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,9 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.xbill.DNS.Lookup;
@@ -29,18 +24,15 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.TXTRecord;
 import org.xbill.DNS.Type;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import im.tox.QR.IntentIntegrator;
 import im.tox.QR.IntentResult;
-import im.tox.antox.data.AntoxDB;
-
-import im.tox.antox.fragments.PinDialogFragment;
-import im.tox.antox.utils.Constants;
 import im.tox.antox.R;
-import im.tox.antox.tox.ToxService;
-import im.tox.antox.utils.DhtNode;
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.fragments.PinDialogFragment;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.Constants;
+import im.tox.jtoxcore.FriendExistsException;
+import im.tox.jtoxcore.ToxException;
 
 public class AddFriendActivity extends ActionBarActivity implements PinDialogFragment.PinDialogListener {
 
@@ -58,7 +50,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     EditText friendID;
     EditText friendMessage;
     EditText friendAlias;
-    Spinner  friendGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,47 +68,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             getSupportActionBar().setIcon(R.drawable.ic_actionbar);
         }
-
-        // Check to see if user is connected to dht first
-
-        if(!DhtNode.connected) {
-            AlertDialog notConnectedAlertDialog = new AlertDialog.Builder(this).create();
-            notConnectedAlertDialog.setTitle(R.string.addfriend_no_internet);
-            notConnectedAlertDialog.setMessage(getString(R.string.addfriend_no_internet_text));
-            notConnectedAlertDialog.setIcon(R.drawable.ic_launcher);
-            notConnectedAlertDialog.setButton(getString(R.string.button_ok), new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-
-            notConnectedAlertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    finish();
-                }
-            });
-            notConnectedAlertDialog.show();
-        }
-
-        //set the spinner
-        friendGroup = (Spinner) findViewById(R.id.spinner_add_friend_group);
-        ArrayList<String> spinnerArray = new ArrayList<String>();
-        spinnerArray.add(getResources().getString(R.string.manage_groups_friends));
-        SharedPreferences sharedPreferences = getSharedPreferences("groups", Context.MODE_PRIVATE);
-        if (!sharedPreferences.getAll().isEmpty()) {
-            Map<String,?> keys = sharedPreferences.getAll();
-
-            for(Map.Entry<String,?> entry : keys.entrySet()){
-                String groupName = entry.getValue().toString();
-                spinnerArray.add(groupName);
-            }
-
-        }
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        friendGroup.setAdapter(spinnerAdapter);
 
         context = getApplicationContext();
         text = getString(R.string.addfriend_friend_added);
@@ -176,17 +126,21 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
             String[] friendData = {ID, message, alias};
 
             AntoxDB db = new AntoxDB(getApplicationContext());
-            if (!db.doesFriendExist(friendID.getText().toString())) {
-                Intent addFriend = new Intent(this, ToxService.class);
-                addFriend.setAction(Constants.ADD_FRIEND);
-                addFriend.putExtra("friendData", friendData);
-                this.startService(addFriend);
+            if (!db.doesFriendExist(ID)) {
+                try {
+                    ToxSingleton toxSingleton = ToxSingleton.getInstance();
+                    toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
+                } catch (ToxException e) {
+                    e.printStackTrace();
+                } catch (FriendExistsException e) {
+                    e.printStackTrace();
+                }
 
                 if (!alias.equals(""))
                     ID = alias;
 
-                String group = friendGroup.getSelectedItem().toString();
-                db.addFriend(ID, "Friend Request Sent", alias, originalUsername, group);
+                Log.d("AddFriendActivity","Adding friend to database");
+                db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
             } else {
                 return -2;
             }
