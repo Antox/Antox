@@ -34,6 +34,7 @@ import im.tox.antox.utils.DhtNode;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
+import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
@@ -162,6 +163,35 @@ public class ToxSingleton {
         } catch (Exception e) {
             friendListSubject.onError(e);
         }
+    }
+
+    public void sendUnsentMessages(Context ctx) {
+            AntoxDB db = new AntoxDB(ctx);
+            ArrayList<Message> unsentMessageList = db.getUnsentMessageList();
+            for (int i = 0; i<unsentMessageList.size(); i++) {
+                AntoxFriend friend = null;
+                int id = unsentMessageList.get(i).message_id;
+                boolean sendingSucceeded = true;
+                try {
+                    friend = getAntoxFriend(unsentMessageList.get(i).key);
+                } catch (Exception e) {
+                    Log.d(TAG, e.toString());
+                }
+                try {
+                    if (friend != null) {
+                        jTox.sendMessage(friend, unsentMessageList.get(i).message, id);
+                    }
+                } catch (ToxException e) {
+                    Log.d(TAG, e.toString());
+                    e.printStackTrace();
+                    sendingSucceeded = false;
+                }
+                if (sendingSucceeded) {
+                    db.updateUnsentMessage(id);
+                }
+            }
+            db.close();
+            updateMessages(ctx);
     }
 
     public void updateFriendRequests(Context ctx) {

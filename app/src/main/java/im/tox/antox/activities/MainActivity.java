@@ -136,7 +136,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
-            
+
             updateLeftPane();
 
 

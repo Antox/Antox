@@ -30,37 +30,9 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
     public void execute(AntoxFriend friend, boolean online) {
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserOnline(friend.getId(), online);
-        Intent update = new Intent(Constants.BROADCAST_ACTION);
-        update.putExtra("action", Constants.UPDATE);
-        LocalBroadcastManager.getInstance(ctx).sendBroadcast(update);
-        if (online) {
-            db = new AntoxDB(this.ctx);
-            ArrayList<Message> unsentMessageList = db.getUnsentMessageList();
-            for (int i = 0; i<unsentMessageList.size(); i++) {
-                friend = null;
-                int id = unsentMessageList.get(i).message_id;
-                boolean sendingSucceeded = true;
-                try {
-                    friend = toxSingleton.getAntoxFriend(unsentMessageList.get(i).key);
-                } catch (Exception e) {
-                    Log.d(TAG, e.toString());
-                }
-                try {
-                    if (friend != null) {
-                        toxSingleton.jTox.sendMessage(friend, unsentMessageList.get(i).message, id);
-                    }
-                } catch (ToxException e) {
-                    Log.d(TAG, e.toString());
-                    e.printStackTrace();
-                    sendingSucceeded = false;
-                }
-                if (sendingSucceeded) {
-                    db.updateUnsentMessage(id);
-                }
-            }
-            toxSingleton.updateMessages(ctx);
-        }
-
         db.close();
+        if (online) {
+            toxSingleton.sendUnsentMessages(ctx);
+        }
     }
 }
