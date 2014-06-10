@@ -170,7 +170,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                     public void call(Tuple<String,Boolean> t) {
                         String activeKey = t.x;
                         boolean chatActive = t.y;
-                        toxSingleton.activeKey = activeKey;
                         toxSingleton.chatActive = chatActive;
                         if (chatActive) {
                             AntoxDB db = new AntoxDB(getApplicationContext());
@@ -196,23 +195,26 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                 getSupportFragmentManager().beginTransaction().remove(fragment).commit();
                             }
                         } else {
-                            if (isFriend) {
-                                Log.d("MainActivity","chat fragment creation, isFriend: " + isFriend);
-                                ChatFragment newFragment = new ChatFragment(activeKey);
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.right_pane, newFragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
-                            } else {
-                                Log.d("MainActivity","friend request fragment creation, isFriend: " + isFriend);
-                                FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.right_pane, newFragment);
-                                transaction.addToBackStack(null);
-                                transaction.commit();
+                            if (!activeKey.equals(toxSingleton.activeKey)) {
+                                if (isFriend) {
+                                    Log.d("MainActivity", "chat fragment creation, isFriend: " + isFriend);
+                                    ChatFragment newFragment = new ChatFragment(activeKey);
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.right_pane, newFragment);
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
+                                } else {
+                                    Log.d("MainActivity", "friend request fragment creation, isFriend: " + isFriend);
+                                    FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
+                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                    transaction.replace(R.id.right_pane, newFragment);
+                                    transaction.addToBackStack(null);
+                                    transaction.commit();
+                                }
+                                pane.closePane();
                             }
-                            pane.closePane();
                         }
+                        toxSingleton.activeKey = activeKey;
                     }
                 });
         if (toxSingleton.activeKey != null) {
