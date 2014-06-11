@@ -1,10 +1,5 @@
 package im.tox.antox.adapters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,8 +10,13 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import im.tox.antox.utils.Friend;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 import im.tox.antox.R;
+import im.tox.antox.utils.Friend;
 
 public class FriendsListAdapter extends ArrayAdapter<Friend> implements
 		Filterable {

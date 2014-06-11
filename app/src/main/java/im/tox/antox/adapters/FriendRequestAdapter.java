@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.R;
+import im.tox.antox.utils.FriendRequest;
 
 public class FriendRequestAdapter extends ArrayAdapter<FriendRequest> implements
 		Filterable {

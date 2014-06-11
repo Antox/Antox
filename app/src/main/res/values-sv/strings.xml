@@ -6,21 +6,9 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Välkommen</string>
     <string name="title_activity_add_friend">Lägg Till Vän</string>
-    <string name="title_activity_settings">Inställningar</string>
-    <string name="title_activity_profile">Profil</string>
-    <string name="title_activity_about">Om</string>
-    <string name="title_activity_friend_profile">Profil</string>
-    <string name="title_activity_manage_groups">Hantera Grupper</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Inställningar</string>
-    <string name="action_exit">Avsluta</string>
     <string name="add_friend">Lägg Till Vän</string>
-    <string name="search_friend">Sök</string>
-    <string name="action_profile">Profil</string>
-    <string name="action_about">Om</string>
-    <string name="add_to_group">Lägg Till I Grupp</string>
-    <string name="manage_groups">Hantera Grupper</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -39,45 +27,8 @@
     </string>
     <string name="main_node_list_download_error">Fel Vid Nedladdning Av Nodlista</string>
 
-    <!-- About Activity -->
-    <string name="about_details">Antox är en Androidklient för Tox</string>
-    <string name="about_bugs">För att rapportera en bug, gå till våran GitHub-sida och klicka på \"issues\".</string>
-    <string name="about_github_url">https://github.com/Astonex/Antox</string>
-    <string name="about_facebook_url">https://www.facebook.com/toxproject</string>
-    <string name="about_twitter_url">https://twitter.com/ProjectTox</string>
-    <string name="about_irc">Vi finns på Freenode på #tox-dev</string>
-    <string name="about_version">Version</string>
-
     <!--  Chat Activity -->
     <string name="chat_enter_message">Skicka ett meddelande</string>
-
-
-    <!-- Settings Activity -->
-    <string name="about_string">Den här klienten är fortfarande i pre-alpha.</string>
-    <string name="getstarted_string">Ange ditt önskade användarnamn</string>
-    <string name="settings_custom_dht">Egna DHT nodinställningar</string>
-    <string name="settings_use_custom_dht">Använd egna DHT nodinställningar</string>
-    <string name="settings_user_key_title">Ditt Tox ID</string>
-    <string name="settings_name_hint">ange ditt namn</string>
-    <string name="settings_note_hint">ange en personlig kommentar</string>
-    <string name="settings_dht_ip">Bootstrap IP-adress (t.ex.: 192.254.75.98)</string>
-    <string name="settings_dht_port">Bootstrap portnummer (t.ex.: 33445)</string>
-    <string name="settings_dht_key">Bootstrap Publik Nyckeadress (t.ex.: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Uppdatera</string>
-    <string name="settings_updated">Dina inställningar har uppdaterats</string>
-    <string name="settings_dht_spinner_title">Avancerade Inställningar</string>
-    <string name="settings_language_title">Språk</string>
-    <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Humör</string>
-    <string name="settings_theme_title">Tema</string>
-    <string name="settings_username_title">Användarnamn</string>
-    <string name="settings_empty_strings">Du måste fylla i alla fält</string>
-    <string name="settings_invalid_key">Ogiltig nyckel angiven</string>
-    <string name="settings_send_typing_indicators">Visa när någon skriver</string>
-    <string name="developer_string">Utvecklad med kärlek av Tox Utvecklingsteam</string>
-    <string name="welcome_must_select_username">Du måste ange ett användarnamn</string>
-    <string name="settings_notifications">Stäng av aviseringar</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Din väns Tox ID</string>
@@ -97,13 +48,6 @@
         Försök starta om applikationen.
     </string>
 
-    <!-- Profile Activity -->
-    <string name="share_with">Dela Med</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Borta</string>
-    <string name="status_busy">Upptagen</string>
-    <string name="profile_updated">Din Profil har uppdaterats</string>
-
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Namn</string>
     <string name="friend_profile_nick">Smeknamn</string>
@@ -112,28 +56,7 @@
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Uppdatera</string>
     <string name="friend_profile_updated">Smeknamn har uppdaterats</string>
-    <string name="firend_profile_copy">Kopiera ID</string>
     <string name="friend_profile_copied">ID Kopierat</string>
-
-    <!-- Manage Groups Activity -->
-    <string name="manage_groups_add_group">Lägg Till Grupp</string>
-    <string name="manage_groups_number_of_members">Antal medlemmar: </string>
-    <string name="manage_groups_none">Inga</string>
-    <string name="manage_groups_dialog_add_group">Lägg till en grupp</string>
-    <string name="manage_groups_dialog_rename_group">Byt namn på grupp</string>
-    <string name="manage_groups_no_name">Var vänlig döp din grupp</string>
-    <string name="manage_groups_already_exists">Gruppen finns redan</string>
-    <string name="manage_groups_dialog_add_button">Lägg till</string>
-    <string name="manage_groups_dialog_rename_button">Byt namn</string>
-    <string name="manage_groups_dialog_cancel_button">Avbryt</string>
-    <string name="manage_groups_no_delete_friends">Gruppen "Vänner" är standardgryppen. Den kan inte ändras.</string>
-    <string name="manage_groups_rename_group">Byt namn</string>
-    <string name="manage_groups_delete_group">Ta bort</string>
-    <string name="manage_groups_action_on">Handling på</string>
-    <string name="manage_groups_friends">Vänner</string>
-    <string name="manage_groups_toast_deleted">Gruppen togs bort. Alla medlemmar flyttades till Vänner</string>
-    <string name="manage_groups_toast_renamed">Gruppens namn ändrades</string>
-    <string name="manage_groups_toast_added">Gruppen lades till</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Acceptera</string>

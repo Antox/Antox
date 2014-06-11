@@ -1,36 +1,37 @@
 package im.tox.antox.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Map;
 
-import im.tox.antox.activities.FriendProfileActivity;
-import im.tox.antox.data.AntoxDB;
-import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.Friend;
-import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.R;
-import im.tox.antox.tox.ToxService;
-import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.AntoxFriend;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.FriendInfo;
+import im.tox.antox.utils.FriendRequest;
+import im.tox.antox.utils.LeftPaneItem;
+import im.tox.antox.utils.Tuple;
+import im.tox.jtoxcore.ToxException;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by ollie on 28/02/14.
@@ -39,7 +40,7 @@ public class ContactsFragment extends Fragment {
     /**
      * List View for displaying all the friends in a scrollable list
      */
-    private ListView leftPaneListView;
+    private ListView contactsListView;
     /**
      * Adapter for the friendListView
      */
@@ -47,40 +48,90 @@ public class ContactsFragment extends Fragment {
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
+    private Subscription friendInfoSub;
+    private Subscription keySub;
 
+    private String activeKey;
 
     public ContactsFragment() {
-        main_act = (MainActivity) getActivity();
-
     }
 
-    public void onChangeFriendRequest(int position, String key, String message) {
-        toxSingleton.activeFriendRequestKey = key;
-        toxSingleton.activeFriendKey = null;
-        Fragment newFragment = new FriendRequestFragment(key, message);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.right_pane, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void updateContacts(Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>> friendstuple) {
+        ArrayList<FriendInfo> friendsList = friendstuple.x;
+        ArrayList<FriendRequest> friendRequests = friendstuple.y;
+
+        //If you have no friends or friend requests, display the no friends message
+        LinearLayout noFriends = (LinearLayout) getView().findViewById(R.id.contacts_no_friends);
+        if (friendsList.size() == 0 && friendRequests.size() == 0) {
+            noFriends.setVisibility(View.VISIBLE);
+        } else {
+            noFriends.setVisibility(View.GONE);
+        }
+
+        leftPaneAdapter = new LeftPaneAdapter(getActivity());
+        FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
+        friend_requests = friendRequests.toArray(friend_requests);
+        if (friend_requests.length > 0) {
+            leftPaneAdapter.addItem(new LeftPaneItem("Requests"));
+            for (int i = 0; i < friend_requests.length; i++) {
+                LeftPaneItem request = new LeftPaneItem(friend_requests[i].requestKey, friend_requests[i].requestMessage);
+                leftPaneAdapter.addItem(request);
+            }
+        }
+        FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
+        friends_list = friendsList.toArray(friends_list);
+        if (friends_list.length > 0) {
+            LeftPaneItem friends_header = new LeftPaneItem("Contacts");
+            leftPaneAdapter.addItem(friends_header);
+            for (int i = 0; i < friends_list.length; i++) {
+                LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
+                leftPaneAdapter.addItem(friend);
+            }
+        }
+        contactsListView.setAdapter(leftPaneAdapter);
+        setSelectionToKey(activeKey);
+        System.out.println("updated contacts");
     }
 
-    public void onChangeContact(int position) {
-        toxSingleton.activeFriendKey = main_act.leftPaneKeyList.get(position);
-        toxSingleton.activeFriendRequestKey = null;
-        ChatFragment newFragment = new ChatFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.right_pane, newFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    private void setSelectionToKey(String key) {
+        if (key != null && !key.equals("")) {
+            for (int i = 0; i < leftPaneAdapter.getCount(); i++) {
+                if (leftPaneAdapter.getKey(i).equals(key)) {
+                    contactsListView.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
-    public void updateLeftPane() {
-        leftPaneAdapter = main_act.leftPaneAdapter;
-        leftPaneListView.setAdapter(leftPaneAdapter);
-        System.out.println("updated left pane");
+    @Override
+    public void onResume(){
+        super.onResume();
+        friendInfoSub = toxSingleton.friendListAndRequestsSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>>>() {
+                    @Override
+                    public void call(Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>> friendstuple) {
+                        updateContacts(friendstuple);
+                    }
+                });
+        keySub = toxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Log.d("ContactsFragment", "key subject");
+                        activeKey = s;
+                        setSelectionToKey(activeKey);
+                    }
+                });
     }
 
-    private MainActivity main_act;
+    @Override
+    public void onPause(){
+        super.onPause();
+        friendInfoSub.unsubscribe();
+        keySub.unsubscribe();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,14 +140,12 @@ public class ContactsFragment extends Fragment {
          * by a tox function once implemented
          */
 
-        main_act = (MainActivity) getActivity();
+        View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
+        contactsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        View rootView = inflater.inflate(R.layout.fragment_leftpane, container, false);
-        leftPaneListView = (ListView) rootView.findViewById(R.id.left_pane_list);
 
-        updateLeftPane();
-
-        leftPaneListView
+        contactsListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -104,216 +153,131 @@ public class ContactsFragment extends Fragment {
                                             long id) {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
-                        if (type == Constants.TYPE_CONTACT) {
-                            if (toxSingleton.friendsList.all().size() == 0) {
-                                //Final copy of position so it can be used in the inner class.
-                                final int positionCopy = position;
-                                //ProgressDialog to alert the user that the data is not ready.
-                                final ProgressDialog progressDialog = ProgressDialog.show(getActivity(),
-                                        "Loading...", "Please wait while we load your data", false, false);
-                                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
-                                //Build an async task that will cancel the dialog once the data is finished loading.
-                                AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
-                                    @Override
-                                    protected String doInBackground(String... strings) {
-                                        while (toxSingleton.friendsList.all().size() == 0) {
-                                            //while there are no friends, do nothing
-                                        }
-
-                                        return null;
-                                    }
-
-                                    @Override
-                                    protected void onPostExecute(String s) {
-                                      //When the friend list is populated then the dialog is canceled and the
-                                      //right panel can be loaded.
-                                      progressDialog.dismiss();
-                                      onChangeContact(positionCopy);
-                                    }
-                                };
-
-                                asyncTask.execute();
-                            } else {
-                                onChangeContact(position);
-                            }
-                        } else if (type == Constants.TYPE_FRIEND_REQUEST) {
-
-                            String key = item.first;
-                            String message = item.second;
-                            onChangeFriendRequest(position, key, message);
-                            main_act.activeTitle = main_act.getString(R.string.friendrequest);
-                            main_act.pane.closePane();
-                            toxSingleton.rightPaneActive = true;
+                        String key = item.key;
+                        if (key != "") {
+                            setSelectionToKey(key);
+                            toxSingleton.activeKeySubject.onNext(key);
                         }
                     }
                 });
 
-        leftPaneListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        contactsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View itemView, int index, long id) {
                 final LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(index);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(main_act);
-                boolean isGroupChat=false;
-                final boolean isFriendRequest = item.viewType==Constants.TYPE_FRIEND_REQUEST;
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final boolean isFriendRequest = item.viewType == Constants.TYPE_FRIEND_REQUEST;
                 final CharSequence items[];
 
                 SharedPreferences settingsPref = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
-                final int option = settingsPref.getInt("group_option", 0);
 
-                if(isFriendRequest){
-                    items= new CharSequence[]{
+                if (isFriendRequest) {
+                    items = new CharSequence[]{
                             getResources().getString(R.string.friendrequest_accept),
                             getResources().getString(R.string.friendrequest_reject),
                             getResources().getString(R.string.friend_action_block)
                     };
-                } else if(option == 3) {
-                    items = new CharSequence[] {
-                            getResources().getString(R.string.friend_action_unblock),
-                            getResources().getString(R.string.friend_action_deletechat)
-                    };
-                } else {
-                    items= new CharSequence[]{
+                }else {
+                    items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
-                            getResources().getString(R.string.friend_action_move_to_group),
                             getResources().getString(R.string.friend_action_delete),
                             getResources().getString(R.string.friend_action_deletechat),
                             getResources().getString(R.string.friend_action_block)
                     };
                 }
-                builder.setTitle(main_act.getString(R.string.contacts_actions_on) + " " + item.first)
+                builder.setTitle(getResources().getString(R.string.contacts_actions_on) + " " + item.first)
                         .setCancelable(true)
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
                                 //item.first equals the key
-                                if(isFriendRequest){
-                                    switch (index){
+                                if (isFriendRequest) {
+                                    switch (index) {
                                         case 0:
-                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                            //When accepting a friend request from long click it will be automatically assigned to "Friends" group
-                                            db.addFriend(item.first, "Friend Accepted", "", "", "Friends");
-                                            db.close();
-                                            main_act.updateLeftPane();
-                                            Intent acceptRequestIntent = new Intent(getActivity(), ToxService.class);
-                                            acceptRequestIntent.setAction(Constants.ACCEPT_FRIEND_REQUEST);
-                                            acceptRequestIntent.putExtra("key", item.first);
-                                            main_act.startService(acceptRequestIntent);
-                                            main_act.updateLeftPane();
+                                            class AcceptFriendRequest extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+                                                    db.addFriend(item.key, "Friend Accepted", "", "");
+                                                    db.close();
+                                                    try {
+                                                        toxSingleton.jTox.confirmRequest(item.key);
+                                                        toxSingleton.jTox.save();
+                                                    } catch (Exception e) {
+
+                                                    }
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateFriendRequests(getActivity());
+                                                    toxSingleton.updateFriendsList(getActivity());
+                                                }
+                                            }
+
+                                            new AcceptFriendRequest().execute();
+
                                             break;
                                         case 1:
-                                            AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                            antoxDB.deleteFriendRequest(item.first);
-                                            antoxDB.close();
-                                            main_act.updateLeftPane();
-                                            Intent rejectRequestIntent = new Intent(main_act, ToxService.class);
-                                            rejectRequestIntent.setAction(Constants.REJECT_FRIEND_REQUEST);
-                                            rejectRequestIntent.putExtra("key", item.first);
-                                            main_act.startService(rejectRequestIntent);
-                                            main_act.updateLeftPane();
-                                            //rejectRequest(item.first);
+                                            class RejectFriendRequest extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                                    antoxDB.deleteFriendRequest(item.key);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateFriendsList(getActivity());
+                                                    toxSingleton.updateFriendRequests(getActivity());
+                                                }
+
+                                            }
+
+                                            new RejectFriendRequest().execute();
+
                                             break;
                                         case 2:
-                                            showBlockDialog(getActivity(),item.first);
-                                            break;
-                                    }
-                                } else if(option == 3) {
-                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
-                                    //Get friend key
-                                    String key = "";
-                                    for(int i = 0; i < tmp.size(); i++) {
-                                        if(item.first.equals(tmp.get(i).friendName)) {
-                                            key = tmp.get(i).friendKey;
-                                            break;
-                                        }
-                                    }
-                                    switch(index) {
-                                        case 0:
-                                            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                            db.unblockUser(key);
-                                            db.close();
-                                            break;
-                                        case 1:
-                                            AntoxDB db2 = new AntoxDB(getActivity().getApplicationContext());
-                                            db2.deleteChat(key);
-                                            db2.close();
-                                            main_act.updateLeftPane();
-                                            clearChat(key);
+                                            showBlockDialog(getActivity(), item.key);
                                             break;
                                     }
                                 } else {
-                                    ArrayList<Friend> tmp = ((MainActivity)getActivity()).friendList;
-                                    //Get friend key
-                                    String key = "";
-                                    String group = "";
-                                    for(int i = 0; i < tmp.size(); i++) {
-                                        if(item.first.equals(tmp.get(i).friendName)) {
-                                            key = tmp.get(i).friendKey;
-                                            group = tmp.get(i).friendGroup;
-                                            break;
-                                        }
-                                    }
-                                    switch (index){
-                                        case 0:
-                                            if(!key.equals("")) {
-                                                Intent profile = new Intent(main_act, FriendProfileActivity.class);
+                                    String key = item.key;
+                                    if (!key.equals("")) {
+                                        switch (index) {
+                                            case 0:
+                                                //todo: implement profiles
+                                                Toast.makeText(getActivity(),"To be implemented",Toast.LENGTH_SHORT).show();
+                                                /*
+                                                Intent profile = new Intent(getActivity(), FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
-                                                profile.putExtra("group", group);
                                                 startActivity(profile);
-                                            }
-                                            break;
-                                        case 1:
-                                            //move to group
-                                            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                                            ArrayList<String> groups = new ArrayList<String>();
-                                            groups.add(getResources().getString(R.string.manage_groups_friends));
-                                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("groups", Context.MODE_PRIVATE);
-                                            if (!sharedPreferences.getAll().isEmpty()) {
-                                                Map<String, ?> keys = sharedPreferences.getAll();
-                                                for (Map.Entry<String, ?> entry : keys.entrySet()) {
-                                                    groups.add(entry.getValue().toString());
-                                                }
-                                            }
-                                            final CharSequence[] cs = groups.toArray(new CharSequence[groups.size()]);
-                                            final String userKey = key;
-
-                                            dialogBuilder.setTitle("Choose a group");
-                                            dialogBuilder.setItems(cs, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    AntoxDB db = new AntoxDB(getActivity());
-                                                    db.moveUserToOtherGroup(userKey, cs[i].toString());
-                                                    main_act.updateLeftPane();
-                                                    Toast.makeText(getActivity(), getActivity().getString(R.string.toast_succ_move_user),
-                                                            Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                            builder.create().cancel();
-                                            dialogBuilder.show();
-                                            break;
-                                        case 2:
-                                            //Delete friend
-                                            if (!key.equals("")) {
-                                                showAlertDialog(getActivity(),key);
-                                            }
-                                            break;
-                                        case 3:
-                                            AntoxDB db = new AntoxDB(getActivity());
-                                            db.deleteChat(key);
-                                            db.close();
-                                            main_act.updateLeftPane();
-                                            clearChat(key);
-                                            break;
-                                        case 4:
-                                            showBlockDialog(getActivity(),key);
-                                            break;
+                                                */
+                                                break;
+                                            case 1:
+                                                //Delete friend
+                                                showDeleteFriendDialog(getActivity(), key);
+                                                break;
+                                            case 2:
+                                                AntoxDB db = new AntoxDB(getActivity());
+                                                db.deleteChat(key);
+                                                db.close();
+                                                toxSingleton.updateMessages(getActivity());
+                                                break;
+                                            case 3:
+                                                showBlockDialog(getActivity(), key);
+                                                break;
+                                        }
                                     }
                                 }
                                 dialog.cancel();
                             }
                         });
                 AlertDialog alert = builder.create();
-                if(item.viewType!=Constants.TYPE_HEADER){
+                if (item.viewType != Constants.TYPE_HEADER) {
                     alert.show();
                 }
                 return true;
@@ -323,7 +287,7 @@ public class ContactsFragment extends Fragment {
         return rootView;
     }
 
-    public void showBlockDialog(Context context, String fkey) {
+    public void showBlockDialog(final Context context, String fkey) {
         final String key = fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(getResources().getString(R.string.friend_action_block_confirmation))
@@ -335,8 +299,7 @@ public class ContactsFragment extends Fragment {
                                 AntoxDB dbBlock = new AntoxDB(getActivity());
                                 dbBlock.blockUser(key);
                                 dbBlock.close();
-                                clearChat(key);
-                                main_act.updateLeftPane();
+                                toxSingleton.updateFriendsList(getActivity());
                             }
                         })
                 .setNegativeButton(getResources().getString(R.string.button_no),
@@ -349,7 +312,7 @@ public class ContactsFragment extends Fragment {
         builder.show();
     }
 
-    public void showAlertDialog(Context context, String fkey) {
+    public void showDeleteFriendDialog(Context context, String fkey) {
         final String key= fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(getResources().getString(R.string.contacts_clear_saved_logs))
@@ -358,44 +321,58 @@ public class ContactsFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                AntoxDB db = new AntoxDB(getActivity());
-                                db.deleteChat(key);
-                                db.deleteFriend(key);
-                                db.close();
-                                clearChat(key);
-                                main_act.updateLeftPane();
-                                Intent intent = new Intent(getActivity(), ToxService.class);
-                                intent.setAction(Constants.DELETE_FRIEND_AND_CHAT);
-                                intent.putExtra("key", key);
-                                getActivity().startService(intent);
+                                class DeleteFriendAndChat extends AsyncTask<Void, Void, Void> {
+                                    @Override
+                                    protected Void doInBackground(Void... params) {
+                                        AntoxDB db = new AntoxDB(getActivity());
+                                        db.deleteChat(key);
+                                        db.deleteFriend(key);
+                                        db.close();
+                                        return null;
+                                    }
+                                    @Override
+                                    protected void onPostExecute(Void result) {
+                                        toxSingleton.updateFriendsList(getActivity());
+                                        toxSingleton.updateMessages(getActivity());
+                                    }
+                                }
+
+                                new DeleteFriendAndChat().execute();
                             }
-                        })
+                        }
+                )
                 .setNegativeButton(getResources().getString(R.string.button_no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                AntoxDB db = new AntoxDB(getActivity());
-                                db.deleteFriend(key);
-                                db.close();
-                                clearChat(key);
-                                main_act.updateLeftPane();
-                                Intent intent = new Intent(getActivity(), ToxService.class);
-                                intent.setAction(Constants.DELETE_FRIEND);
-                                intent.putExtra("key", key);
-                                getActivity().startService(intent);
+                                class DeleteFriend extends AsyncTask<Void, Void, Void> {
+                                    @Override
+                                    protected Void doInBackground(Void... params) {
+                                        AntoxDB db = new AntoxDB(getActivity());
+                                        db.deleteFriend(key);
+                                        db.close();
+                                        // Remove friend from tox friend list
+                                        AntoxFriend friend = toxSingleton.getAntoxFriend(key);
+                                        if (friend != null) {
+
+                                            try {
+                                                toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                            } catch (ToxException e) {
+                                            }
+                                        }
+
+                                        return null;
+                                    }
+                                    @Override
+                                    protected void onPostExecute(Void result) {
+                                        toxSingleton.updateFriendsList(getActivity());
+                                    }
+                                }
+
+                                new DeleteFriend().execute();
                             }
                         }
                 );
         builder.show();
-    }
-    public void clearChat(String key)
-    {
-        if(key.equals(toxSingleton.activeFriendKey))//check if the deleted friend was the active friend
-        {
-            toxSingleton.activeFriendKey=null;
-            getFragmentManager().beginTransaction().
-                    remove(getFragmentManager().findFragmentById(R.id.right_pane)).commit();
-            main_act.activeTitle="Antox";
-        }
     }
 }
