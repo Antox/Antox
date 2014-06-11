@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 8
@@ -28,12 +28,18 @@ android {
     }
 }
 
+
+
 dependencies {
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:appcompat-v7:+'
     compile files('libs/wearable-preview-support.jar')
     compile files('libs/jToxcore.jar')
     compile files('libs/core.jar')
     compile files('libs/jsoup-1.7.3.jar')
     compile files('libs/dnsjava-2.1.6.jar')
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.netflix.rxjava:rxjava-android:0.18.3'
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'com.android.support:support-v4:19.+'
 }

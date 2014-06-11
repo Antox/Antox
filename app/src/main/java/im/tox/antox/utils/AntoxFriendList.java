@@ -1,15 +1,15 @@
 package im.tox.antox.utils;
 
-import im.tox.jtoxcore.FriendExistsException;
-import im.tox.jtoxcore.FriendList;
-import im.tox.jtoxcore.ToxFriend;
-import im.tox.jtoxcore.ToxUserStatus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
+import im.tox.jtoxcore.FriendExistsException;
+import im.tox.jtoxcore.FriendList;
+import im.tox.jtoxcore.ToxFriend;
+import im.tox.jtoxcore.ToxUserStatus;
 
 /**
  * Wrapper class for the Tox Friendlist.
