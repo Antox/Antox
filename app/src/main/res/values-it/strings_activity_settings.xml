@@ -39,4 +39,10 @@
 
     <!-- Menu strings -->
     <string name="copy_tox_id">Copia Tox ID</string>
+    
+    <!-- Dht strings -->
+    <string name="dht">Server DHT</string>
+    <string name="dht_ip">Indirizzo IP</string>
+    <string name="dht_port">Porta</string>
+    <string name="dht_key">Chiave</string>
 </resources>
