@@ -6,21 +6,18 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Welcome</string>
     <string name="title_activity_add_friend">Add Friend</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_friend_profile">Profile</string>
-    <string name="title_activity_manage_groups">Manage Groups</string>
+    <string name="title_activity_friend_profile">Friend Profile</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="action_settings">Settings</string>
-    <string name="action_exit">Exit</string>
     <string name="add_friend">Add Friend</string>
-    <string name="search_friend">Search</string>
-    <string name="action_profile">Profile</string>
-    <string name="action_about">About</string>
-    <string name="add_to_group">Add To Group</string>
-    <string name="manage_groups">Manage Groups</string>
+
+    <!-- Welcome Activity -->
+    <string name="welcome_must_select_username">You must set a name</string>
+    <string name="welcome_alpha_warning">This client is still in pre-alpha.</string>
+    <string name="welcome_getstarted_string">Enter a name to display to your friends</string>
+    <string name="welcome_name_hint">nickname</string>
+    <string name="welcome_button">Start</string>
+    <string name="welcome_developer_string">Made with love by the Tox Development Team</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -29,46 +26,19 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Connection Status</string>
     <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
+    <string name="main_recent_no">No recent conversations</string>
     <string name="main_try_adding">Add some friends to get started</string>
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
     <string name="main_not_connected">
         No internet connection has been detected. Without an internet connection, you will have
-        limited functionality.
+        limited functionality unless you are using Antox for LAN only
     </string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
 
-    <!--  Chat Activity -->
+    <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
-
-
-    <!-- Settings Activity -->
-    <string name="about_string">This client is still in pre-alpha.</string>
-    <string name="getstarted_string">Enter your desired name</string>
-    <string name="settings_custom_dht">Custom Tox Node Settings</string>
-    <string name="settings_use_custom_dht">Use Custom Tox node settings</string>
-    <string name="settings_user_key_title">Your Tox ID</string>
-    <string name="settings_name_hint">Username</string>
-    <string name="settings_note_hint">Status message</string>
-    <string name="settings_dht_ip">IP address of a bootstrap (ex: 192.254.75.98)</string>
-    <string name="settings_dht_port">Port address of a bootstrap (ex: 33445)</string>
-    <string name="settings_dht_key">Public Key address of a bootstrap (ex: FE3914F4616E227F29B2103450D6B55A836AD4BD23F97144E2C4ABE8D504FE1B)</string>
-    <string name="settings_button">Update</string>
-    <string name="settings_updated">Your settings have been updated</string>
-    <string name="settings_dht_spinner_title">Advanced Settings</string>
-    <string name="settings_language_title">Language</string>
-    <string name="settings_status_title">Status</string>
-    <string name="settings_note_title">Mood</string>
-    <string name="settings_theme_title">Theme</string>
-    <string name="settings_username_title">Username</string>
-    <string name="settings_empty_strings">You must fill out all fields</string>
-    <string name="settings_invalid_key">Invalid key entered</string>
-    <string name="settings_send_typing_indicators">Send Typing Indicators</string>
-    <string name="developer_string">Made with love by the Tox Development Team</string>
-    <string name="welcome_must_select_username">You must set a name</string>
-    <string name="settings_notifications">Turn off notifications</string>
-
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
@@ -83,17 +53,8 @@
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
     <string name="addfriend_no_internet">No Tox Network connection</string>
-    <string name="addfriend_no_internet_text">
-        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
-        Try restarting the application.
-    </string>
-
-    <!--  Profile Activity -->
-    <string name="share_with">Share With</string>
-    <string name="status_online">Online</string>
-    <string name="status_away">Away</string>
-    <string name="status_busy">Busy</string>
-    <string name="profile_updated">Your Profile has been updated</string>
+    <string name="addfriend_no_internet_text">        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
+        Try restarting the application.</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
@@ -105,26 +66,6 @@
     <string name="friend_profile_updated">The profile has been updated</string>
     <string name="friend_profile_copy">Copy Tox ID</string>
     <string name="friend_profile_copied">Tox ID Copied</string>
-
-    <!-- Manage Groups Activity -->
-    <string name="manage_groups_add_group">Add Group</string>
-    <string name="manage_groups_number_of_members">Number of members: </string>
-    <string name="manage_groups_none">None</string>
-    <string name="manage_groups_dialog_add_group">Add a group</string>
-    <string name="manage_groups_dialog_rename_group">Rename group</string>
-    <string name="manage_groups_no_name">Please name your group</string>
-    <string name="manage_groups_already_exists">Group already exists</string>
-    <string name="manage_groups_dialog_add_button">Add</string>
-    <string name="manage_groups_dialog_rename_button">Rename</string>
-    <string name="manage_groups_dialog_cancel_button">Cancel</string>
-    <string name="manage_groups_no_delete_friends">The group “Friends” is the default group. It cannot be modified.</string>
-    <string name="manage_groups_rename_group">Rename</string>
-    <string name="manage_groups_delete_group">Delete</string>
-    <string name="manage_groups_action_on">Action on</string>
-    <string name="manage_groups_friends">Friends</string>
-    <string name="manage_groups_toast_deleted">Group successfully deleted. All group users moved to Friends.</string>
-    <string name="manage_groups_toast_renamed">Group successfully renamed</string>
-    <string name="manage_groups_toast_added">Group successfully added</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accept</string>
@@ -144,20 +85,20 @@
     <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
     <string name="friend_action_deletechat">Delete Chat Logs</string>
-    <string name="friend_action_block_confirmation">
-        Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. Are you sure you wish to continue?
-    </string>
-    <string name="toast_succ_move_user">The user has been moved successfully</string>
-
+    <string name="friend_action_block_confirmation">        Blocking this user will remove them from your friends list and you will no longer see friend
+        requests from them. Are you sure you wish to continue?</string>
+    <string name="toast_succ_move_user">Contact has been moved successfully</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
 
-    <!--  Misc -->
+    <!-- Misc -->
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
+    <string name="share_with">Share with</string>
 
 </resources>

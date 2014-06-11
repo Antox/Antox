@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="actions">
-        <item>Todos</item>
-        <item>Conectados</item>
-        <item>Desconectados</item>
-        <item>Bloqueados</item>
-    </string-array>
-</resources>
