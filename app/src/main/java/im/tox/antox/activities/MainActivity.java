@@ -138,8 +138,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-
-
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
 
@@ -164,68 +162,81 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     @Override
     public void onResume(){
         super.onResume();
-        chatActiveSub = toxSingleton.chatActiveAndKey.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
-                .subscribe(new Action1<Tuple<String,Boolean>>() {
-                    @Override
-                    public void call(Tuple<String,Boolean> t) {
-                        AntoxDB antoxDB = new AntoxDB(getApplicationContext());
-                        String activeKey = t.x;
-                        boolean chatActive = t.y;
-                        toxSingleton.chatActive = chatActive;
-                        if (toxSingleton.chatActive) {
-                            antoxDB.markIncomingMessagesRead(activeKey);
-                            toxSingleton.clearUselessNotifications(activeKey);
-                            toxSingleton.updateMessages(getApplicationContext());
-                        }
-                        antoxDB.close();
-                    }
-                });
-        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Tuple<String,Boolean>>() {
-                    @Override
-                    public void call(Tuple<String,Boolean> activeKeyAndIfFriend) {
-                        String activeKey = activeKeyAndIfFriend.x;
-                        boolean isFriend = activeKeyAndIfFriend.y;
-                        if (activeKey.equals("")) {
-                            pane.openPane();
-                            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
-                            if (fragment != null) {
-                                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("beenLoaded", false) == true){
+            chatActiveSub = toxSingleton.chatActiveAndKey.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
+                    .subscribe(new Action1<Tuple<String, Boolean>>() {
+                        @Override
+                        public void call(Tuple<String, Boolean> t) {
+                            AntoxDB antoxDB = new AntoxDB(getApplicationContext());
+                            String activeKey = t.x;
+                            boolean chatActive = t.y;
+                            toxSingleton.chatActive = chatActive;
+                            if (toxSingleton.chatActive) {
+                                antoxDB.markIncomingMessagesRead(activeKey);
+                                toxSingleton.clearUselessNotifications(activeKey);
+                                toxSingleton.updateMessages(getApplicationContext());
                             }
-                        } else {
-                            if (!activeKey.equals(toxSingleton.activeKey)) {
-                                if (isFriend) {
-                                    Log.d("MainActivity", "chat fragment creation, isFriend: " + isFriend);
-                                    ChatFragment newFragment = new ChatFragment(activeKey);
-                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.right_pane, newFragment);
-                                    transaction.addToBackStack(null);
-                                    transaction.commit();
+                            antoxDB.close();
+                        }
+                    });
+            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Tuple<String, Boolean>>() {
+                        @Override
+                        public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
+                            String activeKey = activeKeyAndIfFriend.x;
+                            boolean isFriend = activeKeyAndIfFriend.y;
+                            if (activeKey.equals("")) {
+                                if(pane != null) {
+                                    pane.openPane();
                                 } else {
-                                    Log.d("MainActivity", "friend request fragment creation, isFriend: " + isFriend);
-                                    FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
-                                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.right_pane, newFragment);
-                                    transaction.addToBackStack(null);
-                                    transaction.commit();
+                                    pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
+                                    PaneListener paneListener = new PaneListener();
+                                    pane.setPanelSlideListener(paneListener);
+                                    pane.openPane();
                                 }
+                                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
+                                if (fragment != null) {
+                                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                                }
+                            } else {
+                                if (!activeKey.equals(toxSingleton.activeKey)) {
+                                    if (isFriend) {
+                                        Log.d("MainActivity", "chat fragment creation, isFriend: " + isFriend);
+                                        ChatFragment newFragment = new ChatFragment(activeKey);
+                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.right_pane, newFragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                    } else {
+                                        Log.d("MainActivity", "friend request fragment creation, isFriend: " + isFriend);
+                                        FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
+                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.right_pane, newFragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                    }
+                                }
+                                pane.closePane();
                             }
-                            pane.closePane();
+                            toxSingleton.activeKey = activeKey;
                         }
-                        toxSingleton.activeKey = activeKey;
-                    }
-                });
-        if (toxSingleton.activeKey != null) {
-            toxSingleton.clearUselessNotifications(toxSingleton.activeKey);
+                    });
+            if (toxSingleton.activeKey != null) {
+                toxSingleton.clearUselessNotifications(toxSingleton.activeKey);
+            }
         }
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        activeKeySub.unsubscribe();
-        chatActiveSub.unsubscribe();
-        toxSingleton.chatActive = false;
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(preferences.getBoolean("beenLoaded", false) == true) {
+            activeKeySub.unsubscribe();
+            chatActiveSub.unsubscribe();
+            toxSingleton.chatActive = false;
+        }
     }
 
     void showAlertDialog(Context context, String title, String message) {

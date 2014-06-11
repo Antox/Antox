@@ -1,6 +1,7 @@
 package im.tox.antox.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import im.tox.antox.R;
+import im.tox.antox.tox.ToxDoService;
+import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.Constants;
 
 public class WelcomeActivity extends ActionBarActivity {
 
@@ -56,6 +60,19 @@ public class WelcomeActivity extends ActionBarActivity {
 
             // Set result for activity
             setResult(RESULT_OK);
+
+            /* Next thing to be called is MainAcitivity.onResume() so we need to do essential
+             * initialisations here to stop client crashing when using it for the first time
+             */
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+            toxSingleton.initSubjects(getApplicationContext());
+            /* If the tox service isn't already running, start it */
+            if (!toxSingleton.isRunning) {
+                /* Start without checking for internet connection in case of LAN usage */
+                Intent startToxIntent = new Intent(getApplicationContext(), ToxDoService.class);
+                startToxIntent.setAction(Constants.START_TOX);
+                getApplicationContext().startService(startToxIntent);
+            }
 
             // Close activity
             finish();
