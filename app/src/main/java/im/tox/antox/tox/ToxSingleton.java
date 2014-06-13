@@ -249,6 +249,16 @@ public class ToxSingleton {
     }
 
     public void initTox(Context ctx) {
+
+        try {
+            System.load("/data/data/im.tox.antox/lib/libsodium.so");
+            System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+        } catch (Exception e) {
+            Log.d(TAG, "Failed System.load()");
+            e.printStackTrace();
+        }
+
+
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
 
@@ -275,14 +285,6 @@ public class ToxSingleton {
             } catch (ToxException e) {
                 e.printStackTrace();
             }
-        }
-
-        try {
-            System.load("/data/data/im.tox.antox/lib/libsodium.so");
-            System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
-        } catch (Exception e) {
-            Log.d(TAG, "Failed System.load()");
-            e.printStackTrace();
         }
 
         /* If the service wasn't running then we wouldn't have gotten callbacks for a user
