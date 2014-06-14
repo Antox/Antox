@@ -18,6 +18,9 @@ import java.util.concurrent.ExecutionException;
 
 import im.tox.antox.callbacks.AntoxOnActionCallback;
 import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
+import im.tox.antox.callbacks.AntoxOnFileControlCallback;
+import im.tox.antox.callbacks.AntoxOnFileDataCallback;
+import im.tox.antox.callbacks.AntoxOnFileSendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnFriendRequestCallback;
 import im.tox.antox.callbacks.AntoxOnMessageCallback;
 import im.tox.antox.callbacks.AntoxOnNameChangeCallback;
@@ -316,6 +319,9 @@ public class ToxSingleton {
         AntoxOnStatusMessageCallback antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(ctx);
         AntoxOnUserStatusCallback antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(ctx);
         AntoxOnTypingChangeCallback antoxOnTypingChangeCallback = new AntoxOnTypingChangeCallback(ctx);
+        AntoxOnFileSendRequestCallback antoxOnFileSendRequestCallback = new AntoxOnFileSendRequestCallback(ctx);
+        AntoxOnFileControlCallback antoxOnFileControlCallback = new AntoxOnFileControlCallback(ctx);
+        AntoxOnFileDataCallback antoxOnFileDataCallback = new AntoxOnFileDataCallback(ctx);
 
         callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
         callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
@@ -326,6 +332,9 @@ public class ToxSingleton {
         callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback);
         callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback);
         callbackHandler.registerOnTypingChangeCallback(antoxOnTypingChangeCallback);
+        callbackHandler.registerOnFileSendRequestCallback(antoxOnFileSendRequestCallback);
+        callbackHandler.registerOnFileControlCallback(antoxOnFileControlCallback);
+        callbackHandler.registerOnFileDataCallback(antoxOnFileDataCallback);
 
         /* Load user details */
         try {
