@@ -2,6 +2,7 @@ package im.tox.antox.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -20,6 +21,7 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
+import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
@@ -185,7 +187,12 @@ public class ChatFragment extends Fragment {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //do stuff
+                        switch (i) {
+                            case 0:
+                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent, Constants.IMAGE_RESULT);
+                                break;
+                        }
                     }
                 });
                 builder.create().show();
