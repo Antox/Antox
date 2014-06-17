@@ -1,9 +1,17 @@
 package im.tox.antox.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +20,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.ChatMessagesAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -146,6 +159,44 @@ public class ChatFragment extends Fragment {
             chatListView.setSelection(adapter.getCount() - 1);
         }
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
+        Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
+        Log.d("ChatFragment ImageResult data", data.toString());
+        if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            String path = null;
+            String[] filePathColumn = {MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.DISPLAY_NAME};
+            String filePath = null;
+            String fileName = null;
+            CursorLoader loader = new CursorLoader(getActivity(), uri, filePathColumn, null, null, null);
+            Cursor cursor = loader.loadInBackground();
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(filePathColumn[0]);
+                    filePath = cursor.getString(columnIndex);
+                    int fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn[1]);
+                    fileName = cursor.getString(fileNameIndex);
+                }
+            }
+            try {
+                path = filePath;
+            } catch (Exception e) {
+                Log.d("onActivityResult", e.toString());
+            }
+            if (path != null) {
+                toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
+            }
+        }
+    }
+
+
+
 
     @SuppressWarnings("deprecation")
     @Override

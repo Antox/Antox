@@ -141,6 +141,10 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
 
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.clearFileNumbers();
+            db.close();
+
             updateLeftPane();
 
 
@@ -265,21 +269,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
         startActivity(intent);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
-            updateLeftPane();
-        } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
-            Uri uri=  data.getData();
-            File pickedFile = new File(uri.getPath());
-            Log.d("file picked",""+pickedFile.getAbsolutePath() );
-            Log.d("file type",""+getContentResolver().getType(uri));
-        } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
-            restartActivity();
-        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
-            finish();
-        }
     }
 
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {

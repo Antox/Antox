@@ -4,15 +4,27 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -41,6 +53,7 @@ import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxFileControl;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 import rx.Observable;
@@ -145,7 +158,6 @@ public class ToxSingleton {
         });
     }
 
-    ;
 
     private boolean isKeyFriend(String key, ArrayList<Friend> fl) {
         for (Friend f : fl) {
@@ -156,7 +168,141 @@ public class ToxSingleton {
         return false;
     }
 
-    ;
+    public void sendFileSendRequest(String path, String key, Context context) {
+        Log.d("sendFileSendRequest path", path);
+        File file = new File(path);
+        String[] splitPath = path.split("/");
+        String fileName = splitPath[splitPath.length - 1];
+        if (fileName != null) {
+            int fileNumber = -1;
+            try {
+                fileNumber = jTox.toxNewFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
+            } catch (Exception e) {
+                Log.d("toxNewFileSender error", e.toString());
+            }
+            if (fileNumber != -1) {
+                AntoxDB antoxDB = new AntoxDB(context);
+                antoxDB.addFileTransfer(key, path, fileNumber);
+                antoxDB.close();
+            }
+        }
+    }
+
+    public void sendFileData(final String key, final int fileNumber, final int startPosition, final Context context) {
+        class sendFileTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... params) {
+                boolean result = sendFileDataRecursion(key, fileNumber, startPosition, context);
+                Log.d("sendFileDataRecursion finished, result: ", Boolean.toString(result));
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+            }
+        }
+        new sendFileTask().execute();
+    }
+
+    public boolean sendFileDataRecursion(final String key, final int fileNumber, final int startPosition, final Context context) {
+        String path = "";
+        AntoxDB antoxDB = new AntoxDB(context);
+        path = antoxDB.getFilePath(key, fileNumber);
+        antoxDB.close();
+        int result = -1;
+        if (!path.equals("")) {
+            int chunkSize = 1;
+            try {
+                chunkSize = jTox.toxFileDataSize(getAntoxFriend(key).getFriendnumber());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            File file = new File(path);
+            byte[] bytes = new byte[(int) file.length()];
+            BufferedInputStream buf = null;
+            try {
+                buf = new BufferedInputStream(new FileInputStream(file));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int i = startPosition;
+            if (buf != null) {
+                for (i = startPosition; i < bytes.length; i = i + chunkSize) {
+                    byte[] data = new byte[chunkSize];
+                    try {
+                        //Log.d("sendFileDataTask", "file read chunk, chunksize: " + Integer.toString(chunkSize));
+                        int read = buf.read(data, 0, chunkSize);
+                        //Log.d("sendFileDataTask", "file read chunk data: " + bytesToHex(data) + ", number of bytes read: " + Integer.toString(read));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                    try {
+                        result = jTox.toxFileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        break;
+                    }
+                    if (result == -1) {
+                        Log.d("sendFileDataTask", "toxFileSendData failed");
+                        break;
+                    }
+                }
+                if (i > bytes.length) {
+                    i = bytes.length;
+                }
+                try {
+                    buf.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (result != -1) {
+                try {
+                    Log.d("toxFileSendControl", "FINISHED");
+                    jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    AntoxDB db = new AntoxDB(context);
+                    db.clearFileNumber(key, fileNumber);
+                    db.close();
+                    return true;
+                } catch (Exception e) {
+                    Log.d("toxFileSendControl error", e.toString());
+                }
+            } else {
+                try {
+                    jTox.doTox();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                SystemClock.sleep(50);
+                return sendFileDataRecursion(key, fileNumber, i, context);
+            }
+        }
+        return false;
+    }
+
+    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    private static byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
 
     public void updateFriendsList(Context ctx) {
         try {
