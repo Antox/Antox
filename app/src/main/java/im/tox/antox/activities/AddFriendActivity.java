@@ -136,9 +136,6 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                     e.printStackTrace();
                 }
 
-                if (!alias.equals(""))
-                    ID = alias;
-
                 Log.d("AddFriendActivity","Adding friend to database");
                 db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
             } else {
