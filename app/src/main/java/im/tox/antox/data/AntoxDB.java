@@ -44,6 +44,10 @@ public class AntoxDB extends SQLiteOpenHelper {
     public String CREATE_TABLE_FRIEND_REQUESTS = "CREATE TABLE IF NOT EXISTS friend_requests" +
             " ( _id integer primary key, tox_key text, message text)";
 
+    public String CREATE_TABLE_FILE_TRANSFERS = "CREATE TABLE IF NOT EXISTS file_transfers" +
+            " ( _id integer primary key, tox_key text, file_number integer, path text, " +
+            "FOREIGN KEY (tox_key) REFERENCES friends(tox_key))";
+
     public AntoxDB(Context ctx) {
         super(ctx, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
     }
@@ -53,6 +57,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FRIENDS);
         db.execSQL(CREATE_TABLE_FRIEND_REQUESTS);
         db.execSQL(CREATE_TABLE_MESSAGES);
+        db.execSQL(CREATE_TABLE_FILE_TRANSFERS);
     }
 
     @Override
@@ -85,6 +90,10 @@ public class AntoxDB extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS);
                 db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST);
                 onCreate(db);
+                break;
+            case 7:
+                db.execSQL(CREATE_TABLE_FILE_TRANSFERS);
+                break;
         }
     }
 
@@ -132,6 +141,16 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addFileTransfer(String key, String path, int fileNumber) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_KEY, key);
+        values.put("path", path);
+        values.put("file_number", fileNumber);
+        db.insert("file_transfers", null, values);
+        db.close();
+    }
+
     public void addFriendRequest(String key, String message) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -175,6 +194,20 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
         return map;
     };
+
+    public String getFilePath(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String path = "";
+        String selectQuery = "SELECT path FROM file_transfers WHERE tox_key = '" + key + "' AND file_number == " +
+                fileNumber;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            path = cursor.getString(0);
+        }
+        cursor.close();
+        db.close();
+        return path;
+    }
 
     public boolean isKeyInFriends(String key){
         SQLiteDatabase db = this.getWritableDatabase();
