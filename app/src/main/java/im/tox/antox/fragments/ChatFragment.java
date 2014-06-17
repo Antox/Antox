@@ -1,9 +1,16 @@
 package im.tox.antox.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,10 +19,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.ChatMessagesAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -146,6 +158,65 @@ public class ChatFragment extends Fragment {
             chatListView.setSelection(adapter.getCount() - 1);
         }
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
+        Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
+        Log.d("ChatFragment ImageResult data", data.toString());
+        if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage =  data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA,
+                       MediaStore.Images.Media.DISPLAY_NAME};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                int fileNameIndex = cursor.getColumnIndex(filePathColumn[1]);
+                String fileName = cursor.getString(fileNameIndex);
+
+                byte[] bytes = getBytesFromUri(selectedImage, getActivity());
+                Log.d("ChatFragment ImageResult bytes length", Integer.toString(bytes.length));
+                try {
+                    toxSingleton.jTox.toxNewFileSender(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), bytes.length, fileName);
+                } catch (Exception e) {
+                    Log.d("toxNewFileSender error", e.toString());
+                }
+            }
+        }
+    }
+
+    private static byte[] getBytesFromUri(Uri uri, Context context) {
+        byte[] output = null;
+        try {
+            InputStream istream = context.getContentResolver().openInputStream(uri);
+            try {
+                output = getBytes(istream);
+            } catch (Exception e) {
+                Log.d("getBytesFromUri Error:", e.toString());
+            }
+        } catch (Exception e) {
+            Log.d("getBytesFromUri Error:", e.toString());
+        }
+        return output;
+    }
+
+    public static byte[] getBytes(InputStream inputStream) throws IOException {
+      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+      int bufferSize = 1024;
+      byte[] buffer = new byte[bufferSize];
+
+      int len = 0;
+      while ((len = inputStream.read(buffer)) != -1) {
+        byteBuffer.write(buffer, 0, len);
+      }
+      return byteBuffer.toByteArray();
+    }
+
+
 
     @SuppressWarnings("deprecation")
     @Override
