@@ -201,6 +201,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         String selectQuery = "SELECT path FROM file_transfers WHERE tox_key = '" + key + "' AND file_number == " +
                 fileNumber;
         Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.d("getFilePath count: ", Integer.toString(cursor.getCount()));
         if (cursor.moveToFirst()) {
             path = cursor.getString(0);
         }
@@ -209,6 +210,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         return path;
     }
 
+    public void clearFileNumbers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE file_transfers SET file_number = -1";
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void clearFileNumber(String key, int number) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE file_transfers SET file_number = -1 WHERE tox_key == '" + key + "' AND file_number = " + number;
+        db.execSQL(query);
+        db.close();
+    }
     public boolean isKeyInFriends(String key){
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery = "SELECT count(*) FROM friends WHERE tox_key == '" + key + "'";
