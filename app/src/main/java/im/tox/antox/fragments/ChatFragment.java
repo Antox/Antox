@@ -3,6 +3,7 @@ package im.tox.antox.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -166,55 +167,34 @@ public class ChatFragment extends Fragment {
         Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
         Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
         Log.d("ChatFragment ImageResult data", data.toString());
-        if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK && data != null) {
-            Uri selectedImage =  data.getData();
+        if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            String path = null;
             String[] filePathColumn = {MediaStore.Images.Media.DATA,
-                       MediaStore.Images.Media.DISPLAY_NAME};
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            if (cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String filePath = cursor.getString(columnIndex);
-                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                int fileNameIndex = cursor.getColumnIndex(filePathColumn[1]);
-                String fileName = cursor.getString(fileNameIndex);
-
-                byte[] bytes = getBytesFromUri(selectedImage, getActivity());
-                Log.d("ChatFragment ImageResult bytes length", Integer.toString(bytes.length));
-                try {
-                    toxSingleton.jTox.toxNewFileSender(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), bytes.length, fileName);
-                } catch (Exception e) {
-                    Log.d("toxNewFileSender error", e.toString());
+                    MediaStore.Images.Media.DISPLAY_NAME};
+            String filePath = null;
+            String fileName = null;
+            CursorLoader loader = new CursorLoader(getActivity(), uri, filePathColumn, null, null, null);
+            Cursor cursor = loader.loadInBackground();
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(filePathColumn[0]);
+                    filePath = cursor.getString(columnIndex);
+                    int fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn[1]);
+                    fileName = cursor.getString(fileNameIndex);
                 }
             }
-        }
-    }
-
-    private static byte[] getBytesFromUri(Uri uri, Context context) {
-        byte[] output = null;
-        try {
-            InputStream istream = context.getContentResolver().openInputStream(uri);
             try {
-                output = getBytes(istream);
+                path = filePath;
             } catch (Exception e) {
-                Log.d("getBytesFromUri Error:", e.toString());
+                Log.d("onActivityResult", e.toString());
             }
-        } catch (Exception e) {
-            Log.d("getBytesFromUri Error:", e.toString());
+            if (path != null) {
+                toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
+            }
         }
-        return output;
     }
 
-    public static byte[] getBytes(InputStream inputStream) throws IOException {
-      ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-      int bufferSize = 1024;
-      byte[] buffer = new byte[bufferSize];
-
-      int len = 0;
-      while ((len = inputStream.read(buffer)) != -1) {
-        byteBuffer.write(buffer, 0, len);
-      }
-      return byteBuffer.toByteArray();
-    }
 
 
 
