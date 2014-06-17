@@ -199,6 +199,7 @@ public class ContactsFragment extends Fragment {
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                                     db.addFriend(item.key, "Friend Accepted", "", "");
+                                                    db.deleteFriendRequest(item.key);
                                                     db.close();
                                                     try {
                                                         toxSingleton.jTox.confirmRequest(item.key);
@@ -328,6 +329,15 @@ public class ContactsFragment extends Fragment {
                                         db.deleteChat(key);
                                         db.deleteFriend(key);
                                         db.close();
+                                        // Remove friend from tox friend list
+                                        AntoxFriend friend = toxSingleton.getAntoxFriend(key);
+                                        if (friend != null) {
+
+                                            try {
+                                                toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                            } catch (ToxException e) {
+                                            }
+                                        }
                                         return null;
                                     }
                                     @Override

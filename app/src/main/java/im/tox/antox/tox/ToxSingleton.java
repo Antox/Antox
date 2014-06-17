@@ -317,9 +317,15 @@ public class ToxSingleton {
             friendListSubject.onError(e);
         }
     }
+
     public void clearUselessNotifications (String key) {
-        if (key != null && !key.equals(""))
-            mNotificationManager.cancel(getAntoxFriend(key).getFriendnumber());
+        if (key != null && !key.equals("")) {
+            try {
+                mNotificationManager.cancel(getAntoxFriend(key).getFriendnumber());
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     public void sendUnsentMessages(Context ctx) {
