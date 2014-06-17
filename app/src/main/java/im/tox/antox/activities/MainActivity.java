@@ -267,21 +267,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         startActivity(intent);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
-            updateLeftPane();
-        } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
-            Uri uri=  data.getData();
-            File pickedFile = new File(uri.getPath());
-            Log.d("file picked",""+pickedFile.getAbsolutePath() );
-            Log.d("file type",""+getContentResolver().getType(uri));
-        } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
-            restartActivity();
-        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
-            finish();
-        }
-    }
-
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
 
         @Override
