@@ -20,7 +20,7 @@ public class AntoxOnFileControlCallback implements OnFileControlCallback<AntoxFr
     public void execute(AntoxFriend friend, boolean sending, int fileNumber, ToxFileControl control_type, byte[] data) {
         Log.d(TAG, "execute");
         if (control_type.equals(ToxFileControl.TOX_FILECONTROL_ACCEPT) && sending) {
-            toxSingleton.sendFileData(friend.getId(), fileNumber, ctx);
+            toxSingleton.sendFileData(friend.getId(), fileNumber, 0, ctx);
         }
     }
 }
