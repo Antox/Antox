@@ -3,6 +3,7 @@ package im.tox.antox.callbacks;
 import android.content.Context;
 import android.util.Log;
 
+import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnFileControlCallback;
@@ -21,6 +22,9 @@ public class AntoxOnFileControlCallback implements OnFileControlCallback<AntoxFr
         Log.d(TAG, "execute");
         if (control_type.equals(ToxFileControl.TOX_FILECONTROL_ACCEPT) && sending) {
             toxSingleton.sendFileData(friend.getId(), fileNumber, 0, ctx);
+        }
+        if (control_type.equals(ToxFileControl.TOX_FILECONTROL_FINISHED) && !sending) {
+            toxSingleton.fileFinished(friend.getId(), fileNumber, ctx);
         }
     }
 }

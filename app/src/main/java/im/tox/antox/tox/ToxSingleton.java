@@ -192,7 +192,7 @@ public class ToxSingleton {
     }
 
     public void fileSendRequest(String key, int fileNumber, String fileName, long fileSize, Context context) {
-        Log.d("fileSendRequest","");
+        Log.d("fileSendRequest, fileNumber: ",Integer.toString(fileNumber));
         AntoxDB antoxDB = new AntoxDB(context);
         antoxDB.addFileTransfer(key, fileName, fileNumber, false);
         antoxDB.close();
@@ -256,12 +256,21 @@ public class ToxSingleton {
         }
     }
 
+    public void fileFinished(String key, int fileNumber, Context context) {
+        AntoxDB db = new AntoxDB(context);
+        db.clearFileNumber(key, fileNumber);
+        db.close();
+    }
+
     public void sendFileData(final String key, final int fileNumber, final int startPosition, final Context context) {
         class sendFileTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... params) {
                 boolean result = doSendFileData(key, fileNumber, startPosition, context);
                 Log.d("doSendFileData finished, result: ", Boolean.toString(result));
+                AntoxDB db = new AntoxDB(context);
+                db.clearFileNumber(key, fileNumber);
+                db.close();
                 return null;
             }
 
