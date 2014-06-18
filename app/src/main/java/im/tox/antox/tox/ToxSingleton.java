@@ -182,7 +182,7 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber);
+                antoxDB.addFileTransfer(key, path, fileNumber, true);
                 antoxDB.close();
             }
         }
@@ -192,8 +192,8 @@ public class ToxSingleton {
         class sendFileTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... params) {
-                boolean result = sendFileDataRecursion(key, fileNumber, startPosition, context);
-                Log.d("sendFileDataRecursion finished, result: ", Boolean.toString(result));
+                boolean result = doSendFileData(key, fileNumber, startPosition, context);
+                Log.d("doSendFileData finished, result: ", Boolean.toString(result));
                 return null;
             }
 
@@ -204,7 +204,7 @@ public class ToxSingleton {
         new sendFileTask().execute();
     }
 
-    public boolean sendFileDataRecursion(final String key, final int fileNumber, final int startPosition, final Context context) {
+    public boolean doSendFileData(final String key, final int fileNumber, final int startPosition, final Context context) {
         String path = "";
         AntoxDB antoxDB = new AntoxDB(context);
         path = antoxDB.getFilePath(key, fileNumber);
@@ -230,9 +230,8 @@ public class ToxSingleton {
                 for (i = startPosition; i < bytes.length; i = i + chunkSize) {
                     byte[] data = new byte[chunkSize];
                     try {
-                        //Log.d("sendFileDataTask", "file read chunk, chunksize: " + Integer.toString(chunkSize));
+                        buf.mark(chunkSize*2);
                         int read = buf.read(data, 0, chunkSize);
-                        //Log.d("sendFileDataTask", "file read chunk data: " + bytesToHex(data) + ", number of bytes read: " + Integer.toString(read));
                     } catch (Exception e) {
                         e.printStackTrace();
                         break;
@@ -245,7 +244,18 @@ public class ToxSingleton {
                     }
                     if (result == -1) {
                         Log.d("sendFileDataTask", "toxFileSendData failed");
-                        break;
+                        try {
+                            jTox.doTox();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        SystemClock.sleep(50);
+                        i = i - chunkSize;
+                        try {
+                            buf.reset();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 if (i > bytes.length) {
@@ -262,20 +272,13 @@ public class ToxSingleton {
                     Log.d("toxFileSendControl", "FINISHED");
                     jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                     AntoxDB db = new AntoxDB(context);
-                    db.clearFileNumber(key, fileNumber);
                     db.close();
                     return true;
                 } catch (Exception e) {
                     Log.d("toxFileSendControl error", e.toString());
                 }
             } else {
-                try {
-                    jTox.doTox();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                SystemClock.sleep(50);
-                return sendFileDataRecursion(key, fileNumber, i, context);
+                return false;
             }
         }
         return false;
