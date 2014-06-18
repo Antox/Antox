@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -19,6 +20,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
@@ -184,6 +187,71 @@ public class ToxSingleton {
                 AntoxDB antoxDB = new AntoxDB(context);
                 antoxDB.addFileTransfer(key, path, fileNumber, true);
                 antoxDB.close();
+            }
+        }
+    }
+
+    public void fileSendRequest(String key, int fileNumber, String fileName, long fileSize, Context context) {
+        Log.d("fileSendRequest","");
+        AntoxDB antoxDB = new AntoxDB(context);
+        antoxDB.addFileTransfer(key, fileName, fileNumber, false);
+        antoxDB.close();
+        acceptFile(key, fileNumber, context);
+    }
+
+    public void acceptFile(String key, int fileNumber, Context context) {
+        /*
+        AntoxDB antoxDB = new AntoxDB(context);
+        String fileName = antoxDB.getFilePath(key, fileNumber);
+
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+            if (!dirfile.mkdirs()) {
+                Log.e("acceptFile", "Directory not created");
+            }
+            File file = new File(dirfile.getPath(), fileName);
+            antoxDB.setFilePath(key, fileNumber, file.getPath());
+        }
+        antoxDB.close();
+        */
+        try {
+            jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
+        AntoxDB antoxDB = new AntoxDB(context);
+        String fileName = antoxDB.getFilePath(key, fileNumber);
+        antoxDB.close();
+
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+            if (!dirfile.mkdirs()) {
+                Log.e("acceptFile", "Directory not created");
+            }
+            File file = new File(dirfile.getPath(), fileName);
+            FileOutputStream output = null;
+            try {
+                output = new FileOutputStream(file, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                output.write(data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    output.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

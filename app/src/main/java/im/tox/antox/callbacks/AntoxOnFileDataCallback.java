@@ -18,5 +18,6 @@ public class AntoxOnFileDataCallback implements OnFileDataCallback<AntoxFriend> 
 
     public void execute(AntoxFriend friend, int filenumber, byte[] data) {
         Log.d(TAG, "execute");
+        toxSingleton.receiveFileData(friend.getId(), filenumber, data, ctx);
     }
 }

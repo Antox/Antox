@@ -11,6 +11,7 @@ public final class Constants {
     public static final String BROADCAST_ACTION = "im.tox.antox.BROADCAST";
     public static final String SWITCH_TO_FRIEND = "im.tox.antox.SWITCH_TO_FRIEND";
     public static final String UPDATE = "im.tox.antox.UPDATE";
+    public static final String DOWNLOAD_DIRECTORY = "Tox received files";
 
     //All DB Constants
     public static final String DATABASE_NAME = "antoxdb";

@@ -18,5 +18,6 @@ public class AntoxOnFileSendRequestCallback implements OnFileSendRequestCallback
 
     public void execute(AntoxFriend friend, int filenumber, long filesize, byte[] filename) {
         Log.d(TAG, "execute");
+        toxSingleton.fileSendRequest(friend.getId(), filenumber, new String(filename), filesize, ctx);
     }
 }
