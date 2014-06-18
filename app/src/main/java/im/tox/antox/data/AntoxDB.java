@@ -217,6 +217,13 @@ public class AntoxDB extends SQLiteOpenHelper {
         return path;
     }
 
+    public String setFilePath(String key, int fileNumber, String path) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET message = '" + path + "' WHERE tox_key = '" + key + "' AND is_file == 1 AND message_id == " +
+                fileNumber;
+        db.execSQL(query);
+        return path;
+    }
     public void clearFileNumbers() {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "UPDATE messages SET message_id = -1 WHERE is_file == 1";
