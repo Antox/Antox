@@ -231,6 +231,12 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void clearFileNumber(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET message_id = -1 WHERE is_file == 1 AND message_id == " + fileNumber;
+        db.execSQL(query);
+        db.close();
+    }
     public boolean isKeyInFriends(String key){
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery = "SELECT count(*) FROM friends WHERE tox_key == '" + key + "'";
