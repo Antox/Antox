@@ -39,14 +39,11 @@ public class AntoxDB extends SQLiteOpenHelper {
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
             "message_id integer, tox_key text, message text, is_outgoing boolean, " +
             "has_been_received boolean, has_been_read boolean, successfully_sent boolean, " +
+            "is_file boolean, progress integer, " +
             "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))";
 
     public String CREATE_TABLE_FRIEND_REQUESTS = "CREATE TABLE IF NOT EXISTS friend_requests" +
             " ( _id integer primary key, tox_key text, message text)";
-
-    public String CREATE_TABLE_FILE_TRANSFERS = "CREATE TABLE IF NOT EXISTS file_transfers" +
-            " ( _id integer primary key, tox_key text, file_number integer, path text, " +
-            "FOREIGN KEY (tox_key) REFERENCES friends(tox_key))";
 
     public AntoxDB(Context ctx) {
         super(ctx, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
@@ -57,7 +54,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FRIENDS);
         db.execSQL(CREATE_TABLE_FRIEND_REQUESTS);
         db.execSQL(CREATE_TABLE_MESSAGES);
-        db.execSQL(CREATE_TABLE_FILE_TRANSFERS);
     }
 
     @Override
@@ -92,7 +88,10 @@ public class AntoxDB extends SQLiteOpenHelper {
                 onCreate(db);
                 break;
             case 7:
-                db.execSQL(CREATE_TABLE_FILE_TRANSFERS);
+                db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN is_file boolean");
+                db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET is_file=0");
+                db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN progress integer");
+                db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET progress=0");
                 break;
         }
     }
@@ -141,13 +140,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addFileTransfer(String key, String path, int fileNumber) {
+    public void addFileTransfer(String key, String path, int fileNumber, boolean is_outgoing) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
-        values.put("path", path);
-        values.put("file_number", fileNumber);
-        db.insert("file_transfers", null, values);
+        values.put(Constants.COLUMN_NAME_MESSAGE, path);
+        values.put(Constants.COLUMN_NAME_MESSAGE_ID, fileNumber);
+        values.put(Constants.COLUMN_NAME_IS_OUTGOING, is_outgoing);
+        values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false);
+        values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
+        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
+        values.put("is_file", true);
+        values.put("progress", 0);
+        db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
 
@@ -170,6 +175,8 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
+        values.put("is_file", false);
+        values.put("progress", 0);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
@@ -198,7 +205,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     public String getFilePath(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         String path = "";
-        String selectQuery = "SELECT path FROM file_transfers WHERE tox_key = '" + key + "' AND file_number == " +
+        String selectQuery = "SELECT message FROM messages WHERE tox_key = '" + key + "' AND is_file == 1 AND message_id == " +
                 fileNumber;
         Cursor cursor = db.rawQuery(selectQuery, null);
         Log.d("getFilePath count: ", Integer.toString(cursor.getCount()));
@@ -212,17 +219,11 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void clearFileNumbers() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE file_transfers SET file_number = -1";
+        String query = "UPDATE messages SET message_id = -1 WHERE is_file == 1";
         db.execSQL(query);
         db.close();
     }
 
-    public void clearFileNumber(String key, int number) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE file_transfers SET file_number = -1 WHERE tox_key == '" + key + "' AND file_number = " + number;
-        db.execSQL(query);
-        db.close();
-    }
     public boolean isKeyInFriends(String key){
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery = "SELECT count(*) FROM friends WHERE tox_key == '" + key + "'";
@@ -265,7 +266,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
-        if (key == "") {
+        if (key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
@@ -275,14 +276,16 @@ public class AntoxDB extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 int m_id = cursor.getInt(0);
+                Timestamp time = Timestamp.valueOf(cursor.getString(1));
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
                 boolean outgoing = cursor.getInt(5)>0;
                 boolean received = cursor.getInt(6)>0;
                 boolean read = cursor.getInt(7)>0;
                 boolean sent = cursor.getInt(8)>0;
-                Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
+                boolean isFile = cursor.getInt(9)>0;
+                int progress = cursor.getInt(10);
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress));
             } while (cursor.moveToNext());
         }
 
@@ -332,7 +335,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     public ArrayList<Message> getUnsentMessageList() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0 ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0 AND is_file =0 ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -346,7 +349,9 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean read = cursor.getInt(7)>0;
                 boolean sent = cursor.getInt(8)>0;
                 Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
+                boolean isFile = cursor.getInt(9)>0;
+                int progress = cursor.getInt(10);
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress));
             } while (cursor.moveToNext());
         }
 
