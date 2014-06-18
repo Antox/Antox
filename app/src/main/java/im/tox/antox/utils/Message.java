@@ -14,12 +14,14 @@ public class Message {
     public boolean has_been_read;
     public boolean successfully_sent;
     public Timestamp timestamp;
+    public boolean is_file;
+    public int progress;
 
     public Message() {
         super();
     }
 
-    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time) {
+    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog) {
         super();
         this.message_id = message_id;
         this.key = k;
@@ -29,6 +31,8 @@ public class Message {
         this.has_been_read = read;
         this.successfully_sent = sent;
         this.timestamp = time;
+        this.is_file = file;
+        this.progress = prog;
     }
 
 }
