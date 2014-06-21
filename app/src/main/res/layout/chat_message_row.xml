@@ -72,6 +72,13 @@
                     android:text="Afd"
                     android:textSize="@dimen/text_smallish"
                     android:textColor="@android:color/black" />
+                <ProgressBar
+                    android:id="@+id/file_transfer_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:max="100"
+                    android:progress="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
             </LinearLayout>
             </LinearLayout>
                 <LinearLayout

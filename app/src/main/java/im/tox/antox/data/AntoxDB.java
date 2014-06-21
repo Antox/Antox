@@ -133,7 +133,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addFileTransfer(String key, String path, int fileNumber, boolean is_outgoing) {
+    public void addFileTransfer(String key, String path, int fileNumber, boolean is_outgoing, int size) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
@@ -145,6 +145,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
         values.put("is_file", true);
         values.put("progress", 0);
+        values.put("size", size);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
@@ -227,6 +228,18 @@ public class AntoxDB extends SQLiteOpenHelper {
     public void clearFileNumber(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "UPDATE messages SET message_id = -1 WHERE is_file == 1 AND message_id == " + fileNumber;
+        db.execSQL(query);
+        db.close();
+    }
+    public void incrementProgress(String key, int fileNumber, int progress) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET progress=progress + " + progress + " WHERE is_file == 1 AND message_id == " + fileNumber;
+        db.execSQL(query);
+        db.close();
+    }
+    public void fileFinished(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET progress=size WHERE is_file == 1 AND message_id == " + fileNumber;
         db.execSQL(query);
         db.close();
     }
