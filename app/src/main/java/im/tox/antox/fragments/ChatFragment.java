@@ -2,13 +2,10 @@ package im.tox.antox.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,23 +13,16 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
 import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.ChatMessagesAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -56,7 +46,6 @@ public class ChatFragment extends Fragment {
     private static String TAG = "im.tox.antox.fragments.ChatFragment";
     public static String ARG_CONTACT_NUMBER = "contact_number";
     private ListView chatListView;
-    private int counter = 0;
 
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
@@ -142,7 +131,17 @@ public class ChatFragment extends Fragment {
                                 if (friend != null) {
                                     boolean sendingSucceeded = true;
                                     try {
-                                        toxSingleton.jTox.sendMessage(friend, msg, id);
+                                        // Max message length in tox is 1368 bytes
+                                        int numOfMessages = msg.length()/1368;
+
+                                        if(numOfMessages > 1) {
+                                            for(int i = 0; i < numOfMessages; i++) {
+                                                toxSingleton.jTox.sendMessage(friend, msg.substring(1368*i, (1368*i)+1368), id);
+                                            }
+                                        } else {
+                                            toxSingleton.jTox.sendMessage(friend, msg, id);
+                                        }
+
                                     } catch (ToxException e) {
                                         Log.d(TAG, e.toString());
                                         e.printStackTrace();
