@@ -101,6 +101,9 @@ public class ChatFragment extends Fragment {
             chatName.setText(friend[1]);
         else
             chatName.setText(friend[0]);
+
+        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+        statusText.setText(friend[2]);
     }
 
     @Override
