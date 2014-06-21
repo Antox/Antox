@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -143,7 +145,6 @@ public class ContactsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contacts, container, false);
         contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
         contactsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
 
         contactsListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -3,6 +3,51 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="@color/blue">
+        
+            <TextView
+                android:id="@+id/chatActiveName"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:contentDescription="Name of active friend"
+                android:textColor="@color/white_absolute"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="2"/>
+
+            <ImageButton
+                android:id="@+id/callFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:contentDescription="Voice Call Friend"
+                android:onClick="onClickVoiceCallFriend"
+                android:src="@drawable/ic_action_call"
+                android:layout_marginRight="20dp"/>
+
+            <ImageButton
+                android:id="@+id/videoFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:contentDescription="Video Call Friend"
+                android:onClick="onClickVideoCallFriend"
+                android:src="@drawable/ic_action_video"
+                android:layout_marginRight="10sp"/>
+        
+    </LinearLayout>
+    
     <ListView
         android:id="@+id/chatMessages"
         android:layout_width="match_parent"

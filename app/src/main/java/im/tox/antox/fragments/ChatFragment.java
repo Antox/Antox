@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,7 +62,6 @@ public class ChatFragment extends Fragment {
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
 
-
     public ChatFragment() {
     }
 
@@ -88,6 +88,16 @@ public class ChatFragment extends Fragment {
                 updateChat(messages);
             }
         });
+
+        // There should be a way to do this without accessing the db
+        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+        String[] friend = db.getFriendDetails(activeKey);
+
+        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+        if(!friend[1].equals(""))
+            chatName.setText(friend[1]);
+        else
+            chatName.setText(friend[0]);
     }
 
     @Override

@@ -26,9 +26,6 @@ import im.tox.jtoxcore.ToxUserStatus;
  * Created by Aagam Shah on 7/3/14.
  */
 public class AntoxDB extends SQLiteOpenHelper {
-
-    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
-
     // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
     // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends" +
@@ -562,9 +559,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                String name = cursor.getString(2);
-                String note = cursor.getString(4);
-                String alias = cursor.getString(5);
+                String name = cursor.getString(1);
+                String note = cursor.getString(3);
+                String alias = cursor.getString(4);
 
                 if(name == null)
                     name = "";
