@@ -132,7 +132,8 @@ public class ChatFragment extends Fragment {
                                     boolean sendingSucceeded = true;
                                     try {
                                         // Max message length in tox is 1368 bytes
-                                        int numOfMessages = msg.length()/1368;
+                                        final byte[] utf8Bytes = msg.getBytes("UTF-8");
+                                        int numOfMessages = utf8Bytes.length/1368;
 
                                         if(numOfMessages > 1) {
                                             for(int i = 0; i < numOfMessages; i++) {
