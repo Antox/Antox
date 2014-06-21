@@ -591,7 +591,8 @@ public class ToxSingleton {
         /* If connected to internet, download nodes */
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
-                new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
+                if(DhtNode.ipv4.size() == 0)
+                    new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
                 /* Try and bootstrap to online nodes*/
                 while (DhtNode.connected == false && networkInfo.isConnected()) {
                     try {

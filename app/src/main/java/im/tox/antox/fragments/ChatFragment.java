@@ -13,7 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,6 +225,30 @@ public class ChatFragment extends Fragment {
         chatListView.setAdapter(adapter);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
+        messageBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                boolean isTyping;
+                if(i3 > 0) {
+                    isTyping = true;
+                } else {
+                    isTyping = false;
+                }
+                try {
+                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), isTyping);
+                } catch (ToxException ex) {
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -234,6 +261,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                try {
+                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), false);
+                } catch (ToxException ex) {
+
+                }
             }
         });
         View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
