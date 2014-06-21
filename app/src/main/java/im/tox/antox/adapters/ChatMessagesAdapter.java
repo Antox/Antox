@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.utils.ChatMessages;
+import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.PrettyTimestamp;
 
 public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
@@ -51,13 +52,27 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.time = (TextView) row.findViewById(R.id.message_text_date);
             holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
             holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
+            holder.title = (TextView) row.findViewById(R.id.message_title);
             row.setTag(holder);
         } else {
             holder = (ChatMessagesHolder) row.getTag();
         }
 
         ChatMessages chatMessages = data.get(position);
-        holder.message.setText(chatMessages.message);
+        if (!messages.isFile) {
+            holder.title.setVisibility(View.GONE);
+            holder.message.setText(chatMessages.message);
+        } else {
+            holder.title.setVisibility(View.VISIBLE);
+            holder.title.setText(R.string.chat_file_transfer);
+            if (messages.IsMine()) {
+                String[] split = chatMessages.message.split("/");
+                holder.message.setText(split[split.length-1]);
+            } else {
+                holder.message.setText(chatMessages.message);
+            }
+        }
+
         holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
 
         if (messages.IsMine()) {
@@ -68,7 +83,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.row.setGravity(Gravity.RIGHT);
             holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
             holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
-            if (messages.sent) {
+            if (messages.sent && !messages.isFile) {
                 holder.sent.setVisibility(View.VISIBLE);
                 if (messages.received) {
                     holder.sent.setVisibility(View.GONE);
@@ -103,6 +118,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         TextView time;
         ImageView sent;
         ImageView received;
+        TextView title;
     }
 
 }
