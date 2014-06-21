@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
             holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
             holder.title = (TextView) row.findViewById(R.id.message_title);
+            holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
             row.setTag(holder);
         } else {
             holder = (ChatMessagesHolder) row.getTag();
@@ -62,9 +64,13 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         if (!messages.isFile) {
             holder.title.setVisibility(View.GONE);
             holder.message.setText(chatMessages.message);
+            holder.progress.setVisibility(View.GONE);
         } else {
             holder.title.setVisibility(View.VISIBLE);
             holder.title.setText(R.string.chat_file_transfer);
+            holder.progress.setVisibility(View.VISIBLE);
+            holder.progress.setMax(messages.size);
+            holder.progress.setProgress(messages.progress);
             if (messages.IsMine()) {
                 String[] split = chatMessages.message.split("/");
                 holder.message.setText(split[split.length-1]);
@@ -119,6 +125,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         ImageView sent;
         ImageView received;
         TextView title;
+        ProgressBar progress;
     }
 
 }

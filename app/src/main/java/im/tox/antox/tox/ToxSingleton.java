@@ -185,7 +185,7 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, true);
+                antoxDB.addFileTransfer(key, path, fileNumber, true, (int) file.length());
                 antoxDB.close();
             }
         }
@@ -194,7 +194,7 @@ public class ToxSingleton {
     public void fileSendRequest(String key, int fileNumber, String fileName, long fileSize, Context context) {
         Log.d("fileSendRequest, fileNumber: ",Integer.toString(fileNumber));
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileName, fileNumber, false);
+        antoxDB.addFileTransfer(key, fileName, fileNumber, false, (int) fileSize);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
     }
@@ -226,7 +226,6 @@ public class ToxSingleton {
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
         AntoxDB antoxDB = new AntoxDB(context);
         String fileName = antoxDB.getFilePath(key, fileNumber);
-        antoxDB.close();
 
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -247,6 +246,9 @@ public class ToxSingleton {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                //antoxDB.incrementProgress(key, fileNumber, data.length);
+                //updatedMessagesSubject.onNext(true);
+                antoxDB.close();
                 try {
                     output.close();
                 } catch (Exception e) {
@@ -258,8 +260,10 @@ public class ToxSingleton {
 
     public void fileFinished(String key, int fileNumber, Context context) {
         AntoxDB db = new AntoxDB(context);
+        db.fileFinished(key, fileNumber);
         db.clearFileNumber(key, fileNumber);
         db.close();
+        updatedMessagesSubject.onNext(true);
     }
 
     public void sendFileData(final String key, final int fileNumber, final int startPosition, final Context context) {
@@ -348,8 +352,7 @@ public class ToxSingleton {
                 try {
                     Log.d("toxFileSendControl", "FINISHED");
                     jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
-                    AntoxDB db = new AntoxDB(context);
-                    db.close();
+                    fileFinished(key, fileNumber, context);
                     return true;
                 } catch (Exception e) {
                     Log.d("toxFileSendControl error", e.toString());
