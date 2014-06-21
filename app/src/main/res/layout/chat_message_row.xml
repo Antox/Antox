@@ -59,6 +59,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/message_title"
+                    android:text="Title"
+                    android:textSize="@dimen/text_smallish"
+                    android:textColor="@color/gray_darker"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:linksClickable="true"
                     android:autoLink="web|phone|email"
                     android:id="@+id/message_text"

@@ -36,7 +36,7 @@ public class AntoxDB extends SQLiteOpenHelper {
             " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
             "message_id integer, tox_key text, message text, is_outgoing boolean, " +
             "has_been_received boolean, has_been_read boolean, successfully_sent boolean, " +
-            "is_file boolean, progress integer, " +
+            "is_file boolean, progress integer, size integer, " +
             "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))";
 
     public String CREATE_TABLE_FRIEND_REQUESTS = "CREATE TABLE IF NOT EXISTS friend_requests" +
@@ -58,24 +58,19 @@ public class AntoxDB extends SQLiteOpenHelper {
         switch(oldVersion) {
             case 1:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN has_been_read boolean");
-                break;
             case 2:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN successfully_sent boolean");
-                break;
             case 3:
                 //There are some possibilities when in version 3 there is already the alis column
                 if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ALIAS)) {
                     db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN alias text");
-                    break;
                 }
             case 4:
                 if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ISBLOCKED)) {
                     db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
-                    break;
                 }
             case 5:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN usergroup text");
-                break;
 
             case 6:
                 /* Just drop all tables and recreate them - lazy and unfriendly but this is alpha */
@@ -83,13 +78,14 @@ public class AntoxDB extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS);
                 db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST);
                 onCreate(db);
-                break;
             case 7:
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN is_file boolean");
                 db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET is_file=0");
                 db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN progress integer");
                 db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET progress=0");
-                break;
+            case 8:
+                db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN size integer");
+                db.execSQL("UPDATE " + Constants.TABLE_CHAT_LOGS + " SET size=0");
         }
     }
 
@@ -295,7 +291,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean sent = cursor.getInt(8)>0;
                 boolean isFile = cursor.getInt(9)>0;
                 int progress = cursor.getInt(10);
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress));
+                int size = cursor.getInt(11);
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
             } while (cursor.moveToNext());
         }
 
@@ -361,7 +358,8 @@ public class AntoxDB extends SQLiteOpenHelper {
                 Timestamp time = Timestamp.valueOf(cursor.getString(1));
                 boolean isFile = cursor.getInt(9)>0;
                 int progress = cursor.getInt(10);
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress));
+                int size = cursor.getInt(11);
+                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
             } while (cursor.moveToNext());
         }
 

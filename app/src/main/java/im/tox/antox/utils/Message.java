@@ -16,12 +16,13 @@ public class Message {
     public Timestamp timestamp;
     public boolean is_file;
     public int progress;
+    public int size;
 
     public Message() {
         super();
     }
 
-    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog) {
+    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog, int size) {
         super();
         this.message_id = message_id;
         this.key = k;
@@ -33,6 +34,7 @@ public class Message {
         this.timestamp = time;
         this.is_file = file;
         this.progress = prog;
+        this.size = size;
     }
 
 }
