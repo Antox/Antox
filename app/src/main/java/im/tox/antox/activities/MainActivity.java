@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.Locale;
@@ -141,12 +142,16 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
 
+            //Update lists
+            toxSingleton.updateFriendsList(this);
+            toxSingleton.updateLastMessageMap(this);
+            toxSingleton.updateUnreadCountMap(this);
+
             AntoxDB db = new AntoxDB(getApplicationContext());
             db.clearFileNumbers();
             db.close();
 
             updateLeftPane();
-
 
             onNewIntent(getIntent());
         }
@@ -161,6 +166,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onClickAddFriend(View v) {
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
+    }
+
+    public void onClickVoiceCallFriend(View v) {
+
+    }
+
+    public void onClickVideoCallFriend(View v) {
+
     }
 
     @Override
@@ -264,15 +277,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         }
     }
 
-    private void restartActivity() {
-        Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        startActivity(intent);
-    }
-
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
-
         @Override
         public void onPanelClosed(View view) {
             toxSingleton.rightPaneOpenSubject.onNext(true);
@@ -281,14 +286,11 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         @Override
         public void onPanelOpened(View view) {
             toxSingleton.rightPaneOpenSubject.onNext(false);
-
-            supportInvalidateOptionsMenu();
         }
 
         @Override
         public void onPanelSlide(View view, float arg1) {
         }
-
     }
 
     /* Needed for Tox ID dialog in settings fragment */
