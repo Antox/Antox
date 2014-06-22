@@ -15,7 +15,7 @@ public final class Constants {
 
     //All DB Constants
     public static final String DATABASE_NAME = "antoxdb";
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 1;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "messages";
     public static final String TABLE_FRIEND_REQUEST = "friend_requests";
@@ -26,7 +26,6 @@ public final class Constants {
     public static final String COLUMN_NAME_NOTE ="note";
     public static final String COLUMN_NAME_STATUS ="status";
     public static final String COLUMN_NAME_MESSAGE_ID ="message_id";
-    public static final String COLUMN_NAME_IS_OUTGOING ="is_outgoing";
     public static final String COLUMN_NAME_HAS_BEEN_RECEIVED ="has_been_received";
     public static final String COLUMN_NAME_HAS_BEEN_READ ="has_been_read";
     public static final String COLUMN_NAME_SUCCESSFULLY_SENT ="successfully_sent";
@@ -40,4 +39,10 @@ public final class Constants {
 
     //imagepicker
     public static final int IMAGE_RESULT = 0;
+
+    // Message Types
+    public static final int MESSAGE_TYPE_OWN = 1;
+    public static final int MESSAGE_TYPE_FRIEND = 2;
+    public static final int MESSAGE_TYPE_FILE_TRANSFER = 3;
+    public static final int MESSAGE_TYPE_ACTION = 4;
 }

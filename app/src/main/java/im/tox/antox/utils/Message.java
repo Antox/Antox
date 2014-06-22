@@ -10,33 +10,30 @@ public class Message {
     public int id;
     public String key;
     public String message;
-    public boolean is_outgoing;
     public boolean has_been_received;
     public boolean has_been_read;
     public boolean successfully_sent;
     public Timestamp timestamp;
-    public boolean is_file;
     public int progress;
     public int size;
+    public int type;
 
     public Message() {
         super();
     }
 
-    public Message(int id, int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog, int size) {
+    public Message(int id, int message_id, String k, String m, boolean received, boolean read, boolean sent, Timestamp time, int prog, int size, int type) {
         super();
         this.id = id;
         this.message_id = message_id;
         this.key = k;
         this.message = m;
-        this.is_outgoing = outgoing;
         this.has_been_received = received;
         this.has_been_read = read;
         this.successfully_sent = sent;
-        this.timestamp = time;
-        this.is_file = file;
         this.progress = prog;
         this.size = size;
+        this.type = type;
     }
 
 }

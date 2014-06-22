@@ -186,7 +186,7 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, true, (int) file.length());
+                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length());
                 antoxDB.close();
             }
         }
@@ -195,7 +195,7 @@ public class ToxSingleton {
     public void fileSendRequest(String key, int fileNumber, String fileName, long fileSize, Context context) {
         Log.d("fileSendRequest, fileNumber: ",Integer.toString(fileNumber));
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileName, fileNumber, false, (int) fileSize);
+        antoxDB.addFileTransfer(key, fileName, fileNumber, (int) fileSize);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
     }
