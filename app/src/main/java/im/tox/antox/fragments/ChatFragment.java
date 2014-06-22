@@ -146,7 +146,9 @@ public class ChatFragment extends Fragment {
 
                                                 if(msb == 0) { // Single byte char
 
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368), id);
+                                                    int end = i*1368 > msg.length() ? msg.length() : i*1368;
+
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, end), id);
 
                                                 } else { // Multi-byte char
 
