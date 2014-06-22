@@ -138,10 +138,31 @@ public class ChatFragment extends Fragment {
                                         final byte[] utf8Bytes = msg.getBytes("UTF-8");
                                         int numOfMessages = utf8Bytes.length/1368;
 
-                                        if(numOfMessages > 1) {
-                                            for(int i = 0; i < numOfMessages; i++) {
-                                                toxSingleton.jTox.sendMessage(friend, msg.substring(1368*i, (1368*i)+1368), id);
+                                        if(numOfMessages > 0) {
+
+                                            final int OneByte = 0xFFFFFF80;
+                                            final int TwoByte = 0xFFFFF800;
+                                            final int ThreeByte = 0xFFFF0000;
+
+                                            int total = 0;
+                                            int previous = 0;
+
+                                            for(int i = 0; i < msg.length(); i++) {
+                                                if((msg.charAt(i) & OneByte) == 0)
+                                                    total += 1;
+                                                else if((msg.charAt(i) & TwoByte) == 0)
+                                                    total += 2;
+                                                else if((msg.charAt(i) & ThreeByte) == 0)
+                                                    total += 3;
+                                                else
+                                                    total += 4;
+
+                                                if(total >= 1368) {
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i - 1), id);
+                                                    previous = i;
+                                                }
                                             }
+
                                         } else {
                                             toxSingleton.jTox.sendMessage(friend, msg, id);
                                         }
@@ -299,4 +320,6 @@ public class ChatFragment extends Fragment {
         });
         return rootView;
     }
+
+
 }
