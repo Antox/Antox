@@ -168,7 +168,7 @@ public class ChatFragment extends Fragment {
         if (messages.size() >= 0) {
             adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
+                adapter.data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).is_file, messages.get(i).progress, messages.get(i).size));
             }
             Log.d("ChatFragment", "Updating chat");
             adapter.notifyDataSetChanged();

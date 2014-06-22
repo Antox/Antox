@@ -59,12 +59,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/message_title"
+                    android:text="Title"
+                    android:textSize="@dimen/text_smallish"
+                    android:textColor="@color/gray_darker"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:linksClickable="true"
                     android:autoLink="web|phone|email"
                     android:id="@+id/message_text"
                     android:text="Afd"
                     android:textSize="@dimen/text_smallish"
                     android:textColor="@android:color/black" />
+                <ProgressBar
+                    android:id="@+id/file_transfer_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:max="100"
+                    android:progress="50"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
             </LinearLayout>
             </LinearLayout>
                 <LinearLayout
