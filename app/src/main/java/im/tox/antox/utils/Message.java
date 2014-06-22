@@ -34,6 +34,7 @@ public class Message {
         this.progress = prog;
         this.size = size;
         this.type = type;
+        this.timestamp = time;
     }
 
 }

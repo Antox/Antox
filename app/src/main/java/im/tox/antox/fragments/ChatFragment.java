@@ -171,11 +171,6 @@ public class ChatFragment extends Fragment {
         if (messages.size() >= 0) {
             adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                // TODO: Hagrid please fix
-                Calendar calendar = Calendar.getInstance();
-                java.util.Date now = calendar.getTime();
-                java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-                messages.get(i).timestamp = currentTimestamp;
                 adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).progress, messages.get(i).size, messages.get(i).type));
             }
             Log.d("ChatFragment", "Updating chat");
