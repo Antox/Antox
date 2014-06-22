@@ -160,6 +160,7 @@ public class ChatFragment extends Fragment {
                                                 if(total >= 1368) {
                                                     toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i - 1), id);
                                                     previous = i;
+                                                    total = 0;
                                                 }
                                             }
 
