@@ -7,6 +7,7 @@ import java.sql.Timestamp;
  */
 public class Message {
     public int message_id;
+    public int id;
     public String key;
     public String message;
     public boolean is_outgoing;
@@ -22,8 +23,9 @@ public class Message {
         super();
     }
 
-    public Message(int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog, int size) {
+    public Message(int id, int message_id, String k, String m, boolean outgoing, boolean received, boolean read, boolean sent, Timestamp time, boolean file, int prog, int size) {
         super();
+        this.id = id;
         this.message_id = message_id;
         this.key = k;
         this.message = m;
