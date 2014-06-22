@@ -88,6 +88,7 @@ public class ToxSingleton {
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
     public Observable chatActiveAndKey;
+    public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
@@ -247,7 +248,9 @@ public class ToxSingleton {
                 e.printStackTrace();
             } finally {
                 //antoxDB.incrementProgress(key, fileNumber, data.length);
-                //updatedMessagesSubject.onNext(true);
+                updatedMessagesSubject.onNext(true);
+                int id = antoxDB.getFileId(key, fileNumber);
+                incrementProgress(id, data.length);
                 antoxDB.close();
                 try {
                     output.close();
@@ -258,12 +261,31 @@ public class ToxSingleton {
         }
     }
 
+    public void incrementProgress(int id, int length) {
+        Integer idObject = id;
+        if (id != -1) {
+            if (!progressMap.containsKey(idObject)) {
+                progressMap.put(idObject, length);
+            } else {
+                Integer current = progressMap.get(idObject);
+                progressMap.put(idObject, current+length);
+            }
+        }
+    }
+
     public void fileFinished(String key, int fileNumber, Context context) {
         AntoxDB db = new AntoxDB(context);
         db.fileFinished(key, fileNumber);
-        db.clearFileNumber(key, fileNumber);
         db.close();
         updatedMessagesSubject.onNext(true);
+    }
+
+    public int getProgress(int id) {
+        if (id != -1 && progressMap.containsKey(id)) {
+            return progressMap.get(id);
+        } else {
+            return 0;
+        }
     }
 
     public void sendFileData(final String key, final int fileNumber, final int startPosition, final Context context) {

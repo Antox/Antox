@@ -211,6 +211,20 @@ public class AntoxDB extends SQLiteOpenHelper {
         return path;
     }
 
+    public int getFileId(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int id = -1;
+        String selectQuery = "SELECT _id FROM messages WHERE tox_key = '" + key + "' AND is_file == 1 AND message_id == " +
+                fileNumber;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(0);
+        }
+        cursor.close();
+        db.close();
+        return id;
+    }
+
     public String setFilePath(String key, int fileNumber, String path) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "UPDATE messages SET message = '" + path + "' WHERE tox_key = '" + key + "' AND is_file == 1 AND message_id == " +
@@ -239,7 +253,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     }
     public void fileFinished(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE messages SET progress=size WHERE is_file == 1 AND message_id == " + fileNumber;
+        String query = "UPDATE messages SET progress=size AND " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 AND message_id = -1 WHERE is_file == 1 AND message_id == " + fileNumber;
         db.execSQL(query);
         db.close();
     }
@@ -294,8 +308,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(0);
+                int id = cursor.getInt(0);
                 Timestamp time = Timestamp.valueOf(cursor.getString(1));
+                int message_id = cursor.getInt(0);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
                 boolean outgoing = cursor.getInt(5)>0;
@@ -305,7 +320,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean isFile = cursor.getInt(9)>0;
                 int progress = cursor.getInt(10);
                 int size = cursor.getInt(11);
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
+                messageList.add(new Message(id, message_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
             } while (cursor.moveToNext());
         }
 
@@ -360,6 +375,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(0);
                 int m_id = cursor.getInt(2);
                 Log.d("UNSENT MESAGE ID: ", "" + m_id);
                 String k = cursor.getString(3);
@@ -372,7 +388,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean isFile = cursor.getInt(9)>0;
                 int progress = cursor.getInt(10);
                 int size = cursor.getInt(11);
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
+                messageList.add(new Message(id, m_id, k, m, outgoing, received, read, sent, time, isFile, progress, size));
             } while (cursor.moveToNext());
         }
 
