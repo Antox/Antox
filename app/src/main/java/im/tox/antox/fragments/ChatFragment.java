@@ -136,32 +136,38 @@ public class ChatFragment extends Fragment {
                                     try {
                                         // Max message length in tox is 1368 bytes
                                         final byte[] utf8Bytes = msg.getBytes("UTF-8");
-                                        int numOfMessages = utf8Bytes.length/1368;
+                                        int numOfMessages = (utf8Bytes.length/1368) + 1;
 
-                                        if(numOfMessages > 0) {
+                                        if(numOfMessages > 1) {
 
-                                            final int OneByte = 0xFFFFFF80;
-                                            final int TwoByte = 0xFFFFF800;
-                                            final int ThreeByte = 0xFFFF0000;
+                                            for(int i = 1; i < numOfMessages - 1; i++) {
 
-                                            int total = 0;
-                                            int previous = 0;
+                                                int msb = (utf8Bytes[i*1368] & 0xff) >> 7;
 
-                                            for(int i = 0; i < msg.length(); i++) {
-                                                if((msg.charAt(i) & OneByte) == 0)
-                                                    total += 1;
-                                                else if((msg.charAt(i) & TwoByte) == 0)
-                                                    total += 2;
-                                                else if((msg.charAt(i) & ThreeByte) == 0)
-                                                    total += 3;
-                                                else
-                                                    total += 4;
+                                                if(msb == 0) { // Single byte char
 
-                                                if(total >= 1368) {
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i - 1), id);
-                                                    previous = i;
-                                                    total = 0;
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368), id);
+
+                                                } else { // Multi-byte char
+
+                                                    boolean found = false;
+                                                    int num = 1;
+
+                                                    while(!found) {
+
+                                                        int ssb = (utf8Bytes[(i*1368) - num] >> 6) & 1;
+
+                                                        if(ssb == 1) { // Found start of word
+                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368-num), id);
+                                                            found = true;
+                                                        } else {
+                                                            num++;
+                                                        }
+
+                                                    }
+
                                                 }
+
                                             }
 
                                         } else {
