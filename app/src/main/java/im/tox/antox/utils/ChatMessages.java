@@ -1,6 +1,7 @@
 package im.tox.antox.utils;
 
 public class ChatMessages {
+    public int id;
     public int message_id;
     public String message;
     public String time;
@@ -16,8 +17,9 @@ public class ChatMessages {
         super();
     }
 
-    public ChatMessages(int message_id,String message, String time, boolean ownMessage, boolean received, boolean sent, boolean isfile, int progress, int size) {
+    public ChatMessages(int id, int message_id,String message, String time, boolean ownMessage, boolean received, boolean sent, boolean isfile, int progress, int size) {
         super();
+        this.id = id;
         this.message_id=message_id;
         this.time = time;
         this.message = message;

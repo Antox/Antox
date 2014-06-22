@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.PrettyTimestamp;
@@ -25,6 +26,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     public ArrayList<ChatMessages> data = null;
     private int density;
     private int paddingscale = 8;
+    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     public ChatMessagesAdapter(Context context, int layoutResourceId,
                                ArrayList<ChatMessages> data) {
@@ -70,7 +72,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.title.setText(R.string.chat_file_transfer);
             holder.progress.setVisibility(View.VISIBLE);
             holder.progress.setMax(messages.size);
-            holder.progress.setProgress(messages.progress);
+            holder.progress.setProgress(toxSingleton.getProgress(messages.id));
             if (messages.IsMine()) {
                 String[] split = chatMessages.message.split("/");
                 holder.message.setText(split[split.length-1]);
