@@ -1,6 +1,7 @@
 package im.tox.antox.utils;
 
 public class ChatMessages {
+    // These should be private
     public int id;
     public int message_id;
     public String message;
@@ -12,23 +13,23 @@ public class ChatMessages {
     public boolean isFile;
     public int progress;
     public int size;
+    public int type;
 
     public ChatMessages() {
         super();
     }
 
-    public ChatMessages(int id, int message_id,String message, String time, boolean ownMessage, boolean received, boolean sent, boolean isfile, int progress, int size) {
+    public ChatMessages(int id, int message_id,String message, String time,boolean received, boolean sent, int progress, int size, int type) {
         super();
         this.id = id;
         this.message_id=message_id;
         this.time = time;
         this.message = message;
-        this.ownMessage = ownMessage;
         this.received = received;
         this.sent = sent;
-        this.isFile = isfile;
         this.progress = progress;
         this.size = size;
+        this.type = type;
     }
 
     public ChatMessages(String message, String time, String friendName) {
@@ -39,6 +40,13 @@ public class ChatMessages {
     }
 
     public boolean IsMine() {
-        return ownMessage;
+        if(type == 1)
+            return true;
+        else
+            return false;
+    }
+
+    public int getType() {
+        return this.type;
     }
 }

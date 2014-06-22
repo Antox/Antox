@@ -38,82 +38,105 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
     }
 
     @Override
+    public int getViewTypeCount() {
+        return 4;
+    }
+
+    // Todo: Use different layout resources for views depending on type case
+    // see: https://stackoverflow.com/questions/3514548/creating-viewholders-for-listviews-with-different-item-layouts
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        int type = data.get(position).getType();
+
         ChatMessages messages = this.getItem(position);
         View row = convertView;
-        ChatMessagesHolder holder = null;
-
-        if (row == null) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            row = inflater.inflate(layoutResourceId, parent, false);
-            holder = new ChatMessagesHolder();
-            holder.message = (TextView) row.findViewById(R.id.message_text);
-            holder.alignment = (LinearLayout) row.findViewById(R.id.message_alignment_box);
-            holder.layout = (LinearLayout) row.findViewById(R.id.message_text_layout);
-            holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
-            holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
-            holder.time = (TextView) row.findViewById(R.id.message_text_date);
-            holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
-            holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
-            holder.title = (TextView) row.findViewById(R.id.message_title);
-            holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
-            row.setTag(holder);
-        } else {
-            holder = (ChatMessagesHolder) row.getTag();
-        }
+        ChatMessagesHolder holder = new ChatMessagesHolder();
 
         ChatMessages chatMessages = data.get(position);
-        if (!messages.isFile) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        row = inflater.inflate(layoutResourceId, parent, false);
+
+        holder.message = (TextView) row.findViewById(R.id.message_text);
+        holder.alignment = (LinearLayout) row.findViewById(R.id.message_alignment_box);
+        holder.layout = (LinearLayout) row.findViewById(R.id.message_text_layout);
+        holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
+        holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
+        holder.time = (TextView) row.findViewById(R.id.message_text_date);
+        holder.sent = (ImageView) row.findViewById(R.id.chat_row_sent);
+        holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
+        holder.title = (TextView) row.findViewById(R.id.message_title);
+        holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
+
+        switch(type) {
+
+            case Constants.MESSAGE_TYPE_OWN:
+
+                holder.alignment.setGravity(Gravity.RIGHT);
+                holder.time.setGravity(Gravity.RIGHT);
+                holder.layout.setGravity(Gravity.RIGHT);
+                holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
+                holder.row.setGravity(Gravity.RIGHT);
+                holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
+                holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
+                if (messages.sent && !messages.isFile) {
+                    holder.sent.setVisibility(View.VISIBLE);
+                    if (messages.received) {
+                        holder.sent.setVisibility(View.GONE);
+                        holder.received.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.received.setVisibility(View.GONE);
+                    }
+                } else {
+                    holder.sent.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.GONE);
+                }
+
+                break;
+
+            case Constants.MESSAGE_TYPE_FRIEND:
+
+                holder.message.setTextColor(context.getResources().getColor(R.color.black));
+                holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
+                holder.background.setPadding(6*density + 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale);
+                holder.alignment.setGravity(Gravity.LEFT);
+                holder.time.setGravity(Gravity.LEFT);
+                holder.layout.setGravity(Gravity.LEFT);
+                holder.row.setGravity(Gravity.LEFT);
+                holder.sent.setVisibility(View.GONE);
+                holder.received.setVisibility(View.GONE);
+
+                break;
+
+            case Constants.MESSAGE_TYPE_FILE_TRANSFER:
+
+                holder.title.setVisibility(View.VISIBLE);
+                holder.title.setText(R.string.chat_file_transfer);
+                holder.progress.setVisibility(View.VISIBLE);
+                holder.progress.setMax(messages.size);
+                holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                if (messages.IsMine()) {
+                    String[] split = chatMessages.message.split("/");
+                    holder.message.setText(split[split.length-1]);
+                } else {
+                    holder.message.setText(chatMessages.message);
+                }
+
+                break;
+
+            case Constants.MESSAGE_TYPE_ACTION:
+                break;
+        }
+
+        if(type != Constants.MESSAGE_TYPE_FILE_TRANSFER) {
             holder.title.setVisibility(View.GONE);
             holder.message.setText(chatMessages.message);
             holder.progress.setVisibility(View.GONE);
-        } else {
-            holder.title.setVisibility(View.VISIBLE);
-            holder.title.setText(R.string.chat_file_transfer);
-            holder.progress.setVisibility(View.VISIBLE);
-            holder.progress.setMax(messages.size);
-            holder.progress.setProgress(toxSingleton.getProgress(messages.id));
-            if (messages.IsMine()) {
-                String[] split = chatMessages.message.split("/");
-                holder.message.setText(split[split.length-1]);
-            } else {
-                holder.message.setText(chatMessages.message);
-            }
         }
 
         holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
 
-        if (messages.IsMine()) {
-            holder.alignment.setGravity(Gravity.RIGHT);
-            holder.time.setGravity(Gravity.RIGHT);
-            holder.layout.setGravity(Gravity.RIGHT);
-            holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
-            holder.row.setGravity(Gravity.RIGHT);
-            holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
-            holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
-            if (messages.sent && !messages.isFile) {
-                holder.sent.setVisibility(View.VISIBLE);
-                if (messages.received) {
-                    holder.sent.setVisibility(View.GONE);
-                    holder.received.setVisibility(View.VISIBLE);
-                } else {
-                    holder.received.setVisibility(View.GONE);
-                }
-            } else {
-                holder.sent.setVisibility(View.GONE);
-                holder.received.setVisibility(View.GONE);
-            }
-        } else {
-            holder.message.setTextColor(context.getResources().getColor(R.color.black));
-            holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
-            holder.background.setPadding(6*density + 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale);
-            holder.alignment.setGravity(Gravity.LEFT);
-            holder.time.setGravity(Gravity.LEFT);
-            holder.layout.setGravity(Gravity.LEFT);
-            holder.row.setGravity(Gravity.LEFT);
-            holder.sent.setVisibility(View.GONE);
-            holder.received.setVisibility(View.GONE);
-        }
         return row;
     }
 
