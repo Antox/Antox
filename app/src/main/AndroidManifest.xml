@@ -30,7 +30,9 @@
         android:theme="@style/CustomActionBarTheme" >
         <service
             android:name="im.tox.antox.tox.ToxDoService"
-            android:exported="false" />
+            android:exported="false"
+
+            android:label="Antox" />
 
         <activity
             android:name="im.tox.antox.activities.MainActivity"
