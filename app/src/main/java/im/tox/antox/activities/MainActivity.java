@@ -123,13 +123,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         getString(R.string.main_not_connected));
             }
 
-            /* If the tox service isn't already running, start it */
-            if (!toxSingleton.isRunning) {
-                /* Start without checking for internet connection in case of LAN usage */
-                Intent startToxIntent = new Intent(getApplicationContext(), ToxDoService.class);
-                startToxIntent.setAction(Constants.START_TOX);
-                getApplicationContext().startService(startToxIntent);
-            }
+            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
+            getApplicationContext().startService(startTox);
 
             pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
             PaneListener paneListener = new PaneListener();

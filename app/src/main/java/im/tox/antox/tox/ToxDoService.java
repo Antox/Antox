@@ -1,19 +1,17 @@
 package im.tox.antox.tox;
 
-import android.app.IntentService;
-import android.content.Context;
+import android.app.Service;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.IBinder;
 import android.util.Log;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import im.tox.antox.utils.Constants;
+
 import im.tox.jtoxcore.ToxException;
 
-public class ToxDoService extends IntentService {
+public class ToxDoService extends Service {
 
     private static final String TAG = "im.tox.antox.tox.ToxDoService";
 
@@ -22,21 +20,28 @@ public class ToxDoService extends IntentService {
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();;
 
     public ToxDoService() {
-        super("ToxDoService");
+        super();
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-
-        if (intent.getAction().equals(Constants.START_TOX)) {
+    public void onCreate() {
+        Thread t = new Thread() {
+            public void run() {
                 toxSingleton.initTox(getApplicationContext());
-                toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
-        } else if (intent.getAction().equals(Constants.STOP_TOX)) {
-            if (toxScheduleTaskExecutor != null) {
-                toxScheduleTaskExecutor.shutdownNow();
             }
-            stopSelf();
-        }
+        };
+        t.start();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int id) {
+        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
+        return START_STICKY;
     }
 
     /* Extend the scheduler to have it restart itself on any exceptions */
