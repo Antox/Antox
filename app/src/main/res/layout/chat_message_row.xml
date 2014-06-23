@@ -24,38 +24,6 @@
             android:paddingRight="8dp"
             android:paddingBottom="4dp"
             android:background="@drawable/chatleft">
-            <LinearLayout
-                android:id="@+id/message_alignment_box"
-                android:orientation="vertical"
-                android:gravity="left"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/message_sent_photo"
-                    android:layout_width="120dp"
-                    android:layout_height="90dp"
-                    android:visibility="gone"
-                />
-                <LinearLayout
-                    android:id="@+id/message_audio_player"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    >
-                    <ImageView
-                        android:id="@+id/message_play_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_action_play"
-                        />
-                    <SeekBar
-                        android:id="@+id/message_audio_bar"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-                </LinearLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,8 +46,48 @@
                     android:max="100"
                     android:progress="50"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
-            </LinearLayout>
+                    android:layout_height="25dp" />
+                <TextView
+                    android:id="@+id/file_transfer_progress_text"
+                    android:text="Finished"
+                    android:textSize="@dimen/text_smallish"
+                    android:textColor="@color/gray_darker"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp" />
+                <FrameLayout
+                    android:id="@+id/message_sent_photo_frame"
+                    android:visibility="gone"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/message_sent_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:visibility="gone"
+                    />
+                </FrameLayout>
+                <LinearLayout
+                    android:id="@+id/message_audio_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    >
+                    <ImageView
+                        android:id="@+id/message_play_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_play"
+                        />
+                    <SeekBar
+                        android:id="@+id/message_audio_bar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
             </LinearLayout>
                 <LinearLayout
                     android:orientation="horizontal"

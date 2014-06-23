@@ -113,7 +113,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addFileTransfer(String key, String path, int fileNumber, int size) {
+    public void addFileTransfer(String key, String path, int fileNumber, int size, boolean sending) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
@@ -122,7 +122,11 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
-        values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
+        if (sending) {
+            values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
+        } else {
+            values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND);
+        }
         values.put("size", size);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
@@ -180,10 +184,10 @@ public class AntoxDB extends SQLiteOpenHelper {
     public String getFilePath(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         String path = "";
-        String selectQuery = "SELECT message FROM messages WHERE tox_key = '" + key + "' AND type == 3 AND message_id == " +
+        String selectQuery = "SELECT message FROM messages WHERE tox_key = '" + key + "' AND (type == 3 OR type == 4) AND message_id == " +
                 fileNumber;
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("getFilePath count: ", Integer.toString(cursor.getCount()));
+        Log.d("getFilePath count: ", Integer.toString(cursor.getCount()) + " filenumber: " + fileNumber);
         if (cursor.moveToFirst()) {
             path = cursor.getString(0);
         }
@@ -195,7 +199,7 @@ public class AntoxDB extends SQLiteOpenHelper {
     public int getFileId(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
         int id = -1;
-        String selectQuery = "SELECT _id FROM messages WHERE tox_key = '" + key + "' AND type == 3 AND message_id == " +
+        String selectQuery = "SELECT _id FROM messages WHERE tox_key = '" + key + "' AND (type == 3 OR type == 4) AND message_id == " +
                 fileNumber;
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -208,21 +212,22 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void clearFileNumbers() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE messages SET message_id = -1 WHERE type == 3";
+        String query = "UPDATE messages SET message_id = -1 WHERE (type == 3 OR type == 4)";
         db.execSQL(query);
         db.close();
     }
 
     public void clearFileNumber(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE messages SET message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
+        String query = "UPDATE messages SET message_id = -1 WHERE (type == 3 OR type == 4) AND message_id == " + fileNumber + " AND tox_key = '" + key + "'";
         db.execSQL(query);
         db.close();
     }
 
     public void fileFinished(String key, int fileNumber) {
+        Log.d("AntoxDB","fileFinished");
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE messages SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 AND message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
+        String query = "UPDATE messages SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1, message_id = -1 WHERE (type == 3 OR type == 4) AND message_id == " + fileNumber + " AND tox_key = '" + key + "'";
         db.execSQL(query);
         db.close();
     }
@@ -443,7 +448,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_ISONLINE, "0");
-        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'",  null);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null);
         db.close();
     }
 
