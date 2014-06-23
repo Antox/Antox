@@ -16,15 +16,16 @@ public class AntoxOnFileControlCallback implements OnFileControlCallback<AntoxFr
     private Context ctx;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
-    public AntoxOnFileControlCallback(Context ctx) { this.ctx = ctx; };
+    public AntoxOnFileControlCallback(Context ctx) { this.ctx = ctx; }
 
     public void execute(AntoxFriend friend, boolean sending, int fileNumber, ToxFileControl control_type, byte[] data) {
-        Log.d(TAG, "execute");
+        Log.d(TAG, "execute, control type: " + control_type.name() + " sending: " + sending);
+        if (control_type.equals(ToxFileControl.TOX_FILECONTROL_FINISHED) && !sending) {
+            Log.d(TAG, "TOX_FILECONTROL_FINISHED");
+            toxSingleton.fileFinished(friend.getId(), fileNumber, ctx);
+        }
         if (control_type.equals(ToxFileControl.TOX_FILECONTROL_ACCEPT) && sending) {
             toxSingleton.sendFileData(friend.getId(), fileNumber, 0, ctx);
-        }
-        if (control_type.equals(ToxFileControl.TOX_FILECONTROL_FINISHED) && !sending) {
-            toxSingleton.fileFinished(friend.getId(), fileNumber, ctx);
         }
     }
 }

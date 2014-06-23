@@ -66,7 +66,6 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         row = inflater.inflate(layoutResourceId, parent, false);
 
         holder.message = (TextView) row.findViewById(R.id.message_text);
-        holder.alignment = (LinearLayout) row.findViewById(R.id.message_alignment_box);
         holder.layout = (LinearLayout) row.findViewById(R.id.message_text_layout);
         holder.row = (LinearLayout) row.findViewById(R.id.message_row_layout);
         holder.background = (LinearLayout) row.findViewById(R.id.message_text_background);
@@ -76,12 +75,15 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.title = (TextView) row.findViewById(R.id.message_title);
         holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
         holder.imageMessage = (ImageView) row.findViewById(R.id.message_sent_photo);
+        holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
+
+        holder.progressText.setVisibility(View.GONE);
+        holder.progress.setVisibility(View.GONE);
 
         switch(type) {
 
             case Constants.MESSAGE_TYPE_OWN:
 
-                holder.alignment.setGravity(Gravity.RIGHT);
                 holder.time.setGravity(Gravity.RIGHT);
                 holder.layout.setGravity(Gravity.RIGHT);
                 holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
@@ -108,7 +110,6 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 holder.message.setTextColor(context.getResources().getColor(R.color.black));
                 holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
                 holder.background.setPadding(6*density + 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale);
-                holder.alignment.setGravity(Gravity.LEFT);
                 holder.time.setGravity(Gravity.LEFT);
                 holder.layout.setGravity(Gravity.LEFT);
                 holder.row.setGravity(Gravity.LEFT);
@@ -121,9 +122,15 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
-                holder.progress.setVisibility(View.VISIBLE);
-                holder.progress.setMax(messages.size);
-                holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                if (!messages.received) {
+                    int progress = toxSingleton.getProgress(messages.id);
+                    holder.progress.setVisibility(View.VISIBLE);
+                    holder.progress.setMax(messages.size);
+                    holder.progress.setProgress(progress);
+                } else {
+                    holder.progressText.setText("Finished");
+                    holder.progressText.setVisibility(View.VISIBLE);
+                }
                 //holder.background.setVisibility(View.INVISIBLE);
                 holder.received.setVisibility(View.INVISIBLE);
                 holder.sent.setVisibility(View.INVISIBLE);
@@ -187,7 +194,6 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         LinearLayout row;
         LinearLayout layout;
         LinearLayout background;
-        LinearLayout alignment;
         TextView message;
         TextView time;
         ImageView sent;
@@ -195,6 +201,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         ImageView imageMessage;
         TextView title;
         ProgressBar progress;
+        TextView progressText;
         //imageMessage.se
     }
 
