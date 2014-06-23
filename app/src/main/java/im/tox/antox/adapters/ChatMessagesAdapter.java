@@ -162,7 +162,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                         holder.progressText.setVisibility(View.VISIBLE);
                     }
                 }
-                boolean isImage = true;
+                boolean isImage = false;
                 if (messages.received || messages.isMine()) {
                     File f = null;
                     f = new File(holder.message.getText().toString());
@@ -177,22 +177,39 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                     Bitmap bmp = null;
                     if (f.exists()) {
                         try {
-                            final File path = f;
-                            final BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inPreferredConfig = Bitmap.Config.RGB_565;
-                            options.inSampleSize = calculateInSampleSize(options, 200, 200);
-                            bmp = BitmapFactory.decodeFile(path.getPath(), options);
-                            holder.imageMessage.setImageBitmap(bmp);
-                            holder.imageMessage.setVisibility(View.VISIBLE);
-                            holder.imageMessageFrame.setVisibility(View.VISIBLE);
-                            holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    Intent i = new Intent();
-                                    i.setAction(android.content.Intent.ACTION_VIEW);
-                                    i.setDataAndType(Uri.fromFile(path), "image/*");
-                                    getContext().startActivity(i);
+                            final File file = f;
+                            final String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
+                            for (String extension : okFileExtensions)
+                            {
+                                if (file.getName().toLowerCase().endsWith(extension))
+                                {
+                                    isImage = true;
                                 }
-                            });
+                            }
+                            if (isImage) {
+                                final BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                                options.inSampleSize = calculateInSampleSize(options, 200, 200);
+                                bmp = BitmapFactory.decodeFile(file.getPath(), options);
+                                if (options.outWidth != -1 && options.outHeight != -1) {
+                                    isImage = true;
+                                } else {
+                                    isImage = false;
+                                }
+                            }
+                            if (isImage) {
+                                holder.imageMessage.setImageBitmap(bmp);
+                                holder.imageMessage.setVisibility(View.VISIBLE);
+                                holder.imageMessageFrame.setVisibility(View.VISIBLE);
+                                holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent i = new Intent();
+                                        i.setAction(android.content.Intent.ACTION_VIEW);
+                                        i.setDataAndType(Uri.fromFile(file), "image/*");
+                                        getContext().startActivity(i);
+                                    }
+                                });
+                            }
                             bmp = null;
                         } catch (Exception e) {
                             e.printStackTrace();
