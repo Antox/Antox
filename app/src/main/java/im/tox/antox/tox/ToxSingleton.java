@@ -379,11 +379,11 @@ public class ToxSingleton {
                             e.printStackTrace();
                         }
                     }
+                    if (i > bytes.length) {
+                        i = bytes.length;
+                    }
+                    setProgress(id, i);
                 }
-                if (i > bytes.length) {
-                    i = bytes.length;
-                }
-                setProgress(id, i);
                 try {
                     buf.close();
                 } catch (Exception e) {
