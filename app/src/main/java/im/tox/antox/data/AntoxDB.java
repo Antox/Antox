@@ -141,7 +141,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addMessage(int message_id, String key, String message, boolean is_outgoing, boolean has_been_received, boolean has_been_read, boolean successfully_sent){
+    public void addMessage(int message_id, String key, String message, boolean has_been_received, boolean has_been_read, boolean successfully_sent, int type){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id);
@@ -150,11 +150,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
-
-        if(is_outgoing)
-            values.put("type", Constants.MESSAGE_TYPE_OWN);
-        else
-            values.put("type", Constants.MESSAGE_TYPE_FRIEND);
+        values.put("type", type);
 
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
