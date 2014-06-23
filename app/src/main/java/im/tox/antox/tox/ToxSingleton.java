@@ -233,6 +233,7 @@ public class ToxSingleton {
         AntoxDB antoxDB = new AntoxDB(context);
         antoxDB.fileTransferStarted(key, fileNumber);
         antoxDB.close();
+        updatedMessagesSubject.onNext(true);
     }
 
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
