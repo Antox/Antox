@@ -6,7 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Bienvenido</string>
     <string name="title_activity_add_friend">Agregar amigo</string>
-
+    <string name="title_activity_friend_profile">Perfil de amigo</string>
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Agregar amigo</string>
 
@@ -21,7 +21,8 @@
     <string name="main_friend_requests">Solicitudes de amistad</string>
     <string name="main_friends">Amigos</string>
     <string name="main_no_internet">No hay conexión al Internet</string>
-    <string name="main_not_connected">No estás conectado al Internet</string>
+    <string name="main_not_connected">No estás conectado al Internet. Sin una conexion a internet
+        Antox tendra una funcionalidad limitada a menos de que lo uses en una red LAN</string>
     <string name="main_node_list_download_error">Error Descargando la Lista de Nodos</string>
 
     <!--  Chat Activity -->
@@ -42,6 +43,20 @@
     <string name="addfriend_optional_title">Extras opcionales</string>
     <string name="dialog_pin">Ingresa el pin de tu amigo</string>
     <string name="addfriend_invalid_pin">Pin invalido</string>
+    <string name="addfriend_no_internet">No hay conexion a la red TOX</string>
+    <string name="addfriend_no_internet_text">No estas conectado a la red Tox, asi que no puedes agregar un amigo por ahora
+        Intenta reiniciar la aplicacion.</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_name">Nombre</string>
+    <string name="friend_profile_nick">Apodo</string>
+    <string name="friend_profile_group">Grupo</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Estado</string>
+    <string name="friend_profile_button">Guardar cambios</string>
+    <string name="friend_profile_updated">El perfil ha sido actualizado</string>
+    <string name="friend_profile_copy">Copiar la Tox ID</string>
+    <string name="friend_profile_copied">Tox ID copiada</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Aceptar</string>
@@ -64,7 +79,7 @@
         Bloquear a este usuario va a eliminarlo de tu lista de amigos y no podrás recibir solicitudes
         de su parte. ¿Estas seguro que deseas continuar?
     </string>
-
+    <string name="toast_succ_move_user">El contacto se ha cambiado exitosamente</string>
     <string name="contacts_actions_on">Acciones para</string>
     <string name="contacts_clear_saved_logs">¿También deseas borrar el historial de mensajes?</string>
 
@@ -74,5 +89,9 @@
     <string name="button_cancel">Cancelar</string>
     <string name="button_yes">Sí</string>
     <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tox_id">Copiar Tox ID al portapapeles</string>
+    <string name="share_with">Compartir con</string>
 
 </resources>
