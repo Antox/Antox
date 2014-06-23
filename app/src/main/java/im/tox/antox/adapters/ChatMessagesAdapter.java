@@ -140,6 +140,30 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                     holder.progress.setVisibility(View.GONE);
                     holder.progressText.setText("Finished");
                     holder.progressText.setVisibility(View.VISIBLE);
+                } else {
+                    if (messages.sent) {
+                        if (messages.message_id != -1) {
+                            holder.progress.setVisibility(View.VISIBLE);
+                            holder.progress.setMax(messages.size);
+                            holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                            holder.progressText.setVisibility(View.GONE);
+                        } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
+                            holder.progress.setVisibility(View.GONE);
+                            holder.progressText.setText("Failed");
+                            holder.progressText.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        holder.progress.setVisibility(View.GONE);
+                        if (messages.isMine()) {
+                            holder.progressText.setText("Sent filesending request");
+                        } else {
+                            holder.progressText.setText("Received filesending request");
+                        }
+                        holder.progressText.setVisibility(View.VISIBLE);
+                    }
+                }
+                boolean isImage = true;
+                if (messages.received || messages.isMine()) {
                     File f = null;
                     f = new File(holder.message.getText().toString());
                     if (f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())) {
@@ -174,13 +198,12 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                             e.printStackTrace();
                         }
                     }
-                } else {
-                    holder.progress.setVisibility(View.VISIBLE);
-                    holder.progress.setMax(messages.size);
-                    holder.progress.setProgress(toxSingleton.getProgress(messages.id));
-                    holder.progressText.setVisibility(View.GONE);
                 }
-
+                if (messages.received && isImage) {
+                    holder.progressText.setVisibility(View.GONE);
+                    holder.title.setVisibility(View.GONE);
+                    holder.message.setVisibility(View.GONE);
+                }
                 break;
 
             case Constants.MESSAGE_TYPE_ACTION:
