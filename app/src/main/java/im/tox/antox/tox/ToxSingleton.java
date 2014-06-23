@@ -261,7 +261,6 @@ public class ToxSingleton {
                 e.printStackTrace();
             } finally {
                 incrementProgress(id, data.length);
-                updatedMessagesSubject.onNext(true);
                 try {
                     output.close();
                 } catch (Exception e) {
@@ -281,6 +280,7 @@ public class ToxSingleton {
                 progressMap.put(idObject, current+length);
             }
         }
+        updatedMessagesSubject.onNext(true);
     }
 
     public void setProgress(int id, int progress) {
@@ -288,6 +288,7 @@ public class ToxSingleton {
         if (id != -1) {
             progressMap.put(idObject, progress);
         }
+        updatedMessagesSubject.onNext(true);
     }
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
