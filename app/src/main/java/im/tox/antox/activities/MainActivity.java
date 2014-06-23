@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.Locale;
@@ -141,8 +142,16 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
 
-            updateLeftPane();
+            //Update lists
+            toxSingleton.updateFriendsList(this);
+            toxSingleton.updateLastMessageMap(this);
+            toxSingleton.updateUnreadCountMap(this);
 
+            AntoxDB db = new AntoxDB(getApplicationContext());
+            db.clearFileNumbers();
+            db.close();
+
+            updateLeftPane();
 
             onNewIntent(getIntent());
         }
@@ -157,6 +166,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onClickAddFriend(View v) {
         Intent intent = new Intent(this, AddFriendActivity.class);
         startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE);
+    }
+
+    public void onClickVoiceCallFriend(View v) {
+
+    }
+
+    public void onClickVideoCallFriend(View v) {
+
     }
 
     @Override
@@ -260,30 +277,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         }
     }
 
-    private void restartActivity() {
-        Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        startActivity(intent);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
-            updateLeftPane();
-        } else if(requestCode==Constants.SENDFILE_PICKEDFRIEND_CODE && resultCode==RESULT_OK) {
-            Uri uri=  data.getData();
-            File pickedFile = new File(uri.getPath());
-            Log.d("file picked",""+pickedFile.getAbsolutePath() );
-            Log.d("file type",""+getContentResolver().getType(uri));
-        } else if(requestCode==Constants.UPDATE_SETTINGS_REQUEST_CODE && resultCode==RESULT_OK) {
-            restartActivity();
-        } else if(requestCode==Constants.WELCOME_ACTIVITY_REQUEST_CODE && resultCode==RESULT_CANCELED) {
-            finish();
-        }
-    }
-
     private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
-
         @Override
         public void onPanelClosed(View view) {
             toxSingleton.rightPaneOpenSubject.onNext(true);
@@ -292,14 +286,11 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         @Override
         public void onPanelOpened(View view) {
             toxSingleton.rightPaneOpenSubject.onNext(false);
-
-            supportInvalidateOptionsMenu();
         }
 
         @Override
         public void onPanelSlide(View view, float arg1) {
         }
-
     }
 
     /* Needed for Tox ID dialog in settings fragment */

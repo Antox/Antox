@@ -3,6 +3,64 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/blue"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/chatActiveName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Name of active friend"
+            android:textColor="@color/white_absolute"
+            android:textSize="20sp"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="15dp"
+            android:text="USERNAME"/>
+
+        <TextView
+            android:id="@+id/chatActiveStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Status of active friend"
+            android:textColor="@color/grey_light"
+            android:textSize="13sp"
+            android:text="STATUS"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/chatActiveName"
+            android:layout_alignStart="@+id/chatActiveName"
+            android:layout_marginBottom="5dp" />
+
+        <ImageButton
+            android:id="@+id/callFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="Voice Call Friend"
+            android:onClick="onClickVoiceCallFriend"
+            android:src="@drawable/ic_action_call"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/videoFriend"
+            android:layout_marginRight="15dp" />
+
+        <ImageButton
+            android:id="@+id/videoFriend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="Video Call Friend"
+            android:onClick="onClickVideoCallFriend"
+            android:src="@drawable/ic_action_video"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="15dp" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/chatMessages"
         android:layout_width="match_parent"
@@ -17,15 +75,25 @@
         android:layout_width="fill_parent"
         android:background="@color/white_absolute"
         android:layout_height="wrap_content">
-
         <View
             android:id="@+id/divider_comment"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/gray_darker" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/attachmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_medium"
+            android:src="@drawable/ic_action_attachment"/>
         <EditText
             android:id="@+id/yourMessage"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"
@@ -36,20 +104,18 @@
             android:inputType="textShortMessage|textCapSentences|textMultiLine|textAutoCorrect"
             android:textSize="@dimen/text_medium"
             android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:background="@android:color/transparent"
-            android:layout_toLeftOf="@+id/sendMessageButton"
             android:hint="@string/chat_enter_message" />
-
         <ImageView
             android:contentDescription="Send Button"
             android:id="@+id/sendMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
             android:paddingRight="@dimen/margin_medium"
             android:src="@drawable/ic_send" />
-
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
