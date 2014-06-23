@@ -6,6 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Witaj</string>
     <string name="title_activity_add_friend">Dodaj znajomego</string>
+    <string name="title_activity_friend_profile">Profil znajomego</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Dodaj znajomego</string>
@@ -25,18 +26,20 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Status połączenia</string>
     <string name="main_no_friends">Brak znajomych</string>
+    <string name="main_recent_no">Brak niedawnych rozmów</string>
     <string name="main_try_adding">Dodaj znajomych by zacząć</string>
     <string name="main_friend_requests">Zapytania znajomych</string>
     <string name="main_friends">Znajomi</string>
     <string name="main_no_internet">Brak połączenia z Internetem</string>
     <string name="main_not_connected">
         Nie wykryto połączenia z internetem. Bez połączenia z internetem funkcjonalność
-        będzie ograniczona.
+        będzie ograniczona, za wyjątkiem sytuacji w której Antox jest używany tylko w LAN-ie
     </string>
     <string name="main_node_list_download_error">Błąd pobierania listy węzłów</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Wyślij wiadomość</string>
+    <string name="chat_file_transfer">Przesyłanie plików</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
@@ -90,7 +93,6 @@
         nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
     </string>
     <string name="toast_succ_move_user">Udało się przenieść kontakt</string>
-
     <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
 
@@ -100,5 +102,8 @@
     <string name="button_yes">Tak</string>
     <string name="button_no">Nie</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Witaj pusty fragmencie</string>
+    <string name="dialog_tox_id">Kopiuj Tox ID do schowka</string>
+    <string name="share_with">Podziel się z</string>
 
 </resources>
