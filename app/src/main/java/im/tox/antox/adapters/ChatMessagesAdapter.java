@@ -109,6 +109,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                         holder.received.setVisibility(View.VISIBLE);
                     } else {
                         holder.received.setVisibility(View.GONE);
+                        holder.sent.setVisibility(View.GONE);
                     }
                 }
                 break;
@@ -121,7 +122,6 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 break;
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
-                break;
             case Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND:
                 if (type == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
                     ownMessage(holder);

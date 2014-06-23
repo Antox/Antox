@@ -230,6 +230,9 @@ public class ToxSingleton {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        AntoxDB antoxDB = new AntoxDB(context);
+        antoxDB.fileTransferStarted(key, fileNumber);
+        antoxDB.close();
     }
 
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
