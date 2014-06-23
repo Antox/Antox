@@ -233,6 +233,8 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 holder.message.setTextColor(context.getResources().getColor(R.color.gray_darker));
                 holder.row.setGravity(Gravity.CENTER);
                 holder.background.setBackgroundColor(context.getResources().getColor(R.color.white_absolute));
+                holder.message.setTextSize(12);
+
                 break;
         }
 
