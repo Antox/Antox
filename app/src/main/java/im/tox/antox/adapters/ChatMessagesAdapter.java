@@ -99,24 +99,24 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
 
         switch(type) {
-
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
                 if (messages.sent) {
-                    holder.sent.setVisibility(View.VISIBLE);
                     if (messages.received) {
                         holder.sent.setVisibility(View.GONE);
                         holder.received.setVisibility(View.VISIBLE);
                     } else {
+                        holder.sent.setVisibility(View.VISIBLE);
                         holder.received.setVisibility(View.GONE);
-                        holder.sent.setVisibility(View.GONE);
                     }
+                } else {
+                    holder.sent.setVisibility(View.GONE);
+                    holder.received.setVisibility(View.GONE);
                 }
                 break;
 
             case Constants.MESSAGE_TYPE_FRIEND:
                 friendMessage(holder);
-
                 holder.sent.setVisibility(View.GONE);
                 holder.received.setVisibility(View.GONE);
                 break;
