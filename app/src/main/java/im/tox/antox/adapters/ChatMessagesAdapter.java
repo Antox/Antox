@@ -3,6 +3,7 @@ package im.tox.antox.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -159,7 +160,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 if(f.exists()) {
                     try {
                         final File path = f;
-                        bmp = BitMapHelper.decodeSampledBitmapFromFile(new FileInputStream(f),1200,900);//BitmapFactory.decodeStream(, null, options);
+                        final BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferredConfig = Bitmap.Config.RGB_565;
+                        options.inSampleSize = calculateInSampleSize(options, 200, 200);
+                        bmp = BitmapFactory.decodeFile(path.getPath(), options);
                         holder.imageMessage.setImageBitmap(bmp);
                         holder.imageMessage.setVisibility(View.VISIBLE);
                         holder.imageMessageFrame.setVisibility(View.VISIBLE);
@@ -172,7 +176,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                             }
                         });
                         bmp=null;
-                    } catch (FileNotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -192,6 +196,28 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
 
         return row;
+    }
+    private static int calculateInSampleSize(
+                BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     static class ChatMessagesHolder {
