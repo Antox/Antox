@@ -121,6 +121,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 break;
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
+                break;
             case Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND:
                 if (type == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
                     ownMessage(holder);
@@ -207,6 +208,12 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 break;
 
             case Constants.MESSAGE_TYPE_ACTION:
+
+                holder.time.setGravity(Gravity.LEFT);
+                holder.layout.setGravity(Gravity.CENTER);
+                holder.message.setTextColor(context.getResources().getColor(R.color.grey_light));
+                holder.row.setGravity(Gravity.CENTER);
+
                 break;
         }
 

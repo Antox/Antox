@@ -183,7 +183,7 @@ public class ChatFragment extends Fragment {
                                     }
                                     AntoxDB db = new AntoxDB(getActivity());
                                     /* Add message to chatlog */
-                                    db.addMessage(id, key, msg, true, false, false, sendingSucceeded);
+                                    db.addMessage(id, key, msg, false, false, sendingSucceeded, 1);
                                     db.close();
                                     /* update UI */
                                     toxSingleton.updateMessages(getActivity());
