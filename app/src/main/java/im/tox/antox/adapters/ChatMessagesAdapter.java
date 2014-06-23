@@ -1,7 +1,10 @@
 package im.tox.antox.adapters;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.BitMapHelper;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.PrettyTimestamp;
@@ -68,6 +75,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.received = (ImageView) row.findViewById(R.id.chat_row_received);
         holder.title = (TextView) row.findViewById(R.id.message_title);
         holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
+        holder.imageMessage = (ImageView) row.findViewById(R.id.message_sent_photo);
 
         switch(type) {
 
@@ -116,11 +124,46 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                 holder.progress.setVisibility(View.VISIBLE);
                 holder.progress.setMax(messages.size);
                 holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                //holder.background.setVisibility(View.INVISIBLE);
+                holder.received.setVisibility(View.INVISIBLE);
+                holder.sent.setVisibility(View.INVISIBLE);
+
+                File f = null;
                 if (messages.IsMine()) {
                     String[] split = chatMessages.message.split("/");
                     holder.message.setText(split[split.length-1]);
+
                 } else {
                     holder.message.setText(chatMessages.message);
+                }
+                f = new File(holder.message.getText().toString());
+                if(f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())){
+                    f = new File(holder.message.getText().toString());
+                }else{
+                    f = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+                    f = new File(f.getAbsolutePath()+"/"+holder.message.getText().toString());
+                }
+                /*should check file mime/type here and then decide what to do*/
+                Bitmap bmp = null;
+                if(f.exists()) {
+                    try {
+                        final File path = f;
+                        bmp = BitMapHelper.decodeSampledBitmapFromFile(new FileInputStream(f),1200,900);//BitmapFactory.decodeStream(, null, options);
+                        holder.imageMessage.setImageBitmap(bmp);
+                        holder.imageMessage.setVisibility(View.VISIBLE);
+                        holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                Intent i = new Intent();
+                                i.setAction(android.content.Intent.ACTION_VIEW);
+                                i.setDataAndType(Uri.fromFile(path),"image/*");
+                                getContext().startActivity(i);
+                            }
+                        });
+                        bmp=null;
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
@@ -149,8 +192,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         TextView time;
         ImageView sent;
         ImageView received;
+        ImageView imageMessage;
         TextView title;
         ProgressBar progress;
+        //imageMessage.se
     }
 
 }
