@@ -25,6 +25,10 @@ public class AntoxOnFileControlCallback implements OnFileControlCallback<AntoxFr
             toxSingleton.fileFinished(friend.getId(), fileNumber, ctx);
         }
         if (control_type.equals(ToxFileControl.TOX_FILECONTROL_ACCEPT) && sending) {
+            AntoxDB antoxDB = new AntoxDB(ctx);
+            antoxDB.fileTransferStarted(friend.getId(), fileNumber);
+            antoxDB.close();
+            toxSingleton.updatedMessagesSubject.onNext(true);
             toxSingleton.sendFileData(friend.getId(), fileNumber, 0, ctx);
         }
     }

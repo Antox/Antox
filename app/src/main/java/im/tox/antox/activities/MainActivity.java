@@ -178,11 +178,12 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
             toxSingleton.updateFriendsList(this);
         }
-
     }
+
     @Override
     public void onResume(){
         super.onResume();
