@@ -133,61 +133,84 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
-                if (!messages.received) {
-                    holder.progress.setVisibility(View.VISIBLE);
-                    holder.progress.setMax(messages.size);
-                    holder.progress.setProgress(toxSingleton.getProgress(messages.id));
-                    holder.progressText.setVisibility(View.GONE);
-                } else {
-                    holder.progress.setVisibility(View.GONE);
-                    holder.progressText.setText("Finished");
-                    holder.progressText.setVisibility(View.VISIBLE);
-                }
                 holder.received.setVisibility(View.GONE);
                 holder.sent.setVisibility(View.GONE);
 
-                File f = null;
-                f = new File(holder.message.getText().toString());
-                if(f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())){
-                    f = new File(holder.message.getText().toString());
-                }else{
-                    f = new File(Environment.getExternalStoragePublicDirectory(
-                            Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-                    f = new File(f.getAbsolutePath()+"/"+holder.message.getText().toString());
-                }
-                /*should check file mime/type here and then decide what to do*/
-                Bitmap bmp = null;
-                if(f.exists()) {
-                    try {
-                        final File path = f;
-                        final BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.RGB_565;
-                        options.inSampleSize = calculateInSampleSize(options, 200, 200);
-                        bmp = BitmapFactory.decodeFile(path.getPath(), options);
-                        holder.imageMessage.setImageBitmap(bmp);
-                        holder.imageMessage.setVisibility(View.VISIBLE);
-                        holder.imageMessageFrame.setVisibility(View.VISIBLE);
-                        holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                Intent i = new Intent();
-                                i.setAction(android.content.Intent.ACTION_VIEW);
-                                i.setDataAndType(Uri.fromFile(path),"image/*");
-                                getContext().startActivity(i);
-                            }
-                        });
-                        bmp=null;
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if (messages.received) {
+                    holder.progress.setVisibility(View.GONE);
+                    holder.progressText.setText("Finished");
+                    holder.progressText.setVisibility(View.VISIBLE);
+                } else {
+                    if (messages.sent) {
+                        if (messages.message_id != -1) {
+                            holder.progress.setVisibility(View.VISIBLE);
+                            holder.progress.setMax(messages.size);
+                            holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                            holder.progressText.setVisibility(View.GONE);
+                        } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
+                            holder.progress.setVisibility(View.GONE);
+                            holder.progressText.setText("Failed");
+                            holder.progressText.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        holder.progress.setVisibility(View.GONE);
+                        if (messages.isMine()) {
+                            holder.progressText.setText("Sent filesending request");
+                        } else {
+                            holder.progressText.setText("Received filesending request");
+                        }
+                        holder.progressText.setVisibility(View.VISIBLE);
                     }
                 }
-
+                boolean isImage = true;
+                if (messages.received || messages.isMine()) {
+                    File f = null;
+                    f = new File(holder.message.getText().toString());
+                    if (f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())) {
+                        f = new File(holder.message.getText().toString());
+                    } else {
+                        f = new File(Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+                        f = new File(f.getAbsolutePath() + "/" + holder.message.getText().toString());
+                    }
+                /*should check file mime/type here and then decide what to do*/
+                    Bitmap bmp = null;
+                    if (f.exists()) {
+                        try {
+                            final File path = f;
+                            final BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferredConfig = Bitmap.Config.RGB_565;
+                            options.inSampleSize = calculateInSampleSize(options, 200, 200);
+                            bmp = BitmapFactory.decodeFile(path.getPath(), options);
+                            holder.imageMessage.setImageBitmap(bmp);
+                            holder.imageMessage.setVisibility(View.VISIBLE);
+                            holder.imageMessageFrame.setVisibility(View.VISIBLE);
+                            holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                                public void onClick(View v) {
+                                    Intent i = new Intent();
+                                    i.setAction(android.content.Intent.ACTION_VIEW);
+                                    i.setDataAndType(Uri.fromFile(path), "image/*");
+                                    getContext().startActivity(i);
+                                }
+                            });
+                            bmp = null;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                if (messages.received && isImage) {
+                    holder.progressText.setVisibility(View.GONE);
+                    holder.title.setVisibility(View.GONE);
+                    holder.message.setVisibility(View.GONE);
+                }
                 break;
 
             case Constants.MESSAGE_TYPE_ACTION:
                 break;
         }
 
-        if(type != Constants.MESSAGE_TYPE_FILE_TRANSFER) {
+        if(type != Constants.MESSAGE_TYPE_FILE_TRANSFER && type != Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND) {
             holder.title.setVisibility(View.GONE);
             holder.message.setText(chatMessages.message);
             holder.progress.setVisibility(View.GONE);
