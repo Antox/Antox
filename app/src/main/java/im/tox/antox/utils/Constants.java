@@ -44,5 +44,6 @@ public final class Constants {
     public static final int MESSAGE_TYPE_OWN = 1;
     public static final int MESSAGE_TYPE_FRIEND = 2;
     public static final int MESSAGE_TYPE_FILE_TRANSFER = 3;
-    public static final int MESSAGE_TYPE_ACTION = 4;
+    public static final int MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4;
+    public static final int MESSAGE_TYPE_ACTION = 5;
 }

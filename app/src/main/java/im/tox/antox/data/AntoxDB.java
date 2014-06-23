@@ -46,7 +46,6 @@ public class AntoxDB extends SQLiteOpenHelper {
             "has_been_received boolean, " +
             "has_been_read boolean, " +
             "successfully_sent boolean, " +
-            "progress integer, " +
             "size integer, " +
             "type int, " +
             "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))";
@@ -124,7 +123,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
         values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
-        values.put("progress", 0);
         values.put("size", size);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
@@ -148,7 +146,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
-        values.put("progress", 0);
 
         if(is_outgoing)
             values.put("type", Constants.MESSAGE_TYPE_OWN);
@@ -225,7 +222,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void fileFinished(String key, int fileNumber) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "UPDATE messages SET progress=size AND " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 AND message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
+        String query = "UPDATE messages SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 AND message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
         db.execSQL(query);
         db.close();
     }
@@ -272,10 +269,9 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean received = cursor.getInt(5)>0;
                 boolean read = cursor.getInt(6)>0;
                 boolean sent = cursor.getInt(7)>0;
-                int progress = cursor.getInt(8);
-                int size = cursor.getInt(9);
-                int type = cursor.getInt(10);
-                messageList.add(new Message(id, message_id, k, m,received, read, sent, time, progress, size, type));
+                int size = cursor.getInt(8);
+                int type = cursor.getInt(9);
+                messageList.add(new Message(id, message_id, k, m,received, read, sent, time, size, type));
             } while (cursor.moveToNext());
         }
 
@@ -339,10 +335,9 @@ public class AntoxDB extends SQLiteOpenHelper {
                 boolean received = cursor.getInt(5)>0;
                 boolean read = cursor.getInt(6)>0;
                 boolean sent = cursor.getInt(7)>0;
-                int progress = cursor.getInt(8);
-                int size = cursor.getInt(9);
-                int type = cursor.getInt(10);
-                messageList.add(new Message(id, m_id, k, m, received, read, sent, time, progress, size, type));
+                int size = cursor.getInt(8);
+                int type = cursor.getInt(9);
+                messageList.add(new Message(id, m_id, k, m, received, read, sent, time, size, type));
             } while (cursor.moveToNext());
         }
 
