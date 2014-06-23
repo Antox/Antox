@@ -226,17 +226,13 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
             case Constants.MESSAGE_TYPE_ACTION:
 
-                holder.message.setText(chatMessages.message);
-                holder.message.setVisibility(View.VISIBLE);
-                holder.time.setGravity(Gravity.LEFT);
+                holder.time.setGravity(Gravity.CENTER);
                 holder.layout.setGravity(Gravity.CENTER);
-                holder.message.setTextColor(context.getResources().getColor(R.color.grey_light));
-                holder.row.setGravity(Gravity.CENTER);
-                holder.received.setVisibility(View.GONE);
-                holder.background.setVisibility(View.GONE);
                 holder.sent.setVisibility(View.GONE);
-                holder.message.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
+                holder.received.setVisibility(View.GONE);
+                holder.message.setTextColor(context.getResources().getColor(R.color.gray_darker));
+                holder.row.setGravity(Gravity.CENTER);
+                holder.background.setBackgroundColor(context.getResources().getColor(R.color.white_absolute));
                 break;
         }
 
