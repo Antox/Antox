@@ -225,22 +225,6 @@ public class ToxSingleton {
     }
 
     public void acceptFile(String key, int fileNumber, Context context) {
-        /*
-        AntoxDB antoxDB = new AntoxDB(context);
-        String fileName = antoxDB.getFilePath(key, fileNumber);
-
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-            if (!dirfile.mkdirs()) {
-                Log.e("acceptFile", "Directory not created");
-            }
-            File file = new File(dirfile.getPath(), fileName);
-            antoxDB.setFilePath(key, fileNumber, file.getPath());
-        }
-        antoxDB.close();
-        */
         try {
             jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
         } catch (Exception e) {
