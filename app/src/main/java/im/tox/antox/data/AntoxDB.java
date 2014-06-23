@@ -113,7 +113,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addFileTransfer(String key, String path, int fileNumber, int size) {
+    public void addFileTransfer(String key, String path, int fileNumber, int size, boolean sending) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
@@ -122,7 +122,11 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
-        values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
+        if (sending) {
+            values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
+        } else {
+            values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND);
+        }
         values.put("size", size);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
@@ -444,7 +448,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_ISONLINE, "0");
-        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'",  null);
+        db.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null);
         db.close();
     }
 

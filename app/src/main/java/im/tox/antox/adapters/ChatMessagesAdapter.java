@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -49,6 +51,23 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         return 4;
     }
 
+    private void ownMessage(ChatMessagesHolder holder) {
+        holder.time.setGravity(Gravity.RIGHT);
+        holder.layout.setGravity(Gravity.RIGHT);
+        holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
+        holder.row.setGravity(Gravity.RIGHT);
+        holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
+        holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
+    }
+
+    private void friendMessage(ChatMessagesHolder holder) {
+        holder.message.setTextColor(context.getResources().getColor(R.color.black));
+        holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
+        holder.background.setPadding(6 * density + 1 * density * paddingscale, 1 * density * paddingscale, 1 * density * paddingscale, 1 * density * paddingscale);
+        holder.time.setGravity(Gravity.LEFT);
+        holder.layout.setGravity(Gravity.LEFT);
+        holder.row.setGravity(Gravity.LEFT);
+    }
     // Todo: Use different layout resources for views depending on type case
     // see: https://stackoverflow.com/questions/3514548/creating-viewholders-for-listviews-with-different-item-layouts
     @Override
@@ -75,22 +94,14 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.title = (TextView) row.findViewById(R.id.message_title);
         holder.progress = (ProgressBar) row.findViewById(R.id.file_transfer_progress);
         holder.imageMessage = (ImageView) row.findViewById(R.id.message_sent_photo);
+        holder.imageMessageFrame = (FrameLayout) row.findViewById(R.id.message_sent_photo_frame);
         holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
-
-        holder.progressText.setVisibility(View.GONE);
-        holder.progress.setVisibility(View.GONE);
 
         switch(type) {
 
             case Constants.MESSAGE_TYPE_OWN:
-
-                holder.time.setGravity(Gravity.RIGHT);
-                holder.layout.setGravity(Gravity.RIGHT);
-                holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
-                holder.row.setGravity(Gravity.RIGHT);
-                holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
-                holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
-                if (messages.sent && !messages.isFile) {
+                ownMessage(holder);
+                if (messages.sent) {
                     holder.sent.setVisibility(View.VISIBLE);
                     if (messages.received) {
                         holder.sent.setVisibility(View.GONE);
@@ -98,51 +109,43 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                     } else {
                         holder.received.setVisibility(View.GONE);
                     }
-                } else {
-                    holder.sent.setVisibility(View.GONE);
-                    holder.received.setVisibility(View.GONE);
                 }
-
                 break;
 
             case Constants.MESSAGE_TYPE_FRIEND:
+                friendMessage(holder);
 
-                holder.message.setTextColor(context.getResources().getColor(R.color.black));
-                holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatleft));
-                holder.background.setPadding(6*density + 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale, 1*density*paddingscale);
-                holder.time.setGravity(Gravity.LEFT);
-                holder.layout.setGravity(Gravity.LEFT);
-                holder.row.setGravity(Gravity.LEFT);
                 holder.sent.setVisibility(View.GONE);
                 holder.received.setVisibility(View.GONE);
-
                 break;
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
+            case Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND:
+                if (type == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
+                    ownMessage(holder);
+                    String[] split = chatMessages.message.split("/");
+                    holder.message.setText(split[split.length - 1]);
+                } else {
+                    friendMessage(holder);
+                    holder.message.setText(chatMessages.message);
+                }
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
                 if (!messages.received) {
-                    int progress = toxSingleton.getProgress(messages.id);
                     holder.progress.setVisibility(View.VISIBLE);
                     holder.progress.setMax(messages.size);
-                    holder.progress.setProgress(progress);
+                    holder.progress.setProgress(toxSingleton.getProgress(messages.id));
+                    holder.progressText.setVisibility(View.GONE);
                 } else {
+                    holder.progress.setVisibility(View.GONE);
                     holder.progressText.setText("Finished");
                     holder.progressText.setVisibility(View.VISIBLE);
                 }
-                //holder.background.setVisibility(View.INVISIBLE);
-                holder.received.setVisibility(View.INVISIBLE);
-                holder.sent.setVisibility(View.INVISIBLE);
+                holder.received.setVisibility(View.GONE);
+                holder.sent.setVisibility(View.GONE);
 
                 File f = null;
-                if (messages.IsMine()) {
-                    String[] split = chatMessages.message.split("/");
-                    holder.message.setText(split[split.length-1]);
-
-                } else {
-                    holder.message.setText(chatMessages.message);
-                }
                 f = new File(holder.message.getText().toString());
                 if(f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())){
                     f = new File(holder.message.getText().toString());
@@ -159,6 +162,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                         bmp = BitMapHelper.decodeSampledBitmapFromFile(new FileInputStream(f),1200,900);//BitmapFactory.decodeStream(, null, options);
                         holder.imageMessage.setImageBitmap(bmp);
                         holder.imageMessage.setVisibility(View.VISIBLE);
+                        holder.imageMessageFrame.setVisibility(View.VISIBLE);
                         holder.imageMessage.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
                                 Intent i = new Intent();
@@ -199,6 +203,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         ImageView sent;
         ImageView received;
         ImageView imageMessage;
+        FrameLayout imageMessageFrame;
         TextView title;
         ProgressBar progress;
         TextView progressText;
