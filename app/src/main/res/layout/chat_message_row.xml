@@ -45,7 +45,7 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:max="100"
                     android:progress="50"
-                    android:layout_width="match_parent"
+                    android:layout_width="200dp"
                     android:layout_height="25dp" />
                 <TextView
                     android:id="@+id/file_transfer_progress_text"
