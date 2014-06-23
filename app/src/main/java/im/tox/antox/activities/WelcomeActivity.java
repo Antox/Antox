@@ -63,6 +63,7 @@ public class WelcomeActivity extends ActionBarActivity {
 
             /* Next thing to be called is MainAcitivity.onResume() so we need to do essential
              * initialisations here to stop client crashing when using it for the first time
+             * Feels really ugly however so please change it
              */
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             toxSingleton.initSubjects(getApplicationContext());

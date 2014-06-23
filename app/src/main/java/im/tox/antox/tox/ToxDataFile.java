@@ -10,9 +10,6 @@ import java.io.IOException;
 
 public class ToxDataFile {
 
-	/**
-	 * Other clients use the file name data so we shall as well
-	 */
 	private String fileName = "AntoxDataFile";
     private Context ctx;
 
@@ -39,10 +36,9 @@ public class ToxDataFile {
     /**
      * Checks if external storage is available to read
      * @return
+     * THIS NEEDS TO BE DONE PROPERLY
      */
-    public boolean isExternalStorageReadable() {
-        return true;
-    }
+
 
 	/**
 	 * Method for loading data from a saved file and return it. Requires the
