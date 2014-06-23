@@ -215,7 +215,6 @@ public class ChatFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
         Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
-        Log.d("ChatFragment ImageResult data", data.toString());
         if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             String path = null;
