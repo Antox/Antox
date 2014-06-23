@@ -121,7 +121,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_MESSAGE_ID, fileNumber);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
-        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
+        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, false);
         if (sending) {
             values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
         } else {
@@ -129,6 +129,13 @@ public class AntoxDB extends SQLiteOpenHelper {
         }
         values.put("size", size);
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
+        db.close();
+    }
+
+    public void fileTransferStarted(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + " = 1 WHERE (type == 3 OR type == 4) AND message_id == " + fileNumber + " AND tox_key = '" + key + "'";
+        db.execSQL(query);
         db.close();
     }
 

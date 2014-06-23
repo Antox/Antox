@@ -46,7 +46,7 @@
                     android:max="100"
                     android:progress="50"
                     android:layout_width="200dp"
-                    android:layout_height="25dp" />
+                    android:layout_height="20dp" />
                 <TextView
                     android:id="@+id/file_transfer_progress_text"
                     android:text="Finished"
@@ -54,7 +54,7 @@
                     android:textColor="@color/gray_darker"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp" />
+                    android:layout_height="20dp" />
                 <FrameLayout
                     android:id="@+id/message_sent_photo_frame"
                     android:visibility="gone"
