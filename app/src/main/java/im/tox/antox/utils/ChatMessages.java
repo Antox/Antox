@@ -37,8 +37,8 @@ public class ChatMessages {
         this.friendName = friendName;
     }
 
-    public boolean IsMine() {
-        if(type == 1)
+    public boolean isMine() {
+        if(type == 1 || type == 3)
             return true;
         else
             return false;
