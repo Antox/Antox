@@ -97,6 +97,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.imageMessage = (ImageView) row.findViewById(R.id.message_sent_photo);
         holder.imageMessageFrame = (FrameLayout) row.findViewById(R.id.message_sent_photo_frame);
         holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
+        holder.padding = (View) row.findViewById(R.id.file_transfer_padding);
 
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
@@ -154,25 +155,30 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                             holder.progressText.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        holder.progress.setVisibility(View.GONE);
-                        if (messages.isMine()) {
-                            holder.progressText.setText("Sent filesending request");
-                        } else {
-                            holder.progressText.setText("Received filesending request");
+                        if (messages.message_id != -1) {
+                            holder.progress.setVisibility(View.GONE);
+                            if (messages.isMine()) {
+                                holder.progressText.setText("Sent filesending request");
+                            } else {
+                                holder.progressText.setText("Received filesending request");
+                            }
+                            holder.progressText.setVisibility(View.VISIBLE);
+                        } else { //Filesending request not accepted, it's sent, we no longer have a filenumber, but it hasn't been accepted
+                            holder.progress.setVisibility(View.GONE);
+                            holder.progressText.setText("Failed");
+                            holder.progressText.setVisibility(View.VISIBLE);
                         }
-                        holder.progressText.setVisibility(View.VISIBLE);
                     }
                 }
                 boolean isImage = false;
                 if (messages.received || messages.isMine()) {
                     File f = null;
-                    f = new File(holder.message.getText().toString());
-                    if (f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getPath())) {
-                        f = new File(holder.message.getText().toString());
+                    if (messages.message.contains("/")) {
+                        f = new File(messages.message);
                     } else {
                         f = new File(Environment.getExternalStoragePublicDirectory(
                                 Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-                        f = new File(f.getAbsolutePath() + "/" + holder.message.getText().toString());
+                        f = new File(f.getAbsolutePath() + "/" + messages.message);
                     }
                 /*should check file mime/type here and then decide what to do*/
                     Bitmap bmp = null;
@@ -202,6 +208,11 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                                 holder.imageMessage.setImageBitmap(bmp);
                                 holder.imageMessage.setVisibility(View.VISIBLE);
                                 holder.imageMessageFrame.setVisibility(View.VISIBLE);
+                                if (messages.received) {
+                                    holder.padding.setVisibility(View.GONE);
+                                } else {
+                                    holder.padding.setVisibility(View.VISIBLE);
+                                }
                                 holder.imageMessage.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
                                         Intent i = new Intent();
@@ -284,6 +295,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         TextView title;
         ProgressBar progress;
         TextView progressText;
+        View padding;
         //imageMessage.se
     }
 

@@ -55,6 +55,12 @@
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp" />
+                <View
+                    android:id="@+id/file_transfer_padding"
+                    android:visibility="gone"
+                    android:layout_height="10dp"
+                    android:layout_width="match_parent"
+                    ></View>
                 <FrameLayout
                     android:id="@+id/message_sent_photo_frame"
                     android:visibility="gone"
