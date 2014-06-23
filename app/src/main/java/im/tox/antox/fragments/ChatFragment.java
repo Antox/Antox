@@ -1,15 +1,28 @@
 package im.tox.antox.fragments;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -18,6 +31,7 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
+import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
@@ -35,7 +49,6 @@ public class ChatFragment extends Fragment {
     private static String TAG = "im.tox.antox.fragments.ChatFragment";
     public static String ARG_CONTACT_NUMBER = "contact_number";
     private ListView chatListView;
-    private int counter = 0;
 
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
@@ -43,7 +56,6 @@ public class ChatFragment extends Fragment {
     Subscription messagesSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
-
 
     public ChatFragment() {
     }
@@ -71,6 +83,19 @@ public class ChatFragment extends Fragment {
                 updateChat(messages);
             }
         });
+
+        // There should be a way to do this without accessing the db
+        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+        String[] friend = db.getFriendDetails(activeKey);
+
+        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+        if(!friend[1].equals(""))
+            chatName.setText(friend[1]);
+        else
+            chatName.setText(friend[0]);
+
+        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+        statusText.setText(friend[2]);
     }
 
     @Override
@@ -109,7 +134,48 @@ public class ChatFragment extends Fragment {
                                 if (friend != null) {
                                     boolean sendingSucceeded = true;
                                     try {
-                                        toxSingleton.jTox.sendMessage(friend, msg, id);
+                                        // Max message length in tox is 1368 bytes
+                                        final byte[] utf8Bytes = msg.getBytes("UTF-8");
+                                        int numOfMessages = (utf8Bytes.length/1368) + 1;
+
+                                        if(numOfMessages > 1) {
+
+                                            for(int i = 1; i < numOfMessages - 1; i++) {
+
+                                                int msb = (utf8Bytes[i*1368] & 0xff) >> 7;
+
+                                                if(msb == 0) { // Single byte char
+
+                                                    int end = i*1368 > msg.length() ? msg.length() : i*1368;
+
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, end), id);
+
+                                                } else { // Multi-byte char
+
+                                                    boolean found = false;
+                                                    int num = 1;
+
+                                                    while(!found) {
+
+                                                        int ssb = (utf8Bytes[(i*1368) - num] >> 6) & 1;
+
+                                                        if(ssb == 1) { // Found start of word
+                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368-num), id);
+                                                            found = true;
+                                                        } else {
+                                                            num++;
+                                                        }
+
+                                                    }
+
+                                                }
+
+                                            }
+
+                                        } else {
+                                            toxSingleton.jTox.sendMessage(friend, msg, id);
+                                        }
+
                                     } catch (ToxException e) {
                                         Log.d(TAG, e.toString());
                                         e.printStackTrace();
@@ -135,13 +201,51 @@ public class ChatFragment extends Fragment {
         if (messages.size() >= 0) {
             adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(), messages.get(i).is_outgoing, messages.get(i).has_been_received, messages.get(i).successfully_sent));
+                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).progress, messages.get(i).size, messages.get(i).type));
             }
             Log.d("ChatFragment", "Updating chat");
             adapter.notifyDataSetChanged();
             chatListView.setSelection(adapter.getCount() - 1);
         }
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
+        Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
+        Log.d("ChatFragment ImageResult data", data.toString());
+        if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            String path = null;
+            String[] filePathColumn = {MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.DISPLAY_NAME};
+            String filePath = null;
+            String fileName = null;
+            CursorLoader loader = new CursorLoader(getActivity(), uri, filePathColumn, null, null, null);
+            Cursor cursor = loader.loadInBackground();
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(filePathColumn[0]);
+                    filePath = cursor.getString(columnIndex);
+                    int fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn[1]);
+                    fileName = cursor.getString(fileNameIndex);
+                }
+            }
+            try {
+                path = filePath;
+            } catch (Exception e) {
+                Log.d("onActivityResult", e.toString());
+            }
+            if (path != null) {
+                toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
+            }
+        }
+    }
+
+
+
 
     @SuppressWarnings("deprecation")
     @Override
@@ -157,6 +261,30 @@ public class ChatFragment extends Fragment {
         chatListView.setAdapter(adapter);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
+        messageBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                boolean isTyping;
+                if(i3 > 0) {
+                    isTyping = true;
+                } else {
+                    isTyping = false;
+                }
+                try {
+                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), isTyping);
+                } catch (ToxException ex) {
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -169,8 +297,38 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                try {
+                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), false);
+                } catch (ToxException ex) {
+
+                }
+            }
+        });
+        View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
+        attachmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                final CharSequence items[];
+                items = new CharSequence[] {
+                        "Attach image"
+                };
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent, Constants.IMAGE_RESULT);
+                                break;
+                        }
+                    }
+                });
+                builder.create().show();
             }
         });
         return rootView;
     }
+
+
 }

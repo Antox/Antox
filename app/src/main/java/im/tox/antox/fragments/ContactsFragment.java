@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -144,7 +146,6 @@ public class ContactsFragment extends Fragment {
         contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
         contactsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-
         contactsListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -199,6 +200,7 @@ public class ContactsFragment extends Fragment {
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
                                                     db.addFriend(item.key, "Friend Accepted", "", "");
+                                                    db.deleteFriendRequest(item.key);
                                                     db.close();
                                                     try {
                                                         toxSingleton.jTox.confirmRequest(item.key);
@@ -328,6 +330,15 @@ public class ContactsFragment extends Fragment {
                                         db.deleteChat(key);
                                         db.deleteFriend(key);
                                         db.close();
+                                        // Remove friend from tox friend list
+                                        AntoxFriend friend = toxSingleton.getAntoxFriend(key);
+                                        if (friend != null) {
+
+                                            try {
+                                                toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                            } catch (ToxException e) {
+                                            }
+                                        }
                                         return null;
                                     }
                                     @Override

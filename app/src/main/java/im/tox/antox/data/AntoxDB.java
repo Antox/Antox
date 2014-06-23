@@ -26,23 +26,35 @@ import im.tox.jtoxcore.ToxUserStatus;
  * Created by Aagam Shah on 7/3/14.
  */
 public class AntoxDB extends SQLiteOpenHelper {
-
-    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
-
     // After modifying one of this tables, update the database version in Constants.DATABASE_VERSION
     // and also update the onUpgrade method
     public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends" +
-            " (tox_key text primary key, username text, status text, note text, alias text," +
-            " isonline boolean, isblocked boolean);";
+            " (tox_key text primary key, " +
+            "username text, " +
+            "status text, " +
+            "note text, " +
+            "alias text, " +
+            "isonline boolean, " +
+            "isblocked boolean);";
 
     public String CREATE_TABLE_MESSAGES = "CREATE TABLE IF NOT EXISTS messages" +
-            " ( _id integer primary key , timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-            "message_id integer, tox_key text, message text, is_outgoing boolean, " +
-            "has_been_received boolean, has_been_read boolean, successfully_sent boolean, " +
+            " ( _id integer primary key , " +
+            "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+            "message_id integer, " +
+            "tox_key text, " +
+            "message text, " +
+            "has_been_received boolean, " +
+            "has_been_read boolean, " +
+            "successfully_sent boolean, " +
+            "progress integer, " +
+            "size integer, " +
+            "type int, " +
             "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))";
 
     public String CREATE_TABLE_FRIEND_REQUESTS = "CREATE TABLE IF NOT EXISTS friend_requests" +
-            " ( _id integer primary key, tox_key text, message text)";
+            " ( _id integer primary key, " +
+            "tox_key text, " +
+            "message text)";
 
     public AntoxDB(Context ctx) {
         super(ctx, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
@@ -57,35 +69,10 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch(oldVersion) {
-            case 1:
-                db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN has_been_read boolean");
-                break;
-            case 2:
-                db.execSQL("ALTER TABLE " + Constants.TABLE_CHAT_LOGS + " ADD COLUMN successfully_sent boolean");
-                break;
-            case 3:
-                //There are some possibilities when in version 3 there is already the alis column
-                if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ALIAS)) {
-                    db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN alias text");
-                    break;
-                }
-            case 4:
-                if (!isColumnInTable(db, Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_ISBLOCKED)) {
-                    db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN isblocked boolean");
-                    break;
-                }
-            case 5:
-                db.execSQL("ALTER TABLE " + Constants.TABLE_FRIENDS + " ADD COLUMN usergroup text");
-                break;
-
-            case 6:
-                /* Just drop all tables and recreate them - lazy and unfriendly but this is alpha */
-                db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS);
-                db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS);
-                db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST);
-                onCreate(db);
-        }
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST);
+        onCreate(db);
     }
 
     //check if a column is in a table
@@ -105,11 +92,6 @@ public class AntoxDB extends SQLiteOpenHelper {
             return false;
         }
     }
-
-
-    //Adding friend using his key.
-    // Currently we are not able to fetch Note,username so keep it null.
-    //So storing the received message as his/her personal note.
 
     public void addFriend(String key, String message, String alias, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -132,6 +114,22 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addFileTransfer(String key, String path, int fileNumber, int size) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_NAME_KEY, key);
+        values.put(Constants.COLUMN_NAME_MESSAGE, path);
+        values.put(Constants.COLUMN_NAME_MESSAGE_ID, fileNumber);
+        values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false);
+        values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false);
+        values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, true);
+        values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER);
+        values.put("progress", 0);
+        values.put("size", size);
+        db.insert(Constants.TABLE_CHAT_LOGS, null, values);
+        db.close();
+    }
+
     public void addFriendRequest(String key, String message) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -147,10 +145,16 @@ public class AntoxDB extends SQLiteOpenHelper {
         values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id);
         values.put(Constants.COLUMN_NAME_KEY, key);
         values.put(Constants.COLUMN_NAME_MESSAGE, message);
-        values.put(Constants.COLUMN_NAME_IS_OUTGOING, is_outgoing);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received);
         values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read);
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent);
+        values.put("progress", 0);
+
+        if(is_outgoing)
+            values.put("type", Constants.MESSAGE_TYPE_OWN);
+        else
+            values.put("type", Constants.MESSAGE_TYPE_FRIEND);
+
         db.insert(Constants.TABLE_CHAT_LOGS, null, values);
         db.close();
     }
@@ -161,7 +165,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         String selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " +
                 "FROM messages " +
                 "JOIN friends ON friends.tox_key = messages.tox_key " +
-                "WHERE messages.has_been_read == 0 AND messages.is_outgoing == 0 " +
+                "WHERE messages.has_been_read == 0 AND messages.type == 2 " +
                 "GROUP BY friends.tox_key";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -176,21 +180,54 @@ public class AntoxDB extends SQLiteOpenHelper {
         return map;
     };
 
-    public boolean isKeyInFriends(String key){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT count(*) FROM friends WHERE tox_key == '" + key + "'";
+    public String getFilePath(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String path = "";
+        String selectQuery = "SELECT message FROM messages WHERE tox_key = '" + key + "' AND type == 3 AND message_id == " +
+                fileNumber;
         Cursor cursor = db.rawQuery(selectQuery, null);
-        int count;
+        Log.d("getFilePath count: ", Integer.toString(cursor.getCount()));
         if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        } else {
-            count = 0;
+            path = cursor.getString(0);
         }
-        if (count > 0) {
-            return true;
-        } else {
-            return false;
+        cursor.close();
+        db.close();
+        return path;
+    }
+
+    public int getFileId(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int id = -1;
+        String selectQuery = "SELECT _id FROM messages WHERE tox_key = '" + key + "' AND type == 3 AND message_id == " +
+                fileNumber;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(0);
         }
+        cursor.close();
+        db.close();
+        return id;
+    }
+
+    public void clearFileNumbers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET message_id = -1 WHERE type == 3";
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void clearFileNumber(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void fileFinished(String key, int fileNumber) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "UPDATE messages SET progress=size AND " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 AND message_id = -1 WHERE type == 3 AND message_id == " + fileNumber;
+        db.execSQL(query);
+        db.close();
     }
 
     public HashMap getLastMessages() {
@@ -218,7 +255,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
-        if (key == "") {
+        if (key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
@@ -227,15 +264,18 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                int m_id = cursor.getInt(0);
+                int id = cursor.getInt(0);
+                Timestamp time = Timestamp.valueOf(cursor.getString(1));
+                int message_id = cursor.getInt(2);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
-                boolean outgoing = cursor.getInt(5)>0;
-                boolean received = cursor.getInt(6)>0;
-                boolean read = cursor.getInt(7)>0;
-                boolean sent = cursor.getInt(8)>0;
-                Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
+                boolean received = cursor.getInt(5)>0;
+                boolean read = cursor.getInt(6)>0;
+                boolean sent = cursor.getInt(7)>0;
+                int progress = cursor.getInt(8);
+                int size = cursor.getInt(9);
+                int type = cursor.getInt(10);
+                messageList.add(new Message(id, message_id, k, m,received, read, sent, time, progress, size, type));
             } while (cursor.moveToNext());
         }
 
@@ -285,21 +325,24 @@ public class AntoxDB extends SQLiteOpenHelper {
     public ArrayList<Message> getUnsentMessageList() {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0 ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=0 AND type == 1 ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(0);
+                Timestamp time = Timestamp.valueOf(cursor.getString(1));
                 int m_id = cursor.getInt(2);
                 Log.d("UNSENT MESAGE ID: ", "" + m_id);
                 String k = cursor.getString(3);
                 String m = cursor.getString(4);
-                boolean outgoing = cursor.getInt(5)>0;
-                boolean received = cursor.getInt(6)>0;
-                boolean read = cursor.getInt(7)>0;
-                boolean sent = cursor.getInt(8)>0;
-                Timestamp time = Timestamp.valueOf(cursor.getString(1));
-                messageList.add(new Message(m_id, k, m, outgoing, received, read, sent, time));
+                boolean received = cursor.getInt(5)>0;
+                boolean read = cursor.getInt(6)>0;
+                boolean sent = cursor.getInt(7)>0;
+                int progress = cursor.getInt(8);
+                int size = cursor.getInt(9);
+                int type = cursor.getInt(10);
+                messageList.add(new Message(id, m_id, k, m, received, read, sent, time, progress, size, type));
             } while (cursor.moveToNext());
         }
 
@@ -314,7 +357,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, "1");
-        values.put(Constants.COLUMN_NAME_IS_OUTGOING, "1");
+        values.put("type", 1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = new Date();
@@ -326,9 +369,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public String setMessageReceived(int receipt) { //returns public key of who the message was sent to
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED + "=1 WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND type =1";
         db.execSQL(query);
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=1";
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_MESSAGE_ID + "=" + receipt + " AND " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT + "=1 AND type=1";
         Cursor cursor = db.rawQuery(selectQuery, null);
         String k = "";
         if (cursor.moveToFirst()) {
@@ -341,7 +384,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void markIncomingMessagesRead(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ + "=1 WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND " + Constants.COLUMN_NAME_IS_OUTGOING + "=0";
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ + "=1 WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND type=2";
         db.execSQL(query);
         db.close();
         Log.d("", "marked incoming messages as read");
@@ -442,14 +485,6 @@ public class AntoxDB extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteMessage(int messageId)
-    {
-        System.out.println("%%"+messageId);
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(Constants.TABLE_CHAT_LOGS, "_id" + "='" + messageId + "'", null);
-        db.close();
-    }
-
     public void updateFriendName(String key, String newName) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -497,9 +532,9 @@ public class AntoxDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                String name = cursor.getString(2);
-                String note = cursor.getString(4);
-                String alias = cursor.getString(5);
+                String name = cursor.getString(1);
+                String note = cursor.getString(3);
+                String alias = cursor.getString(4);
 
                 if(name == null)
                     name = "";
