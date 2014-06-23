@@ -28,6 +28,7 @@
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
+    <string name="chat_file_transfer">Invia un file</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_must_select_username">Devi inserire un nome utente</string>
