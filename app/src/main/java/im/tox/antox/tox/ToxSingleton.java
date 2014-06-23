@@ -283,6 +283,12 @@ public class ToxSingleton {
         }
     }
 
+    public void setProgress(int id, int progress) {
+        Integer idObject = id;
+        if (id != -1) {
+            progressMap.put(idObject, progress);
+        }
+    }
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
         AntoxDB db = new AntoxDB(context);
@@ -322,6 +328,7 @@ public class ToxSingleton {
         String path = "";
         AntoxDB antoxDB = new AntoxDB(context);
         path = antoxDB.getFilePath(key, fileNumber);
+        int id = antoxDB.getFileId(key, fileNumber);
         antoxDB.close();
         int result = -1;
         if (!path.equals("")) {
@@ -375,6 +382,7 @@ public class ToxSingleton {
                 if (i > bytes.length) {
                     i = bytes.length;
                 }
+                setProgress(id, i);
                 try {
                     buf.close();
                 } catch (Exception e) {
