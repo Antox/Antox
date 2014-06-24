@@ -60,7 +60,7 @@ public class RecentFragment extends Fragment {
                         view.getFocusables(position);
                         view.setSelected(true);
                         setSelectionToKey(activeKey);
-                        toxSingleton.activeKeySubject.onNext(key);
+                        toxSingleton.changeActiveKey(key);
                     }
                 });
         return rootView;

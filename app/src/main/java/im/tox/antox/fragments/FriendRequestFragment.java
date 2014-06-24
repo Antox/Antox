@@ -80,7 +80,7 @@ public class FriendRequestFragment extends Fragment {
                     protected void onPostExecute(Void result) {
                         toxSingleton.updateFriendsList(getActivity());
                         toxSingleton.updateFriendRequests(getActivity());
-                        toxSingleton.activeKeySubject.onNext("");
+                        toxSingleton.clearActiveKey();
                     }
                 }
 
@@ -102,7 +102,7 @@ public class FriendRequestFragment extends Fragment {
                     @Override
                     protected void onPostExecute(Void result) {
                         toxSingleton.updateFriendRequests(getActivity());
-                        toxSingleton.activeKeySubject.onNext("");
+                        toxSingleton.clearActiveKey();
                     }
 
                 }
