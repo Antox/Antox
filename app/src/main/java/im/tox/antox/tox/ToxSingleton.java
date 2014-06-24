@@ -2,18 +2,13 @@ package im.tox.antox.tox;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -21,13 +16,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -84,6 +77,7 @@ public class ToxSingleton {
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
     public BehaviorSubject<Boolean> rightPaneOpenSubject;
+    public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
@@ -112,6 +106,8 @@ public class ToxSingleton {
         unreadCountsSubject.subscribeOn(Schedulers.io());
         activeKeySubject = BehaviorSubject.create("");
         activeKeySubject.subscribeOn(Schedulers.io());
+        doClosePaneSubject = PublishSubject.create();
+        doClosePaneSubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
         updatedMessagesSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
@@ -222,6 +218,16 @@ public class ToxSingleton {
         antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
+    }
+
+    public void changeActiveKey(String key) {
+        activeKeySubject.onNext(key);
+        doClosePaneSubject.onNext(true);
+    }
+
+    public void clearActiveKey() {
+        activeKeySubject.onNext("");
+        doClosePaneSubject.onNext(false);
     }
 
     public void acceptFile(String key, int fileNumber, Context context) {

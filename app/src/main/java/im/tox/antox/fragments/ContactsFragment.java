@@ -157,7 +157,7 @@ public class ContactsFragment extends Fragment {
                         String key = item.key;
                         if (key != "") {
                             setSelectionToKey(key);
-                            toxSingleton.activeKeySubject.onNext(key);
+                            toxSingleton.changeActiveKey(key);
                         }
                     }
                 });
