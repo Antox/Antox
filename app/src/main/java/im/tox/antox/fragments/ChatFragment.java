@@ -57,9 +57,6 @@ public class ChatFragment extends Fragment {
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
 
-    public ChatFragment() {
-    }
-
     public ChatFragment(String key) {
         this.activeKey = key;
     }
@@ -87,6 +84,7 @@ public class ChatFragment extends Fragment {
         // There should be a way to do this without accessing the db
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
         String[] friend = db.getFriendDetails(activeKey);
+        Log.d("onResume","activeKey: " + activeKey);
 
         TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
         if(!friend[1].equals(""))
