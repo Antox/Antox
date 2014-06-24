@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
     Subscription activeKeySub;
     Subscription chatActiveSub;
+    Subscription doClosePaneSub;
 
     SharedPreferences preferences;
 
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     protected void onNewIntent(Intent i) {
         if (i.getAction() != null) {
             if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.getAntoxFriend(i.getStringExtra("key")) != null) {
-                toxSingleton.activeKeySubject.onNext(i.getStringExtra("key"));
+                toxSingleton.changeActiveKey(i.getStringExtra("key"));
             }
         }
     }
@@ -201,15 +202,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
                             String activeKey = activeKeyAndIfFriend.x;
                             boolean isFriend = activeKeyAndIfFriend.y;
+                            Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
                             if (activeKey.equals("")) {
-                                if(pane != null) {
-                                    pane.openPane();
-                                } else {
-                                    pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-                                    PaneListener paneListener = new PaneListener();
-                                    pane.setPanelSlideListener(paneListener);
-                                    pane.openPane();
-                                }
                                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
                                 if (fragment != null) {
                                     getSupportFragmentManager().beginTransaction().remove(fragment).commit();
@@ -232,9 +226,19 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                         transaction.commit();
                                     }
                                 }
-                                pane.closePane();
                             }
                             toxSingleton.activeKey = activeKey;
+                        }
+                    });
+            doClosePaneSub = toxSingleton.doClosePaneSubject.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean close) {
+                            if (close) {
+                                pane.closePane();
+                            } else {
+                                pane.openPane();
+                            }
                         }
                     });
             if (toxSingleton.activeKey != null) {
@@ -250,6 +254,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         if(preferences.getBoolean("beenLoaded", false) == true) {
             activeKeySub.unsubscribe();
             chatActiveSub.unsubscribe();
+            doClosePaneSub.unsubscribe();
             toxSingleton.chatActive = false;
         }
     }
