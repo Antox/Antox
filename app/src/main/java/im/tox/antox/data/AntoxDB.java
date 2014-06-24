@@ -169,7 +169,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         String selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " +
                 "FROM messages " +
                 "JOIN friends ON friends.tox_key = messages.tox_key " +
-                "WHERE messages.has_been_read == 0 AND messages.type == 2 " +
+                "WHERE messages.has_been_read == 0 AND (messages.type == 2 OR messages.type == 4)" +
                 "GROUP BY friends.tox_key";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -240,7 +240,7 @@ public class AntoxDB extends SQLiteOpenHelper {
         HashMap map = new HashMap();
         String selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
                 "SELECT MAX(_id) " +
-                "FROM messages " +
+                "FROM messages WHERE (type == 1 OR type == 2) " +
                 "GROUP BY tox_key)";
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

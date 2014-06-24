@@ -45,6 +45,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
         if (online) {
             toxSingleton.sendUnsentMessages(ctx);
         }
+        toxSingleton.updateFriendsList(ctx);
         toxSingleton.updateMessages(ctx);
     }
 }
