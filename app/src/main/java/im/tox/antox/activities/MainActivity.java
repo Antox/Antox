@@ -64,12 +64,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     protected void onNewIntent(Intent i) {
         if (i.getAction() != null) {
             if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.getAntoxFriend(i.getStringExtra("key")) != null) {
-                Fragment newFragment = new ChatFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.right_pane, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toxSingleton.activeKeySubject.onNext(i.getStringExtra("key"));
             }
         }
     }
