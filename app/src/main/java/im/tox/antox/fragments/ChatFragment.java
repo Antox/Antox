@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -20,9 +21,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.sql.Timestamp;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -42,6 +44,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+
 /**
  * Created by ollie on 28/02/14.
  */
@@ -56,7 +59,7 @@ public class ChatFragment extends Fragment {
     Subscription messagesSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
-
+    public String photoPath;
     public ChatFragment(String key) {
         this.activeKey = key;
     }
@@ -239,6 +242,14 @@ public class ChatFragment extends Fragment {
                 toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
             }
         }
+        if(requestCode==Constants.PHOTO_RESULT && resultCode==Activity.RESULT_OK){
+
+            if(photoPath!=null) {
+                toxSingleton.sendFileSendRequest(photoPath, activeKey, getActivity());
+                photoPath=null;
+            }
+
+        }
     }
 
 
@@ -308,7 +319,7 @@ public class ChatFragment extends Fragment {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final CharSequence items[];
                 items = new CharSequence[] {
-                        "Attach image"
+                        "Attach image","Take a photo"
                 };
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -317,6 +328,28 @@ public class ChatFragment extends Fragment {
                             case 0:
                                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                 startActivityForResult(intent, Constants.IMAGE_RESULT);
+                                break;
+                            case 1:
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                String image_name = "Antoxpic"+new Date().toString();
+                                File storageDir = Environment.getExternalStoragePublicDirectory(
+                                        Environment.DIRECTORY_PICTURES);
+                                File file = null;
+                                try {
+                                    file = File.createTempFile(
+                                            image_name,  /* prefix */
+                                            ".jpg",         /* suffix */
+                                            storageDir      /* directory */
+                                    );
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if(file!=null) {
+                                    Uri imageUri = Uri.fromFile(file);
+                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                    photoPath=file.getAbsolutePath();
+                                }
+                                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
                                 break;
                         }
                     }
