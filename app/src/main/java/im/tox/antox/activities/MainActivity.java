@@ -241,9 +241,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                             }
                         }
                     });
-            if (toxSingleton.activeKey != null) {
-                toxSingleton.clearUselessNotifications(toxSingleton.activeKey);
-            }
         }
     }
 
