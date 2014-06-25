@@ -387,7 +387,7 @@ public class AntoxDB extends SQLiteOpenHelper {
 
     public void markIncomingMessagesRead(String key) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ + "=1 WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND type=2";
+        String query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ + "=1 WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND (type == 2 OR type == 4)";
         db.execSQL(query);
         db.close();
         Log.d("", "marked incoming messages as read");
