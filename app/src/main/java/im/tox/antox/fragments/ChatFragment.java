@@ -2,12 +2,10 @@ package im.tox.antox.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,16 +22,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.zip.CheckedOutputStream;
 
 import im.tox.antox.R;
 import im.tox.antox.adapters.ChatMessagesAdapter;
