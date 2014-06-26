@@ -104,6 +104,7 @@ public class LeftPaneAdapter extends BaseAdapter {
         LeftPaneItem item = getItem(position);
 
         holder.firstText.setText(item.first);
+
         if (type != Constants.TYPE_HEADER) {
             holder.secondText.setText(item.second);
         }
