@@ -321,33 +321,6 @@ public class ChatFragment extends Fragment {
             }
         });
         View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
-        View cameraButton = (View) rootView.findViewById(R.id.cameraButton);
-
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                String image_name = "Antoxpic"+new Date().toString();
-                File storageDir = Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES);
-                File file = null;
-                try {
-                    file = File.createTempFile(
-                            image_name,  /* prefix */
-                            ".jpg",         /* suffix */
-                            storageDir      /* directory */
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(file!=null) {
-                    Uri imageUri = Uri.fromFile(file);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    photoPath=file.getAbsolutePath();
-                }
-                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
-            }
-        });
 
         attachmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,7 +328,8 @@ public class ChatFragment extends Fragment {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final CharSequence items[];
                 items = new CharSequence[] {
-                        "Attach image" // SHOULD BE XML STRING TO BE TRANSLATED
+                        "Attach photo", // SHOULD BE XML STRING TO BE TRANSLATED
+                        "Take photo"
                 };
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -365,6 +339,27 @@ public class ChatFragment extends Fragment {
                                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                 startActivityForResult(intent, Constants.IMAGE_RESULT);
                                 break;
+                            case 1:
+                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                String image_name = "Antoxpic" + new Date().toString();
+                                File storageDir = Environment.getExternalStoragePublicDirectory(
+                                        Environment.DIRECTORY_PICTURES);
+                                File file = null;
+                                try {
+                                    file = File.createTempFile(
+                                            image_name,  /* prefix */
+                                            ".jpg",         /* suffix */
+                                            storageDir      /* directory */
+                                    );
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (file != null) {
+                                    Uri imageUri = Uri.fromFile(file);
+                                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                    photoPath = file.getAbsolutePath();
+                                }
+                                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
                         }
                     }
                 });
