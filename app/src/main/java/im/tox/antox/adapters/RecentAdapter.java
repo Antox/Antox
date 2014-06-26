@@ -81,10 +81,11 @@ public class RecentAdapter extends ArrayAdapter<FriendInfo> {
         Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
         Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
-        holder.friendName.setTypeface(robotoBold);
+        holder.friendName.setTypeface(robotoRegular);
         holder.friendStatus.setTypeface(robotoRegular);
         holder.timestamp.setTypeface(robotoRegular);
         holder.timestamp.setTextColor(context.getResources().getColor(R.color.gray_darker));
+        holder.unreadCount.setTypeface(robotoRegular);
 
 		return row;
 	}

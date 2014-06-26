@@ -7,11 +7,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,13 +78,13 @@ public class ContactsFragment extends Fragment {
         FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
-            char lastLetter = '0';
+            String lastLetter = "";
             for (int i = 0; i < friends_list.length; i++) {
 
-                if(friends_list[i].friendName.charAt(0) != lastLetter) {
+                if(!friends_list[i].friendName.substring(0,1).equalsIgnoreCase(lastLetter)) {
                     LeftPaneItem friends_header = new LeftPaneItem(friends_list[i].friendName.substring(0,1));
                     leftPaneAdapter.addItem(friends_header);
-                    lastLetter = friends_list[i].friendName.charAt(0);
+                    lastLetter = friends_list[i].friendName.substring(0,1);
                 }
 
                 LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
@@ -281,6 +284,25 @@ public class ContactsFragment extends Fragment {
                     alert.show();
                 }
                 return true;
+            }
+        });
+
+        /* Search function */
+        EditText search = (EditText) rootView.findViewById(R.id.searchBar);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                leftPaneAdapter.getFilter().filter(charSequence);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
