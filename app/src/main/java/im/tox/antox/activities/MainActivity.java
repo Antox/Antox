@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -17,11 +18,16 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -50,7 +56,7 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends ActionBarActivity implements DialogToxID.DialogToxIDListener {
 
-    public SlidingPaneLayout pane;
+    public DrawerLayout pane;
     public ChatFragment chat;
 
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
@@ -122,10 +128,29 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
             getApplicationContext().startService(startTox);
 
-            pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-            PaneListener paneListener = new PaneListener();
-            pane.setPanelSlideListener(paneListener);
-            pane.openPane();
+            pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
+            DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            };
+            pane.setDrawerListener(paneListener);
 
             toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -235,9 +260,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         @Override
                         public void call(Boolean close) {
                             if (close) {
-                                pane.closePane();
+                                pane.openDrawer(Gravity.RIGHT);
                             } else {
-                                pane.openPane();
+                                pane.closeDrawer(Gravity.RIGHT);
                             }
                         }
                     });
@@ -270,26 +295,10 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
     @Override
     public void onBackPressed() {
-        if (!pane.isOpen()) {
-            pane.openPane();
+        if (!pane.isDrawerOpen(Gravity.RIGHT)) {
+            pane.closeDrawer(Gravity.RIGHT);
         } else {
             finish();
-        }
-    }
-
-    private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
-        @Override
-        public void onPanelClosed(View view) {
-            toxSingleton.rightPaneOpenSubject.onNext(true);
-        }
-
-        @Override
-        public void onPanelOpened(View view) {
-            toxSingleton.rightPaneOpenSubject.onNext(false);
-        }
-
-        @Override
-        public void onPanelSlide(View view, float arg1) {
         }
     }
 
