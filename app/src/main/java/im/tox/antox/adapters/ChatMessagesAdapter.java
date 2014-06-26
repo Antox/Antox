@@ -186,38 +186,32 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
                                 if (file.getName().toLowerCase().endsWith(extension)) {
 
-                                    // Try to load from cache if file is our own as the file hash shouldn't change
-                                    if(chatMessages.isMine()) {
-                                        if(BitmapManager.checkValidImage(file)) {
-                                            BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
-                                        }
-                                    }
-
-                                    // Set visibility on image holder
-                                    holder.imageMessage.setVisibility(View.VISIBLE);
-                                    holder.imageMessageFrame.setVisibility(View.VISIBLE);
-
                                     if (messages.received) {
                                         if (BitmapManager.checkValidImage(file)) {
                                             BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
                                         }
 
+                                        holder.imageMessage.setVisibility(View.VISIBLE);
+                                        holder.imageMessageFrame.setVisibility(View.VISIBLE);
+
                                         holder.padding.setVisibility(View.GONE);
                                         holder.progressText.setVisibility(View.GONE);
                                         holder.title.setVisibility(View.GONE);
                                         holder.message.setVisibility(View.GONE);
+
+                                        holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                                            public void onClick(View v) {
+                                                Intent i = new Intent();
+                                                i.setAction(android.content.Intent.ACTION_VIEW);
+                                                i.setDataAndType(Uri.fromFile(file), "image/*");
+                                                getContext().startActivity(i);
+                                            }
+                                        });
+
                                     } else {
                                         holder.padding.setVisibility(View.VISIBLE);
                                     }
 
-                                    holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-                                        public void onClick(View v) {
-                                            Intent i = new Intent();
-                                            i.setAction(android.content.Intent.ACTION_VIEW);
-                                            i.setDataAndType(Uri.fromFile(file), "image/*");
-                                            getContext().startActivity(i);
-                                        }
-                                    });
                                 }
 
                                 break; // break for loop
