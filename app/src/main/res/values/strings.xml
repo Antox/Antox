@@ -36,6 +36,7 @@
         limited functionality unless you are using Antox for LAN only
     </string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
+    <string name="search_all_contacts">Search all contacts</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>

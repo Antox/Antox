@@ -104,7 +104,7 @@ public class ChatFragment extends Fragment {
         statusText.setText(friend[2]);
 
         chatName.setTypeface(robotoBold);
-        statusText.setTypeface(robotoThin);
+        statusText.setTypeface(robotoRegular);
     }
 
     @Override

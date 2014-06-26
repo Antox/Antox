@@ -4,12 +4,56 @@
     android:id="@+id/contact_list"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:background="@color/white_absolute"
     android:orientation="vertical" >
-        <FrameLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/white_absolute">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_search"
+            android:id="@+id/imageView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp" />
+
+        <EditText
+            android:id="@+id/searchBar"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:hint="@string/search_all_contacts"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_marginLeft="19dp"
+            android:layout_alignRight="@+id/addFriendIcon"
+            android:textColor="@color/black"
+            android:inputType="text"
+            android:typeface="normal"
+            android:background="@color/white_absolute"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/addFriendIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_add_person"
+            android:layout_marginRight="10dp"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClickAddFriend"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
                 <ListView
                     android:id="@+id/contacts_list"
                     android:layout_width="match_parent"
@@ -18,65 +62,8 @@
                     android:cacheColorHint="@android:color/transparent"
                     android:divider="@color/white"
                     android:dividerHeight="1dp" />
-                <LinearLayout
-                    android:id="@+id/contacts_no_friends"
-                    android:visibility="gone"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:gravity="center">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="20sp"
-                        android:fontFamily=""
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/main_no_friends"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="18sp"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/main_try_adding"/>
-                    </LinearLayout>
+
     </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:background="@color/blue">
-        <ImageButton
-            android:contentDescription="Start Group Conversation"
-            android:id="@+id/contacts_start_group_conversation"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_action_add_group"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <ImageButton
-            android:contentDescription="Search Contacts"
-            android:id="@+id/contacts_search"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_action_search"/>
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <ImageButton
-            android:contentDescription="Add Friend"
-            android:id="@+id/contacts_add_friend"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@android:color/transparent"
-            android:onClick="onClickAddFriend"
-            android:src="@drawable/ic_action_add_person"/>
-    </LinearLayout>
+
 </LinearLayout>
 
