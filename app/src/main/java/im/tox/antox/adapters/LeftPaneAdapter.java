@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,11 +24,14 @@ import im.tox.antox.utils.PrettyTimestamp;
 /**
  * Created by ollie on 04/03/14.
  */
-public class LeftPaneAdapter extends BaseAdapter {
+public class LeftPaneAdapter extends BaseAdapter implements Filterable {
 
+    private ArrayList<LeftPaneItem> mDataOriginal = new ArrayList<LeftPaneItem>();
     private ArrayList<LeftPaneItem> mData = new ArrayList<LeftPaneItem>();
     private LayoutInflater mInflater;
     private Context context;
+
+    Filter mFilter;
 
     public LeftPaneAdapter(Context context) {
         mInflater = ((Activity) context).getLayoutInflater();
@@ -34,6 +40,7 @@ public class LeftPaneAdapter extends BaseAdapter {
 
     public void addItem(final LeftPaneItem item) {
         mData.add(item);
+        mDataOriginal.add(item);
         notifyDataSetChanged();
     }
 
@@ -65,11 +72,6 @@ public class LeftPaneAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-
-    private String SplitKey(String key) {
-        return key.substring(0,38) + "\n" + key.substring(38);
     }
 
     @Override
@@ -106,7 +108,10 @@ public class LeftPaneAdapter extends BaseAdapter {
         holder.firstText.setText(item.first);
 
         if (type != Constants.TYPE_HEADER) {
-            holder.secondText.setText(item.second);
+            if(!item.second.equals(""))
+                holder.secondText.setText(item.second);
+            else
+                holder.firstText.setGravity(Gravity.CENTER_VERTICAL);
         }
         if (type == Constants.TYPE_CONTACT) {
             if (item.count > 0) {
@@ -124,7 +129,7 @@ public class LeftPaneAdapter extends BaseAdapter {
         Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         if(holder.firstText != null)
-            holder.firstText.setTypeface(robotoBold);
+            holder.firstText.setTypeface(robotoRegular);
 
         if(holder.secondText != null)
             holder.secondText.setTypeface(robotoRegular);
@@ -135,7 +140,7 @@ public class LeftPaneAdapter extends BaseAdapter {
         }
 
         if(holder.countText != null)
-            holder.countText.setTypeface(robotoThin);
+            holder.countText.setTypeface(robotoRegular);
 
         return convertView;
     }
@@ -149,4 +154,59 @@ public class LeftPaneAdapter extends BaseAdapter {
         public TextView timeText;
     }
 
+    @Override
+    public Filter getFilter() {
+        if(mFilter == null) {
+            mFilter = new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults filterResults = new FilterResults();
+
+                    if (mDataOriginal != null) {
+
+                        if (constraint.equals("") || constraint == null) {
+
+                            filterResults.values = mDataOriginal;
+                            filterResults.count = mDataOriginal.size();
+
+                        } else {
+                            mData = mDataOriginal;
+                            ArrayList<LeftPaneItem> tempList = new ArrayList<LeftPaneItem>();
+                            int length = mData.size();
+                            int i = 0;
+                            while (i < length) {
+                                LeftPaneItem item = mData.get(i);
+                                if (getItemViewType(i) == Constants.TYPE_HEADER
+                                        && item.first.substring(0, 1).equalsIgnoreCase(constraint.subSequence(0, 1).toString()))
+                                    tempList.add(item);
+                                else if (item.first.toUpperCase().startsWith(constraint.toString().toUpperCase()))
+                                    tempList.add(item);
+
+                                i++;
+                            }
+
+                            filterResults.values = tempList;
+                            filterResults.count = tempList.size();
+                        }
+
+                    }
+
+                    return filterResults;
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                protected void publishResults(CharSequence contraint, FilterResults results) {
+                    mData = (ArrayList<LeftPaneItem>) results.values;
+                    if (results.count > 0) {
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+            };
+        }
+
+        return mFilter;
+    }
 }
