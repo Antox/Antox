@@ -299,11 +299,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
     @Override
     public void onBackPressed() {
-        if (!pane.isDrawerOpen(Gravity.RIGHT)) {
-            pane.closeDrawer(Gravity.RIGHT);
-        } else {
-            finish();
-        }
+        finish();
     }
 
     /* Needed for Tox ID dialog in settings fragment */
