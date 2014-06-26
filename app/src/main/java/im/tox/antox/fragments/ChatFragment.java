@@ -328,8 +328,8 @@ public class ChatFragment extends Fragment {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final CharSequence items[];
                 items = new CharSequence[] {
-                        "Attach photo", // SHOULD BE XML STRING TO BE TRANSLATED
-                        "Take photo"
+                        getResources().getString(R.string.attachment_photo),
+                        getResources().getString(R.string.attachment_takephoto)
                 };
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
