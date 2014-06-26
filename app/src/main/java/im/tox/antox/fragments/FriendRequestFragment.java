@@ -110,7 +110,6 @@ public class FriendRequestFragment extends Fragment {
                 new RejectFriendRequest().execute();
             }
         });
-
         return rootView;
     }
 }
