@@ -7,17 +7,21 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="60dp">
         <TextView
             android:id="@+id/icon"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:background="@color/green"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:duplicateParentState="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_height="match_parent">
             <LinearLayout
                 android:duplicateParentState="true"
@@ -44,6 +48,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             <LinearLayout
@@ -62,12 +67,13 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
-                    android:textSize="@dimen/text_medium"/>
+                    android:textSize="15sp"/>
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
                     android:layout_width="25dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
