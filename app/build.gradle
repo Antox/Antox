@@ -26,6 +26,7 @@ android {
         absolutePaths false
         lintConfig file("lint.xml")
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/fonts'] } }
 }
 
 

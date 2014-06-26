@@ -2,8 +2,7 @@ package im.tox.antox.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.PrettyTimestamp;
@@ -94,6 +94,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
         holder.padding = (View) row.findViewById(R.id.file_transfer_padding);
 
+        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
@@ -130,6 +134,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
+                holder.title.setTypeface(robotoBold);
                 holder.received.setVisibility(View.GONE);
                 holder.sent.setVisibility(View.GONE);
 
@@ -177,44 +182,25 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                     }
 
                     if (f.exists()) {
-                        try {
-
                             final File file = f;
                             final String[] okFileExtensions =  new String[] {"jpg", "png", "gif","jpeg"};
 
-                            for (String extension : okFileExtensions)
-                            {
+                            for (String extension : okFileExtensions) {
+
                                 if (file.getName().toLowerCase().endsWith(extension)) {
 
-                                    Bitmap bmp;
+                                    if (messages.received) {
+                                        if (BitmapManager.checkValidImage(file)) {
+                                            BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
+                                        }
 
-                                    final BitmapFactory.Options options = new BitmapFactory.Options();
-
-                                    // Decode just the bounds to see if it's a valid image
-                                    options.inJustDecodeBounds = true;
-                                    bmp = BitmapFactory.decodeFile(file.getPath(), options);
-
-                                    if (options.outWidth != -1 && options.outHeight != -1) {
-
-                                        // Decode a downsampled bitmap
-                                        options.inJustDecodeBounds = false;
-                                        options.inSampleSize = calculateSampleSize(options, 100,100);
-                                        options.inPreferredConfig = Bitmap.Config.RGB_565;
-                                        bmp = BitmapFactory.decodeFile(file.getPath(), options);
-
-                                        // Set up bitmap display and other ui pieces
-                                        holder.imageMessage.setImageBitmap(bmp);
                                         holder.imageMessage.setVisibility(View.VISIBLE);
                                         holder.imageMessageFrame.setVisibility(View.VISIBLE);
 
-                                        if (messages.received) {
-                                            holder.padding.setVisibility(View.GONE);
-                                            holder.progressText.setVisibility(View.GONE);
-                                            holder.title.setVisibility(View.GONE);
-                                            holder.message.setVisibility(View.GONE);
-                                        } else {
-                                            holder.padding.setVisibility(View.VISIBLE);
-                                        }
+                                        holder.padding.setVisibility(View.GONE);
+                                        holder.progressText.setVisibility(View.GONE);
+                                        holder.title.setVisibility(View.GONE);
+                                        holder.message.setVisibility(View.GONE);
 
                                         holder.imageMessage.setOnClickListener(new View.OnClickListener() {
                                             public void onClick(View v) {
@@ -224,15 +210,15 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
                                                 getContext().startActivity(i);
                                             }
                                         });
+
+                                    } else {
+                                        holder.padding.setVisibility(View.VISIBLE);
                                     }
 
                                 }
 
-                                break;
+                                break; // break for loop
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
 
@@ -260,30 +246,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
         holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
 
+        holder.message.setTypeface(robotoRegular);
+        holder.time.setTypeface(robotoRegular);
+
         return row;
-    }
-
-    public static int calculateSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > reqHeight
-                    && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 
     static class ChatMessagesHolder {
