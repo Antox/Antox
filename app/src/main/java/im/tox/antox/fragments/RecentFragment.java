@@ -1,5 +1,6 @@
 package im.tox.antox.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -48,21 +49,20 @@ public class RecentFragment extends Fragment {
         conversationListView = (ListView) rootView.findViewById(R.id.conversations_list);
         conversationListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-
         conversationListView
                 .setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position,
-                                            long id) {
-                        FriendInfo item = (FriendInfo) parent.getAdapter().getItem(position);
-                        String key = item.friendKey;
-                        view.getFocusables(position);
-                        view.setSelected(true);
-                        setSelectionToKey(activeKey);
-                        toxSingleton.changeActiveKey(key);
-                    }
-                });
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                FriendInfo item = (FriendInfo) parent.getAdapter().getItem(position);
+                String key = item.friendKey;
+                view.getFocusables(position);
+                view.setSelected(true);
+                setSelectionToKey(activeKey);
+                toxSingleton.changeActiveKey(key);
+            }
+        });
         return rootView;
     }
 

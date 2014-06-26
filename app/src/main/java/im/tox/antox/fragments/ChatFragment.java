@@ -6,6 +6,7 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -89,6 +90,10 @@ public class ChatFragment extends Fragment {
         String[] friend = db.getFriendDetails(activeKey);
         Log.d("onResume","activeKey: " + activeKey);
 
+        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
+
         TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
         if(!friend[1].equals(""))
             chatName.setText(friend[1]);
@@ -97,6 +102,9 @@ public class ChatFragment extends Fragment {
 
         TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
         statusText.setText(friend[2]);
+
+        chatName.setTypeface(robotoBold);
+        statusText.setTypeface(robotoThin);
     }
 
     @Override

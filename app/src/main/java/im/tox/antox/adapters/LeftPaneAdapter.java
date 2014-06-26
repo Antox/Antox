@@ -3,6 +3,7 @@ package im.tox.antox.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +25,15 @@ public class LeftPaneAdapter extends BaseAdapter {
 
     private ArrayList<LeftPaneItem> mData = new ArrayList<LeftPaneItem>();
     private LayoutInflater mInflater;
+    private Context context;
 
     public LeftPaneAdapter(Context context) {
         mInflater = ((Activity) context).getLayoutInflater();
+        this.context = context;
     }
 
     public void addItem(final LeftPaneItem item) {
         mData.add(item);
-        notifyDataSetChanged();
-    }
-
-    public void addSeparatorItem(final LeftPaneItem item) {
-        mData.add(item);
-        // save separator position
         notifyDataSetChanged();
     }
 
@@ -120,6 +117,24 @@ public class LeftPaneAdapter extends BaseAdapter {
             holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp));
             holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(item.icon)));
         }
+
+        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        if(holder.firstText != null)
+            holder.firstText.setTypeface(robotoBold);
+
+        if(holder.secondText != null)
+            holder.secondText.setTypeface(robotoRegular);
+
+        if(holder.timeText != null) {
+            holder.timeText.setTypeface(robotoRegular);
+            holder.timeText.setTextColor(context.getResources().getColor(R.color.gray_darker));
+        }
+
+        if(holder.countText != null)
+            holder.countText.setTypeface(robotoThin);
 
         return convertView;
     }

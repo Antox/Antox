@@ -31,6 +31,7 @@
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:textSize="20sp"
+                        android:fontFamily=""
                         android:layout_gravity="center_horizontal"
                         android:text="@string/main_no_friends"/>
                     <TextView

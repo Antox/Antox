@@ -40,6 +40,7 @@ import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Tuple;
 import rx.Subscription;
@@ -154,6 +155,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            //Init Bitmap Manager
+            new BitmapManager();
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
