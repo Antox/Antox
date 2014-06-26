@@ -62,14 +62,6 @@ public class ContactsFragment extends Fragment {
         ArrayList<FriendInfo> friendsList = friendstuple.x;
         ArrayList<FriendRequest> friendRequests = friendstuple.y;
 
-        //If you have no friends or friend requests, display the no friends message
-        LinearLayout noFriends = (LinearLayout) getView().findViewById(R.id.contacts_no_friends);
-        if (friendsList.size() == 0 && friendRequests.size() == 0) {
-            noFriends.setVisibility(View.VISIBLE);
-        } else {
-            noFriends.setVisibility(View.GONE);
-        }
-
         leftPaneAdapter = new LeftPaneAdapter(getActivity());
         FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
         friend_requests = friendRequests.toArray(friend_requests);
@@ -83,9 +75,15 @@ public class ContactsFragment extends Fragment {
         FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
-            LeftPaneItem friends_header = new LeftPaneItem("Contacts");
-            leftPaneAdapter.addItem(friends_header);
+            char lastLetter = '0';
             for (int i = 0; i < friends_list.length; i++) {
+
+                if(friends_list[i].friendName.charAt(0) != lastLetter) {
+                    LeftPaneItem friends_header = new LeftPaneItem(friends_list[i].friendName.substring(0,1));
+                    leftPaneAdapter.addItem(friends_header);
+                    lastLetter = friends_list[i].friendName.charAt(0);
+                }
+
                 LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
