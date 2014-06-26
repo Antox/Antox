@@ -43,7 +43,7 @@ For a list of which devices currently run Antox, visit our <a href="https://wiki
 - Basic messaging - this does not include group chats
 
 ###Screenshots Of Progress
-<img src="http://a.pomf.se/skpyho.png" width="230px" height="400px"/><img src="https://pbs.twimg.com/media/Bq0stgVCQAA2Q6n.png:large" width="230px" height="400px"/><img src="http://a.pomf.se/qozvok.png" width="230px" height="400px"/>
+<img src="http://a.pomf.se/bboyqc.png" width="230px" height="400px"/><img src="https://pbs.twimg.com/media/Bq0stgVCQAA2Q6n.png:large" width="230px" height="400px"/><img src="http://a.pomf.se/qozvok.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
