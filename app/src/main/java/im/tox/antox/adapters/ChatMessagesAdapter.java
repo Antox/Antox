@@ -2,8 +2,7 @@ package im.tox.antox.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
@@ -18,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import im.tox.antox.R;
@@ -96,6 +94,10 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.progressText = (TextView) row.findViewById(R.id.file_transfer_progress_text);
         holder.padding = (View) row.findViewById(R.id.file_transfer_padding);
 
+        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
@@ -132,6 +134,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
+                holder.title.setTypeface(robotoBold);
                 holder.received.setVisibility(View.GONE);
                 holder.sent.setVisibility(View.GONE);
 
@@ -242,6 +245,9 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         }
 
         holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
+
+        holder.message.setTypeface(robotoRegular);
+        holder.time.setTypeface(robotoRegular);
 
         return row;
     }

@@ -3,6 +3,7 @@ package im.tox.antox.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,16 @@ public class RecentAdapter extends ArrayAdapter<FriendInfo> {
         } else {
             holder.unreadCount.setVisibility(View.VISIBLE);
         }
+
+        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+
+        holder.friendName.setTypeface(robotoBold);
+        holder.friendStatus.setTypeface(robotoRegular);
+        holder.timestamp.setTypeface(robotoRegular);
+        holder.timestamp.setTextColor(context.getResources().getColor(R.color.gray_darker));
+
 		return row;
 	}
 
