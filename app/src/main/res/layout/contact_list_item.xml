@@ -7,17 +7,21 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="55dp">
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="60dp">
         <TextView
             android:id="@+id/icon"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:background="@color/green"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:duplicateParentState="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_height="match_parent">
             <LinearLayout
                 android:duplicateParentState="true"
@@ -28,22 +32,23 @@
                 <TextView
                     android:id="@+id/friend_name"
                     android:duplicateParentState="true"
-                    android:textColor="@drawable/list_selector_big_text"
+                    android:textColor="@color/black"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_large"
+                    android:textSize="19sp"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/last_message_timestamp"
                     android:duplicateParentState="true"
                     android:text="10:00 PM"
                     android:textSize="@dimen/text_small"
-                    android:textColor="@drawable/list_selector_small_text"
+                    android:textColor="@color/gray_darker"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
+                    android:layout_marginRight="20dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             <LinearLayout
@@ -55,19 +60,21 @@
                 <TextView
                     android:id="@+id/friend_status"
                     android:duplicateParentState="true"
-                    android:textColor="@drawable/list_selector_small_text"
+                    android:textColor="@color/gray_darker"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
-                    android:textSize="@dimen/text_medium"/>
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"/>
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
                     android:layout_width="25dp"
+                    android:layout_marginRight="20dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"

@@ -14,7 +14,6 @@ public class Message {
     public boolean has_been_read;
     public boolean successfully_sent;
     public Timestamp timestamp;
-    public int progress;
     public int size;
     public int type;
 
@@ -22,7 +21,7 @@ public class Message {
         super();
     }
 
-    public Message(int id, int message_id, String k, String m, boolean received, boolean read, boolean sent, Timestamp time, int prog, int size, int type) {
+    public Message(int id, int message_id, String k, String m, boolean received, boolean read, boolean sent, Timestamp time, int size, int type) {
         super();
         this.id = id;
         this.message_id = message_id;
@@ -31,7 +30,6 @@ public class Message {
         this.has_been_received = received;
         this.has_been_read = read;
         this.successfully_sent = sent;
-        this.progress = prog;
         this.size = size;
         this.type = type;
         this.timestamp = time;
