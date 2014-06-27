@@ -30,9 +30,22 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
     public void execute(AntoxFriend friend, boolean online) {
         AntoxDB db = new AntoxDB(ctx);
         db.updateUserOnline(friend.getId(), online);
+
+        String[] det = db.getFriendDetails(friend.getId());
+        String tmp;
+
+        if(!det[1].equals(""))
+            tmp = det[1];
+        else
+            tmp = det[0];
+
+        String tmp2 = online ? "come online" : "gone offline";
+        db.addMessage(-1, friend.getId(), tmp + " has " + tmp2, true, true, true, 5);
         db.close();
         if (online) {
             toxSingleton.sendUnsentMessages(ctx);
         }
+        toxSingleton.updateFriendsList(ctx);
+        toxSingleton.updateMessages(ctx);
     }
 }

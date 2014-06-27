@@ -11,7 +11,6 @@ public class ChatMessages {
     public boolean received;
     public boolean sent;
     public boolean isFile;
-    public int progress;
     public int size;
     public int type;
 
@@ -19,7 +18,7 @@ public class ChatMessages {
         super();
     }
 
-    public ChatMessages(int id, int message_id,String message, String time,boolean received, boolean sent, int progress, int size, int type) {
+    public ChatMessages(int id, int message_id,String message, String time,boolean received, boolean sent, int size, int type) {
         super();
         this.id = id;
         this.message_id=message_id;
@@ -27,7 +26,6 @@ public class ChatMessages {
         this.message = message;
         this.received = received;
         this.sent = sent;
-        this.progress = progress;
         this.size = size;
         this.type = type;
     }
@@ -39,8 +37,8 @@ public class ChatMessages {
         this.friendName = friendName;
     }
 
-    public boolean IsMine() {
-        if(type == 1)
+    public boolean isMine() {
+        if(type == 1 || type == 3)
             return true;
         else
             return false;

@@ -6,8 +6,10 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -20,9 +22,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.sql.Timestamp;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -42,6 +45,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+
 /**
  * Created by ollie on 28/02/14.
  */
@@ -56,10 +60,7 @@ public class ChatFragment extends Fragment {
     Subscription messagesSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
-
-    public ChatFragment() {
-    }
-
+    public String photoPath;
     public ChatFragment(String key) {
         this.activeKey = key;
     }
@@ -87,6 +88,11 @@ public class ChatFragment extends Fragment {
         // There should be a way to do this without accessing the db
         AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
         String[] friend = db.getFriendDetails(activeKey);
+        Log.d("onResume","activeKey: " + activeKey);
+
+        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
+        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
+        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
         TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
         if(!friend[1].equals(""))
@@ -96,6 +102,9 @@ public class ChatFragment extends Fragment {
 
         TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
         statusText.setText(friend[2]);
+
+        chatName.setTypeface(robotoBold);
+        statusText.setTypeface(robotoRegular);
     }
 
     @Override
@@ -183,7 +192,7 @@ public class ChatFragment extends Fragment {
                                     }
                                     AntoxDB db = new AntoxDB(getActivity());
                                     /* Add message to chatlog */
-                                    db.addMessage(id, key, msg, true, false, false, sendingSucceeded);
+                                    db.addMessage(id, key, msg, false, false, sendingSucceeded, 1);
                                     db.close();
                                     /* update UI */
                                     toxSingleton.updateMessages(getActivity());
@@ -201,7 +210,7 @@ public class ChatFragment extends Fragment {
         if (messages.size() >= 0) {
             adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).progress, messages.get(i).size, messages.get(i).type));
+                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
             }
             Log.d("ChatFragment", "Updating chat");
             adapter.notifyDataSetChanged();
@@ -215,7 +224,6 @@ public class ChatFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("ChatFragment ImageResult resultCode", Integer.toString(resultCode));
         Log.d("ChatFragment ImageResult requestCode", Integer.toString(requestCode));
-        Log.d("ChatFragment ImageResult data", data.toString());
         if (requestCode == Constants.IMAGE_RESULT  && resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             String path = null;
@@ -241,6 +249,14 @@ public class ChatFragment extends Fragment {
             if (path != null) {
                 toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
             }
+        }
+        if(requestCode==Constants.PHOTO_RESULT && resultCode==Activity.RESULT_OK){
+
+            if(photoPath!=null) {
+                toxSingleton.sendFileSendRequest(photoPath, activeKey, getActivity());
+                photoPath=null;
+            }
+
         }
     }
 
@@ -305,13 +321,41 @@ public class ChatFragment extends Fragment {
             }
         });
         View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
+        View cameraButton = (View) rootView.findViewById(R.id.cameraButton);
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                String image_name = "Antoxpic"+new Date().toString();
+                File storageDir = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES);
+                File file = null;
+                try {
+                    file = File.createTempFile(
+                            image_name,  /* prefix */
+                            ".jpg",         /* suffix */
+                            storageDir      /* directory */
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(file!=null) {
+                    Uri imageUri = Uri.fromFile(file);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    photoPath=file.getAbsolutePath();
+                }
+                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
+            }
+        });
+
         attachmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final CharSequence items[];
                 items = new CharSequence[] {
-                        "Attach image"
+                        "Attach image" // SHOULD BE XML STRING TO BE TRANSLATED
                 };
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
