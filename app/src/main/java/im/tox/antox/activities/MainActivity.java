@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -17,11 +18,16 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -34,6 +40,7 @@ import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Tuple;
 import rx.Subscription;
@@ -50,13 +57,14 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends ActionBarActivity implements DialogToxID.DialogToxIDListener {
 
-    public SlidingPaneLayout pane;
+    public DrawerLayout pane;
     public ChatFragment chat;
 
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     Subscription activeKeySub;
     Subscription chatActiveSub;
+    Subscription doClosePaneSub;
 
     SharedPreferences preferences;
 
@@ -64,12 +72,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     protected void onNewIntent(Intent i) {
         if (i.getAction() != null) {
             if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.getAntoxFriend(i.getStringExtra("key")) != null) {
-                Fragment newFragment = new ChatFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.right_pane, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toxSingleton.changeActiveKey(i.getStringExtra("key"));
             }
         }
     }
@@ -123,21 +126,38 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         getString(R.string.main_not_connected));
             }
 
-            /* If the tox service isn't already running, start it */
-            if (!toxSingleton.isRunning) {
-                /* Start without checking for internet connection in case of LAN usage */
-                Intent startToxIntent = new Intent(getApplicationContext(), ToxDoService.class);
-                startToxIntent.setAction(Constants.START_TOX);
-                getApplicationContext().startService(startToxIntent);
-            }
+            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
+            getApplicationContext().startService(startTox);
 
-            pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-            PaneListener paneListener = new PaneListener();
-            pane.setPanelSlideListener(paneListener);
-            pane.openPane();
+            pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
+            DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            };
+            pane.setDrawerListener(paneListener);
 
             toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            //Init Bitmap Manager
+            new BitmapManager();
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
@@ -177,6 +197,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==Constants.ADD_FRIEND_REQUEST_CODE && resultCode==RESULT_OK){
+            toxSingleton.updateFriendsList(this);
+        }
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -203,15 +231,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
                             String activeKey = activeKeyAndIfFriend.x;
                             boolean isFriend = activeKeyAndIfFriend.y;
+                            Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
                             if (activeKey.equals("")) {
-                                if(pane != null) {
-                                    pane.openPane();
-                                } else {
-                                    pane = (SlidingPaneLayout) findViewById(R.id.slidingpane_layout);
-                                    PaneListener paneListener = new PaneListener();
-                                    pane.setPanelSlideListener(paneListener);
-                                    pane.openPane();
-                                }
                                 Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
                                 if (fragment != null) {
                                     getSupportFragmentManager().beginTransaction().remove(fragment).commit();
@@ -234,14 +255,21 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                         transaction.commit();
                                     }
                                 }
-                                pane.closePane();
                             }
                             toxSingleton.activeKey = activeKey;
                         }
                     });
-            if (toxSingleton.activeKey != null) {
-                toxSingleton.clearUselessNotifications(toxSingleton.activeKey);
-            }
+            doClosePaneSub = toxSingleton.doClosePaneSubject.observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean close) {
+                            if (close) {
+                                pane.openDrawer(Gravity.RIGHT);
+                            } else {
+                                pane.closeDrawer(Gravity.RIGHT);
+                            }
+                        }
+                    });
         }
     }
 
@@ -252,6 +280,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         if(preferences.getBoolean("beenLoaded", false) == true) {
             activeKeySub.unsubscribe();
             chatActiveSub.unsubscribe();
+            doClosePaneSub.unsubscribe();
             toxSingleton.chatActive = false;
         }
     }
@@ -270,27 +299,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
     @Override
     public void onBackPressed() {
-        if (!pane.isOpen()) {
-            pane.openPane();
-        } else {
-            finish();
-        }
-    }
-
-    private class PaneListener implements SlidingPaneLayout.PanelSlideListener {
-        @Override
-        public void onPanelClosed(View view) {
-            toxSingleton.rightPaneOpenSubject.onNext(true);
-        }
-
-        @Override
-        public void onPanelOpened(View view) {
-            toxSingleton.rightPaneOpenSubject.onNext(false);
-        }
-
-        @Override
-        public void onPanelSlide(View view, float arg1) {
-        }
+        finish();
     }
 
     /* Needed for Tox ID dialog in settings fragment */

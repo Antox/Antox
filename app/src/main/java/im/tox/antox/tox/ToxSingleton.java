@@ -2,18 +2,13 @@ package im.tox.antox.tox;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -21,13 +16,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -84,6 +77,7 @@ public class ToxSingleton {
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
     public BehaviorSubject<Boolean> rightPaneOpenSubject;
+    public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
@@ -112,6 +106,8 @@ public class ToxSingleton {
         unreadCountsSubject.subscribeOn(Schedulers.io());
         activeKeySubject = BehaviorSubject.create("");
         activeKeySubject.subscribeOn(Schedulers.io());
+        doClosePaneSubject = PublishSubject.create();
+        doClosePaneSubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
         updatedMessagesSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
@@ -186,7 +182,7 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length());
+                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
                 antoxDB.close();
             }
         }
@@ -194,40 +190,63 @@ public class ToxSingleton {
 
     public void fileSendRequest(String key, int fileNumber, String fileName, long fileSize, Context context) {
         Log.d("fileSendRequest, fileNumber: ",Integer.toString(fileNumber));
+        String fileN = fileName;
+        String[] fileSplit = fileName.split("\\.");
+        String filePre = "";
+        String fileExt = fileSplit[fileSplit.length-1];
+        for (int j=0; j<fileSplit.length-1; j++) {
+            filePre = filePre.concat(fileSplit[j]);
+            if (j<fileSplit.length-2) {
+                filePre = filePre.concat(".");
+            }
+        }
+        File dirfile = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+        if (!dirfile.mkdirs()) {
+            Log.e("acceptFile", "Directory not created");
+        }
+        File file = new File(dirfile.getPath(), fileN);
+        if (file.exists()) {
+            int i = 1;
+            do {
+                fileN = filePre + "(" + Integer.toString(i) + ")" + "." + fileExt;
+                file = new File(dirfile.getPath(), fileN);
+                i++;
+            } while (file.exists());
+        }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileName, fileNumber, (int) fileSize);
+        antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
     }
 
-    public void acceptFile(String key, int fileNumber, Context context) {
-        /*
-        AntoxDB antoxDB = new AntoxDB(context);
-        String fileName = antoxDB.getFilePath(key, fileNumber);
+    public void changeActiveKey(String key) {
+        activeKeySubject.onNext(key);
+        doClosePaneSubject.onNext(true);
+    }
 
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-            if (!dirfile.mkdirs()) {
-                Log.e("acceptFile", "Directory not created");
-            }
-            File file = new File(dirfile.getPath(), fileName);
-            antoxDB.setFilePath(key, fileNumber, file.getPath());
-        }
-        antoxDB.close();
-        */
+    public void clearActiveKey() {
+        activeKeySubject.onNext("");
+        doClosePaneSubject.onNext(false);
+    }
+
+    public void acceptFile(String key, int fileNumber, Context context) {
         try {
             jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        AntoxDB antoxDB = new AntoxDB(context);
+        antoxDB.fileTransferStarted(key, fileNumber);
+        antoxDB.close();
+        updatedMessagesSubject.onNext(true);
     }
 
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
         AntoxDB antoxDB = new AntoxDB(context);
         String fileName = antoxDB.getFilePath(key, fileNumber);
-
+        int id = antoxDB.getFileId(key, fileNumber);
+        antoxDB.close();
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             File dirfile = new File(Environment.getExternalStoragePublicDirectory(
@@ -247,11 +266,7 @@ public class ToxSingleton {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                //antoxDB.incrementProgress(key, fileNumber, data.length);
-                updatedMessagesSubject.onNext(true);
-                int id = antoxDB.getFileId(key, fileNumber);
                 incrementProgress(id, data.length);
-                antoxDB.close();
                 try {
                     output.close();
                 } catch (Exception e) {
@@ -271,9 +286,18 @@ public class ToxSingleton {
                 progressMap.put(idObject, current+length);
             }
         }
+        updatedMessagesSubject.onNext(true);
     }
 
+    public void setProgress(int id, int progress) {
+        Integer idObject = id;
+        if (id != -1) {
+            progressMap.put(idObject, progress);
+        }
+        updatedMessagesSubject.onNext(true);
+    }
     public void fileFinished(String key, int fileNumber, Context context) {
+        Log.d("ToxSingleton","fileFinished");
         AntoxDB db = new AntoxDB(context);
         db.fileFinished(key, fileNumber);
         db.close();
@@ -311,6 +335,7 @@ public class ToxSingleton {
         String path = "";
         AntoxDB antoxDB = new AntoxDB(context);
         path = antoxDB.getFilePath(key, fileNumber);
+        int id = antoxDB.getFileId(key, fileNumber);
         antoxDB.close();
         int result = -1;
         if (!path.equals("")) {
@@ -360,9 +385,10 @@ public class ToxSingleton {
                             e.printStackTrace();
                         }
                     }
-                }
-                if (i > bytes.length) {
-                    i = bytes.length;
+                    if (i > bytes.length) {
+                        i = bytes.length;
+                    }
+                    setProgress(id, i);
                 }
                 try {
                     buf.close();
