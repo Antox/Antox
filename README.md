@@ -1,14 +1,14 @@
 ![Antox](http://vexx.us/Images/AntoxFull.png "Antox Tox Android Client")
 =====
 
-Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is built on current design guidelines, and is both fast and fluid. Support for stickers, geo-location, and other various services offered by other competeting applications are currently being decided upon. Once ready, Antox will be available on Google Play and on F-Droid.
+Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. 
+Once ready, Antox will be available on Google Play and on F-Droid.
 
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
 ###Current development
-The development branch of Antox was recently merged into master bringing a new UI and a code base restructure. 
-Please let us know of any issues/bugs this caused. We welcome any feedback and suggestions on the new changes too.
-Work is now being done on jToxcore so that more functions can be added to Antox.
+Currently working on improving the file transfers, inline image displaying and fixing any bugs related to them. Other forms of media will
+also be looked at for inlining. Development will also happen on the contacts list to allow searching and proper ordering
 
 ###Antox On F-Droid
 To get Antox on F-Droid, add https://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Repositories' in F-Droid and click the '+' symbol in the action bar. PLEASE NOTE this app is still alpha and
@@ -43,7 +43,7 @@ For a list of which devices currently run Antox, visit our <a href="https://wiki
 - Basic messaging - this does not include group chats
 
 ###Screenshots Of Progress
-<img src="http://a.pomf.se/skpyho.png" width="230px" height="400px"/><img src="http://a.pomf.se/qtsrmo.png" width="230px" height="400px"/><img src="http://a.pomf.se/qozvok.png" width="230px" height="400px"/>
+<img src="http://a.pomf.se/bboyqc.png" width="230px" height="400px"/><img src="https://pbs.twimg.com/media/Bq0stgVCQAA2Q6n.png:large" width="230px" height="400px"/><img src="http://a.pomf.se/qozvok.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*

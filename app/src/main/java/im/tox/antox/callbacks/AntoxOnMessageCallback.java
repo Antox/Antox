@@ -34,9 +34,9 @@ public class AntoxOnMessageCallback implements OnMessageCallback<AntoxFriend> {
         AntoxDB db = new AntoxDB(this.ctx);
         if(!db.isFriendBlocked(friend.getId())) {
             if (!(toxSingleton.chatActive && (toxSingleton.activeKey.equals(friend.getId())))) {
-                db.addMessage(-1, friend.getId(), message, false, true, false, true);
+                db.addMessage(-1, friend.getId(), message, true, false, true, 2);
             } else {
-                db.addMessage(-1, friend.getId(), message, false, true, true, true);
+                db.addMessage(-1, friend.getId(), message, true, true, true, 2);
             }
         }
         db.close();

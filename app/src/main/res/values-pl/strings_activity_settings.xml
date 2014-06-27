@@ -44,4 +44,11 @@
 
     <!-- Menu strings -->
     <string name="copy_tox_id">Kopiuj Tox ID</string>
+
+    <!-- Dht strings -->
+    <string name="dht">Węzły DHT</string>
+    <string name="dht_ip">Adres IP</string>
+    <string name="dht_port">Port</string>
+    <string name="dht_key">Klucz</string>
+
 </resources>

@@ -37,12 +37,14 @@ public final class Constants {
     public static final int ADD_FRIEND_REQUEST_CODE=0;
     public static final int WELCOME_ACTIVITY_REQUEST_CODE = 3;
 
-    //imagepicker
+    //file sending
     public static final int IMAGE_RESULT = 0;
+    public static final int PHOTO_RESULT = 1;
 
     // Message Types
     public static final int MESSAGE_TYPE_OWN = 1;
     public static final int MESSAGE_TYPE_FRIEND = 2;
     public static final int MESSAGE_TYPE_FILE_TRANSFER = 3;
-    public static final int MESSAGE_TYPE_ACTION = 4;
+    public static final int MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4;
+    public static final int MESSAGE_TYPE_ACTION = 5;
 }

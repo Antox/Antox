@@ -29,11 +29,14 @@
             android:textColor="@color/grey_light"
             android:textSize="13sp"
             android:text="STATUS"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
             android:layout_alignLeft="@+id/chatActiveName"
             android:layout_alignStart="@+id/chatActiveName"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:layout_toLeftOf="@+id/callFriend" />
 
         <ImageButton
             android:id="@+id/callFriend"
@@ -90,6 +93,15 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/margin_medium"
             android:src="@drawable/ic_action_attachment"/>
+
+        <ImageView
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_medium"
+            android:src="@drawable/ic_action_camera"/>
+
         <EditText
             android:id="@+id/yourMessage"
             android:layout_width="0dp"
