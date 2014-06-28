@@ -210,20 +210,20 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferences.getBoolean("beenLoaded", false)){
-            chatActiveSub = toxSingleton.chatActiveAndKey.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
-                    .subscribe(new Action1<Tuple<String, Boolean>>() {
+            chatActiveSub = toxSingleton.chatActiveSubject.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
+                    .subscribe(new Action1<String>() {
                         @Override
-                        public void call(Tuple<String, Boolean> t) {
-                            AntoxDB antoxDB = new AntoxDB(getApplicationContext());
-                            String activeKey = t.x;
-                            boolean chatActive = t.y;
-                            toxSingleton.chatActive = chatActive;
-                            if (toxSingleton.chatActive) {
+                        public void call(String activeKey) {
+                            if (!activeKey.equals("")) {
+                                toxSingleton.chatActive = true;
+                                AntoxDB antoxDB = new AntoxDB(getApplicationContext());
                                 antoxDB.markIncomingMessagesRead(activeKey);
                                 toxSingleton.clearUselessNotifications(activeKey);
                                 toxSingleton.updateMessages(getApplicationContext());
+                                antoxDB.close();
+                            } else {
+                                toxSingleton.chatActive = false;
                             }
-                            antoxDB.close();
                         }
                     });
             activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
