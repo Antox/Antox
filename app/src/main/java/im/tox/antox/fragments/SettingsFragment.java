@@ -80,6 +80,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 return true;
             }
         });
+
     }
 
     /**
