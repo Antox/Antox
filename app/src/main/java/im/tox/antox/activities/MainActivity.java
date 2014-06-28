@@ -111,11 +111,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         }
 
         /* Check if first time ever running by checking the preferences */
-        if (preferences.getBoolean("beenLoaded", false) == false) {
-
+        if (!preferences.getBoolean("beenLoaded", false)) {
             Intent intent = new Intent(this, WelcomeActivity.class);
             startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
-
         } else {
             /* Check if connected to the Internet */
             ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -158,6 +156,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             //Init Bitmap Manager
             new BitmapManager();
+
+            //Get epoch time for online/offline messages
+            Constants.epoch = System.currentTimeMillis()/1000; // Current time in seconds
 
             //Initialize the RxJava Subjects in tox singleton;
             toxSingleton.initSubjects(this);
@@ -208,7 +209,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("beenLoaded", false) == true){
+        if (preferences.getBoolean("beenLoaded", false)){
             chatActiveSub = toxSingleton.chatActiveAndKey.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
                     .subscribe(new Action1<Tuple<String, Boolean>>() {
                         @Override
@@ -277,7 +278,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onPause(){
         super.onPause();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(preferences.getBoolean("beenLoaded", false) == true) {
+        if(preferences.getBoolean("beenLoaded", false)) {
             activeKeySub.unsubscribe();
             chatActiveSub.unsubscribe();
             doClosePaneSub.unsubscribe();
