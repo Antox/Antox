@@ -322,6 +322,15 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
+
+        View backButton = (View) rootView.findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+                                              toxSingleton.doClosePaneSubject.onNext(false);
+                                          }
+                                      });
         View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
 
         attachmentButton.setOnClickListener(new View.OnClickListener() {
