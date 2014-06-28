@@ -41,7 +41,7 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
             tmp = det[0];
 
         long epochNow = System.currentTimeMillis()/1000;
-        if(epochNow - Constants.epoch > 60) {
+        if(epochNow - Constants.epoch > 30) {
             String tmp2 = online ? "come online" : "gone offline";
             db.addMessage(-1, friend.getId(), tmp + " has " + tmp2, true, true, true, 5);
             db.close();
