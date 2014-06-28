@@ -68,7 +68,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        toxSingleton.rightPaneOpenSubject.onNext(true);
+        toxSingleton.chatActiveSubject.onNext(activeKey);
         messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
             @Override
             public ArrayList<Message> call(Boolean input) {
@@ -111,7 +111,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        toxSingleton.rightPaneOpenSubject.onNext(false);
+        toxSingleton.chatActiveSubject.onNext("");
         messagesSub.unsubscribe();
     }
 
