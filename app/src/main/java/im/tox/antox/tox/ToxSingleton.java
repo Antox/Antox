@@ -166,7 +166,7 @@ public class ToxSingleton {
         if (fileName != null) {
             int fileNumber = -1;
             try {
-                fileNumber = jTox.toxNewFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
+                fileNumber = jTox.newFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
             } catch (Exception e) {
                 Log.d("toxNewFileSender error", e.toString());
             }
@@ -222,7 +222,7 @@ public class ToxSingleton {
 
     public void acceptFile(String key, int fileNumber, Context context) {
         try {
-            jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
+            jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -331,7 +331,7 @@ public class ToxSingleton {
         if (!path.equals("")) {
             int chunkSize = 1;
             try {
-                chunkSize = jTox.toxFileDataSize(getAntoxFriend(key).getFriendnumber());
+                chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -355,7 +355,7 @@ public class ToxSingleton {
                         break;
                     }
                     try {
-                        result = jTox.toxFileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
+                        result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
                     } catch (Exception e) {
                         e.printStackTrace();
                         break;
@@ -389,7 +389,7 @@ public class ToxSingleton {
             if (result != -1) {
                 try {
                     Log.d("toxFileSendControl", "FINISHED");
-                    jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    jTox.fileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                     fileFinished(key, fileNumber, context);
                     return true;
                 } catch (Exception e) {
