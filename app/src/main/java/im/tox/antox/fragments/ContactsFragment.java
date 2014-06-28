@@ -159,7 +159,7 @@ public class ContactsFragment extends Fragment {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
                         String key = item.key;
-                        if (key != "") {
+                        if (!key.equals("")) {
                             setSelectionToKey(key);
                             toxSingleton.changeActiveKey(key);
                         }

@@ -93,6 +93,10 @@
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
 
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Attach photo</string>
+    <string name="attachment_takephoto">Take photo</string>
+
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
