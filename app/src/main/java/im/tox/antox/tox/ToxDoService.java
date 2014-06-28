@@ -41,6 +41,7 @@ public class ToxDoService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
         toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 500, TimeUnit.MILLISECONDS);
+
         return START_STICKY;
     }
 
@@ -91,10 +92,11 @@ public class ToxDoService extends Service {
             /* Praise the sun */
             try {
                 toxSingleton.jTox.doTox();
-                toxSingleton.isRunning = true;
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
+            } catch (NullPointerException e) {
+                toxSingleton.initTox(getApplicationContext());
             }
         }
     }

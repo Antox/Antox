@@ -86,8 +86,6 @@ public class ToxSingleton {
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
 
-    public boolean isRunning = false;
-
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
     }
@@ -614,18 +612,17 @@ public class ToxSingleton {
                 if(DhtNode.ipv4.size() == 0)
                     new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
                 /* Try and bootstrap to online nodes*/
-                while (DhtNode.connected == false && networkInfo.isConnected()) {
+                while (DhtNode.connected == false) {
                     try {
                         if (DhtNode.ipv4.size() > 0) {
                             try {
                                 jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                         Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
+                                Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
+                                DhtNode.connected = true;
                             } catch (ToxException e) {
 
                             }
-
-                            Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
-                            DhtNode.connected = true;
                         }
                     } catch (UnknownHostException e) {
                         DhtNode.counter = DhtNode.counter >= DhtNode.ipv4.size() ? 0 : DhtNode.counter++;
@@ -637,6 +634,8 @@ public class ToxSingleton {
                 e.printStackTrace();
             }
         }
+
+
     }
 
     public static ToxSingleton getInstance() {
