@@ -89,6 +89,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
                     DhtNode.port.add(node[4]);
                     DhtNode.key.add(node[5]);
                 }
+                br.close();
                 Log.d(TAG, "AntoxNodes file found and been read");
             } catch (Exception exp) {
                 Log.d(TAG, "AntoxNodes file not found");

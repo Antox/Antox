@@ -47,4 +47,7 @@ public final class Constants {
     public static final int MESSAGE_TYPE_FILE_TRANSFER = 3;
     public static final int MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4;
     public static final int MESSAGE_TYPE_ACTION = 5;
+
+    // Epoch time
+    public static long epoch;
 }
