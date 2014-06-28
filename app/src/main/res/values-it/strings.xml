@@ -5,11 +5,11 @@
 
     <!-- Activity titles -->
     <string name="title_activity_welcome">Benvenuto</string>
-    <string name="title_activity_add_friend">Aggiungi Amico</string>
+    <string name="title_activity_add_friend">Aggiungi Contatto</string>
     <string name="title_activity_friend_profile">Profilo</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">Aggiungi Amico</string>
+    <string name="add_friend">Aggiungi Contatto</string>
 
     <!-- Main Activity -->
     <string name="title">Antox</string>
@@ -17,14 +17,15 @@
     <string name="main_username">Nome Utente</string>
     <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
-    <string name="main_no_friends">Non hai amici</string>
+    <string name="main_no_friends">Nessun contatto</string>
     <string name="main_recent_no">Nessuna coversazione recente</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
-    <string name="main_friends">Amici</string>
+    <string name="main_friends">Contatti</string>
     <string name="main_no_internet">Nessuna connessione ad internet</string>
     <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
     <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
+    <string name="search_all_contacts">Cerca tra i contatti</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
@@ -39,19 +40,19 @@
     <string name="welcome_developer_string">Sviluppato da astonex</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Tox ID del tuo amico</string>
+    <string name="addfriend_friend_key">Tox ID del contatto</string>
     <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
-    <string name="addfriend_button">Aggiungi Amico</string>
-    <string name="addfriend_friend_added">Amico aggiunto</string>
-    <string name="addfriend_friend_exists">Amico già inserito</string>
+    <string name="addfriend_button">Aggiungi Contatto</string>
+    <string name="addfriend_friend_added">Contatto aggiunto</string>
+    <string name="addfriend_friend_exists">Contatto già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">Tox ID inserito non valido</string>
-    <string name="addfriend_nick_hint">Nome personalizzato per il tuo amico</string>
+    <string name="addfriend_nick_hint">Nome personalizzato per il contatto</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
-    <string name="dialog_pin">Inserisci il pin del tuo amico</string>
+    <string name="dialog_pin">Inserisci il pin del contatto</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
     <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
-    <string name="addfriend_no_internet_text">Non puoi aggiungere amici in questo momento:
+    <string name="addfriend_no_internet_text">Non puoi aggiungere contatti in questo momento:
         non sei connesso alla rete Tox.\nProva a riavviare l\'applicazione.
     </string>
 
@@ -62,7 +63,7 @@
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Salva</string>
-    <string name="friend_profile_updated">Profilo dell\'amico salvato</string>
+    <string name="friend_profile_updated">Profilo del contatto salvato</string>
     <string name="friend_profile_copy">Copia Tox ID</string>
     <string name="friend_profile_copied">Tox ID copiato</string>
 
@@ -77,14 +78,14 @@
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profilo</string>
-    <string name="friend_action_sendfile">Invia File</string>
-    <string name="friend_action_delete">Rimuovi Amico</string>
+    <string name="friend_action_sendfile">Invia file</string>
+    <string name="friend_action_delete">Rimuovi contatto</string>
     <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_unblock">Sblocca</string>
-    <string name="friend_action_deletechat">Elimina Chat</string>
+    <string name="friend_action_deletechat">Elimina chat</string>
     <string name="friend_action_block_confirmation">
-        Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
+        Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
         richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
     </string>
     <string name="toast_succ_move_user">Spostamento riuscito</string>
