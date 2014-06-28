@@ -76,12 +76,11 @@ public class ToxSingleton {
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
-    public BehaviorSubject<Boolean> rightPaneOpenSubject;
+    public BehaviorSubject<String> chatActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
-    public Observable chatActiveAndKey;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
@@ -96,10 +95,10 @@ public class ToxSingleton {
     public void initSubjects(Context ctx) {
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
         friendListSubject.subscribeOn(Schedulers.io());
-        rightPaneOpenSubject = BehaviorSubject.create(new Boolean(false));
-        rightPaneOpenSubject.subscribeOn(Schedulers.io());
         friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
         friendRequestSubject.subscribeOn(Schedulers.io());
+        chatActiveSubject = BehaviorSubject.create("");
+        chatActiveSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
@@ -148,13 +147,6 @@ public class ToxSingleton {
                 isFriend = isKeyFriend(key, fl);
                 return new Tuple<String, Boolean>(key, isFriend);
             }
-        });
-        chatActiveAndKey = combineLatest(rightPaneOpenSubject, activeKeySubject, new Func2<Boolean, String, Tuple<String, Boolean>>() {
-            @Override
-            public Tuple<String, Boolean> call(Boolean rightActive, String key) {
-                return new Tuple<String, Boolean>(key, rightActive);
-            }
-
         });
     }
 
