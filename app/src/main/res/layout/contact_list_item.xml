@@ -48,7 +48,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="10dp"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             <LinearLayout
@@ -67,14 +67,14 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="10dp"
                     android:textSize="15sp"/>
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
                     android:layout_width="25dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
