@@ -206,6 +206,12 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        toxSingleton.activeKey = "";
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -255,6 +261,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                     }
+                                    toxSingleton.doClosePaneSubject.onNext(true);
                                 }
                             }
                             toxSingleton.activeKey = activeKey;
