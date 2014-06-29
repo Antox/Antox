@@ -78,6 +78,9 @@ public class ContactsFragment extends Fragment {
         FriendInfo friends_list[] = new FriendInfo[friendsList.size()];
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
+            if (friend_requests.length > 0) {
+                leftPaneAdapter.addItem(new LeftPaneItem("Friends"));
+            }
             String lastLetter = "";
             for (int i = 0; i < friends_list.length; i++) {
 
@@ -156,7 +159,7 @@ public class ContactsFragment extends Fragment {
                         LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
                         int type = item.viewType;
                         String key = item.key;
-                        if (key != "") {
+                        if (!key.equals("")) {
                             setSelectionToKey(key);
                             toxSingleton.changeActiveKey(key);
                         }
