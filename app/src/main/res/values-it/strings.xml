@@ -92,6 +92,10 @@
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
+    
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Allega foto</string>
+    <string name="attachment_takephoto">Scatta foto</string>
 
     <!-- Misc -->
     <string name="button_confirm">Applica</string>
