@@ -9,6 +9,15 @@
         android:layout_height="48dp"
         android:background="@color/blue"
         android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/abc_ic_ab_back_holo_dark"/>
 
         <TextView
             android:id="@+id/chatActiveName"
@@ -18,7 +27,8 @@
             android:textColor="@color/white_absolute"
             android:textSize="20sp"
             android:layout_marginTop="3dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/backButton"
             android:text="USERNAME"/>
 
         <TextView
@@ -92,15 +102,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/margin_medium"
-            android:src="@drawable/ic_action_attachment"/>
+            android:src="@drawable/ic_action_attachment_2"/>
 
-        <ImageView
-            android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="@dimen/margin_medium"
-            android:src="@drawable/ic_action_camera"/>
 
         <EditText
             android:id="@+id/yourMessage"

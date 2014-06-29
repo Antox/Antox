@@ -34,14 +34,19 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
         String[] det = db.getFriendDetails(friend.getId());
         String tmp;
 
+        // Set tmp to alias if not empty otherwise to their name
         if(!det[1].equals(""))
             tmp = det[1];
         else
             tmp = det[0];
 
-        String tmp2 = online ? "come online" : "gone offline";
-        db.addMessage(-1, friend.getId(), tmp + " has " + tmp2, true, true, true, 5);
-        db.close();
+        long epochNow = System.currentTimeMillis()/1000;
+        if(epochNow - Constants.epoch > 30) {
+            String tmp2 = online ? "come online" : "gone offline";
+            db.addMessage(-1, friend.getId(), tmp + " has " + tmp2, true, true, true, 5);
+            db.close();
+        }
+
         if (online) {
             toxSingleton.sendUnsentMessages(ctx);
         }
