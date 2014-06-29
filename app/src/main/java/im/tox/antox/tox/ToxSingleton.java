@@ -76,18 +76,15 @@ public class ToxSingleton {
     public BehaviorSubject<HashMap> unreadCountsSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
-    public BehaviorSubject<Boolean> rightPaneOpenSubject;
+    public BehaviorSubject<String> chatActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
-    public Observable chatActiveAndKey;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
-
-    public boolean isRunning = false;
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -96,10 +93,10 @@ public class ToxSingleton {
     public void initSubjects(Context ctx) {
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
         friendListSubject.subscribeOn(Schedulers.io());
-        rightPaneOpenSubject = BehaviorSubject.create(new Boolean(false));
-        rightPaneOpenSubject.subscribeOn(Schedulers.io());
         friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
         friendRequestSubject.subscribeOn(Schedulers.io());
+        chatActiveSubject = BehaviorSubject.create("");
+        chatActiveSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
@@ -149,13 +146,6 @@ public class ToxSingleton {
                 return new Tuple<String, Boolean>(key, isFriend);
             }
         });
-        chatActiveAndKey = combineLatest(rightPaneOpenSubject, activeKeySubject, new Func2<Boolean, String, Tuple<String, Boolean>>() {
-            @Override
-            public Tuple<String, Boolean> call(Boolean rightActive, String key) {
-                return new Tuple<String, Boolean>(key, rightActive);
-            }
-
-        });
     }
 
 
@@ -176,7 +166,7 @@ public class ToxSingleton {
         if (fileName != null) {
             int fileNumber = -1;
             try {
-                fileNumber = jTox.toxNewFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
+                fileNumber = jTox.newFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
             } catch (Exception e) {
                 Log.d("toxNewFileSender error", e.toString());
             }
@@ -232,7 +222,7 @@ public class ToxSingleton {
 
     public void acceptFile(String key, int fileNumber, Context context) {
         try {
-            jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
+            jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -341,7 +331,7 @@ public class ToxSingleton {
         if (!path.equals("")) {
             int chunkSize = 1;
             try {
-                chunkSize = jTox.toxFileDataSize(getAntoxFriend(key).getFriendnumber());
+                chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -365,7 +355,7 @@ public class ToxSingleton {
                         break;
                     }
                     try {
-                        result = jTox.toxFileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
+                        result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
                     } catch (Exception e) {
                         e.printStackTrace();
                         break;
@@ -399,7 +389,7 @@ public class ToxSingleton {
             if (result != -1) {
                 try {
                     Log.d("toxFileSendControl", "FINISHED");
-                    jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    jTox.fileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                     fileFinished(key, fileNumber, context);
                     return true;
                 } catch (Exception e) {
@@ -410,29 +400,6 @@ public class ToxSingleton {
             }
         }
         return false;
-    }
-
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
-    private static byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
     }
 
     public void updateFriendsList(Context ctx) {
@@ -645,18 +612,17 @@ public class ToxSingleton {
                 if(DhtNode.ipv4.size() == 0)
                     new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
                 /* Try and bootstrap to online nodes*/
-                while (DhtNode.connected == false && networkInfo.isConnected()) {
+                while (DhtNode.connected == false) {
                     try {
                         if (DhtNode.ipv4.size() > 0) {
                             try {
                                 jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
                                         Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
+                                Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
+                                DhtNode.connected = true;
                             } catch (ToxException e) {
 
                             }
-
-                            Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
-                            DhtNode.connected = true;
                         }
                     } catch (UnknownHostException e) {
                         DhtNode.counter = DhtNode.counter >= DhtNode.ipv4.size() ? 0 : DhtNode.counter++;
@@ -668,6 +634,8 @@ public class ToxSingleton {
                 e.printStackTrace();
             }
         }
+
+
     }
 
     public static ToxSingleton getInstance() {
