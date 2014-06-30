@@ -244,7 +244,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
             holder.progress.setVisibility(View.GONE);
         }
 
-        holder.time.setText(PrettyTimestamp.prettyChatTimestamp(chatMessages.time));
+        holder.time.setText(PrettyTimestamp.prettyTimestamp(chatMessages.time, true));
 
         holder.message.setTypeface(robotoRegular);
         holder.time.setTypeface(robotoRegular);

@@ -2,7 +2,11 @@ package im.tox.antox.utils;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import android.text.format.Time;
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -10,127 +14,46 @@ import java.util.TimeZone;
  * Created by ollie on 29/05/14.
  */
 public class PrettyTimestamp {
-    public static String prettyTimestamp(Timestamp t) {
-        String tString = t.toString();
-        try {
-            //Set the date format.
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-            //Get the Date in UTC format.
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date date = dateFormat.parse(tString);
-
-            //Adapt the date to the local timestamp.
-            dateFormat.setTimeZone(TimeZone.getDefault());
-            tString = dateFormat.format(date).toString();
-        }
-        catch (Exception e) {
-            tString = t.toString();
-        }
-        return prettyTimestamp(tString);
-    }
-
-    public static String prettyTimestamp(String tString) {
-        java.util.Date date= new java.util.Date();
-        Timestamp current = new Timestamp(date.getTime());
-        String output;
-        String month = "";
-        if (current.toString().substring(0,10).equals(tString.substring(0,10))){
-            output = tString.substring(11,16);
-        } else if (tString.substring(0,10).equals("1899-12-31")) {
-            output = "";
-        } else {
-            switch (Integer.parseInt(tString.substring(5,7))) {
-                case 1:
-                    month = "Jan";
-                    break;
-                case 2:
-                    month = "Feb";
-                    break;
-                case 3:
-                    month = "Mar";
-                    break;
-                case 4:
-                    month = "Apr";
-                    break;
-                case 5:
-                    month = "May";
-                    break;
-                case 6:
-                    month = "Jun";
-                    break;
-                case 7:
-                    month = "Jul";
-                    break;
-                case 8:
-                    month = "Aug";
-                    break;
-                case 9:
-                    month = "Sep";
-                    break;
-                case 10:
-                    month = "Oct";
-                    break;
-                case 11:
-                    month = "Nov";
-                    break;
-                case 12:
-                    month = "Dec";
-                    break;
+    public static String prettyTimestamp(Timestamp t, boolean isChat) {
+        //Set time in UTC time
+        Time time = new Time("UTC");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(t);
+        time.set(cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+        //Switch to device timezone
+        time.switchTimezone(Time.getCurrentTimezone());
+        Time startOfDay = new Time(Time.getCurrentTimezone());
+        startOfDay.setToNow();
+        startOfDay.hour = 0;
+        startOfDay.minute = 0;
+        startOfDay.second = 0;
+        Time startOfYear = new Time(Time.getCurrentTimezone());
+        startOfYear.setToNow();
+        startOfYear.hour = 0;
+        startOfYear.minute = 0;
+        startOfYear.second = 0;
+        startOfYear.monthDay = 0;
+        startOfYear.month = 0;
+        Time startOfTime = new Time(Time.getCurrentTimezone());
+        startOfTime.set(0);
+        if (t.equals(new Timestamp(0,0,0,0,0,0,0))) {
+            return "";
+        } else if (isChat) {
+            if (time.after(startOfDay)) {
+                return time.format("%H:%M");
+            } else if (time.after(startOfYear)) {
+                return time.format("%b %d, %H:%M");
+            } else {
+                return time.format("%b %d %Y, %H:%M");
             }
-            output = month + " " + tString.substring(8,10);
-        }
-        return output;
-    }
-    public static String prettyChatTimestamp(String tString) {
-        java.util.Date date= new java.util.Date();
-        Timestamp current = new Timestamp(date.getTime());
-        String output;
-        String month = "";
-        if (current.toString().substring(0,10).equals(tString.substring(0,10))){
-            output = tString.substring(11,16);
-        } else if (tString.substring(0,10).equals("1899-12-31")) {
-            output = "";
         } else {
-            switch (Integer.parseInt(tString.substring(5,7))) {
-                case 1:
-                    month = "Jan";
-                    break;
-                case 2:
-                    month = "Feb";
-                    break;
-                case 3:
-                    month = "Mar";
-                    break;
-                case 4:
-                    month = "Apr";
-                    break;
-                case 5:
-                    month = "May";
-                    break;
-                case 6:
-                    month = "Jun";
-                    break;
-                case 7:
-                    month = "Jul";
-                    break;
-                case 8:
-                    month = "Aug";
-                    break;
-                case 9:
-                    month = "Sep";
-                    break;
-                case 10:
-                    month = "Oct";
-                    break;
-                case 11:
-                    month = "Nov";
-                    break;
-                case 12:
-                    month = "Dec";
-                    break;
+            if (time.after(startOfDay)) {
+                return time.format("%H:%M");
+            } else if (time.after(startOfYear)) {
+                return time.format("%b %d");
+            } else {
+                return time.format("%b %d %Y");
             }
-            output = month + " " + tString.substring(8,10) + ", " + tString.substring(11,16);
         }
-        return output;
     }
 }
