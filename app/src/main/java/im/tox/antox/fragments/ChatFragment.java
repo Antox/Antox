@@ -288,10 +288,13 @@ public class ChatFragment extends Fragment {
                 } else {
                     isTyping = false;
                 }
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), isTyping);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
 
@@ -315,10 +318,13 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendMessage();
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), false);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
         });
