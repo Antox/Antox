@@ -26,6 +26,7 @@
         funktioniert Antox nur eingeschränkt.
     </string>
     <string name="main_node_list_download_error">Fehler beim Herunterladen der Node Liste</string>
+    <string name="search_all_contacts">Durchsuche alle Kontakte</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Nachricht senden</string>
@@ -81,9 +82,12 @@
         Freundschaftsanfragen mehr von ihm erhalten. Bist du sicher, dass du diesen Benutzer blockieren möchtest?
     </string>
     <string name="toast_succ_move_user">Der Benutzer wurde erfolgreich verschoben</string>
-
     <string name="contacts_actions_on">Aktionen für</string>
     <string name="contacts_clear_saved_logs">Möchtest du auch den gespeicherten Chatverlauf löschen?</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Bild senden</string>
+    <string name="attachment_takephoto">Foto aufnehmen</string>
 
     <!--  Misc -->
     <string name="button_confirm">OK</string>
@@ -91,5 +95,7 @@
     <string name="button_yes">Ja</string>
     <string name="button_no">Nein</string>
     <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Deine Tox ID in die Zwischenablage kopieren</string>
+    <string name="share_with">Teilen mit</string>
     
 </resources>
