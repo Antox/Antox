@@ -120,7 +120,7 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
             } else {
                 holder.countText.setVisibility(View.GONE);
             }
-            holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp));
+            holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false));
             holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(item.icon)));
         }
 
