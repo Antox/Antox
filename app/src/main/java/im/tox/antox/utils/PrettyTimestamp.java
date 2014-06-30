@@ -29,6 +29,25 @@ public class PrettyTimestamp {
         return prettyTimestamp(tString);
     }
 
+    public static String prettyChatTimestamp(Timestamp t) {
+        String tString = t.toString();
+        try {
+            //Set the date format.
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+            //Get the Date in UTC format.
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = dateFormat.parse(tString);
+
+            //Adapt the date to the local timestamp.
+            dateFormat.setTimeZone(TimeZone.getDefault());
+            tString = dateFormat.format(date).toString();
+        }
+        catch (Exception e) {
+            tString = t.toString();
+        }
+        return prettyChatTimestamp(tString);
+    }
+    
     public static String prettyTimestamp(String tString) {
         java.util.Date date= new java.util.Date();
         Timestamp current = new Timestamp(date.getTime());
@@ -81,6 +100,7 @@ public class PrettyTimestamp {
         }
         return output;
     }
+
     public static String prettyChatTimestamp(String tString) {
         java.util.Date date= new java.util.Date();
         Timestamp current = new Timestamp(date.getTime());
