@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -60,9 +61,11 @@ public class ChatFragment extends Fragment {
 
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
+    private TextView isTypingBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
     Subscription titleSub;
+    Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
     public String photoPath;
@@ -123,6 +126,21 @@ public class ChatFragment extends Fragment {
                 statusText.setTypeface(robotoRegular);
             }
         });
+        typingSub = toxSingleton.typingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean x) {
+                if (toxSingleton.typingMap.containsKey(activeKey)) {
+                    boolean isTyping = toxSingleton.typingMap.get(activeKey);
+                    if (isTyping) {
+                        isTypingBox.setVisibility(View.VISIBLE);
+                    } else {
+                        isTypingBox.setVisibility(View.GONE);
+                    }
+                } else {
+                    isTypingBox.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -131,6 +149,7 @@ public class ChatFragment extends Fragment {
         toxSingleton.chatActiveSubject.onNext("");
         messagesSub.unsubscribe();
         titleSub.unsubscribe();
+        typingSub.unsubscribe();
     }
 
     public void sendMessage() {
@@ -377,6 +396,8 @@ public class ChatFragment extends Fragment {
                     return true;
                 }
         });
+
+        isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
