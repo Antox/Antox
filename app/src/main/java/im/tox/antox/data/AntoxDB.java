@@ -427,7 +427,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                     name = key.substring(0,7);
 
                 if(!isBlocked)
-                    friendList.add(new Friend(online, name, status, note, key));
+                    friendList.add(new Friend(online, name, status, note, key, alias));
 
             } while (cursor.moveToNext());
         }

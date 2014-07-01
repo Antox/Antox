@@ -38,6 +38,7 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
@@ -61,6 +62,7 @@ public class ChatFragment extends Fragment {
     private EditText messageBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
+    Subscription titleSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
     public String photoPath;
@@ -89,26 +91,38 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        // There should be a way to do this without accessing the db
-        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-        String[] friend = db.getFriendDetails(activeKey);
-        Log.d("onResume","activeKey: " + activeKey);
+        titleSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<FriendInfo>>() {
+            @Override
+            public void call(ArrayList<FriendInfo> fi) {
+                String friendName = "";
+                String friendAlias = "";
+                String friendNote = "";
+                for (FriendInfo f : fi) {
+                    if (f.friendKey.equals(activeKey)) {
+                        friendName = f.friendName;
+                        friendNote = f.personalNote;
+                        friendAlias = f.alias;
+                        break;
+                    }
+                }
 
-        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
+                Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
+                Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
+                Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
-        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
-        if(!friend[1].equals(""))
-            chatName.setText(friend[1]);
-        else
-            chatName.setText(friend[0]);
+                TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+                if (!friendAlias.equals(""))
+                    chatName.setText(friendAlias);
+                else
+                    chatName.setText(friendName);
 
-        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
-        statusText.setText(friend[2]);
+                TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+                statusText.setText(friendNote);
 
-        chatName.setTypeface(robotoBold);
-        statusText.setTypeface(robotoRegular);
+                chatName.setTypeface(robotoBold);
+                statusText.setTypeface(robotoRegular);
+            }
+        });
     }
 
     @Override
@@ -116,6 +130,7 @@ public class ChatFragment extends Fragment {
         super.onPause();
         toxSingleton.chatActiveSubject.onNext("");
         messagesSub.unsubscribe();
+        titleSub.unsubscribe();
     }
 
     public void sendMessage() {
