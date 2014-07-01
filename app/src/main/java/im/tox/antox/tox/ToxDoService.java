@@ -17,7 +17,8 @@ public class ToxDoService extends Service {
 
     private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
-    private ToxSingleton toxSingleton = ToxSingleton.getInstance();;
+    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
+    ;
 
     public ToxDoService() {
         super();
@@ -66,12 +67,14 @@ public class ToxDoService extends Service {
             return new LogOnExceptionRunnable(command);
         }
 
-        private class LogOnExceptionRunnable implements Runnable{
+        private class LogOnExceptionRunnable implements Runnable {
             private Runnable theRunnable;
+
             public LogOnExceptionRunnable(Runnable theRunnable) {
                 super();
                 this.theRunnable = theRunnable;
             }
+
             @Override
             public void run() {
                 try {
@@ -95,8 +98,6 @@ public class ToxDoService extends Service {
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
-            } catch (NullPointerException e) {
-                toxSingleton.initTox(getApplicationContext());
             }
         }
     }
