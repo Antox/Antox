@@ -402,7 +402,7 @@ public class ChatFragment extends Fragment {
         });
 
         isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
-        statusTextBox = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+        statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
