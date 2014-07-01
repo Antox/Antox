@@ -29,7 +29,19 @@
             android:layout_marginTop="3dp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/backButton"
-            android:text="USERNAME"/>
+            android:text=""/>
+        <TextView
+            android:id="@+id/isTyping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Whether active friend is typing"
+            android:textColor="@color/grey_light"
+            android:textSize="20sp"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="5dp"
+            android:visibility="gone"
+            android:layout_toRightOf="@+id/chatActiveName"
+            android:text="is typing..."/>
 
         <TextView
             android:id="@+id/chatActiveStatus"
@@ -38,7 +50,7 @@
             android:contentDescription="Status of active friend"
             android:textColor="@color/grey_light"
             android:textSize="13sp"
-            android:text="STATUS"
+            android:text=""
             android:ellipsize="end"
             android:singleLine="true"
             android:layout_gravity="bottom"
