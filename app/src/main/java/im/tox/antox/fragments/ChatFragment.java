@@ -320,7 +320,41 @@ public class ChatFragment extends Fragment {
                                                 @Override
                                                 protected Void doInBackground(Void... params) {
                                                     AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                                    antoxDB.deleteMessage(activeKey, chatMessages.get(i).message_id);
+                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(getActivity());
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    CharSequence[] items = new CharSequence[]{
+                            "Delete message"
+                    };
+                    final int i = index;
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
                                                     antoxDB.close();
                                                     return null;
                                                 }
