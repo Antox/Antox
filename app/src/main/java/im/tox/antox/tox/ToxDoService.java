@@ -40,7 +40,7 @@ public class ToxDoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 500, TimeUnit.MILLISECONDS);
+        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
 
         return START_STICKY;
     }
@@ -79,7 +79,7 @@ public class ToxDoService extends Service {
                 } catch (Exception e) {
                     Log.d(TAG, "Executor has caught an exception");
                     e.printStackTrace();
-                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 500, TimeUnit.MILLISECONDS);
+                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
                     throw new RuntimeException(e);
                 }
             }
