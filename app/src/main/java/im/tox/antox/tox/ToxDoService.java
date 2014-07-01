@@ -31,16 +31,8 @@ public class ToxDoService extends Service {
             }
         };
         t.start();
-    }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int id) {
-        Thread t = new Thread() {
+        Thread t2 = new Thread() {
             @Override
             public void run() {
                 try {
@@ -61,8 +53,16 @@ public class ToxDoService extends Service {
                 }
             }
         };
-        t.start();
+        t2.start();
+    }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int id) {
         return START_STICKY;
     }
 }
