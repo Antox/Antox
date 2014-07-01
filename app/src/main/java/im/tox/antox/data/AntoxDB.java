@@ -393,6 +393,14 @@ public class AntoxDB extends SQLiteOpenHelper {
         Log.d("", "marked incoming messages as read");
     }
 
+    public void deleteMessage(String key, int message_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + "='" + key +"' AND (type == 1 OR type == 2) AND " + Constants.COLUMN_NAME_MESSAGE_ID + " == " + message_id;
+        db.execSQL(query);
+        db.close();
+        Log.d("", "Deleted message");
+    }
+
     public ArrayList<Friend> getFriendList() {
         SQLiteDatabase db = this.getReadableDatabase();
 
