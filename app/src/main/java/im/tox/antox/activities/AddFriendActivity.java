@@ -121,40 +121,47 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
     private boolean isKeyOwn(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if(preferences.getString("tox_id", "").equals(key))
+        String tmp = preferences.getString("tox_id", "");
+        if(tmp.startsWith("tox://"))
+            tmp.substring(6);
+        if(tmp.equals(key))
             return true;
         else
             return false;
     }
-    
+
     private int checkAndSend(String key, String originalUsername) {
-        if(validateFriendKey(key) && !isKeyOwn(key)) {
-            String ID = key;
-            String message = friendMessage.getText().toString();
-            String alias = friendAlias.getText().toString();
+        if(!isKeyOwn(key)) {
+            if (validateFriendKey(key)) {
+                String ID = key;
+                String message = friendMessage.getText().toString();
+                String alias = friendAlias.getText().toString();
 
-            String[] friendData = {ID, message, alias};
+                String[] friendData = {ID, message, alias};
 
-            AntoxDB db = new AntoxDB(getApplicationContext());
-            if (!db.doesFriendExist(ID)) {
-                try {
-                    ToxSingleton toxSingleton = ToxSingleton.getInstance();
-                    toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
-                } catch (ToxException e) {
-                    e.printStackTrace();
-                } catch (FriendExistsException e) {
-                    e.printStackTrace();
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                if (!db.doesFriendExist(ID)) {
+                    try {
+                        ToxSingleton toxSingleton = ToxSingleton.getInstance();
+                        toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
+                    } catch (ToxException e) {
+                        e.printStackTrace();
+                    } catch (FriendExistsException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("AddFriendActivity", "Adding friend to database");
+                    db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
+                } else {
+                    return -2;
                 }
-
-                Log.d("AddFriendActivity","Adding friend to database");
-                db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
+                db.close();
+                return 0;
             } else {
-                return -2;
+                return -1;
             }
-            db.close();
-            return 0;
         } else {
-            return -1;
+            return -3;
         }
     }
     /*
@@ -193,15 +200,20 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
         if(!isV2) {
 
-            if(checkAndSend(finalFriendKey, _originalUsername) == 0) {
+            int result = checkAndSend(finalFriendKey, _originalUsername);
+
+            if(result == 0) {
                 toast = Toast.makeText(context, text, duration);
                 toast.show();
-            } else if(checkAndSend(finalFriendKey, _originalUsername) == -1) {
+            } else if(result == -1) {
                 toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
-            } else if(checkAndSend(finalFriendKey, _originalUsername) == -2) {
+            } else if(result == -2) {
                 toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+                toast.show();
+            } else if(result == -3) {
+                toast = Toast.makeText(context, getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT);
                 toast.show();
             }
 
