@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.sql.Time;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -14,8 +15,6 @@ import im.tox.jtoxcore.ToxException;
 public class ToxDoService extends Service {
 
     private static final String TAG = "im.tox.antox.tox.ToxDoService";
-
-    private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
     ;
@@ -41,64 +40,29 @@ public class ToxDoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
-
-        return START_STICKY;
-    }
-
-    /* Extend the scheduler to have it restart itself on any exceptions */
-    private class ToxScheduleTaskExecutor extends ScheduledThreadPoolExecutor {
-
-        public ToxScheduleTaskExecutor(int size) {
-            super(1);
-        }
-
-        @Override
-        public ScheduledFuture scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-            return super.scheduleAtFixedRate(wrapRunnable(command), initialDelay, period, unit);
-        }
-
-        @Override
-        public ScheduledFuture scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-            return super.scheduleWithFixedDelay(wrapRunnable(command), initialDelay, delay, unit);
-        }
-
-        private Runnable wrapRunnable(Runnable command) {
-            return new LogOnExceptionRunnable(command);
-        }
-
-        private class LogOnExceptionRunnable implements Runnable {
-            private Runnable theRunnable;
-
-            public LogOnExceptionRunnable(Runnable theRunnable) {
-                super();
-                this.theRunnable = theRunnable;
-            }
-
+        Thread t = new Thread() {
             @Override
             public void run() {
                 try {
-                    theRunnable.run();
-                } catch (Exception e) {
-                    Log.d(TAG, "Executor has caught an exception");
-                    e.printStackTrace();
-                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
-                    throw new RuntimeException(e);
+                    while(!toxSingleton.isInited) {
+                        // Wait till singleton is inited
+                    }
+                    long after = System.currentTimeMillis();
+                    int interval = toxSingleton.jTox.doToxInterval();
+                    while(true) {
+                        long current = System.currentTimeMillis();
+                        if(current - after >= interval) {
+                            toxSingleton.jTox.doTox();
+                            interval = toxSingleton.jTox.doToxInterval();
+                            after = System.currentTimeMillis();
+                        }
+                    }
+                } catch (ToxException e) {
                 }
             }
-        }
-    }
+        };
+        t.start();
 
-    private class DoTox implements Runnable {
-        @Override
-        public void run() {
-            /* Praise the sun */
-            try {
-                toxSingleton.jTox.doTox();
-            } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
-                e.printStackTrace();
-            }
-        }
+        return START_STICKY;
     }
 }

@@ -84,6 +84,7 @@ public class ToxSingleton {
     public Observable friendListAndRequestsSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
     public HashMap<String, Boolean> typingMap = new HashMap<>();
+    public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
@@ -639,7 +640,7 @@ public class ToxSingleton {
             }
         }
 
-
+        isInited = true;
     }
 
     public static ToxSingleton getInstance() {
