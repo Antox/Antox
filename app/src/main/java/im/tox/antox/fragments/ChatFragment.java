@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.ClipboardManager;
@@ -83,7 +85,8 @@ public class ChatFragment extends Fragment {
             public ArrayList<Message> call(Boolean input) {
                 Log.d("ChatFragment","updatedMessageSubject map");
                 AntoxDB antoxDB = new AntoxDB(getActivity());
-                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
                 antoxDB.close();
                 return messageList;
             }

@@ -12,6 +12,11 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
+    <CheckBoxPreference
+        android:key="action_messages"
+        android:title="@string/pref_title_action_messages"
+        android:defaultValue="true" />
+
     <PreferenceScreen
         android:title="@string/pref_advanced" >
 

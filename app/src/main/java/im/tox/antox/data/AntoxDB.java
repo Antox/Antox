@@ -256,14 +256,20 @@ public class AntoxDB extends SQLiteOpenHelper {
         return map;
     }
 
-    public ArrayList<Message> getMessageList(String key) {
+    public ArrayList<Message> getMessageList(String key, boolean actionMessages) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
         if (key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
-            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+            String act;
+            if (actionMessages) {
+                act = "";
+            } else {
+                act = "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) ";
+            }
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' " + act + "ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
         }
         Cursor cursor = db.rawQuery(selectQuery, null);
 
