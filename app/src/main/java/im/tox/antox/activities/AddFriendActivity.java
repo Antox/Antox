@@ -2,10 +2,12 @@ package im.tox.antox.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
@@ -117,8 +119,16 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         }
     }
 
+    private boolean isKeyOwn(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if(preferences.getString("tox_id", "").equals(key))
+            return true;
+        else
+            return false;
+    }
+    
     private int checkAndSend(String key, String originalUsername) {
-        if(validateFriendKey(key)) {
+        if(validateFriendKey(key) && !isKeyOwn(key)) {
             String ID = key;
             String message = friendMessage.getText().toString();
             String alias = friendAlias.getText().toString();
