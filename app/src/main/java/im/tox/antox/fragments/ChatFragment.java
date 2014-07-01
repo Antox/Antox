@@ -8,16 +8,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -277,6 +280,54 @@ public class ChatFragment extends Fragment {
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
+        chatListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                                           int index, long arg3) {
+                if (chatMessages.get(index).getType() == 1 || chatMessages.get(index).getType() == 2) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    CharSequence[] items = new CharSequence[]{
+                            "Copy message",
+                            "Delete message"
+                    };
+                    final int i = index;
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Copy
+                                            String msg = chatMessages.get(i).message;
+                                            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(getActivity().CLIPBOARD_SERVICE);
+                                            clipboard.setText(msg);
+                                            break;
+                                        case 1: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                                    antoxDB.deleteMessage(activeKey, chatMessages.get(i).message_id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(getActivity());
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                    return true;
+                }
+        });
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
