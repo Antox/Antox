@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxSingleton;
@@ -63,6 +64,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("status_message"));
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
+        bindPreferenceSummaryToValue(findPreference("nospam"));
 
         /* Override the Tox ID click functionality to display a dialog with the qr image
          * and copy to clipboard button
@@ -186,6 +188,20 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+        }
+
+        if(key.equals("nospam")) {
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+            try {
+                int nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
+                toxSingleton.jTox.setNospam(nospam);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("tox_id", toxSingleton.jTox.getAddress());
+                editor.commit();
+                bindPreferenceSummaryToValue(findPreference("tox_id"));
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
