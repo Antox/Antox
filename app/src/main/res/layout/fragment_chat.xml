@@ -5,12 +5,12 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/blue"
         android:orientation="horizontal">
         <LinearLayout
+            android:id="@+id/backButton"
             android:gravity="center"
             android:layout_width="24dp"
             android:layout_height="48dp">
