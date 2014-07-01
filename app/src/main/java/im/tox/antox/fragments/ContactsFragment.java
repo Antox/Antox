@@ -3,6 +3,7 @@ package im.tox.antox.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.FriendProfileActivity;
 import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
@@ -255,13 +257,9 @@ public class ContactsFragment extends Fragment {
                                     if (!key.equals("")) {
                                         switch (index) {
                                             case 0:
-                                                //todo: implement profiles
-                                                Toast.makeText(getActivity(),"To be implemented",Toast.LENGTH_SHORT).show();
-                                                /*
                                                 Intent profile = new Intent(getActivity(), FriendProfileActivity.class);
                                                 profile.putExtra("key", key);
                                                 startActivity(profile);
-                                                */
                                                 break;
                                             case 1:
                                                 //Delete friend
