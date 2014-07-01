@@ -36,11 +36,15 @@
             android:layout_height="wrap_content"
             android:contentDescription="Whether active friend is typing"
             android:textColor="@color/grey_light"
-            android:textSize="20sp"
-            android:layout_marginTop="3dp"
-            android:layout_marginLeft="5dp"
+            android:textSize="13sp"
+            android:layout_marginBottom="5dp"
             android:visibility="gone"
-            android:layout_toRightOf="@+id/chatActiveName"
+            android:ellipsize="end"
+            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/chatActiveName"
+            android:layout_alignStart="@+id/chatActiveName"
+            android:layout_toLeftOf="@+id/callFriend"
             android:text="is typing..."/>
 
         <TextView
