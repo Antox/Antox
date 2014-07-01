@@ -62,6 +62,7 @@ public class ChatFragment extends Fragment {
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
     private TextView isTypingBox;
+    private TextView statusTextBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
     Subscription titleSub;
@@ -133,11 +134,14 @@ public class ChatFragment extends Fragment {
                     boolean isTyping = toxSingleton.typingMap.get(activeKey);
                     if (isTyping) {
                         isTypingBox.setVisibility(View.VISIBLE);
+                        statusTextBox.setVisibility(View.GONE);
                     } else {
                         isTypingBox.setVisibility(View.GONE);
+                        statusTextBox.setVisibility(View.VISIBLE);
                     }
                 } else {
                     isTypingBox.setVisibility(View.GONE);
+                    statusTextBox.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -398,6 +402,7 @@ public class ChatFragment extends Fragment {
         });
 
         isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
+        statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
