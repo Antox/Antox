@@ -1,5 +1,6 @@
 package im.tox.antox.activities;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
