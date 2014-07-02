@@ -7,6 +7,9 @@ import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 
 public final class BitmapManager {
@@ -37,7 +40,7 @@ public final class BitmapManager {
             mMemoryCache.put(key, bitmap);
     }
 
-    private static int calculateSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 
         // Raw height and width of image
         final int height = options.outHeight;
@@ -61,34 +64,85 @@ public final class BitmapManager {
     }
 
     public static boolean checkValidImage(File file) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(file.getPath(), options);
-        if(options.outWidth > 0 && options.outHeight > 0)
-            return true;
-        else
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+            byte[] byteArr = decodeBytes(fis);
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options);
+            if(options.outWidth > 0 && options.outHeight > 0)
+                return true;
+            else
+                return false;
+        } catch (FileNotFoundException e) {
+            Log.d("BitMapManager", "File not found when trying to be used for FileInputStream in checkValidImage");
+            e.printStackTrace();
             return false;
+        }
+    }
+
+    private static byte[] decodeBytes(InputStream inputStream) {
+        byte[] byteArr = new byte[0];
+        byte[] buffer = new byte[1024];
+        int len;
+        int count = 0;
+
+        try {
+            while ((len = inputStream.read(buffer)) > -1) {
+                if (len != 0) {
+                    if (count + len > byteArr.length) {
+                        byte[] newbuf = new byte[(count + len) * 2];
+                        System.arraycopy(byteArr, 0, newbuf, 0, count);
+                        byteArr = newbuf;
+                    }
+
+                    System.arraycopy(buffer, 0, byteArr, count, len);
+                    count += len;
+                }
+            }
+
+            return byteArr;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static void loadBitmap(File file, int id, ImageView imageView) {
         final String imageKey = String.valueOf(id);
-        final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+        Bitmap bitmap = getBitmapFromMemCache(imageKey);
 
         if(bitmap != null) {
             Log.d("BitmapManager", "Found image in cache");
             imageView.setImageBitmap(bitmap);
         } else {
             Log.d("BitmapManager", "Image not in cache");
-            // Decode image
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = calculateSampleSize(options, 100,100);
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            final Bitmap bmp = BitmapFactory.decodeFile(file.getPath(), options);
-            imageView.setImageBitmap(bmp);
-            // Add bitmap to cache
-            addBitmapToMemoryCache(imageKey, bmp);
-        }
+            // Read file into byte array and decode that
+            FileInputStream fis;
+            try {
+                fis = new FileInputStream(file);
+                byte [] byteArr = decodeBytes(fis);
+                // Decode bounds and calculate sample size
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                bitmap = BitmapFactory.decodeByteArray(byteArr, 0 , byteArr.length, options);
+                options.inSampleSize = calculateInSampleSize(options, 100, 100);
+                // Deocde image and set it
+                options.inPurgeable = true;
+                options.inInputShareable = true;
+                options.inJustDecodeBounds = false;
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options);
+                imageView.setImageBitmap(bitmap);
+                // Add bitmap to cache
+                addBitmapToMemoryCache(imageKey, bitmap);
+            } catch(FileNotFoundException e) {
+                Log.d("BitMapManager", "File not found when trying to be used for FileInputStream");
+                e.printStackTrace();
+            }
 
+        }
     }
 }

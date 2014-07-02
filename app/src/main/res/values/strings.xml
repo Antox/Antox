@@ -55,8 +55,7 @@
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
     <string name="addfriend_no_internet">No Tox Network connection</string>
-    <string name="addfriend_no_internet_text">        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
-        Try restarting the application.</string>
+    <string name="addfriend_own_key">You cannot add yourself</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>

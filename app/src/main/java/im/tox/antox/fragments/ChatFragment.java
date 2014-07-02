@@ -5,19 +5,24 @@ import android.app.AlertDialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -35,6 +41,7 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.Message;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
@@ -56,8 +63,12 @@ public class ChatFragment extends Fragment {
 
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
+    private TextView isTypingBox;
+    private TextView statusTextBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
+    Subscription titleSub;
+    Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
     public String photoPath;
@@ -74,7 +85,8 @@ public class ChatFragment extends Fragment {
             public ArrayList<Message> call(Boolean input) {
                 Log.d("ChatFragment","updatedMessageSubject map");
                 AntoxDB antoxDB = new AntoxDB(getActivity());
-                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
                 antoxDB.close();
                 return messageList;
             }
@@ -86,26 +98,56 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        // There should be a way to do this without accessing the db
-        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-        String[] friend = db.getFriendDetails(activeKey);
-        Log.d("onResume","activeKey: " + activeKey);
+        titleSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<FriendInfo>>() {
+            @Override
+            public void call(ArrayList<FriendInfo> fi) {
+                String friendName = "";
+                String friendAlias = "";
+                String friendNote = "";
+                for (FriendInfo f : fi) {
+                    if (f.friendKey.equals(activeKey)) {
+                        friendName = f.friendName;
+                        friendNote = f.personalNote;
+                        friendAlias = f.alias;
+                        break;
+                    }
+                }
 
-        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
+                Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
+                Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
+                Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
-        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
-        if(!friend[1].equals(""))
-            chatName.setText(friend[1]);
-        else
-            chatName.setText(friend[0]);
+                TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+                if (!friendAlias.equals(""))
+                    chatName.setText(friendAlias);
+                else
+                    chatName.setText(friendName);
 
-        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
-        statusText.setText(friend[2]);
+                TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+                statusText.setText(friendNote);
 
-        chatName.setTypeface(robotoBold);
-        statusText.setTypeface(robotoRegular);
+                chatName.setTypeface(robotoBold);
+                statusText.setTypeface(robotoRegular);
+            }
+        });
+        typingSub = toxSingleton.typingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean x) {
+                if (toxSingleton.typingMap.containsKey(activeKey)) {
+                    boolean isTyping = toxSingleton.typingMap.get(activeKey);
+                    if (isTyping) {
+                        isTypingBox.setVisibility(View.VISIBLE);
+                        statusTextBox.setVisibility(View.GONE);
+                    } else {
+                        isTypingBox.setVisibility(View.GONE);
+                        statusTextBox.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    isTypingBox.setVisibility(View.GONE);
+                    statusTextBox.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -113,6 +155,8 @@ public class ChatFragment extends Fragment {
         super.onPause();
         toxSingleton.chatActiveSubject.onNext("");
         messagesSub.unsubscribe();
+        titleSub.unsubscribe();
+        typingSub.unsubscribe();
     }
 
     public void sendMessage() {
@@ -150,39 +194,28 @@ public class ChatFragment extends Fragment {
                                         int numOfMessages = (utf8Bytes.length/1368) + 1;
 
                                         if(numOfMessages > 1) {
-
-                                            for(int i = 1; i < numOfMessages - 1; i++) {
-
-                                                int msb = (utf8Bytes[i*1368] & 0xff) >> 7;
-
+                                            for(int i = 1; i <= numOfMessages; i++) {
+                                                int end = i*1367 > msg.length() ? msg.length() : i*1367;
+                                                int msb = (utf8Bytes[end-1] & 0xff) >> 7;
                                                 if(msb == 0) { // Single byte char
-
-                                                    int end = i*1368 > msg.length() ? msg.length() : i*1368;
-
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, end), id);
-
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1367, end), id);
+                                                    id++;
                                                 } else { // Multi-byte char
-
                                                     boolean found = false;
                                                     int num = 1;
-
                                                     while(!found) {
-
-                                                        int ssb = (utf8Bytes[(i*1368) - num] >> 6) & 1;
-
+                                                        end = (i*1367)-num > msg.length() ? msg.length() : (i*1367)-num;
+                                                        int ssb = (utf8Bytes[(end-1) - num] >> 6) & 1;
                                                         if(ssb == 1) { // Found start of word
-                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368-num), id);
+                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1367, end), id);
+                                                            id++;
                                                             found = true;
                                                         } else {
                                                             num++;
                                                         }
-
                                                     }
-
                                                 }
-
                                             }
-
                                         } else {
                                             toxSingleton.jTox.sendMessage(friend, msg, id);
                                         }
@@ -212,7 +245,7 @@ public class ChatFragment extends Fragment {
         if (messages.size() >= 0) {
             adapter.data.clear();
             for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
+                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp, messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
             }
             Log.d("ChatFragment", "Updating chat");
             adapter.notifyDataSetChanged();
@@ -277,6 +310,91 @@ public class ChatFragment extends Fragment {
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
+        chatListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+                                           int index, long arg3) {
+                if (chatMessages.get(index).getType() == 1 || chatMessages.get(index).getType() == 2) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    CharSequence[] items = new CharSequence[]{
+                            "Copy message",
+                            "Delete message"
+                    };
+                    final int i = index;
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Copy
+                                            String msg = chatMessages.get(i).message;
+                                            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(getActivity().CLIPBOARD_SERVICE);
+                                            clipboard.setText(msg);
+                                            break;
+                                        case 1: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(getActivity());
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    CharSequence[] items = new CharSequence[]{
+                            "Delete message"
+                    };
+                    final int i = index;
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
+                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(getActivity());
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                    return true;
+                }
+        });
+
+        isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
+        statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
@@ -288,10 +406,13 @@ public class ChatFragment extends Fragment {
                 } else {
                     isTyping = false;
                 }
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), isTyping);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
 
@@ -315,10 +436,13 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendMessage();
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), false);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
         });
