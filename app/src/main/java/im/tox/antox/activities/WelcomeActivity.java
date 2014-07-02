@@ -67,7 +67,7 @@ public class WelcomeActivity extends ActionBarActivity {
              */
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             toxSingleton.initSubjects(getApplicationContext());
-            /* If the tox service isn't already running, start it */
+
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
             getApplicationContext().startService(startTox);
 

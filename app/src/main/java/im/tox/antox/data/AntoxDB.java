@@ -256,14 +256,20 @@ public class AntoxDB extends SQLiteOpenHelper {
         return map;
     }
 
-    public ArrayList<Message> getMessageList(String key) {
+    public ArrayList<Message> getMessageList(String key, boolean actionMessages) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
         if (key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
-            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+            String act;
+            if (actionMessages) {
+                act = "";
+            } else {
+                act = "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) ";
+            }
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' " + act + "ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
         }
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -393,6 +399,14 @@ public class AntoxDB extends SQLiteOpenHelper {
         Log.d("", "marked incoming messages as read");
     }
 
+    public void deleteMessage(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + Constants.TABLE_CHAT_LOGS + " WHERE _id == " + id;
+        db.execSQL(query);
+        db.close();
+        Log.d("", "Deleted message");
+    }
+
     public ArrayList<Friend> getFriendList() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -419,7 +433,7 @@ public class AntoxDB extends SQLiteOpenHelper {
                     name = key.substring(0,7);
 
                 if(!isBlocked)
-                    friendList.add(new Friend(online, name, status, note, key));
+                    friendList.add(new Friend(online, name, status, note, key, alias));
 
             } while (cursor.moveToNext());
         }

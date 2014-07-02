@@ -74,6 +74,7 @@ public class ToxSingleton {
     public BehaviorSubject<ArrayList<FriendRequest>> friendRequestSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
+    public BehaviorSubject<Boolean> typingSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
     public BehaviorSubject<String> chatActiveSubject;
@@ -82,6 +83,8 @@ public class ToxSingleton {
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
+    public HashMap<String, Boolean> typingMap = new HashMap<>();
+    public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
@@ -107,6 +110,8 @@ public class ToxSingleton {
         doClosePaneSubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
         updatedMessagesSubject.subscribeOn(Schedulers.io());
+        typingSubject = BehaviorSubject.create(true);
+        typingSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
             @Override
             public ArrayList<FriendInfo> call(ArrayList<Friend> fl, HashMap lm, HashMap uc) {
@@ -127,7 +132,7 @@ public class ToxSingleton {
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount));
+                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias));
                 }
                 return fi;
             }
@@ -635,7 +640,7 @@ public class ToxSingleton {
             }
         }
 
-
+        isInited = true;
     }
 
     public static ToxSingleton getInstance() {

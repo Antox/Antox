@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
+import android.util.Log;
 
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxSingleton;
@@ -61,9 +62,9 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("nickname"));
         bindPreferenceSummaryToValue(findPreference("status"));
         bindPreferenceSummaryToValue(findPreference("status_message"));
-        bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
+        bindPreferenceSummaryToValue(findPreference("nospam"));
 
         /* Override the Tox ID click functionality to display a dialog with the qr image
          * and copy to clipboard button
@@ -124,28 +125,6 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
 
             } else {
                 // For all other preferences, set the summary to the value's
@@ -209,6 +188,20 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+        }
+
+        if(key.equals("nospam")) {
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+            try {
+                int nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
+                toxSingleton.jTox.setNospam(nospam);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("tox_id", toxSingleton.jTox.getAddress());
+                editor.commit();
+                bindPreferenceSummaryToValue(findPreference("tox_id"));
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
