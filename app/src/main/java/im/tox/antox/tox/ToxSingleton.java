@@ -83,10 +83,13 @@ public class ToxSingleton {
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
+    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
     public HashMap<String, Boolean> typingMap = new HashMap<>();
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
+
+    public enum FileStatus {REQUESTSENT, CANCELLED, INPROGRESS, FINISHED, PAUSED};
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -163,10 +166,10 @@ public class ToxSingleton {
     }
 
     public void sendFileSendRequest(String path, String key, Context context) {
-        Log.d("sendFileSendRequest path", path);
         File file = new File(path);
         String[] splitPath = path.split("/");
         String fileName = splitPath[splitPath.length - 1];
+        Log.d("sendFileSendRequest", "name: " + fileName);
         if (fileName != null) {
             int fileNumber = -1;
             try {
@@ -232,6 +235,10 @@ public class ToxSingleton {
         }
         AntoxDB antoxDB = new AntoxDB(context);
         antoxDB.fileTransferStarted(key, fileNumber);
+        int id = antoxDB.getFileId(key, fileNumber);
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.INPROGRESS);
+        }
         antoxDB.close();
         updatedMessagesSubject.onNext(true);
     }
@@ -293,7 +300,23 @@ public class ToxSingleton {
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
         AntoxDB db = new AntoxDB(context);
+        int id = db.getFileId(key, fileNumber);
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.FINISHED);
+        }
         db.fileFinished(key, fileNumber);
+        db.close();
+        updatedMessagesSubject.onNext(true);
+    }
+
+    public void cancelFile(String key, int fileNumber, Context context) {
+        Log.d("ToxSingleton","cancelFile");
+        AntoxDB db = new AntoxDB(context);
+        int id = db.getFileId(key, fileNumber);
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.CANCELLED);
+        }
+        db.clearFileNumber(key, fileNumber);
         db.close();
         updatedMessagesSubject.onNext(true);
     }
@@ -331,6 +354,9 @@ public class ToxSingleton {
         path = antoxDB.getFilePath(key, fileNumber);
         int id = antoxDB.getFileId(key, fileNumber);
         antoxDB.close();
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.INPROGRESS);
+        }
         int result = -1;
         if (!path.equals("")) {
             int chunkSize = 1;
@@ -364,6 +390,9 @@ public class ToxSingleton {
                         e.printStackTrace();
                         break;
                     }
+                    if (!(fileStatusMap.containsKey(id) && fileStatusMap.get(id).equals(FileStatus.INPROGRESS))) {
+                        break;
+                    }
                     if (result == -1) {
                         Log.d("sendFileDataTask", "toxFileSendData failed");
                         try {
@@ -390,7 +419,7 @@ public class ToxSingleton {
                     e.printStackTrace();
                 }
             }
-            if (result != -1) {
+            if (result != -1 && fileStatusMap.get(id).equals(FileStatus.INPROGRESS)) {
                 try {
                     Log.d("toxFileSendControl", "FINISHED");
                     jTox.fileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
