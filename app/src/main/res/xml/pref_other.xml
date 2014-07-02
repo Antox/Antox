@@ -12,4 +12,24 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
+    <CheckBoxPreference
+        android:key="action_messages"
+        android:title="@string/pref_title_action_messages"
+        android:defaultValue="true" />
+
+    <PreferenceScreen
+        android:title="@string/pref_advanced" >
+
+            <EditTextPreference
+                android:key="nospam"
+                android:title="@string/pref_nospam"
+                android:defaultValue=""
+                android:numeric="integer"
+                android:inputType="number"
+                android:singleLine="true"
+                android:maxLines="1" />
+
+    </PreferenceScreen>
+
+
 </PreferenceScreen>

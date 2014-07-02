@@ -4,75 +4,89 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/blue"
-        android:orientation="vertical">
-        <ImageButton
+        android:orientation="horizontal">
+        <LinearLayout
             android:id="@+id/backButton"
+            android:gravity="center"
+            android:layout_width="24dp"
+            android:layout_height="48dp">
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
             android:background="@android:color/transparent"
-            android:layout_marginLeft="5dp"
             android:src="@drawable/abc_ic_ab_back_holo_dark"/>
-
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
         <TextView
             android:id="@+id/chatActiveName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="Name of active friend"
             android:textColor="@color/white_absolute"
             android:textSize="20sp"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:layout_marginTop="3dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/backButton"
-            android:text="USERNAME"/>
-
+            android:layout_marginBottom="-5dp"
+            android:text=""/>
         <TextView
-            android:id="@+id/chatActiveStatus"
-            android:layout_width="wrap_content"
+            android:id="@+id/isTyping"
+            android:text="is typing..."
+            android:visibility="gone"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="Status of active friend"
             android:textColor="@color/grey_light"
             android:textSize="13sp"
-            android:text="STATUS"
             android:ellipsize="end"
-            android:singleLine="true"
-            android:layout_gravity="bottom"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/chatActiveName"
-            android:layout_alignStart="@+id/chatActiveName"
-            android:layout_marginBottom="5dp"
-            android:layout_toLeftOf="@+id/callFriend" />
-
-        <ImageButton
+            android:singleLine="true"/>
+        <TextView
+            android:id="@+id/chatActiveStatus"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="Status of active friend"
+            android:textColor="@color/grey_light"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:singleLine="true"/>
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/callFriend"
+            android:gravity="center"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="Voice Call Friend"
             android:onClick="onClickVoiceCallFriend"
-            android:src="@drawable/ic_action_call"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/videoFriend"
-            android:layout_marginRight="15dp" />
-
-        <ImageButton
+            android:src="@drawable/ic_action_call"/>
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/videoFriend"
+            android:gravity="center"
+            android:layout_marginRight="5dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="Video Call Friend"
             android:onClick="onClickVideoCallFriend"
-            android:src="@drawable/ic_action_video"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="15dp" />
-    </RelativeLayout>
+            android:src="@drawable/ic_action_video"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/chatMessages"
