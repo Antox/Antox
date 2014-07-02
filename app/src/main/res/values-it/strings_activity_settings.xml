@@ -26,6 +26,7 @@
     <string name="pref_title_enable_notifications">Abilita notifiche</string>
     <string name="pref_title_new_message_notifications">Notifiche per i nuovi messaggi</string>
     <string name="pref_title_new_friend_notifications">Notifiche per le richieste d\'amicizia</string>
+    <string name="pref_title_action_messages">Notifiche per le azioni</string>
 
     <string name="pref_title_ringtone">Suoneria</string>
     <string name="pref_ringtone_silent">Silenzioso</string>
@@ -39,10 +40,8 @@
 
     <!-- Menu strings -->
     <string name="copy_tox_id">Copia Tox ID</string>
-    
-    <!-- Dht strings -->
-    <string name="dht">Server DHT</string>
-    <string name="dht_ip">Indirizzo IP</string>
-    <string name="dht_port">Porta</string>
-    <string name="dht_key">Chiave</string>
+
+    <!-- Advanced strings -->
+    <string name="pref_advanced">Avanzate</string>
+    <string name="pref_nospam">Nospam</string>
 </resources>
