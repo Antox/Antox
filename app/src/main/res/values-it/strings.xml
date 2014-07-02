@@ -52,9 +52,7 @@
     <string name="dialog_pin">Inserisci il pin del contatto</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
     <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
-    <string name="addfriend_no_internet_text">Non puoi aggiungere contatti in questo momento:
-        non sei connesso alla rete Tox.\nProva a riavviare l\'applicazione.
-    </string>
+    <string name="addfriend_own_key">Non puoi aggiungere te stesso</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nome</string>
