@@ -17,7 +17,8 @@ public class ToxDoService extends Service {
 
     private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
-    private ToxSingleton toxSingleton = ToxSingleton.getInstance();;
+    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
+    ;
 
     public ToxDoService() {
         super();
@@ -40,7 +41,7 @@ public class ToxDoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 500, TimeUnit.MILLISECONDS);
+        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
 
         return START_STICKY;
     }
@@ -66,12 +67,14 @@ public class ToxDoService extends Service {
             return new LogOnExceptionRunnable(command);
         }
 
-        private class LogOnExceptionRunnable implements Runnable{
+        private class LogOnExceptionRunnable implements Runnable {
             private Runnable theRunnable;
+
             public LogOnExceptionRunnable(Runnable theRunnable) {
                 super();
                 this.theRunnable = theRunnable;
             }
+
             @Override
             public void run() {
                 try {
@@ -79,7 +82,7 @@ public class ToxDoService extends Service {
                 } catch (Exception e) {
                     Log.d(TAG, "Executor has caught an exception");
                     e.printStackTrace();
-                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 500, TimeUnit.MILLISECONDS);
+                    toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
                     throw new RuntimeException(e);
                 }
             }
@@ -95,8 +98,6 @@ public class ToxDoService extends Service {
             } catch (ToxException e) {
                 Log.d(TAG, e.getError().toString());
                 e.printStackTrace();
-            } catch (NullPointerException e) {
-                toxSingleton.initTox(getApplicationContext());
             }
         }
     }

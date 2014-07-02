@@ -69,7 +69,7 @@ public class RecentAdapter extends ArrayAdapter<FriendInfo> {
 		holder.friendName.setText(friend.friendName);
 		holder.friendStatus.setText(friend.lastMessage);
         holder.unreadCount.setText(Integer.toString(friend.unreadCount));
-        holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(friend.lastMessageTimestamp));
+        holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(friend.lastMessageTimestamp, false));
         holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(friend.icon)));
         if (friend.unreadCount == 0) {
             holder.unreadCount.setVisibility(View.GONE);
