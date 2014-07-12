@@ -27,6 +27,7 @@ import im.tox.QR.Contents;
 import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
+import im.tox.antox.fragments.ContactsFragment;
 
 public class FriendProfileActivity extends ActionBarActivity {
 
@@ -46,7 +47,6 @@ public class FriendProfileActivity extends ActionBarActivity {
         String friendNote = friendDetails[2];
 
         setTitle(friendName+"'s Profile");
-
 
         EditText editFriendAlias = (EditText) findViewById(R.id.friendAliasText);
         editFriendAlias.setText(friendAlias);
@@ -150,4 +150,14 @@ public class FriendProfileActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(FriendProfileActivity.this,MainActivity.class);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        FriendProfileActivity.this.startActivity(intent);
+        finish();
+
+    }
 }
