@@ -100,6 +100,11 @@
     <string name="message_copy">Kopiera meddelande</string>
     <string name="message_delete">Ta bort meddelande</string>
 
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Tidigare</string>
+    <string name="titles_contacts">Kontakter</string>
+    <string name="titles_settings">Inställningar</string>
+
     <!--  Misc -->
     <string name="button_confirm">Bekräfta</string>
     <string name="button_cancel">Avbryt</string>
