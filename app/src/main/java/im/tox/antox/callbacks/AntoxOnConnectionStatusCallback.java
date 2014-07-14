@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
@@ -42,8 +43,8 @@ public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallba
 
         long epochNow = System.currentTimeMillis()/1000;
         if(epochNow - Constants.epoch > 30) {
-            String tmp2 = online ? "come online" : "gone offline";
-            db.addMessage(-1, friend.getId(), tmp + " has " + tmp2, true, true, true, 5);
+            String tmp2 = online ? this.ctx.getString(R.string.connection_online) : this.ctx.getString(R.string.connection_offline);
+            db.addMessage(-1, friend.getId(), tmp + " " + this.ctx.getString(R.string.connection_has) + " " + tmp2, true, true, true, 5);
             db.close();
         }
 
