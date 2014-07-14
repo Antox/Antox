@@ -98,6 +98,11 @@
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>
 
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Recent</string>
+    <string name="titles_contacts">Contacts</string>
+    <string name="titles_settings">Settings</string>
+
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>

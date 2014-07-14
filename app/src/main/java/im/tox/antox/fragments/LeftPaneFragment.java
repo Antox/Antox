@@ -21,7 +21,8 @@ public class LeftPaneFragment extends Fragment {
 
     public class LeftPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = { "Recent", "Contacts", "Settings"};
+        private final String[] TITLES = { getString(R.string.titles_recent),
+                getString(R.string.titles_contacts), getString(R.string.titles_settings)};
 
         public LeftPagerAdapter(FragmentManager fm) {
             super(fm);
