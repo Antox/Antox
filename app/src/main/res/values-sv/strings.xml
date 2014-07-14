@@ -6,9 +6,18 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Välkommen</string>
     <string name="title_activity_add_friend">Lägg Till Vän</string>
+    <string name="title_activity_friend_profile">Väns Profil</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Lägg Till Vän</string>
+
+    <!-- Welcome Activity -->
+    <string name="welcome_must_select_username">Du måste välja ett namn</string>
+    <string name="welcome_alpha_warning">Den här klienten är fortfarande i pre-alpha.</string>
+    <string name="welcome_getstarted_string">Välj ett skärmnamn</string>
+    <string name="welcome_name_hint">smeknamn</string>
+    <string name="welcome_button">Starta</string>
+    <string name="welcome_developer_string">Gjord med kärlek av Tox utvecklarna</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -17,22 +26,25 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Anslutningsstatus</string>
     <string name="main_no_friends">Du måste vara ny här.</string>
+    <string name="main_recent_no">Inga nya konversationer</string>
     <string name="main_try_adding">Lägg till några vänner för att komma igång</string>
     <string name="main_friend_requests">Vänförfrågningar</string>
     <string name="main_friends">Vänner</string>
     <string name="main_no_internet">Ingen Internetanslutning</string>
     <string name="main_not_connected">
         Ingen internetanslutning hittades. Utan internetanslutning kommer du ha
-        begränsad funktionalitet.
+        begränsad funktionalitet om du inte använder Antox endast över LAN
     </string>
     <string name="main_node_list_download_error">Fel Vid Nedladdning Av Nodlista</string>
+    <string name="search_all_contacts">Sök i kontakter</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Skicka ett meddelande</string>
+    <string name="chat_file_transfer">Filöverföring</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Din väns Tox ID</string>
-    <string name="addfriend_friend_message">Frivilligt meddelande</string>
+    <string name="addfriend_friend_message">Skicka ett meddelande med din förfrågan</string>
     <string name="addfriend_button">Lägg Till Vän</string>
     <string name="addfriend_friend_added">Vän Tillagd</string>
     <string name="addfriend_friend_exists">Vännen finns redan</string>
@@ -43,10 +55,7 @@
     <string name="dialog_pin">Ange din väns pin</string>
     <string name="addfriend_invalid_pin">Ogiltig Pin</string>
     <string name="addfriend_no_internet">Ingen anslutning till Tox-nätverket</string>
-    <string name="addfriend_no_internet_text">
-        Tyvärr är du inte ansluten till Tox-nätverket så du kan inte lägga till en vän just nu.
-        Försök starta om applikationen.
-    </string>
+    <string name="addfriend_own_key">Du kan inte lägga till dig själv</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Namn</string>
@@ -55,15 +64,16 @@
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Uppdatera</string>
-    <string name="friend_profile_updated">Smeknamn har uppdaterats</string>
-    <string name="friend_profile_copied">ID Kopierat</string>
+    <string name="friend_profile_updated">Profilen har uppdaterats</string>
+    <string name="friend_profile_copy">Kopiera Tox ID</string>
+    <string name="friend_profile_copied">Tox ID Kopierat</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Acceptera</string>
     <string name="friendrequest_reject">Avvisa</string>
     <string name="friendrequest_accepted">Vänföfrågan accepterad</string>
     <string name="friendrequest_deleted">Vänförfrågan borttagen</string>
-    <string name="friendrequest">Vänförfrågan</string>
+    <string name="friendrequest">Vänförfrågningar</string>
     <string name="friendrequest_recieved">Vänförfrågan mottagen</string>
     <string name="friend_request">Ny Vänförfrågan</string>
 
@@ -72,7 +82,7 @@
     <string name="friend_action_sendfile">Skicka Fil</string>
     <string name="friend_action_delete">Ta Bort Vän</string>
     <string name="friend_action_move_to_group">Flytta till Grupp</string>
-    <string name="friend_action_block">Blocka</string>
+    <string name="friend_action_block">Blockera</string>
     <string name="friend_action_unblock">Avblockera</string>
     <string name="group_action_leave">Lämna Grupp</string>
     <string name="friend_action_deletechat">Ta bort Chatloggar</string>
@@ -81,9 +91,12 @@
         längre kunna se vänförfrågningar från henom. Är du säker på att du vill fortsätta?
     </string>
     <string name="toast_succ_move_user">Vännen har flyttats</string>
-
     <string name="contacts_actions_on">Handlingar på</string>
     <string name="contacts_clear_saved_logs">Vill du rensa de sparade chattloggarna också?</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Bifoga bild</string>
+    <string name="attachment_takephoto">Ta bild</string>
 
     <!--  Misc -->
     <string name="button_confirm">Bekräfta</string>
@@ -91,5 +104,8 @@
     <string name="button_yes">Ja</string>
     <string name="button_no">Nej</string>
     <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tox_id">Kopiera Tox ID till urklipp</string>
+    <string name="share_with">Dela med</string>
 
 </resources>
