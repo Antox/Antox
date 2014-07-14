@@ -95,6 +95,8 @@
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
     <string name="attachment_takephoto">Take photo</string>
+    <string name="message_copy">Copy message</string>
+    <string name="message_delete">Delete message</string>
 
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
