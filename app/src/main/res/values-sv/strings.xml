@@ -107,5 +107,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_tox_id">Kopiera Tox ID till urklipp</string>
     <string name="share_with">Dela med</string>
+    <string name="connection_has">har</string>
+    <string name="connection_online">loggat in</string>
+    <string name="connection_offline">loggat ut</string>
 
 </resources>
