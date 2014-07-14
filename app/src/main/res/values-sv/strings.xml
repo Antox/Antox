@@ -80,7 +80,7 @@
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profil</string>
     <string name="friend_action_sendfile">Skicka Fil</string>
-    <string name="friend_action_delete">Ta Bort Vän</string>
+    <string name="friend_action_delete">Ta bort Vän</string>
     <string name="friend_action_move_to_group">Flytta till Grupp</string>
     <string name="friend_action_block">Blockera</string>
     <string name="friend_action_unblock">Avblockera</string>
