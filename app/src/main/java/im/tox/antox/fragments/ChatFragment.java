@@ -317,8 +317,8 @@ public class ChatFragment extends Fragment {
                 if (chatMessages.get(index).getType() == 1 || chatMessages.get(index).getType() == 2) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     CharSequence[] items = new CharSequence[]{
-                            "Copy message",
-                            "Delete message"
+                            getString(R.string.message_copy),
+                            getString(R.string.message_delete)
                     };
                     final int i = index;
                     builder.setCancelable(true)
@@ -357,7 +357,7 @@ public class ChatFragment extends Fragment {
                     } else {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     CharSequence[] items = new CharSequence[]{
-                            "Delete message"
+                            getString(R.string.message_delete)
                     };
                     final int i = index;
                     builder.setCancelable(true)
