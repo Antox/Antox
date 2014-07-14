@@ -105,5 +105,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
     <string name="share_with">Share with</string>
+    <string name="connection_has">has</string>
+    <string name="connection_online">come online</string>
+    <string name="connection_offline">gone offline</string>
 
 </resources>
