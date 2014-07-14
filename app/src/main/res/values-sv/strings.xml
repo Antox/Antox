@@ -97,6 +97,8 @@
     <!-- Chat Fragment -->
     <string name="attachment_photo">Bifoga bild</string>
     <string name="attachment_takephoto">Ta bild</string>
+    <string name="message_copy">Kopiera meddelande</string>
+    <string name="message_delete">Ta bort meddelande</string>
 
     <!--  Misc -->
     <string name="button_confirm">Bekräfta</string>
