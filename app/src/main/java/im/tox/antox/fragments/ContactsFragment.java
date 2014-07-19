@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
@@ -66,6 +68,8 @@ public class ContactsFragment extends Fragment {
     public void updateContacts(Tuple<ArrayList<FriendInfo>,ArrayList<FriendRequest>> friendstuple) {
         ArrayList<FriendInfo> friendsList = friendstuple.x;
         ArrayList<FriendRequest> friendRequests = friendstuple.y;
+
+        Collections.sort(friendsList, new NameComparator());
 
         leftPaneAdapter = new LeftPaneAdapter(getActivity());
         FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
@@ -406,5 +410,22 @@ public class ContactsFragment extends Fragment {
                         }
                 );
         builder.show();
+    }
+
+    private class NameComparator implements Comparator<FriendInfo> {
+        @Override
+        public int compare(FriendInfo a, FriendInfo b) {
+            if(!a.alias.equals("")) {
+                if(!b.alias.equals(""))
+                    return a.alias.compareTo(b.alias);
+                else
+                    return a.alias.compareTo(b.friendName);
+            } else {
+                if(!b.alias.equals(""))
+                    return a.friendName.compareTo(b.alias);
+                else
+                    return a.friendName.compareTo(b.friendName);
+            }
+        }
     }
 }

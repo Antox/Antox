@@ -1,8 +1,9 @@
 package im.tox.antox.utils;
 
 import java.sql.Timestamp;
+import java.util.Comparator;
 
-public class FriendInfo extends Friend {
+public class FriendInfo extends Friend{
 
     public int unreadCount;
     public String lastMessage;
