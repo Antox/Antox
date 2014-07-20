@@ -189,33 +189,43 @@ public class ChatFragment extends Fragment {
                                 if (friend != null) {
                                     boolean sendingSucceeded = true;
                                     try {
+                                        // NB: substring includes from start up to but not including the end position
                                         // Max message length in tox is 1368 bytes
+                                        // jToxCore seems to append a null byte so split around 1367
                                         final byte[] utf8Bytes = msg.getBytes("UTF-8");
-                                        int numOfMessages = (utf8Bytes.length/1368) + 1;
+                                        int numOfMessages = (utf8Bytes.length/1367) + 1;
 
                                         if(numOfMessages > 1) {
-                                            for(int i = 1; i <= numOfMessages; i++) {
-                                                int end = i*1367 > msg.length() ? msg.length() : i*1367;
-                                                int msb = (utf8Bytes[end-1] & 0xff) >> 7;
-                                                if(msb == 0) { // Single byte char
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1367, end), id);
-                                                    id++;
-                                                } else { // Multi-byte char
-                                                    boolean found = false;
-                                                    int num = 1;
-                                                    while(!found) {
-                                                        end = (i*1367)-num > msg.length() ? msg.length() : (i*1367)-num;
-                                                        int ssb = (utf8Bytes[(end-1) - num] >> 6) & 1;
-                                                        if(ssb == 1) { // Found start of word
-                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1367, end), id);
-                                                            id++;
-                                                            found = true;
-                                                        } else {
-                                                            num++;
-                                                        }
-                                                    }
+
+                                            final int OneByte = 0xFFFFFF80;
+                                            final int TwoByte = 0xFFFFF800;
+                                            final int ThreeByte = 0xFFFF0000;
+
+                                            int total = 0;
+                                            int previous = 0;
+                                            int numberOfMessagesSent = 0;
+
+                                            for(int i = 0; i < msg.length(); i++) {
+                                                if((msg.charAt(i) & OneByte) == 0)
+                                                    total += 1;
+                                                else if((msg.charAt(i) & TwoByte) == 0)
+                                                    total += 2;
+                                                else if((msg.charAt(i) & ThreeByte) == 0)
+                                                    total += 3;
+                                                else
+                                                    total += 4;
+
+                                                if(numberOfMessagesSent == numOfMessages-1) {
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous), id);
+                                                    break;
+                                                } else if(total >= 1366) {
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i), id);
+                                                    numberOfMessagesSent++;
+                                                    previous = i;
+                                                    total = 0;
                                                 }
                                             }
+
                                         } else {
                                             toxSingleton.jTox.sendMessage(friend, msg, id);
                                         }
@@ -234,7 +244,9 @@ public class ChatFragment extends Fragment {
                                 }
                                 subscriber.onCompleted();
                             } catch (Exception e) {
+                                Log.e("ChatFragment", "Subscriber error: " + e.getMessage());
                                 subscriber.onError(e);
+
                             }
                          }
                      });
