@@ -76,6 +76,10 @@ public class ChatFragment extends Fragment {
         this.activeKey = key;
     }
 
+    public ChatFragment() {
+        super();
+    }
+
     @Override
     public void onResume(){
         super.onResume();
