@@ -94,6 +94,13 @@
     <!-- Chat Fragment -->
     <string name="attachment_photo">Allega foto</string>
     <string name="attachment_takephoto">Scatta foto</string>
+    <string name="message_copy">Copia messaggio</string>
+    <string name="message_delete">Cancella messaggio</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Recenti</string>
+    <string name="titles_contacts">Contatti</string>
+    <string name="titles_settings">Impostazioni</string>
 
     <!-- Misc -->
     <string name="button_confirm">Applica</string>
@@ -104,5 +111,8 @@
     <string name="hello_blank_fragment">Ciao fragment vuoto</string>
     <string name="dialog_tox_id">Copia Tox ID negli appunti</string>
     <string name="share_with">Condividi con</string>
+    <string name="connection_has">è</string>
+    <string name="connection_online">online</string>
+    <string name="connection_offline">offline</string>
 
 </resources>
