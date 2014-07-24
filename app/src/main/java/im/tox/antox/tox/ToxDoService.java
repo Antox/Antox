@@ -25,12 +25,12 @@ public class ToxDoService extends Service {
 
     @Override
     public void onCreate() {
+        if(!toxSingleton.isInited)
+            toxSingleton.initTox(getApplicationContext());
+
         Runnable start = new Runnable() {
             @Override
             public void run() {
-                if(!toxSingleton.isInited)
-                    toxSingleton.initTox(getApplicationContext());
-
                 final DoTox doTox = new DoTox();
                 toxScheduleTaskExecutor.scheduleAtFixedRate(doTox, 0, 50, TimeUnit.MILLISECONDS);
             }
