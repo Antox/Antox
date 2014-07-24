@@ -53,7 +53,7 @@ public class ChatMessagesAdapter extends ArrayAdapter<ChatMessages> {
         holder.layout.setGravity(Gravity.RIGHT);
         holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
         holder.row.setGravity(Gravity.RIGHT);
-        holder.background.setBackground(context.getResources().getDrawable(R.drawable.chatright));
+        holder.background.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chatright));
         holder.background.setPadding(1*density*paddingscale, 1*density*paddingscale, 6*density + 1*density*paddingscale, 1*density*paddingscale);
     }
 
