@@ -18,7 +18,6 @@ public class ToxDoService extends Service {
     private ToxScheduleTaskExecutor toxScheduleTaskExecutor = new ToxScheduleTaskExecutor(1);
 
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
-    ;
 
     public ToxDoService() {
         super();
@@ -26,12 +25,24 @@ public class ToxDoService extends Service {
 
     @Override
     public void onCreate() {
-        Thread t = new Thread() {
+        if(!toxSingleton.isInited) {
+            Runnable initTox = new Runnable() {
+                @Override
+                public void run() {
+                    toxSingleton.initTox(getApplicationContext());
+                }
+            };
+            new Thread(initTox).start();
+        }
+
+        Runnable runnable = new Runnable() {
+            @Override
             public void run() {
-                toxSingleton.initTox(getApplicationContext());
+                final DoTox doTox = new DoTox();
+                toxScheduleTaskExecutor.scheduleAtFixedRate(doTox, 0, 50, TimeUnit.MILLISECONDS);
             }
         };
-        t.start();
+        new Thread(runnable).start();
     }
 
     @Override
@@ -41,8 +52,6 @@ public class ToxDoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
-        toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
-
         return START_STICKY;
     }
 

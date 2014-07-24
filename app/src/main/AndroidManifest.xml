@@ -31,7 +31,6 @@
         <service
             android:name="im.tox.antox.tox.ToxDoService"
             android:exported="false"
-
             android:label="Antox" />
 
         <activity
