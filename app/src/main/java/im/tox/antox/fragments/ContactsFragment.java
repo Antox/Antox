@@ -417,14 +417,14 @@ public class ContactsFragment extends Fragment {
         public int compare(FriendInfo a, FriendInfo b) {
             if(!a.alias.equals("")) {
                 if(!b.alias.equals(""))
-                    return a.alias.compareTo(b.alias);
+                    return a.alias.toUpperCase().compareTo(b.alias.toUpperCase());
                 else
-                    return a.alias.compareTo(b.friendName);
+                    return a.alias.toUpperCase().compareTo(b.friendName.toUpperCase());
             } else {
                 if(!b.alias.equals(""))
-                    return a.friendName.compareTo(b.alias);
+                    return a.friendName.toUpperCase().compareTo(b.alias.toUpperCase());
                 else
-                    return a.friendName.compareTo(b.friendName);
+                    return a.friendName.toUpperCase().compareTo(b.friendName.toUpperCase());
             }
         }
     }
