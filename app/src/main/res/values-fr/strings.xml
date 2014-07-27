@@ -6,27 +6,41 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Bienvenue</string>
     <string name="title_activity_add_friend">Ajouter un ami</string>
+    <string name="title_activity_friend_profile">Profil de l'ami</string>
+
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Ajouter un ami</string>
 
+    <!-- Welcome Activity -->
+    <string name="welcome_must_select_username">Vous devez choisir un nom d\'utilisateur</string>
+    <string name="welcome_alpha_warning">Ce client est encore en pre-alpha.</string>
+    <string name="welcome_getstarted_string">Entrez un nom pour afficher vos amis</string>
+    <string name="welcome_name_hint">surnom</string>
+    <string name="welcome_button">Démarrer</string>
+    <string name="welcome_developer_string">Développé avec amour par l'équipe de développement Tox</string>
+
     <!-- Main Activity -->
+    <string name="title">antox</string>
+    <string name="main_avatar">Avatar</string>
+    <string name="main_username">Nom d'utilisateur</string>
+    <string name="main_status">Statut</string>
     <string name="icon_description">Statut de la connexion</string>
     <string name="main_no_friends">Hey! Vous n\'avez personne à qui parler!</string>
+    <string name="main_recent_no">Pas de conversations récentes</string>
     <string name="main_try_adding">Ajouter des amis pour commencer</string>
     <string name="main_friend_requests">Demandes d\'amis</string>
     <string name="main_friends">Amis</string>
     <string name="main_no_internet">Pas de connexion internet</string>
-    <string name="main_not_connected">Vous n\'êtes pas connecté à internet</string>
+    <string name="main_not_connected">Aucune connexion à internet détectée. Sans connexion à internet,
+        les fonctionnalités auxquelles vous avez accès sont limitées, sauf si vous utilisez Antox seulement
+        sur un LAN</string>
     <string name="main_node_list_download_error">Erreur lors du téléchargement de la liste des nœuds</string>
+    <string name="search_all_contacts">Chercher tous les contacts</string>
 
     <!--  Chat Activity -->
     <string name="chat_enter_message">Envoyer un message</string>
-
-
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">Vos devez sélectionner un nom d\'utilisateur</string>
-
+    <string name="chat_file_transfer">Transfert de fichier</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Identifiant Tox de votre ami</string>
@@ -38,14 +52,21 @@
     <string name="invalid_friend_ID">Identifiant Tox invalide</string>
     <string name="addfriend_nick_hint">Choisir un pseudo pour votre ami</string>
     <string name="addfriend_optional_title">Infos supplémentaires</string>
+    <string name="dialog_pin">Entrez le pin de votre ami</string>
+    <string name="addfriend_invalid_pin">Pin invalide</string>
+    <string name="addfriend_no_internet">Pas de connexion au réseau Tox</string>
+    <string name="addfriend_own_key">Vous ne pouvez pas vous ajouter vous-même</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nom</string>
-    <string name="friend_profile_nick">Nickname</string>
-    <string name="friend_profile_key">Clé Tox</string>
-    <string name="friend_profile_note">Note</string>
-    <string name="friend_profile_button">Mettre l\'alias à jour</string>
-    <string name="friend_profile_updated">L\'alias a été mis à jour</string>
+    <string name="friend_profile_nick">Pseudo</string>
+    <string name="friend_profile_group">Groupe</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Statut</string>
+    <string name="friend_profile_button">Modifier</string>
+    <string name="friend_profile_updated">Le profil a été mis à jour</string>
+    <string name="friend_profile_copy">Copier le Tox ID</string>
+    <string name="friend_profile_copied">Tox ID Copié</string>
 
     <!-- Friend request fragment -->
     <string name="friendrequest_accept">Accepter</string>
@@ -60,17 +81,39 @@
     <string name="friend_action_profile">Profil</string>
     <string name="friend_action_sendfile">Envoyer fichier</string>
     <string name="friend_action_delete">Supprimer l\'ami</string>
+    <string name="friend_action_move_to_group">Move to Group</string>
     <string name="friend_action_block">Bloquer</string>
+    <string name="friend_action_unblock">Débloquer</string>
     <string name="group_action_leave">Quitter groupe</string>
     <string name="friend_action_deletechat">Vider l\'historique de chat</string>
-
+    <string name="friend_action_block_confirmation"> En bloquant cet utilisateur, vous le retirez de vos
+        amis et vous ne verrez plus de demande d\'ajout de sa part. Voulez-vous vraiment continuer ?</string>
+    <string name="toast_succ_move_user">Le contact a été déplacé avec succès</string>
     <string name="contacts_actions_on">Actions</string>
     <string name="contacts_clear_saved_logs">Voulez-vous également supprimer l\'historique de chat enregistré ?</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Associer une photo</string>
+    <string name="attachment_takephoto">Prendre une photo</string>
+    <string name="message_copy">Copier le message</string>
+    <string name="message_delete">Supprimer le message</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Récents</string>
+    <string name="titles_contacts">Contacts</string>
+    <string name="titles_settings">Paramètres</string>
 
     <!--  Misc -->
     <string name="button_confirm">Confirmer</string>
     <string name="button_cancel">Annuler</string>
     <string name="button_yes">Oui</string>
     <string name="button_no">Non</string>
+    <string name="button_ok">OK</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tox_id">Copier le Tox ID dans le presse-papier</string>
+    <string name="share_with">Partager avec</string>
+    <string name="connection_has">a</string>
+    <string name="connection_online">s\'est connecté</string>
+    <string name="connection_offline">s\'est déconnecté</string>
 
 </resources>

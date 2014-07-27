@@ -17,7 +17,7 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 
-public class WelcomeActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,9 @@ public class WelcomeActivity extends ActionBarActivity {
         }
     }
 
-    public void updateSettings(View view) {
+    public void onClickLogin(View view) {
 
-        TextView username = (TextView) findViewById(R.id.welcome_name_hint);
+        TextView username = (TextView) findViewById(R.id.welcome_account_name);
         String usernameText = username.getText().toString();
 
         if (usernameText.trim().equals("")) {
