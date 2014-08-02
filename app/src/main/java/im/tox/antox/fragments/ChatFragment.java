@@ -83,75 +83,81 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        toxSingleton.chatActiveSubject.onNext(activeKey);
-        messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
+        Runnable load = new Runnable() {
             @Override
-            public ArrayList<Message> call(Boolean input) {
-                Log.d("ChatFragment","updatedMessageSubject map");
-                AntoxDB antoxDB = new AntoxDB(getActivity());
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
-                antoxDB.close();
-                return messageList;
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
-            @Override
-            public void call(ArrayList<Message> messages) {
-                Log.d("ChatFragment", "updatedMessageSubject subscription");
-                updateChat(messages);
-            }
-        });
-
-        titleSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<FriendInfo>>() {
-            @Override
-            public void call(ArrayList<FriendInfo> fi) {
-                String friendName = "";
-                String friendAlias = "";
-                String friendNote = "";
-                for (FriendInfo f : fi) {
-                    if (f.friendKey.equals(activeKey)) {
-                        friendName = f.friendName;
-                        friendNote = f.personalNote;
-                        friendAlias = f.alias;
-                        break;
+            public void run() {
+                toxSingleton.chatActiveSubject.onNext(activeKey);
+                messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
+                    @Override
+                    public ArrayList<Message> call(Boolean input) {
+                        Log.d("ChatFragment","updatedMessageSubject map");
+                        AntoxDB antoxDB = new AntoxDB(getActivity());
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
+                        antoxDB.close();
+                        return messageList;
                     }
-                }
-
-                Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
-                Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
-                Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
-
-                TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
-                if (!friendAlias.equals(""))
-                    chatName.setText(friendAlias);
-                else
-                    chatName.setText(friendName);
-
-                TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
-                statusText.setText(friendNote);
-
-                chatName.setTypeface(robotoBold);
-                statusText.setTypeface(robotoRegular);
-            }
-        });
-        typingSub = toxSingleton.typingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
-            @Override
-            public void call(Boolean x) {
-                if (toxSingleton.typingMap.containsKey(activeKey)) {
-                    boolean isTyping = toxSingleton.typingMap.get(activeKey);
-                    if (isTyping) {
-                        isTypingBox.setVisibility(View.VISIBLE);
-                        statusTextBox.setVisibility(View.GONE);
-                    } else {
-                        isTypingBox.setVisibility(View.GONE);
-                        statusTextBox.setVisibility(View.VISIBLE);
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
+                    @Override
+                    public void call(ArrayList<Message> messages) {
+                        Log.d("ChatFragment", "updatedMessageSubject subscription");
+                        updateChat(messages);
                     }
-                } else {
-                    isTypingBox.setVisibility(View.GONE);
-                    statusTextBox.setVisibility(View.VISIBLE);
-                }
+                });
+
+                titleSub = toxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<FriendInfo>>() {
+                    @Override
+                    public void call(ArrayList<FriendInfo> fi) {
+                        String friendName = "";
+                        String friendAlias = "";
+                        String friendNote = "";
+                        for (FriendInfo f : fi) {
+                            if (f.friendKey.equals(activeKey)) {
+                                friendName = f.friendName;
+                                friendNote = f.personalNote;
+                                friendAlias = f.alias;
+                                break;
+                            }
+                        }
+
+                        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
+                        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
+                        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
+
+                        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+                        if (!friendAlias.equals(""))
+                            chatName.setText(friendAlias);
+                        else
+                            chatName.setText(friendName);
+
+                        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+                        statusText.setText(friendNote);
+
+                        chatName.setTypeface(robotoBold);
+                        statusText.setTypeface(robotoRegular);
+                    }
+                });
+                typingSub = toxSingleton.typingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean x) {
+                        if (toxSingleton.typingMap.containsKey(activeKey)) {
+                            boolean isTyping = toxSingleton.typingMap.get(activeKey);
+                            if (isTyping) {
+                                isTypingBox.setVisibility(View.VISIBLE);
+                                statusTextBox.setVisibility(View.GONE);
+                            } else {
+                                isTypingBox.setVisibility(View.GONE);
+                                statusTextBox.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            isTypingBox.setVisibility(View.GONE);
+                            statusTextBox.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
             }
-        });
+        };
+        new Thread(load).start();
     }
 
     @Override
@@ -318,6 +324,13 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Runnable load = new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        };
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         chatMessages = new ArrayList<ChatMessages>();

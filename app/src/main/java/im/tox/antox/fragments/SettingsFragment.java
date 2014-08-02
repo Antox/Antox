@@ -1,5 +1,6 @@
 package im.tox.antox.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -17,7 +18,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.LoginActivity;
+import im.tox.antox.data.UserDB;
+import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 
@@ -65,6 +70,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
         bindPreferenceSummaryToValue(findPreference("nospam"));
+        bindPreferenceSummaryToValue(findPreference("active_account"));
 
         /* Override the Tox ID click functionality to display a dialog with the qr image
          * and copy to clipboard button
@@ -82,6 +88,29 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
         });
 
+        Preference logoutPreference = (Preference) findPreference("logout");
+        logoutPreference.setOnPreferenceClickListener(new EditTextPreference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("loggedin", false);
+                editor.apply();
+
+                // Stop the Tox Service
+                Intent startTox = new Intent(getActivity().getApplicationContext(), ToxDoService.class);
+                getActivity().getApplicationContext().stopService(startTox);
+
+                // Launch login activity
+                Intent login = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                getActivity().startActivity(login);
+
+                // Finish this activity
+                getActivity().finish();
+
+                return true;
+            }
+        });
     }
 
     /**
@@ -149,6 +178,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
 
     /* Callback will handle updating the new settings on the tox network */
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        UserDB db = new UserDB(getActivity());
 
         if(key.equals("nickname")) {
 
@@ -159,6 +189,8 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "nickname", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("status")) {
@@ -177,6 +209,8 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "status", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("status_message")) {
@@ -188,6 +222,8 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "status_message", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("nospam")) {

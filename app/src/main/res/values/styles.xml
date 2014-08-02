@@ -15,4 +15,5 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
     </style>
+
 </resources>

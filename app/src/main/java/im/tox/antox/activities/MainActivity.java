@@ -1,6 +1,5 @@
 package im.tox.antox.activities;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -8,11 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,18 +16,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.io.File;
 import java.util.Locale;
 
 import im.tox.antox.R;
@@ -39,7 +29,6 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.fragments.FriendRequestFragment;
-import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
@@ -50,9 +39,6 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
- * The Main Activity which is launched when the app icon is pressed in the app tray and acts as the
- * central part of the entire app. It also displays the friends list to the user.
- *
  * @author Mark Winter (Astonex)
  */
 
@@ -86,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         getSupportActionBar().hide();
 
         /* Fix for an android 4.1.x bug */
-        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getWindow().setFlags(
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -111,72 +97,63 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
         }
 
-        /* Check if first time ever running by checking the preferences */
-        if (!preferences.getBoolean("beenLoaded", false)) {
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivityForResult(intent, Constants.WELCOME_ACTIVITY_REQUEST_CODE);
-        } else {
-            /* Check if connected to the Internet */
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            if (networkInfo != null && !networkInfo.isConnected()) {
+        /* Check if connected to the Internet */
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && !networkInfo.isConnected()) {
                 /* Display lack of internt connection warning */
-                showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
-                        getString(R.string.main_not_connected));
+            showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
+                    getString(R.string.main_not_connected));
+        }
+
+        pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
+        DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
             }
 
-            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
-            getApplicationContext().startService(startTox);
+            @Override
+            public void onDrawerOpened(View drawerView) {
 
-            pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
-            DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
-                @Override
-                public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
 
-                }
+            @Override
+            public void onDrawerClosed(View drawerView) {
 
-                @Override
-                public void onDrawerOpened(View drawerView) {
+            }
 
-                }
+            @Override
+            public void onDrawerStateChanged(int newState) {
 
-                @Override
-                public void onDrawerClosed(View drawerView) {
+            }
+        };
+        pane.setDrawerListener(paneListener);
 
-                }
-
-                @Override
-                public void onDrawerStateChanged(int newState) {
-
-                }
-            };
-            pane.setDrawerListener(paneListener);
-
-            toxSingleton.mNotificationManager =
+        toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            //Init Bitmap Manager
-            new BitmapManager();
+        //Init Bitmap Manager
+        BitmapManager bm = new BitmapManager();
 
-            //Get epoch time for online/offline messages
-            Constants.epoch = System.currentTimeMillis()/1000; // Current time in seconds
+        //Get epoch time for online/offline messages
+        Constants.epoch = System.currentTimeMillis() / 1000; // Current time in seconds
 
-            //Initialize the RxJava Subjects in tox singleton;
-            toxSingleton.initSubjects(this);
+        //Initialize the RxJava Subjects in tox singleton;
+        toxSingleton.initSubjects(this);
 
-            //Update lists
-            toxSingleton.updateFriendsList(this);
-            toxSingleton.updateLastMessageMap(this);
-            toxSingleton.updateUnreadCountMap(this);
+        //Update lists
+        toxSingleton.updateFriendsList(this);
+        toxSingleton.updateLastMessageMap(this);
+        toxSingleton.updateUnreadCountMap(this);
 
-            AntoxDB db = new AntoxDB(getApplicationContext());
-            db.clearFileNumbers();
-            db.close();
+        AntoxDB db = new AntoxDB(getApplicationContext());
+        db.clearFileNumbers();
+        db.close();
 
-            updateLeftPane();
+        updateLeftPane();
 
-            onNewIntent(getIntent());
-        }
+        onNewIntent(getIntent());
     }
 
     public void updateLeftPane() {
@@ -216,7 +193,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("beenLoaded", false)){
             chatActiveSub = toxSingleton.chatActiveSubject.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
                     .subscribe(new Action1<String>() {
                         @Override
@@ -279,7 +255,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                             }
                         }
                     });
-        }
+
     }
 
     @Override
