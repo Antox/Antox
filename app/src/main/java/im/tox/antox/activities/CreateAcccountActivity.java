@@ -207,6 +207,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(main);
 
+                setResult(RESULT_OK);
                 finish();
             }
         }

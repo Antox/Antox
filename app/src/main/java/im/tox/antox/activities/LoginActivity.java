@@ -108,6 +108,15 @@ public class LoginActivity extends ActionBarActivity {
 
     public void onClickCreateAccount(View view) {
         Intent createAccount = new Intent(getApplicationContext(), CreateAcccountActivity.class);
-        startActivity(createAccount);
+        startActivityForResult(createAccount, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                finish();
+            }
+        }
     }
 }

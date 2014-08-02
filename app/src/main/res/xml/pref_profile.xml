@@ -30,6 +30,7 @@
         android:defaultValue="@string/pref_default_status_message"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:inputType="textAutoComplete"
         android:maxLines="1" />
 
     <EditTextPreference
