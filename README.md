@@ -7,8 +7,8 @@ Once ready, Antox will be available on Google Play and on F-Droid.
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
 ###Current development
-Currently working on improving the file transfers, inline image displaying and fixing any bugs related to them. Other forms of media will
-also be looked at for inlining. Development will also happen on the contacts list to allow searching and proper ordering
+Currently working on fixing bugs with multiple profiles and integrating toxme.se registration into the app. Work is also being done to wrap the Tox A/V features in jToxcore so that
+they can be implemented here.
 
 ###Antox On F-Droid
 To get Antox on F-Droid, add https://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Repositories' in F-Droid and click the '+' symbol in the action bar. PLEASE NOTE this app is still alpha and
@@ -43,7 +43,7 @@ For a list of which devices currently run Antox, visit our <a href="https://wiki
 - Basic messaging - this does not include group chats
 
 ###Screenshots Of Progress
-<img src="http://a.pomf.se/bboyqc.png" width="230px" height="400px"/><img src="https://pbs.twimg.com/media/Bq0stgVCQAA2Q6n.png:large" width="230px" height="400px"/><img src="http://a.pomf.se/qozvok.png" width="230px" height="400px"/>
+<img src="http://a.pomf.se/fzwbww.png" width="230px" height="400px"/><img src="http://a.pomf.se/twtkls.png" width="230px" height="400px"/><img src="http://a.pomf.se/zsgakz.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
