@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_large"
@@ -12,8 +11,7 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large"
         android:orientation="vertical"
-        android:focusableInTouchMode="true"
-        tools:context=".loginActivity" >
+        android:focusableInTouchMode="true">
 
         <ImageView
             android:contentDescription="Antox Logo"

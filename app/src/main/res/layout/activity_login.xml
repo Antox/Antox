@@ -1,11 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#222629"
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/margin_large"
@@ -13,8 +11,7 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large"
         android:orientation="vertical"
-        android:focusableInTouchMode="true"
-        tools:context=".loginActivity" >
+        android:focusableInTouchMode="true">
 
         <ImageView
             android:contentDescription="Antox Logo"
@@ -31,9 +28,8 @@
                android:layout_height="40dp"
                android:gravity="center"
                android:layout_gravity="center"
-               android:layout_marginTop="10dp"
                android:textColor="@color/black"
-               android:inputType="text"
+               android:layout_marginTop="10dp"
                android:hint="@string/login_account_hint"
                />
 
@@ -42,8 +38,8 @@
                 android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:layout_marginTop="5dp"
+                android:textColor="@color/black"
                 android:background="@drawable/edittextbackground"
                 android:layout_gravity="center"
                 android:inputType="textPassword"

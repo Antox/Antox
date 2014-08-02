@@ -10,6 +10,7 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
+        android:focusableInTouchMode="true"
         android:paddingTop="@dimen/margin_large"
         tools:context=".AddFriendActivity">
 
