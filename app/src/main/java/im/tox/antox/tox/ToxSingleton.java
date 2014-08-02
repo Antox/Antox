@@ -569,6 +569,10 @@ public class ToxSingleton {
         } else {
             try {
                 jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("tox_id", jTox.getAddress());
+                editor.commit();
             } catch (ToxException e) {
                 e.printStackTrace();
             }

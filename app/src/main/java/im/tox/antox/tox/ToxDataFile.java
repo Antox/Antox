@@ -1,6 +1,8 @@
 package im.tox.antox.tox;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,13 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import im.tox.antox.utils.Constants;
+
 public class ToxDataFile {
 
-	private String fileName = "AntoxDataFile";
+	private String fileName;
     private Context ctx;
 
 	public ToxDataFile(Context context) {
         ctx = context;
+        fileName = Constants.ACTIVE_DATABASE_NAME;
 	}
 
 	/**

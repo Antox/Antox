@@ -4,20 +4,38 @@
     <string name="app_name">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_welcome">Welcome</string>
+    <string name="title_activity_login">Login</string>
     <string name="title_activity_add_friend">Add Friend</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Add Friend</string>
 
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">You must set a name</string>
-    <string name="welcome_alpha_warning">This client is still in pre-alpha.</string>
-    <string name="welcome_getstarted_string">Enter a name to display to your friends</string>
-    <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Start</string>
-    <string name="welcome_developer_string">Made with love by the Tox Development Team</string>
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">You must fill in both fields</string>
+    <string name="login_alpha_warning">This client is still in pre-alpha.</string>
+    <string name="login_getstarted_string">Enter a name to display to your friends</string>
+    <string name="login_name_hint">nickname</string>
+    <string name="login_login">Login</string>
+    <string name="login_developer_string">Made with love by the Tox Development Team</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_account_hint">Account Name</string>
+    <string name="login_new_text">New to Antox?</string>
+    <string name="login_create_account_text">Create Account</string>
+    <string name="login_already_have_account">Already have an account?</string>
+    <string name="login_bad_login">Username or password was not correct</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Account Name</string>
+    <string name="create_password_hint">Password</string>
+    <string name="create_password_again_hint">Confirm Password</string>
+    <string name="create_text">Create a new Antox account</string>
+    <string name="create_register">Register</string>
+    <string name="create_skip">Skip registration (Advanced Users Only)</string>
+    <string name="create_must_fill_in">You must fill in all fields</string>
+    <string name="create_password_bad_match">Your passwords do not match</string>
+    <string name="create_allow_search">Allow others to search for you</string>
+    <string name="create_bio_string">Say a little something about yourself</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -31,10 +49,8 @@
     <string name="main_friend_requests">Friend Requests</string>
     <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">
-        No internet connection has been detected. Without an internet connection, you will have
-        limited functionality unless you are using Antox for LAN only
-    </string>
+    <string name="main_not_connected">        No internet connection has been detected. Without an internet connection, you will have
+        limited functionality unless you are using Antox for LAN only</string>
     <string name="main_node_list_download_error">Error Downloading Nodes List</string>
     <string name="search_all_contacts">Search all contacts</string>
 
@@ -115,5 +131,8 @@
     <string name="connection_has">has</string>
     <string name="connection_online">come online</string>
     <string name="connection_offline">gone offline</string>
+    <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

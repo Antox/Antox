@@ -6,7 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_welcome">Bienvenue</string>
     <string name="title_activity_add_friend">Ajouter un ami</string>
-    <string name="title_activity_friend_profile">Profil de l'ami</string>
+    <string name="title_activity_friend_profile">Profil de l\'ami</string>
 
 
     <!-- Navigation / Action Bar -->
@@ -18,12 +18,12 @@
     <string name="welcome_getstarted_string">Entrez un nom pour afficher vos amis</string>
     <string name="welcome_name_hint">surnom</string>
     <string name="welcome_button">Démarrer</string>
-    <string name="welcome_developer_string">Développé avec amour par l'équipe de développement Tox</string>
+    <string name="welcome_developer_string">Développé avec amour par l\'équipe de développement Tox</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
     <string name="main_avatar">Avatar</string>
-    <string name="main_username">Nom d'utilisateur</string>
+    <string name="main_username">Nom d\'utilisateur</string>
     <string name="main_status">Statut</string>
     <string name="icon_description">Statut de la connexion</string>
     <string name="main_no_friends">Hey! Vous n\'avez personne à qui parler!</string>

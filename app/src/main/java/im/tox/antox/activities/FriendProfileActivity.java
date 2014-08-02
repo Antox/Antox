@@ -27,7 +27,6 @@ import im.tox.QR.Contents;
 import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.fragments.ContactsFragment;
 
 public class FriendProfileActivity extends ActionBarActivity {
 

@@ -1,16 +1,123 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="im.tox.antox.activities.CreateAcccountActivity">
+    android:background="#222629"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true"
+        tools:context=".loginActivity" >
 
-</RelativeLayout>
+        <ImageView
+            android:contentDescription="Antox Logo"
+            android:id="@+id/imageView1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/full_logo"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/create_text"
+            android:layout_width="match_parent"
+            android:textColor="@color/white_absolute"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:textStyle="bold"
+            android:text="@string/create_text"
+            android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/create_account_name"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/create_name_hint"
+        android:layout_width="200dp"
+        android:background="@drawable/edittextbackground"
+        android:layout_height="40dp" />
+
+    <EditText
+        android:id="@+id/create_password"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="@string/create_password_hint"
+        android:layout_width="200dp"
+        android:inputType="textPassword"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/edittextbackground"
+        android:layout_height="40dp" />
+
+    <EditText
+        android:id="@+id/create_password_again"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:hint="@string/create_password_again_hint"
+        android:layout_width="200dp"
+        android:inputType="textPassword"
+        android:background="@drawable/edittextbackground"
+        android:layout_height="40dp" />
+
+        <CheckBox
+            android:id="@+id/create_allow_search"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:textColor="@color/white_absolute"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:onClick="onClickAllowSearch"
+            android:text="@string/create_allow_search"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/create_bio_string"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_absolute"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="0dp"
+            android:text="@string/create_bio_string"/>
+
+        <EditText
+            android:id="@+id/create_bio"
+            android:layout_width="200dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/edittextbackground"/>
+
+        <Button
+            android:id="@+id/create_account"
+            android:layout_gravity="center"
+            android:layout_width="207dp"
+            android:layout_height="wrap_content"
+            android:text="@string/create_register"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            android:onClick="onClickRegisterAccount"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_darker"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:drawableBottom="@drawable/dotted"
+            android:clickable="true"
+            android:onClick="onClickSkipRegistration"
+            android:text="@string/create_skip"/>
+
+    </LinearLayout>
+</ScrollView>

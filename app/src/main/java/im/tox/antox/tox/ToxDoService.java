@@ -23,10 +23,14 @@ public class ToxDoService extends Service {
         super();
     }
 
+    private Thread serviceThread;
+
     @Override
     public void onCreate() {
-        if(!toxSingleton.isInited)
+        if(!toxSingleton.isInited) {
             toxSingleton.initTox(getApplicationContext());
+            Log.d("ToxDoService", "Initting ToxSingleton");
+        }
 
         Runnable start = new Runnable() {
             @Override
@@ -35,7 +39,8 @@ public class ToxDoService extends Service {
                 toxScheduleTaskExecutor.scheduleAtFixedRate(doTox, 0, 50, TimeUnit.MILLISECONDS);
             }
         };
-        new Thread(start).start();
+        serviceThread = new Thread(start);
+        serviceThread.start();
     }
 
     @Override
@@ -46,6 +51,17 @@ public class ToxDoService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int id) {
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        toxScheduleTaskExecutor.shutdownNow();
+        toxScheduleTaskExecutor = null;
+        toxSingleton.isInited = false;
+        toxSingleton = null;
+        serviceThread.interrupt();
+        Log.d("ToxDoService", "onDestroy() called");
+        super.onDestroy();
     }
 
     /* Extend the scheduler to have it restart itself on any exceptions */
@@ -82,7 +98,7 @@ public class ToxDoService extends Service {
                 try {
                     theRunnable.run();
                 } catch (Exception e) {
-                    Log.d(TAG, "Executor has caught an exception");
+                    Log.e(TAG, "Executor has caught an exception");
                     e.printStackTrace();
                     toxScheduleTaskExecutor.scheduleAtFixedRate(new DoTox(), 0, 50, TimeUnit.MILLISECONDS);
                     throw new RuntimeException(e);
@@ -98,7 +114,7 @@ public class ToxDoService extends Service {
             try {
                 toxSingleton.jTox.doTox();
             } catch (ToxException e) {
-                Log.d(TAG, e.getError().toString());
+                Log.e(TAG, e.getError().toString());
                 e.printStackTrace();
             }
         }

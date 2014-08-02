@@ -2,9 +2,11 @@ package im.tox.antox.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.sql.Timestamp;
@@ -56,7 +58,7 @@ public class AntoxDB extends SQLiteOpenHelper {
             "message text)";
 
     public AntoxDB(Context ctx) {
-        super(ctx, Constants.DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        super(ctx, Constants.ACTIVE_DATABASE_NAME, null, Constants.DATABASE_VERSION);
     }
 
     @Override
