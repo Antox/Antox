@@ -188,7 +188,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         if(isV2) {
             DialogFragment dialog = new PinDialogFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("Enter Friend's Pin", "Enter Friend's Pin");
+            bundle.putString(getResources().getString(R.string.addfriend_friend_pin_title), getResources().getString(R.string.addfriend_friend_pin_text));
             dialog.setArguments(bundle);
             dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
         }
@@ -210,10 +210,10 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 toast.show();
                 return;
             } else if(result == -2) {
-                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+                toast = Toast.makeText(context, getResources().getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
                 toast.show();
             } else if(result == -3) {
-                toast = Toast.makeText(context, getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT);
+                toast = Toast.makeText(context, getResources().getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT);
                 toast.show();
             }
 
