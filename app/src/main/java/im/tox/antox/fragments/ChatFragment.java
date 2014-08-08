@@ -71,6 +71,7 @@ public class ChatFragment extends Fragment {
     Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
+    private AntoxDB antoxDB;
     public String photoPath;
     public ChatFragment(String key) {
         this.activeKey = key;
@@ -87,21 +88,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void run() {
                 toxSingleton.chatActiveSubject.onNext(activeKey);
-                messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
+                messagesSub = toxSingleton.updatedMessagesSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
                     @Override
-                    public ArrayList<Message> call(Boolean input) {
-                        Log.d("ChatFragment","updatedMessageSubject map");
-                        AntoxDB antoxDB = new AntoxDB(getActivity());
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
-                        antoxDB.close();
-                        return messageList;
-                    }
-                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
-                    @Override
-                    public void call(ArrayList<Message> messages) {
+                    public void call(Boolean aBoolean) {
                         Log.d("ChatFragment", "updatedMessageSubject subscription");
-                        updateChat(messages);
+                        updateChat();
                     }
                 });
 
@@ -263,16 +254,15 @@ public class ChatFragment extends Fragment {
         send.subscribeOn(Schedulers.io()).subscribe();
     }
 
-    public void updateChat(ArrayList<Message> messages) {
-        if (messages.size() >= 0) {
-            adapter.data.clear();
-            for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp, messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
-            }
-            Log.d("ChatFragment", "Updating chat");
-            adapter.notifyDataSetChanged();
-            chatListView.setSelection(adapter.getCount() - 1);
-        }
+    private Cursor getCursor() {
+        antoxDB.close();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
+        return cursor;
+    }
+
+    public void updateChat() {
+        adapter.changeCursor(getCursor());
     }
 
 
@@ -334,7 +324,10 @@ public class ChatFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         chatMessages = new ArrayList<ChatMessages>();
-        adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, chatMessages);
+        this.antoxDB = new AntoxDB(getActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
+        adapter = new ChatMessagesAdapter(getActivity(), cursor, antoxDB.getMessageIds(activeKey, preferences.getBoolean("action_messages", true)));
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
@@ -456,7 +449,7 @@ public class ChatFragment extends Fragment {
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                chatListView.setSelection(adapter.getCount() - 1);
+                //chatListView.setSelection(adapter.getCount() - 1);
             }
         });
 
