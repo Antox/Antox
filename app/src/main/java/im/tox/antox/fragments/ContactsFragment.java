@@ -75,7 +75,7 @@ public class ContactsFragment extends Fragment {
         FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
         friend_requests = friendRequests.toArray(friend_requests);
         if (friend_requests.length > 0) {
-            leftPaneAdapter.addItem(new LeftPaneItem("Requests"));
+            leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_requests)));
             for (int i = 0; i < friend_requests.length; i++) {
                 LeftPaneItem request = new LeftPaneItem(friend_requests[i].requestKey, friend_requests[i].requestMessage);
                 leftPaneAdapter.addItem(request);
@@ -85,7 +85,7 @@ public class ContactsFragment extends Fragment {
         friends_list = friendsList.toArray(friends_list);
         if (friends_list.length > 0) {
             if (friend_requests.length > 0) {
-                leftPaneAdapter.addItem(new LeftPaneItem("Friends"));
+                leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_friends)));
             }
             String lastLetter = "";
             for (int i = 0; i < friends_list.length; i++) {

@@ -72,6 +72,8 @@
     <string name="addfriend_invalid_pin">Invalid Pin</string>
     <string name="addfriend_no_internet">No Tox Network connection</string>
     <string name="addfriend_own_key">You cannot add yourself</string>
+    <string name="addfriend_friend_pin_title">Enter Friend\'s Pin</string>
+    <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
@@ -85,6 +87,7 @@
     <string name="friend_profile_copied">Tox ID Copied</string>
 
     <!-- Friend request fragment -->
+    <string name="friend_profile_title">%1$s\' Profile</string>
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
     <string name="friendrequest_accepted">Friend request accepted</string>
@@ -107,6 +110,8 @@
     <string name="toast_succ_move_user">Contact has been moved successfully</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
+    <string name="contacts_delimiter_requests">Requests</string>
+    <string name="contacts_delimiter_friends">Friends</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
@@ -134,5 +139,11 @@
     <string name="title_activity_create_acccount">CreateAcccountActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Install Barcode Scanner?</string>
+    <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>
+    <string name="qr_button_yes">Yes</string>
+    <string name="qr_button_no">No</string>
 
 </resources>
