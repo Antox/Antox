@@ -67,18 +67,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        getSupportActionBar().hide();
-
-        /* Fix for an android 4.1.x bug */
-        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
-            );
-        }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -95,6 +83,19 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             Configuration config = new Configuration();
             config.locale = locale;
             getApplicationContext().getResources().updateConfiguration(config, getApplicationContext().getResources().getDisplayMetrics());
+        }
+
+        setContentView(R.layout.activity_main);
+
+        getSupportActionBar().hide();
+
+        /* Fix for an android 4.1.x bug */
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+            );
         }
 
         /* Check if connected to the Internet */
