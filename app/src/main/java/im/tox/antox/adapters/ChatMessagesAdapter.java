@@ -12,6 +12,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
@@ -23,6 +25,9 @@ import android.widget.TextView;
 import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.MainActivity;
@@ -38,21 +43,21 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
     private int density;
     private int paddingscale = 8;
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
+    private Animation animLeft;
+    private Animation animRight;
+    private Animation anim;
     private LayoutInflater mInflater;
-    /*
-    public ChatMessagesAdapter(Context context, int layoutResourceId,
-                               ArrayList<ChatMessages> data) {
-        super(context, layoutResourceId, data);
-        this.context = context;
-        this.layoutResourceId = layoutResourceId;
-        this.data = data;
-        density = (int) context.getResources().getDisplayMetrics().density;
-    }*/
-    public ChatMessagesAdapter(Context context, Cursor c) {
+    private HashSet<Integer> animatedIds;
+
+    public ChatMessagesAdapter(Context context, Cursor c, HashSet<Integer> ids) {
         super(context, R.layout.chat_message_row, c, 0);
         this.context = context;
+        this.animLeft = AnimationUtils.loadAnimation(this.context, R.anim.slide_in_left);
+        this.animRight = AnimationUtils.loadAnimation(this.context, R.anim.slide_in_right);
+        this.anim = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.density = (int) context.getResources().getDisplayMetrics().density;
+        this.animatedIds = ids;
     }
 
 
@@ -239,12 +244,26 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
             holder.title.setVisibility(View.GONE);
             holder.message.setText(msg.message);
             holder.progress.setVisibility(View.GONE);
+            holder.imageMessage.setVisibility(View.GONE);
+            holder.imageMessageFrame.setVisibility(View.GONE);
+            holder.message.setVisibility(View.VISIBLE);
         }
 
         holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true));
 
         holder.message.setTypeface(robotoRegular);
         holder.time.setTypeface(robotoRegular);
+
+        if (!animatedIds.contains(id)) {
+            /*
+            if (msg.isMine()) {
+                holder.row.startAnimation(animRight);
+            } else {
+                holder.row.startAnimation(animLeft);
+            }*/
+            holder.row.startAnimation(anim);
+            animatedIds.add(id);
+        }
 
     }
 
