@@ -71,6 +71,7 @@ public class ChatFragment extends Fragment {
     Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
+    private AntoxDB antoxDB;
     public String photoPath;
     public ChatFragment(String key) {
         this.activeKey = key;
@@ -263,16 +264,15 @@ public class ChatFragment extends Fragment {
         send.subscribeOn(Schedulers.io()).subscribe();
     }
 
+    private Cursor getCursor() {
+        antoxDB.close();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
+        return cursor;
+    }
+
     public void updateChat(ArrayList<Message> messages) {
-        if (messages.size() >= 0) {
-            adapter.data.clear();
-            for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp, messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
-            }
-            Log.d("ChatFragment", "Updating chat");
-            adapter.notifyDataSetChanged();
-            chatListView.setSelection(adapter.getCount() - 1);
-        }
+        adapter.changeCursor(getCursor());
     }
 
 
@@ -334,7 +334,10 @@ public class ChatFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         chatMessages = new ArrayList<ChatMessages>();
-        adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, chatMessages);
+        this.antoxDB = new AntoxDB(getActivity());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
+        adapter = new ChatMessagesAdapter(getActivity(), cursor);
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);

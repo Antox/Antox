@@ -10,11 +10,16 @@
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
+        android:textColor="@color/blue"
+        app:pstsDividerColor="@color/white"
         app:pstsIndicatorColor="@color/blue"
+        app:pstsUnderlineHeight="1dp"
+        app:pstsIndicatorHeight="2dp"
         app:pstsShouldExpand="true"
         app:pstsTabPaddingLeftRight="5dp"
         android:layout_height="48dip" />
     <android.support.v4.view.ViewPager
+        android:background="@color/white_absolute"
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
