@@ -88,21 +88,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void run() {
                 toxSingleton.chatActiveSubject.onNext(activeKey);
-                messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
+                messagesSub = toxSingleton.updatedMessagesSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
                     @Override
-                    public ArrayList<Message> call(Boolean input) {
-                        Log.d("ChatFragment","updatedMessageSubject map");
-                        AntoxDB antoxDB = new AntoxDB(getActivity());
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        ArrayList<Message> messageList = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true));
-                        antoxDB.close();
-                        return messageList;
-                    }
-                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
-                    @Override
-                    public void call(ArrayList<Message> messages) {
+                    public void call(Boolean aBoolean) {
                         Log.d("ChatFragment", "updatedMessageSubject subscription");
-                        updateChat(messages);
+                        updateChat();
                     }
                 });
 
@@ -271,7 +261,7 @@ public class ChatFragment extends Fragment {
         return cursor;
     }
 
-    public void updateChat(ArrayList<Message> messages) {
+    public void updateChat() {
         adapter.changeCursor(getCursor());
     }
 
@@ -337,7 +327,7 @@ public class ChatFragment extends Fragment {
         this.antoxDB = new AntoxDB(getActivity());
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
-        adapter = new ChatMessagesAdapter(getActivity(), cursor);
+        adapter = new ChatMessagesAdapter(getActivity(), cursor, antoxDB.getMessageIds(activeKey, preferences.getBoolean("action_messages", true)));
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
@@ -459,7 +449,7 @@ public class ChatFragment extends Fragment {
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                chatListView.setSelection(adapter.getCount() - 1);
+                //chatListView.setSelection(adapter.getCount() - 1);
             }
         });
 

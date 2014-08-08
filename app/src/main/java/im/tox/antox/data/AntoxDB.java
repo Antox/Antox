@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 import im.tox.antox.tox.ToxSingleton;
@@ -318,6 +320,34 @@ public class AntoxDB {
         return messageList;
     }
 
+    public HashSet<Integer> getMessageIds(String key, boolean actionMessages) {
+        this.open(false);
+        String selectQuery;
+        HashSet<Integer> idSet = new HashSet<Integer>();
+        if (key.equals("")) {
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
+        } else {
+            String act;
+            if (actionMessages) {
+                act = "";
+            } else {
+                act = "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) ";
+            }
+            selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' " + act + "ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
+        }
+        Cursor cursor = mDb.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                idSet.add(id);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        this.close();
+        return idSet;
+    }
     public Cursor getMessageCursor(String key, boolean actionMessages) {
         this.open(false);
         ArrayList<Message> messageList = new ArrayList<Message>();
