@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -209,7 +210,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                             }
                         }
                     });
-            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged().observeOn(AndroidSchedulers.mainThread())
+            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged()
                     .subscribe(new Action1<Tuple<String, Boolean>>() {
                         @Override
                         public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
@@ -223,13 +224,21 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                 }
                             } else {
                                 if (!activeKey.equals(toxSingleton.activeKey)) {
+                                    toxSingleton.doClosePaneSubject.onNext(true);
                                     if (isFriend) {
                                         Log.d("MainActivity", "chat fragment creation, isFriend: " + isFriend);
-                                        ChatFragment newFragment = new ChatFragment(activeKey);
-                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.right_pane, newFragment);
-                                        transaction.addToBackStack(null);
-                                        transaction.commit();
+                                        class OneShotTask implements Runnable {
+                                            String key;
+                                            OneShotTask(String s) { key = s; }
+                                            public void run() {
+                                                ChatFragment newFragment = new ChatFragment(key);
+                                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                                transaction.replace(R.id.right_pane, newFragment);
+                                                transaction.addToBackStack(null);
+                                                transaction.commit();
+                                            }
+                                        }
+                                        new Handler().postDelayed(new OneShotTask(activeKey), 200);
                                     } else {
                                         Log.d("MainActivity", "friend request fragment creation, isFriend: " + isFriend);
                                         FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
@@ -238,7 +247,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                     }
-                                    toxSingleton.doClosePaneSubject.onNext(true);
                                 }
                             }
                             toxSingleton.activeKey = activeKey;
