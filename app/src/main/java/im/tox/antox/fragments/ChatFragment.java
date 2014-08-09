@@ -45,12 +45,14 @@ import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 
 /**
@@ -98,14 +100,14 @@ public class ChatFragment extends Fragment {
                 .subscribe(new Action1<Tuple<String, Boolean>>() {
                     @Override
                     public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
-                        String activeKey = activeKeyAndIfFriend.x;
+                        String key = activeKeyAndIfFriend.x;
                         boolean isFriend = activeKeyAndIfFriend.y;
-                        Log.d("ChatFragment", "activekeysub: key: " + activeKey + " toxsingleton active key: " + toxSingleton.activeKey);
-                        if (!activeKey.equals("")) {
+                        Log.d("ChatFragment", "activekeysub: key: " + key + " toxsingleton active key: " + toxSingleton.activeKey);
+                        if (!key.equals("") && !key.equals(activeKey)) {
                             toxSingleton.doClosePaneSubject.onNext(true);
                             if (isFriend) {
                                 Log.d("ChatFragment", "chat fragment enabled, isFriend: " + isFriend + ", key: " + activeKey);
-                                changeKey(activeKey);
+                                changeKey(key);
                             }
                         }
                     }
@@ -281,7 +283,26 @@ public class ChatFragment extends Fragment {
     }
 
     public void updateChat() {
-        adapter.changeCursor(getCursor());
+        Observable.create(new Observable.OnSubscribeFunc<Cursor>() {
+            @Override
+            public Subscription onSubscribe(Observer<? super Cursor> observer) {
+                try {
+                    Cursor cursor = getCursor();
+                    observer.onNext(cursor);
+                    observer.onCompleted();
+                } catch (Exception e) {
+                    observer.onError(e);
+                }
+
+                return Subscriptions.empty();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Cursor>() {
+                    @Override
+                    public void call(Cursor cursor) {
+                        adapter.changeCursor(cursor);
+                    }
+                });
         Log.d("ChatFragment", "new key: " + activeKey);
     }
 
