@@ -82,6 +82,7 @@ public class ToxSingleton {
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
+    public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
     public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
     public HashMap<String, Boolean> typingMap = new HashMap<>();
@@ -154,6 +155,12 @@ public class ToxSingleton {
                 return new Tuple<String, Boolean>(key, isFriend);
             }
         });
+        friendInfoListAndActiveSubject = combineLatest(friendInfoListSubject, activeKeyAndIsFriendSubject, new Func2<ArrayList<FriendInfo>, Tuple<String,Boolean>,Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>>() {
+                    @Override
+                    public Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>> call(ArrayList<FriendInfo> o, Tuple<String,Boolean> o2) {
+                        return new Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>((ArrayList<FriendInfo>) o, (Tuple<String,Boolean>) o2);
+                    }
+                });
     }
 
 

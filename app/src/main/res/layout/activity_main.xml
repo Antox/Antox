@@ -19,6 +19,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        />
+        >
+    <fragment
+        android:id="@+id/fragment_chat"
+        android:name="im.tox.antox.fragments.ChatFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/fragment_friendrequest"
+        android:name="im.tox.antox.fragments.FriendRequestFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_friendrequest" />
+    <LinearLayout
+        android:id="@+id/no_active_chat"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_absolute"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            android:text="@string/main_no_active_chat"/>
+    </LinearLayout>
+    </FrameLayout>
 </android.support.v4.widget.DrawerLayout>
 

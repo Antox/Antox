@@ -46,7 +46,8 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends ActionBarActivity implements DialogToxID.DialogToxIDListener {
 
     public DrawerLayout pane;
-    public ChatFragment chat;
+    public View chat;
+    public View request;
 
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -106,7 +107,8 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
                     getString(R.string.main_not_connected));
         }
-
+        chat = (View) findViewById(R.id.fragment_chat);
+        request = (View) findViewById(R.id.fragment_friendrequest);
         pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
         DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
             @Override
@@ -210,7 +212,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                             }
                         }
                     });
-            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject.distinctUntilChanged()
+            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject
                     .subscribe(new Action1<Tuple<String, Boolean>>() {
                         @Override
                         public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
@@ -218,34 +220,18 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                             boolean isFriend = activeKeyAndIfFriend.y;
                             Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
                             if (activeKey.equals("")) {
-                                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.right_pane);
-                                if (fragment != null) {
-                                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-                                }
+                                chat.setVisibility(View.GONE);
+                                request.setVisibility(View.GONE);
                             } else {
                                 if (!activeKey.equals(toxSingleton.activeKey)) {
                                     toxSingleton.doClosePaneSubject.onNext(true);
                                     if (isFriend) {
-                                        Log.d("MainActivity", "chat fragment creation, isFriend: " + isFriend);
-                                        class OneShotTask implements Runnable {
-                                            String key;
-                                            OneShotTask(String s) { key = s; }
-                                            public void run() {
-                                                ChatFragment newFragment = new ChatFragment(key);
-                                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                                transaction.replace(R.id.right_pane, newFragment);
-                                                transaction.addToBackStack(null);
-                                                transaction.commit();
-                                            }
-                                        }
-                                        new Handler().postDelayed(new OneShotTask(activeKey), 200);
+                                        chat.setVisibility(View.VISIBLE);
+                                        request.setVisibility(View.GONE);
+
                                     } else {
-                                        Log.d("MainActivity", "friend request fragment creation, isFriend: " + isFriend);
-                                        FriendRequestFragment newFragment = new FriendRequestFragment(activeKey);
-                                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.right_pane, newFragment);
-                                        transaction.addToBackStack(null);
-                                        transaction.commit();
+                                        chat.setVisibility(View.GONE);
+                                        request.setVisibility(View.VISIBLE);
                                     }
                                 }
                             }
