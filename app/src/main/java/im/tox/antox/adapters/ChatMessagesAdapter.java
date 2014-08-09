@@ -1,12 +1,16 @@
 package im.tox.antox.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.widget.ResourceCursorAdapter;
+import android.text.ClipboardManager;
 import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
@@ -27,10 +32,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import im.tox.antox.R;
-import im.tox.antox.activities.MainActivity;
+import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.ChatMessages;
@@ -43,8 +47,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
     private int density;
     private int paddingscale = 8;
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
-    private Animation animLeft;
-    private Animation animRight;
     private Animation anim;
     private LayoutInflater mInflater;
     private HashSet<Integer> animatedIds;
@@ -52,8 +54,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
     public ChatMessagesAdapter(Context context, Cursor c, HashSet<Integer> ids) {
         super(context, R.layout.chat_message_row, c, 0);
         this.context = context;
-        this.animLeft = AnimationUtils.loadAnimation(this.context, R.anim.slide_in_left);
-        this.animRight = AnimationUtils.loadAnimation(this.context, R.anim.slide_in_right);
         this.anim = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.density = (int) context.getResources().getDisplayMetrics().density;
@@ -66,17 +66,17 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
           return mInflater.inflate(this.layoutResourceId, parent, false);
      }
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        int id = cursor.getInt(0);
-        Timestamp time = Timestamp.valueOf(cursor.getString(1));
-        int message_id = cursor.getInt(2);
-        String k = cursor.getString(3);
-        String m = cursor.getString(4);
-        boolean received = cursor.getInt(5)>0;
-        boolean read = cursor.getInt(6)>0;
-        boolean sent = cursor.getInt(7)>0;
-        int size = cursor.getInt(8);
-        int type = cursor.getInt(9);
+    public void bindView(View view, final Context context, Cursor cursor) {
+        final int id = cursor.getInt(0);
+        final Timestamp time = Timestamp.valueOf(cursor.getString(1));
+        final int message_id = cursor.getInt(2);
+        final String k = cursor.getString(3);
+        final String m = cursor.getString(4);
+        final boolean received = cursor.getInt(5)>0;
+        final boolean read = cursor.getInt(6)>0;
+        final boolean sent = cursor.getInt(7)>0;
+        final int size = cursor.getInt(8);
+        final int type = cursor.getInt(9);
 
         ChatMessages msg = new ChatMessages(id, message_id, m, time, received, sent, size, type);
         ChatMessagesHolder holder = new ChatMessagesHolder();
@@ -210,6 +210,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                                             i.setAction(android.content.Intent.ACTION_VIEW);
                                             i.setDataAndType(Uri.fromFile(file), "image/*");
                                             ChatMessagesAdapter.this.context.startActivity(i);
+
                                         }
                                     });
 
@@ -265,6 +266,83 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
             animatedIds.add(id);
         }
 
+        holder.row.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (type == Constants.MESSAGE_TYPE_OWN || type == Constants.MESSAGE_TYPE_FRIEND) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    CharSequence[] items = new CharSequence[]{
+                            context.getResources().getString(R.string.message_copy),
+                            context.getResources().getString(R.string.message_delete)
+                    };
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Copy
+                                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+                                            clipboard.setText(m);
+                                            break;
+                                        case 1: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(context.getApplicationContext());
+                                                    antoxDB.deleteMessage(id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(context);
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    CharSequence[] items = new CharSequence[]{
+                            context.getResources().getString(R.string.message_delete)
+                    };
+                    builder.setCancelable(true)
+                            .setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int index) {
+                                    switch (index) {
+                                        case 0: //Delete
+                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
+                                                @Override
+                                                protected Void doInBackground(Void... params) {
+                                                    AntoxDB antoxDB = new AntoxDB(context.getApplicationContext());
+                                                    antoxDB.deleteMessage(id);
+                                                    antoxDB.close();
+                                                    return null;
+                                                }
+
+                                                @Override
+                                                protected void onPostExecute(Void result) {
+                                                    toxSingleton.updateMessages(context);
+                                                }
+
+                                            }
+                                            new DeleteMessage().execute();
+
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+                return true;
+            }
+        });
     }
 
     @Override

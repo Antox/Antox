@@ -15,7 +15,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -323,7 +322,6 @@ public class ChatFragment extends Fragment {
         };
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        chatMessages = new ArrayList<ChatMessages>();
         this.antoxDB = new AntoxDB(getActivity());
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
@@ -332,89 +330,6 @@ public class ChatFragment extends Fragment {
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
-        chatListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
-            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-                                           int index, long arg3) {
-                if (chatMessages.get(index).getType() == 1 || chatMessages.get(index).getType() == 2) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    CharSequence[] items = new CharSequence[]{
-                            getString(R.string.message_copy),
-                            getString(R.string.message_delete)
-                    };
-                    final int i = index;
-                    builder.setCancelable(true)
-                            .setItems(items, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int index) {
-                                    switch (index) {
-                                        case 0: //Copy
-                                            String msg = chatMessages.get(i).message;
-                                            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(getActivity().CLIPBOARD_SERVICE);
-                                            clipboard.setText(msg);
-                                            break;
-                                        case 1: //Delete
-                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
-                                                @Override
-                                                protected Void doInBackground(Void... params) {
-                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
-                                                    antoxDB.close();
-                                                    return null;
-                                                }
-
-                                                @Override
-                                                protected void onPostExecute(Void result) {
-                                                    toxSingleton.updateMessages(getActivity());
-                                                }
-
-                                            }
-                                            new DeleteMessage().execute();
-
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    } else {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    CharSequence[] items = new CharSequence[]{
-                            getString(R.string.message_delete)
-                    };
-                    final int i = index;
-                    builder.setCancelable(true)
-                            .setItems(items, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int index) {
-                                    switch (index) {
-                                        case 0: //Delete
-                                            class DeleteMessage extends AsyncTask<Void, Void, Void> {
-                                                @Override
-                                                protected Void doInBackground(Void... params) {
-                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                                    antoxDB.deleteMessage(chatMessages.get(i).id);
-                                                    antoxDB.close();
-                                                    return null;
-                                                }
-
-                                                @Override
-                                                protected void onPostExecute(Void result) {
-                                                    toxSingleton.updateMessages(getActivity());
-                                                }
-
-                                            }
-                                            new DeleteMessage().execute();
-
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
-                    return true;
-                }
-        });
-
         isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
         statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 
