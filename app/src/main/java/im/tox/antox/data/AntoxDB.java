@@ -324,7 +324,7 @@ public class AntoxDB {
         this.open(false);
         String selectQuery;
         HashSet<Integer> idSet = new HashSet<Integer>();
-        if (key.equals("")) {
+        if (key == null || key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             String act;
@@ -352,7 +352,7 @@ public class AntoxDB {
         this.open(false);
         ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
-        if (key.equals("")) {
+        if (key == null || key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             String act;
