@@ -367,7 +367,7 @@ public class AntoxDB {
     }
     public Cursor getRecentCursor() {
         this.open(false);
-        String selectQuery = "SELECT f.tox_key, f.username, f.status, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
+        String selectQuery = "SELECT f.tox_key, f.username, f.isonline, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
                 "FROM " + Constants.TABLE_FRIENDS + " f " +
                 "INNER JOIN " + Constants.TABLE_CHAT_LOGS + " m1 ON (f.tox_key = m1.tox_key) " +
                 "LEFT OUTER JOIN (SELECT tox_key FROM " + Constants.TABLE_CHAT_LOGS + " WHERE ((type = 2 OR type = 4) AND has_been_read = 0)) " +
