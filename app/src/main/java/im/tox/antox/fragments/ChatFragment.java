@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Random;
 
 import im.tox.antox.R;
@@ -41,7 +38,6 @@ import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.FriendInfo;
-import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import rx.Observable;
@@ -50,7 +46,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -87,7 +82,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        toxSingleton.chatActiveSubject.onNext(activeKey);
+        Log.d("ChatFragment", "onResume");
         messagesSub = toxSingleton.updatedMessagesSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
@@ -175,7 +170,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        toxSingleton.chatActiveSubject.onNext("");
+        Log.d("ChatFragment","onPause");
         messagesSub.unsubscribe();
         titleSub.unsubscribe();
         typingSub.unsubscribe();
