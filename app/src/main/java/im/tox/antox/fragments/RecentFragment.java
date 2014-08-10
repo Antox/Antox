@@ -1,5 +1,6 @@
 package im.tox.antox.fragments;
 
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,11 +20,16 @@ import java.util.Comparator;
 
 import im.tox.antox.R;
 import im.tox.antox.adapters.RecentAdapter;
+import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.FriendInfo;
+import rx.Observable;
+import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 /**
  * Created by ollie on 28/02/14.
@@ -37,6 +43,8 @@ public class RecentFragment extends Fragment {
     private Subscription sub;
     private String activeKey;
     private Subscription keySub;
+    private AntoxDB antoxDB;
+    private RecentAdapter adapter;
 
     public RecentFragment() {
     }
@@ -46,23 +54,12 @@ public class RecentFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recent, container, false);
+        this.antoxDB = new AntoxDB(getActivity());
+        Cursor cursor = this.antoxDB.getRecentCursor();
+        adapter = new RecentAdapter(getActivity(), cursor);
         conversationListView = (ListView) rootView.findViewById(R.id.conversations_list);
         conversationListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        conversationListView
-                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                FriendInfo item = (FriendInfo) parent.getAdapter().getItem(position);
-                String key = item.friendKey;
-                view.getFocusables(position);
-                view.setSelected(true);
-                setSelectionToKey(activeKey);
-                toxSingleton.changeActiveKey(key);
-            }
-        });
+        conversationListView.setAdapter(adapter);
         return rootView;
     }
 
@@ -74,7 +71,7 @@ public class RecentFragment extends Fragment {
                     @Override
                     public void call(ArrayList<FriendInfo> friends_list) {
                         updateRecentConversations(filterSortRecent(friends_list));
-                        setSelectionToKey(activeKey);
+                        //setSelectionToKey(activeKey);
                     }
                 });
         keySub = toxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
@@ -83,20 +80,9 @@ public class RecentFragment extends Fragment {
                     public void call(String s) {
                         Log.d("RecentFragment", "key subject");
                         activeKey = s;
-                        setSelectionToKey(activeKey);
+                        //setSelectionToKey(activeKey);
                     }
                 });
-    }
-
-    private void setSelectionToKey(String key) {
-        if (key != null && !key.equals("")) {
-            for (int i = 0; i < conversationAdapter.getCount(); i++) {
-                if (conversationAdapter.getItem(i).friendKey.equals(key)) {
-                    conversationListView.setSelection(i);
-                    break;
-                }
-            }
-        }
     }
 
     private ArrayList<FriendInfo> filterSortRecent(ArrayList<FriendInfo> input) {
@@ -125,6 +111,10 @@ public class RecentFragment extends Fragment {
         keySub.unsubscribe();
     }
 
+    private Cursor getCursor() {
+        Cursor cursor = this.antoxDB.getRecentCursor();
+        return cursor;
+    }
     public void updateRecentConversations(ArrayList<FriendInfo> friendsList) {
 
         //If you have no recent conversations, display  message
@@ -135,8 +125,26 @@ public class RecentFragment extends Fragment {
             noConversations.setVisibility(View.GONE);
         }
 
-        conversationAdapter = new RecentAdapter(getActivity(), R.layout.contact_list_item, friendsList);
-        conversationListView.setAdapter(conversationAdapter);
+        Observable.create(new Observable.OnSubscribeFunc<Cursor>() {
+            @Override
+            public Subscription onSubscribe(Observer<? super Cursor> observer) {
+                try {
+                    Cursor cursor = getCursor();
+                    observer.onNext(cursor);
+                    observer.onCompleted();
+                } catch (Exception e) {
+                    observer.onError(e);
+                }
+
+                return Subscriptions.empty();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Cursor>() {
+                    @Override
+                    public void call(Cursor cursor) {
+                        adapter.changeCursor(cursor);
+                    }
+                });
         System.out.println("updated recent fragment");
     }
 }

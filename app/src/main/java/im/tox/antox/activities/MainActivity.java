@@ -11,11 +11,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -27,12 +24,11 @@ import java.util.Locale;
 
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
-import im.tox.antox.fragments.ChatFragment;
 import im.tox.antox.fragments.DialogToxID;
-import im.tox.antox.fragments.FriendRequestFragment;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -118,12 +114,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
+                Log.d("MainActivity", "Drawer listener, drawer open");
+                toxSingleton.rightPaneActiveSubject.onNext(true);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-
+                Log.d("MainActivity", "Drawer listener, drawer closed");
+                toxSingleton.rightPaneActiveSubject.onNext(false);
             }
 
             @Override
@@ -196,59 +194,54 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            chatActiveSub = toxSingleton.chatActiveSubject.subscribeOn(Schedulers.io()).observeOn(Schedulers.io())
-                    .subscribe(new Action1<String>() {
-                        @Override
-                        public void call(String activeKey) {
-                            if (!activeKey.equals("")) {
-                                toxSingleton.chatActive = true;
-                                AntoxDB antoxDB = new AntoxDB(getApplicationContext());
-                                antoxDB.markIncomingMessagesRead(activeKey);
-                                toxSingleton.clearUselessNotifications(activeKey);
-                                toxSingleton.updateMessages(getApplicationContext());
-                                antoxDB.close();
-                            } else {
-                                toxSingleton.chatActive = false;
-                            }
+        doClosePaneSub = toxSingleton.doClosePaneSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean close) {
+                        if (close) {
+                            pane.openDrawer(Gravity.RIGHT);
+                        } else {
+                            pane.closeDrawer(Gravity.RIGHT);
                         }
-                    });
-            activeKeySub = toxSingleton.activeKeyAndIsFriendSubject
-                    .subscribe(new Action1<Tuple<String, Boolean>>() {
-                        @Override
-                        public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
-                            String activeKey = activeKeyAndIfFriend.x;
-                            boolean isFriend = activeKeyAndIfFriend.y;
-                            Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
-                            if (activeKey.equals("")) {
-                                chat.setVisibility(View.GONE);
-                                request.setVisibility(View.GONE);
-                            } else {
-                                if (!activeKey.equals(toxSingleton.activeKey)) {
-                                    toxSingleton.doClosePaneSubject.onNext(true);
-                                    if (isFriend) {
-                                        chat.setVisibility(View.VISIBLE);
-                                        request.setVisibility(View.GONE);
+                    }
+                });
+        activeKeySub = toxSingleton.rightPaneActiveAndKeyAndIsFriendSubject.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Triple<Boolean, String, Boolean>>() {
+                    @Override
+                    public void call(Triple<Boolean, String, Boolean> rightPaneActiveAndActiveKeyAndIfFriend) {
+                        boolean rightPaneActive = rightPaneActiveAndActiveKeyAndIfFriend.x;
+                        String activeKey = rightPaneActiveAndActiveKeyAndIfFriend.y;
+                        boolean isFriend = rightPaneActiveAndActiveKeyAndIfFriend.z;
+                        Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
+                        if (activeKey.equals("")) {
+                            chat.setVisibility(View.GONE);
+                            request.setVisibility(View.GONE);
+                        } else {
+                            if (!activeKey.equals(toxSingleton.activeKey)) {
+                                toxSingleton.doClosePaneSubject.onNext(true);
+                                if (isFriend) {
+                                    chat.setVisibility(View.VISIBLE);
+                                    request.setVisibility(View.GONE);
 
-                                    } else {
-                                        chat.setVisibility(View.GONE);
-                                        request.setVisibility(View.VISIBLE);
-                                    }
+                                } else {
+                                    chat.setVisibility(View.GONE);
+                                    request.setVisibility(View.VISIBLE);
                                 }
                             }
-                            toxSingleton.activeKey = activeKey;
                         }
-                    });
-            doClosePaneSub = toxSingleton.doClosePaneSubject.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Boolean>() {
-                        @Override
-                        public void call(Boolean close) {
-                            if (close) {
-                                pane.openDrawer(Gravity.RIGHT);
-                            } else {
-                                pane.closeDrawer(Gravity.RIGHT);
-                            }
+                        toxSingleton.activeKey = activeKey;
+                        if (!activeKey.equals("") && rightPaneActive && isFriend) {
+                            AntoxDB antoxDB = new AntoxDB(getApplicationContext());
+                            antoxDB.markIncomingMessagesRead(activeKey);
+                            toxSingleton.clearUselessNotifications(activeKey);
+                            toxSingleton.updateMessages(getApplicationContext());
+                            antoxDB.close();
+                            toxSingleton.chatActive = true;
+                        } else {
+                            toxSingleton.chatActive = false;
                         }
-                    });
+                    }
+                });
 
     }
 
@@ -258,7 +251,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(preferences.getBoolean("beenLoaded", false)) {
             activeKeySub.unsubscribe();
-            chatActiveSub.unsubscribe();
             doClosePaneSub.unsubscribe();
             toxSingleton.chatActive = false;
         }
