@@ -170,7 +170,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        Log.d("ChatFragment","onPause");
+        Log.d("ChatFragment", "onPause");
         messagesSub.unsubscribe();
         titleSub.unsubscribe();
         typingSub.unsubscribe();
@@ -272,6 +272,9 @@ public class ChatFragment extends Fragment {
     }
 
     private Cursor getCursor() {
+        if (this.antoxDB == null) {
+            this.antoxDB = new AntoxDB(getActivity());
+        }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
         return cursor;
@@ -363,9 +366,8 @@ public class ChatFragment extends Fragment {
         };
 
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        this.antoxDB = new AntoxDB(getActivity());
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Cursor cursor = this.antoxDB.getMessageCursor(this.activeKey, preferences.getBoolean("action_messages", true));
+        Cursor cursor = getCursor();
         adapter = new ChatMessagesAdapter(getActivity(), cursor, antoxDB.getMessageIds(this.activeKey, preferences.getBoolean("action_messages", true)));
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
