@@ -100,6 +100,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
         Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
+        holder.message.setTextSize(16);
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
