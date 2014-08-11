@@ -46,6 +46,7 @@
 
     <string name="pref_title_language">Language</string>
     <string-array name="pref_language_list_titles" translatable="false">
+        <item>Български</item>
         <item>English</item>
         <item>Deutsch</item>
         <item>Español</item>
@@ -60,6 +61,7 @@
         <item>Português</item>
     </string-array>
     <string-array name="pref_language_list_values" translatable="false">
+        <item>bg</item>
         <item>en</item>
         <item>de</item>
         <item>es</item>
