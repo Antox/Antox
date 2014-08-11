@@ -25,6 +25,9 @@
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
 
+    <string name="pref_title_account_name">Kontonamn</string>
+    <string name="pref_title_logout">Logga ut</string>
+
     <!-- Notifications -->
     <string name="pref_header_notifications">Aviseringar</string>
 
