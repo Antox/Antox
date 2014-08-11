@@ -83,8 +83,10 @@ public class ToxSingleton {
     public Observable rightPaneActiveAndKeyAndIsFriendSubject;
     public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
-    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
-    public HashMap<String, Boolean> typingMap = new HashMap<>();
+    public HashMap<Integer, ArrayList<Tuple<Integer,Long>>> progressHistoryMap = new HashMap<>();
+    public HashMap<Integer, Integer> positionMap = new HashMap<Integer, Integer>();
+    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
+    public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
     public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
@@ -295,14 +297,42 @@ public class ToxSingleton {
     public void incrementProgress(int id, int length) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             if (!progressMap.containsKey(idObject)) {
                 progressMap.put(idObject, length);
+                ArrayList<Tuple<Integer, Long>> a = new ArrayList<Tuple<Integer, Long>>();
+                a.add(new Tuple<Integer, Long>(length, time));
+                progressHistoryMap.put(idObject, a);
             } else {
                 Integer current = progressMap.get(idObject);
                 progressMap.put(idObject, current+length);
+                ArrayList<Tuple<Integer, Long>> a = progressHistoryMap.get(idObject);
+                a.add(new Tuple<Integer, Long>(current + length, time));
+                progressHistoryMap.put(idObject, a);
             }
         }
         updatedMessagesSubject.onNext(true);
+    }
+
+    public Tuple<Integer, Long> getProgressSinceXAgo(int id, int ms) {
+    //ms is time to lookback, will find the first time value that is at least ms milliseconds ago, or if there isn't one, the first time value
+        if (progressHistoryMap.containsKey(id)) {
+            ArrayList<Tuple<Integer, Long>> progressHistory = progressHistoryMap.get(id);
+            if (progressHistory.size() <= 1) {
+                return null;
+            }
+            Tuple<Integer, Long> current = progressHistory.get(progressHistory.size() - 1);
+            Tuple<Integer, Long> before;
+            long timeDifference;
+            for (int i = progressHistory.size() - 2; i >= 0; --i) {
+                before = progressHistory.get(i);
+                timeDifference = current.y - before.y;
+                if (timeDifference > ms || i == 0) {
+                    return new Tuple<Integer, Long>(current.x - before.x, System.currentTimeMillis() - before.y);
+                }
+            }
+        }
+        return null;
     }
 
     public void setProgress(int id, int progress) {

@@ -40,6 +40,7 @@ import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.PrettyTimestamp;
+import im.tox.antox.utils.Tuple;
 
 public class ChatMessagesAdapter extends ResourceCursorAdapter {
     Context context;
@@ -77,6 +78,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         final boolean sent = cursor.getInt(7)>0;
         final int size = cursor.getInt(8);
         final int type = cursor.getInt(9);
+
 
         ChatMessages msg = new ChatMessages(id, message_id, m, time, received, sent, size, type);
         ChatMessagesHolder holder = new ChatMessagesHolder();
@@ -126,6 +128,8 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
             case Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND:
+                final int position = cursor.getPosition();
+                toxSingleton.positionMap.put(id, position);
                 if (type == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
                     ownMessage(holder);
                     String[] split = msg.message.split("/");
@@ -151,15 +155,23 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             holder.progress.setVisibility(View.VISIBLE);
                             holder.progress.setMax(msg.size);
                             holder.progress.setProgress(toxSingleton.getProgress(msg.id));
-                            holder.progressText.setVisibility(View.GONE);
+                            Tuple<Integer, Long> progress = toxSingleton.getProgressSinceXAgo(msg.id, 5000);
+                            int bytesPerSecond;
+                            if (progress != null) {
+                                bytesPerSecond = (int) ((long) (progress.x * 1000) / progress.y);
+                            } else {
+                                bytesPerSecond = 0;
+                            }
+                            holder.progressText.setText(Integer.toString(bytesPerSecond/1024) + " KiB/s");
+                            holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
                             holder.progress.setVisibility(View.GONE);
                             holder.progressText.setText("Failed");
                             holder.progressText.setVisibility(View.VISIBLE);
                         }
                     } else {
+                        holder.progress.setVisibility(View.GONE);
                         if (msg.message_id != -1) {
-                            holder.progress.setVisibility(View.GONE);
                             if (msg.isMine()) {
                                 holder.progressText.setText("Sent filesending request");
                             } else {
@@ -167,7 +179,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             }
                             holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending request not accepted, it's sent, we no longer have a filenumber, but it hasn't been accepted
-                            holder.progress.setVisibility(View.GONE);
                             holder.progressText.setText("Failed");
                             holder.progressText.setVisibility(View.VISIBLE);
                         }
@@ -175,6 +186,8 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                 }
 
                 if (msg.received || msg.isMine()) {
+                    holder.imageMessage.setVisibility(View.GONE);
+                    holder.imageMessageFrame.setVisibility(View.GONE);
                     File f = null;
                     if (msg.message.contains("/")) {
                         f = new File(msg.message);
