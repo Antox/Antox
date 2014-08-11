@@ -162,7 +162,8 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             } else {
                                 bytesPerSecond = 0;
                             }
-                            holder.progressText.setText(Integer.toString(bytesPerSecond/1024) + " KiB/s");
+                            int secondsToComplete = msg.size/bytesPerSecond;
+                            holder.progressText.setText(Integer.toString(bytesPerSecond/1024) + " KiB/s, " + secondsToComplete + " seconds left");
                             holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
                             holder.progress.setVisibility(View.GONE);
@@ -259,6 +260,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
             holder.title.setVisibility(View.GONE);
             holder.message.setText(msg.message);
             holder.progress.setVisibility(View.GONE);
+            holder.progressText.setVisibility(View.GONE);
             holder.imageMessage.setVisibility(View.GONE);
             holder.imageMessageFrame.setVisibility(View.GONE);
             holder.message.setVisibility(View.VISIBLE);
