@@ -324,7 +324,7 @@ public class AntoxDB {
         this.open(false);
         String selectQuery;
         HashSet<Integer> idSet = new HashSet<Integer>();
-        if (key.equals("")) {
+        if (key == null || key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             String act;
@@ -350,9 +350,8 @@ public class AntoxDB {
     }
     public Cursor getMessageCursor(String key, boolean actionMessages) {
         this.open(false);
-        ArrayList<Message> messageList = new ArrayList<Message>();
         String selectQuery;
-        if (key.equals("")) {
+        if (key == null || key.equals("")) {
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " DESC";
         } else {
             String act;
@@ -363,6 +362,19 @@ public class AntoxDB {
             }
             selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + Constants.COLUMN_NAME_KEY + " = '" + key + "' " + act + "ORDER BY " + Constants.COLUMN_NAME_TIMESTAMP + " ASC";
         }
+        Cursor cursor = mDb.rawQuery(selectQuery, null);
+        return cursor;
+    }
+    public Cursor getRecentCursor() {
+        this.open(false);
+        String selectQuery = "SELECT f.tox_key, f.username, f.isonline, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
+                "FROM " + Constants.TABLE_FRIENDS + " f " +
+                "INNER JOIN " + Constants.TABLE_CHAT_LOGS + " m1 ON (f.tox_key = m1.tox_key) " +
+                "LEFT OUTER JOIN (SELECT tox_key FROM " + Constants.TABLE_CHAT_LOGS + " WHERE ((type = 2 OR type = 4) AND has_been_read = 0)) " +
+                "m2 ON (f.tox_key = m2.tox_key) " +
+                "WHERE m1._id = (SELECT MAX(_id) FROM " + Constants.TABLE_CHAT_LOGS + " WHERE (tox_key = f.tox_key AND NOT type = 5)) " +
+                "GROUP BY f.tox_key " +
+                "ORDER BY m1._id DESC";
         Cursor cursor = mDb.rawQuery(selectQuery, null);
         return cursor;
     }

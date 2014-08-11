@@ -12,12 +12,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -46,6 +43,7 @@ import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
@@ -77,11 +75,13 @@ public class ToxSingleton {
     public BehaviorSubject<Boolean> typingSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
-    public BehaviorSubject<String> chatActiveSubject;
+    public BehaviorSubject<Boolean> rightPaneActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
+    public Observable rightPaneActiveAndKeyAndIsFriendSubject;
+    public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
     public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
     public HashMap<String, Boolean> typingMap = new HashMap<>();
@@ -90,7 +90,7 @@ public class ToxSingleton {
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
 
-    public enum FileStatus {REQUESTSENT, CANCELLED, INPROGRESS, FINISHED, PAUSED};
+    public enum FileStatus {REQUESTSENT, CANCELLED, INPROGRESS, FINISHED, PAUSED}
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -101,8 +101,8 @@ public class ToxSingleton {
         friendListSubject.subscribeOn(Schedulers.io());
         friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
         friendRequestSubject.subscribeOn(Schedulers.io());
-        chatActiveSubject = BehaviorSubject.create("");
-        chatActiveSubject.subscribeOn(Schedulers.io());
+        rightPaneActiveSubject = BehaviorSubject.create(false);
+        rightPaneActiveSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
@@ -111,7 +111,7 @@ public class ToxSingleton {
         activeKeySubject.subscribeOn(Schedulers.io());
         doClosePaneSubject = PublishSubject.create();
         doClosePaneSubject.subscribeOn(Schedulers.io());
-        updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
+        updatedMessagesSubject = BehaviorSubject.create(true);
         updatedMessagesSubject.subscribeOn(Schedulers.io());
         typingSubject = BehaviorSubject.create(true);
         typingSubject.subscribeOn(Schedulers.io());
@@ -152,6 +152,20 @@ public class ToxSingleton {
                 boolean isFriend;
                 isFriend = isKeyFriend(key, fl);
                 return new Tuple<String, Boolean>(key, isFriend);
+            }
+        });
+        friendInfoListAndActiveSubject = combineLatest(friendInfoListSubject, activeKeyAndIsFriendSubject, new Func2<ArrayList<FriendInfo>, Tuple<String,Boolean>,Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>>() {
+                    @Override
+                    public Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>> call(ArrayList<FriendInfo> o, Tuple<String,Boolean> o2) {
+                        return new Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>((ArrayList<FriendInfo>) o, (Tuple<String,Boolean>) o2);
+                    }
+                });
+        rightPaneActiveAndKeyAndIsFriendSubject = combineLatest(rightPaneActiveSubject, activeKeyAndIsFriendSubject, new Func2<Boolean, Tuple<String, Boolean>, Triple<Boolean, String, Boolean>>() {
+            @Override
+            public Triple<Boolean, String, Boolean> call(Boolean rightPaneActive, Tuple<String, Boolean> activeKeyAndIsFriend) {
+                String activeKey = activeKeyAndIsFriend.x;
+                Boolean isFriend = activeKeyAndIsFriend.y;
+                return new Triple<Boolean, String, Boolean>(rightPaneActive, activeKey, isFriend);
             }
         });
     }
