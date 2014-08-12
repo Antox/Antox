@@ -105,9 +105,6 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             } else {
-                // Set active account name
-                Constants.ACTIVE_DATABASE_NAME = account;
-
                 // Generate a safe random password for encryption (the user entered password is used for logging in)
                 final String AB = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()";
                 Random rnd = new Random();

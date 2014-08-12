@@ -19,6 +19,7 @@ import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 import im.tox.antox.callbacks.AntoxOnActionCallback;
@@ -75,6 +76,7 @@ public class ToxSingleton {
     public BehaviorSubject<Boolean> typingSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
+    public BehaviorSubject<Boolean> updatedProgressSubject;
     public BehaviorSubject<Boolean> rightPaneActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
@@ -84,8 +86,9 @@ public class ToxSingleton {
     public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
     public HashMap<Integer, ArrayList<Tuple<Integer,Long>>> progressHistoryMap = new HashMap<>();
-    public HashMap<Integer, Integer> positionMap = new HashMap<Integer, Integer>();
     public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
+    public HashMap<Integer, Integer> fileSizeMap = new HashMap<>();
+    public HashSet<Integer> fileIds = new HashSet<>();
     public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
     public boolean isInited = false;
 
@@ -115,6 +118,8 @@ public class ToxSingleton {
         doClosePaneSubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(true);
         updatedMessagesSubject.subscribeOn(Schedulers.io());
+        updatedProgressSubject = BehaviorSubject.create(true);
+        updatedProgressSubject.subscribeOn(Schedulers.io());
         typingSubject = BehaviorSubject.create(true);
         typingSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
@@ -196,7 +201,8 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                long id = antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                fileIds.add((int) id);
                 antoxDB.close();
             }
         }
@@ -229,7 +235,8 @@ public class ToxSingleton {
             } while (file.exists());
         }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        long id = antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        fileIds.add((int) id);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
     }
@@ -305,13 +312,13 @@ public class ToxSingleton {
                 progressHistoryMap.put(idObject, a);
             } else {
                 Integer current = progressMap.get(idObject);
-                progressMap.put(idObject, current+length);
+                progressMap.put(idObject, current + length);
                 ArrayList<Tuple<Integer, Long>> a = progressHistoryMap.get(idObject);
                 a.add(new Tuple<Integer, Long>(current + length, time));
                 progressHistoryMap.put(idObject, a);
             }
         }
-        updatedMessagesSubject.onNext(true);
+        updatedProgressSubject.onNext(true);
     }
 
     public Tuple<Integer, Long> getProgressSinceXAgo(int id, int ms) {
@@ -338,9 +345,18 @@ public class ToxSingleton {
     public void setProgress(int id, int progress) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             progressMap.put(idObject, progress);
+            ArrayList<Tuple<Integer, Long>> a;
+            if (!progressHistoryMap.containsKey(idObject)) {
+                a = new ArrayList<Tuple<Integer, Long>>();
+            } else {
+                a = progressHistoryMap.get(idObject);
+            }
+            a.add(new Tuple<Integer, Long>(progress, time));
+            progressHistoryMap.put(idObject, a);
+            updatedProgressSubject.onNext(true);
         }
-        updatedMessagesSubject.onNext(true);
     }
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
@@ -348,6 +364,7 @@ public class ToxSingleton {
         int id = db.getFileId(key, fileNumber);
         if (id != -1) {
             fileStatusMap.put(id, FileStatus.FINISHED);
+            fileIds.remove(id);
         }
         db.fileFinished(key, fileNumber);
         db.close();
