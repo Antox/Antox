@@ -88,7 +88,8 @@ public class ToxSingleton {
     public HashMap<Integer, ArrayList<Tuple<Integer,Long>>> progressHistoryMap = new HashMap<>();
     public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
     public HashMap<Integer, Integer> fileSizeMap = new HashMap<>();
-    public HashMap<Integer, FileOutputStream> fileMap = new HashMap<>();
+    public HashMap<Integer, FileOutputStream> fileStreamMap = new HashMap<>();
+    public HashMap<Integer, File> fileMap = new HashMap<>();
     public HashSet<Integer> fileIds = new HashSet<>();
     public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
     public boolean isInited = false;
@@ -273,7 +274,7 @@ public class ToxSingleton {
         int id = antoxDB.getFileId(key, fileNumber);
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            if (!fileMap.containsKey(id)) {
+            if (!fileStreamMap.containsKey(id)) {
                 String fileName = antoxDB.getFilePath(key, fileNumber);
                 File dirfile = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
@@ -287,19 +288,22 @@ public class ToxSingleton {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                fileMap.put(id, output);
+                fileMap.put(id, file);
+                fileStreamMap.put(id, output);
 
             }
             antoxDB.close();
-            FileOutputStream output = fileMap.get(id);
             try {
-                output.write(data);
+                fileStreamMap.get(id).write(data);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 incrementProgress(id, data.length);
+            }
+            if (fileMap.get(id).length() == fileSizeMap.get(id)) { // file finished
                 try {
-                    output.close();
+                    fileStreamMap.get(id).close();
+                    jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
