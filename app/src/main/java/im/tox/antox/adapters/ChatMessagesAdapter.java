@@ -104,27 +104,34 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
 
         holder.message.setTextSize(16);
+        holder.message.setVisibility(View.GONE);
+        holder.time.setVisibility(View.GONE);
+        holder.sent.setVisibility(View.GONE);
+        holder.received.setVisibility(View.GONE);
+        holder.title.setVisibility(View.GONE);
+        holder.progress.setVisibility(View.GONE);
+        holder.imageMessage.setVisibility(View.GONE);
+        holder.imageMessageFrame.setVisibility(View.GONE);
+        holder.progressText.setVisibility(View.GONE);
+        holder.padding.setVisibility(View.GONE);
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
+                holder.message.setText(msg.message);
+                holder.message.setVisibility(View.VISIBLE);
                 if (msg.sent) {
                     if (msg.received) {
-                        holder.sent.setVisibility(View.GONE);
                         holder.received.setVisibility(View.VISIBLE);
                     } else {
                         holder.sent.setVisibility(View.VISIBLE);
-                        holder.received.setVisibility(View.GONE);
                     }
-                } else {
-                    holder.sent.setVisibility(View.GONE);
-                    holder.received.setVisibility(View.GONE);
                 }
                 break;
 
             case Constants.MESSAGE_TYPE_FRIEND:
                 friendMessage(holder);
-                holder.sent.setVisibility(View.GONE);
-                holder.received.setVisibility(View.GONE);
+                holder.message.setText(msg.message);
+                holder.message.setVisibility(View.VISIBLE);
                 break;
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
@@ -134,19 +141,18 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                     ownMessage(holder);
                     String[] split = msg.message.split("/");
                     holder.message.setText(split[split.length - 1]);
+                    holder.message.setVisibility(View.VISIBLE);
                 } else {
                     friendMessage(holder);
                     holder.message.setText(msg.message);
+                    holder.message.setVisibility(View.VISIBLE);
                 }
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
                 holder.title.setTypeface(robotoBold);
-                holder.received.setVisibility(View.GONE);
-                holder.sent.setVisibility(View.GONE);
 
                 if (msg.received) {
-                    holder.progress.setVisibility(View.GONE);
                     holder.progressText.setText("Finished");
                     holder.progressText.setVisibility(View.VISIBLE);
                 } else {
@@ -170,29 +176,24 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             }
                             holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
-                            holder.progress.setVisibility(View.GONE);
                             holder.progressText.setText("Failed");
                             holder.progressText.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        holder.progress.setVisibility(View.GONE);
                         if (msg.message_id != -1) {
                             if (msg.isMine()) {
                                 holder.progressText.setText("Sent filesending request");
                             } else {
                                 holder.progressText.setText("Received filesending request");
                             }
-                            holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending request not accepted, it's sent, we no longer have a filenumber, but it hasn't been accepted
                             holder.progressText.setText("Failed");
-                            holder.progressText.setVisibility(View.VISIBLE);
                         }
+                        holder.progressText.setVisibility(View.VISIBLE);
                     }
                 }
 
                 if (msg.received || msg.isMine()) {
-                    holder.imageMessage.setVisibility(View.GONE);
-                    holder.imageMessageFrame.setVisibility(View.GONE);
                     File f = null;
                     if (msg.message.contains("/")) {
                         f = new File(msg.message);
@@ -210,31 +211,27 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
                             if (file.getName().toLowerCase().endsWith(extension)) {
 
-                                if (msg.received) {
-                                    if (BitmapManager.checkValidImage(file)) {
-                                        BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
-                                    }
-
+                                if (BitmapManager.checkValidImage(file)) {
+                                    BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
                                     holder.imageMessage.setVisibility(View.VISIBLE);
                                     holder.imageMessageFrame.setVisibility(View.VISIBLE);
+                                    if (msg.received) {
+                                        holder.message.setVisibility(View.GONE);
+                                        holder.title.setVisibility(View.GONE);
+                                        holder.progressText.setVisibility(View.GONE);
+                                        holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                                            public void onClick(View v) {
+                                                Intent i = new Intent();
+                                                i.setAction(android.content.Intent.ACTION_VIEW);
+                                                i.setDataAndType(Uri.fromFile(file), "image/*");
+                                                ChatMessagesAdapter.this.context.startActivity(i);
 
-                                    holder.padding.setVisibility(View.GONE);
-                                    holder.progressText.setVisibility(View.GONE);
-                                    holder.title.setVisibility(View.GONE);
-                                    holder.message.setVisibility(View.GONE);
+                                            }
+                                        });
 
-                                    holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-                                        public void onClick(View v) {
-                                            Intent i = new Intent();
-                                            i.setAction(android.content.Intent.ACTION_VIEW);
-                                            i.setDataAndType(Uri.fromFile(file), "image/*");
-                                            ChatMessagesAdapter.this.context.startActivity(i);
-
-                                        }
-                                    });
-
-                                } else {
-                                    holder.padding.setVisibility(View.VISIBLE);
+                                    } else {
+                                        holder.padding.setVisibility(View.VISIBLE);
+                                    }
                                 }
 
                             }
@@ -250,8 +247,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
                 holder.time.setGravity(Gravity.CENTER);
                 holder.layout.setGravity(Gravity.CENTER);
-                holder.sent.setVisibility(View.GONE);
-                holder.received.setVisibility(View.GONE);
                 holder.message.setTextColor(context.getResources().getColor(R.color.gray_darker));
                 holder.row.setGravity(Gravity.CENTER);
                 holder.background.setBackgroundColor(context.getResources().getColor(R.color.white_absolute));
@@ -260,28 +255,11 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                 break;
         }
 
-        if(type != Constants.MESSAGE_TYPE_FILE_TRANSFER && type != Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND) {
-            holder.title.setVisibility(View.GONE);
-            holder.message.setText(msg.message);
-            holder.progress.setVisibility(View.GONE);
-            holder.progressText.setVisibility(View.GONE);
-            holder.imageMessage.setVisibility(View.GONE);
-            holder.imageMessageFrame.setVisibility(View.GONE);
-            holder.message.setVisibility(View.VISIBLE);
-        }
-
         holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true));
-
         holder.message.setTypeface(robotoRegular);
         holder.time.setTypeface(robotoRegular);
 
         if (!animatedIds.contains(id)) {
-            /*
-            if (msg.isMine()) {
-                holder.row.startAnimation(animRight);
-            } else {
-                holder.row.startAnimation(animLeft);
-            }*/
             holder.row.startAnimation(anim);
             animatedIds.add(id);
         }
