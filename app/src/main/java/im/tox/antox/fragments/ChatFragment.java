@@ -20,8 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.R;
 import im.tox.antox.adapters.ChatMessagesAdapter;
@@ -64,11 +67,13 @@ public class ChatFragment extends Fragment {
     private TextView statusTextBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
+    Subscription progressSub;
     Subscription activeKeySub;
     Subscription titleSub;
     Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
+    private boolean scrolling = false;
     private AntoxDB antoxDB;
     public String photoPath;
     public ChatFragment(String key) {
@@ -83,6 +88,14 @@ public class ChatFragment extends Fragment {
     public void onResume(){
         super.onResume();
         Log.d("ChatFragment", "onResume");
+        progressSub = Observable.interval(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
+            @Override
+            public void call(Long aLong) {
+                if (!scrolling && toxSingleton.fileIds.size() > 0) {
+                    updateProgress();
+                }
+            }
+        });
         messagesSub = toxSingleton.updatedMessagesSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
@@ -175,9 +188,18 @@ public class ChatFragment extends Fragment {
         titleSub.unsubscribe();
         typingSub.unsubscribe();
         activeKeySub.unsubscribe();
+        progressSub.unsubscribe();
     }
 
-    public void sendMessage() {
+    private void updateProgress() {
+        int start = chatListView.getFirstVisiblePosition();
+        for (int i = start, j = chatListView.getLastVisiblePosition(); i <= j; i++) {
+            View view = chatListView.getChildAt(i - start);
+            chatListView.getAdapter().getView(i, view, chatListView);
+        }
+    }
+
+    private void sendMessage() {
         Log.d("ChatFragment","sendMessage");
         if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
             return;
@@ -280,7 +302,7 @@ public class ChatFragment extends Fragment {
         return cursor;
     }
 
-    public void updateChat() {
+    private void updateChat() {
         Observable.create(new Observable.OnSubscribeFunc<Cursor>() {
             @Override
             public Subscription onSubscribe(Observer<? super Cursor> observer) {
@@ -373,6 +395,23 @@ public class ChatFragment extends Fragment {
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
+        chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    scrolling = false;
+                } else {
+                    scrolling = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+
+        });
         isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
         statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 

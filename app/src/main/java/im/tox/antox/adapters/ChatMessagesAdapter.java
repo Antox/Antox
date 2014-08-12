@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.text.ClipboardManager;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,8 +129,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
             case Constants.MESSAGE_TYPE_FILE_TRANSFER:
             case Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND:
-                final int position = cursor.getPosition();
-                toxSingleton.positionMap.put(id, position);
+                toxSingleton.fileSizeMap.put(id,size);
                 if (type == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
                     ownMessage(holder);
                     String[] split = msg.message.split("/");
@@ -162,8 +162,12 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             } else {
                                 bytesPerSecond = 0;
                             }
-                            int secondsToComplete = msg.size/bytesPerSecond;
-                            holder.progressText.setText(Integer.toString(bytesPerSecond/1024) + " KiB/s, " + secondsToComplete + " seconds left");
+                            if (bytesPerSecond != 0) {
+                                int secondsToComplete = msg.size / bytesPerSecond;
+                                holder.progressText.setText(Integer.toString(bytesPerSecond/1024) + " KiB/s, " + secondsToComplete + " seconds left");
+                            } else {
+                                holder.progressText.setText(Integer.toString(bytesPerSecond / 1024) + " KiB/s");
+                            }
                             holder.progressText.setVisibility(View.VISIBLE);
                         } else { //Filesending failed, it's sent, we no longer have a filenumber, but it hasn't been received
                             holder.progress.setVisibility(View.GONE);

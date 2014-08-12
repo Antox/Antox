@@ -3,6 +3,7 @@ package im.tox.antox.tox;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,8 +19,9 @@ public class ToxDataFile {
     private Context ctx;
 
 	public ToxDataFile(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         ctx = context;
-        fileName = Constants.ACTIVE_DATABASE_NAME;
+        fileName = preferences.getString("active_account","");
 	}
 
 	/**
@@ -27,7 +29,14 @@ public class ToxDataFile {
 	 * @return
 	 */
 	public boolean doesFileExist() {
+        if (ctx==null) {
+            Log.d("ToxDataFile", "Context is null!");
+        }
+        Log.d("ToxDataFile", "fileName: " + fileName);
 		File myFile = ctx.getFileStreamPath(fileName);
+        if (myFile == null) {
+            Log.d("ToxDataFile", "myFile is null!");
+        }
 		return myFile.exists();
 	}
 
