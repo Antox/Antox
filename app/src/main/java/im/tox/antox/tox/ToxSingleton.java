@@ -19,6 +19,7 @@ import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 import im.tox.antox.callbacks.AntoxOnActionCallback;
@@ -75,6 +76,7 @@ public class ToxSingleton {
     public BehaviorSubject<Boolean> typingSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
+    public BehaviorSubject<Boolean> updatedProgressSubject;
     public BehaviorSubject<Boolean> rightPaneActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
@@ -83,8 +85,13 @@ public class ToxSingleton {
     public Observable rightPaneActiveAndKeyAndIsFriendSubject;
     public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
-    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
-    public HashMap<String, Boolean> typingMap = new HashMap<>();
+    public HashMap<Integer, ArrayList<Tuple<Integer,Long>>> progressHistoryMap = new HashMap<>();
+    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
+    public HashMap<Integer, Integer> fileSizeMap = new HashMap<>();
+    public HashMap<Integer, FileOutputStream> fileStreamMap = new HashMap<>();
+    public HashMap<Integer, File> fileMap = new HashMap<>();
+    public HashSet<Integer> fileIds = new HashSet<>();
+    public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
     public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
@@ -113,6 +120,8 @@ public class ToxSingleton {
         doClosePaneSubject.subscribeOn(Schedulers.io());
         updatedMessagesSubject = BehaviorSubject.create(true);
         updatedMessagesSubject.subscribeOn(Schedulers.io());
+        updatedProgressSubject = BehaviorSubject.create(true);
+        updatedProgressSubject.subscribeOn(Schedulers.io());
         typingSubject = BehaviorSubject.create(true);
         typingSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
@@ -194,7 +203,8 @@ public class ToxSingleton {
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                long id = antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                fileIds.add((int) id);
                 antoxDB.close();
             }
         }
@@ -227,7 +237,8 @@ public class ToxSingleton {
             } while (file.exists());
         }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        long id = antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        fileIds.add((int) id);
         antoxDB.close();
         acceptFile(key, fileNumber, context);
     }
@@ -260,31 +271,39 @@ public class ToxSingleton {
 
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
         AntoxDB antoxDB = new AntoxDB(context);
-        String fileName = antoxDB.getFilePath(key, fileNumber);
         int id = antoxDB.getFileId(key, fileNumber);
-        antoxDB.close();
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-            if (!dirfile.mkdirs()) {
-                Log.e("acceptFile", "Directory not created");
+            if (!fileStreamMap.containsKey(id)) {
+                String fileName = antoxDB.getFilePath(key, fileNumber);
+                File dirfile = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+                if (!dirfile.mkdirs()) {
+                    Log.e("acceptFile", "Directory not created");
+                }
+                File file = new File(dirfile.getPath(), fileName);
+                FileOutputStream output = null;
+                try {
+                    output = new FileOutputStream(file, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fileMap.put(id, file);
+                fileStreamMap.put(id, output);
+
             }
-            File file = new File(dirfile.getPath(), fileName);
-            FileOutputStream output = null;
+            antoxDB.close();
             try {
-                output = new FileOutputStream(file, true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                output.write(data);
+                fileStreamMap.get(id).write(data);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 incrementProgress(id, data.length);
+            }
+            if (fileMap.get(id).length() == fileSizeMap.get(id)) { // file finished
                 try {
-                    output.close();
+                    fileStreamMap.get(id).close();
+                    jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -295,22 +314,59 @@ public class ToxSingleton {
     public void incrementProgress(int id, int length) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             if (!progressMap.containsKey(idObject)) {
                 progressMap.put(idObject, length);
+                ArrayList<Tuple<Integer, Long>> a = new ArrayList<Tuple<Integer, Long>>();
+                a.add(new Tuple<Integer, Long>(length, time));
+                progressHistoryMap.put(idObject, a);
             } else {
                 Integer current = progressMap.get(idObject);
-                progressMap.put(idObject, current+length);
+                progressMap.put(idObject, current + length);
+                ArrayList<Tuple<Integer, Long>> a = progressHistoryMap.get(idObject);
+                a.add(new Tuple<Integer, Long>(current + length, time));
+                progressHistoryMap.put(idObject, a);
             }
         }
-        updatedMessagesSubject.onNext(true);
+        updatedProgressSubject.onNext(true);
+    }
+
+    public Tuple<Integer, Long> getProgressSinceXAgo(int id, int ms) {
+    //ms is time to lookback, will find the first time value that is at least ms milliseconds ago, or if there isn't one, the first time value
+        if (progressHistoryMap.containsKey(id)) {
+            ArrayList<Tuple<Integer, Long>> progressHistory = progressHistoryMap.get(id);
+            if (progressHistory.size() <= 1) {
+                return null;
+            }
+            Tuple<Integer, Long> current = progressHistory.get(progressHistory.size() - 1);
+            Tuple<Integer, Long> before;
+            long timeDifference;
+            for (int i = progressHistory.size() - 2; i >= 0; --i) {
+                before = progressHistory.get(i);
+                timeDifference = current.y - before.y;
+                if (timeDifference > ms || i == 0) {
+                    return new Tuple<Integer, Long>(current.x - before.x, System.currentTimeMillis() - before.y);
+                }
+            }
+        }
+        return null;
     }
 
     public void setProgress(int id, int progress) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             progressMap.put(idObject, progress);
+            ArrayList<Tuple<Integer, Long>> a;
+            if (!progressHistoryMap.containsKey(idObject)) {
+                a = new ArrayList<Tuple<Integer, Long>>();
+            } else {
+                a = progressHistoryMap.get(idObject);
+            }
+            a.add(new Tuple<Integer, Long>(progress, time));
+            progressHistoryMap.put(idObject, a);
+            updatedProgressSubject.onNext(true);
         }
-        updatedMessagesSubject.onNext(true);
     }
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
@@ -318,6 +374,7 @@ public class ToxSingleton {
         int id = db.getFileId(key, fileNumber);
         if (id != -1) {
             fileStatusMap.put(id, FileStatus.FINISHED);
+            fileIds.remove(id);
         }
         db.fileFinished(key, fileNumber);
         db.close();
