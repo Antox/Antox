@@ -193,7 +193,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("active_account", account);
                 editor.putString("nickname", account);
-                editor.putString("status", "1");
+                editor.putString("status", "online");
                 editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
                 editor.putString("tox_id", ID);
                 editor.putBoolean("loggedin", true);

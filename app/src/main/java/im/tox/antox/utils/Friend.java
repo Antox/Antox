@@ -1,7 +1,9 @@
 package im.tox.antox.utils;
 
+import im.tox.jtoxcore.ToxUserStatus;
+
 public class Friend {
-	public int icon;
+    public boolean isOnline;
 	public String friendName;
 	public String friendStatus;
     public String personalNote;
@@ -12,15 +14,22 @@ public class Friend {
 		super();
 	}
 
-	public Friend(int icon, String friendName, String userStatus, String userNote, String key, String a) {
+	public Friend(boolean isOnline, String friendName, String friendStatus, String userNote, String key, String a) {
 		super();
-		this.icon = icon;
+        this.isOnline = isOnline;
 		this.friendName = friendName;
-		this.friendStatus = userStatus;
+		this.friendStatus = friendStatus;
         this.personalNote = userNote;
         this.friendKey = key;
         this.alias = a;
 	}
+
+    public ToxUserStatus getFriendStatusAsToxUserStatus()
+    {
+        return UserStatus.getToxUserStatusFromString(friendStatus);
+    }
+
+
 
 	@Override
 	public String toString() {
