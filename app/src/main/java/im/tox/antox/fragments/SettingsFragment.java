@@ -2,9 +2,6 @@ package im.tox.antox.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -12,10 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
-import android.util.Log;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.LoginActivity;
@@ -23,6 +17,7 @@ import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.UserStatus;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 
@@ -197,10 +192,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
 
             ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
             String newStatusString = sharedPreferences.getString(key, "");
-            if(newStatusString.equals("2"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_AWAY;
-            if(newStatusString.equals("3"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_BUSY;
+            newStatus = UserStatus.getToxUserStatusFromString(newStatusString);
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {

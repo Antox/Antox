@@ -1,32 +1,21 @@
 package im.tox.antox.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.IconColor;
 import im.tox.antox.utils.PrettyTimestamp;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
+import im.tox.antox.utils.UserStatus;
 
 public class RecentAdapter extends ResourceCursorAdapter {
 	Context context;
@@ -49,10 +38,11 @@ public class RecentAdapter extends ResourceCursorAdapter {
     public void bindView(View view, final Context context, Cursor cursor) {
         final String tox_key = cursor.getString(0);
         final String username = cursor.getString(1);
-        final int online = cursor.getInt(2);
-        final Timestamp time = Timestamp.valueOf(cursor.getString(3));
-        final String message = cursor.getString(4);
-        final int unreadCount = cursor.getInt(5);
+        final boolean online = cursor.getInt(2) !=0;
+        final String status = cursor.getString(3);
+        final Timestamp time = Timestamp.valueOf(cursor.getString(4));
+        final String message = cursor.getString(5);
+        final int unreadCount = cursor.getInt(6);
         FriendsListHolder holder = new FriendsListHolder();
         holder.icon = (TextView) view.findViewById(R.id.icon);
         holder.friendName = (TextView) view.findViewById(R.id.friend_name);
@@ -65,7 +55,7 @@ public class RecentAdapter extends ResourceCursorAdapter {
         holder.friendStatus.setText(message);
         holder.unreadCount.setText(Integer.toString(unreadCount));
         holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(time, false));
-        holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(online)));
+        holder.icon.setBackgroundColor(IconColor.iconColorAsColor(online, UserStatus.getToxUserStatusFromString(status)));
         if (unreadCount == 0) {
             holder.unreadCount.setVisibility(View.GONE);
         } else {

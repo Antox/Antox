@@ -39,7 +39,9 @@ import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.Tuple;
+import im.tox.antox.utils.IconColor;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -120,11 +122,15 @@ public class ChatFragment extends Fragment {
                     String friendName = "";
                     String friendAlias = "";
                     String friendNote = "";
+                    ToxUserStatus friendStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
+                    boolean friendIsOnline = false;
                     for (FriendInfo f : fi) {
                         if (f.friendKey.equals(key)) {
                             friendName = f.friendName;
                             friendNote = f.personalNote;
                             friendAlias = f.alias;
+                            friendStatus = f.getFriendStatusAsToxUserStatus();
+                            friendIsOnline = f.isOnline;
                             break;
                         }
                     }
@@ -141,6 +147,9 @@ public class ChatFragment extends Fragment {
 
                     TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
                     statusText.setText(friendNote);
+
+                    TextView statusIcon = (TextView) getActivity().findViewById(R.id.chat_friend_status_icon);
+                    statusIcon.setBackgroundColor(IconColor.iconColorAsColor(friendIsOnline,friendStatus));
 
                     chatName.setTypeface(robotoBold);
                     statusText.setTypeface(robotoRegular);

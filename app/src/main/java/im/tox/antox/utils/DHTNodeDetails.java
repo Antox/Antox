@@ -1,7 +1,6 @@
 package im.tox.antox.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -25,7 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import im.tox.antox.tox.ToxDoService;
 
 public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
 
@@ -201,7 +199,6 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
                 if(reachable)
                     result[1] = (int)elapsedTime;
             } catch (IOException e) {
-                e.printStackTrace();
                 e.printStackTrace();
             }
 

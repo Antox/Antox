@@ -13,10 +13,10 @@
         <item>Away</item>
         <item>Busy</item>
     </string-array>
-    <string-array name="pref_status_list_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="pref_status_list_values" translatable="false">
+        <item>none</item>
+        <item>away</item>
+        <item>busy</item>
     </string-array>
 
     <string name="pref_title_status_message">Status Message</string>
