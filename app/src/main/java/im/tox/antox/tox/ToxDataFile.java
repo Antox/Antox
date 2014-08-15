@@ -24,6 +24,11 @@ public class ToxDataFile {
         fileName = preferences.getString("active_account","");
 	}
 
+    public ToxDataFile(Context context, String fileName) {
+        ctx = context;
+        this.fileName = fileName;
+    }
+
 	/**
 	 * Method to check if the data file exists before attempting to use it
 	 * @return

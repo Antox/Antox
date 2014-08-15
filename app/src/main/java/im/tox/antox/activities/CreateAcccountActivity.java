@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,14 +18,39 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.abstractj.kalium.crypto.Box;
+import org.abstractj.kalium.crypto.SecretBox;
+import org.abstractj.kalium.encoders.Encoder;
+import org.abstractj.kalium.encoders.Hex;
+import org.abstractj.kalium.encoders.Raw;
+import org.abstractj.kalium.keys.KeyPair;
+import org.abstractj.kalium.keys.PublicKey;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 import im.tox.antox.R;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDataFile;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.utils.AntoxFriendList;
-import im.tox.antox.utils.Constants;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
@@ -124,7 +150,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler);
-                    ToxDataFile toxDataFile = new ToxDataFile(this);
+                    ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());
                     ID = jTox.getAddress();
                     fileBytes = toxDataFile.loadFile();
@@ -134,57 +160,79 @@ public class CreateAcccountActivity extends ActionBarActivity{
 
                 // Register Account using toxme.se API
                 /*
-                long epoch = System.currentTimeMillis();
-                int allow = allowSearch ? 1 : 0;
+                System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
+
+                int allow = 1;
                 try {
                     JSONObject unencryptedPayload = new JSONObject();
                     unencryptedPayload.put("tox_id", ID);
                     unencryptedPayload.put("name", account);
                     unencryptedPayload.put("privacy", allow);
                     unencryptedPayload.put("bio", "Antox User");
+                    long epoch = System.currentTimeMillis();
                     unencryptedPayload.put("timestamp", epoch);
 
-                    /* Encrypt the payload *
-                    String toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13";
-
                     Hex hexEncoder = new Hex();
-                    byte[] pk = hexEncoder.decode(toxmepk);
+                    Raw rawEncoder = new Raw();
 
-                    byte[] sk = new byte[32];
-                    System.arraycopy(fileBytes, 52, sk, 0, 32);
+                    String toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13";
+                    byte[] serverPublicKey = hexEncoder.decode(toxmepk);
+                    byte[] ourSecretKey = new byte[32];
+                    System.arraycopy(fileBytes, 52, ourSecretKey, 0, 32);
 
-                    Box box = new Box(pk, sk);
-                    SecureRandom secureRandom = new SecureRandom();
-                    byte[] nonce = secureRandom.generateSeed(24);
-                    byte[] payloadBytes = box.encrypt(nonce, unencryptedPayload.toString().getBytes());
-                    String payload = new String(payloadBytes);
-                    String nonceString = new String(nonce);
+                    Box box = new Box(serverPublicKey, ourSecretKey);
+                    org.abstractj.kalium.crypto.Random random = new org.abstractj.kalium.crypto.Random();
+                    byte[] nonce = random.randomBytes(24);
+                    byte[] payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString()));
+                    // Encode payload and nonce to base64
+                    payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP);
+                    nonce = Base64.encode(nonce, Base64.NO_WRAP);
+
+                    String payload = rawEncoder.encode(payloadBytes);
+                    String nonceString = rawEncoder.encode(nonce);
 
                     JSONObject json = new JSONObject();
-                    json.put("action_id", 1);
-                    json.put("public_key", "changeme");
+                    json.put("action", 1);
+                    json.put("public_key", ID.substring(0,64));
                     json.put("encrypted", payload);
                     json.put("nonce", nonceString);
 
-                    HttpClient httpClient = new DefaultHttpClient();
-                    try {
-                        HttpPost request = new HttpPost("http://toxme.se/api/");
-                        StringEntity params =new StringEntity(json.toString());
-                        request.addHeader("content-type", "application/x-www-form-urlencoded");
-                        request.setEntity(params);
-                        HttpResponse response = httpClient.execute(request);
-                        // handle response here...
-                        Log.d("Response", response.toString());
-                    }catch (Exception ex) {
-                        // handle exception here
-                        Log.d("CreateAccount", ex.getMessage());
-                    } finally {
-                        httpClient.getConnectionManager().shutdown();
-                    }
+                    final JSONObject finaljson = json;
+                    Log.d("CreateAccount", "JSON: " + finaljson.toString());
+                    final Runnable httppost = new Runnable() {
+                        @Override
+                        public void run() {
+                            HttpClient httpClient = new DefaultHttpClient();
+                            try {
+                                HttpPost post = new HttpPost("https://toxme.se/api");
+                                post.setHeader("Content-Type", "application/json");
+                                post.setEntity(new StringEntity(finaljson.toString()));
+                                HttpResponse response = httpClient.execute(post);
+                                Log.d("CreateAccount", "Response code: " + response.toString());
+                                HttpEntity entity = response.getEntity();
+                                Scanner in = new Scanner(entity.getContent());
+                                while (in.hasNext())
+                                {
+                                    Log.d("CreateAccount", "Response: " + in.next());
+                                }
+                                in.close();
+                            } catch(UnsupportedEncodingException e) {
+                                Log.d("CreateAccount", "Unsupported Encoding Exception: " + e.getMessage());
+                            } catch(IOException e) {
+                                Log.d("CreateAccount", "IOException: " + e.getMessage());
+                            } finally {
+                                httpClient.getConnectionManager().shutdown();
+                            }
+                        }
+                    };
+                    Thread thread = new Thread(httppost);
+                    thread.start();
+
                 } catch(JSONException e) {
-                    Log.d("CreateAcccount", e.getMessage());
+                    Log.d("CreateAcccount", "JSON Exception "+e.getMessage());
                 }
                 */
+
                 // Login and launch
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = preferences.edit();
