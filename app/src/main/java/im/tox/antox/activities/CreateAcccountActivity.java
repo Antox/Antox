@@ -134,6 +134,9 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 UserDB db = new UserDB(this);
                 db.addUser(account, password1);
 
+                System.load("/data/data/im.tox.antox/lib/libsodium.so");
+                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+
                 // Create a tox data file
                 String ID = "";
                 byte[] fileBytes = null;
@@ -297,10 +300,11 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 while (in.hasNext()) {
                     String responseString = in.next();
                     Log.d("CreateAccount", "Response: " + responseString);
-                    if (responseString.contentEquals("{\"c\":")) {
+                    if (responseString.contains("\"c\":")) {
                         errorCode = in.next();
                         errorCode = errorCode.replaceAll("\"", "");
                         errorCode = errorCode.replaceAll(",", "");
+                        errorCode = errorCode.replaceAll("\\}", "");
                         Log.d("CreateAccount", "Error Code: " + errorCode);
                     }
                 }
