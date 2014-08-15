@@ -98,6 +98,9 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         holder.imageMessageFrame = (FrameLayout) view.findViewById(R.id.message_sent_photo_frame);
         holder.progressText = (TextView) view.findViewById(R.id.file_transfer_progress_text);
         holder.padding = (View) view.findViewById(R.id.file_transfer_padding);
+        holder.buttons = (LinearLayout) view.findViewById(R.id.file_buttons);
+        holder.accept = (View) view.findViewById(R.id.file_accept_button);
+        holder.reject = (View) view.findViewById(R.id.file_reject_button);
 
         Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
         Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
@@ -114,6 +117,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         holder.imageMessageFrame.setVisibility(View.GONE);
         holder.progressText.setVisibility(View.GONE);
         holder.padding.setVisibility(View.GONE);
+        holder.buttons.setVisibility(View.GONE);
         switch(type) {
             case Constants.MESSAGE_TYPE_OWN:
                 ownMessage(holder);
@@ -185,9 +189,22 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                                 holder.progressText.setText("Sent filesending request");
                             } else {
                                 holder.progressText.setText("Received filesending request");
+                                holder.buttons.setVisibility(View.VISIBLE);
+                                holder.accept.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        toxSingleton.acceptFile(k, message_id, context);
+                                    }
+                                });
+                                holder.reject.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        toxSingleton.rejectFile(k, message_id, context);
+                                    }
+                                });
                             }
-                        } else { //Filesending request not accepted, it's sent, we no longer have a filenumber, but it hasn't been accepted
-                            holder.progressText.setText("Failed");
+                        } else { //Filesending request not accepted, we no longer have a filenumber, but it hasn't been accepted
+                            holder.progressText.setText("Rejected");
                         }
                         holder.progressText.setVisibility(View.VISIBLE);
                     }
@@ -209,7 +226,10 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
                         for (String extension : okFileExtensions) {
 
+                            Log.d("ChatMessagesAdapter", file.getName().toLowerCase());
+                            Log.d("ChatMessagesAdapter", extension);
                             if (file.getName().toLowerCase().endsWith(extension)) {
+                                Log.d("ChatMessagesAdapter", "true");
 
                                 if (BitmapManager.checkValidImage(file)) {
                                     BitmapManager.loadBitmap(file, file.getPath().hashCode(), holder.imageMessage);
@@ -233,9 +253,9 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                                     }
                                 }
 
+                                break; // break for loop
                             }
 
-                            break; // break for loop
                         }
                     }
                 }
@@ -257,6 +277,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true));
         holder.message.setTypeface(robotoRegular);
         holder.time.setTypeface(robotoRegular);
+        holder.time.setVisibility(View.VISIBLE);
 
         if (!animatedIds.contains(id)) {
             holder.row.startAnimation(anim);
@@ -379,6 +400,9 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         ProgressBar progress;
         TextView progressText;
         View padding;
+        LinearLayout buttons;
+        View accept;
+        View reject;
     }
 
 }
