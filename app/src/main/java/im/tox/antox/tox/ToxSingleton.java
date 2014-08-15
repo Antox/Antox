@@ -240,7 +240,6 @@ public class ToxSingleton {
         long id = antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
         fileIds.add((int) id);
         antoxDB.close();
-        acceptFile(key, fileNumber, context);
     }
 
     public void changeActiveKey(String key) {
@@ -254,16 +253,32 @@ public class ToxSingleton {
     }
 
     public void acceptFile(String key, int fileNumber, Context context) {
-        try {
-            jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.fileTransferStarted(key, fileNumber);
         int id = antoxDB.getFileId(key, fileNumber);
         if (id != -1) {
+            try {
+                jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            antoxDB.fileTransferStarted(key, fileNumber);
             fileStatusMap.put(id, FileStatus.INPROGRESS);
+        }
+        antoxDB.close();
+        updatedMessagesSubject.onNext(true);
+    }
+
+    public void rejectFile(String key, int fileNumber, Context context) {
+        AntoxDB antoxDB = new AntoxDB(context);
+        int id = antoxDB.getFileId(key, fileNumber);
+        if (id != -1) {
+            try {
+                jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), new byte[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            antoxDB.clearFileNumber(key, fileNumber);
+            fileStatusMap.put(id, FileStatus.CANCELLED);
         }
         antoxDB.close();
         updatedMessagesSubject.onNext(true);
@@ -300,10 +315,13 @@ public class ToxSingleton {
             } finally {
                 incrementProgress(id, data.length);
             }
+            Log.d("ToxSingleton","file size so far: " + fileMap.get(id).length() + " final file size: " + fileSizeMap.get(id));
             if (fileMap.get(id).length() == fileSizeMap.get(id)) { // file finished
                 try {
                     fileStreamMap.get(id).close();
                     jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    fileFinished(key, fileNumber, context);
+                    Log.d("ToxSingleton","receiveFileData finished receiving file");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
