@@ -106,7 +106,8 @@
             android:layout_marginTop="10dp"
             android:onClick="onClickRegisterAccount"/>
 
-        <TextView
+        <CheckBox
+            android:id="@+id/skip_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_darker"
@@ -114,7 +115,6 @@
             android:layout_marginTop="50dp"
             android:drawableBottom="@drawable/dotted"
             android:clickable="true"
-            android:onClick="onClickSkipRegistration"
             android:text="@string/create_skip"/>
 
     </LinearLayout>
