@@ -19,31 +19,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.abstractj.kalium.crypto.Box;
-import org.abstractj.kalium.crypto.SecretBox;
-import org.abstractj.kalium.encoders.Encoder;
 import org.abstractj.kalium.encoders.Hex;
 import org.abstractj.kalium.encoders.Raw;
-import org.abstractj.kalium.keys.KeyPair;
-import org.abstractj.kalium.keys.PublicKey;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
 
 import im.tox.antox.R;
@@ -110,7 +98,6 @@ public class CreateAcccountActivity extends ActionBarActivity{
         EditText accountField = (EditText) findViewById(R.id.create_account_name);
         EditText password1Field = (EditText) findViewById(R.id.create_password);
         EditText password2Field = (EditText) findViewById(R.id.create_password_again);
-        CheckBox allowSearchField = (CheckBox) findViewById(R.id.create_allow_search);
 
         String account = accountField.getText().toString();
         String password1 = password1Field.getText().toString();
@@ -130,12 +117,19 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             } else {
+                // Load tox libraries
+                try {
+                    System.load("/data/data/im.tox.antox/lib/libsodium.so");
+                    System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+                } catch (Exception e) {
+                    Log.d("CreateAccount", "Failed System.load()");
+                    e.printStackTrace();
+                }
+
+
                 // Add user to DB
                 UserDB db = new UserDB(this);
                 db.addUser(account, password1);
-
-                System.load("/data/data/im.tox.antox/lib/libsodium.so");
-                System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
 
                 // Create a tox data file
                 String ID = "";
@@ -177,9 +171,13 @@ public class CreateAcccountActivity extends ActionBarActivity{
                     finish();
                 } else {
                     /* Register Account using toxme.se API */
-                    System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
-                    int allow = 1;
-                    String errorCode;
+                    try {
+                        System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
+                    } catch (Exception e) {
+                        Log.d("CreateAccount", "System.load() on kalium failed");
+                    }
+
+                    int allow = 0;
                     JSONPost jsonPost = new JSONPost();
                     Thread toxmeThread = new Thread(jsonPost);
                     try {
@@ -187,7 +185,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                         unencryptedPayload.put("tox_id", ID);
                         unencryptedPayload.put("name", account);
                         unencryptedPayload.put("privacy", allow);
-                        unencryptedPayload.put("bio", "Antox User");
+                        unencryptedPayload.put("bio", "");
                         long epoch = System.currentTimeMillis() / 1000;
                         unencryptedPayload.put("timestamp", epoch);
 
