@@ -39,7 +39,8 @@
         android:hint="@string/create_name_hint"
         android:layout_width="200dp"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/create_password"
@@ -50,7 +51,8 @@
         android:inputType="textPassword"
         android:layout_marginTop="5dp"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/create_password_again"
@@ -61,7 +63,8 @@
         android:layout_width="200dp"
         android:inputType="textPassword"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
         <CheckBox
             android:id="@+id/create_allow_search"
