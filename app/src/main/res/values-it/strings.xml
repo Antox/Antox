@@ -4,7 +4,7 @@
     <string name="app_name">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_welcome">Benvenuto</string>
+    <string name="title_activity_login">Login</string>
     <string name="title_activity_add_friend">Aggiungi Contatto</string>
     <string name="title_activity_friend_profile">Profilo</string>
 
@@ -18,6 +18,7 @@
     <string name="main_status">Stato</string>
     <string name="icon_description">Stato Connessione</string>
     <string name="main_no_friends">Nessun contatto</string>
+    <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
     <string name="main_recent_no">Nessuna coversazione recente</string>
     <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
     <string name="main_friend_requests">Richieste D\'Amicizia</string>
@@ -30,14 +31,34 @@
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
     <string name="chat_file_transfer">Invia un file</string>
+    <string name="accept_caps">ACCETTA</string>
+    <string name="reject_caps">RIFIUTA</string>
 
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">Devi inserire un nome utente</string>
-    <string name="welcome_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="welcome_getstarted_string">Nome</string>
-    <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Inizia ad usare Antox!</string>
-    <string name="welcome_developer_string">Sviluppato da astonex</string>
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">Devi compilare entrambi i campi</string>
+    <string name="login_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
+    <string name="login_getstarted_string">Inserisci il nome che verrà visualizzato dai tuoi contatti</string>
+    <string name="login_name_hint">nickname</string>
+    <string name="login_login">Login</string>
+    <string name="login_developer_string">Sviluppato con amore da Astonex</string>
+    <string name="login_password_hint">password</string>
+    <string name="login_account_hint">nome account</string>
+    <string name="login_new_text">Sei un nuovo utente Antox?</string>
+    <string name="login_create_account_text">Crea un account</string>
+    <string name="login_already_have_account">Hai già un account?</string>
+    <string name="login_bad_login">Il nome utente o la password non è corretto</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Nome Account</string>
+    <string name="create_password_hint">Password</string>
+    <string name="create_password_again_hint">Conferma Password</string>
+    <string name="create_text">Crea un nouvo account Antox</string>
+    <string name="create_register">Registrazione</string>
+    <string name="create_skip">Salta registrazione (utenti esperti)</string>
+    <string name="create_must_fill_in">Devi compilare tutti i campi</string>
+    <string name="create_password_bad_match">Le passwords non corrispondono</string>
+    <string name="create_allow_search">Includi il mio account nei risultati delle ricerche degli altri utenti</string>
+    <string name="create_bio_string">Scrivi qualcosa riguardo te stesso</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID del contatto</string>
@@ -53,8 +74,11 @@
     <string name="addfriend_invalid_pin">Pin non valido</string>
     <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
     <string name="addfriend_own_key">Non puoi aggiungere te stesso</string>
+    <string name="addfriend_friend_pin_title">Pin del Contatto</string>
+    <string name="addfriend_friend_pin_text">Inserisci il pin del contatto</string>
 
     <!-- Friend Profile Activity -->
+    <string name="friend_profile_title">Profilo di %1$s</string>
     <string name="friend_profile_name">Nome</string>
     <string name="friend_profile_nick">Nome Personalizzato</string>
     <string name="friend_profile_group">Gruppo</string>
@@ -90,6 +114,8 @@
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
+    <string name="contacts_delimiter_requests">Richieste d\'amicizia</string>
+    <string name="contacts_delimiter_friends">Contatti</string>
     
     <!-- Chat Fragment -->
     <string name="attachment_photo">Allega foto</string>
@@ -114,5 +140,11 @@
     <string name="connection_has">è</string>
     <string name="connection_online">online</string>
     <string name="connection_offline">offline</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Installare Barcode Scanner?</string>
+    <string name="qr_default_message">Antox richiede Barcode Scanner per poter leggere i codici QR.\n\nVuoi installare Barcode Scanner?</string>
+    <string name="qr_button_yes">Sì</string>
+    <string name="qr_button_no">No</string>
 
 </resources>
