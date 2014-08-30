@@ -4,7 +4,7 @@
     <string name="app_name">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_welcome">Witaj</string>
+    <string name="title_activity_login">Zaloguj</string>
     <string name="title_activity_add_friend">Dodaj znajomego</string>
     <string name="title_activity_friend_profile">Profil znajomego</string>
 
@@ -16,8 +16,26 @@
     <string name="welcome_alpha_warning">Ten klient to wciąż pre-alpha.</string>
     <string name="welcome_getstarted_string">Wprowadź nazwę wyświetlaną dla twoich znajomych</string>
     <string name="welcome_name_hint">nick</string>
-    <string name="welcome_button">Start</string>
+    <string name="login_login">Login</string>
     <string name="welcome_developer_string">Stworzone z miłością przez the Tox Development Team</string>
+	<string name="login_password_hint">Hasło</string>
+    <string name="login_account_hint">Nazwa konta</string>
+    <string name="login_new_text">Nowy w Antox?</string>
+    <string name="login_create_account_text">Utwórz konto</string>
+    <string name="login_already_have_account">Masz już konto?</string>
+    <string name="login_bad_login">Nazwa urzytkownika lub hasło sa błędne.</string>
+	
+	<!-- Create Account Activity -->
+    <string name="create_name_hint">Nazwa konta</string>
+    <string name="create_password_hint">Hasło</string>
+    <string name="create_password_again_hint">Potwierdź hasło</string>
+    <string name="create_text">Utwórz nowe konto Antox</string>
+    <string name="create_register">Zarejestruj</string>
+    <string name="create_skip">Pomiń rejestrację (Tylko zaawansowani urzytkownicy)</string>
+    <string name="create_must_fill_in">Musisz uzupełnić wszystkie pola</string>
+    <string name="create_password_bad_match">Hasła się nie zgadzają</string>
+    <string name="create_allow_search">Pozwól innym ciebie wszukać</string>
+    <string name="create_bio_string">Powiedz coś o sobie</string>
 
     <!-- Main Activity -->
     <string name="title">antox</string>
@@ -26,20 +44,21 @@
     <string name="main_status">Status</string>
     <string name="icon_description">Status połączenia</string>
     <string name="main_no_friends">Brak znajomych</string>
+	<string name="main_no_active_chat">Chat nieaktywny. Uruchom jakiś wybierając znajomego z panelu po lewej.</string>
     <string name="main_recent_no">Brak niedawnych rozmów</string>
     <string name="main_try_adding">Dodaj znajomych by zacząć</string>
     <string name="main_friend_requests">Zapytania znajomych</string>
     <string name="main_friends">Znajomi</string>
     <string name="main_no_internet">Brak połączenia z Internetem</string>
-    <string name="main_not_connected">
-        Nie wykryto połączenia z internetem. Bez połączenia z internetem funkcjonalność
-        będzie ograniczona, za wyjątkiem sytuacji w której Antox jest używany tylko w LAN-ie
-    </string>
+    <string name="main_not_connected">        Nie wykryto połączenia z internetem. Bez połączenia z internetem funkcjonalność
+        będzie ograniczona, za wyjątkiem sytuacji w której Antox jest używany tylko w LAN-ie</string>
     <string name="main_node_list_download_error">Błąd pobierania listy węzłów</string>
-
+	
     <!--  Chat Activity -->
     <string name="chat_enter_message">Wyślij wiadomość</string>
     <string name="chat_file_transfer">Przesyłanie plików</string>
+	<string name="accept_caps">ZAAKCPETUJ</string>
+    <string name="reject_caps">ODMÓW</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
@@ -54,10 +73,9 @@
     <string name="dialog_pin">Wprowadź Pin znajomego</string>
     <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
     <string name="addfriend_no_internet">Brak połączenia z siecią Tox</string>
-    <string name="addfriend_no_internet_text">
-        Niestety nie jesteś połączon(a/y) do sieci Tox, więc nie możesz dodać znajomego w tym momencie.
-        Spróbuj zrestartować aplikację.
-    </string>
+	<string name="addfriend_own_key">You cannot add yourself</string>
+	<string name="addfriend_friend_pin_title">Wpisz Pin znajomego</string>
+    <string name="addfriend_friend_pin_text">Wpisz Pin znajomego</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Nazwa</string>
@@ -71,6 +89,7 @@
     <string name="friend_profile_copied">ID skopiowane</string>
 
     <!-- Friend request fragment -->
+    <string name="friend_profile_title">Profil %1$s\'</string>
     <string name="friendrequest_accept">Zaakceptuj</string>
     <string name="friendrequest_reject">Odrzuć</string>
     <string name="friendrequest_accepted">Prośba o dodanie do znajomych zaakceptowana</string>
@@ -88,14 +107,13 @@
     <string name="friend_action_unblock">Odblokuj</string>
     <string name="group_action_leave">Opuść grupę</string>
     <string name="friend_action_deletechat">Usuń logi czatu</string>
-    <string name="friend_action_block_confirmation">
-        Zablokowanie tego użytkownika usunie go z Twojej lisy znajomych i prośby o dodanie do znajomych
-        nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?
-    </string>
+    <string name="friend_action_block_confirmation">        Zablokowanie tego użytkownika usunie go z Twojej lisy znajomych i prośby o dodanie do znajomych
+        nie będą od niego widoczne. Aby odblokować, idź do Ustawień. Czy na pewno chcesz kontynuować?</string>
     <string name="toast_succ_move_user">Udało się przenieść kontakt</string>
     <string name="contacts_actions_on">Działania na</string>
     <string name="contacts_clear_saved_logs">Czy chcesz także wyczyścić zapisane logi czatu?</string>
-
+	<string name="contacts_delimiter_requests">Zaproszenia</string>
+    <string name="contacts_delimiter_friends">Znajomi</string>
     <!--  Misc -->
     <string name="button_confirm">Potwierdź</string>
     <string name="button_cancel">Anuluj</string>
@@ -105,5 +123,17 @@
     <string name="hello_blank_fragment">Witaj pusty fragmencie</string>
     <string name="dialog_tox_id">Kopiuj Tox ID do schowka</string>
     <string name="share_with">Podziel się z</string>
+	<string name="connection_has">jest</string>
+    <string name="connection_online">online</string>
+    <string name="connection_offline">offline</string>
+    <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Ustawienia</string>
+	
+    <!-- QR -->
+    <string name="qr_default_title">Zainstalować skaner kodów?</string>
+    <string name="qr_default_message">Ta aplikacja wymaga skanera kodów kreskowych. Chciałbyś go zainstalować?</string>
+    <string name="qr_button_yes">Tak</string>
+    <string name="qr_button_no">Nie</string>
 
 </resources>
