@@ -31,7 +31,7 @@
                android:textColor="@color/black"
                android:layout_marginTop="10dp"
                android:hint="@string/login_account_hint"
-               />
+               android:singleLine="true" />
 
             <EditText
                 android:id="@+id/login_password"
@@ -43,7 +43,8 @@
                 android:background="@drawable/edittextbackground"
                 android:layout_gravity="center"
                 android:inputType="textPassword"
-                android:hint="@string/login_password_hint"/>
+                android:hint="@string/login_password_hint"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/login_login_button"
