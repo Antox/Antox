@@ -185,7 +185,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "nickname", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account",""), "nickname", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("status")) {
@@ -202,7 +202,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "status", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account",""), "status", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("status_message")) {
@@ -215,7 +215,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(Constants.ACTIVE_DATABASE_NAME, "status_message", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account",""), "status_message", sharedPreferences.getString(key, ""));
         }
 
         if(key.equals("nospam")) {

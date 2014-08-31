@@ -37,9 +37,6 @@ public class LoginActivity extends ActionBarActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(preferences.getBoolean("loggedin", false)) {
-            // Set the active account name
-            Constants.ACTIVE_DATABASE_NAME = preferences.getString("active_account", "");
-
             /* Attempt to start service in case it's not running */
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
             getApplicationContext().startService(startTox);
@@ -71,9 +68,6 @@ public class LoginActivity extends ActionBarActivity {
             UserDB db = new UserDB(this);
 
             if(db.login(account, password)) {
-                /* Set active account name */
-                Constants.ACTIVE_DATABASE_NAME = account;
-
                 /* Set that we're logged in and active user's details*/
                 String[] details = db.getUserDetails(account);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);

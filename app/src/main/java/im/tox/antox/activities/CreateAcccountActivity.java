@@ -1,4 +1,5 @@
 package im.tox.antox.activities;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.abstractj.kalium.crypto.Box;
 import org.abstractj.kalium.encoders.Hex;
 import org.abstractj.kalium.encoders.Raw;
@@ -27,9 +29,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+
 import im.tox.antox.R;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDataFile;
@@ -38,13 +42,16 @@ import im.tox.antox.utils.AntoxFriendList;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
+
 public class CreateAcccountActivity extends ActionBarActivity{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_create_acccount);
-/* Fix for an android 4.1.x bug */
+
+        /* Fix for an android 4.1.x bug */
         if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getWindow().setFlags(
@@ -53,23 +60,27 @@ public class CreateAcccountActivity extends ActionBarActivity{
             );
         }
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-// Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.create_acccount, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-// Handle action bar item clicks here. The action bar will
-// automatically handle clicks on the Home/Up button, so long
-// as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void onClickAllowSearch(View view) {
         CheckBox checkBox = (CheckBox) findViewById(R.id.create_allow_search);
         TextView bioString = (TextView) findViewById(R.id.create_bio_string);
@@ -82,13 +93,16 @@ public class CreateAcccountActivity extends ActionBarActivity{
             bioField.setVisibility(View.GONE);
         }
     }
+
     public void onClickRegisterAccount(View view) {
         EditText accountField = (EditText) findViewById(R.id.create_account_name);
         EditText password1Field = (EditText) findViewById(R.id.create_password);
         EditText password2Field = (EditText) findViewById(R.id.create_password_again);
+
         String account = accountField.getText().toString();
         String password1 = password1Field.getText().toString();
         String password2 = password2Field.getText().toString();
+
         if(account.equals("") || password1.equals("") || password2.equals("")) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.create_must_fill_in);
@@ -103,7 +117,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             } else {
-// Load tox libraries
+                // Load tox libraries
                 try {
                     System.load("/data/data/im.tox.antox/lib/libsodium.so");
                     System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
@@ -111,10 +125,13 @@ public class CreateAcccountActivity extends ActionBarActivity{
                     Log.d("CreateAccount", "Failed System.load()");
                     e.printStackTrace();
                 }
-// Add user to DB
+
+
+                // Add user to DB
                 UserDB db = new UserDB(this);
                 db.addUser(account, password1);
-// Create a tox data file
+
+                // Create a tox data file
                 String ID = "";
                 byte[] fileBytes = null;
                 try {
@@ -128,33 +145,38 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 } catch(ToxException e) {
                     Log.d("CreateAccount", e.getMessage());
                 }
+
                 CheckBox skipRegistration = (CheckBox) findViewById(R.id.skip_button);
                 if(skipRegistration.isChecked()) {
-// Login and launch
+                    // Login and launch
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("active_account", account);
                     editor.putString("nickname", account);
-                    editor.putString("status", "online");
+                    editor.putString("status", "1");
                     editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
                     editor.putString("tox_id", ID);
                     editor.putBoolean("loggedin", true);
                     editor.apply();
-/* Start Tox Service */
+
+                            /* Start Tox Service */
                     Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
                     getApplicationContext().startService(startTox);
-/* Launch main activity */
+
+                            /* Launch main activity */
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
+
                     setResult(RESULT_OK);
                     finish();
                 } else {
-/* Register Account using toxme.se API */
+                    /* Register Account using toxme.se API */
                     try {
                         System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
                     } catch (Exception e) {
                         Log.d("CreateAccount", "System.load() on kalium failed");
                     }
+
                     int allow = 0;
                     JSONPost jsonPost = new JSONPost();
                     Thread toxmeThread = new Thread(jsonPost);
@@ -166,26 +188,32 @@ public class CreateAcccountActivity extends ActionBarActivity{
                         unencryptedPayload.put("bio", "");
                         long epoch = System.currentTimeMillis() / 1000;
                         unencryptedPayload.put("timestamp", epoch);
+
                         Hex hexEncoder = new Hex();
                         Raw rawEncoder = new Raw();
+
                         String toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13";
                         byte[] serverPublicKey = hexEncoder.decode(toxmepk);
                         byte[] ourSecretKey = new byte[32];
                         System.arraycopy(fileBytes, 52, ourSecretKey, 0, 32);
+
                         Box box = new Box(serverPublicKey, ourSecretKey);
                         org.abstractj.kalium.crypto.Random random = new org.abstractj.kalium.crypto.Random();
                         byte[] nonce = random.randomBytes(24);
                         byte[] payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString()));
-// Encode payload and nonce to base64
+                        // Encode payload and nonce to base64
                         payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP);
                         nonce = Base64.encode(nonce, Base64.NO_WRAP);
+
                         String payload = rawEncoder.encode(payloadBytes);
                         String nonceString = rawEncoder.encode(nonce);
+
                         JSONObject json = new JSONObject();
                         json.put("action", 1);
                         json.put("public_key", ID.substring(0, 64));
                         json.put("encrypted", payload);
                         json.put("nonce", nonceString);
+
                         jsonPost.setJSON(json.toString());
                         toxmeThread.start();
                         toxmeThread.join();
@@ -193,13 +221,15 @@ public class CreateAcccountActivity extends ActionBarActivity{
                         Log.d("CreateAcccount", "JSON Exception " + e.getMessage());
                     } catch (InterruptedException e) {
                     }
+
                     String toastMessage = "";
                     Context context = getApplicationContext();
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast;
+
                     switch(jsonPost.getErrorCode()) {
                         case "0":
-// Login and launch
+                            // Login and launch
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("active_account", account);
@@ -209,28 +239,34 @@ public class CreateAcccountActivity extends ActionBarActivity{
                             editor.putString("tox_id", ID);
                             editor.putBoolean("loggedin", true);
                             editor.apply();
-/* Start Tox Service */
+
+                            /* Start Tox Service */
                             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
                             getApplicationContext().startService(startTox);
-/* Launch main activity */
+
+                            /* Launch main activity */
                             Intent main = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(main);
+
                             setResult(RESULT_OK);
                             finish();
                             break;
+
                         case "-25": // Name alrady taken
                             toastMessage = "This name is already taken";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
                             break;
+
                         case "-26":
-// ID already bound to a name
+                            // ID already bound to a name
                             toastMessage = "Internal Antox Error. Please restart and try again";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
                             break;
+
                         case "-4":
-// Rate limited
+                            // Rate limited
                             toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
@@ -240,11 +276,15 @@ public class CreateAcccountActivity extends ActionBarActivity{
             }
         }
     }
+
     private class JSONPost implements Runnable {
         private volatile String errorCode = "notdone";
         private String finaljson;
+
         public JSONPost() {
+
         }
+
         public void run() {
             HttpClient httpClient = new DefaultHttpClient();
             try {
@@ -275,13 +315,13 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 httpClient.getConnectionManager().shutdown();
             }
         }
+
         public synchronized String getErrorCode() {
             return errorCode;
         }
+
         public synchronized void setJSON(String json) {
             finaljson = json;
         }
     }
 }
-
-

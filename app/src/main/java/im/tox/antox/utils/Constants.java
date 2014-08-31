@@ -14,7 +14,6 @@ public final class Constants {
     public static final String DOWNLOAD_DIRECTORY = "Tox received files";
 
     //All DB Constants
-    public static String ACTIVE_DATABASE_NAME;
     public static final int DATABASE_VERSION = 1;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "messages";
