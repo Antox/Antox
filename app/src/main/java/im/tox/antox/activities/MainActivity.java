@@ -104,6 +104,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
                     getString(R.string.main_not_connected));
         }
+
         chat = (View) findViewById(R.id.fragment_chat);
         request = (View) findViewById(R.id.fragment_friendrequest);
         pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);

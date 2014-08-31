@@ -39,7 +39,8 @@
         android:hint="@string/create_name_hint"
         android:layout_width="200dp"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/create_password"
@@ -50,7 +51,8 @@
         android:inputType="textPassword"
         android:layout_marginTop="5dp"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/create_password_again"
@@ -61,7 +63,8 @@
         android:layout_width="200dp"
         android:inputType="textPassword"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        android:singleLine="true" />
 
         <CheckBox
             android:id="@+id/create_allow_search"
@@ -106,7 +109,8 @@
             android:layout_marginTop="10dp"
             android:onClick="onClickRegisterAccount"/>
 
-        <TextView
+        <CheckBox
+            android:id="@+id/skip_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/gray_darker"
@@ -114,7 +118,6 @@
             android:layout_marginTop="50dp"
             android:drawableBottom="@drawable/dotted"
             android:clickable="true"
-            android:onClick="onClickSkipRegistration"
             android:text="@string/create_skip"/>
 
     </LinearLayout>

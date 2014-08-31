@@ -170,8 +170,8 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
 
                         } else {
                             mData = mDataOriginal;
-                            ArrayList<LeftPaneItem> tempList1 = new ArrayList<>();
-                            ArrayList<LeftPaneItem> tempList2 = new ArrayList<>();
+                            ArrayList<LeftPaneItem> tempList1 = new ArrayList<LeftPaneItem>();
+                            ArrayList<LeftPaneItem> tempList2 = new ArrayList<LeftPaneItem>();
                             int length = mData.size();
                             int i = 0;
                             while (i < length) {

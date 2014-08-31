@@ -30,8 +30,8 @@ import im.tox.jtoxcore.ToxUserStatus;
 public class AntoxDB {
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        DatabaseHelper(Context context) {
-            super(context, Constants.ACTIVE_DATABASE_NAME, null, Constants.DATABASE_VERSION);
+        DatabaseHelper(Context context, String activeDatabase) {
+            super(context, activeDatabase, null, Constants.DATABASE_VERSION);
         }
         public String CREATE_TABLE_FRIENDS = "CREATE TABLE IF NOT EXISTS friends" +
                 " (tox_key text primary key, " +
@@ -78,13 +78,16 @@ public class AntoxDB {
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
     private Context ctx;
+    private String activeDatabase;
 
     public AntoxDB(Context ctx) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
         this.ctx = ctx;
+        this.activeDatabase = preferences.getString("active_account","");
     }
 
     public AntoxDB open(boolean writeable) throws SQLException {
-        mDbHelper = new DatabaseHelper(ctx);
+        mDbHelper = new DatabaseHelper(ctx, activeDatabase);
         if (writeable) {
             mDb = mDbHelper.getWritableDatabase();
         } else {
@@ -136,7 +139,7 @@ public class AntoxDB {
         this.close();
     }
 
-    public void addFileTransfer(String key, String path, int fileNumber, int size, boolean sending) {
+    public long addFileTransfer(String key, String path, int fileNumber, int size, boolean sending) {
         this.open(true);
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_NAME_KEY, key);
@@ -151,8 +154,9 @@ public class AntoxDB {
             values.put("type", Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND);
         }
         values.put("size", size);
-        mDb.insert(Constants.TABLE_CHAT_LOGS, null, values);
+        long id = mDb.insert(Constants.TABLE_CHAT_LOGS, null, values);
         this.close();
+        return id;
     }
 
     public void fileTransferStarted(String key, int fileNumber) {
