@@ -46,6 +46,7 @@ import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
+import im.tox.antox.utils.UserStatus;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxFileControl;
@@ -144,7 +145,7 @@ public class ToxSingleton {
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias));
+                    fi.add(new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias));
                 }
                 return fi;
             }
@@ -686,7 +687,7 @@ public class ToxSingleton {
             }
         }
 
-        /* Instansiate and register callback classes */
+        /* Instantiate and register callback classes */
         AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(ctx);
         AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(ctx);
         AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(ctx);
@@ -720,10 +721,7 @@ public class ToxSingleton {
             jTox.setStatusMessage(preferences.getString("status_message", ""));
             ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
             String newStatusString = preferences.getString("status", "");
-            if (newStatusString.equals("2"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_AWAY;
-            if (newStatusString.equals("3"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_BUSY;
+            newStatus = UserStatus.getToxUserStatusFromString(newStatusString);
             jTox.setUserStatus(newStatus);
         } catch (ToxException e) {
 

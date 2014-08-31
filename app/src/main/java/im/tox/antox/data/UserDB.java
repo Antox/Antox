@@ -45,7 +45,7 @@ public class UserDB extends SQLiteOpenHelper {
         values.put("username", username);
         values.put("password", password);
         values.put("nickname", username);
-        values.put("status", "1");
+        values.put("status", "online");
         values.put("status_message", "Hey! I'm using Antox");
         db.insert("users", null, values);
         db.close();

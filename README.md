@@ -28,6 +28,10 @@ PLEASE NOTE this app is still alpha and will contain bugs and missing features (
 ###Known To Work On
 For a list of which devices currently run Antox, visit our <a href="https://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a> Antox should support Android 2.2+. Please open an issue if you find yourself unable to so it can be fixed.
 
+###Translating Antox
+You can localize the application via github pull request or by requesting a new language or join an existing translation team on Transifex.
+Transifex page - https://www.transifex.com/projects/p/antox/
+
 ###Compiling Antox From Source
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1

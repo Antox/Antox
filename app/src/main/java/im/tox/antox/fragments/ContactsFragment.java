@@ -16,10 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +24,6 @@ import java.util.Comparator;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
-import im.tox.antox.activities.MainActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -96,7 +92,7 @@ public class ContactsFragment extends Fragment {
                     lastLetter = friends_list[i].friendName.substring(0,1);
                 }
 
-                LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].icon, friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
+                LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].isOnline, friends_list[i].getFriendStatusAsToxUserStatus(), friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
         }
