@@ -20,6 +20,15 @@
             android:background="@android:color/transparent"
             android:src="@drawable/abc_ic_ab_back_holo_dark"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/chat_friend_status_icon"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:background="@color/green"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_weight="1"

@@ -16,15 +16,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TimeZone;
 
-import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
 import im.tox.antox.utils.Tuple;
+import im.tox.antox.utils.UserStatus;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -371,7 +370,7 @@ public class AntoxDB {
     }
     public Cursor getRecentCursor() {
         this.open(false);
-        String selectQuery = "SELECT f.tox_key, f.username, f.isonline, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
+        String selectQuery = "SELECT f.tox_key, f.username, f.isonline, f.status, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
                 "FROM " + Constants.TABLE_FRIENDS + " f " +
                 "INNER JOIN " + Constants.TABLE_CHAT_LOGS + " m1 ON (f.tox_key = m1.tox_key) " +
                 "LEFT OUTER JOIN (SELECT tox_key FROM " + Constants.TABLE_CHAT_LOGS + " WHERE ((type = 2 OR type = 4) AND has_been_read = 0)) " +
@@ -509,7 +508,7 @@ public class AntoxDB {
                 String status = cursor.getString(2);
                 String note = cursor.getString(3);
                 String alias = cursor.getString(4);
-                int online = cursor.getInt(5);
+                boolean isOnline = cursor.getInt(5) != 0 ;
                 boolean isBlocked = cursor.getInt(6)>0;
 
                 if(alias == null)
@@ -521,7 +520,7 @@ public class AntoxDB {
                     name = key.substring(0,7);
 
                 if(!isBlocked)
-                    friendList.add(new Friend(online, name, status, note, key, alias));
+                    friendList.add(new Friend(isOnline, name, status, note, key, alias));
 
             } while (cursor.moveToNext());
         }
@@ -609,12 +608,7 @@ public class AntoxDB {
     public void updateUserStatus(String key, ToxUserStatus status) {
         this.open(false);
         ContentValues values = new ContentValues();
-        String tmp = "";
-        if (status == ToxUserStatus.TOX_USERSTATUS_BUSY) {
-            tmp = "busy";
-        } else if (status == ToxUserStatus.TOX_USERSTATUS_AWAY) {
-            tmp = "away";
-        }
+        String tmp = UserStatus.getStringFromToxUserStatus(status);
         values.put(Constants.COLUMN_NAME_STATUS, tmp);
         mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null);
         this.close();

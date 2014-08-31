@@ -2,7 +2,6 @@ package im.tox.antox.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -121,7 +120,7 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
                 holder.countText.setVisibility(View.GONE);
             }
             holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false));
-            holder.icon.setBackgroundColor(Color.parseColor(IconColor.iconColor(item.icon)));
+            holder.icon.setBackgroundColor(IconColor.iconColorAsColor(item.isOnline,item.status));
         }
 
         Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
