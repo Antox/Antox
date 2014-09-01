@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -189,7 +190,7 @@ public class ContactsFragment extends Fragment {
                     items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
                             getResources().getString(R.string.friend_action_delete),
-                            getResources().getString(R.string.friend_action_deletechat),
+                            getResources().getString(R.string.friend_action_delete_chat),
                             getResources().getString(R.string.friend_action_block)
                     };
                 }
@@ -262,14 +263,12 @@ public class ContactsFragment extends Fragment {
                                                 startActivity(profile);
                                                 break;
                                             case 1:
-                                                //Delete friend
+                                                // Delete friend
                                                 showDeleteFriendDialog(getActivity(), key);
                                                 break;
                                             case 2:
-                                                AntoxDB db = new AntoxDB(getActivity());
-                                                db.deleteChat(key);
-                                                db.close();
-                                                toxSingleton.updateMessages(getActivity());
+                                                // Delete chat logs
+                                                showDeleteChatDialog(getActivity(), key);
                                                 break;
                                             case 3:
                                                 showBlockDialog(getActivity(), key);
@@ -313,7 +312,7 @@ public class ContactsFragment extends Fragment {
     public void showBlockDialog(final Context context, String fkey) {
         final String key = fkey;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(getResources().getString(R.string.friend_action_block_confirmation))
+        builder.setMessage(getResources().getString(R.string.friend_action_block_friend_confirmation))
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.button_yes),
                         new DialogInterface.OnClickListener() {
@@ -337,77 +336,77 @@ public class ContactsFragment extends Fragment {
 
     public void showDeleteFriendDialog(Context context, String fkey) {
         final String key= fkey;
+        View delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend,null);
+        final CheckBox deleteLogsCheckboxView = (CheckBox) delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(getResources().getString(R.string.contacts_clear_saved_logs))
+        builder//.setMessage(getResources().getString(R.string.friend_action_delete_friend_confirmation))
+                .setView(delete_friend_dialog)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        class DeleteFriendAndChat extends AsyncTask<Void, Void, Void> {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                AntoxDB db = new AntoxDB(getActivity());
+                                if (deleteLogsCheckboxView.isChecked())
+                                    db.deleteChat(key);
+                                db.deleteFriend(key);
+                                db.close();
+                                // Remove friend from tox friend list
+                                AntoxFriend friend = toxSingleton.getAntoxFriend(key);
+                                if (friend != null) {
+
+                                    try {
+                                        toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
+                                    } catch (ToxException e) {
+                                    }
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void result) {
+                                toxSingleton.updateFriendsList(getActivity());
+                                toxSingleton.updateMessages(getActivity());
+                            }
+                        }
+
+                        new DeleteFriendAndChat().execute();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+      builder.show();
+    }
+
+    public void showDeleteChatDialog(Context context, String fkey) {
+        final String key= fkey;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(getResources().getString(R.string.friend_action_delete_chat_confirmation))
                 .setCancelable(false)
                 .setPositiveButton(getResources().getString(R.string.button_yes),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                class DeleteFriendAndChat extends AsyncTask<Void, Void, Void> {
-                                    @Override
-                                    protected Void doInBackground(Void... params) {
-                                        AntoxDB db = new AntoxDB(getActivity());
-                                        db.deleteChat(key);
-                                        db.deleteFriend(key);
-                                        db.close();
-                                        // Remove friend from tox friend list
-                                        AntoxFriend friend = toxSingleton.getAntoxFriend(key);
-                                        if (friend != null) {
-
-                                            try {
-                                                toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
-                                            } catch (ToxException e) {
-                                            }
-                                        }
-                                        return null;
-                                    }
-                                    @Override
-                                    protected void onPostExecute(Void result) {
-                                        toxSingleton.updateFriendsList(getActivity());
-                                        toxSingleton.updateMessages(getActivity());
-                                    }
-                                }
-
-                                new DeleteFriendAndChat().execute();
+                                AntoxDB db = new AntoxDB(getActivity());
+                                db.deleteChat(key);
+                                db.close();
+                                toxSingleton.updateMessages(getActivity());
                             }
-                        }
-                )
+                        })
                 .setNegativeButton(getResources().getString(R.string.button_no),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                class DeleteFriend extends AsyncTask<Void, Void, Void> {
-                                    @Override
-                                    protected Void doInBackground(Void... params) {
-                                        AntoxDB db = new AntoxDB(getActivity());
-                                        db.deleteFriend(key);
-                                        db.close();
-                                        // Remove friend from tox friend list
-                                        AntoxFriend friend = toxSingleton.getAntoxFriend(key);
-                                        if (friend != null) {
-
-                                            try {
-                                                toxSingleton.jTox.deleteFriend(friend.getFriendnumber());
-                                            } catch (ToxException e) {
-                                            }
-                                        }
-
-                                        return null;
-                                    }
-                                    @Override
-                                    protected void onPostExecute(Void result) {
-                                        toxSingleton.updateFriendsList(getActivity());
-                                    }
-                                }
-
-                                new DeleteFriend().execute();
                             }
                         }
                 );
         builder.show();
     }
-
     private class NameComparator implements Comparator<FriendInfo> {
         @Override
         public int compare(FriendInfo a, FriendInfo b) {
