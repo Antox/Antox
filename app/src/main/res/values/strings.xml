@@ -103,18 +103,26 @@
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
+    <string name="friend_action_delete_chat">Delete chat logs</string>
     <string name="friend_action_move_to_group">Move to Group</string>
     <string name="friend_action_block">Block</string>
     <string name="friend_action_unblock">Unblock</string>
     <string name="group_action_leave">Leave Group</string>
-    <string name="friend_action_deletechat">Delete Chat Logs</string>
-    <string name="friend_action_block_confirmation">        Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. Are you sure you wish to continue?</string>
     <string name="toast_succ_move_user">Contact has been moved successfully</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
     <string name="contacts_delimiter_requests">Requests</string>
     <string name="contacts_delimiter_friends">Friends</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Are you sure you want to delete the chat logs?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
+        requests from them.\n\nAre you sure you wish to continue?</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
