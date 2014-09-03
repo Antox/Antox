@@ -265,10 +265,11 @@ public class ChatFragment extends Fragment {
                                                     total += 4;
 
                                                 if(numberOfMessagesSent == numOfMessages-1) {
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous), id);
+                                                    // TODO: fix id's since withid was removed
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous));
                                                     break;
                                                 } else if(total >= 1366) {
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i), id);
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i));
                                                     numberOfMessagesSent++;
                                                     previous = i;
                                                     total = 0;
@@ -276,7 +277,7 @@ public class ChatFragment extends Fragment {
                                             }
 
                                         } else {
-                                            toxSingleton.jTox.sendMessage(friend, msg, id);
+                                            toxSingleton.jTox.sendMessage(friend, msg);
                                         }
 
                                     } catch (ToxException e) {

@@ -41,6 +41,7 @@ import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.utils.AntoxFriendList;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 
 public class CreateAcccountActivity extends ActionBarActivity{
@@ -117,15 +118,11 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             } else {
-                // Load tox libraries
                 try {
-                    System.load("/data/data/im.tox.antox/lib/libsodium.so");
-                    System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+                    System.load("/data/data/im.tox.antox/lib/libtox.so");
                 } catch (Exception e) {
-                    Log.d("CreateAccount", "Failed System.load()");
-                    e.printStackTrace();
+                    Log.d("CreateAccount", e.getMessage());
                 }
-
 
                 // Add user to DB
                 UserDB db = new UserDB(this);
@@ -137,7 +134,11 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    JTox jTox = new JTox(antoxFriendList, callbackHandler);
+                    ToxOptions toxOptions = new ToxOptions();
+                    toxOptions.setUdpEnabled(false);
+                    toxOptions.setIpv6Enabled(true);
+                    toxOptions.setProxyEnabled(false);
+                    JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());
                     ID = jTox.getAddress();
