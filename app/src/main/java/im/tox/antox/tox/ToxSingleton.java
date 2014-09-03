@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 import im.tox.antox.callbacks.AntoxOnActionCallback;
+import im.tox.antox.callbacks.AntoxOnAudioDataCallback;
+import im.tox.antox.callbacks.AntoxOnAvCallbackCallback;
 import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
 import im.tox.antox.callbacks.AntoxOnFileControlCallback;
 import im.tox.antox.callbacks.AntoxOnFileDataCallback;
@@ -34,6 +36,7 @@ import im.tox.antox.callbacks.AntoxOnReadReceiptCallback;
 import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
+import im.tox.antox.callbacks.AntoxOnVideoDataCallback;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
@@ -694,6 +697,10 @@ public class ToxSingleton {
         AntoxOnFileSendRequestCallback antoxOnFileSendRequestCallback = new AntoxOnFileSendRequestCallback(ctx);
         AntoxOnFileControlCallback antoxOnFileControlCallback = new AntoxOnFileControlCallback(ctx);
         AntoxOnFileDataCallback antoxOnFileDataCallback = new AntoxOnFileDataCallback(ctx);
+
+        AntoxOnAudioDataCallback antoxOnAudioDataCallback = new AntoxOnAudioDataCallback(ctx);
+        AntoxOnAvCallbackCallback antoxOnAvCallbackCallback = new AntoxOnAvCallbackCallback(ctx);
+        AntoxOnVideoDataCallback antoxOnVideoDataCallback = new AntoxOnVideoDataCallback(ctx);
 
         callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
         callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
