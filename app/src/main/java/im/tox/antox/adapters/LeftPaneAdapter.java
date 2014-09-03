@@ -123,23 +123,9 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
             holder.icon.setBackgroundColor(IconColor.iconColorAsColor(item.isOnline,item.status));
         }
 
-        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
-
-        if(holder.firstText != null)
-            holder.firstText.setTypeface(robotoRegular);
-
-        if(holder.secondText != null)
-            holder.secondText.setTypeface(robotoRegular);
-
         if(holder.timeText != null) {
-            holder.timeText.setTypeface(robotoRegular);
             holder.timeText.setTextColor(context.getResources().getColor(R.color.gray_darker));
         }
-
-        if(holder.countText != null)
-            holder.countText.setTypeface(robotoRegular);
 
         return convertView;
     }

@@ -148,10 +148,6 @@ public class ChatFragment extends Fragment {
                         }
                     }
 
-                    Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
-                    Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
-                    Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
-
                     TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
                     if (!friendAlias.equals(""))
                         chatName.setText(friendAlias);
@@ -163,9 +159,6 @@ public class ChatFragment extends Fragment {
 
                     TextView statusIcon = (TextView) getActivity().findViewById(R.id.chat_friend_status_icon);
                     statusIcon.setBackgroundColor(IconColor.iconColorAsColor(friendIsOnline,friendStatus));
-
-                    chatName.setTypeface(robotoBold);
-                    statusText.setTypeface(robotoRegular);
                 }
             }
         });
