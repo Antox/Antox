@@ -102,10 +102,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         holder.accept = (View) view.findViewById(R.id.file_accept_button);
         holder.reject = (View) view.findViewById(R.id.file_reject_button);
 
-        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
-
         holder.message.setTextSize(16);
         holder.message.setVisibility(View.GONE);
         holder.time.setVisibility(View.GONE);
@@ -154,7 +150,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
 
                 holder.title.setVisibility(View.VISIBLE);
                 holder.title.setText(R.string.chat_file_transfer);
-                holder.title.setTypeface(robotoBold);
 
                 if (msg.received) {
                     holder.progressText.setText("Finished");
@@ -275,8 +270,6 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
         }
 
         holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true));
-        holder.message.setTypeface(robotoRegular);
-        holder.time.setTypeface(robotoRegular);
         holder.time.setVisibility(View.VISIBLE);
 
         if (!animatedIds.contains(id)) {

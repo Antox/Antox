@@ -62,16 +62,6 @@ public class RecentAdapter extends ResourceCursorAdapter {
             holder.unreadCount.setVisibility(View.VISIBLE);
         }
 
-        Typeface robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
-
-        holder.friendName.setTypeface(robotoRegular);
-        holder.friendStatus.setTypeface(robotoRegular);
-        holder.timestamp.setTypeface(robotoRegular);
-        holder.timestamp.setTextColor(context.getResources().getColor(R.color.gray_darker));
-        holder.unreadCount.setTypeface(robotoRegular);
-
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
