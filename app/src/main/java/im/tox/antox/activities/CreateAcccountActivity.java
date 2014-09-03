@@ -118,12 +118,6 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             } else {
-                try {
-                    System.load("/data/data/im.tox.antox/lib/libtox.so");
-                } catch (Exception e) {
-                    Log.d("CreateAccount", e.getMessage());
-                }
-
                 // Add user to DB
                 UserDB db = new UserDB(this);
                 db.addUser(account, password1);
@@ -134,10 +128,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    ToxOptions toxOptions = new ToxOptions();
-                    toxOptions.setUdpEnabled(false);
-                    toxOptions.setIpv6Enabled(true);
-                    toxOptions.setProxyEnabled(false);
+                    ToxOptions toxOptions = new ToxOptions(true, false, false);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());

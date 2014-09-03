@@ -628,23 +628,13 @@ public class ToxSingleton {
     }
 
     public void initTox(Context ctx) {
-
-        try {
-            System.load("/data/data/im.tox.antox/lib/libtox.so");
-        } catch (Exception e) {
-            Log.d("CreateAccount", e.getMessage());
-        }
-
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
 
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
-        ToxOptions options = new ToxOptions();
-        options.setIpv6Enabled(true);
-        options.setUdpEnabled(false);
-        options.setProxyEnabled(false);
+        ToxOptions options = new ToxOptions(true, false, false);
 
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {
