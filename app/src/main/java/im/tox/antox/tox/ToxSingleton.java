@@ -50,6 +50,7 @@ import im.tox.antox.utils.UserStatus;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxFileControl;
+import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 import rx.Observable;
@@ -564,7 +565,8 @@ public class ToxSingleton {
                 }
                 try {
                     if (friend != null) {
-                        jTox.sendMessage(friend, unsentMessageList.get(i).message, id);
+                        // TODO: fix for withid change
+                        jTox.sendMessage(friend, unsentMessageList.get(i).message);
                     }
                 } catch (ToxException e) {
                     Log.d(TAG, e.toString());
@@ -628,13 +630,10 @@ public class ToxSingleton {
     public void initTox(Context ctx) {
 
         try {
-            System.load("/data/data/im.tox.antox/lib/libsodium.so");
-            System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
+            System.load("/data/data/im.tox.antox/lib/libtox.so");
         } catch (Exception e) {
-            Log.d(TAG, "Failed System.load()");
-            e.printStackTrace();
+            Log.d("CreateAccount", e.getMessage());
         }
-
 
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
@@ -642,10 +641,15 @@ public class ToxSingleton {
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
+        ToxOptions options = new ToxOptions();
+        options.setIpv6Enabled(true);
+        options.setUdpEnabled(false);
+        options.setProxyEnabled(false);
+
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {
             try {
-                jTox = new JTox(antoxFriendList, callbackHandler);
+                jTox = new JTox(antoxFriendList, callbackHandler, options);
                 /* Save data file */
                 dataFile.saveFile(jTox.save());
                 /* Save users public key to settings */
@@ -658,7 +662,7 @@ public class ToxSingleton {
             }
         } else {
             try {
-                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler, options);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("tox_id", jTox.getAddress());
