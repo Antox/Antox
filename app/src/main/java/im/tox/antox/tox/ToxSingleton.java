@@ -637,7 +637,7 @@ public class ToxSingleton {
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
-        ToxOptions options = new ToxOptions(true, false, false);
+        ToxOptions options = new ToxOptions(true, true, false);
 
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {
@@ -714,6 +714,9 @@ public class ToxSingleton {
         callbackHandler.registerOnFileSendRequestCallback(antoxOnFileSendRequestCallback);
         callbackHandler.registerOnFileControlCallback(antoxOnFileControlCallback);
         callbackHandler.registerOnFileDataCallback(antoxOnFileDataCallback);
+        callbackHandler.registerOnAudioDataCallback(antoxOnAudioDataCallback);
+        callbackHandler.registerOnAvCallbackCallback(antoxOnAvCallbackCallback);
+        callbackHandler.registerOnVideoDataCallback(antoxOnVideoDataCallback);
 
         /* Load user details */
         try {
