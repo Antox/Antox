@@ -128,7 +128,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    ToxOptions toxOptions = new ToxOptions(true, false, false);
+                    ToxOptions toxOptions = new ToxOptions(true, true, false);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());

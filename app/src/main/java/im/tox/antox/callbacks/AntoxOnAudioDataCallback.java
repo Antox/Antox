@@ -1,6 +1,7 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
+import android.util.Log;
 
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnAudioDataCallback;
@@ -17,6 +18,6 @@ public class AntoxOnAudioDataCallback implements OnAudioDataCallback<AntoxFriend
     }
 
     public void execute(int callID, byte[] data) {
-
+        Log.d("OnAudioDataCallback", "Received callback from: " + callID);
     }
 }

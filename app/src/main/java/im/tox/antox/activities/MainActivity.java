@@ -26,10 +26,14 @@ import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.fragments.DialogToxID;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
+import im.tox.jtoxcore.ToxCallType;
+import im.tox.jtoxcore.ToxCodecSettings;
+import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -171,7 +175,19 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     }
 
     public void onClickVoiceCallFriend(View v) {
-
+        /** Curent error when using this code
+         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ JNI WARNING: JNI method called with exception pending
+         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ in Lim/tox/jtoxcore/JTox;.toxav_call:(JILim/tox/jtoxcore/ToxCodecSettings;I)I (GetFieldID)
+         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ Pending exception is:
+         *   09-04 03:05:12.075  13525-13525/im.tox.antox I/dalvikvm﹕ java.lang.NoSuchFieldError: no field with name='call_type' signature='Lim/tox/jtoxcore/ToxCodecSettings' in class Lim/tox/jtoxcore/ToxCodecSettings;
+         */
+        ToxCodecSettings toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 0, 0, 0, 64000, 20, 48000, 1);
+        AntoxFriend friend = toxSingleton.getAntoxFriend(toxSingleton.activeKey);
+        int userID = friend.getFriendnumber();
+        try {
+            toxSingleton.jTox.avCall(userID, toxCodecSettings, 10);
+        } catch (ToxException e) {
+        }
     }
 
     public void onClickVideoCallFriend(View v) {
