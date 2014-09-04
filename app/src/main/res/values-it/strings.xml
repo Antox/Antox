@@ -102,21 +102,29 @@
     <string name="friend_action_profile">Profilo</string>
     <string name="friend_action_sendfile">Invia file</string>
     <string name="friend_action_delete">Rimuovi contatto</string>
+    <string name="friend_action_delete_chat">Elimina chat</string>
     <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
     <string name="friend_action_block">Blocca</string>
     <string name="friend_action_unblock">Sblocca</string>
-    <string name="friend_action_deletechat">Elimina chat</string>
-    <string name="friend_action_block_confirmation">
-        Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
-        richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
-    </string>
     <string name="toast_succ_move_user">Spostamento riuscito</string>
     <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
     <string name="contacts_delimiter_requests">Richieste d\'amicizia</string>
     <string name="contacts_delimiter_friends">Contatti</string>
-    
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Sei sicuro di voler eliminare la chat?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">
+        Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
+        richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
+    </string>
+
     <!-- Chat Fragment -->
     <string name="attachment_photo">Allega foto</string>
     <string name="attachment_takephoto">Scatta foto</string>
