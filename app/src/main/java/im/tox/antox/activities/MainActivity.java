@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -69,6 +70,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Pressing the volume keys will affect STREAM_MUSIC played from this app
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -175,12 +179,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     }
 
     public void onClickVoiceCallFriend(View v) {
-        /** Curent error when using this code
-         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ JNI WARNING: JNI method called with exception pending
-         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ in Lim/tox/jtoxcore/JTox;.toxav_call:(JILim/tox/jtoxcore/ToxCodecSettings;I)I (GetFieldID)
-         *   09-04 03:05:12.075  13525-13525/im.tox.antox W/dalvikvm﹕ Pending exception is:
-         *   09-04 03:05:12.075  13525-13525/im.tox.antox I/dalvikvm﹕ java.lang.NoSuchFieldError: no field with name='call_type' signature='Lim/tox/jtoxcore/ToxCodecSettings' in class Lim/tox/jtoxcore/ToxCodecSettings;
-         */
         ToxCodecSettings toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 0, 0, 0, 64000, 20, 48000, 1);
         AntoxFriend friend = toxSingleton.getAntoxFriend(toxSingleton.activeKey);
         int userID = friend.getFriendnumber();
