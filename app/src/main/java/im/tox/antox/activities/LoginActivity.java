@@ -68,6 +68,7 @@ public class LoginActivity extends ActionBarActivity {
             if(db.login(account)) {
                 /* Set that we're logged in and active user's details*/
                 String[] details = db.getUserDetails(account);
+                db.close();
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean("loggedin", true);
@@ -93,8 +94,6 @@ public class LoginActivity extends ActionBarActivity {
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
             }
-
-            db.close();
         }
     }
 

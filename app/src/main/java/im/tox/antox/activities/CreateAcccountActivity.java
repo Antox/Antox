@@ -110,6 +110,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 // Add user to DB
                 UserDB db = new UserDB(this);
                 db.addUser(account, "");
+                db.close();
 
                 // Create a tox data file
                 String ID = "";
