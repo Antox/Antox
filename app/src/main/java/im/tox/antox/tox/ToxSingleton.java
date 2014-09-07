@@ -723,7 +723,7 @@ public class ToxSingleton {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
             jTox.setName(preferences.getString("nickname", ""));
             jTox.setStatusMessage(preferences.getString("status_message", ""));
-            ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
+            ToxUserStatus newStatus;
             String newStatusString = preferences.getString("status", "");
             newStatus = UserStatus.getToxUserStatusFromString(newStatusString);
             jTox.setUserStatus(newStatus);
@@ -740,27 +740,13 @@ public class ToxSingleton {
             try {
                 if(DhtNode.ipv4.size() == 0)
                     new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
-                /* Try and bootstrap to online nodes*/
-                while (DhtNode.connected == false) {
-                    try {
-                        if (DhtNode.ipv4.size() > 0) {
-                            try {
-                                jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
-                                        Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
-                                Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
-                                DhtNode.connected = true;
-                            } catch (ToxException e) {
 
-                            }
-                        }
-                    } catch (UnknownHostException e) {
-                        DhtNode.counter = DhtNode.counter >= DhtNode.ipv4.size() ? 0 : DhtNode.counter++;
-                    }
+                /* Attempt to connect to all the nodes */
+                for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                    jTox.bootstrap(DhtNode.ipv4.get(i), Integer.parseInt(DhtNode.port.get(0)), DhtNode.key.get(0));
                 }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            } catch (Exception e) {
             }
         }
 
