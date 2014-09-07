@@ -62,11 +62,14 @@ public class UserDB extends SQLiteOpenHelper {
         cursor.moveToFirst();
         int count = cursor.getInt(0);
         cursor.close();
+        db.close();
 
         if(count > 0)
             return true;
 
         return false;
+
+
     }
 
     public String[] getUserDetails(String username) {
