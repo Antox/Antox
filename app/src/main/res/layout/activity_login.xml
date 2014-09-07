@@ -29,22 +29,9 @@
                android:gravity="center"
                android:layout_gravity="center"
                android:textColor="@color/black"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="50dp"
                android:hint="@string/login_account_hint"
                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/login_password"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:gravity="center"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/black"
-                android:background="@drawable/edittextbackground"
-                android:layout_gravity="center"
-                android:inputType="textPassword"
-                android:hint="@string/login_password_hint"
-                android:singleLine="true" />
 
             <Button
                 android:id="@+id/login_login_button"

@@ -52,12 +52,10 @@ public class LoginActivity extends ActionBarActivity {
     public void onClickLogin(View view) {
 
         EditText accountNameField = (EditText) findViewById(R.id.login_account_name);
-        EditText passwordField = (EditText) findViewById(R.id.login_password);
 
         String account = accountNameField.getText().toString();
-        String password = passwordField.getText().toString();
 
-        if (account.equals("") || password.equals("")) {
+        if (account.equals("")) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.login_must_fill_in);
             int duration = Toast.LENGTH_SHORT;
@@ -67,7 +65,7 @@ public class LoginActivity extends ActionBarActivity {
             /* Attempt to login */
             UserDB db = new UserDB(this);
 
-            if(db.login(account, password)) {
+            if(db.login(account)) {
                 /* Set that we're logged in and active user's details*/
                 String[] details = db.getUserDetails(account);
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
