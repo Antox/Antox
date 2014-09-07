@@ -54,21 +54,16 @@ public class UserDB extends SQLiteOpenHelper {
     /**
      * Checks to see if the user details are correct
      * @param username - username of user
-     * @param password - password of user
      * @return - true if details were correct, false otherwise
      */
-    public boolean login(String username, String password) {
+    public boolean login(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT password FROM users WHERE username='" + username + "'";
-        Cursor cursor = db.rawQuery(query, null);
-        String realPassword = "";
-        if(cursor.moveToFirst()) {
-            realPassword = cursor.getString(0);
-        }
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM users WHERE username='" + username + "'", null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
         cursor.close();
-        db.close();
 
-        if(realPassword.equals(password))
+        if(count > 0)
             return true;
 
         return false;

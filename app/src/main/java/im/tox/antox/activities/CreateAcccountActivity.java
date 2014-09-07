@@ -97,30 +97,19 @@ public class CreateAcccountActivity extends ActionBarActivity{
 
     public void onClickRegisterAccount(View view) {
         EditText accountField = (EditText) findViewById(R.id.create_account_name);
-        EditText password1Field = (EditText) findViewById(R.id.create_password);
-        EditText password2Field = (EditText) findViewById(R.id.create_password_again);
 
         String account = accountField.getText().toString();
-        String password1 = password1Field.getText().toString();
-        String password2 = password2Field.getText().toString();
 
-        if(account.equals("") || password1.equals("") || password2.equals("")) {
+        if(account.equals("")) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.create_must_fill_in);
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-            if(!password1.equals(password2)) {
-                Context context = getApplicationContext();
-                CharSequence text = getString(R.string.create_password_bad_match);
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-            } else {
                 // Add user to DB
                 UserDB db = new UserDB(this);
-                db.addUser(account, password1);
+                db.addUser(account, "");
 
                 // Create a tox data file
                 String ID = "";
@@ -128,7 +117,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    ToxOptions toxOptions = new ToxOptions(true, true, false);
+                    ToxOptions toxOptions = new ToxOptions(false, true, false);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());
@@ -139,7 +128,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 }
 
                 CheckBox skipRegistration = (CheckBox) findViewById(R.id.skip_button);
-                if(skipRegistration.isChecked()) {
+                if(!skipRegistration.isChecked()) {
                     // Login and launch
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = preferences.edit();
@@ -265,7 +254,6 @@ public class CreateAcccountActivity extends ActionBarActivity{
                             break;
                     }
                 }
-            }
         }
     }
 
