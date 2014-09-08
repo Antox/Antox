@@ -20,7 +20,7 @@
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
 
-    <string name="pref_title_account_name">Nome Account</string>
+    <string name="pref_title_account_name">Nome Profilo</string>
     <string name="pref_title_logout">Logout</string>
 
     <!-- Notifications -->

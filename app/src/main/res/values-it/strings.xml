@@ -35,26 +35,21 @@
     <string name="reject_caps">RIFIUTA</string>
 
     <!-- Login Activity -->
-    <string name="login_must_fill_in">Devi compilare entrambi i campi</string>
+    <string name="login_must_fill_in">Devi inserire un nome profilo</string>
     <string name="login_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="login_getstarted_string">Inserisci il nome che verrà visualizzato dai tuoi contatti</string>
-    <string name="login_name_hint">nickname</string>
     <string name="login_login">Login</string>
-    <string name="login_developer_string">Sviluppato con amore da Astonex</string>
-    <string name="login_password_hint">password</string>
-    <string name="login_account_hint">nome account</string>
-    <string name="login_new_text">Sei un nuovo utente Antox?</string>
-    <string name="login_create_account_text">Crea un account</string>
+    <string name="login_account_hint">nome profilo</string>
+    <string name="login_create_account_text">Crea un profilo Tox</string>
     <string name="login_already_have_account">Hai già un account?</string>
-    <string name="login_bad_login">Il nome utente o la password non è corretto</string>
+    <string name="login_bad_login">Il nome profilo non è corretto</string>
 
     <!-- Create Account Activity -->
-    <string name="create_name_hint">Nome Account</string>
+    <string name="create_name_hint">Nome Profilo</string>
     <string name="create_password_hint">Password</string>
     <string name="create_password_again_hint">Conferma Password</string>
-    <string name="create_text">Crea un nouvo account Antox</string>
+    <string name="create_text">Crea un nouvo profilo Tox\nOgni profilo ha il suo Tox ID personale</string>
     <string name="create_register">Registrazione</string>
-    <string name="create_skip">Salta registrazione (utenti esperti)</string>
+    <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
     <string name="create_password_bad_match">Le passwords non corrispondono</string>
     <string name="create_allow_search">Includi il mio account nei risultati delle ricerche degli altri utenti</string>
