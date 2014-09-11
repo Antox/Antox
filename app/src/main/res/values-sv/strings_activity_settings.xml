@@ -1,84 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <string name="title_activity_settings">Inställningar</string>
-
-    <!-- Profile -->
-    <string name="pref_header_profile">Profil</string>
-
-    <string name="pref_title_nickname">Namn</string>
-    <string name="pref_default_nickname">Antoxanvändare</string>
-
-    <string name="pref_title_status">Status</string>
-    <string-array name="pref_status_list_titles">
-        <item>Online</item>
-        <item>Borta</item>
-        <item>Upptagen</item>
-    </string-array>
-    <string-array name="pref_status_list_values" translatable="false">
-        <item>online</item>
-        <item>away</item>
-        <item>busy</item>
-    </string-array>
-
-    <string name="pref_title_status_message">Statusmeddelande</string>
-    <string name="pref_default_status_message">Hey! Jag använder Antox</string>
-
-    <string name="pref_title_tox_id">Tox ID</string>
-    <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
-
-    <string name="pref_title_account_name">Kontonamn</string>
-    <string name="pref_title_logout">Logga ut</string>
-
-    <!-- Notifications -->
-    <string name="pref_header_notifications">Aviseringar</string>
-
-    <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
-    <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
-    <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
-    <string name="pref_title_action_messages">Handlingsmeddelanden</string>
-
-    <string name="pref_title_ringtone">Ringsignal</string>
-    <string name="pref_ringtone_silent">Tyst</string>
-
-    <string name="pref_title_vibrate">Vibrera</string>
-
-    <!-- Other -->
-    <string name="pref_header_other">Annat</string>
-
-    <string name="pref_title_language">Språk</string>
-    <string-array name="pref_language_list_titles" translatable="false">
-        <item>English</item>
-        <item>Deutsch</item>
-        <item>Español</item>
-        <item>Français</item>
-        <item>Italiano</item>
-        <item>Nederlands</item>
-        <item>Polski</item>
-        <item>Svenska</item>
-        <item>Türkçe</item>
-        <item>Русский</item>
-        <item>Український</item>
-        <item>Português</item>
-    </string-array>
-    <string-array name="pref_language_list_values" translatable="false">
-        <item>en</item>
-        <item>de</item>
-        <item>es</item>
-        <item>fr</item>
-        <item>it</item>
-        <item>nl</item>
-        <item>pl</item>
-        <item>sv</item>
-        <item>tr</item>
-        <item>ru</item>
-        <item>uk</item>
-        <item>pt</item>
-    </string-array>
-
-    <!-- Menu strings -->
-    <string name="copy_tox_id">Kopiera Tox ID</string>
-
-    <!-- Advanced strings -->
-    <string name="pref_advanced">Avancerat</string>
-    <string name="pref_nospam">Nospam</string>
-
+  <string name="title_activity_settings">Inställningar</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Namn</string>
+  <string name="pref_default_nickname">Antoxanvändare</string>
+  <string name="pref_title_status">Status</string>
+  <string-array name="pref_status_list_titles">
+    <item>Online</item>
+    <item>Borta</item>
+    <item>Upptagen</item>
+  </string-array>
+  <string name="pref_title_status_message">Statusmeddelande</string>
+  <string name="pref_default_status_message">Hey! Jag använder Antox</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
+  <string name="pref_title_account_name">Profilnamn</string>
+  <string name="pref_title_logout">Logga ut</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Aviseringar</string>
+  <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
+  <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
+  <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
+  <string name="pref_title_action_messages">Handlingsmeddelanden</string>
+  <string name="pref_title_ringtone">Ringsignal</string>
+  <string name="pref_ringtone_silent">Tyst</string>
+  <string name="pref_title_vibrate">Vibrera</string>
+  <!--Other-->
+  <string name="pref_header_other">Annat</string>
+  <string name="pref_title_language">Språk</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Kopiera Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_advanced">Avancerat</string>
+  <string name="pref_nospam">Nospam</string>
 </resources>

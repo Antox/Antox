@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Ajuste</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Retrato</string>
+  <string name="pref_title_nickname">Nombre</string>
+  <string name="pref_default_nickname">Usuario de Antox</string>
+  <string name="pref_title_status">Estado</string>
+  <string-array name="pref_status_list_titles">
+    <item>Conectado</item>
+    <item>Ausente</item>
+    <item>Ocupado</item>
+  </string-array>
+  <string name="pref_title_status_message">Mensaje de Estado</string>
+  <string name="pref_default_status_message">Hola! Estoy usando Antox</string>
+  <string name="pref_title_tox_id">Identificación del Tox</string>
+  <string name="pref_default_tox_id">Por defecto Tox ID - Usted no debe ver esto</string>
+  <string name="pref_title_logout">Salir</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Notificaciones</string>
+  <string name="pref_title_enable_notifications">Activar notificaciones</string>
+  <string name="pref_title_new_message_notifications">Avisos de mensajes</string>
+  <string name="pref_title_new_friend_notifications">Solicitud de amistad notificaciones</string>
+  <string name="pref_title_action_messages">Mensajes de acción</string>
+  <string name="pref_title_ringtone">Tono</string>
+  <string name="pref_ringtone_silent">Silencioso</string>
+  <string name="pref_title_vibrate">Vibrar</string>
+  <!--Other-->
+  <string name="pref_header_other">Otro</string>
+  <string name="pref_title_language">Idioma</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Copiar la Identificación Tox</string>
+  <!--Advanced strings-->
+  <string name="pref_advanced">Avanzado</string>
+  <string name="pref_nospam">Nospam</string>
+</resources>

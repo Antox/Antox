@@ -1,84 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <string name="title_activity_settings">Настройки</string>
-
-    <!-- Profile -->
-    <string name="pref_header_profile">Профиль</string>
-
-    <string name="pref_title_nickname">Имя</string>
-    <string name="pref_default_nickname">Пользователь Antox</string>
-
-    <string name="pref_title_status">Статус</string>
-    <string-array name="pref_status_list_titles">
-        <item>В сети</item>
-        <item>Отошел</item>
-        <item>Занят</item>
-    </string-array>
-    <string-array name="pref_status_list_values" translatable="false">
-        <item>online</item>
-        <item>away</item>
-        <item>busy</item>
-    </string-array>
-
-    <string name="pref_title_status_message">Статусное сообщение</string>
-    <string name="pref_default_status_message">Всем привет! Я пользуюсь Antox\'ом!</string>
-
-    <string name="pref_title_tox_id">Tox ID</string>
-    <string name="pref_default_tox_id">Tox ID по умолчанию - Вы будете видеть его</string>
-
-    <string name="pref_title_account_name">Имя аккаунта</string>
-    <string name="pref_title_logout">Выход</string>
-
-    <!-- Notifications -->
-    <string name="pref_header_notifications">Уведомления</string>
-
-    <string name="pref_title_enable_notifications">Включить уведомления</string>
-    <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
-    <string name="pref_title_new_friend_notifications">Уведомления о запросе друга</string>
-    <string name="pref_title_action_messages">Сообщения о действиях</string>
-
-    <string name="pref_title_ringtone">Рингтон</string>
-    <string name="pref_ringtone_silent">Без звука</string>
-
-    <string name="pref_title_vibrate">Вибрировать</string>
-
-    <!-- Other -->
-    <string name="pref_header_other">Другое</string>
-
-    <string name="pref_title_language">Язык</string>
-    <string-array name="pref_language_list_titles" translatable="false">
-        <item>English</item>
-        <item>Deutsch</item>
-        <item>Español</item>
-        <item>Français</item>
-        <item>Italiano</item>
-        <item>Nederlands</item>
-        <item>Polski</item>
-        <item>Svenska</item>
-        <item>Türkçe</item>
-        <item>Русский</item>
-        <item>Український</item>
-        <item>Português</item>
-    </string-array>
-    <string-array name="pref_language_list_values" translatable="false">
-        <item>en</item>
-        <item>de</item>
-        <item>es</item>
-        <item>fr</item>
-        <item>it</item>
-        <item>nl</item>
-        <item>pl</item>
-        <item>sv</item>
-        <item>tr</item>
-        <item>ru</item>
-        <item>uk</item>
-        <item>pt</item>
-    </string-array>
-
-    <!-- Menu strings -->
-    <string name="copy_tox_id">Скопировать Tox ID</string>
-
-    <!-- Advanced strings -->
-    <string name="pref_advanced">Дополнительно</string>
-    <string name="pref_nospam">Nospam</string>
-
+  <string name="title_activity_settings">Настройки</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Профиль</string>
+  <string name="pref_title_nickname">Имя</string>
+  <string name="pref_default_nickname">Пользователь Antox</string>
+  <string name="pref_title_status">Статус</string>
+  <string-array name="pref_status_list_titles">
+    <item>В сети</item>
+    <item>Отошел</item>
+    <item>Занят</item>
+  </string-array>
+  <string name="pref_title_status_message">Статусное сообщение</string>
+  <string name="pref_default_status_message">Всем привет! Я пользуюсь Antox\'ом!</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Tox ID по умолчанию - Вы будете видеть его</string>
+  <string name="pref_title_logout">Выход</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Уведомления</string>
+  <string name="pref_title_enable_notifications">Включить уведомления</string>
+  <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
+  <string name="pref_title_new_friend_notifications">Уведомления о запросе друга</string>
+  <string name="pref_title_action_messages">Сообщения о действиях</string>
+  <string name="pref_title_ringtone">Рингтон</string>
+  <string name="pref_ringtone_silent">Без звука</string>
+  <string name="pref_title_vibrate">Вибрировать</string>
+  <!--Other-->
+  <string name="pref_header_other">Другое</string>
+  <string name="pref_title_language">Язык</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Скопировать Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_advanced">Дополнительно</string>
+  <string name="pref_nospam">Nospam</string>
 </resources>
