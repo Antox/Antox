@@ -1,83 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-    <string name="app_name">Antox</string>
-
-    <!-- Activity titles -->
-    <string name="title_activity_welcome">Ласкаво просимо</string>
-    <string name="title_activity_add_friend">Додати друга</string>
-
-    <!-- Navigation / Action Bar -->
-    <string name="add_friend">Додати друга</string>
-
-    <!-- Main Activity -->
-    <string name="title">antox</string>
-    <string name="main_avatar">Аватар</string>
-    <string name="main_username">Ім\'я</string>
-    <string name="main_status">Статус</string>
-    <string name="icon_description">Статус підключення</string>
-    <string name="main_no_friends">Дивіться-но, один-однісінький!</string>
-    <string name="main_try_adding">Запросіть друзів до бесіди</string>
-    <string name="main_friend_requests">Запити друзів</string>
-    <string name="main_friends">Друзі</string>
-    <string name="main_no_internet">Немає Інтернет-з\'єднання</string>
-    <string name="main_not_connected">Ви не з\'єднані з Інтернетом</string>
-    <string name="main_node_list_download_error">Помилка завантаження списку вузлів</string>
-
-    <!--  Chat Activity -->
-    <string name="chat_enter_message">Надіслати повідомлення</string>
-
-
-    <!-- Settings Activity -->
-    <string name="welcome_must_select_username">Ви повинні вибрати ім\'я</string>
-
-
-    <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Tox ID Вашого друга</string>
-    <string name="addfriend_friend_message">Надіслати повідомлення з Вашим запитом</string>
-    <string name="addfriend_button">Додати друга</string>
-    <string name="addfriend_friend_added">Друга додано</string>
-    <string name="addfriend_friend_exists">Друг вже існує</string>
-    <string name="scanqr_button">Сканувати QR-код</string>
-    <string name="invalid_friend_ID">Невірний Tox ID</string>
-    <string name="addfriend_nick_hint">Задайте нік для друга</string>
-    <string name="addfriend_optional_title">Необов\'язкові відомості</string>
-
-    <!-- Friend Profile Activity -->
-    <string name="friend_profile_name">Ім\'я</string>
-    <string name="friend_profile_nick">Псевдонім</string>
-    <string name="friend_profile_key">Tox ID</string>
-    <string name="friend_profile_note">Статус</string>
-    <string name="friend_profile_button">Оновити</string>
-    <string name="friend_profile_updated">Псевдонім був оновлений</string>
-
-    <!-- Friend request fragment -->
-    <string name="friendrequest_accept">Прийняти</string>
-    <string name="friendrequest_reject">Відхилити</string>
-    <string name="friendrequest_accepted">Запит друга прийнято</string>
-    <string name="friendrequest_deleted">Запит друга видалено</string>
-    <string name="friendrequest">Запит друга</string>
-    <string name="friendrequest_recieved">Запит друга отримано</string>
-    <string name="friend_request">Новий запит друга</string>
-
-    <!-- Contacts Fragment -->
-    <string name="friend_action_profile">Профіль</string>
-    <string name="friend_action_sendfile">Відправити файл</string>
-    <string name="friend_action_delete">Видалити друга</string>
-    <string name="friend_action_block">Заблокувати</string>
-    <string name="group_action_leave">Покинути групу</string>
-    <string name="friend_action_deletechat">Видалити журнали чатів</string>
-    <string name="friend_action_block_confirmation">
-        Блокування користувача видалить його зі списку друзів, і Ви більше не будете бачити запити від нього. Для розблокування, перейдіть в Установки. Ви впевнені, що бажаєте продовжити?
-    </string>
-
-    <string name="contacts_actions_on">Дії включені</string>
-    <string name="contacts_clear_saved_logs">Ви бажаєте також очистити збережені журнали?</string>
-
-    <!--  Misc -->
-    <string name="button_confirm">Підтвердити</string>
-    <string name="button_cancel">Скасувати</string>
-    <string name="button_yes">Так</string>
-    <string name="button_no">Ні</string>
-
+  <string name="app_name">Antox</string>
+  <!--Activity titles-->
+  <string name="title_activity_add_friend">Додати друга</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_friend">Додати друга</string>
+  <!--Login Activity-->
+  <!--Create Account Activity-->
+  <!--Main Activity-->
+  <string name="title">antox</string>
+  <string name="main_avatar">Аватар</string>
+  <string name="main_username">Ім\'я</string>
+  <string name="main_status">Статус</string>
+  <string name="icon_description">Статус підключення</string>
+  <string name="main_no_friends">Дивіться-но, один-однісінький!</string>
+  <string name="main_try_adding">Запросіть друзів до бесіди</string>
+  <string name="main_friend_requests">Запити друзів</string>
+  <string name="main_friends">Друзі</string>
+  <string name="main_no_internet">Немає Інтернет-з\'єднання</string>
+  <string name="main_not_connected">Ви не з\'єднані з Інтернетом</string>
+  <string name="main_node_list_download_error">Помилка завантаження списку вузлів</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Надіслати повідомлення</string>
+  <!--Add Friend Activity-->
+  <string name="addfriend_friend_key">Tox ID Вашого друга</string>
+  <string name="addfriend_friend_message">Надіслати повідомлення з Вашим запитом</string>
+  <string name="addfriend_button">Додати друга</string>
+  <string name="addfriend_friend_added">Друга додано</string>
+  <string name="addfriend_friend_exists">Друг вже існує</string>
+  <string name="scanqr_button">Сканувати QR-код</string>
+  <string name="invalid_friend_ID">Невірний Tox ID</string>
+  <string name="addfriend_nick_hint">Задайте нік для друга</string>
+  <string name="addfriend_optional_title">Необов\'язкові відомості</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_name">Ім\'я</string>
+  <string name="friend_profile_nick">Псевдонім</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">Статус</string>
+  <string name="friend_profile_button">Оновити</string>
+  <string name="friend_profile_updated">Псевдонім був оновлений</string>
+  <!--Friend request fragment-->
+  <string name="friendrequest_accept">Прийняти</string>
+  <string name="friendrequest_reject">Відхилити</string>
+  <string name="friendrequest_accepted">Запит друга прийнято</string>
+  <string name="friendrequest_deleted">Запит друга видалено</string>
+  <string name="friendrequest">Запит друга</string>
+  <string name="friendrequest_recieved">Запит друга отримано</string>
+  <string name="friend_request">Новий запит друга</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Профіль</string>
+  <string name="friend_action_sendfile">Відправити файл</string>
+  <string name="friend_action_delete">Видалити друга</string>
+  <string name="friend_action_block">Заблокувати</string>
+  <string name="group_action_leave">Покинути групу</string>
+  <string name="contacts_actions_on">Дії включені</string>
+  <string name="contacts_clear_saved_logs">Ви бажаєте також очистити збережені журнали?</string>
+  <!--Delete Friend Dialog-->
+  <!--Delete Chat Logs Dialog-->
+  <!--Block Friend Dialog-->
+  <!--Chat Fragment-->
+  <!--Left Pane Fragment-->
+  <!--Misc-->
+  <string name="button_confirm">Підтвердити</string>
+  <string name="button_cancel">Скасувати</string>
+  <string name="button_yes">Так</string>
+  <string name="button_no">Ні</string>
+  <!--QR-->
 </resources>

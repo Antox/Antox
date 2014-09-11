@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add_friend">Dodaj prijatelja</string>
+  <string name="title_activity_friend_profile">Prijateljov profil</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_friend">Dodaj prijatelja</string>
+  <!--Login Activity-->
+  <string name="login_alpha_warning">Ovaj client je i dalje u pre-alpha fazi.</string>
+  <!--Create Account Activity-->
+  <string name="create_password_again_hint">Potvrdi lozinku</string>
+  <string name="create_bio_string">Ispričaj nešto malo o sebi</string>
+  <!--Main Activity-->
+  <string name="main_username">Korisničko ime</string>
+  <string name="main_status">Status</string>
+  <string name="main_not_connected">Internet konekcija nije pronađena. Bez internet konekcije, imati ćeš umanjen pristup Antox-u, osim ako ga koristiš u LAN-u</string>
+  <string name="main_node_list_download_error">Greška pri preuzimanju Nodes liste</string>
+  <!--Chat Activity-->
+  <string name="chat_file_transfer">File transfer</string>
+  <!--Add Friend Activity-->
+  <string name="addfriend_button">Dodaj prijatelja</string>
+  <string name="invalid_friend_ID">Invalidni Tox ID</string>
+  <string name="addfriend_friend_pin_title">Napiši prijateljov Pin</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_button">Update</string>
+  <string name="friend_profile_copied">Tox ID kopirana</string>
+  <!--Friend request fragment-->
+  <string name="friendrequest_accepted">Zahtjev za prijateljstvo prihvaćeno</string>
+  <string name="friendrequest">Zahtjevi za prijatelje</string>
+  <string name="friendrequest_recieved">Zahtjev za prijateljstvo primljeno</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profil</string>
+  <string name="friend_action_delete">Izbriši prijatelja</string>
+  <string name="friend_action_block">blokiraj</string>
+  <string name="group_action_leave">Napusti grupu</string>
+  <string name="contacts_delimiter_friends">Prijatelji</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Da li si siguran da želiš ovog prijatelja izbrisati?</string>
+  <!--Delete Chat Logs Dialog-->
+  <!--Block Friend Dialog-->
+  <!--Chat Fragment-->
+  <string name="message_delete">Izbriši poruku</string>
+  <!--Left Pane Fragment-->
+  <!--Misc-->
+  <string name="button_confirm">Potvrdi</string>
+  <string name="button_yes">Da</string>
+  <string name="button_no">Ne</string>
+  <string name="button_ok">OK</string>
+  <string name="share_with">Podijeli sa</string>
+  <string name="hello_world">Zdravo svijete!</string>
+  <string name="action_settings">Postavke</string>
+  <!--QR-->
+  <string name="qr_button_no">Ne</string>
+</resources>
