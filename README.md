@@ -7,8 +7,7 @@ Once ready, Antox will be available on Google Play and on F-Droid.
 [![tip for next commit](http://tip4commit.com/projects/654.svg)](http://tip4commit.com/projects/654)
 
 ###Current development
-Currently working on fixing bugs with multiple profiles and integrating toxme.se registration into the app. Work is also being done to wrap the Tox A/V features in jToxcore so that
-they can be implemented here.
+Currently implementing A/V in Antox
 
 ###Antox On F-Droid
 To get Antox on F-Droid, add https://markwinter.me/fdroid/repo to your repo list. To do this, go to 'Repositories' in F-Droid and click the '+' symbol in the action bar. PLEASE NOTE this app is still alpha and
@@ -45,6 +44,7 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 
 ###What Is Currently Working
 - Basic messaging - this does not include group chats
+- File transfers
 
 ###Screenshots Of Progress
 <img src="http://a.pomf.se/fzwbww.png" width="230px" height="400px"/><img src="http://a.pomf.se/twtkls.png" width="230px" height="400px"/><img src="http://a.pomf.se/zsgakz.png" width="230px" height="400px"/>
