@@ -82,19 +82,6 @@ public class CreateAcccountActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickAllowSearch(View view) {
-        CheckBox checkBox = (CheckBox) findViewById(R.id.create_allow_search);
-        TextView bioString = (TextView) findViewById(R.id.create_bio_string);
-        EditText bioField = (EditText) findViewById(R.id.create_bio);
-        if(checkBox.isChecked()) {
-            bioString.setVisibility(View.VISIBLE);
-            bioField.setVisibility(View.VISIBLE);
-        } else {
-            bioString.setVisibility(View.GONE);
-            bioField.setVisibility(View.GONE);
-        }
-    }
-
     public void onClickRegisterAccount(View view) {
         EditText accountField = (EditText) findViewById(R.id.create_account_name);
 
