@@ -72,6 +72,7 @@
     <string name="addfriend_own_key">You cannot add yourself</string>
     <string name="addfriend_friend_pin_title">Enter Friend\'s Pin</string>
     <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
+    <string name="addfriend_default_message">Hey! Please accept my friend request</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_name">Name</string>
