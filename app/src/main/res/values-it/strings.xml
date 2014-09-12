@@ -71,6 +71,7 @@
     <string name="addfriend_own_key">Non puoi aggiungere te stesso</string>
     <string name="addfriend_friend_pin_title">Pin del Contatto</string>
     <string name="addfriend_friend_pin_text">Inserisci il pin del contatto</string>
+    <string name="addfriend_default_message">Hey! Per favore accetta la mia richiesta di amicizia</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_title">Profilo di %1$s</string>
