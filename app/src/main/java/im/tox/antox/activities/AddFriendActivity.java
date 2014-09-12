@@ -137,6 +137,10 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 String message = friendMessage.getText().toString();
                 String alias = friendAlias.getText().toString();
 
+                // Check to see if message was blank, if so set a default
+                if(message.equals(""))
+                    message = getString(R.string.addfriend_default_message);
+
                 String[] friendData = {ID, message, alias};
 
                 AntoxDB db = new AntoxDB(getApplicationContext());
