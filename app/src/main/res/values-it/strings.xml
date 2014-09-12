@@ -1,10 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
-    <string name="app_name">Antox</string>
-
     <!-- Activity titles -->
-    <string name="title_activity_login">Login</string>
     <string name="title_activity_add_friend">Aggiungi Contatto</string>
     <string name="title_activity_friend_profile">Profilo</string>
 
@@ -12,20 +9,10 @@
     <string name="add_friend">Aggiungi Contatto</string>
 
     <!-- Main Activity -->
-    <string name="title">Antox</string>
-    <string name="main_avatar">Immagine Profilo</string>
-    <string name="main_username">Nome Utente</string>
-    <string name="main_status">Stato</string>
-    <string name="icon_description">Stato Connessione</string>
-    <string name="main_no_friends">Nessun contatto</string>
     <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
     <string name="main_recent_no">Nessuna coversazione recente</string>
-    <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
-    <string name="main_friend_requests">Richieste D\'Amicizia</string>
-    <string name="main_friends">Contatti</string>
     <string name="main_no_internet">Nessuna connessione ad internet</string>
     <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
-    <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
     <string name="search_all_contacts">Cerca tra i contatti</string>
 
     <!-- Chat Activity -->
@@ -36,24 +23,17 @@
 
     <!-- Login Activity -->
     <string name="login_must_fill_in">Devi inserire un nome profilo</string>
-    <string name="login_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
     <string name="login_login">Login</string>
     <string name="login_account_hint">nome profilo</string>
     <string name="login_create_account_text">Crea un profilo Tox</string>
-    <string name="login_already_have_account">Hai già un account?</string>
     <string name="login_bad_login">Il nome profilo non è corretto</string>
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Nome Profilo</string>
-    <string name="create_password_hint">Password</string>
-    <string name="create_password_again_hint">Conferma Password</string>
     <string name="create_text">Crea un nouvo profilo Tox\nOgni profilo ha il suo Tox ID personale</string>
     <string name="create_register">Registrazione</string>
     <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
-    <string name="create_password_bad_match">Le passwords non corrispondono</string>
-    <string name="create_allow_search">Includi il mio account nei risultati delle ricerche degli altri utenti</string>
-    <string name="create_bio_string">Scrivi qualcosa riguardo te stesso</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID del contatto</string>
@@ -67,7 +47,6 @@
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
     <string name="dialog_pin">Inserisci il pin del contatto</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
-    <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
     <string name="addfriend_own_key">Non puoi aggiungere te stesso</string>
     <string name="addfriend_friend_pin_title">Pin del Contatto</string>
     <string name="addfriend_friend_pin_text">Inserisci il pin del contatto</string>
@@ -75,37 +54,24 @@
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_title">Profilo di %1$s</string>
-    <string name="friend_profile_name">Nome</string>
     <string name="friend_profile_nick">Nome Personalizzato</string>
-    <string name="friend_profile_group">Gruppo</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Salva</string>
     <string name="friend_profile_updated">Profilo del contatto salvato</string>
-    <string name="friend_profile_copy">Copia Tox ID</string>
     <string name="friend_profile_copied">Tox ID copiato</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
     <string name="friendrequest_reject">Rifiuta</string>
-    <string name="friendrequest_accepted">Richiesta d\'amicizia accettata</string>
-    <string name="friendrequest_deleted">Richiesta d\'amicizia cancellata</string>
-    <string name="friendrequest">Richiesta D\'Amicizia</string>
-    <string name="friendrequest_recieved">Ricevuta richiesta d\'amicizia</string>
     <string name="friend_request">Nuova Richiesta D\'Amicizia</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profilo</string>
-    <string name="friend_action_sendfile">Invia file</string>
     <string name="friend_action_delete">Rimuovi contatto</string>
     <string name="friend_action_delete_chat">Elimina chat</string>
-    <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
     <string name="friend_action_block">Blocca</string>
-    <string name="friend_action_unblock">Sblocca</string>
-    <string name="toast_succ_move_user">Spostamento riuscito</string>
-    <string name="group_action_leave">Lascia Gruppo</string>
     <string name="contacts_actions_on">Azioni per</string>
-    <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
     <string name="contacts_delimiter_requests">Richieste d\'amicizia</string>
     <string name="contacts_delimiter_friends">Contatti</string>
 
@@ -138,12 +104,13 @@
     <string name="button_yes">Sì</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
-    <string name="hello_blank_fragment">Ciao fragment vuoto</string>
     <string name="dialog_tox_id">Copia Tox ID negli appunti</string>
     <string name="share_with">Condividi con</string>
     <string name="connection_has">è</string>
     <string name="connection_online">online</string>
     <string name="connection_offline">offline</string>
+    <string name="title_activity_create_acccount">Crea Profilo</string>
+    <string name="action_settings">Impostazioni</string>
 
     <!-- QR -->
     <string name="qr_default_title">Installare Barcode Scanner?</string>
