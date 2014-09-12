@@ -102,7 +102,7 @@
   <string name="friend_action_delete_chat_confirmation">Sei sicuro di voler eliminare la chat?</string>
   <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
-richieste d\\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
+richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <!--Chat Fragment-->
   <string name="attachment_photo">Allega foto</string>
   <string name="attachment_takephoto">Scatta foto</string>
