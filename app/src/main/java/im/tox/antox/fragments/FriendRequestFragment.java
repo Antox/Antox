@@ -62,7 +62,6 @@ public class FriendRequestFragment extends Fragment {
                             if (!isFriend) {
                                 key = activeKey;
                                 changeKey(activeKey);
-                                toxSingleton.doClosePaneSubject.onNext(true);
                             }
                         }
                     }
