@@ -54,7 +54,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
 
-            <!-- Intent filter for handling tox:// links -->
+            <!-- Intent filter for handling tox: links -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -339,8 +339,7 @@ public class ContactsFragment extends Fragment {
         View delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend,null);
         final CheckBox deleteLogsCheckboxView = (CheckBox) delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder//.setMessage(getResources().getString(R.string.friend_action_delete_friend_confirmation))
-                .setView(delete_friend_dialog)
+        builder .setView(delete_friend_dialog)
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,

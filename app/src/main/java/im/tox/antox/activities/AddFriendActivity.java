@@ -122,8 +122,8 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
     private boolean isKeyOwn(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String tmp = preferences.getString("tox_id", "");
-        if(tmp.startsWith("tox://"))
-            tmp.substring(6);
+        if(tmp.toLowerCase().startsWith("tox:"))
+            tmp.substring(4);
         if(tmp.equals(key))
             return true;
         else
@@ -280,7 +280,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         if (scanResult != null) {
             if (scanResult.getContents() != null) {
                 EditText addFriendKey = (EditText) findViewById(R.id.addfriend_key);
-                String friendKey = (scanResult.getContents().contains("tox://") ? scanResult.getContents().substring(6) : scanResult.getContents());
+                String friendKey = (scanResult.getContents().toLowerCase().contains("tox:") ? scanResult.getContents().substring(4) : scanResult.getContents());
                 if (validateFriendKey(friendKey)) {
                     addFriendKey.setText(friendKey);
                 } else {
