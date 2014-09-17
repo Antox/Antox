@@ -25,18 +25,16 @@ public class ToxDoService extends Service {
             Log.d("ToxDoService", "Initting ToxSingleton");
         }
 
+        keepRunning = true;
+
         Runnable start = new Runnable() {
             @Override
             public void run() {
-                long lastTime = System.currentTimeMillis();
                 while(keepRunning) {
-                    long currentTime = System.currentTimeMillis();
                     try {
-                        if (currentTime - lastTime > toxSingleton.jTox.doToxInterval()) {
-                            lastTime = currentTime;
-                            toxSingleton.jTox.doTox();
-                        }
-                    } catch (ToxException e) {
+                        Thread.sleep(toxSingleton.jTox.doToxInterval());
+                        toxSingleton.jTox.doTox();
+                    } catch (Exception e) {
                     }
                 }
             }

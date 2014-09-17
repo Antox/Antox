@@ -638,7 +638,10 @@ public class ToxSingleton {
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
-        ToxOptions options = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean udpEnabled = preferences.getBoolean("enable_udp", false);
+
+        ToxOptions options = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
 
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {
@@ -647,7 +650,6 @@ public class ToxSingleton {
                 /* Save data file */
                 dataFile.saveFile(jTox.save());
                 /* Save users public key to settings */
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("tox_id", jTox.getAddress());
                 editor.commit();
@@ -657,7 +659,6 @@ public class ToxSingleton {
         } else {
             try {
                 jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler, options);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("tox_id", jTox.getAddress());
                 editor.commit();
@@ -721,7 +722,6 @@ public class ToxSingleton {
 
         /* Load user details */
         try {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
             jTox.setName(preferences.getString("nickname", ""));
             jTox.setStatusMessage(preferences.getString("status_message", ""));
             ToxUserStatus newStatus;

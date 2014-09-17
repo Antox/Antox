@@ -106,7 +106,9 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    boolean udpEnabled = preferences.getBoolean("enable_udp", false);
+                    ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());
