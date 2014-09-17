@@ -30,9 +30,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import im.tox.antox.R;
 import im.tox.antox.data.UserDB;
@@ -88,9 +91,22 @@ public class CreateAcccountActivity extends ActionBarActivity{
 
         String account = accountField.getText().toString();
 
+        Pattern pattern = Pattern.compile("\\s");
+        Pattern pattern2 = Pattern.compile(File.separator);
+        Matcher matcher = pattern.matcher(account);
+        boolean containsSpaces = matcher.find();
+        matcher = pattern2.matcher(account);
+        boolean containsFileSeperator = matcher.find();
+
         if(account.equals("")) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.create_must_fill_in);
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else if (containsSpaces || containsFileSeperator) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.create_bad_profile_name);
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
