@@ -84,15 +84,7 @@ public class ContactsFragment extends Fragment {
             if (friend_requests.length > 0) {
                 leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_friends)));
             }
-            String lastLetter = "";
             for (int i = 0; i < friends_list.length; i++) {
-
-                if(!friends_list[i].friendName.substring(0,1).equalsIgnoreCase(lastLetter)) {
-                    LeftPaneItem friends_header = new LeftPaneItem(friends_list[i].friendName.substring(0,1));
-                    leftPaneAdapter.addItem(friends_header);
-                    lastLetter = friends_list[i].friendName.substring(0,1);
-                }
-
                 LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].isOnline, friends_list[i].getFriendStatusAsToxUserStatus(), friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
