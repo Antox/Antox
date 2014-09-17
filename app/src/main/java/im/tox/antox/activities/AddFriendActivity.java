@@ -123,7 +123,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String tmp = preferences.getString("tox_id", "");
         if(tmp.toLowerCase().startsWith("tox:"))
-            tmp.substring(4);
+            tmp = tmp.substring(4);
         if(tmp.equals(key))
             return true;
         else

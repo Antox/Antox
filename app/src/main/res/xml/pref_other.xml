@@ -20,6 +20,11 @@
     <PreferenceScreen
         android:title="@string/pref_advanced" >
 
+            <CheckBoxPreference
+                android:key="enable_udp"
+                android:title="@string/pref_udp"
+                android:defaultValue="false" />
+
             <EditTextPreference
                 android:key="nospam"
                 android:title="@string/pref_nospam"

@@ -79,6 +79,7 @@
     <string name="copy_tox_id">Copy Tox ID</string>
 
     <!-- Advanced strings -->
+    <string name="pref_udp">Enable UDP</string>
     <string name="pref_advanced">Advanced</string>
     <string name="pref_nospam">Nospam</string>
 

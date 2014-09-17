@@ -47,6 +47,7 @@ import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Options;
 import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.UserStatus;
@@ -637,7 +638,7 @@ public class ToxSingleton {
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
-        ToxOptions options = new ToxOptions(false, true, false);
+        ToxOptions options = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled);
 
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {

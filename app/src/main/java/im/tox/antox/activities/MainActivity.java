@@ -145,7 +145,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Init Bitmap Manager
-        BitmapManager bm = new BitmapManager();
+        new BitmapManager();
 
         //Get epoch time for online/offline messages
         Constants.epoch = System.currentTimeMillis() / 1000; // Current time in seconds
