@@ -17,8 +17,11 @@ import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.Options;
 import im.tox.antox.utils.UserStatus;
+import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -175,7 +178,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         UserDB db = new UserDB(getActivity());
 
-        if(key.equals("nickname")) {
+        if (key.equals("nickname")) {
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
@@ -185,10 +188,10 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(sharedPreferences.getString("active_account",""), "nickname", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key, ""));
         }
 
-        if(key.equals("status")) {
+        if (key.equals("status")) {
 
             ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
             String newStatusString = sharedPreferences.getString(key, "");
@@ -202,10 +205,10 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(sharedPreferences.getString("active_account",""), "status", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status", sharedPreferences.getString(key, ""));
         }
 
-        if(key.equals("status_message")) {
+        if (key.equals("status_message")) {
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
@@ -215,10 +218,10 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             }
 
             // Update user DB
-            db.updateUserDetail(sharedPreferences.getString("active_account",""), "status_message", sharedPreferences.getString(key, ""));
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key, ""));
         }
 
-        if(key.equals("nospam")) {
+        if (key.equals("nospam")) {
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
                 int nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
@@ -230,6 +233,18 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             } catch (ToxException e) {
                 e.printStackTrace();
             }
+        }
+
+        if (key.equals("enable_udp")) {
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+            Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false);
+
+            // Stop service
+            Intent service = new Intent(getActivity(), ToxDoService.class);
+            getActivity().stopService(service);
+            // Start service
+            getActivity().startService(service);
         }
     }
 }

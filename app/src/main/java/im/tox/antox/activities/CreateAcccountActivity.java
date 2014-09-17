@@ -39,6 +39,7 @@ import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDataFile;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.utils.AntoxFriendList;
+import im.tox.antox.utils.Options;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxOptions;
@@ -105,7 +106,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
                 try {
                     AntoxFriendList antoxFriendList = new AntoxFriendList();
                     CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    ToxOptions toxOptions = new ToxOptions(false, true, false);
+                    ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled);
                     JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
                     ToxDataFile toxDataFile = new ToxDataFile(this, account);
                     toxDataFile.saveFile(jTox.save());
