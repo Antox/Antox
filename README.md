@@ -47,7 +47,7 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 - File transfers
 
 ###Screenshots Of Progress
-<img src="http://a.pomf.se/fzwbww.png" width="230px" height="400px"/><img src="http://a.pomf.se/twtkls.png" width="230px" height="400px"/><img src="http://a.pomf.se/zsgakz.png" width="230px" height="400px"/>
+<img src="http://a.pomf.se/fggnpw.png" width="230px" height="400px"/><img src="http://a.pomf.se/rmoahn.png" width="230px" height="400px"/><img src="http://a.pomf.se/fjlawy.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
