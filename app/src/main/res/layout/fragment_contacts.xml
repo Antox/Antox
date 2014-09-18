@@ -54,6 +54,8 @@
                         android:layout_height="479dp"
                         android:background="@color/white_absolute"
                         android:cacheColorHint="@android:color/transparent"
+                        android:headerDividersEnabled="true"
+                        android:footerDividersEnabled="false"
                         android:divider="@drawable/list_divider"
                         android:dividerHeight="1dp" />
     </FrameLayout>
