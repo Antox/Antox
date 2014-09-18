@@ -34,6 +34,7 @@
     <string name="create_register">Registrazione</string>
     <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
+    <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/" o "\\"</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID del contatto</string>
@@ -74,6 +75,8 @@
     <string name="contacts_actions_on">Azioni per</string>
     <string name="contacts_delimiter_requests">Richieste d\'amicizia</string>
     <string name="contacts_delimiter_friends">Contatti</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
