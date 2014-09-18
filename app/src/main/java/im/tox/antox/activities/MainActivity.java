@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         super.onCreate(savedInstanceState);
 
         // Pressing the volume keys will affect STREAM_MUSIC played from this app
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 

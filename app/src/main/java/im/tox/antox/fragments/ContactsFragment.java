@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.shamanland.fab.FloatingActionButton;
+import com.shamanland.fab.ShowHideOnScroll;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,6 +129,14 @@ public class ContactsFragment extends Fragment {
                         setSelectionToKey(activeKey);
                     }
                 });
+
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setSize(FloatingActionButton.SIZE_NORMAL);
+        fab.setColor(Color.parseColor("#6BC25F"));
+        fab.initBackground();
+        fab.setImageResource(R.drawable.ic_action_new);
+        contactsListView.setOnTouchListener(new ShowHideOnScroll(fab));
+
     }
 
     @Override
