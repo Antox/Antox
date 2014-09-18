@@ -51,7 +51,7 @@
                 android:textColor="@color/white_absolute"
                 android:text="@string/login_create_account_text"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="50dp"
                 android:onClick="onClickCreateAccount"/>
     </LinearLayout>
 
