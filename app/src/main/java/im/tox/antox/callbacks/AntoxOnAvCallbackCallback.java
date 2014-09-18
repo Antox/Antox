@@ -9,6 +9,7 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
+import im.tox.antox.utils.CaptureAudio;
 import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.ToxAvCallbackID;
 import im.tox.jtoxcore.ToxCallType;
@@ -22,6 +23,8 @@ import im.tox.jtoxcore.callbacks.OnAvCallbackCallback;
 public class AntoxOnAvCallbackCallback implements OnAvCallbackCallback<AntoxFriend> {
 
     private Context ctx;
+    CaptureAudio captureAudio = new CaptureAudio();
+
 
     public AntoxOnAvCallbackCallback(Context ctx) {
         this.ctx = ctx;
@@ -47,6 +50,9 @@ public class AntoxOnAvCallbackCallback implements OnAvCallbackCallback<AntoxFrie
                     // Prepare for transmission
                     toxSingleton.jTox.avPrepareTransmission(0, 3, 40, false);
 
+                    // Start microphone task
+                    captureAudio.execute(String.valueOf(callID));
+
                     break;
 
                 case ON_CANCEL: // Incoming call timed out/stopped
@@ -59,6 +65,7 @@ public class AntoxOnAvCallbackCallback implements OnAvCallbackCallback<AntoxFrie
 
                 case ON_END: // On-going call has now been ended
                     Log.d("OnAvCallbackCallback", "Callback type: ON_END");
+                    captureAudio.cancel(true);
                     break;
 
 
