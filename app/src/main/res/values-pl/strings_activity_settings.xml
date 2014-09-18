@@ -30,7 +30,7 @@
   <string name="pref_title_enable_notifications">Włącz powiadomienia</string>
   <string name="pref_title_new_message_notifications">Powiadomienia o wiadomościach</string>
   <string name="pref_title_new_friend_notifications">Powiadomienia o zapytania znajomych</string>
-  <string name="pref_title_action_messages">Pokazuj zmiany statusu w oknie rozmowy<string>
+  <string name="pref_title_action_messages">Pokazuj zmiany statusu w oknie rozmowy</string>
 
   <string name="pref_title_ringtone">Dzwonek</string>
   <string name="pref_ringtone_silent">Cichy</string>
