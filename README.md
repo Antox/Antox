@@ -36,8 +36,8 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.3 and 19.0.3 respectively as of writing)
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
-- Download the latest jToxcore binaries from https://jenkins.libtoxcore.so/job/jToxcore_Android/lastSuccessfulBuild/artifact/*zip*/archive.zip
-- Copy the armeabi/, armeabi-v7a/, mips/ and x86/ folders to app/src/main/jniLibs/
+- Download the latest jToxcore binaries from https://jenkins.libtoxcore.so/job/jtoxcore_android_arm/
+- Copy libjtoxcore.so to app/src/main/armeabi/jniLibs/
 - Copy jToxcore.jar to app/libs/jToxcore.jar
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
