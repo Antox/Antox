@@ -12,7 +12,8 @@
     <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
     <string name="main_recent_no">Nessuna coversazione recente</string>
     <string name="main_no_internet">Nessuna connessione ad internet</string>
-    <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
+    <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili (a meno che
+    tu non stia usando Antox solo in una rete LAN)</string>
     <string name="search_all_contacts">Cerca tra i contatti</string>
 
     <!-- Chat Activity -->
