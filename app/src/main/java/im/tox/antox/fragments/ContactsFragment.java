@@ -72,6 +72,7 @@ public class ContactsFragment extends Fragment {
         ArrayList<FriendRequest> friendRequests = friendstuple.y;
 
         Collections.sort(friendsList, new NameComparator());
+        Collections.sort(friendsList, new OnlineComparator());
 
         leftPaneAdapter = new LeftPaneAdapter(getActivity());
         FriendRequest friend_requests[] = new FriendRequest[friendRequests.size()];
@@ -411,6 +412,7 @@ public class ContactsFragment extends Fragment {
                 );
         builder.show();
     }
+
     private class NameComparator implements Comparator<FriendInfo> {
         @Override
         public int compare(FriendInfo a, FriendInfo b) {
@@ -425,6 +427,18 @@ public class ContactsFragment extends Fragment {
                 else
                     return a.friendName.toUpperCase().compareTo(b.friendName.toUpperCase());
             }
+        }
+    }
+
+    private class OnlineComparator implements Comparator<FriendInfo> {
+        @Override
+        public int compare(FriendInfo a, FriendInfo b) {
+            if (a.isOnline && !b.isOnline)
+                return -1;
+            else if (!a.isOnline && b.isOnline)
+                return 1;
+            else
+                return 0;
         }
     }
 }
