@@ -90,7 +90,18 @@ public class ContactsFragment extends Fragment {
             if (friend_requests.length > 0) {
                 leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_friends)));
             }
+
+            boolean onlineAdded = false;
+            boolean offlineAdded = false;
             for (int i = 0; i < friends_list.length; i++) {
+                if(!offlineAdded && !friends_list[i].isOnline) {
+                    leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_offline)));
+                    offlineAdded = true;
+                }
+                if(!onlineAdded && friends_list[i].isOnline) {
+                    leftPaneAdapter.addItem(new LeftPaneItem(getResources().getString(R.string.contacts_delimiter_online)));
+                    onlineAdded = true;
+                }
                 LeftPaneItem friend = new LeftPaneItem(friends_list[i].friendKey, friends_list[i].friendName, friends_list[i].lastMessage, friends_list[i].isOnline, friends_list[i].getFriendStatusAsToxUserStatus(), friends_list[i].unreadCount, friends_list[i].lastMessageTimestamp);
                 leftPaneAdapter.addItem(friend);
             }
