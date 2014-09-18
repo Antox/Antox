@@ -16,7 +16,7 @@
                     android:background="@color/white_absolute"
                     android:cacheColorHint="@android:color/transparent"
                     android:divider="@drawable/list_divider"
-                    android:dividerHeight="1dp" />
+                    android:dividerHeight="0dp" />
                 <LinearLayout
                     android:id="@+id/recent_no_conversations"
                     android:visibility="gone"
