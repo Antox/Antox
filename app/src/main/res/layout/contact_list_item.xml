@@ -2,7 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
-    android:padding="8dp" >
+    android:padding="10dp" >
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center"
@@ -15,13 +15,13 @@
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:background="@color/green"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="@dimen/margin_medium"/>
         <LinearLayout
             android:duplicateParentState="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="30dp"
             android:layout_height="match_parent">
             <LinearLayout
                 android:duplicateParentState="true"
