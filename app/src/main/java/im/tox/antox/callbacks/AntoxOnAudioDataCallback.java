@@ -27,21 +27,21 @@ public class AntoxOnAudioDataCallback implements OnAudioDataCallback<AntoxFriend
 
     public void execute(int callID, byte[] data) {
         Log.d("OnAudioDataCallback", "Received callback from: " + callID);
+
         try {
-            AudioTrack audioTrack = new AudioTrack(
-                    AudioManager.STREAM_MUSIC,
+            AudioTrack audioTrack = new  AudioTrack(
+                    AudioManager.STREAM_VOICE_CALL,
                     48000,
                     AudioFormat.CHANNEL_CONFIGURATION_MONO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     data.length,
-                    AudioTrack.MODE_STATIC);
-
+                    AudioTrack.MODE_STREAM);
             audioTrack.play();
             audioTrack.write(data, 0, data.length);
             audioTrack.stop();
-            audioTrack.flush();
-
+            audioTrack.release();
         } catch (Exception e) {
+            Log.e("AudioPlayback", e.getMessage());
         }
     }
 }
