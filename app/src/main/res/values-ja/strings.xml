@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Antox</string>
+  <!--Activity titles-->
+  <string name="title_activity_login">ログイン</string>
+  <string name="title_activity_add_friend">友達を追加</string>
+  <string name="title_activity_friend_profile">友達のプロファイル</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_friend">友達を追加</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">プロファイル名を入力してください</string>
+  <string name="login_alpha_warning">このクライアントはまだアルファテスト前です</string>
+  <string name="login_login">ログイン</string>
+  <string name="login_account_hint">プロファイル名</string>
+  <string name="login_create_account_text">Tox プロファイルを作成</string>
+  <string name="login_already_have_account">既にアカウントをお持ちですか？</string>
+  <string name="login_bad_login">プロファイルが見つかりませんでした</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">プロファイル名</string>
+  <string name="create_password_hint">パスワード</string>
+  <string name="create_password_again_hint">パスワードの確認</string>
+  <string name="create_text">新しいToxプロファイルを作成\nプロファイル毎に独自のTox IDが与えられます</string>
+  <string name="create_register">登録</string>
+  <string name="create_skip">誰でもプロファイル名からあなたを追加できるようにする</string>
+  <string name="create_password_bad_match">パスワードが一致しません</string>
+  <string name="create_allow_search">他人があなたを検索できるようにする</string>
+  <string name="create_bio_string">あなたについて、少し</string>
+  <!--Main Activity-->
+  <string name="title">antox</string>
+  <string name="main_avatar">アバター</string>
+  <string name="main_username">ユーザー名</string>
+  <string name="main_status">状況</string>
+  <string name="icon_description">接続状況</string>
+  <string name="main_recent_no">最近の会話はありません</string>
+  <string name="main_try_adding">始めるには友達を追加しましょう</string>
+  <string name="main_friend_requests">友達申請</string>
+  <string name="main_friends">友達</string>
+  <string name="main_no_internet">インターネット接続なし</string>
+  <string name="main_node_list_download_error">ノードリストをダウンロードできませんでした</string>
+  <string name="search_all_contacts">すべてのコンタクトを検索</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">メッセージを送信</string>
+  <string name="chat_file_transfer">ファイルの転送</string>
+  <string name="accept_caps">受理</string>
+  <string name="reject_caps">拒否</string>
+  <!--Add Friend Activity-->
+  <string name="addfriend_friend_key">友達のTox ID</string>
+  <string name="addfriend_friend_message">申請と共にメッセージを送る</string>
+  <string name="addfriend_button">友達を追加</string>
+  <string name="addfriend_friend_added">友達を追加しました</string>
+  <string name="addfriend_friend_exists">友達は既に存在します</string>
+  <string name="scanqr_button">QRコードを読み込む</string>
+  <string name="invalid_friend_ID">無効なTox ID</string>
+  <string name="addfriend_nick_hint">友達にニックネームを割り当てる</string>
+  <string name="addfriend_own_key">自分を足すことはできません</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_name">名前</string>
+  <string name="friend_profile_nick">ニックネーム</string>
+  <string name="friend_profile_group">グループ</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">状況</string>
+  <string name="friend_profile_button">更新</string>
+  <string name="friend_profile_updated">プロファイルが更新されました</string>
+  <string name="friend_profile_copy">Tox IDをコピー</string>
+  <string name="friend_profile_copied">Tox IDがコピーされました</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">%1$s のプロファイル</string>
+  <string name="friendrequest_accept">受理</string>
+  <string name="friendrequest_reject">拒否</string>
+  <string name="friendrequest_accepted">友達申請が受理されました</string>
+  <string name="friendrequest_deleted">友達申請が削除されました</string>
+  <string name="friendrequest">友達申請</string>
+  <string name="friendrequest_recieved">友達申請を受け取りました</string>
+  <string name="friend_request">たらしい友達申請</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">プロファイル</string>
+  <string name="friend_action_sendfile">ファイル送信</string>
+  <string name="friend_action_delete">友達を削除</string>
+  <string name="friend_action_delete_chat">会話ログを削除</string>
+  <string name="friend_action_move_to_group">グループを移動</string>
+  <string name="friend_action_block">ブロック</string>
+  <string name="friend_action_unblock">ブロック解除</string>
+  <string name="group_action_leave">グループを抜ける</string>
+  <!--Delete Friend Dialog-->
+  <!--Delete Chat Logs Dialog-->
+  <!--Block Friend Dialog-->
+  <!--Chat Fragment-->
+  <string name="attachment_photo">写真を追加</string>
+  <string name="attachment_takephoto">写真を撮る</string>
+  <string name="message_copy">メッセージをコピー</string>
+  <string name="message_delete">メッセージを削除</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">最近</string>
+  <string name="titles_contacts">コンタクト</string>
+  <string name="titles_settings">設定</string>
+  <!--Misc-->
+  <string name="button_confirm">確証</string>
+  <string name="button_cancel">キャンセル</string>
+  <string name="button_yes">はい</string>
+  <string name="button_no">いいえ</string>
+  <string name="button_ok">OK</string>
+  <string name="hello_world">ハローワールド</string>
+  <string name="action_settings">設定</string>
+  <!--QR-->
+  <string name="qr_button_yes">はい</string>
+  <string name="qr_button_no">いいえ</string>
+</resources>

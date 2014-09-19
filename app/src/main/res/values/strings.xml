@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Antox</string>
+    <string name="app_name" translatable="false">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_welcome">Welcome</string>
     <string name="title_activity_add_friend">Add Friend</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Add Friend</string>
 
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">You must set a name</string>
-    <string name="welcome_alpha_warning">This client is still in pre-alpha.</string>
-    <string name="welcome_getstarted_string">Enter a name to display to your friends</string>
-    <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Start</string>
-    <string name="welcome_developer_string">Made with love by the Tox Development Team</string>
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">You must fill in a profile name</string>
+    <string name="login_login">Login</string>
+    <string name="login_account_hint">Profile Name</string>
+    <string name="login_create_account_text">Create Tox Profile</string>
+    <string name="login_bad_login">Profile name was not recognised</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Profile Name</string>
+    <string name="create_text">Create a new Tox profile\nEach profile gets its own Tox ID</string>
+    <string name="create_register">Register</string>
+    <string name="create_skip">Allow anyone to add you using your profile name</string>
+    <string name="create_must_fill_in">You must fill in all fields</string>
+    <string name="create_bad_profile_name">Profile name can\'t contain spaces or backslashes/forwardslashes</string>
 
     <!-- Main Activity -->
-    <string name="title">antox</string>
-    <string name="main_avatar">Avatar</string>
-    <string name="main_username">Username</string>
-    <string name="main_status">Status</string>
-    <string name="icon_description">Connection Status</string>
-    <string name="main_no_friends">Hey look, it\'s nobby-no-mates!</string>
+    <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
     <string name="main_recent_no">No recent conversations</string>
-    <string name="main_try_adding">Add some friends to get started</string>
-    <string name="main_friend_requests">Friend Requests</string>
-    <string name="main_friends">Friends</string>
     <string name="main_no_internet">No Internet Connection</string>
-    <string name="main_not_connected">
-        No internet connection has been detected. Without an internet connection, you will have
-        limited functionality unless you are using Antox for LAN only
-    </string>
-    <string name="main_node_list_download_error">Error Downloading Nodes List</string>
+    <string name="main_not_connected">No internet connection has been detected. Without an internet connection, you will have
+        limited functionality unless you are using Antox for LAN only</string>
     <string name="search_all_contacts">Search all contacts</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
+    <string name="accept_caps">ACCEPT</string>
+    <string name="reject_caps">REJECT</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
@@ -54,48 +51,56 @@
     <string name="addfriend_optional_title">Optional Extras</string>
     <string name="dialog_pin">Enter your friend\'s pin</string>
     <string name="addfriend_invalid_pin">Invalid Pin</string>
-    <string name="addfriend_no_internet">No Tox Network connection</string>
-    <string name="addfriend_no_internet_text">        Unfortunately, you aren\'t connected to the Tox Network so you cannot add a friend right now.
-        Try restarting the application.</string>
+    <string name="addfriend_own_key">You cannot add yourself</string>
+    <string name="addfriend_friend_pin_title">Enter Friend\'s Pin</string>
+    <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
+    <string name="addfriend_default_message">Hey! Please accept my friend request</string>
 
     <!-- Friend Profile Activity -->
-    <string name="friend_profile_name">Name</string>
     <string name="friend_profile_nick">Nickname</string>
-    <string name="friend_profile_group">Group</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Status</string>
     <string name="friend_profile_button">Update</string>
     <string name="friend_profile_updated">The profile has been updated</string>
-    <string name="friend_profile_copy">Copy Tox ID</string>
     <string name="friend_profile_copied">Tox ID Copied</string>
 
     <!-- Friend request fragment -->
+    <string name="friend_profile_title">%1$s\' Profile</string>
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
-    <string name="friendrequest_accepted">Friend request accepted</string>
-    <string name="friendrequest_deleted">Friend request deleted</string>
-    <string name="friendrequest">Friend Requests</string>
-    <string name="friendrequest_recieved">Friend request received</string>
     <string name="friend_request">New Friend Request</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
-    <string name="friend_action_sendfile">Send File</string>
     <string name="friend_action_delete">Remove Friend</string>
-    <string name="friend_action_move_to_group">Move to Group</string>
+    <string name="friend_action_delete_chat">Delete chat logs</string>
     <string name="friend_action_block">Block</string>
-    <string name="friend_action_unblock">Unblock</string>
-    <string name="group_action_leave">Leave Group</string>
-    <string name="friend_action_deletechat">Delete Chat Logs</string>
-    <string name="friend_action_block_confirmation">        Blocking this user will remove them from your friends list and you will no longer see friend
-        requests from them. Are you sure you wish to continue?</string>
-    <string name="toast_succ_move_user">Contact has been moved successfully</string>
     <string name="contacts_actions_on">Actions on</string>
-    <string name="contacts_clear_saved_logs">Do you want to clear the saved chat logs as well?</string>
+    <string name="contacts_delimiter_requests">Requests</string>
+    <string name="contacts_delimiter_friends">Friends</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Are you sure you want to delete the chat logs?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
+        requests from them.\n\nAre you sure you wish to continue?</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
     <string name="attachment_takephoto">Take photo</string>
+    <string name="message_copy">Copy message</string>
+    <string name="message_delete">Delete message</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Recent</string>
+    <string name="titles_contacts">Contacts</string>
+    <string name="titles_settings">Settings</string>
 
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
@@ -103,8 +108,18 @@
     <string name="button_yes">Yes</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
     <string name="share_with">Share with</string>
+    <string name="connection_has">has</string>
+    <string name="connection_online">come online</string>
+    <string name="connection_offline">gone offline</string>
+    <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Install Barcode Scanner?</string>
+    <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>
+    <string name="qr_button_yes">Yes</string>
+    <string name="qr_button_no">No</string>
 
 </resources>

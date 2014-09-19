@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -18,8 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -27,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import im.tox.antox.R;
 import im.tox.antox.adapters.ChatMessagesAdapter;
@@ -35,15 +40,19 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.Message;
+import im.tox.antox.utils.FriendInfo;
+import im.tox.antox.utils.Tuple;
+import im.tox.antox.utils.IconColor;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxUserStatus;
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 
 
 /**
@@ -56,64 +65,143 @@ public class ChatFragment extends Fragment {
 
     private ChatMessagesAdapter adapter;
     private EditText messageBox;
+    private TextView isTypingBox;
+    private TextView statusTextBox;
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
     Subscription messagesSub;
+    Subscription progressSub;
+    Subscription activeKeySub;
+    Subscription titleSub;
+    Subscription typingSub;
     private ArrayList<ChatMessages> chatMessages;
     private String activeKey;
+    private boolean scrolling = false;
+    private AntoxDB antoxDB;
     public String photoPath;
     public ChatFragment(String key) {
         this.activeKey = key;
     }
 
+    public ChatFragment() {
+        super();
+    }
+
     @Override
     public void onResume(){
         super.onResume();
-        messagesSub = toxSingleton.updatedMessagesSubject.map(new Func1<Boolean, ArrayList<Message>>() {
+        Log.d("ChatFragment", "onResume");
+        progressSub = Observable.interval(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
             @Override
-            public ArrayList<Message> call(Boolean input) {
-                Log.d("ChatFragment","updatedMessageSubject map");
-                AntoxDB antoxDB = new AntoxDB(getActivity());
-                ArrayList<Message> messageList = antoxDB.getMessageList(activeKey);
-                antoxDB.close();
-                return messageList;
+            public void call(Long aLong) {
+                if (!scrolling && toxSingleton.fileIds.size() > 0) {
+                    updateProgress();
+                }
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<ArrayList<Message>>() {
+        });
+        messagesSub = toxSingleton.updatedMessagesSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
             @Override
-            public void call(ArrayList<Message> messages) {
+            public void call(Boolean aBoolean) {
                 Log.d("ChatFragment", "updatedMessageSubject subscription");
-                updateChat(messages);
+                updateChat();
             }
         });
 
-        // There should be a way to do this without accessing the db
-        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-        String[] friend = db.getFriendDetails(activeKey);
-        Log.d("onResume","activeKey: " + activeKey);
+        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject
+                .subscribe(new Action1<Tuple<String, Boolean>>() {
+                    @Override
+                    public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
+                        String key = activeKeyAndIfFriend.x;
+                        boolean isFriend = activeKeyAndIfFriend.y;
+                        Log.d("ChatFragment", "activekeysub: key: " + key + " toxsingleton active key: " + toxSingleton.activeKey);
+                        if (!key.equals("") && !key.equals(activeKey)) {
+                            toxSingleton.doClosePaneSubject.onNext(true);
+                            if (isFriend) {
+                                Log.d("ChatFragment", "chat fragment enabled, isFriend: " + isFriend + ", key: " + activeKey);
+                                changeKey(key);
+                            }
+                        }
+                    }
+                });
 
-        Typeface robotoBold = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Bold.ttf");
-        Typeface robotoThin = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Thin.ttf");
-        Typeface robotoRegular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Regular.ttf");
 
-        TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
-        if(!friend[1].equals(""))
-            chatName.setText(friend[1]);
-        else
-            chatName.setText(friend[0]);
+        titleSub = toxSingleton.friendInfoListAndActiveSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>>() {
+            @Override
+            public void call(Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>> tup) {
+                ArrayList<FriendInfo> fi = tup.x;
+                String key = tup.y.x;
+                Boolean isFriend = tup.y.y;
 
-        TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
-        statusText.setText(friend[2]);
+                if (isFriend) {
+                    String friendName = "";
+                    String friendAlias = "";
+                    String friendNote = "";
+                    ToxUserStatus friendStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
+                    boolean friendIsOnline = false;
+                    for (FriendInfo f : fi) {
+                        if (f.friendKey.equals(key)) {
+                            friendName = f.friendName;
+                            friendNote = f.personalNote;
+                            friendAlias = f.alias;
+                            friendStatus = f.getFriendStatusAsToxUserStatus();
+                            friendIsOnline = f.isOnline;
+                            break;
+                        }
+                    }
 
-        chatName.setTypeface(robotoBold);
-        statusText.setTypeface(robotoRegular);
+                    TextView chatName = (TextView) getActivity().findViewById(R.id.chatActiveName);
+                    if (!friendAlias.equals(""))
+                        chatName.setText(friendAlias);
+                    else
+                        chatName.setText(friendName);
+
+                    TextView statusText = (TextView) getActivity().findViewById(R.id.chatActiveStatus);
+                    statusText.setText(friendNote);
+
+                    TextView statusIcon = (TextView) getActivity().findViewById(R.id.chat_friend_status_icon);
+                    statusIcon.setBackgroundColor(IconColor.iconColorAsColor(friendIsOnline,friendStatus));
+                }
+            }
+        });
+        typingSub = toxSingleton.typingSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean x) {
+                if (toxSingleton.typingMap.containsKey(activeKey)) {
+                    boolean isTyping = toxSingleton.typingMap.get(activeKey);
+                    if (isTyping) {
+                        isTypingBox.setVisibility(View.VISIBLE);
+                        statusTextBox.setVisibility(View.GONE);
+                    } else {
+                        isTypingBox.setVisibility(View.GONE);
+                        statusTextBox.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    isTypingBox.setVisibility(View.GONE);
+                    statusTextBox.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
     public void onPause(){
         super.onPause();
+        Log.d("ChatFragment", "onPause");
         messagesSub.unsubscribe();
+        titleSub.unsubscribe();
+        typingSub.unsubscribe();
+        activeKeySub.unsubscribe();
+        progressSub.unsubscribe();
     }
 
-    public void sendMessage() {
+    private void updateProgress() {
+        int start = chatListView.getFirstVisiblePosition();
+        for (int i = start, j = chatListView.getLastVisiblePosition(); i <= j; i++) {
+            View view = chatListView.getChildAt(i - start);
+            chatListView.getAdapter().getView(i, view, chatListView);
+        }
+    }
+
+    private void sendMessage() {
         Log.d("ChatFragment","sendMessage");
         if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
             return;
@@ -124,7 +212,7 @@ public class ChatFragment extends Fragment {
         } else {
             msg = "";
         }
-        final String key = activeKey;
+        final String key = this.activeKey;
         messageBox.setText("");
         Observable<Boolean> send = Observable.create(
                 new Observable.OnSubscribe<Boolean>() {
@@ -143,46 +231,46 @@ public class ChatFragment extends Fragment {
                                 if (friend != null) {
                                     boolean sendingSucceeded = true;
                                     try {
+                                        // NB: substring includes from start up to but not including the end position
                                         // Max message length in tox is 1368 bytes
+                                        // jToxCore seems to append a null byte so split around 1367
                                         final byte[] utf8Bytes = msg.getBytes("UTF-8");
-                                        int numOfMessages = (utf8Bytes.length/1368) + 1;
+                                        int numOfMessages = (utf8Bytes.length/1367) + 1;
 
                                         if(numOfMessages > 1) {
 
-                                            for(int i = 1; i < numOfMessages - 1; i++) {
+                                            final int OneByte = 0xFFFFFF80;
+                                            final int TwoByte = 0xFFFFF800;
+                                            final int ThreeByte = 0xFFFF0000;
 
-                                                int msb = (utf8Bytes[i*1368] & 0xff) >> 7;
+                                            int total = 0;
+                                            int previous = 0;
+                                            int numberOfMessagesSent = 0;
 
-                                                if(msb == 0) { // Single byte char
+                                            for(int i = 0; i < msg.length(); i++) {
+                                                if((msg.charAt(i) & OneByte) == 0)
+                                                    total += 1;
+                                                else if((msg.charAt(i) & TwoByte) == 0)
+                                                    total += 2;
+                                                else if((msg.charAt(i) & ThreeByte) == 0)
+                                                    total += 3;
+                                                else
+                                                    total += 4;
 
-                                                    int end = i*1368 > msg.length() ? msg.length() : i*1368;
-
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, end), id);
-
-                                                } else { // Multi-byte char
-
-                                                    boolean found = false;
-                                                    int num = 1;
-
-                                                    while(!found) {
-
-                                                        int ssb = (utf8Bytes[(i*1368) - num] >> 6) & 1;
-
-                                                        if(ssb == 1) { // Found start of word
-                                                            toxSingleton.jTox.sendMessage(friend, msg.substring((i-1)*1368, i*1368-num), id);
-                                                            found = true;
-                                                        } else {
-                                                            num++;
-                                                        }
-
-                                                    }
-
+                                                if(numberOfMessagesSent == numOfMessages-1) {
+                                                    // TODO: fix id's since withid was removed
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous));
+                                                    break;
+                                                } else if(total >= 1366) {
+                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i));
+                                                    numberOfMessagesSent++;
+                                                    previous = i;
+                                                    total = 0;
                                                 }
-
                                             }
 
                                         } else {
-                                            toxSingleton.jTox.sendMessage(friend, msg, id);
+                                            toxSingleton.jTox.sendMessage(friend, msg);
                                         }
 
                                     } catch (ToxException e) {
@@ -199,25 +287,52 @@ public class ChatFragment extends Fragment {
                                 }
                                 subscriber.onCompleted();
                             } catch (Exception e) {
+                                Log.e("ChatFragment", "Subscriber error: " + e.getMessage());
                                 subscriber.onError(e);
+
                             }
                          }
                      });
         send.subscribeOn(Schedulers.io()).subscribe();
     }
 
-    public void updateChat(ArrayList<Message> messages) {
-        if (messages.size() >= 0) {
-            adapter.data.clear();
-            for (int i = 0; i < messages.size(); i++) {
-                adapter.data.add(new ChatMessages(messages.get(i).id, messages.get(i).message_id, messages.get(i).message, messages.get(i).timestamp.toString(),messages.get(i).has_been_received, messages.get(i).successfully_sent, messages.get(i).size, messages.get(i).type));
-            }
-            Log.d("ChatFragment", "Updating chat");
-            adapter.notifyDataSetChanged();
-            chatListView.setSelection(adapter.getCount() - 1);
+    private Cursor getCursor() {
+        if (this.antoxDB == null) {
+            this.antoxDB = new AntoxDB(getActivity());
         }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = this.antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true));
+        return cursor;
     }
 
+    private void updateChat() {
+        Observable.create(new Observable.OnSubscribeFunc<Cursor>() {
+            @Override
+            public Subscription onSubscribe(Observer<? super Cursor> observer) {
+                try {
+                    Cursor cursor = getCursor();
+                    observer.onNext(cursor);
+                    observer.onCompleted();
+                } catch (Exception e) {
+                    observer.onError(e);
+                }
+
+                return Subscriptions.empty();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Cursor>() {
+                    @Override
+                    public void call(Cursor cursor) {
+                        adapter.changeCursor(cursor);
+                    }
+                });
+        Log.d("ChatFragment", "new key: " + activeKey);
+    }
+
+    public void changeKey(String key) {
+        activeKey = key;
+        updateChat();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -247,13 +362,13 @@ public class ChatFragment extends Fragment {
                 Log.d("onActivityResult", e.toString());
             }
             if (path != null) {
-                toxSingleton.sendFileSendRequest(path, activeKey, getActivity());
+                toxSingleton.sendFileSendRequest(path, this.activeKey, getActivity());
             }
         }
         if(requestCode==Constants.PHOTO_RESULT && resultCode==Activity.RESULT_OK){
 
             if(photoPath!=null) {
-                toxSingleton.sendFileSendRequest(photoPath, activeKey, getActivity());
+                toxSingleton.sendFileSendRequest(photoPath, this.activeKey, getActivity());
                 photoPath=null;
             }
 
@@ -268,13 +383,40 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        Runnable load = new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        };
+
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        chatMessages = new ArrayList<ChatMessages>();
-        adapter = new ChatMessagesAdapter(getActivity(), R.layout.chat_message_row, chatMessages);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Cursor cursor = getCursor();
+        adapter = new ChatMessagesAdapter(getActivity(), cursor, antoxDB.getMessageIds(this.activeKey, preferences.getBoolean("action_messages", true)));
         chatListView = (ListView) rootView.findViewById(R.id.chatMessages);
         chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         chatListView.setStackFromBottom(true);
         chatListView.setAdapter(adapter);
+        chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                    scrolling = false;
+                } else {
+                    scrolling = true;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+
+        });
+        isTypingBox = (TextView) rootView.findViewById(R.id.isTyping);
+        statusTextBox = (TextView) rootView.findViewById(R.id.chatActiveStatus);
 
         messageBox = (EditText) rootView.findViewById(R.id.yourMessage);
         messageBox.addTextChangedListener(new TextWatcher() {
@@ -286,10 +428,13 @@ public class ChatFragment extends Fragment {
                 } else {
                     isTyping = false;
                 }
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), isTyping);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
 
@@ -304,7 +449,7 @@ public class ChatFragment extends Fragment {
         messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                chatListView.setSelection(adapter.getCount() - 1);
+                //chatListView.setSelection(adapter.getCount() - 1);
             }
         });
 
@@ -313,13 +458,25 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 sendMessage();
-                try {
-                    toxSingleton.jTox.sendIsTyping(toxSingleton.getAntoxFriend(activeKey).getFriendnumber(), false);
-                } catch (ToxException ex) {
+                AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
+                if (friend != null) {
+                    try {
+                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false);
+                    } catch (ToxException ex) {
 
+                    }
                 }
             }
         });
+
+        View backButton = (View) rootView.findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+                                              toxSingleton.doClosePaneSubject.onNext(false);
+                                          }
+                                      });
         View attachmentButton = (View) rootView.findViewById(R.id.attachmentButton);
 
         attachmentButton.setOnClickListener(new View.OnClickListener() {

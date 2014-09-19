@@ -13,10 +13,10 @@
         <item>Away</item>
         <item>Busy</item>
     </string-array>
-    <string-array name="pref_status_list_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="pref_status_list_values" translatable="false">
+        <item>online</item>
+        <item>away</item>
+        <item>busy</item>
     </string-array>
 
     <string name="pref_title_status_message">Status Message</string>
@@ -25,28 +25,30 @@
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - You should not see this</string>
 
+    <string name="pref_title_account_name">Profile Name</string>
+    <string name="pref_title_logout">Logout</string>
+
     <!-- Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 
     <string name="pref_title_enable_notifications">Enable notifications</string>
     <string name="pref_title_new_message_notifications">Message notifications</string>
     <string name="pref_title_new_friend_notifications">Friend request notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_action_messages">Action messages</string>
 
     <!-- Other -->
     <string name="pref_header_other">Other</string>
 
     <string name="pref_title_language">Language</string>
     <string-array name="pref_language_list_titles" translatable="false">
+        <item>Български</item>
         <item>English</item>
         <item>Deutsch</item>
         <item>Español</item>
         <item>Français</item>
+        <item>Hrvatski</item>
         <item>Italiano</item>
+        <item>日本語</item>
         <item>Nederlands</item>
         <item>Polski</item>
         <item>Svenska</item>
@@ -56,11 +58,14 @@
         <item>Português</item>
     </string-array>
     <string-array name="pref_language_list_values" translatable="false">
+        <item>bg</item>
         <item>en</item>
         <item>de</item>
         <item>es</item>
         <item>fr</item>
+        <item>hr</item>
         <item>it</item>
+        <item>ja</item>
         <item>nl</item>
         <item>pl</item>
         <item>sv</item>
@@ -73,10 +78,9 @@
     <!-- Menu strings -->
     <string name="copy_tox_id">Copy Tox ID</string>
 
-    <!-- Dht strings -->
-    <string name="dht">DHT Node</string>
-    <string name="dht_ip">IP Address</string>
-    <string name="dht_port">Port</string>
-    <string name="dht_key">Key</string>
+    <!-- Advanced strings -->
+    <string name="pref_udp">Enable UDP</string>
+    <string name="pref_advanced">Advanced</string>
+    <string name="pref_nospam">Nospam</string>
 
 </resources>

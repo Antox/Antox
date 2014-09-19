@@ -12,19 +12,19 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.ExecutionException;
 
 import im.tox.antox.callbacks.AntoxOnActionCallback;
+import im.tox.antox.callbacks.AntoxOnAudioDataCallback;
+import im.tox.antox.callbacks.AntoxOnAvCallbackCallback;
 import im.tox.antox.callbacks.AntoxOnConnectionStatusCallback;
 import im.tox.antox.callbacks.AntoxOnFileControlCallback;
 import im.tox.antox.callbacks.AntoxOnFileDataCallback;
@@ -36,6 +36,7 @@ import im.tox.antox.callbacks.AntoxOnReadReceiptCallback;
 import im.tox.antox.callbacks.AntoxOnStatusMessageCallback;
 import im.tox.antox.callbacks.AntoxOnTypingChangeCallback;
 import im.tox.antox.callbacks.AntoxOnUserStatusCallback;
+import im.tox.antox.callbacks.AntoxOnVideoDataCallback;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
@@ -46,10 +47,14 @@ import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.Message;
+import im.tox.antox.utils.Options;
+import im.tox.antox.utils.Triple;
 import im.tox.antox.utils.Tuple;
+import im.tox.antox.utils.UserStatus;
 import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxFileControl;
+import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.ToxUserStatus;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 import rx.Observable;
@@ -74,20 +79,31 @@ public class ToxSingleton {
     public BehaviorSubject<ArrayList<FriendRequest>> friendRequestSubject;
     public BehaviorSubject<HashMap> lastMessagesSubject;
     public BehaviorSubject<HashMap> unreadCountsSubject;
+    public BehaviorSubject<Boolean> typingSubject;
     public BehaviorSubject<String> activeKeySubject;
     public BehaviorSubject<Boolean> updatedMessagesSubject;
-    public BehaviorSubject<Boolean> rightPaneOpenSubject;
+    public BehaviorSubject<Boolean> updatedProgressSubject;
+    public BehaviorSubject<Boolean> rightPaneActiveSubject;
     public PublishSubject<Boolean> doClosePaneSubject;
     public rx.Observable friendInfoListSubject;
     public rx.Observable activeKeyAndIsFriendSubject;
     public Observable friendListAndRequestsSubject;
-    public Observable chatActiveAndKey;
+    public Observable rightPaneActiveAndKeyAndIsFriendSubject;
+    public Observable friendInfoListAndActiveSubject;
     public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
+    public HashMap<Integer, ArrayList<Tuple<Integer,Long>>> progressHistoryMap = new HashMap<>();
+    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
+    public HashMap<Integer, Integer> fileSizeMap = new HashMap<>();
+    public HashMap<Integer, FileOutputStream> fileStreamMap = new HashMap<>();
+    public HashMap<Integer, File> fileMap = new HashMap<>();
+    public HashSet<Integer> fileIds = new HashSet<>();
+    public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
+    public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
     public boolean chatActive; //ONLY FOR USE BY CALLBACKS
 
-    public boolean isRunning = false;
+    public enum FileStatus {REQUESTSENT, CANCELLED, INPROGRESS, FINISHED, PAUSED}
 
     public AntoxFriend getAntoxFriend(String key) {
         return antoxFriendList.getById(key);
@@ -96,10 +112,10 @@ public class ToxSingleton {
     public void initSubjects(Context ctx) {
         friendListSubject = BehaviorSubject.create(new ArrayList<Friend>());
         friendListSubject.subscribeOn(Schedulers.io());
-        rightPaneOpenSubject = BehaviorSubject.create(new Boolean(false));
-        rightPaneOpenSubject.subscribeOn(Schedulers.io());
         friendRequestSubject = BehaviorSubject.create(new ArrayList<FriendRequest>());
         friendRequestSubject.subscribeOn(Schedulers.io());
+        rightPaneActiveSubject = BehaviorSubject.create(false);
+        rightPaneActiveSubject.subscribeOn(Schedulers.io());
         lastMessagesSubject = BehaviorSubject.create(new HashMap());
         lastMessagesSubject.subscribeOn(Schedulers.io());
         unreadCountsSubject = BehaviorSubject.create(new HashMap());
@@ -108,8 +124,12 @@ public class ToxSingleton {
         activeKeySubject.subscribeOn(Schedulers.io());
         doClosePaneSubject = PublishSubject.create();
         doClosePaneSubject.subscribeOn(Schedulers.io());
-        updatedMessagesSubject = BehaviorSubject.create(new Boolean(true));
+        updatedMessagesSubject = BehaviorSubject.create(true);
         updatedMessagesSubject.subscribeOn(Schedulers.io());
+        updatedProgressSubject = BehaviorSubject.create(true);
+        updatedProgressSubject.subscribeOn(Schedulers.io());
+        typingSubject = BehaviorSubject.create(true);
+        typingSubject.subscribeOn(Schedulers.io());
         friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, new Func3<ArrayList<Friend>, HashMap, HashMap, ArrayList<FriendInfo>>() {
             @Override
             public ArrayList<FriendInfo> call(ArrayList<Friend> fl, HashMap lm, HashMap uc) {
@@ -130,7 +150,7 @@ public class ToxSingleton {
                     } else {
                         unreadCount = 0;
                     }
-                    fi.add(new FriendInfo(f.icon, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount));
+                    fi.add(new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias));
                 }
                 return fi;
             }
@@ -149,12 +169,19 @@ public class ToxSingleton {
                 return new Tuple<String, Boolean>(key, isFriend);
             }
         });
-        chatActiveAndKey = combineLatest(rightPaneOpenSubject, activeKeySubject, new Func2<Boolean, String, Tuple<String, Boolean>>() {
+        friendInfoListAndActiveSubject = combineLatest(friendInfoListSubject, activeKeyAndIsFriendSubject, new Func2<ArrayList<FriendInfo>, Tuple<String,Boolean>,Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>>() {
+                    @Override
+                    public Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>> call(ArrayList<FriendInfo> o, Tuple<String,Boolean> o2) {
+                        return new Tuple<ArrayList<FriendInfo>, Tuple<String,Boolean>>((ArrayList<FriendInfo>) o, (Tuple<String,Boolean>) o2);
+                    }
+                });
+        rightPaneActiveAndKeyAndIsFriendSubject = combineLatest(rightPaneActiveSubject, activeKeyAndIsFriendSubject, new Func2<Boolean, Tuple<String, Boolean>, Triple<Boolean, String, Boolean>>() {
             @Override
-            public Tuple<String, Boolean> call(Boolean rightActive, String key) {
-                return new Tuple<String, Boolean>(key, rightActive);
+            public Triple<Boolean, String, Boolean> call(Boolean rightPaneActive, Tuple<String, Boolean> activeKeyAndIsFriend) {
+                String activeKey = activeKeyAndIsFriend.x;
+                Boolean isFriend = activeKeyAndIsFriend.y;
+                return new Triple<Boolean, String, Boolean>(rightPaneActive, activeKey, isFriend);
             }
-
         });
     }
 
@@ -169,20 +196,21 @@ public class ToxSingleton {
     }
 
     public void sendFileSendRequest(String path, String key, Context context) {
-        Log.d("sendFileSendRequest path", path);
         File file = new File(path);
         String[] splitPath = path.split("/");
         String fileName = splitPath[splitPath.length - 1];
+        Log.d("sendFileSendRequest", "name: " + fileName);
         if (fileName != null) {
             int fileNumber = -1;
             try {
-                fileNumber = jTox.toxNewFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
+                fileNumber = jTox.newFileSender(getAntoxFriend(activeKey).getFriendnumber(), file.length(), fileName);
             } catch (Exception e) {
                 Log.d("toxNewFileSender error", e.toString());
             }
             if (fileNumber != -1) {
                 AntoxDB antoxDB = new AntoxDB(context);
-                antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                long id = antoxDB.addFileTransfer(key, path, fileNumber, (int) file.length(), true);
+                fileIds.add((int) id);
                 antoxDB.close();
             }
         }
@@ -215,9 +243,9 @@ public class ToxSingleton {
             } while (file.exists());
         }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        long id = antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
+        fileIds.add((int) id);
         antoxDB.close();
-        acceptFile(key, fileNumber, context);
     }
 
     public void changeActiveKey(String key) {
@@ -231,44 +259,75 @@ public class ToxSingleton {
     }
 
     public void acceptFile(String key, int fileNumber, Context context) {
-        try {
-            jTox.toxFileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         AntoxDB antoxDB = new AntoxDB(context);
-        antoxDB.fileTransferStarted(key, fileNumber);
+        int id = antoxDB.getFileId(key, fileNumber);
+        if (id != -1) {
+            try {
+                jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), new byte[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            antoxDB.fileTransferStarted(key, fileNumber);
+            fileStatusMap.put(id, FileStatus.INPROGRESS);
+        }
+        antoxDB.close();
+        updatedMessagesSubject.onNext(true);
+    }
+
+    public void rejectFile(String key, int fileNumber, Context context) {
+        AntoxDB antoxDB = new AntoxDB(context);
+        int id = antoxDB.getFileId(key, fileNumber);
+        if (id != -1) {
+            try {
+                jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), new byte[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            antoxDB.clearFileNumber(key, fileNumber);
+            fileStatusMap.put(id, FileStatus.CANCELLED);
+        }
         antoxDB.close();
         updatedMessagesSubject.onNext(true);
     }
 
     public void receiveFileData(String key, int fileNumber, byte[] data, Context context) {
         AntoxDB antoxDB = new AntoxDB(context);
-        String fileName = antoxDB.getFilePath(key, fileNumber);
         int id = antoxDB.getFileId(key, fileNumber);
-        antoxDB.close();
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
-            File dirfile = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
-            if (!dirfile.mkdirs()) {
-                Log.e("acceptFile", "Directory not created");
+            if (!fileStreamMap.containsKey(id)) {
+                String fileName = antoxDB.getFilePath(key, fileNumber);
+                File dirfile = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY);
+                if (!dirfile.mkdirs()) {
+                    Log.e("acceptFile", "Directory not created");
+                }
+                File file = new File(dirfile.getPath(), fileName);
+                FileOutputStream output = null;
+                try {
+                    output = new FileOutputStream(file, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fileMap.put(id, file);
+                fileStreamMap.put(id, output);
+
             }
-            File file = new File(dirfile.getPath(), fileName);
-            FileOutputStream output = null;
+            antoxDB.close();
             try {
-                output = new FileOutputStream(file, true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                output.write(data);
+                fileStreamMap.get(id).write(data);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 incrementProgress(id, data.length);
+            }
+            Log.d("ToxSingleton","file size so far: " + fileMap.get(id).length() + " final file size: " + fileSizeMap.get(id));
+            if (fileMap.get(id).length() == fileSizeMap.get(id)) { // file finished
                 try {
-                    output.close();
+                    fileStreamMap.get(id).close();
+                    jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber(), false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    fileFinished(key, fileNumber, context);
+                    Log.d("ToxSingleton","receiveFileData finished receiving file");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -279,27 +338,81 @@ public class ToxSingleton {
     public void incrementProgress(int id, int length) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             if (!progressMap.containsKey(idObject)) {
                 progressMap.put(idObject, length);
+                ArrayList<Tuple<Integer, Long>> a = new ArrayList<Tuple<Integer, Long>>();
+                a.add(new Tuple<Integer, Long>(length, time));
+                progressHistoryMap.put(idObject, a);
             } else {
                 Integer current = progressMap.get(idObject);
-                progressMap.put(idObject, current+length);
+                progressMap.put(idObject, current + length);
+                ArrayList<Tuple<Integer, Long>> a = progressHistoryMap.get(idObject);
+                a.add(new Tuple<Integer, Long>(current + length, time));
+                progressHistoryMap.put(idObject, a);
             }
         }
-        updatedMessagesSubject.onNext(true);
+        updatedProgressSubject.onNext(true);
+    }
+
+    public Tuple<Integer, Long> getProgressSinceXAgo(int id, int ms) {
+    //ms is time to lookback, will find the first time value that is at least ms milliseconds ago, or if there isn't one, the first time value
+        if (progressHistoryMap.containsKey(id)) {
+            ArrayList<Tuple<Integer, Long>> progressHistory = progressHistoryMap.get(id);
+            if (progressHistory.size() <= 1) {
+                return null;
+            }
+            Tuple<Integer, Long> current = progressHistory.get(progressHistory.size() - 1);
+            Tuple<Integer, Long> before;
+            long timeDifference;
+            for (int i = progressHistory.size() - 2; i >= 0; --i) {
+                before = progressHistory.get(i);
+                timeDifference = current.y - before.y;
+                if (timeDifference > ms || i == 0) {
+                    return new Tuple<Integer, Long>(current.x - before.x, System.currentTimeMillis() - before.y);
+                }
+            }
+        }
+        return null;
     }
 
     public void setProgress(int id, int progress) {
         Integer idObject = id;
         if (id != -1) {
+            long time = System.currentTimeMillis();
             progressMap.put(idObject, progress);
+            ArrayList<Tuple<Integer, Long>> a;
+            if (!progressHistoryMap.containsKey(idObject)) {
+                a = new ArrayList<Tuple<Integer, Long>>();
+            } else {
+                a = progressHistoryMap.get(idObject);
+            }
+            a.add(new Tuple<Integer, Long>(progress, time));
+            progressHistoryMap.put(idObject, a);
+            updatedProgressSubject.onNext(true);
         }
-        updatedMessagesSubject.onNext(true);
     }
     public void fileFinished(String key, int fileNumber, Context context) {
         Log.d("ToxSingleton","fileFinished");
         AntoxDB db = new AntoxDB(context);
+        int id = db.getFileId(key, fileNumber);
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.FINISHED);
+            fileIds.remove(id);
+        }
         db.fileFinished(key, fileNumber);
+        db.close();
+        updatedMessagesSubject.onNext(true);
+    }
+
+    public void cancelFile(String key, int fileNumber, Context context) {
+        Log.d("ToxSingleton","cancelFile");
+        AntoxDB db = new AntoxDB(context);
+        int id = db.getFileId(key, fileNumber);
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.CANCELLED);
+        }
+        db.clearFileNumber(key, fileNumber);
         db.close();
         updatedMessagesSubject.onNext(true);
     }
@@ -337,11 +450,14 @@ public class ToxSingleton {
         path = antoxDB.getFilePath(key, fileNumber);
         int id = antoxDB.getFileId(key, fileNumber);
         antoxDB.close();
+        if (id != -1) {
+            fileStatusMap.put(id, FileStatus.INPROGRESS);
+        }
         int result = -1;
         if (!path.equals("")) {
             int chunkSize = 1;
             try {
-                chunkSize = jTox.toxFileDataSize(getAntoxFriend(key).getFriendnumber());
+                chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -365,9 +481,12 @@ public class ToxSingleton {
                         break;
                     }
                     try {
-                        result = jTox.toxFileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
+                        result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber(), fileNumber, data);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        break;
+                    }
+                    if (!(fileStatusMap.containsKey(id) && fileStatusMap.get(id).equals(FileStatus.INPROGRESS))) {
                         break;
                     }
                     if (result == -1) {
@@ -396,10 +515,10 @@ public class ToxSingleton {
                     e.printStackTrace();
                 }
             }
-            if (result != -1) {
+            if (result != -1 && fileStatusMap.get(id).equals(FileStatus.INPROGRESS)) {
                 try {
                     Log.d("toxFileSendControl", "FINISHED");
-                    jTox.toxFileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
+                    jTox.fileSendControl(getAntoxFriend(key).getFriendnumber(), true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), new byte[0]);
                     fileFinished(key, fileNumber, context);
                     return true;
                 } catch (Exception e) {
@@ -410,29 +529,6 @@ public class ToxSingleton {
             }
         }
         return false;
-    }
-
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
-    private static byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
     }
 
     public void updateFriendsList(Context ctx) {
@@ -473,7 +569,8 @@ public class ToxSingleton {
                 }
                 try {
                     if (friend != null) {
-                        jTox.sendMessage(friend, unsentMessageList.get(i).message, id);
+                        // TODO: fix for withid change
+                        jTox.sendMessage(friend, unsentMessageList.get(i).message);
                     }
                 } catch (ToxException e) {
                     Log.d(TAG, e.toString());
@@ -535,30 +632,24 @@ public class ToxSingleton {
     }
 
     public void initTox(Context ctx) {
-
-        try {
-            System.load("/data/data/im.tox.antox/lib/libsodium.so");
-            System.load("/data/data/im.tox.antox/lib/libtoxcore.so");
-        } catch (Exception e) {
-            Log.d(TAG, "Failed System.load()");
-            e.printStackTrace();
-        }
-
-
         antoxFriendList = new AntoxFriendList();
         callbackHandler = new CallbackHandler(antoxFriendList);
 
         qrFile = ctx.getFileStreamPath("userkey_qr.png");
         dataFile = new ToxDataFile(ctx);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean udpEnabled = preferences.getBoolean("enable_udp", false);
+
+        ToxOptions options = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
+
         /* Choose appropriate constructor depending on if data file exists */
         if (!dataFile.doesFileExist()) {
             try {
-                jTox = new JTox(antoxFriendList, callbackHandler);
+                jTox = new JTox(antoxFriendList, callbackHandler, options);
                 /* Save data file */
                 dataFile.saveFile(jTox.save());
                 /* Save users public key to settings */
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("tox_id", jTox.getAddress());
                 editor.commit();
@@ -567,7 +658,10 @@ public class ToxSingleton {
             }
         } else {
             try {
-                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler);
+                jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler, options);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("tox_id", jTox.getAddress());
+                editor.commit();
             } catch (ToxException e) {
                 e.printStackTrace();
             }
@@ -592,7 +686,7 @@ public class ToxSingleton {
             }
         }
 
-        /* Instansiate and register callback classes */
+        /* Instantiate and register callback classes */
         AntoxOnMessageCallback antoxOnMessageCallback = new AntoxOnMessageCallback(ctx);
         AntoxOnFriendRequestCallback antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(ctx);
         AntoxOnActionCallback antoxOnActionCallback = new AntoxOnActionCallback(ctx);
@@ -606,6 +700,10 @@ public class ToxSingleton {
         AntoxOnFileControlCallback antoxOnFileControlCallback = new AntoxOnFileControlCallback(ctx);
         AntoxOnFileDataCallback antoxOnFileDataCallback = new AntoxOnFileDataCallback(ctx);
 
+        AntoxOnAudioDataCallback antoxOnAudioDataCallback = new AntoxOnAudioDataCallback(ctx);
+        AntoxOnAvCallbackCallback antoxOnAvCallbackCallback = new AntoxOnAvCallbackCallback(ctx);
+        AntoxOnVideoDataCallback antoxOnVideoDataCallback = new AntoxOnVideoDataCallback(ctx);
+
         callbackHandler.registerOnMessageCallback(antoxOnMessageCallback);
         callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback);
         callbackHandler.registerOnActionCallback(antoxOnActionCallback);
@@ -618,18 +716,17 @@ public class ToxSingleton {
         callbackHandler.registerOnFileSendRequestCallback(antoxOnFileSendRequestCallback);
         callbackHandler.registerOnFileControlCallback(antoxOnFileControlCallback);
         callbackHandler.registerOnFileDataCallback(antoxOnFileDataCallback);
+        callbackHandler.registerOnAudioDataCallback(antoxOnAudioDataCallback);
+        callbackHandler.registerOnAvCallbackCallback(antoxOnAvCallbackCallback);
+        callbackHandler.registerOnVideoDataCallback(antoxOnVideoDataCallback);
 
         /* Load user details */
         try {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
             jTox.setName(preferences.getString("nickname", ""));
             jTox.setStatusMessage(preferences.getString("status_message", ""));
-            ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
+            ToxUserStatus newStatus;
             String newStatusString = preferences.getString("status", "");
-            if (newStatusString.equals("2"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_AWAY;
-            if (newStatusString.equals("3"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_BUSY;
+            newStatus = UserStatus.getToxUserStatusFromString(newStatusString);
             jTox.setUserStatus(newStatus);
         } catch (ToxException e) {
 
@@ -644,30 +741,17 @@ public class ToxSingleton {
             try {
                 if(DhtNode.ipv4.size() == 0)
                     new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
-                /* Try and bootstrap to online nodes*/
-                while (DhtNode.connected == false && networkInfo.isConnected()) {
-                    try {
-                        if (DhtNode.ipv4.size() > 0) {
-                            try {
-                                jTox.bootstrap(DhtNode.ipv4.get(DhtNode.counter),
-                                        Integer.parseInt(DhtNode.port.get(DhtNode.counter)), DhtNode.key.get(DhtNode.counter));
-                            } catch (ToxException e) {
 
-                            }
-
-                            Log.d(TAG, "Connected to node: " + DhtNode.owner.get(DhtNode.counter));
-                            DhtNode.connected = true;
-                        }
-                    } catch (UnknownHostException e) {
-                        DhtNode.counter = DhtNode.counter >= DhtNode.ipv4.size() ? 0 : DhtNode.counter++;
-                    }
+                /* Attempt to connect to all the nodes */
+                for(int i = 0; i < DhtNode.ipv4.size(); i++) {
+                    jTox.bootstrap(DhtNode.ipv4.get(i), Integer.parseInt(DhtNode.port.get(0)), DhtNode.key.get(0));
                 }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            } catch (Exception e) {
             }
         }
+
+        isInited = true;
     }
 
     public static ToxSingleton getInstance() {

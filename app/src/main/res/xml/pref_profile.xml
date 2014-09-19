@@ -30,17 +30,17 @@
         android:defaultValue="@string/pref_default_status_message"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:inputType="textAutoComplete"
         android:maxLines="1" />
+
+    <EditTextPreference
+        android:key="active_account"
+        android:title="@string/pref_title_account_name"
+        android:enabled="false" />
 
     <Preference
-        android:key="tox_id"
-        android:title="@string/pref_title_tox_id"
-        android:defaultValue="@string/pref_default_tox_id"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:editable="false"
-        android:textIsSelectable="true"
-        android:maxLines="1" />
-
+        android:key="logout"
+        android:title="@string/pref_title_logout"
+        />
 
 </PreferenceScreen>

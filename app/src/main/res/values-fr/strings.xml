@@ -1,76 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-    <string name="app_name">Antox</string>
-
-    <!-- Activity titles -->
-    <string name="title_activity_welcome">Bienvenue</string>
-    <string name="title_activity_add_friend">Ajouter un ami</string>
-
-    <!-- Navigation / Action Bar -->
-    <string name="add_friend">Ajouter un ami</string>
-
-    <!-- Main Activity -->
-    <string name="icon_description">Statut de la connexion</string>
-    <string name="main_no_friends">Hey! Vous n\'avez personne à qui parler!</string>
-    <string name="main_try_adding">Ajouter des amis pour commencer</string>
-    <string name="main_friend_requests">Demandes d\'amis</string>
-    <string name="main_friends">Amis</string>
-    <string name="main_no_internet">Pas de connexion internet</string>
-    <string name="main_not_connected">Vous n\'êtes pas connecté à internet</string>
-    <string name="main_node_list_download_error">Erreur lors du téléchargement de la liste des nœuds</string>
-
-    <!--  Chat Activity -->
-    <string name="chat_enter_message">Envoyer un message</string>
-
-
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">Vos devez sélectionner un nom d\'utilisateur</string>
-
-
-    <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Identifiant Tox de votre ami</string>
-    <string name="addfriend_friend_message">Joindre un message à votre demande</string>
-    <string name="addfriend_button">Ajout l\'ami</string>
-    <string name="addfriend_friend_added">Ami ajouté</string>
-    <string name="addfriend_friend_exists">L\'ami est déjà ajouté</string>
-    <string name="scanqr_button">Scanner un code QR</string>
-    <string name="invalid_friend_ID">Identifiant Tox invalide</string>
-    <string name="addfriend_nick_hint">Choisir un pseudo pour votre ami</string>
-    <string name="addfriend_optional_title">Infos supplémentaires</string>
-
-    <!-- Friend Profile Activity -->
-    <string name="friend_profile_name">Nom</string>
-    <string name="friend_profile_nick">Nickname</string>
-    <string name="friend_profile_key">Clé Tox</string>
-    <string name="friend_profile_note">Note</string>
-    <string name="friend_profile_button">Mettre l\'alias à jour</string>
-    <string name="friend_profile_updated">L\'alias a été mis à jour</string>
-
-    <!-- Friend request fragment -->
-    <string name="friendrequest_accept">Accepter</string>
-    <string name="friendrequest_reject">Rejeter</string>
-    <string name="friendrequest_accepted">Demande d\'ajout acceptée</string>
-    <string name="friendrequest_deleted">Demande d\'ajout refusée</string>
-    <string name="friendrequest">Demande d\'ajout</string>
-    <string name="friendrequest_recieved">Demande d\'ajout reçue</string>
-    <string name="friend_request">Nouvelle demande d\'ajout</string>
-
-    <!-- Contacts Fragment -->
-    <string name="friend_action_profile">Profil</string>
-    <string name="friend_action_sendfile">Envoyer fichier</string>
-    <string name="friend_action_delete">Supprimer l\'ami</string>
-    <string name="friend_action_block">Bloquer</string>
-    <string name="group_action_leave">Quitter groupe</string>
-    <string name="friend_action_deletechat">Vider l\'historique de chat</string>
-
-    <string name="contacts_actions_on">Actions</string>
-    <string name="contacts_clear_saved_logs">Voulez-vous également supprimer l\'historique de chat enregistré ?</string>
-
-    <!--  Misc -->
-    <string name="button_confirm">Confirmer</string>
-    <string name="button_cancel">Annuler</string>
-    <string name="button_yes">Oui</string>
-    <string name="button_no">Non</string>
-
+  <string name="app_name">Antox</string>
+  <!--Activity titles-->
+  <string name="title_activity_login">Connexion</string>
+  <string name="title_activity_add_friend">Ajouter un ami</string>
+  <string name="title_activity_friend_profile">Profil de l\'ami</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_friend">Ajouter un ami</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Vous devez remplir un nom de profil</string>
+  <string name="login_alpha_warning">Ce client est actuellement en version pré-alpha et peut se révéler instable.</string>
+  <string name="login_login">Connexion</string>
+  <string name="login_account_hint">Nom du profil</string>
+  <string name="login_create_account_text">Créer un profil Tox</string>
+  <string name="login_already_have_account">Déjà inscrit?</string>
+  <string name="login_bad_login">Le nom du profil n\'a pas été reconnu</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Nom du profil</string>
+  <string name="create_password_hint">Mot de passe</string>
+  <string name="create_password_again_hint">Confirmer le mot de passe</string>
+  <string name="create_text">Créer un profil Tox\ Chaque profil aura son propre Tox ID</string>
+  <string name="create_register">S\'inscrire</string>
+  <string name="create_skip">Permettre tout le monde de vous ajouter en utilisant votre nom de profil</string>
+  <string name="create_must_fill_in">Tous les champs n\'ont pas été renseignés!</string>
+  <string name="create_password_bad_match">Mauvaise confirmation du mot de passe!</string>
+  <string name="create_allow_search">Permettre à tout le monde de vous chercher</string>
+  <string name="create_bio_string">Écrivez un petit quelque chose sur vous</string>
+  <!--Main Activity-->
+  <string name="title">antox</string>
+  <string name="main_avatar">Avatar</string>
+  <string name="main_username">Nom d\'utilisateur</string>
+  <string name="main_status">Statut</string>
+  <string name="icon_description">Statut de la connexion</string>
+  <string name="main_no_friends">Zut! Vous n\'avez personne à qui parler!</string>
+  <string name="main_no_active_chat">Vous n\'avez pas de chat en cours. Choisir un ami dans le menu contacts pour commencer à chatter.</string>
+  <string name="main_recent_no">Pas de conversations récentes</string>
+  <string name="main_try_adding">Ajoutez des amis pour commencer</string>
+  <string name="main_friend_requests">Demandes d\'amis</string>
+  <string name="main_friends">Amis</string>
+  <string name="main_no_internet">Pas de connexion internet</string>
+  <string name="main_not_connected">Aucune connexion à internet n\'a été détectée.
+Sans connexion à internet, les fonctionnalités auxquelles vous avez accès sont limitées, sauf si vous utilisez Antox seulement sur un réseau local</string>
+  <string name="main_node_list_download_error">Impossible de récupérer la liste des neuds du réseau</string>
+  <string name="search_all_contacts">Chercher tous les contacts</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Envoyer un message</string>
+  <string name="chat_file_transfer">Transfert de fichier</string>
+  <string name="accept_caps">ACCEPTER</string>
+  <string name="reject_caps">REJETER</string>
+  <!--Add Friend Activity-->
+  <string name="addfriend_friend_key">Identifiant Tox de votre ami</string>
+  <string name="addfriend_friend_message">Joindre un message à votre demande</string>
+  <string name="addfriend_button">Ajouter l\'ami</string>
+  <string name="addfriend_friend_added">Ami ajouté</string>
+  <string name="addfriend_friend_exists">L\'ami est déjà ajouté</string>
+  <string name="scanqr_button">Scanner un code QR</string>
+  <string name="invalid_friend_ID">Identifiant Tox invalide</string>
+  <string name="addfriend_nick_hint">Choisir un pseudo pour votre ami</string>
+  <string name="addfriend_optional_title">Infos supplémentaires</string>
+  <string name="dialog_pin">Entrez le pin de votre ami</string>
+  <string name="addfriend_invalid_pin">Pin invalide</string>
+  <string name="addfriend_no_internet">Pas de connexion au réseau Tox</string>
+  <string name="addfriend_own_key">Vous ne pouvez pas vous ajouter vous-même</string>
+  <string name="addfriend_friend_pin_title">Entrez le pin de votre ami</string>
+  <string name="addfriend_friend_pin_text">Entrez le pin de votre ami</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_name">Nom</string>
+  <string name="friend_profile_nick">Pseudo</string>
+  <string name="friend_profile_group">Groupe</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">Statut</string>
+  <string name="friend_profile_button">Modifier</string>
+  <string name="friend_profile_updated">Le profil a été mis à jour</string>
+  <string name="friend_profile_copy">Copier l\'ID Tox</string>
+  <string name="friend_profile_copied">ID Tox copié</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">Le profil de %1$s\'</string>
+  <string name="friendrequest_accept">Accepter</string>
+  <string name="friendrequest_reject">Rejeter</string>
+  <string name="friendrequest_accepted">Demande d\'ajout acceptée</string>
+  <string name="friendrequest_deleted">Demande d\'ajout refusée</string>
+  <string name="friendrequest">Demandes d\'ajout</string>
+  <string name="friendrequest_recieved">Demande d\'ajout reçue</string>
+  <string name="friend_request">Nouvelle demande d\'ajout</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profil</string>
+  <string name="friend_action_sendfile">Envoyer fichier</string>
+  <string name="friend_action_delete">Supprimer cet ami</string>
+  <string name="friend_action_delete_chat">Supprimer l\'historique des chats</string>
+  <string name="friend_action_move_to_group">Move to Group</string>
+  <string name="friend_action_block">Bloquer</string>
+  <string name="friend_action_unblock">Débloquer</string>
+  <string name="group_action_leave">Quitter le groupe</string>
+  <string name="toast_succ_move_user">Le contact a été déplacé avec succès</string>
+  <string name="contacts_actions_on">Actions</string>
+  <string name="contacts_clear_saved_logs">Voulez-vous également supprimer l\'historique de chat enregistré ?</string>
+  <string name="contacts_delimiter_requests">Demandes d’ajout à la liste des contactes</string>
+  <string name="contacts_delimiter_friends">Amis</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Êtes vous sûr de vouloir supprimer cet ami?</string>
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Êtes vous sûr de vouloir supprimer l\'historique des chats?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Si vous bloquez cet utilisateur, il sera supprimé de votre liste d\'amis et vous ne recevrez plus des demandes d\'ajout de l\'utilisateur.
+Êtes vous sûrs de vouloir continuer?</string>
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Associer une photo</string>
+  <string name="attachment_takephoto">Prendre une photo</string>
+  <string name="message_copy">Copier le message</string>
+  <string name="message_delete">Supprimer le message</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Récents</string>
+  <string name="titles_contacts">Contacts</string>
+  <string name="titles_settings">Paramètres</string>
+  <!--Misc-->
+  <string name="button_confirm">Confirmer</string>
+  <string name="button_cancel">Annuler</string>
+  <string name="button_yes">Oui</string>
+  <string name="button_no">Non</string>
+  <string name="button_ok">OK</string>
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="dialog_tox_id">Copier l\'ID Tox dans le presse-papier</string>
+  <string name="share_with">Partager avec</string>
+  <string name="connection_has">a</string>
+  <string name="connection_online">s\'est connecté</string>
+  <string name="connection_offline">s\'est déconnecté</string>
+  <string name="title_activity_create_acccount">Créer un compte</string>
+  <string name="hello_world">Bonjour tout le monde!</string>
+  <string name="action_settings">Paramètres</string>
+  <!--QR-->
+  <string name="qr_default_title">Installer un lecteur de codes-barres?</string>
+  <string name="qr_default_message">Cette appli a besoin d\'un lecteur de codes-barres. Voulez-vous l\'installer?</string>
+  <string name="qr_button_yes">Oui</string>
+  <string name="qr_button_no">Non</string>
 </resources>

@@ -2,10 +2,12 @@ package im.tox.antox.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.LocalBroadcastManager;
@@ -117,34 +119,53 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         }
     }
 
+    private boolean isKeyOwn(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String tmp = preferences.getString("tox_id", "");
+        if(tmp.toLowerCase().startsWith("tox:"))
+            tmp = tmp.substring(4);
+        if(tmp.equals(key))
+            return true;
+        else
+            return false;
+    }
+
     private int checkAndSend(String key, String originalUsername) {
-        if(validateFriendKey(key)) {
-            String ID = key;
-            String message = friendMessage.getText().toString();
-            String alias = friendAlias.getText().toString();
+        if(!isKeyOwn(key)) {
+            if (validateFriendKey(key)) {
+                String ID = key;
+                String message = friendMessage.getText().toString();
+                String alias = friendAlias.getText().toString();
 
-            String[] friendData = {ID, message, alias};
+                // Check to see if message was blank, if so set a default
+                if(message.equals(""))
+                    message = getString(R.string.addfriend_default_message);
 
-            AntoxDB db = new AntoxDB(getApplicationContext());
-            if (!db.doesFriendExist(ID)) {
-                try {
-                    ToxSingleton toxSingleton = ToxSingleton.getInstance();
-                    toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
-                } catch (ToxException e) {
-                    e.printStackTrace();
-                } catch (FriendExistsException e) {
-                    e.printStackTrace();
+                String[] friendData = {ID, message, alias};
+
+                AntoxDB db = new AntoxDB(getApplicationContext());
+                if (!db.doesFriendExist(ID)) {
+                    try {
+                        ToxSingleton toxSingleton = ToxSingleton.getInstance();
+                        toxSingleton.jTox.addFriend(friendData[0], friendData[1]);
+                    } catch (ToxException e) {
+                        e.printStackTrace();
+                    } catch (FriendExistsException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("AddFriendActivity", "Adding friend to database");
+                    db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
+                } else {
+                    return -2;
                 }
-
-                Log.d("AddFriendActivity","Adding friend to database");
-                db.addFriend(ID, "Friend Request Sent", alias, originalUsername);
+                db.close();
+                return 0;
             } else {
-                return -2;
+                return -1;
             }
-            db.close();
-            return 0;
         } else {
-            return -1;
+            return -3;
         }
     }
     /*
@@ -171,7 +192,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         if(isV2) {
             DialogFragment dialog = new PinDialogFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("Enter Friend's Pin", "Enter Friend's Pin");
+            bundle.putString(getResources().getString(R.string.addfriend_friend_pin_title), getResources().getString(R.string.addfriend_friend_pin_text));
             dialog.setArguments(bundle);
             dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
         }
@@ -183,15 +204,20 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
 
         if(!isV2) {
 
-            if(checkAndSend(finalFriendKey, _originalUsername) == 0) {
+            int result = checkAndSend(finalFriendKey, _originalUsername);
+
+            if(result == 0) {
                 toast = Toast.makeText(context, text, duration);
                 toast.show();
-            } else if(checkAndSend(finalFriendKey, _originalUsername) == -1) {
+            } else if(result == -1) {
                 toast = Toast.makeText(context, getResources().getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT);
                 toast.show();
                 return;
-            } else if(checkAndSend(finalFriendKey, _originalUsername) == -2) {
-                toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+            } else if(result == -2) {
+                toast = Toast.makeText(context, getResources().getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT);
+                toast.show();
+            } else if(result == -3) {
+                toast = Toast.makeText(context, getResources().getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT);
                 toast.show();
             }
 
@@ -254,7 +280,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
         if (scanResult != null) {
             if (scanResult.getContents() != null) {
                 EditText addFriendKey = (EditText) findViewById(R.id.addfriend_key);
-                String friendKey = (scanResult.getContents().contains("tox://") ? scanResult.getContents().substring(6) : scanResult.getContents());
+                String friendKey = (scanResult.getContents().toLowerCase().contains("tox:") ? scanResult.getContents().substring(4) : scanResult.getContents());
                 if (validateFriendKey(friendKey)) {
                     addFriendKey.setText(friendKey);
                 } else {

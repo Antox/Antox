@@ -14,7 +14,6 @@ public final class Constants {
     public static final String DOWNLOAD_DIRECTORY = "Tox received files";
 
     //All DB Constants
-    public static final String DATABASE_NAME = "antoxdb";
     public static final int DATABASE_VERSION = 1;
     public static final String TABLE_FRIENDS = "friends";
     public static final String TABLE_CHAT_LOGS = "messages";
@@ -47,4 +46,7 @@ public final class Constants {
     public static final int MESSAGE_TYPE_FILE_TRANSFER = 3;
     public static final int MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4;
     public static final int MESSAGE_TYPE_ACTION = 5;
+
+    // Epoch time
+    public static long epoch;
 }

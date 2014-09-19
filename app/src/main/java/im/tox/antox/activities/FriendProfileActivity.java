@@ -45,8 +45,7 @@ public class FriendProfileActivity extends ActionBarActivity {
         String friendAlias = friendDetails[1];
         String friendNote = friendDetails[2];
 
-        setTitle(friendName+"'s Profile");
-
+        setTitle(getResources().getString(R.string.friend_profile_title, friendName));
 
         EditText editFriendAlias = (EditText) findViewById(R.id.friendAliasText);
         editFriendAlias.setText(friendAlias);
@@ -109,7 +108,7 @@ public class FriendProfileActivity extends ActionBarActivity {
     }
 
     private void generateQR(String userKey) {
-        String qrData = "tox://" + userKey;
+        String qrData = "tox:" + userKey;
         int qrCodeSize = 400;
         QRCodeEncode qrCodeEncoder = new QRCodeEncode(qrData, null,
                 Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeSize);
@@ -150,4 +149,14 @@ public class FriendProfileActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(FriendProfileActivity.this,MainActivity.class);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        FriendProfileActivity.this.startActivity(intent);
+        finish();
+
+    }
 }

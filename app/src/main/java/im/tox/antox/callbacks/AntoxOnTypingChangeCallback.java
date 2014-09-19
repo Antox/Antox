@@ -1,10 +1,8 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
-import android.util.Log;
 
-import im.tox.antox.activities.MainActivity;
-import im.tox.antox.fragments.ChatFragment;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnTypingChangeCallback;
 
@@ -13,8 +11,14 @@ public class AntoxOnTypingChangeCallback implements OnTypingChangeCallback<Antox
     private static final String TAG = "OnTypingChangeCallback";
     private Context ctx;
 
-    public AntoxOnTypingChangeCallback(Context ctx) { this.ctx = ctx; };
+    private ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+    public AntoxOnTypingChangeCallback(Context ctx) {
+        this.ctx = ctx;
+    }
 
     public void execute(AntoxFriend friend, boolean typing) {
+        toxSingleton.typingMap.put(friend.getId(),typing);
+        toxSingleton.typingSubject.onNext(true);
     }
 }

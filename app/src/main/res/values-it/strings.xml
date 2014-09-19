@@ -1,96 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
-    <string name="app_name">Antox</string>
-
     <!-- Activity titles -->
-    <string name="title_activity_welcome">Benvenuto</string>
-    <string name="title_activity_add_friend">Aggiungi Amico</string>
+    <string name="title_activity_add_friend">Aggiungi Contatto</string>
     <string name="title_activity_friend_profile">Profilo</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">Aggiungi Amico</string>
+    <string name="add_friend">Aggiungi Contatto</string>
 
     <!-- Main Activity -->
-    <string name="title">Antox</string>
-    <string name="main_avatar">Immagine Profilo</string>
-    <string name="main_username">Nome Utente</string>
-    <string name="main_status">Stato</string>
-    <string name="icon_description">Stato Connessione</string>
-    <string name="main_no_friends">Non hai amici</string>
+    <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
     <string name="main_recent_no">Nessuna coversazione recente</string>
-    <string name="main_try_adding">Perché non provi ad aggiungerne?</string>
-    <string name="main_friend_requests">Richieste D\'Amicizia</string>
-    <string name="main_friends">Amici</string>
     <string name="main_no_internet">Nessuna connessione ad internet</string>
     <string name="main_not_connected">Non sei connesso ad internet: alcune funzionalità non saranno disponibili.</string>
-    <string name="main_node_list_download_error">Errore durante il download della lista dei nodi</string>
+    <string name="search_all_contacts">Cerca tra i contatti</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
     <string name="chat_file_transfer">Invia un file</string>
+    <string name="accept_caps">ACCETTA</string>
+    <string name="reject_caps">RIFIUTA</string>
 
-    <!-- Welcome Activity -->
-    <string name="welcome_must_select_username">Devi inserire un nome utente</string>
-    <string name="welcome_alpha_warning">APPLICAZIONE IN FASE PRE-ALPHA</string>
-    <string name="welcome_getstarted_string">Nome</string>
-    <string name="welcome_name_hint">nickname</string>
-    <string name="welcome_button">Inizia ad usare Antox!</string>
-    <string name="welcome_developer_string">Sviluppato da astonex</string>
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">Devi inserire un nome profilo</string>
+    <string name="login_login">Login</string>
+    <string name="login_account_hint">nome profilo</string>
+    <string name="login_create_account_text">Crea un profilo Tox</string>
+    <string name="login_bad_login">Il nome profilo non è corretto</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Nome Profilo</string>
+    <string name="create_text">Crea un nouvo profilo Tox\nOgni profilo ha il suo Tox ID personale</string>
+    <string name="create_register">Registrazione</string>
+    <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
+    <string name="create_must_fill_in">Devi compilare tutti i campi</string>
+    <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/" o "\\"</string>
 
     <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">Tox ID del tuo amico</string>
+    <string name="addfriend_friend_key">Tox ID del contatto</string>
     <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
-    <string name="addfriend_button">Aggiungi Amico</string>
-    <string name="addfriend_friend_added">Amico aggiunto</string>
-    <string name="addfriend_friend_exists">Amico già inserito</string>
+    <string name="addfriend_button">Aggiungi Contatto</string>
+    <string name="addfriend_friend_added">Contatto aggiunto</string>
+    <string name="addfriend_friend_exists">Contatto già inserito</string>
     <string name="scanqr_button">Scansiona un codice QR</string>
     <string name="invalid_friend_ID">Tox ID inserito non valido</string>
-    <string name="addfriend_nick_hint">Nome personalizzato per il tuo amico</string>
+    <string name="addfriend_nick_hint">Nome personalizzato per il contatto</string>
     <string name="addfriend_optional_title">Opzioni Aggiuntive</string>
-    <string name="dialog_pin">Inserisci il pin del tuo amico</string>
+    <string name="dialog_pin">Inserisci il pin del contatto</string>
     <string name="addfriend_invalid_pin">Pin non valido</string>
-    <string name="addfriend_no_internet">Nessuna connessione alla rete Tox</string>
-    <string name="addfriend_no_internet_text">Non puoi aggiungere amici in questo momento:
-        non sei connesso alla rete Tox.\nProva a riavviare l\'applicazione.
-    </string>
+    <string name="addfriend_own_key">Non puoi aggiungere te stesso</string>
+    <string name="addfriend_friend_pin_title">Pin del Contatto</string>
+    <string name="addfriend_friend_pin_text">Inserisci il pin del contatto</string>
+    <string name="addfriend_default_message">Hey! Per favore accetta la mia richiesta di amicizia</string>
 
     <!-- Friend Profile Activity -->
-    <string name="friend_profile_name">Nome</string>
+    <string name="friend_profile_title">Profilo di %1$s</string>
     <string name="friend_profile_nick">Nome Personalizzato</string>
-    <string name="friend_profile_group">Gruppo</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">Note Personali</string>
     <string name="friend_profile_button">Salva</string>
-    <string name="friend_profile_updated">Profilo dell\'amico salvato</string>
-    <string name="friend_profile_copy">Copia Tox ID</string>
+    <string name="friend_profile_updated">Profilo del contatto salvato</string>
     <string name="friend_profile_copied">Tox ID copiato</string>
 
     <!-- Friend Request Fragment -->
     <string name="friendrequest_accept">Accetta</string>
     <string name="friendrequest_reject">Rifiuta</string>
-    <string name="friendrequest_accepted">Richiesta d\'amicizia accettata</string>
-    <string name="friendrequest_deleted">Richiesta d\'amicizia cancellata</string>
-    <string name="friendrequest">Richiesta D\'Amicizia</string>
-    <string name="friendrequest_recieved">Ricevuta richiesta d\'amicizia</string>
     <string name="friend_request">Nuova Richiesta D\'Amicizia</string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profilo</string>
-    <string name="friend_action_sendfile">Invia File</string>
-    <string name="friend_action_delete">Rimuovi Amico</string>
-    <string name="friend_action_move_to_group">Sposta nel gruppo...</string>
+    <string name="friend_action_delete">Rimuovi contatto</string>
+    <string name="friend_action_delete_chat">Elimina chat</string>
     <string name="friend_action_block">Blocca</string>
-    <string name="friend_action_unblock">Sblocca</string>
-    <string name="friend_action_deletechat">Elimina Chat</string>
-    <string name="friend_action_block_confirmation">
-        Bloccando questo utente, verrà rimosso dalla tua lista degli amici e non riceverai più
+    <string name="contacts_actions_on">Azioni per</string>
+    <string name="contacts_delimiter_requests">Richieste d\'amicizia</string>
+    <string name="contacts_delimiter_friends">Contatti</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Sei sicuro di voler eliminare la chat?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">
+        Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
         richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?
     </string>
-    <string name="toast_succ_move_user">Spostamento riuscito</string>
-    <string name="group_action_leave">Lascia Gruppo</string>
-    <string name="contacts_actions_on">Azioni per</string>
-    <string name="contacts_clear_saved_logs">Vuoi cancellare anche i log delle chat?</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Allega foto</string>
+    <string name="attachment_takephoto">Scatta foto</string>
+    <string name="message_copy">Copia messaggio</string>
+    <string name="message_delete">Cancella messaggio</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Recenti</string>
+    <string name="titles_contacts">Contatti</string>
+    <string name="titles_settings">Impostazioni</string>
 
     <!-- Misc -->
     <string name="button_confirm">Applica</string>
@@ -98,8 +107,18 @@
     <string name="button_yes">Sì</string>
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
-    <string name="hello_blank_fragment">Ciao fragment vuoto</string>
     <string name="dialog_tox_id">Copia Tox ID negli appunti</string>
     <string name="share_with">Condividi con</string>
+    <string name="connection_has">è</string>
+    <string name="connection_online">online</string>
+    <string name="connection_offline">offline</string>
+    <string name="title_activity_create_acccount">Crea Profilo</string>
+    <string name="action_settings">Impostazioni</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Installare Barcode Scanner?</string>
+    <string name="qr_default_message">Antox richiede Barcode Scanner per poter leggere i codici QR.\n\nVuoi installare Barcode Scanner?</string>
+    <string name="qr_button_yes">Sì</string>
+    <string name="qr_button_no">No</string>
 
 </resources>

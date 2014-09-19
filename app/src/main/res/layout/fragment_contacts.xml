@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contact_list"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white_absolute"
-    android:orientation="vertical" >
+    android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="58dp"
@@ -29,41 +30,44 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/imageView"
             android:layout_marginLeft="19dp"
-            android:layout_alignRight="@+id/addFriendIcon"
             android:textColor="@color/black"
             android:inputType="text"
             android:typeface="normal"
+            android:windowSoftInputMode="stateHidden"
             android:background="@color/white_absolute"
             android:singleLine="true" />
 
-        <ImageView
-            android:id="@+id/addFriendIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_add_person"
-            android:layout_marginRight="10dp"
-            android:layout_alignTop="@+id/imageView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:onClick="onClickAddFriend"/>
-
     </RelativeLayout>
 
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/list_divider"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-
-                <ListView
-                    android:id="@+id/contacts_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white_absolute"
-                    android:cacheColorHint="@android:color/transparent"
-                    android:divider="@color/white"
-                    android:dividerHeight="1dp" />
-
+                    <ListView
+                        android:id="@+id/contacts_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="479dp"
+                        android:background="@color/white_absolute"
+                        android:cacheColorHint="@android:color/transparent"
+                        android:headerDividersEnabled="true"
+                        android:footerDividersEnabled="false"
+                        android:divider="@drawable/list_divider"
+                        android:dividerHeight="0dp" />
     </FrameLayout>
 
+    <com.shamanland.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:onClick="onClickAddFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        app:floatingActionButtonColor="#6BC25F"
+        />
+    
 </LinearLayout>
 
