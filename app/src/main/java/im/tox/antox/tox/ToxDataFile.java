@@ -1,6 +1,9 @@
 package im.tox.antox.tox;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,21 +11,37 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import im.tox.antox.utils.Constants;
+
 public class ToxDataFile {
 
-	private String fileName = "AntoxDataFile";
+	private String fileName;
     private Context ctx;
 
 	public ToxDataFile(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         ctx = context;
+        fileName = preferences.getString("active_account","");
 	}
+
+    public ToxDataFile(Context context, String fileName) {
+        ctx = context;
+        this.fileName = fileName;
+    }
 
 	/**
 	 * Method to check if the data file exists before attempting to use it
 	 * @return
 	 */
 	public boolean doesFileExist() {
+        if (ctx==null) {
+            Log.d("ToxDataFile", "Context is null!");
+        }
+        Log.d("ToxDataFile", "fileName: " + fileName);
 		File myFile = ctx.getFileStreamPath(fileName);
+        if (myFile == null) {
+            Log.d("ToxDataFile", "myFile is null!");
+        }
 		return myFile.exists();
 	}
 

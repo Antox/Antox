@@ -1,9 +1,7 @@
 package im.tox.antox.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -11,13 +9,19 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 
 import im.tox.antox.R;
+import im.tox.antox.activities.LoginActivity;
+import im.tox.antox.data.UserDB;
+import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.Options;
+import im.tox.antox.utils.UserStatus;
+import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
+import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -61,9 +65,10 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("nickname"));
         bindPreferenceSummaryToValue(findPreference("status"));
         bindPreferenceSummaryToValue(findPreference("status_message"));
-        bindPreferenceSummaryToValue(findPreference("notifications_new_message_ringtone"));
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
+        bindPreferenceSummaryToValue(findPreference("nospam"));
+        bindPreferenceSummaryToValue(findPreference("active_account"));
 
         /* Override the Tox ID click functionality to display a dialog with the qr image
          * and copy to clipboard button
@@ -77,6 +82,30 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 bundle.putString("Enter Friend's Pin", "Enter Friend's Pin");
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), "NoticeDialogFragment");
+                return true;
+            }
+        });
+
+        Preference logoutPreference = (Preference) findPreference("logout");
+        logoutPreference.setOnPreferenceClickListener(new EditTextPreference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean("loggedin", false);
+                editor.apply();
+
+                // Stop the Tox Service
+                Intent startTox = new Intent(getActivity().getApplicationContext(), ToxDoService.class);
+                getActivity().getApplicationContext().stopService(startTox);
+
+                // Launch login activity
+                Intent login = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+                getActivity().startActivity(login);
+
+                // Finish this activity
+                getActivity().finish();
+
                 return true;
             }
         });
@@ -124,28 +153,6 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                                 ? listPreference.getEntries()[index]
                                 : null);
 
-            } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
-                // using RingtoneManager.
-                if (TextUtils.isEmpty(stringValue)) {
-                    // Empty values correspond to 'silent' (no ringtone).
-                    preference.setSummary(R.string.pref_ringtone_silent);
-
-                } else {
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            preference.getContext(), Uri.parse(stringValue));
-
-                    if (ringtone == null) {
-                        // Clear the summary if there was a lookup error.
-                        preference.setSummary(null);
-                    } else {
-                        // Set the summary to reflect the new ringtone display
-                        // name.
-                        String name = ringtone.getTitle(preference.getContext());
-                        preference.setSummary(name);
-                    }
-                }
-
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -169,8 +176,9 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
 
     /* Callback will handle updating the new settings on the tox network */
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        UserDB db = new UserDB(getActivity());
 
-        if(key.equals("nickname")) {
+        if (key.equals("nickname")) {
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
@@ -179,16 +187,15 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key, ""));
         }
 
-        if(key.equals("status")) {
+        if (key.equals("status")) {
 
             ToxUserStatus newStatus = ToxUserStatus.TOX_USERSTATUS_NONE;
             String newStatusString = sharedPreferences.getString(key, "");
-            if(newStatusString.equals("2"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_AWAY;
-            if(newStatusString.equals("3"))
-                newStatus = ToxUserStatus.TOX_USERSTATUS_BUSY;
+            newStatus = UserStatus.getToxUserStatusFromString(newStatusString);
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
@@ -197,9 +204,11 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status", sharedPreferences.getString(key, ""));
         }
 
-        if(key.equals("status_message")) {
+        if (key.equals("status_message")) {
 
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
@@ -208,6 +217,34 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 e.printStackTrace();
             }
 
+            // Update user DB
+            db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key, ""));
+        }
+
+        if (key.equals("nospam")) {
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+            try {
+                int nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
+                toxSingleton.jTox.setNospam(nospam);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("tox_id", toxSingleton.jTox.getAddress());
+                editor.commit();
+                bindPreferenceSummaryToValue(findPreference("tox_id"));
+            } catch (ToxException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (key.equals("enable_udp")) {
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+            Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false);
+
+            // Stop service
+            Intent service = new Intent(getActivity(), ToxDoService.class);
+            getActivity().stopService(service);
+            // Start service
+            getActivity().startService(service);
         }
     }
 }

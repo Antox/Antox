@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Настройки</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Профиль</string>
+  <string name="pref_title_nickname">Имя</string>
+  <string name="pref_default_nickname">Пользователь Antox</string>
+  <string name="pref_title_status">Статус</string>
+  <string-array name="pref_status_list_titles">
+    <item>В сети</item>
+    <item>Отошел</item>
+    <item>Занят</item>
+  </string-array>
+  <string name="pref_title_status_message">Статусное сообщение</string>
+  <string name="pref_default_status_message">Всем привет! Я пользуюсь Antox\'ом!</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Tox ID по умолчанию - Вы будете видеть его</string>
+  <string name="pref_title_logout">Выход</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Уведомления</string>
+  <string name="pref_title_enable_notifications">Включить уведомления</string>
+  <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
+  <string name="pref_title_new_friend_notifications">Уведомления о запросе друга</string>
+  <string name="pref_title_action_messages">Сообщения о действиях</string>
+  <string name="pref_title_ringtone">Рингтон</string>
+  <string name="pref_ringtone_silent">Без звука</string>
+  <string name="pref_title_vibrate">Вибрировать</string>
+  <!--Other-->
+  <string name="pref_header_other">Другое</string>
+  <string name="pref_title_language">Язык</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Скопировать Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_advanced">Дополнительно</string>
+  <string name="pref_nospam">Nospam</string>
+</resources>

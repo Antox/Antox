@@ -99,7 +99,7 @@ public class DialogToxID extends DialogFragment {
     }
 
     private void generateQR(String userKey) {
-        String qrData = "tox://" + userKey;
+        String qrData = "tox:" + userKey;
         int qrCodeSize = 400;
 
         QRCodeEncode qrCodeEncoder = new QRCodeEncode(qrData, null,

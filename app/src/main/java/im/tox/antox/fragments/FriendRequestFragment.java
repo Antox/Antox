@@ -3,6 +3,7 @@ package im.tox.antox.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
+import im.tox.antox.utils.Tuple;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by ollie on 28/02/14.
@@ -20,6 +24,11 @@ public class FriendRequestFragment extends Fragment {
 
     private String key;
     private String message;
+    Subscription activeKeySub;
+    private TextView k;
+    private TextView m;
+    private Button accept;
+    private Button reject;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -41,21 +50,30 @@ public class FriendRequestFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (key != null && message == null) {
-            AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-            this.message = db.getFriendRequestMessage(key);
-            db.close();
-        }
-        View rootView = inflater.inflate(R.layout.fragment_friendrequest, container, false);
-        TextView k = (TextView) rootView.findViewById(R.id.requestfragment_key);
-        k.setText(SplitKey(key));
-        TextView m = (TextView) rootView.findViewById(R.id.requestfragment_message);
-        m.setText(message);
-        Button accept = (Button) rootView.findViewById(R.id.acceptFriendRequest);
-        Button reject = (Button) rootView.findViewById(R.id.rejectFriendRequest);
+    public void onResume() {
+        super.onResume();
+        activeKeySub = toxSingleton.activeKeyAndIsFriendSubject
+                .subscribe(new Action1<Tuple<String, Boolean>>() {
+                    @Override
+                    public void call(Tuple<String, Boolean> activeKeyAndIfFriend) {
+                        String activeKey = activeKeyAndIfFriend.x;
+                        boolean isFriend = activeKeyAndIfFriend.y;
+                        if (activeKey != null && !activeKey.equals("")) {
+                            if (!isFriend) {
+                                key = activeKey;
+                                changeKey(activeKey);
+                            }
+                        }
+                    }
+                });
+    }
 
+    private void changeKey(String activeKey) {
+        AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
+        message = db.getFriendRequestMessage(key);
+        db.close();
+        k.setText(key);
+        m.setText(message);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +105,6 @@ public class FriendRequestFragment extends Fragment {
                 new AcceptFriendRequest().execute();
             }
         });
-
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +127,18 @@ public class FriendRequestFragment extends Fragment {
                 new RejectFriendRequest().execute();
             }
         });
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_friendrequest, container, false);
+        k = (TextView) rootView.findViewById(R.id.requestfragment_key);
+        m = (TextView) rootView.findViewById(R.id.requestfragment_message);
+        accept = (Button) rootView.findViewById(R.id.acceptFriendRequest);
+        reject = (Button) rootView.findViewById(R.id.rejectFriendRequest);
+
+
         return rootView;
     }
 }
