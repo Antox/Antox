@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Antox</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_add_friend">Afegir un amic</string>
+    <string name="title_activity_friend_profile">Perfil de l'amic</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="add_friend">Afegir amic</string>
+
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">Cal que escriguis un nom de perfil</string>
+    <string name="login_login">Entrar</string>
+    <string name="login_account_hint">Nom del perfil</string>
+    <string name="login_create_account_text">Crear un perfil de Tox</string>
+    <string name="login_bad_login">El nom de perfil és desconegut</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Nom del perfil</string>
+    <string name="create_text">Crea un nou perfil de Tox\nCada perfil té el seu propi Tox ID</string>
+    <string name="create_register">Donar d'alta</string>
+    <string name="create_skip">Fer que et puguin trobar pel nom de perfil</string>
+    <string name="create_must_fill_in">Cal que emplenis tots els camps</string>
+    <string name="create_bad_profile_name">El nom de perfil no pot tenir ni espais ni barres</string>
+
+    <!-- Main Activity -->
+    <string name="main_no_active_chat">No hi ha xa tactiu. Enceta'n un triant
+        un amic del quadre de l'esquerra.</string>
+    <string name="main_recent_no">No hi ha converses recents</string>
+    <string name="main_no_internet">no hi ha connexió a internet</string>
+    <string name="main_not_connected">no s'ha trobat connexió a internet. sense
+        connexió a internet, tindràs funcionalitat limitada a menys que facis
+        servir antox només per la xarxa local.</string>
+    <string name="search_all_contacts">Cerca en tots els contactes</string>
+
+    <!-- Chat Activity -->
+    <string name="chat_enter_message">Envia un missatge</string>
+    <string name="chat_file_transfer">Transferència de fitxer</string>
+    <string name="accept_caps">ACCEPTAR</string>
+    <string name="reject_caps">REBUTJAR</string>
+
+    <!-- Add Friend Activity -->
+    <string name="addfriend_friend_key">El Tox ID del teu amic</string>
+    <string name="addfriend_friend_message">Envia-li un missatge demanant amistat</string>
+    <string name="addfriend_button">Afegir amic</string>
+    <string name="addfriend_friend_added">Amic afegit</string>
+    <string name="addfriend_friend_exists">Aquest amic ja existeix</string>
+    <string name="scanqr_button">Escaneja un codi QR</string>
+    <string name="invalid_friend_ID">Tox ID invàlid</string>
+    <string name="addfriend_nick_hint">Dóna un sobrenom a l'amic</string>
+    <string name="addfriend_optional_title">Opcions de més</string>
+    <string name="dialog_pin">Afegeix el PIN de l'amic</string>
+    <string name="addfriend_invalid_pin">PIN invàlid</string>
+    <string name="addfriend_own_key">No et pots afegir a tu mateix</string>
+    <string name="addfriend_friend_pin_title">Introdueix el PIN de l'amic</string>
+    <string name="addfriend_friend_pin_text">Introdueix el PIN de l'amic</string>
+    <string name="addfriend_default_message">Ei! Accepta'm aquesta petició d'amistat</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_nick">Sobrenom</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Estat</string>
+    <string name="friend_profile_button">Actualitza</string>
+    <string name="friend_profile_updated">El perfil ha estat actualitzat</string>
+    <string name="friend_profile_copied">Tox ID copiat</string>
+
+    <!-- Friend request fragment -->
+    <string name="friend_profile_title">Perfil d'en/na %1$</string>
+    <string name="friendrequest_accept">Acceptar</string>
+    <string name="friendrequest_reject">Rebutjar</string>
+    <string name="friend_request">Nova petició d'amistat</string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Perfil</string>
+    <string name="friend_action_delete">Eliminar amic</string>
+    <string name="friend_action_delete_chat">Esborrar-ne les converses</string>
+    <string name="friend_action_block">Bloquejar</string>
+    <string name="contacts_actions_on">Accions sobre</string>
+    <string name="contacts_delimiter_requests">Peticions</string>
+    <string name="contacts_delimiter_friends">Amics</string>
+    <string name="contacts_delimiter_offline">Fora de línia</string>
+    <string name="contacts_delimiter_online">En línia</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Estàs segur que vols eliminar aquest amic?</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Estàs segur que vols esborrar-ne les converses?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">Bloquejant aquest usuari te'l treurà de la llista d'amics i ja no en veuràs més peticions d'amistat.\n\nEstàs segur que hi estàs d'acord?</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Ajuntar una foto</string>
+    <string name="attachment_takephoto">Fer una foto</string>
+    <string name="message_copy">Copiar missatge</string>
+    <string name="message_delete">Esborrar message</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Recent</string>
+    <string name="titles_contacts">Amics</string>
+    <string name="titles_settings">Configuració</string>
+
+    <!-- Misc -->
+    <string name="button_confirm">Confirmar</string>
+    <string name="button_cancel">Cancel·lar</string>
+    <string name="button_yes">Sí</string>
+    <string name="button_no">No</string>
+    <string name="button_ok">D'acord</string>
+    <string name="dialog_tox_id">Copiar el Tox ID al porta-retalls</string>
+    <string name="share_with">Compartir</string>
+    <string name="connection_has">s'ha</string>
+    <string name="connection_online">connetat</string>
+    <string name="connection_offline">desconnectat</string>
+    <string name="title_activity_create_acccount">Crear compte</string>
+    <string name="action_settings">Configuració</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Vols instal·lar l'escàner de codis de barres?</string>
+    <string name="qr_default_message">Aquesta aplicació vol l'escàner de codis
+        de barres Barcode Scanner. El vols instal·lar?</string>
+    <string name="qr_button_yes">Sí</string>
+    <string name="qr_button_no">No</string>
+
+</resources>
