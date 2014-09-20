@@ -1,0 +1,47 @@
+<resources>
+    <string name="title_activity_settings">Configuració</string>
+
+    <!-- Profile -->
+    <string name="pref_header_profile">Pefil</string>
+
+    <string name="pref_title_nickname">Nom</string>
+    <string name="pref_default_nickname">Usuari d'Antox</string>
+
+    <string name="pref_title_status">Estat</string>
+    <string-array name="pref_status_list_titles">
+        <item>En línia</item>
+        <item>Fora</item>
+        <item>Ocupat</item>
+    </string-array>
+
+    <string name="pref_title_status_message">Missatge d'estat</string>
+    <string name="pref_default_status_message">Ei! Faig servir l'Antox</string>
+
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Tox ID per defecte - No l'hauries de veure</string>
+
+    <string name="pref_title_account_name">Nom del perfil</string>
+    <string name="pref_title_logout">Desconnectar</string>
+
+    <!-- Notifications -->
+    <string name="pref_header_notifications">Notificacions</string>
+
+    <string name="pref_title_enable_notifications">Activar les notificacions</string>
+    <string name="pref_title_new_message_notifications">Notificar els missatges</string>
+    <string name="pref_title_new_friend_notifications">Notificar les peticions d'amistat</string>
+    <string name="pref_title_action_messages">Mostrar missatges d'acció</string>
+
+    <!-- Other -->
+    <string name="pref_header_other">Altres</string>
+
+    <string name="pref_title_language">Idioma</string>
+
+    <!-- Menu strings -->
+    <string name="copy_tox_id">Copiar Tox ID</string>
+
+    <!-- Advanced strings -->
+    <string name="pref_udp">Activar UDP</string>
+    <string name="pref_advanced">Configuració avançada</string>
+    <string name="pref_nospam">Nospam</string>
+
+</resources>
