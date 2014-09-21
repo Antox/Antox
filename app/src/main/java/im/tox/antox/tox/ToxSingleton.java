@@ -744,7 +744,7 @@ public class ToxSingleton {
 
                 /* Attempt to connect to all the nodes */
                 for(int i = 0; i < DhtNode.ipv4.size(); i++) {
-                    jTox.bootstrap(DhtNode.ipv4.get(i), Integer.parseInt(DhtNode.port.get(0)), DhtNode.key.get(0));
+                    jTox.bootstrap(DhtNode.ipv4.get(i), Integer.parseInt(DhtNode.port.get(i)), DhtNode.key.get(i));
                 }
 
             } catch (Exception e) {
