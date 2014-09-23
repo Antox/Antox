@@ -67,7 +67,7 @@
     <string name="friend_profile_copied">Tox ID copiat</string>
 
     <!-- Friend request fragment -->
-    <string name="friend_profile_title">Perfil d\'en/na %1$</string>
+    <string name="friend_profile_title">Perfil d\'en/na %1$s</string>
     <string name="friendrequest_accept">Acceptar</string>
     <string name="friendrequest_reject">Rebutjar</string>
     <string name="friend_request">Nova petició d\'amistat</string>

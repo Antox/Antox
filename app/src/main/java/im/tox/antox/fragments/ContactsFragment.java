@@ -39,6 +39,7 @@ import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
 import im.tox.antox.utils.LeftPaneItem;
 import im.tox.antox.utils.Tuple;
+import im.tox.jtoxcore.FriendExistsException;
 import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -201,14 +202,13 @@ public class ContactsFragment extends Fragment {
                     items = new CharSequence[]{
                             getResources().getString(R.string.friendrequest_accept),
                             getResources().getString(R.string.friendrequest_reject),
-                            getResources().getString(R.string.friend_action_block)
                     };
-                }else {
+                } else {
                     items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
                             getResources().getString(R.string.friend_action_delete),
                             getResources().getString(R.string.friend_action_delete_chat),
-                            getResources().getString(R.string.friend_action_block)
+                            getResources().getString(R.string.contacts_resend_friend_request)
                     };
                 }
                 builder.setTitle(getResources().getString(R.string.contacts_actions_on) + " " + item.first)
@@ -266,9 +266,6 @@ public class ContactsFragment extends Fragment {
                                             new RejectFriendRequest().execute();
 
                                             break;
-                                        case 2:
-                                            showBlockDialog(getActivity(), item.key);
-                                            break;
                                     }
                                 } else {
                                     String key = item.key;
@@ -287,8 +284,14 @@ public class ContactsFragment extends Fragment {
                                                 // Delete chat logs
                                                 showDeleteChatDialog(getActivity(), key);
                                                 break;
+
                                             case 3:
-                                                showBlockDialog(getActivity(), key);
+                                                // Resend Friend Request
+                                                try {
+                                                    toxSingleton.jTox.addFriend(key, getResources().getString(R.string.addfriend_default_message));
+                                                } catch (ToxException e) {
+                                                } catch (FriendExistsException e) {
+                                                }
                                                 break;
                                         }
                                     }
@@ -324,31 +327,6 @@ public class ContactsFragment extends Fragment {
         });
 
         return rootView;
-    }
-
-    public void showBlockDialog(final Context context, String fkey) {
-        final String key = fkey;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(getResources().getString(R.string.friend_action_block_friend_confirmation))
-                .setCancelable(false)
-                .setPositiveButton(getResources().getString(R.string.button_yes),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                AntoxDB dbBlock = new AntoxDB(getActivity());
-                                dbBlock.blockUser(key);
-                                dbBlock.close();
-                                toxSingleton.updateFriendsList(getActivity());
-                            }
-                        })
-                .setNegativeButton(getResources().getString(R.string.button_no),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                            }
-                        }
-                );
-        builder.show();
     }
 
     public void showDeleteFriendDialog(Context context, String fkey) {
