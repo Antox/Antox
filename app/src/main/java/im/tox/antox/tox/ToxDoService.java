@@ -1,8 +1,13 @@
 package im.tox.antox.tox;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import im.tox.jtoxcore.ToxException;
@@ -31,10 +36,27 @@ public class ToxDoService extends Service {
             @Override
             public void run() {
                 while(keepRunning) {
-                    try {
-                        Thread.sleep(toxSingleton.jTox.doToxInterval());
-                        toxSingleton.jTox.doTox();
-                    } catch (Exception e) {
+                    final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    final ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    final boolean wifiOnly = preferences.getBoolean("wifi_only", true);
+                    final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+                    if(wifiOnly && !mWifi.isConnected()) {
+
+                        try {
+                            // Sleep for 10 seconds before checking again
+                            Thread.sleep(10000);
+                        } catch (Exception e) {
+                        }
+
+                    } else {
+
+                        try {
+                            Thread.sleep(toxSingleton.jTox.doToxInterval());
+                            toxSingleton.jTox.doTox();
+                        } catch (Exception e) {
+                        }
+
                     }
                 }
             }

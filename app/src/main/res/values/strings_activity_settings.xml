@@ -34,10 +34,11 @@
     <string name="pref_title_enable_notifications">Enable notifications</string>
     <string name="pref_title_new_message_notifications">Message notifications</string>
     <string name="pref_title_new_friend_notifications">Friend request notifications</string>
-    <string name="pref_title_action_messages">Action messages</string>
 
     <!-- Other -->
     <string name="pref_header_other">Other</string>
+    <string name="pref_title_connection_status_messages">Online/Offline Messages</string>
+    <string name="pref_title_wifi_only">Wi-Fi Only</string>
 
     <string name="pref_title_language">Language</string>
     <string-array name="pref_language_list_titles" translatable="false">
