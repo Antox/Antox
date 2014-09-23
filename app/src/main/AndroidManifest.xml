@@ -37,7 +37,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="locale|orientation|screenSize"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
