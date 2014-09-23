@@ -1,7 +1,10 @@
 package im.tox.antox.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -15,6 +18,7 @@ import java.util.Random;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.LoginActivity;
+import im.tox.antox.data.AntoxDB;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
@@ -257,6 +261,21 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             getActivity().stopService(service);
             // Start service
             getActivity().startService(service);
+        }
+
+        if(key.equals("wifi_only")) {
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            final ConnectivityManager connManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            final NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            boolean wifiOnly = sharedPreferences.getBoolean("wifi_only", true);
+
+            // Set all offline as we wont receive callbacks for them by not doing doTox()
+            if(wifiOnly && !mWifi.isConnected()) {
+                AntoxDB antoxDB = new AntoxDB(getActivity());
+                antoxDB.setAllOffline();
+                antoxDB.close();
+            }
         }
     }
 }

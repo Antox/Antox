@@ -13,8 +13,13 @@
         android:positiveButtonText="@null" />
 
     <CheckBoxPreference
+        android:key="wifi_only"
+        android:title="@string/pref_title_wifi_only"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
         android:key="action_messages"
-        android:title="@string/pref_title_action_messages"
+        android:title="@string/pref_title_connection_status_messages"
         android:defaultValue="true" />
 
     <PreferenceScreen
