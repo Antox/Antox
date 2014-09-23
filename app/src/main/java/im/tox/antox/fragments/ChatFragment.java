@@ -191,6 +191,8 @@ public class ChatFragment extends Fragment {
         typingSub.unsubscribe();
         activeKeySub.unsubscribe();
         progressSub.unsubscribe();
+        activeKey = "";
+        toxSingleton.chatActive = false;
     }
 
     private void updateProgress() {
