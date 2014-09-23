@@ -73,7 +73,6 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         bindPreferenceSummaryToValue(findPreference("status_message"));
         bindPreferenceSummaryToValue(findPreference("language"));
         bindPreferenceSummaryToValue(findPreference("tox_id"));
-        bindPreferenceSummaryToValue(findPreference("nospam"));
         bindPreferenceSummaryToValue(findPreference("active_account"));
 
         /* Override the Tox ID click functionality to display a dialog with the qr image
@@ -111,6 +110,28 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
 
                 // Finish this activity
                 getActivity().finish();
+
+                return true;
+            }
+        });
+
+        Preference nospamPreference = (Preference) findPreference("nospam");
+        nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ToxSingleton toxSingleton = ToxSingleton.getInstance();
+                try {
+                    Random random = new Random();
+                    int nospam = random.nextInt(1234567890);
+                    toxSingleton.jTox.setNospam(nospam);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("tox_id", toxSingleton.jTox.getAddress());
+                    editor.commit();
+                    bindPreferenceSummaryToValue(findPreference("tox_id"));
+                } catch (ToxException e) {
+                    e.printStackTrace();
+                }
 
                 return true;
             }
@@ -227,30 +248,6 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
             db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key, ""));
         }
 
-        if (key.equals("nospam")) {
-            ToxSingleton toxSingleton = ToxSingleton.getInstance();
-            try {
-                String nospamString = sharedPreferences.getString("nospam", "");
-                int nospam;
-                // Check if they entered an empty nospam
-                if (!nospamString.equals("")) {
-                    nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
-                }  else {
-                    Random random = new Random();
-                    nospam = random.nextInt(1000);
-                }
-
-                toxSingleton.jTox.setNospam(nospam);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("tox_id", toxSingleton.jTox.getAddress());
-                editor.commit();
-                bindPreferenceSummaryToValue(findPreference("tox_id"));
-
-            } catch (ToxException e) {
-                e.printStackTrace();
-            }
-        }
-
         if (key.equals("enable_udp")) {
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -275,7 +272,14 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 AntoxDB antoxDB = new AntoxDB(getActivity());
                 antoxDB.setAllOffline();
                 antoxDB.close();
+
             }
+        }
+
+        if(key.equals("language")) {
+            Intent intent = getActivity().getIntent();
+            getActivity().finish();
+            startActivity(intent);
         }
     }
 }

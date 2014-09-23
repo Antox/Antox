@@ -319,7 +319,7 @@ public class ContactsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                if(charSequence != null)
+                if(leftPaneAdapter != null)
                     leftPaneAdapter.getFilter().filter(charSequence);
             }
 

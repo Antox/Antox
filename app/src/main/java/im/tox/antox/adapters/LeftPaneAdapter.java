@@ -162,10 +162,7 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
                             int i = 0;
                             while (i < length) {
                                 LeftPaneItem item = mData.get(i);
-                                if (getItemViewType(i) == Constants.TYPE_HEADER
-                                        && item.first.substring(0, 1).equalsIgnoreCase(constraint.subSequence(0, 1).toString()))
-                                    tempList1.add(item);
-                                else if (item.first.toUpperCase().startsWith(constraint.toString().toUpperCase()))
+                                if (item.first.toUpperCase().startsWith(constraint.toString().toUpperCase()))
                                     tempList1.add(item);
                                 else if (item.first.toLowerCase().contains(constraint.toString().toLowerCase()))
                                     tempList2.add(item);

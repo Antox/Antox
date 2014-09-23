@@ -568,7 +568,7 @@ public class ToxSingleton {
                     Log.d(TAG, e.toString());
                 }
                 try {
-                    if (friend != null) {
+                    if (friend != null && friend.isOnline() && jTox != null) {
                         // TODO: fix for withid change
                         jTox.sendMessage(friend, unsentMessageList.get(i).message);
                     }
