@@ -59,15 +59,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     SharedPreferences preferences;
 
     @Override
-    protected void onNewIntent(Intent i) {
-        if (i.getAction() != null) {
-            if (i.getAction().equals(Constants.SWITCH_TO_FRIEND) && toxSingleton.getAntoxFriend(i.getStringExtra("key")) != null) {
-                toxSingleton.changeActiveKey(i.getStringExtra("key"));
-            }
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -164,8 +155,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         db.close();
 
         updateLeftPane();
-
-        onNewIntent(getIntent());
     }
 
     public void updateLeftPane() {
