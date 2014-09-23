@@ -29,10 +29,11 @@
     <string name="pref_title_enable_notifications">Activar les notificacions</string>
     <string name="pref_title_new_message_notifications">Notificar els missatges</string>
     <string name="pref_title_new_friend_notifications">Notificar les peticions d\'amistat</string>
-    <string name="pref_title_action_messages">Mostrar missatges d\'acció</string>
 
     <!-- Other -->
     <string name="pref_header_other">Altres</string>
+    <string name="pref_title_connection_status_messages">Missatges de connexions</string>
+    <string name="pref_title_wifi_only">Només Wi-Fi</string>
 
     <string name="pref_title_language">Idioma</string>
 
@@ -42,6 +43,6 @@
     <!-- Advanced strings -->
     <string name="pref_udp">Activar UDP</string>
     <string name="pref_advanced">Configuració avançada</string>
-    <string name="pref_nospam">Nospam</string>
+    <string name="pref_nospam">Generar nou Nospam</string>
 
 </resources>
