@@ -431,7 +431,7 @@ public class ChatFragment extends Fragment {
                     isTyping = false;
                 }
                 AntoxFriend friend = toxSingleton.getAntoxFriend(activeKey);
-                if (friend != null) {
+                if (friend != null && friend.isOnline()) {
                     try {
                         toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping);
                     } catch (ToxException ex) {

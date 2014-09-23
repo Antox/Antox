@@ -300,8 +300,10 @@ public class ContactsFragment extends Fragment {
                             }
                         });
                 AlertDialog alert = builder.create();
-                if (item.viewType != Constants.TYPE_HEADER) {
-                    alert.show();
+                if(item != null) {
+                    if (item.viewType != Constants.TYPE_HEADER) {
+                        alert.show();
+                    }
                 }
                 return true;
             }
