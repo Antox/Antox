@@ -78,6 +78,7 @@
     <string name="contacts_delimiter_friends">Contatti</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Invia nuova richiesta d\'amicizia</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
