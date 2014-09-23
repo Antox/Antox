@@ -11,6 +11,8 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 
+import java.util.Random;
+
 import im.tox.antox.R;
 import im.tox.antox.activities.LoginActivity;
 import im.tox.antox.data.UserDB;
@@ -224,12 +226,22 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         if (key.equals("nospam")) {
             ToxSingleton toxSingleton = ToxSingleton.getInstance();
             try {
-                int nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
+                String nospamString = sharedPreferences.getString("nospam", "");
+                int nospam;
+                // Check if they entered an empty nospam
+                if (!nospamString.equals("")) {
+                    nospam = Integer.parseInt(sharedPreferences.getString("nospam", ""));
+                }  else {
+                    Random random = new Random();
+                    nospam = random.nextInt(1000);
+                }
+
                 toxSingleton.jTox.setNospam(nospam);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("tox_id", toxSingleton.jTox.getAddress());
                 editor.commit();
                 bindPreferenceSummaryToValue(findPreference("tox_id"));
+
             } catch (ToxException e) {
                 e.printStackTrace();
             }

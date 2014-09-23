@@ -65,7 +65,7 @@
     <string name="friend_profile_copied">Tox ID Copied</string>
 
     <!-- Friend request fragment -->
-    <string name="friend_profile_title">%1$s\' Profile</string>
+    <string name="friend_profile_title">%1$s\'s Profile</string>
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
     <string name="friend_request">New Friend Request</string>
@@ -73,13 +73,14 @@
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_delete">Remove Friend</string>
-    <string name="friend_action_delete_chat">Delete chat logs</string>
+    <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
     <string name="contacts_delimiter_friends">Friends</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Resend Friend Request</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
