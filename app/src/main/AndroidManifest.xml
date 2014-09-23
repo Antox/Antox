@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="im.tox.antox"
-    android:versionCode="35"
-    android:versionName="0.12.7" >
+    android:versionCode="36"
+    android:versionName="0.12.8" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -37,7 +37,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="locale|orientation|screenSize"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity

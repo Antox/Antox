@@ -44,5 +44,5 @@
     <!-- Advanced strings -->
     <string name="pref_udp">Abilita connessioni UDP</string>
     <string name="pref_advanced">Avanzate</string>
-    <string name="pref_nospam">Imposta nospam</string>
+    <string name="pref_nospam">Genera nuovo nospam</string>
 </resources>

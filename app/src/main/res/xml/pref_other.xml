@@ -30,14 +30,9 @@
                 android:title="@string/pref_udp"
                 android:defaultValue="false" />
 
-            <EditTextPreference
+            <Preference
                 android:key="nospam"
-                android:title="@string/pref_nospam"
-                android:defaultValue=""
-                android:numeric="integer"
-                android:inputType="number"
-                android:singleLine="true"
-                android:maxLines="1" />
+                android:title="@string/pref_nospam" />
 
             <Preference
                 android:key="tox_id"
