@@ -275,6 +275,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
                 AntoxDB antoxDB = new AntoxDB(getActivity());
                 antoxDB.setAllOffline();
                 antoxDB.close();
+
             }
         }
     }
