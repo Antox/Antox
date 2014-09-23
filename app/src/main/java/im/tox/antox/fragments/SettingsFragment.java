@@ -278,5 +278,11 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
 
             }
         }
+
+        if(key.equals("language")) {
+            Intent intent = getActivity().getIntent();
+            getActivity().finish();
+            startActivity(intent);
+        }
     }
 }
