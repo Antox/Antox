@@ -183,7 +183,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             if (msg.isMine()) {
                                 holder.progressText.setText("Sent filesending request");
                             } else {
-                                holder.progressText.setText("Received filesending request");
+                                holder.progressText.setText("");
                                 holder.buttons.setVisibility(View.VISIBLE);
                                 holder.accept.setOnClickListener(new View.OnClickListener() {
                                     @Override
