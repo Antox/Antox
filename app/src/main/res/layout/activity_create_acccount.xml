@@ -7,7 +7,8 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/test_bg"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
@@ -74,7 +75,7 @@
             android:textColor="@color/white"
             android:background="#414141"
             android:layout_marginTop="75dp"
-            android:onClick="onClickRegisterAccount"/>
+            android:onClick="onClickRegisterIncogAccount"/>
 
     </LinearLayout>
 </ScrollView>
