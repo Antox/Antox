@@ -78,22 +78,26 @@
                 android:id="@+id/file_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Button
-                    android:gravity="center"
+                <ImageView
+                    android:contentDescription="Send Button"
                     android:id="@+id/file_reject_button"
-                    android:text="@string/reject_caps"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content" />
-                <Button
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/margin_medium"
+
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_action_cancel" />
+                <ImageView
+                    android:contentDescription="Send Button"
                     android:id="@+id/file_accept_button"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/accept_caps"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/margin_medium"
+
+                    android:src="@drawable/ic_action_tick"
+                    android:adjustViewBounds="false"
+                    android:layout_weight="2" />
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/message_audio_player"
