@@ -41,6 +41,11 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
+            android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".activities.StartActivity"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:label="@string/app_name" >
