@@ -99,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && !networkInfo.isConnected()) {
-                /* Display lack of internt connection warning */
+                /* Display lack of internet connection warning */
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
                     getString(R.string.main_not_connected));
         }
