@@ -19,6 +19,35 @@ import im.tox.antox.utils.Constants;
 
 public class LoginActivity extends ActionBarActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        getSupportActionBar().hide();
+
+        /* Fix for an android 4.1.x bug */
+        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+            );
+        }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(preferences.getBoolean("loggedin", false)) {
+            /* Attempt to start service in case it's not running */
+            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
+            getApplicationContext().startService(startTox);
+
+            /* Launch main activity */
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(main);
+
+            finish();
+        }
+    }
 
     public void onClickLogin(View view) {
 
