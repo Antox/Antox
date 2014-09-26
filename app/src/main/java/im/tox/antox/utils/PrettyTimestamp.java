@@ -1,14 +1,9 @@
 package im.tox.antox.utils;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import android.text.format.Time;
-import android.util.Log;
 
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by ollie on 29/05/14.
