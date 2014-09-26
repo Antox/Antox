@@ -31,14 +31,12 @@ import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Triple;
-import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxCallType;
 import im.tox.jtoxcore.ToxCodecSettings;
 import im.tox.jtoxcore.ToxException;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author Mark Winter (Astonex)

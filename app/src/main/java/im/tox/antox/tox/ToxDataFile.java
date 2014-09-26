@@ -11,8 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import im.tox.antox.utils.Constants;
-
 public class ToxDataFile {
 
 	private String fileName;

@@ -1,6 +1,7 @@
 package im.tox.antox.utils;
 
 import android.graphics.Color;
+
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
