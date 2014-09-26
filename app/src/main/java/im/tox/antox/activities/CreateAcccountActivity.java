@@ -48,7 +48,7 @@ import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.callbacks.CallbackHandler;
 
-public class CreateAcccountActivity extends ActionBarActivity{
+public class CreateAcccountActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
         setContentView(R.layout.activity_create_acccount);
 
         /* Fix for an android 4.1.x bug */
-        if(Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getWindow().setFlags(
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -86,7 +86,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickRegisterAccount(View view) {
+    public void onClickRegisterIncogAccount(View view) {
         EditText accountField = (EditText) findViewById(R.id.create_account_name);
 
         String account = accountField.getText().toString();
@@ -98,7 +98,7 @@ public class CreateAcccountActivity extends ActionBarActivity{
         matcher = pattern2.matcher(account);
         boolean containsFileSeperator = matcher.find();
 
-        if(account.equals("")) {
+        if (account.equals("")) {
             Context context = getApplicationContext();
             CharSequence text = getString(R.string.create_must_fill_in);
             int duration = Toast.LENGTH_SHORT;
@@ -111,37 +111,164 @@ public class CreateAcccountActivity extends ActionBarActivity{
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         } else {
-                // Add user to DB
-                UserDB db = new UserDB(this);
-                db.addUser(account, "");
-                db.close();
+            // Add user to DB
+            UserDB db = new UserDB(this);
+            db.addUser(account, "");
+            db.close();
 
-                // Create a tox data file
-                String ID = "";
-                byte[] fileBytes = null;
-                try {
-                    AntoxFriendList antoxFriendList = new AntoxFriendList();
-                    CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                    boolean udpEnabled = preferences.getBoolean("enable_udp", false);
-                    ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
-                    JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
-                    ToxDataFile toxDataFile = new ToxDataFile(this, account);
-                    toxDataFile.saveFile(jTox.save());
-                    ID = jTox.getAddress();
-                    fileBytes = toxDataFile.loadFile();
-                } catch(ToxException e) {
-                    Log.d("CreateAccount", e.getMessage());
-                }
+            // Create a tox data file
+            String ID = "";
+            byte[] fileBytes = null;
+            try {
+                AntoxFriendList antoxFriendList = new AntoxFriendList();
+                CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                boolean udpEnabled = preferences.getBoolean("enable_udp", false);
+                ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
+                JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
+                ToxDataFile toxDataFile = new ToxDataFile(this, account);
+                toxDataFile.saveFile(jTox.save());
+                ID = jTox.getAddress();
+                fileBytes = toxDataFile.loadFile();
+            } catch (ToxException e) {
+                Log.d("CreateAccount", e.getMessage());
+            }
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("active_account", account);
+            editor.putString("nickname", account);
+            editor.putString("status", "online");
+            editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
+            editor.putString("tox_id", ID);
+            editor.putBoolean("loggedin", true);
+            editor.apply();
 
-                CheckBox skipRegistration = (CheckBox) findViewById(R.id.skip_button);
-                if(!skipRegistration.isChecked()) {
+                            /* Start Tox Service */
+            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
+            getApplicationContext().startService(startTox);
+
+                            /* Launch main activity */
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(main);
+
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
+
+
+    public void onClickRegisterAccount(View view) {
+        EditText accountField = (EditText) findViewById(R.id.create_account_name);
+
+        String account = accountField.getText().toString();
+
+        Pattern pattern = Pattern.compile("\\s");
+        Pattern pattern2 = Pattern.compile(File.separator);
+        Matcher matcher = pattern.matcher(account);
+        boolean containsSpaces = matcher.find();
+        matcher = pattern2.matcher(account);
+        boolean containsFileSeperator = matcher.find();
+
+        if (account.equals("")) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.create_must_fill_in);
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else if (containsSpaces || containsFileSeperator) {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.create_bad_profile_name);
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            // Add user to DB
+            UserDB db = new UserDB(this);
+            db.addUser(account, "");
+            db.close();
+
+            // Create a tox data file
+            String ID = "";
+            byte[] fileBytes = null;
+            try {
+                AntoxFriendList antoxFriendList = new AntoxFriendList();
+                CallbackHandler callbackHandler = new CallbackHandler(antoxFriendList);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                boolean udpEnabled = preferences.getBoolean("enable_udp", false);
+                ToxOptions toxOptions = new ToxOptions(Options.ipv6Enabled, udpEnabled, Options.proxyEnabled);
+                JTox jTox = new JTox(antoxFriendList, callbackHandler, toxOptions);
+                ToxDataFile toxDataFile = new ToxDataFile(this, account);
+                toxDataFile.saveFile(jTox.save());
+                ID = jTox.getAddress();
+                fileBytes = toxDataFile.loadFile();
+            } catch (ToxException e) {
+                Log.d("CreateAccount", e.getMessage());
+            }
+                    /* Register Account using toxme.se API */
+            try {
+                System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
+            } catch (Exception e) {
+                Log.d("CreateAccount", "System.load() on kalium failed");
+            }
+
+            int allow = 0;
+            JSONPost jsonPost = new JSONPost();
+            Thread toxmeThread = new Thread(jsonPost);
+            try {
+                JSONObject unencryptedPayload = new JSONObject();
+                unencryptedPayload.put("tox_id", ID);
+                unencryptedPayload.put("name", account);
+                unencryptedPayload.put("privacy", allow);
+                unencryptedPayload.put("bio", "");
+                long epoch = System.currentTimeMillis() / 1000;
+                unencryptedPayload.put("timestamp", epoch);
+
+                Hex hexEncoder = new Hex();
+                Raw rawEncoder = new Raw();
+
+                String toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13";
+                byte[] serverPublicKey = hexEncoder.decode(toxmepk);
+                byte[] ourSecretKey = new byte[32];
+                System.arraycopy(fileBytes, 52, ourSecretKey, 0, 32);
+
+                Box box = new Box(serverPublicKey, ourSecretKey);
+                org.abstractj.kalium.crypto.Random random = new org.abstractj.kalium.crypto.Random();
+                byte[] nonce = random.randomBytes(24);
+                byte[] payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString()));
+                // Encode payload and nonce to base64
+                payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP);
+                nonce = Base64.encode(nonce, Base64.NO_WRAP);
+
+                String payload = rawEncoder.encode(payloadBytes);
+                String nonceString = rawEncoder.encode(nonce);
+
+                JSONObject json = new JSONObject();
+                json.put("action", 1);
+                json.put("public_key", ID.substring(0, 64));
+                json.put("encrypted", payload);
+                json.put("nonce", nonceString);
+
+                jsonPost.setJSON(json.toString());
+                toxmeThread.start();
+                toxmeThread.join();
+            } catch (JSONException e) {
+                Log.d("CreateAcccount", "JSON Exception " + e.getMessage());
+            } catch (InterruptedException e) {
+            }
+
+            String toastMessage = "";
+            Context context = getApplicationContext();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast;
+
+            switch (jsonPost.getErrorCode()) {
+                case "0":
                     // Login and launch
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("active_account", account);
                     editor.putString("nickname", account);
-                    editor.putString("status", "online");
+                    editor.putString("status", "1");
                     editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
                     editor.putString("tox_id", ID);
                     editor.putBoolean("loggedin", true);
@@ -157,111 +284,30 @@ public class CreateAcccountActivity extends ActionBarActivity{
 
                     setResult(RESULT_OK);
                     finish();
-                } else {
-                    /* Register Account using toxme.se API */
-                    try {
-                        System.load("/data/data/im.tox.antox/lib/libkaliumjni.so");
-                    } catch (Exception e) {
-                        Log.d("CreateAccount", "System.load() on kalium failed");
-                    }
+                    break;
 
-                    int allow = 0;
-                    JSONPost jsonPost = new JSONPost();
-                    Thread toxmeThread = new Thread(jsonPost);
-                    try {
-                        JSONObject unencryptedPayload = new JSONObject();
-                        unencryptedPayload.put("tox_id", ID);
-                        unencryptedPayload.put("name", account);
-                        unencryptedPayload.put("privacy", allow);
-                        unencryptedPayload.put("bio", "");
-                        long epoch = System.currentTimeMillis() / 1000;
-                        unencryptedPayload.put("timestamp", epoch);
+                case "-25": // Name alrady taken
+                    toastMessage = "This name is already taken";
+                    toast = Toast.makeText(context, toastMessage, duration);
+                    toast.show();
+                    break;
 
-                        Hex hexEncoder = new Hex();
-                        Raw rawEncoder = new Raw();
+                case "-26":
+                    // ID already bound to a name
+                    toastMessage = "Internal Antox Error. Please restart and try again";
+                    toast = Toast.makeText(context, toastMessage, duration);
+                    toast.show();
+                    break;
 
-                        String toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13";
-                        byte[] serverPublicKey = hexEncoder.decode(toxmepk);
-                        byte[] ourSecretKey = new byte[32];
-                        System.arraycopy(fileBytes, 52, ourSecretKey, 0, 32);
-
-                        Box box = new Box(serverPublicKey, ourSecretKey);
-                        org.abstractj.kalium.crypto.Random random = new org.abstractj.kalium.crypto.Random();
-                        byte[] nonce = random.randomBytes(24);
-                        byte[] payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString()));
-                        // Encode payload and nonce to base64
-                        payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP);
-                        nonce = Base64.encode(nonce, Base64.NO_WRAP);
-
-                        String payload = rawEncoder.encode(payloadBytes);
-                        String nonceString = rawEncoder.encode(nonce);
-
-                        JSONObject json = new JSONObject();
-                        json.put("action", 1);
-                        json.put("public_key", ID.substring(0, 64));
-                        json.put("encrypted", payload);
-                        json.put("nonce", nonceString);
-
-                        jsonPost.setJSON(json.toString());
-                        toxmeThread.start();
-                        toxmeThread.join();
-                    } catch (JSONException e) {
-                        Log.d("CreateAcccount", "JSON Exception " + e.getMessage());
-                    } catch (InterruptedException e) {
-                    }
-
-                    String toastMessage = "";
-                    Context context = getApplicationContext();
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast;
-
-                    switch(jsonPost.getErrorCode()) {
-                        case "0":
-                            // Login and launch
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("active_account", account);
-                            editor.putString("nickname", account);
-                            editor.putString("status", "1");
-                            editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
-                            editor.putString("tox_id", ID);
-                            editor.putBoolean("loggedin", true);
-                            editor.apply();
-
-                            /* Start Tox Service */
-                            Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
-                            getApplicationContext().startService(startTox);
-
-                            /* Launch main activity */
-                            Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(main);
-
-                            setResult(RESULT_OK);
-                            finish();
-                            break;
-
-                        case "-25": // Name alrady taken
-                            toastMessage = "This name is already taken";
-                            toast = Toast.makeText(context, toastMessage, duration);
-                            toast.show();
-                            break;
-
-                        case "-26":
-                            // ID already bound to a name
-                            toastMessage = "Internal Antox Error. Please restart and try again";
-                            toast = Toast.makeText(context, toastMessage, duration);
-                            toast.show();
-                            break;
-
-                        case "-4":
-                            // Rate limited
-                            toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
-                            toast = Toast.makeText(context, toastMessage, duration);
-                            toast.show();
-                            break;
-                    }
-                }
+                case "-4":
+                    // Rate limited
+                    toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
+                    toast = Toast.makeText(context, toastMessage, duration);
+                    toast.show();
+                    break;
+            }
         }
+
     }
 
     private class JSONPost implements Runnable {
