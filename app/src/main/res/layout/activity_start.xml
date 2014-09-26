@@ -1,0 +1,58 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/test_bg"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
+
+        <ImageView
+            android:contentDescription="Antox Logo"
+            android:id="@+id/imageView1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/full_logo"
+            android:layout_gravity="center" />
+
+        <EditText
+            android:id="@+id/login_account_name"
+            android:layout_width="200dp"
+            android:background="@drawable/edittextbackground"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:layout_marginTop="50dp"
+            android:hint="@string/login_account_hint"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/login_login_button"
+            android:layout_width="209dp"
+            android:text="@string/login_login"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white_absolute"
+            android:onClick="onClickLogin"/>
+
+        <Button
+            android:id="@+id/login_create_button"
+            android:background="#3FA831"
+            android:layout_width="200dp"
+            android:layout_gravity="center"
+            android:textColor="@color/white_absolute"
+            android:text="@string/login_create_account_text"
+            android:layout_height="40dp"
+            android:layout_marginTop="50dp"
+            android:onClick="onClickCreateAccount"/>
+    </LinearLayout>
+
+</ScrollView>

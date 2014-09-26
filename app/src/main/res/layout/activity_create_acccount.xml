@@ -1,19 +1,21 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#222629"
+    android:background="@drawable/test_bg"
+    android:gravity="top"
+    android:fillViewport="false"
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_small"
         android:orientation="vertical"
         android:focusableInTouchMode="true">
 
         <ImageView
+            android:paddingTop="130dp"
             android:contentDescription="Antox Logo"
             android:id="@+id/imageView1"
             android:layout_width="200dp"
@@ -26,9 +28,9 @@
             android:layout_width="match_parent"
             android:textColor="@color/white_absolute"
             android:gravity="center"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:textStyle="bold"
+            android:textStyle="italic"
+            android:textSize="40dp"
             android:text="@string/create_text"
             android:layout_height="wrap_content" />
 
@@ -37,22 +39,11 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:hint="@string/create_name_hint"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:background="@drawable/edittextbackground"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:singleLine="true" />
 
-        <TextView
-            android:id="@+id/create_bio_string"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white_absolute"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_marginTop="0dp"
-            android:text="@string/create_bio_string"/>
 
         <EditText
             android:id="@+id/create_bio"
@@ -66,24 +57,24 @@
         <Button
             android:id="@+id/create_account"
             android:layout_gravity="center"
-            android:layout_width="207dp"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
             android:text="@string/create_register"
             android:textColor="@color/white"
+            android:background="#6BC25F"
             android:layout_marginTop="10dp"
             android:onClick="onClickRegisterAccount"/>
 
-        <CheckBox
-            android:id="@+id/skip_button"
-            android:layout_width="250dp"
-            android:checked="true"
+        <Button
+            android:id="@+id/create_account_incog"
             android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:textColor="@color/gray_darker"
-            android:gravity="center"
-            android:layout_marginTop="50dp"
-            android:clickable="true"
-            android:text="@string/create_skip"/>
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:text="@string/create_register_incog"
+            android:textColor="@color/white"
+            android:background="#414141"
+            android:layout_marginTop="75dp"
+            android:onClick="onClickRegisterAccount"/>
 
     </LinearLayout>
 </ScrollView>
