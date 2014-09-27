@@ -2,29 +2,14 @@ package im.tox.antox.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import im.tox.QR.Contents;
-import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 

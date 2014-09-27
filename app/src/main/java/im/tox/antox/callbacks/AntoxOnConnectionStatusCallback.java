@@ -1,19 +1,12 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-
-import java.util.ArrayList;
 
 import im.tox.antox.R;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.Message;
-import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback;
 
 public class AntoxOnConnectionStatusCallback implements OnConnectionStatusCallback<AntoxFriend> {

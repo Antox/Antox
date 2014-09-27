@@ -10,8 +10,6 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import im.tox.jtoxcore.ToxException;
-
 public class ToxDoService extends Service {
 
     private ToxSingleton toxSingleton = ToxSingleton.getInstance();
