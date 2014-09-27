@@ -3,11 +3,10 @@ package im.tox.antox.fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import im.tox.antox.R;
@@ -27,8 +26,8 @@ public class FriendRequestFragment extends Fragment {
     Subscription activeKeySub;
     private TextView k;
     private TextView m;
-    private Button accept;
-    private Button reject;
+    private ImageView accept;
+    private ImageView reject;
 
     ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
@@ -135,8 +134,8 @@ public class FriendRequestFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_friendrequest, container, false);
         k = (TextView) rootView.findViewById(R.id.requestfragment_key);
         m = (TextView) rootView.findViewById(R.id.requestfragment_message);
-        accept = (Button) rootView.findViewById(R.id.acceptFriendRequest);
-        reject = (Button) rootView.findViewById(R.id.rejectFriendRequest);
+        accept =  (ImageView) rootView.findViewById(R.id.acceptFriendRequest);
+        reject =  (ImageView) rootView.findViewById(R.id.rejectFriendRequest);
 
 
         return rootView;
