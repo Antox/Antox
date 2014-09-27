@@ -26,12 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_chat" />
-    <fragment
-        android:id="@+id/fragment_friendrequest"
-        android:name="im.tox.antox.fragments.FriendRequestFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_friendrequest" />
     <LinearLayout
         android:id="@+id/no_active_chat"
         android:visibility="gone"
