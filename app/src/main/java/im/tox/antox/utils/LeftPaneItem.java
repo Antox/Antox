@@ -1,7 +1,6 @@
 package im.tox.antox.utils;
 
 import java.sql.Timestamp;
-
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
