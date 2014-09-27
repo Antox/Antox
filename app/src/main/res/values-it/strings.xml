@@ -24,13 +24,13 @@
     <string name="login_must_fill_in">Devi inserire un nome profilo</string>
     <string name="login_login">Login</string>
     <string name="login_account_hint">nome profilo</string>
-    <string name="login_create_account_text">Crea un profilo Tox</string>
+    <string name="login_create_account_text">Crea un nuovo profilo Antox</string>
     <string name="login_bad_login">Il nome profilo non è corretto</string>
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Nome Profilo</string>
-    <string name="create_text">Crea un nouvo profilo Tox\nOgni profilo ha il suo Tox ID personale</string>
-    <string name="create_register">Registrazione</string>
+    <string name="create_text">Crea un nouvo profilo Antox\nOgni profilo ha il suo Tox ID personale</string>
+    <string name="create_register">Crea profilo</string>
     <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
     <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/" o "\\"</string>
