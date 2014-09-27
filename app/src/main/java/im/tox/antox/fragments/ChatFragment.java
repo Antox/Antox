@@ -376,10 +376,6 @@ public class ChatFragment extends Fragment {
             }
 
         }
-
-        if(requestCode == Constants.FILE_RESULT && resultCode == Activity.RESULT_OK) {
-
-        }
     }
 
 
@@ -529,7 +525,6 @@ public class ChatFragment extends Fragment {
                                     }
                                 });
                                 fileDialog.showDialog();
-                                break;
                         }
                     }
                 });
