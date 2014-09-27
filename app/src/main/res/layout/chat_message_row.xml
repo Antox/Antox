@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/message_row_layout"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/message_text_layout"
@@ -13,6 +14,7 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/message_text_background"
@@ -22,6 +24,7 @@
             android:paddingRight="8dp"
             android:paddingBottom="4dp"
             android:background="@drawable/chatleft">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,22 +81,28 @@
                 android:id="@+id/file_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Button
-                    android:gravity="center"
+                <ImageView
+                    android:contentDescription="Send Button"
                     android:id="@+id/file_reject_button"
-                    android:text="@string/reject_caps"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content" />
-                <Button
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/margin_medium"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_action_cancel" />
+                <View android:layout_height="fill_parent"
+                    android:layout_width="2px"
+                    android:background="#90909090"/>
+                <ImageView
+                    android:contentDescription="Send Button"
                     android:id="@+id/file_accept_button"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/accept_caps"
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:paddingRight="@dimen/margin_medium"
+
+                    android:src="@drawable/ic_action_tick"
+                    android:adjustViewBounds="false"
+                    android:layout_weight="2" />
+
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/message_audio_player"
@@ -156,5 +165,5 @@
                 android:layout_gravity="top"/>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
 

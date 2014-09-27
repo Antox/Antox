@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,13 +22,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +39,10 @@ import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.ChatMessages;
 import im.tox.antox.utils.Constants;
+import im.tox.antox.utils.FileDialog;
 import im.tox.antox.utils.FriendInfo;
-import im.tox.antox.utils.Tuple;
 import im.tox.antox.utils.IconColor;
+import im.tox.antox.utils.Tuple;
 import im.tox.jtoxcore.ToxException;
 import im.tox.jtoxcore.ToxUserStatus;
 import rx.Observable;
@@ -367,12 +367,17 @@ public class ChatFragment extends Fragment {
                 toxSingleton.sendFileSendRequest(path, this.activeKey, getActivity());
             }
         }
+
         if(requestCode==Constants.PHOTO_RESULT && resultCode==Activity.RESULT_OK){
 
             if(photoPath!=null) {
                 toxSingleton.sendFileSendRequest(photoPath, this.activeKey, getActivity());
                 photoPath=null;
             }
+
+        }
+
+        if(requestCode == Constants.FILE_RESULT && resultCode == Activity.RESULT_OK) {
 
         }
     }
@@ -384,14 +389,6 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Runnable load = new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        };
-
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Cursor cursor = getCursor();
@@ -488,7 +485,8 @@ public class ChatFragment extends Fragment {
                 final CharSequence items[];
                 items = new CharSequence[] {
                         getResources().getString(R.string.attachment_photo),
-                        getResources().getString(R.string.attachment_takephoto)
+                        getResources().getString(R.string.attachment_takephoto),
+                        getResources().getString(R.string.attachment_file)
                 };
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -498,6 +496,7 @@ public class ChatFragment extends Fragment {
                                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                 startActivityForResult(intent, Constants.IMAGE_RESULT);
                                 break;
+
                             case 1:
                                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                                 String image_name = "Antoxpic" + new Date().toString();
@@ -519,6 +518,18 @@ public class ChatFragment extends Fragment {
                                     photoPath = file.getAbsolutePath();
                                 }
                                 startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
+                                break;
+
+                            case 2:
+                                File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
+                                FileDialog fileDialog = new FileDialog(getActivity(), mPath);
+                                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                                    public void fileSelected(File file) {
+                                        toxSingleton.sendFileSendRequest(file.getPath(), activeKey, getActivity());
+                                    }
+                                });
+                                fileDialog.showDialog();
+                                break;
                         }
                     }
                 });
@@ -527,6 +538,5 @@ public class ChatFragment extends Fragment {
         });
         return rootView;
     }
-
 
 }

@@ -19,8 +19,6 @@
     <!-- Chat Activity -->
     <string name="chat_enter_message">Scrivi un messaggio</string>
     <string name="chat_file_transfer">Invia un file</string>
-    <string name="accept_caps">ACCETTA</string>
-    <string name="reject_caps">RIFIUTA</string>
 
     <!-- Login Activity -->
     <string name="login_must_fill_in">Devi inserire un nome profilo</string>
@@ -78,6 +76,7 @@
     <string name="contacts_delimiter_friends">Contatti</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Invia nuova richiesta d\'amicizia</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
@@ -93,6 +92,7 @@
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Allega foto</string>
+    <string name="attachment_file">Allega file</string>
     <string name="attachment_takephoto">Scatta foto</string>
     <string name="message_copy">Copia messaggio</string>
     <string name="message_delete">Cancella messaggio</string>

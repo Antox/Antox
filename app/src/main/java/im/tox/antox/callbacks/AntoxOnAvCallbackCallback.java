@@ -1,16 +1,11 @@
 package im.tox.antox.callbacks;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.util.Log;
 
-import im.tox.antox.R;
-import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
-import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.CaptureAudio;
-import im.tox.jtoxcore.FriendList;
 import im.tox.jtoxcore.ToxAvCallbackID;
 import im.tox.jtoxcore.ToxCallType;
 import im.tox.jtoxcore.ToxCodecSettings;

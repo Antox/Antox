@@ -9,15 +9,22 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import im.tox.antox.R;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
-import im.tox.antox.utils.Constants;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
+
+    private String profileSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,18 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(preferences.getBoolean("loggedin", false)) {
+
+        UserDB db = new UserDB(this);
+
+        // Check to see if any users exist. If not, start the create account activity instead
+        if(!db.doUsersExist()) {
+            db.close();
+            Intent createAccount = new Intent(getApplicationContext(), CreateAcccountActivity.class);
+            startActivity(createAccount);
+            finish();
+
+        } else if(preferences.getBoolean("loggedin", false)) {
+            db.close();
             /* Attempt to start service in case it's not running */
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
             getApplicationContext().startService(startTox);
@@ -46,14 +64,32 @@ public class LoginActivity extends ActionBarActivity {
             startActivity(main);
 
             finish();
+        } else {
+            ArrayList<String> profiles = db.getAllProfiles();
+            db.close();
+            // Populate the profile login spinner
+            Spinner profileSpinner = (Spinner) findViewById(R.id.login_account_name);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    this,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    profiles);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            profileSpinner.setAdapter(adapter);
+            profileSpinner.setSelection(0);
+            profileSpinner.setOnItemSelectedListener(this);
         }
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        profileSelected = parent.getItemAtPosition(pos).toString();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
+
+
     public void onClickLogin(View view) {
-
-        EditText accountNameField = (EditText) findViewById(R.id.login_account_name);
-
-        String account = accountNameField.getText().toString();
+        String account = profileSelected;
 
         if (account.equals("")) {
             Context context = getApplicationContext();
@@ -66,7 +102,7 @@ public class LoginActivity extends ActionBarActivity {
             UserDB db = new UserDB(this);
 
             if(db.login(account)) {
-                /* Set that we're logged in and active user's details*/
+                /* Set that we're logged in and active user's details */
                 String[] details = db.getUserDetails(account);
                 db.close();
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
