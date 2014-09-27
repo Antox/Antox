@@ -214,8 +214,8 @@ public class CreateAcccountActivity extends ActionBarActivity{
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast;
 
-                    switch(jsonPost.getErrorCode()) {
-                        case "0":
+                    String errorCode = jsonPost.getErrorCode();
+                    if ("0".equals(errorCode)) {
                             // Login and launch
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                             SharedPreferences.Editor editor = preferences.edit();
@@ -237,27 +237,23 @@ public class CreateAcccountActivity extends ActionBarActivity{
 
                             setResult(RESULT_OK);
                             finish();
-                            break;
-
-                        case "-25": // Name alrady taken
+                    }
+                    else if ("-25".equals(errorCode)) {
                             toastMessage = "This name is already taken";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
-                            break;
-
-                        case "-26":
+                    }
+                    else if ("-26".equals(errorCode)) {
                             // ID already bound to a name
                             toastMessage = "Internal Antox Error. Please restart and try again";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
-                            break;
-
-                        case "-4":
+                    }
+                    else if ("-4".equals(errorCode)) {
                             // Rate limited
                             toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
                             toast = Toast.makeText(context, toastMessage, duration);
                             toast.show();
-                            break;
                     }
                 }
         }

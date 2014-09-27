@@ -32,6 +32,7 @@ import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.BitmapManager;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Triple;
+import im.tox.antox.TestScala;
 import im.tox.jtoxcore.ToxCallType;
 import im.tox.jtoxcore.ToxCodecSettings;
 import im.tox.jtoxcore.ToxException;
@@ -65,6 +66,9 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        TestScala test = new TestScala();
+        test.test();
 
         /* Check if a language has been set or not */
         String language = preferences.getString("language", "-1");
