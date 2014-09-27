@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
+import android.os.PowerManager.WakeLock;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -51,7 +53,12 @@ public class ToxDoService extends Service {
 
                         try {
                             Thread.sleep(toxSingleton.jTox.doToxInterval());
+                            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+                            WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                                    "MyWakelockTag");
+                            wakeLock.acquire();
                             toxSingleton.jTox.doTox();
+                            wakeLock.release();
                         } catch (Exception e) {
                         }
 
