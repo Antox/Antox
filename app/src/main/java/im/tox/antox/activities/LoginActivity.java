@@ -15,7 +15,6 @@ import android.widget.Toast;
 import im.tox.antox.R;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
-import im.tox.antox.utils.Constants;
 
 public class LoginActivity extends ActionBarActivity {
 

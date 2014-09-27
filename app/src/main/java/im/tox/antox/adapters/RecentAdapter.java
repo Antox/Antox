@@ -2,7 +2,6 @@ package im.tox.antox.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;

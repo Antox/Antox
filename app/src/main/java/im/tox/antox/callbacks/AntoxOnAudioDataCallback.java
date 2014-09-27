@@ -4,12 +4,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.media.MediaPlayer;
 import android.util.Log;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnAudioDataCallback;

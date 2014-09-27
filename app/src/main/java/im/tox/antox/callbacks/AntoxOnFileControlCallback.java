@@ -8,9 +8,8 @@ import java.nio.ByteBuffer;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
-import im.tox.jtoxcore.callbacks.OnFileControlCallback;
 import im.tox.jtoxcore.ToxFileControl;
-import im.tox.jtoxcore.callbacks.OnFileSendRequestCallback;
+import im.tox.jtoxcore.callbacks.OnFileControlCallback;
 
 public class AntoxOnFileControlCallback implements OnFileControlCallback<AntoxFriend> {
 

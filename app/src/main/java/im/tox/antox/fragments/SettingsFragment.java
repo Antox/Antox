@@ -22,12 +22,9 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.data.UserDB;
 import im.tox.antox.tox.ToxDoService;
 import im.tox.antox.tox.ToxSingleton;
-import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.Options;
 import im.tox.antox.utils.UserStatus;
-import im.tox.jtoxcore.JTox;
 import im.tox.jtoxcore.ToxException;
-import im.tox.jtoxcore.ToxOptions;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
