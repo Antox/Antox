@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -103,7 +104,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         }
 
         chat = (View) findViewById(R.id.fragment_chat);
-        request = (View) findViewById(R.id.fragment_friendrequest);
         pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
         DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
             @Override
@@ -219,17 +219,13 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
                         if (activeKey.equals("")) {
                             chat.setVisibility(View.GONE);
-                            request.setVisibility(View.GONE);
                         } else {
                             if (!activeKey.equals(toxSingleton.activeKey)) {
                                 toxSingleton.doClosePaneSubject.onNext(true);
                                 if (isFriend) {
                                     chat.setVisibility(View.VISIBLE);
-                                    request.setVisibility(View.GONE);
-
                                 } else {
                                     chat.setVisibility(View.GONE);
-                                    request.setVisibility(View.VISIBLE);
                                 }
                             }
                         }

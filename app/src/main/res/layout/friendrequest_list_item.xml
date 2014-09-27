@@ -1,34 +1,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:padding="@dimen/margin_medium" >
-    <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="55dp">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_medium">
+        <ImageView
+            android:src="@drawable/ic_action_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reject"
+            android:layout_gravity="right"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:src="@drawable/ic_action_tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/accept"
+            android:layout_gravity="center_horizontal"
+            android:layout_toStartOf="@id/reject"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/reject"
+            android:layout_marginRight="21dp" />
+
         <TextView
             android:id="@+id/request_key"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:textSize="@dimen/text_small"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_toLeftOf="@id/accept"/>
+
         <TextView
             android:id="@+id/request_message"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:singleLine="true"
             android:textSize="@dimen/text_small"
+            android:layout_below="@id/request_key"
+            android:gravity="start"
             android:textStyle="italic"/>
-        </LinearLayout>
-    </LinearLayout>
+
 </RelativeLayout> 

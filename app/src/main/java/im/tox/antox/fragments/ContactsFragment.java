@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.shamanland.fab.FloatingActionButton;
@@ -148,7 +149,6 @@ public class ContactsFragment extends Fragment {
         fab.initBackground();
         fab.setImageResource(R.drawable.ic_action_new);
         contactsListView.setOnTouchListener(new ShowHideOnScroll(fab));
-
     }
 
     @Override
@@ -170,21 +170,23 @@ public class ContactsFragment extends Fragment {
         contactsListView = (ListView) rootView.findViewById(R.id.contacts_list);
         contactsListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        contactsListView
-                .setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position,
-                                            long id) {
-                        LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
-                        int type = item.viewType;
-                        String key = item.key;
-                        if (!key.equals("")) {
-                            setSelectionToKey(key);
-                            toxSingleton.changeActiveKey(key);
-                        }
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(position);
+                int type = item.viewType;
+
+                if (type != Constants.TYPE_FRIEND_REQUEST) {
+                    String key = item.key;
+                    if (!key.equals("")) {
+                        setSelectionToKey(key);
+                        toxSingleton.changeActiveKey(key);
                     }
-                });
+                }
+            }
+        });
 
         contactsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -193,16 +195,9 @@ public class ContactsFragment extends Fragment {
                 final LeftPaneItem item = (LeftPaneItem) parent.getAdapter().getItem(index);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 final boolean isFriendRequest = item.viewType == Constants.TYPE_FRIEND_REQUEST;
-                final CharSequence items[];
+                CharSequence items[] = { "" };
 
-                SharedPreferences settingsPref = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
-
-                if (isFriendRequest) {
-                    items = new CharSequence[]{
-                            getResources().getString(R.string.friendrequest_accept),
-                            getResources().getString(R.string.friendrequest_reject),
-                    };
-                } else {
+                if (!isFriendRequest) {
                     items = new CharSequence[]{
                             getResources().getString(R.string.friend_action_profile),
                             getResources().getString(R.string.friend_action_delete),
@@ -215,58 +210,7 @@ public class ContactsFragment extends Fragment {
                         .setItems(items, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int index) {
                                 //item.first equals the key
-                                if (isFriendRequest) {
-                                    switch (index) {
-                                        case 0:
-                                            class AcceptFriendRequest extends AsyncTask<Void, Void, Void> {
-                                                @Override
-                                                protected Void doInBackground(Void... params) {
-                                                    AntoxDB db = new AntoxDB(getActivity().getApplicationContext());
-                                                    db.addFriend(item.key, "Friend Accepted", "", "");
-                                                    db.deleteFriendRequest(item.key);
-                                                    db.close();
-                                                    try {
-                                                        toxSingleton.jTox.confirmRequest(item.key);
-                                                        toxSingleton.jTox.save();
-                                                    } catch (Exception e) {
-
-                                                    }
-                                                    return null;
-                                                }
-
-                                                @Override
-                                                protected void onPostExecute(Void result) {
-                                                    toxSingleton.updateFriendRequests(getActivity());
-                                                    toxSingleton.updateFriendsList(getActivity());
-                                                }
-                                            }
-
-                                            new AcceptFriendRequest().execute();
-
-                                            break;
-                                        case 1:
-                                            class RejectFriendRequest extends AsyncTask<Void, Void, Void> {
-                                                @Override
-                                                protected Void doInBackground(Void... params) {
-                                                    AntoxDB antoxDB = new AntoxDB(getActivity().getApplicationContext());
-                                                    antoxDB.deleteFriendRequest(item.key);
-                                                    antoxDB.close();
-                                                    return null;
-                                                }
-
-                                                @Override
-                                                protected void onPostExecute(Void result) {
-                                                    toxSingleton.updateFriendsList(getActivity());
-                                                    toxSingleton.updateFriendRequests(getActivity());
-                                                }
-
-                                            }
-
-                                            new RejectFriendRequest().execute();
-
-                                            break;
-                                    }
-                                } else {
+                                if (!isFriendRequest) {
                                     String key = item.key;
                                     if (!key.equals("")) {
                                         switch (index) {
@@ -432,4 +376,5 @@ public class ContactsFragment extends Fragment {
                 return 0;
         }
     }
+
 }
