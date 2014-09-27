@@ -64,12 +64,7 @@ public class UserDB extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if(count > 0)
-            return true;
-
-        return false;
-
-
+        return count > 0;
     }
 
     public String[] getUserDetails(String username) {
@@ -93,5 +88,16 @@ public class UserDB extends SQLiteOpenHelper {
         String query = "UPDATE users SET " + detail + "='" + newDetail + "' WHERE username='" + username + "'";
         db.execSQL(query);
         db.close();
+    }
+
+    public boolean doUsersExist() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT count(*) FROM users", null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        cursor.close();
+        db.close();
+
+        return count > 0;
     }
 }
