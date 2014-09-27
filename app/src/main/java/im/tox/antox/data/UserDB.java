@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+
 /**
  * Database for storing Antox accounts
  * @author Mark Winter
@@ -99,5 +101,20 @@ public class UserDB extends SQLiteOpenHelper {
         db.close();
 
         return count > 0;
+    }
+
+    public ArrayList<String> getAllProfiles() {
+        ArrayList<String> profiles = new ArrayList<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String query = "SELECT username FROM users";
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                profiles.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        return profiles;
     }
 }
