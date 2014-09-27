@@ -1,7 +1,7 @@
 package im.tox.antox.utils;
 
 import java.sql.Timestamp;
-
+import im.tox.antox.utils.Friend;
 import im.tox.jtoxcore.ToxUserStatus;
 
 /**
@@ -13,6 +13,7 @@ public class LeftPaneItem {
     public String first; //Either the header, the request key, or the contact name
     public String second; //Either null, the request message, or the contact status message
     public boolean isOnline;
+    public String personalNote;
     public ToxUserStatus status;
     public int count;
     public String key;
@@ -38,6 +39,7 @@ public class LeftPaneItem {
 
     public LeftPaneItem(String key, String name, String message, boolean isOnline,ToxUserStatus status, int count, Timestamp t) {
         super();
+        Friend(friendStatus);
         this.viewType = Constants.TYPE_CONTACT;
         this.key = key;
         this.first = name;
