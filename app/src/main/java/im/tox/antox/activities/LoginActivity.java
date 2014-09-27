@@ -13,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.graphics.Color;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -81,6 +83,7 @@ public class LoginActivity extends ActionBarActivity implements AdapterView.OnIt
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        ((TextView) parent.getChildAt(0)).setTextColor(Color.GRAY);
         profileSelected = parent.getItemAtPosition(pos).toString();
     }
 
