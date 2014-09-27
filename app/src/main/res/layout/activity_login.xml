@@ -37,7 +37,7 @@
                 android:text="@string/login_login"
                 android:layout_height="50dp"
                 android:layout_marginTop="50dp"
-                android:onClick="onClickCreateAccount"/>
+                android:onClick="onClickLogin"/>
 
 
             <Button
