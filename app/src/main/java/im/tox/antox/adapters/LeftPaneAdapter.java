@@ -2,6 +2,8 @@ package im.tox.antox.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import im.tox.antox.R;
+import im.tox.antox.data.AntoxDB;
+import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.Constants;
 import im.tox.antox.utils.IconColor;
 import im.tox.antox.utils.LeftPaneItem;
@@ -126,6 +131,50 @@ public class LeftPaneAdapter extends BaseAdapter implements Filterable {
             holder.timeText.setTextColor(context.getResources().getColor(R.color.gray_darker));
         }
 
+        if(type == Constants.TYPE_FRIEND_REQUEST) {
+            ImageView acceptButton = (ImageView) convertView.findViewById(R.id.accept);
+            ImageView rejectButton = (ImageView) convertView.findViewById(R.id.reject);
+
+            final String key = item.first;
+            acceptButton.setOnClickListener(new View.OnClickListener() {
+                ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+                @Override
+                public void onClick(View view) {
+                    Log.d("OnClick", "Accepting Friend: " + key);
+
+                    AntoxDB db = new AntoxDB(context);
+                    db.addFriend(key, "Friend Accepted", "", "");
+                    db.deleteFriendRequest(key);
+                    db.close();
+                    try {
+                        toxSingleton.jTox.confirmRequest(key);
+                        toxSingleton.jTox.save();
+                    } catch (Exception e) {
+
+                    }
+
+                    toxSingleton.updateFriendRequests(context);
+                    toxSingleton.updateFriendsList(context);
+                }
+            });
+
+            rejectButton.setOnClickListener(new View.OnClickListener() {
+                ToxSingleton toxSingleton = ToxSingleton.getInstance();
+
+                @Override
+                public void onClick(View view) {
+                    Log.d("OnClick", "Rejecting Friend: " + key);
+
+                    AntoxDB antoxDB = new AntoxDB(context);
+                    antoxDB.deleteFriendRequest(key);
+                    antoxDB.close();
+
+                    toxSingleton.updateFriendsList(context);
+                    toxSingleton.updateFriendRequests(context);
+                }
+            });
+        }
         return convertView;
     }
 
