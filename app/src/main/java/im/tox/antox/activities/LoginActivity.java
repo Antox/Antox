@@ -43,7 +43,7 @@ public class LoginActivity extends ActionBarActivity {
             Intent createAccount = new Intent(getApplicationContext(), CreateAcccountActivity.class);
             startActivity(createAccount);
             finish();
-            
+
         } else if(preferences.getBoolean("loggedin", false)) {
             /* Attempt to start service in case it's not running */
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
