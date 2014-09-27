@@ -36,8 +36,6 @@
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
-    <string name="accept_caps">ACCEPT</string>
-    <string name="reject_caps">REJECT</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
@@ -94,6 +92,7 @@
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
+    <string name="attachment_file">Attach File</string>
     <string name="attachment_takephoto">Take photo</string>
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>

@@ -39,6 +39,7 @@ public final class Constants {
     //file sending
     public static final int IMAGE_RESULT = 0;
     public static final int PHOTO_RESULT = 1;
+    public static final int FILE_RESULT = 3;
 
     // Message Types
     public static final int MESSAGE_TYPE_OWN = 1;

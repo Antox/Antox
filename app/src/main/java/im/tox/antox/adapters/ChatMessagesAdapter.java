@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.text.ClipboardManager;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,9 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,8 +25,6 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import im.tox.antox.R;
@@ -183,7 +176,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
                             if (msg.isMine()) {
                                 holder.progressText.setText("Sent filesending request");
                             } else {
-                                holder.progressText.setText("Received filesending request");
+                                holder.progressText.setText("");
                                 holder.buttons.setVisibility(View.VISIBLE);
                                 holder.accept.setOnClickListener(new View.OnClickListener() {
                                     @Override
