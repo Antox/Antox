@@ -30,10 +30,11 @@
     <string name="pref_title_enable_notifications">Abilita notifiche</string>
     <string name="pref_title_new_message_notifications">Notifiche per i nuovi messaggi</string>
     <string name="pref_title_new_friend_notifications">Notifiche per le richieste d\'amicizia</string>
-    <string name="pref_title_action_messages">Notifiche per le azioni</string>
 
     <!-- Other -->
     <string name="pref_header_other">Altro</string>
+    <string name="pref_title_connection_status_messages">Visualizza quando un contatto entra/esce</string>
+    <string name="pref_title_wifi_only">Usa solo connessioni Wi-Fi</string>
 
     <string name="pref_title_language">Lingua</string>
 
@@ -41,7 +42,7 @@
     <string name="copy_tox_id">Copia Tox ID</string>
 
     <!-- Advanced strings -->
-    <string name="pref_udp">Abilita UDP</string>
+    <string name="pref_udp">Abilita connessioni UDP</string>
     <string name="pref_advanced">Avanzate</string>
-    <string name="pref_nospam">Imposta nospam</string>
+    <string name="pref_nospam">Genera nuovo nospam</string>
 </resources>
