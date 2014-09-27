@@ -35,7 +35,16 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(preferences.getBoolean("loggedin", false)) {
+
+        UserDB db = new UserDB(this);
+
+        // Check to see if any users exist. If not, start the create account activity instead
+        if(!db.doUsersExist()) {
+            Intent createAccount = new Intent(getApplicationContext(), CreateAcccountActivity.class);
+            startActivity(createAccount);
+            finish();
+            
+        } else if(preferences.getBoolean("loggedin", false)) {
             /* Attempt to start service in case it's not running */
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
             getApplicationContext().startService(startTox);
