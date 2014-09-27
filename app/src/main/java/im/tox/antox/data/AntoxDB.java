@@ -673,18 +673,4 @@ public class AntoxDB {
         this.close();
         return isBlocked;
     }
-
-    public void blockUser(String key) {
-        this.open(true);
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='1' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
-        mDb.execSQL(query);
-        this.close();
-    }
-
-    public void unblockUser(String key) {
-        this.open(true);
-        String query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ISBLOCKED + "='0' WHERE " + Constants.COLUMN_NAME_KEY + "='" + key + "'";
-        mDb.execSQL(query);
-        this.close();
-    }
 }

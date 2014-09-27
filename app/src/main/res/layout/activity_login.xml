@@ -21,16 +21,14 @@
             android:src="@drawable/full_logo"
             android:layout_gravity="center" />
 
-           <EditText
+           <Spinner
                android:id="@+id/login_account_name"
-               android:layout_width="200dp"
-               android:background="@drawable/edittextbackground"
+               android:layout_width="210dp"
                android:layout_height="40dp"
                android:gravity="center"
                android:layout_gravity="center"
                android:textColor="@color/black"
                android:layout_marginTop="50dp"
-               android:hint="@string/login_account_hint"
                android:singleLine="true" />
 
             <Button
