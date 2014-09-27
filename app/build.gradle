@@ -1,22 +1,37 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:0.12.2"
+        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.0"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: "com.android.application"
+apply plugin: "android-scala"
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion "android-20"
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 19
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        targetSdkVersion 20
     }
 
     buildTypes {
         release {
-            runProguard false
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
+            runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -35,6 +50,7 @@ dependencies {
     compile files('libs/jsoup-1.7.3.jar')
     compile files('libs/dnsjava-2.1.6.jar')
     // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile "org.scala-lang:scala-library:2.11.2"
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile 'com.android.support:support-v4:19.1.+'
     compile 'com.android.support:appcompat-v7:19.1.+'
