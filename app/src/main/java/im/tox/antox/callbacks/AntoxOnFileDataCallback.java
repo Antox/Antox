@@ -6,7 +6,6 @@ import android.util.Log;
 import im.tox.antox.tox.ToxSingleton;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.jtoxcore.callbacks.OnFileDataCallback;
-import im.tox.jtoxcore.callbacks.OnFileSendRequestCallback;
 
 public class AntoxOnFileDataCallback implements OnFileDataCallback<AntoxFriend> {
 
