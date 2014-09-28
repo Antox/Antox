@@ -11,4 +11,7 @@
     <color name="blue">#4c689d</color>
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
+
+    <color name="fab_normal">#6BC25F</color>
+    <color name="fab_pressed">#509147</color>
 </resources>

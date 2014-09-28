@@ -78,11 +78,7 @@ public class CreateAcccountActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     public void onClickRegisterIncogAccount(View view) {
@@ -140,7 +136,11 @@ public class CreateAcccountActivity extends ActionBarActivity {
             editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
             editor.putString("tox_id", ID);
             editor.putBoolean("loggedin", true);
-            editor.apply();
+            if (Build.VERSION.SDK_INT >= 9) {
+                editor.apply();
+            } else {
+                editor.commit();
+            }
 
                             /* Start Tox Service */
             Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
@@ -260,50 +260,48 @@ public class CreateAcccountActivity extends ActionBarActivity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast;
 
-            switch (jsonPost.getErrorCode()) {
-                case "0":
-                    // Login and launch
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("active_account", account);
-                    editor.putString("nickname", account);
-                    editor.putString("status", "1");
-                    editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
-                    editor.putString("tox_id", ID);
-                    editor.putBoolean("loggedin", true);
+            String s = jsonPost.getErrorCode();
+            if (s.equals("0")) {// Login and launch
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("active_account", account);
+                editor.putString("nickname", account);
+                editor.putString("status", "1");
+                editor.putString("status_message", getResources().getString(R.string.pref_default_status_message));
+                editor.putString("tox_id", ID);
+                editor.putBoolean("loggedin", true);
+                if (Build.VERSION.SDK_INT >= 9) {
                     editor.apply();
+                } else {
+                    editor.commit();
+                }
 
                             /* Start Tox Service */
-                    Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
-                    getApplicationContext().startService(startTox);
+                Intent startTox = new Intent(getApplicationContext(), ToxDoService.class);
+                getApplicationContext().startService(startTox);
 
                             /* Launch main activity */
-                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(main);
+                Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(main);
 
-                    setResult(RESULT_OK);
-                    finish();
-                    break;
+                setResult(RESULT_OK);
+                finish();
 
-                case "-25": // Name alrady taken
-                    toastMessage = "This name is already taken";
-                    toast = Toast.makeText(context, toastMessage, duration);
-                    toast.show();
-                    break;
+            } else if (s.equals("-25")) {
+                toastMessage = "This name is already taken";
+                toast = Toast.makeText(context, toastMessage, duration);
+                toast.show();
 
-                case "-26":
-                    // ID already bound to a name
-                    toastMessage = "Internal Antox Error. Please restart and try again";
-                    toast = Toast.makeText(context, toastMessage, duration);
-                    toast.show();
-                    break;
+            } else if (s.equals("-26")) {// ID already bound to a name
+                toastMessage = "Internal Antox Error. Please restart and try again";
+                toast = Toast.makeText(context, toastMessage, duration);
+                toast.show();
 
-                case "-4":
-                    // Rate limited
-                    toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
-                    toast = Toast.makeText(context, toastMessage, duration);
-                    toast.show();
-                    break;
+            } else if (s.equals("-4")) {// Rate limited
+                toastMessage = "You can only register 13 accounts an hour. You have reached this limit";
+                toast = Toast.makeText(context, toastMessage, duration);
+                toast.show();
+
             }
         }
 
