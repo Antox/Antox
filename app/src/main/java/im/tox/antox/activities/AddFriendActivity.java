@@ -89,7 +89,7 @@ public class AddFriendActivity extends ActionBarActivity implements PinDialogFra
                 friendID.setText(uri.getHost());
             //TODO: ACCEPT DNS LOOKUPS FROM URI
 
-        } else if (intent.getAction().equals("toxv2")) {
+        } else if ("toxv2".equals(intent.getAction())) {
             //else if it came from toxv2 restart
 
             friendID.setText(intent.getStringExtra("originalUsername"));
