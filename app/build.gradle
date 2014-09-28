@@ -14,7 +14,6 @@ repositories {
 
 apply plugin: "com.android.application"
 apply plugin: "android-scala"
-apply plugin: 'android'
 
 android {
     compileSdkVersion "android-20"
@@ -28,11 +27,11 @@ android {
     buildTypes {
         release {
             runProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles 'proguard-rules.txt'
         }
         debug {
             runProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles 'proguard-rules.txt'
         }
     }
 
@@ -49,10 +48,10 @@ dependencies {
     compile files('libs/core.jar')
     compile files('libs/jsoup-1.7.3.jar')
     compile files('libs/dnsjava-2.1.6.jar')
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile "org.scala-lang:scala-library:2.11.2"
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
+    compile "org.scala-lang:scala-library:2.11.2"
     compile 'com.android.support:support-v4:19.1.+'
+    	compile "org.scaloid:scaloid_2.11:3.5-10+"
     compile 'com.android.support:appcompat-v7:19.1.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.netflix.rxjava:rxjava-android:0.18.3'

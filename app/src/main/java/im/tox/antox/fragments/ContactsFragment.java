@@ -30,6 +30,7 @@ import java.util.Comparator;
 
 import im.tox.antox.R;
 import im.tox.antox.activities.FriendProfileActivity;
+import im.tox.antox.activities.ChatActivity;
 import im.tox.antox.adapters.LeftPaneAdapter;
 import im.tox.antox.data.AntoxDB;
 import im.tox.antox.tox.ToxSingleton;
@@ -183,6 +184,9 @@ public class ContactsFragment extends Fragment {
                     if (!key.equals("")) {
                         setSelectionToKey(key);
                         toxSingleton.changeActiveKey(key);
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        intent.putExtra("key",key);
+                        startActivity(intent);
                     }
                 }
             }
