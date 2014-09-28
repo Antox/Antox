@@ -104,7 +104,7 @@ public class UserDB extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> getAllProfiles() {
-        ArrayList<String> profiles = new ArrayList<>();
+        ArrayList<String> profiles = new ArrayList<String>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String query = "SELECT username FROM users";
 
