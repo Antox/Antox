@@ -46,15 +46,12 @@ import rx.functions.Action1;
 
 public class MainActivity extends ActionBarActivity implements DialogToxID.DialogToxIDListener {
 
-    public DrawerLayout pane;
-    public View chat;
     public View request;
 
     private final ToxSingleton toxSingleton = ToxSingleton.getInstance();
 
     Subscription activeKeySub;
     Subscription chatActiveSub;
-    Subscription doClosePaneSub;
 
     SharedPreferences preferences;
 
@@ -106,33 +103,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             showAlertDialog(MainActivity.this, getString(R.string.main_no_internet),
                     getString(R.string.main_not_connected));
         }
-
-        chat = (View) findViewById(R.id.fragment_chat);
-        pane = (DrawerLayout) findViewById(R.id.slidingpane_layout);
-        DrawerLayout.DrawerListener paneListener = new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                Log.d("MainActivity", "Drawer listener, drawer open");
-                toxSingleton.rightPaneActiveSubject.onNext(true);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                Log.d("MainActivity", "Drawer listener, drawer closed");
-                toxSingleton.rightPaneActiveSubject.onNext(false);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        };
-        pane.setDrawerListener(paneListener);
 
         toxSingleton.mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -202,17 +172,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
     public void onResume(){
         super.onResume();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        doClosePaneSub = toxSingleton.doClosePaneSubject.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Boolean>() {
-                    @Override
-                    public void call(Boolean close) {
-                        if (close) {
-                            pane.openDrawer(Gravity.RIGHT);
-                        } else {
-                            pane.closeDrawer(Gravity.RIGHT);
-                        }
-                    }
-                });
         activeKeySub = toxSingleton.rightPaneActiveAndKeyAndIsFriendSubject.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Triple<Boolean, String, Boolean>>() {
                     @Override
@@ -222,14 +181,14 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
                         boolean isFriend = rightPaneActiveAndActiveKeyAndIfFriend.z;
                         Log.d("activeKeySub","oldkey: " + toxSingleton.activeKey + " newkey: " + activeKey + " isfriend: " + isFriend);
                         if (activeKey.equals("")) {
-                            chat.setVisibility(View.GONE);
+                            //chat.setVisibility(View.GONE);
                         } else {
                             if (!activeKey.equals(toxSingleton.activeKey)) {
                                 toxSingleton.doClosePaneSubject.onNext(true);
                                 if (isFriend) {
-                                    chat.setVisibility(View.VISIBLE);
+                                    //chat.setVisibility(View.VISIBLE);
                                 } else {
-                                    chat.setVisibility(View.GONE);
+                                    //chat.setVisibility(View.GONE);
                                 }
                             }
                         }
@@ -255,7 +214,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(preferences.getBoolean("beenLoaded", false)) {
             activeKeySub.unsubscribe();
-            doClosePaneSub.unsubscribe();
             toxSingleton.chatActive = false;
         }
     }
@@ -270,14 +228,6 @@ public class MainActivity extends ActionBarActivity implements DialogToxID.Dialo
             }
         });
         alertDialog.show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(pane.isDrawerOpen(Gravity.RIGHT))
-            pane.closeDrawers();
-        else
-            finish();
     }
 
     /* Needed for Tox ID dialog in settings fragment */

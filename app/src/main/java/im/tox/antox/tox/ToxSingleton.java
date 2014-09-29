@@ -67,7 +67,7 @@ import static rx.Observable.combineLatest;
 public class ToxSingleton {
 
     private static final String TAG = "im.tox.antox.tox.ToxSingleton";
-    public JTox jTox;
+    public JTox<AntoxFriend> jTox;
     private AntoxFriendList antoxFriendList;
     public CallbackHandler callbackHandler;
     public NotificationManager mNotificationManager;
