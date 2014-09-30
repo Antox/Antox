@@ -36,7 +36,7 @@ public class AntoxOnAvCallbackCallback implements OnAvCallbackCallback<AntoxFrie
                     Log.d("OnAvCallbackCallback", "Callback type: ON_INVITE");
                     // Display UI elements to accept or reject the call
                     // For testing auto-accept
-                    ToxCodecSettings toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500, 1280, 720, 64000, 20, 48000, 1);
+                    ToxCodecSettings toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500, 1280, 720, 64000, 20, 48000, 2);
                     toxSingleton.jTox.avAnswer(callID, toxCodecSettings);
                     break;
 
