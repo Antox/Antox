@@ -364,7 +364,7 @@ public class ChatMessagesAdapter extends ResourceCursorAdapter {
     }
 
     private void friendMessage(ChatMessagesHolder holder) {
-        holder.message.setTextColor(context.getResources().getColor(R.color.black));
+        holder.message.setTextColor(context.getResources().getColor(R.color.white_absolute));
         holder.background.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.chatleft));
         holder.background.setPadding(6 * density + 1 * density * paddingscale, 1 * density * paddingscale, 1 * density * paddingscale, 1 * density * paddingscale);
         holder.time.setGravity(Gravity.LEFT);
