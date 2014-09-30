@@ -244,6 +244,7 @@ public class ToxSingleton {
         long id = antoxDB.addFileTransfer(key, fileN, fileNumber, (int) fileSize, false);
         fileIds.add((int) id);
         antoxDB.close();
+        updateMessages(context);
     }
 
     public void changeActiveKey(String key) {
