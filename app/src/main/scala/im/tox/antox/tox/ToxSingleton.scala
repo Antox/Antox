@@ -10,14 +10,22 @@ import android.os.Environment
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.util.Log
+import android.util.JsonReader
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Timestamp
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
+import java.net.URL;
+import java.nio.charset.Charset;
 import im.tox.antox.callbacks.AntoxOnActionCallback
 import im.tox.antox.callbacks.AntoxOnAudioDataCallback
 import im.tox.antox.callbacks.AntoxOnAvCallbackCallback
@@ -37,7 +45,6 @@ import im.tox.antox.data.AntoxDB
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.AntoxFriendList
 import im.tox.antox.utils.Constants
-import im.tox.antox.utils.DHTNodeDetails
 import im.tox.antox.utils.DhtNode
 import im.tox.antox.utils.Friend
 import im.tox.antox.utils.FriendInfo
@@ -53,13 +60,26 @@ import im.tox.jtoxcore.ToxFileControl
 import im.tox.jtoxcore.ToxOptions
 import im.tox.jtoxcore.ToxUserStatus
 import im.tox.jtoxcore.callbacks.CallbackHandler
-import rx.Observable
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import rx.{Observable => JObservable}
+import rx.{Observer => JObserver}
+import rx.{Subscriber => JSubscriber}
+import rx.{Subscription => JSubscription}
 import rx.functions.Func2
 import rx.functions.Func3
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 import rx.subjects.PublishSubject
 import rx.Observable.combineLatest
+import rx.lang.scala.Observable
+import rx.lang.scala.Observer
+import rx.lang.scala.Subscriber
+import rx.lang.scala.Subscription
+import rx.lang.scala.Subject
+import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import ToxSingleton._
 //remove if not needed
 import scala.collection.JavaConversions._
@@ -108,15 +128,15 @@ object ToxSingleton {
 
   var doClosePaneSubject: PublishSubject[Boolean] = _
 
-  var friendInfoListSubject: rx.Observable[ArrayList[FriendInfo]] = _
+  var friendInfoListSubject: JObservable[ArrayList[FriendInfo]] = _
 
-  var activeKeyAndIsFriendSubject: rx.Observable[Tuple[String,Boolean]] = _
+  var activeKeyAndIsFriendSubject: JObservable[Tuple[String,Boolean]] = _
 
-  var friendListAndRequestsSubject: Observable[Tuple[ArrayList[FriendInfo],ArrayList[FriendRequest]]] = _
+  var friendListAndRequestsSubject: JObservable[Tuple[ArrayList[FriendInfo],ArrayList[FriendRequest]]] = _
 
-  var rightPaneActiveAndKeyAndIsFriendSubject: Observable[Triple[Boolean, String, Boolean]] = _
+  var rightPaneActiveAndKeyAndIsFriendSubject: JObservable[Triple[Boolean, String, Boolean]] = _
 
-  var friendInfoListAndActiveSubject: Observable[Tuple[ArrayList[FriendInfo],Tuple[String,Boolean]]] = _
+  var friendInfoListAndActiveSubject: JObservable[Tuple[ArrayList[FriendInfo],Tuple[String,Boolean]]] = _
 
   var progressMap: HashMap[Integer, Integer] = new HashMap[Integer, Integer]()
 
@@ -139,6 +159,8 @@ object ToxSingleton {
   var activeKey: String = _
 
   var chatActive: Boolean = _
+
+  var dhtNodes: Array[DhtNode] = Array()
 
   def getAntoxFriend(key: String): AntoxFriend = antoxFriendList.getById(key)
 
@@ -166,26 +188,26 @@ object ToxSingleton {
     friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, 
       new Func3[ArrayList[Friend], HashMap[String, Tuple[String,Timestamp]], HashMap[String, Int], ArrayList[FriendInfo]]() {
 
-      override def call(fl: ArrayList[Friend], lm: HashMap[String, Tuple[String, Timestamp]], uc: HashMap[String, Int]): ArrayList[FriendInfo] = {
-        var fi = new ArrayList[FriendInfo]()
-        for (f <- fl) {
-          var lastMessage: String = null
-          var lastMessageTimestamp: Timestamp = null
-          var unreadCount: Int = 0
-          if (lm.containsKey(f.friendKey)) {
-            lastMessage = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].x.asInstanceOf[String]
-            lastMessageTimestamp = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].y.asInstanceOf[Timestamp]
-          } else {
-            lastMessage = ""
-            lastMessageTimestamp = new Timestamp(0, 0, 0, 0, 0, 0, 0)
+        override def call(fl: ArrayList[Friend], lm: HashMap[String, Tuple[String, Timestamp]], uc: HashMap[String, Int]): ArrayList[FriendInfo] = {
+          var fi = new ArrayList[FriendInfo]()
+          for (f <- fl) {
+            var lastMessage: String = null
+            var lastMessageTimestamp: Timestamp = null
+            var unreadCount: Int = 0
+            if (lm.containsKey(f.friendKey)) {
+              lastMessage = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].x.asInstanceOf[String]
+              lastMessageTimestamp = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].y.asInstanceOf[Timestamp]
+            } else {
+              lastMessage = ""
+              lastMessageTimestamp = new Timestamp(0, 0, 0, 0, 0, 0, 0)
+            }
+            unreadCount = if (uc.containsKey(f.friendKey)) uc.get(f.friendKey).asInstanceOf[java.lang.Integer] else 0
+            fi.add(new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, 
+              lastMessage, lastMessageTimestamp, unreadCount, f.alias))
           }
-          unreadCount = if (uc.containsKey(f.friendKey)) uc.get(f.friendKey).asInstanceOf[java.lang.Integer] else 0
-          fi.add(new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, 
-            lastMessage, lastMessageTimestamp, unreadCount, f.alias))
+          return fi
         }
-        return fi
-      }
-    })
+      })
     friendListAndRequestsSubject = combineLatest(friendInfoListSubject, friendRequestSubject, new Func2[ArrayList[FriendInfo], ArrayList[FriendRequest], Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]]]() {
 
       override def call(fl: ArrayList[FriendInfo], fr: ArrayList[FriendRequest]): Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]] = {
@@ -203,20 +225,20 @@ object ToxSingleton {
     friendInfoListAndActiveSubject = combineLatest(friendInfoListSubject, activeKeyAndIsFriendSubject, 
       new Func2[ArrayList[FriendInfo], Tuple[String, Boolean], Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]]]() {
 
-      override def call(o: ArrayList[FriendInfo], o2: Tuple[String, Boolean]): Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]] = {
-        return new Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]](o.asInstanceOf[ArrayList[FriendInfo]], 
-          o2.asInstanceOf[Tuple[String, Boolean]])
-      }
-    })
+        override def call(o: ArrayList[FriendInfo], o2: Tuple[String, Boolean]): Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]] = {
+          return new Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]](o.asInstanceOf[ArrayList[FriendInfo]], 
+            o2.asInstanceOf[Tuple[String, Boolean]])
+        }
+      })
     rightPaneActiveAndKeyAndIsFriendSubject = combineLatest(rightPaneActiveSubject, activeKeyAndIsFriendSubject, 
       new Func2[Boolean, Tuple[String, Boolean], Triple[Boolean, String, Boolean]]() {
 
-      override def call(rightPaneActive: Boolean, activeKeyAndIsFriend: Tuple[String, Boolean]): Triple[Boolean, String, Boolean] = {
-        var activeKey = activeKeyAndIsFriend.x
-        var isFriend = activeKeyAndIsFriend.y
-        new Triple[Boolean, String, Boolean](rightPaneActive, activeKey, isFriend)
-      }
-    })
+        override def call(rightPaneActive: Boolean, activeKeyAndIsFriend: Tuple[String, Boolean]): Triple[Boolean, String, Boolean] = {
+          var activeKey = activeKeyAndIsFriend.x
+          var isFriend = activeKeyAndIsFriend.y
+          new Triple[Boolean, String, Boolean](rightPaneActive, activeKey, isFriend)
+        }
+      })
   }
 
   private def isKeyFriend(key: String, fl: ArrayList[Friend]): Boolean = {
@@ -245,41 +267,41 @@ object ToxSingleton {
   }
 
   def fileSendRequest(key: String, 
-      fileNumber: Int, 
-      fileName: String, 
-      fileSize: Long, 
-      context: Context) {
-    Log.d("fileSendRequest, fileNumber: ", java.lang.Integer.toString(fileNumber))
-    var fileN = fileName
-    val fileSplit = fileName.split("\\.")
-    var filePre = ""
-    val fileExt = fileSplit(fileSplit.length - 1)
-    for (j <- 0 until fileSplit.length - 1) {
-      filePre = filePre.concat(fileSplit(j))
-      if (j < fileSplit.length - 2) {
-        filePre = filePre.concat(".")
+    fileNumber: Int, 
+    fileName: String, 
+    fileSize: Long, 
+    context: Context) {
+      Log.d("fileSendRequest, fileNumber: ", java.lang.Integer.toString(fileNumber))
+      var fileN = fileName
+      val fileSplit = fileName.split("\\.")
+      var filePre = ""
+      val fileExt = fileSplit(fileSplit.length - 1)
+      for (j <- 0 until fileSplit.length - 1) {
+        filePre = filePre.concat(fileSplit(j))
+        if (j < fileSplit.length - 2) {
+          filePre = filePre.concat(".")
+        }
       }
-    }
-    val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), 
-      Constants.DOWNLOAD_DIRECTORY)
-    if (!dirfile.mkdirs()) {
-      Log.e("acceptFile", "Directory not created")
-    }
-    var file = new File(dirfile.getPath, fileN)
-    if (file.exists()) {
-      var i = 1
-      do {
-        fileN = filePre + "(" + java.lang.Integer.toString(i) + ")" + 
+      val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), 
+        Constants.DOWNLOAD_DIRECTORY)
+      if (!dirfile.mkdirs()) {
+        Log.e("acceptFile", "Directory not created")
+      }
+      var file = new File(dirfile.getPath, fileN)
+      if (file.exists()) {
+        var i = 1
+        do {
+          fileN = filePre + "(" + java.lang.Integer.toString(i) + ")" + 
           "." + 
           fileExt
-        file = new File(dirfile.getPath, fileN)
-        i += 1
-      } while (file.exists());
-    }
-    val antoxDB = new AntoxDB(context)
-    val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, false)
-    fileIds.add(id.toInt)
-    antoxDB.close()
+          file = new File(dirfile.getPath, fileN)
+          i += 1
+        } while (file.exists());
+      }
+      val antoxDB = new AntoxDB(context)
+      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, false)
+      fileIds.add(id.toInt)
+      antoxDB.close()
   }
 
   def changeActiveKey(key: String) {
@@ -299,11 +321,11 @@ object ToxSingleton {
       try {
         jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), 
           Array.ofDim[Byte](0))
-      } catch {
-        case e: Exception => e.printStackTrace()
-      }
-      antoxDB.fileTransferStarted(key, fileNumber)
-      fileStatusMap.put(id, FileStatus.INPROGRESS)
+        } catch {
+          case e: Exception => e.printStackTrace()
+        }
+        antoxDB.fileTransferStarted(key, fileNumber)
+        fileStatusMap.put(id, FileStatus.INPROGRESS)
     }
     antoxDB.close()
     updatedMessagesSubject.onNext(true)
@@ -316,63 +338,63 @@ object ToxSingleton {
       try {
         jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), 
           Array.ofDim[Byte](0))
-      } catch {
-        case e: Exception => e.printStackTrace()
-      }
-      antoxDB.clearFileNumber(key, fileNumber)
-      fileStatusMap.put(id, FileStatus.CANCELLED)
+        } catch {
+          case e: Exception => e.printStackTrace()
+        }
+        antoxDB.clearFileNumber(key, fileNumber)
+        fileStatusMap.put(id, FileStatus.CANCELLED)
     }
     antoxDB.close()
     updatedMessagesSubject.onNext(true)
   }
 
   def receiveFileData(key: String, 
-      fileNumber: Int, 
-      data: Array[Byte], 
-      context: Context) {
-    val antoxDB = new AntoxDB(context)
-    val id = antoxDB.getFileId(key, fileNumber)
-    val state = Environment.getExternalStorageState
-    if (Environment.MEDIA_MOUNTED == state) {
-      if (!fileStreamMap.containsKey(id)) {
-        val fileName = antoxDB.getFilePath(key, fileNumber)
-        val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), 
-          Constants.DOWNLOAD_DIRECTORY)
-        if (!dirfile.mkdirs()) {
-          Log.e("acceptFile", "Directory not created")
+    fileNumber: Int, 
+    data: Array[Byte], 
+    context: Context) {
+      val antoxDB = new AntoxDB(context)
+      val id = antoxDB.getFileId(key, fileNumber)
+      val state = Environment.getExternalStorageState
+      if (Environment.MEDIA_MOUNTED == state) {
+        if (!fileStreamMap.containsKey(id)) {
+          val fileName = antoxDB.getFilePath(key, fileNumber)
+          val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), 
+            Constants.DOWNLOAD_DIRECTORY)
+          if (!dirfile.mkdirs()) {
+            Log.e("acceptFile", "Directory not created")
+          }
+          val file = new File(dirfile.getPath, fileName)
+          var output: FileOutputStream = null
+          try {
+            output = new FileOutputStream(file, true)
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+          fileMap.put(id, file)
+          fileStreamMap.put(id, output)
         }
-        val file = new File(dirfile.getPath, fileName)
-        var output: FileOutputStream = null
+        antoxDB.close()
         try {
-          output = new FileOutputStream(file, true)
+          fileStreamMap.get(id).write(data)
         } catch {
           case e: Exception => e.printStackTrace()
-        }
-        fileMap.put(id, file)
-        fileStreamMap.put(id, output)
+          } finally {
+            incrementProgress(id, data.length)
+          }
+          Log.d("ToxSingleton", "file size so far: " + fileMap.get(id).length + " final file size: " + 
+            fileSizeMap.get(id))
+          if (fileMap.get(id).length == fileSizeMap.get(id)) {
+            try {
+              fileStreamMap.get(id).close()
+              jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
+                Array.ofDim[Byte](0))
+              fileFinished(key, fileNumber, context)
+              Log.d("ToxSingleton", "receiveFileData finished receiving file")
+            } catch {
+              case e: Exception => e.printStackTrace()
+            }
+          }
       }
-      antoxDB.close()
-      try {
-        fileStreamMap.get(id).write(data)
-      } catch {
-        case e: Exception => e.printStackTrace()
-      } finally {
-        incrementProgress(id, data.length)
-      }
-      Log.d("ToxSingleton", "file size so far: " + fileMap.get(id).length + " final file size: " + 
-        fileSizeMap.get(id))
-      if (fileMap.get(id).length == fileSizeMap.get(id)) {
-        try {
-          fileStreamMap.get(id).close()
-          jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
-            Array.ofDim[Byte](0))
-          fileFinished(key, fileNumber, context)
-          Log.d("ToxSingleton", "receiveFileData finished receiving file")
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
-      }
-    }
   }
 
   def incrementProgress(id: Int, length: Int) {
@@ -464,121 +486,121 @@ object ToxSingleton {
   }
 
   def sendFileData(key: String, 
-      fileNumber: Int, 
-      startPosition: Int, 
-      context: Context) {
-    class sendFileTask extends AsyncTask[Void, Void, Void] {
+    fileNumber: Int, 
+    startPosition: Int, 
+    context: Context) {
+      class sendFileTask extends AsyncTask[Void, Void, Void] {
 
-      protected override def doInBackground(params: Void*): Void = {
-        val result = doSendFileData(key, fileNumber, startPosition, context)
-        Log.d("doSendFileData finished, result: ", java.lang.Boolean.toString(result))
-        val db = new AntoxDB(context)
-        db.clearFileNumber(key, fileNumber)
-        db.close()
-        return null
-      }
+        protected override def doInBackground(params: Void*): Void = {
+          val result = doSendFileData(key, fileNumber, startPosition, context)
+          Log.d("doSendFileData finished, result: ", java.lang.Boolean.toString(result))
+          val db = new AntoxDB(context)
+          db.clearFileNumber(key, fileNumber)
+          db.close()
+          return null
+        }
 
-      protected override def onPostExecute(result: Void) {
+        protected override def onPostExecute(result: Void) {
+        }
       }
-    }
-    new sendFileTask().execute()
+      new sendFileTask().execute()
   }
 
   def doSendFileData(key: String, 
-      fileNumber: Int, 
-      startPosition: Int, 
-      context: Context): Boolean = {
-    var path = ""
-    val antoxDB = new AntoxDB(context)
-    path = antoxDB.getFilePath(key, fileNumber)
-    val id = antoxDB.getFileId(key, fileNumber)
-    antoxDB.close()
-    if (id != -1) {
-      fileStatusMap.put(id, FileStatus.INPROGRESS)
-    }
-    var result = -1
-    if (path != "") {
-      var chunkSize = 1
-      try {
-        chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber)
-      } catch {
-        case e: Exception => e.printStackTrace()
+    fileNumber: Int, 
+    startPosition: Int, 
+    context: Context): Boolean = {
+      var path = ""
+      val antoxDB = new AntoxDB(context)
+      path = antoxDB.getFilePath(key, fileNumber)
+      val id = antoxDB.getFileId(key, fileNumber)
+      antoxDB.close()
+      if (id != -1) {
+        fileStatusMap.put(id, FileStatus.INPROGRESS)
       }
-      val file = new File(path)
-      val bytes = Array.ofDim[Byte](file.length.toInt)
-      var buf: BufferedInputStream = null
-      try {
-        buf = new BufferedInputStream(new FileInputStream(file))
-      } catch {
-        case e: Exception => e.printStackTrace()
-      }
-      var i = startPosition
-      if (buf != null) {
-        i = startPosition
-        while (i < bytes.length) {
-          val data = Array.ofDim[Byte](chunkSize)
-          try {
-            buf.mark(chunkSize * 2)
-            val read = buf.read(data, 0, chunkSize)
-          } catch {
-            case e: Exception => {
-              e.printStackTrace()
-              //break
-            }
-          }
-          try {
-            result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber, fileNumber, data)
-          } catch {
-            case e: Exception => {
-              e.printStackTrace()
-              //break
-            }
-          }
-          if (!(fileStatusMap.containsKey(id) && fileStatusMap.get(id) == FileStatus.INPROGRESS)) {
-            //break
-          }
-          if (result == -1) {
-            Log.d("sendFileDataTask", "toxFileSendData failed")
-            try {
-              jTox.doTox()
-            } catch {
-              case e: Exception => e.printStackTrace()
-            }
-            SystemClock.sleep(50)
-            i = i - chunkSize
-            try {
-              buf.reset()
-            } catch {
-              case e: Exception => e.printStackTrace()
-            }
-          }
-          if (i > bytes.length) {
-            i = bytes.length
-          }
-          setProgress(id, i)
-          i = i + chunkSize
-        }
+      var result = -1
+      if (path != "") {
+        var chunkSize = 1
         try {
-          buf.close()
+          chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber)
         } catch {
           case e: Exception => e.printStackTrace()
         }
-      }
-      if (result != -1 && fileStatusMap.get(id) == FileStatus.INPROGRESS) {
+        val file = new File(path)
+        val bytes = Array.ofDim[Byte](file.length.toInt)
+        var buf: BufferedInputStream = null
         try {
-          Log.d("toxFileSendControl", "FINISHED")
-          jTox.fileSendControl(getAntoxFriend(key).getFriendnumber, true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
-            Array.ofDim[Byte](0))
-          fileFinished(key, fileNumber, context)
-          return true
+          buf = new BufferedInputStream(new FileInputStream(file))
         } catch {
-          case e: Exception => Log.d("toxFileSendControl error", e.toString)
+          case e: Exception => e.printStackTrace()
         }
-      } else {
-        return false
+        var i = startPosition
+        if (buf != null) {
+          i = startPosition
+          while (i < bytes.length) {
+            val data = Array.ofDim[Byte](chunkSize)
+            try {
+              buf.mark(chunkSize * 2)
+              val read = buf.read(data, 0, chunkSize)
+            } catch {
+              case e: Exception => {
+                e.printStackTrace()
+                //break
+              }
+            }
+            try {
+              result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber, fileNumber, data)
+            } catch {
+              case e: Exception => {
+                e.printStackTrace()
+                //break
+              }
+            }
+            if (!(fileStatusMap.containsKey(id) && fileStatusMap.get(id) == FileStatus.INPROGRESS)) {
+              //break
+            }
+            if (result == -1) {
+              Log.d("sendFileDataTask", "toxFileSendData failed")
+              try {
+                jTox.doTox()
+              } catch {
+                case e: Exception => e.printStackTrace()
+              }
+              SystemClock.sleep(50)
+              i = i - chunkSize
+              try {
+                buf.reset()
+              } catch {
+                case e: Exception => e.printStackTrace()
+              }
+            }
+            if (i > bytes.length) {
+              i = bytes.length
+            }
+            setProgress(id, i)
+            i = i + chunkSize
+          }
+          try {
+            buf.close()
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+        }
+        if (result != -1 && fileStatusMap.get(id) == FileStatus.INPROGRESS) {
+          try {
+            Log.d("toxFileSendControl", "FINISHED")
+            jTox.fileSendControl(getAntoxFriend(key).getFriendnumber, true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
+              Array.ofDim[Byte](0))
+            fileFinished(key, fileNumber, context)
+            return true
+          } catch {
+            case e: Exception => Log.d("toxFileSendControl error", e.toString)
+          }
+          } else {
+            return false
+          }
       }
-    }
-    false
+      false
   }
 
   def updateFriendsList(ctx: Context) {
@@ -672,6 +694,88 @@ object ToxSingleton {
     }
   }
 
+  def updateDhtNodes(ctx: Context) {
+    Log.d(TAG, "updateDhtNodes")
+    val connMgr = ctx.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
+    val networkInfo = connMgr.getActiveNetworkInfo
+    if (networkInfo != null && networkInfo.isConnected) {
+      Log.d(TAG, "updateDhtNodes: connected")
+      Observable[JSONObject](subscriber => {
+            Log.d(TAG, "updateDhtNodes: in observable")
+            object JsonReader {
+
+              private def readAll(rd: Reader): String = {
+                val sb = new StringBuilder()
+                var cp: Int = rd.read()
+                while (cp != -1) {
+                  sb.append(cp.toChar)
+                  cp = rd.read()
+                }
+                sb.toString
+              }
+
+              def readJsonFromUrl(url: String): JSONObject = {
+                val is = new URL(url).openStream()
+                try {
+                  val rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))
+                  val jsonText = readAll(rd)
+                  val json = new JSONObject(jsonText)
+                  json
+                } catch {
+                  case e: Exception => {
+                    Log.e(TAG, "JsonReader readJsonFromUrl error: " + e)
+                    new JSONObject()
+                  }
+                } finally {
+                  is.close()
+                }
+              }
+            }
+            try {
+              Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
+              val json = JsonReader.readJsonFromUrl("http://jfk.us.cdn.libtoxcore.so/elizabeth_remote/config/Nodefile.json")
+              subscriber.onNext(json)
+              subscriber.onCompleted()
+            } catch {
+              case e: Exception => {
+                Log.e(TAG, "update dht nodes error: " + e);
+                subscriber.onError(e)
+              }
+            }
+          }).map(json => {
+            Log.d(TAG, json.toString)
+            var dhtNodes: Array[DhtNode] = Array()
+            val serverArray = json.getJSONArray("servers")
+            for (i <- 0 until serverArray.length) {
+              val jsonObject = serverArray.getJSONObject(i)
+              dhtNodes +:= new DhtNode(
+                jsonObject.getString("owner"),
+                jsonObject.getString("ipv6"),
+                jsonObject.getString("ipv4"),
+                jsonObject.getString("pubkey"),
+                jsonObject.getInt("port")
+              )
+            }
+            dhtNodes
+          }).subscribeOn(IOScheduler())
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe(nodes => {
+              dhtNodes = nodes
+              Log.d(TAG, "Trying to bootstrap")
+              try {
+                for (i <- 0 until nodes.size) {
+                  jTox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+                }
+              } catch {
+                case e: Exception =>
+              }
+              Log.d(TAG, "Successfully bootstrapped")
+            }, error => {
+              Log.e(TAG, "Failed bootstrapping " + error)
+            })
+    }
+  }
+
   def initTox(ctx: Context) {
     antoxFriendList = new AntoxFriendList()
     callbackHandler = new CallbackHandler(antoxFriendList)
@@ -690,81 +794,70 @@ object ToxSingleton {
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-    } else {
-      try {
-        jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler, options)
-        val editor = preferences.edit()
-        editor.putString("tox_id", jTox.getAddress)
-        editor.commit()
-      } catch {
-        case e: ToxException => e.printStackTrace()
-      }
-    }
-    val db = new AntoxDB(ctx)
-    db.setAllOffline()
-    val friends = db.getFriendList
-    db.close()
-    if (friends.size > 0) {
-      for (i <- 0 until friends.size) {
+      } else {
         try {
-          jTox.confirmRequest(friends.get(i).friendKey)
+          jTox = new JTox(dataFile.loadFile(), antoxFriendList, callbackHandler, options)
+          val editor = preferences.edit()
+          editor.putString("tox_id", jTox.getAddress)
+          editor.commit()
         } catch {
-          case e: Exception => 
+          case e: ToxException => e.printStackTrace()
         }
       }
-    }
-    val antoxOnMessageCallback = new AntoxOnMessageCallback(ctx)
-    val antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(ctx)
-    val antoxOnActionCallback = new AntoxOnActionCallback(ctx)
-    val antoxOnConnectionStatusCallback = new AntoxOnConnectionStatusCallback(ctx)
-    val antoxOnNameChangeCallback = new AntoxOnNameChangeCallback(ctx)
-    val antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(ctx)
-    val antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(ctx)
-    val antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(ctx)
-    val antoxOnTypingChangeCallback = new AntoxOnTypingChangeCallback(ctx)
-    val antoxOnFileSendRequestCallback = new AntoxOnFileSendRequestCallback(ctx)
-    val antoxOnFileControlCallback = new AntoxOnFileControlCallback(ctx)
-    val antoxOnFileDataCallback = new AntoxOnFileDataCallback(ctx)
-    val antoxOnAudioDataCallback = new AntoxOnAudioDataCallback(ctx)
-    val antoxOnAvCallbackCallback = new AntoxOnAvCallbackCallback(ctx)
-    val antoxOnVideoDataCallback = new AntoxOnVideoDataCallback(ctx)
-    callbackHandler.registerOnMessageCallback(antoxOnMessageCallback)
-    callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback)
-    callbackHandler.registerOnActionCallback(antoxOnActionCallback)
-    callbackHandler.registerOnConnectionStatusCallback(antoxOnConnectionStatusCallback)
-    callbackHandler.registerOnNameChangeCallback(antoxOnNameChangeCallback)
-    callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback)
-    callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback)
-    callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback)
-    callbackHandler.registerOnTypingChangeCallback(antoxOnTypingChangeCallback)
-    callbackHandler.registerOnFileSendRequestCallback(antoxOnFileSendRequestCallback)
-    callbackHandler.registerOnFileControlCallback(antoxOnFileControlCallback)
-    callbackHandler.registerOnFileDataCallback(antoxOnFileDataCallback)
-    callbackHandler.registerOnAudioDataCallback(antoxOnAudioDataCallback)
-    callbackHandler.registerOnAvCallbackCallback(antoxOnAvCallbackCallback)
-    callbackHandler.registerOnVideoDataCallback(antoxOnVideoDataCallback)
-    try {
-      jTox.setName(preferences.getString("nickname", ""))
-      jTox.setStatusMessage(preferences.getString("status_message", ""))
-      var newStatus: ToxUserStatus = null
-      val newStatusString = preferences.getString("status", "")
-      newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
-      jTox.setUserStatus(newStatus)
-    } catch {
-      case e: ToxException => 
-    }
-    val connMgr = ctx.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val networkInfo = connMgr.getActiveNetworkInfo
-    if (networkInfo != null && networkInfo.isConnected) {
+      val db = new AntoxDB(ctx)
+      db.setAllOffline()
+      val friends = db.getFriendList
+      db.close()
+      if (friends.size > 0) {
+        for (i <- 0 until friends.size) {
+          try {
+            jTox.confirmRequest(friends.get(i).friendKey)
+          } catch {
+            case e: Exception => 
+          }
+        }
+      }
+      val antoxOnMessageCallback = new AntoxOnMessageCallback(ctx)
+      val antoxOnFriendRequestCallback = new AntoxOnFriendRequestCallback(ctx)
+      val antoxOnActionCallback = new AntoxOnActionCallback(ctx)
+      val antoxOnConnectionStatusCallback = new AntoxOnConnectionStatusCallback(ctx)
+      val antoxOnNameChangeCallback = new AntoxOnNameChangeCallback(ctx)
+      val antoxOnReadReceiptCallback = new AntoxOnReadReceiptCallback(ctx)
+      val antoxOnStatusMessageCallback = new AntoxOnStatusMessageCallback(ctx)
+      val antoxOnUserStatusCallback = new AntoxOnUserStatusCallback(ctx)
+      val antoxOnTypingChangeCallback = new AntoxOnTypingChangeCallback(ctx)
+      val antoxOnFileSendRequestCallback = new AntoxOnFileSendRequestCallback(ctx)
+      val antoxOnFileControlCallback = new AntoxOnFileControlCallback(ctx)
+      val antoxOnFileDataCallback = new AntoxOnFileDataCallback(ctx)
+      val antoxOnAudioDataCallback = new AntoxOnAudioDataCallback(ctx)
+      val antoxOnAvCallbackCallback = new AntoxOnAvCallbackCallback(ctx)
+      val antoxOnVideoDataCallback = new AntoxOnVideoDataCallback(ctx)
+      callbackHandler.registerOnMessageCallback(antoxOnMessageCallback)
+      callbackHandler.registerOnFriendRequestCallback(antoxOnFriendRequestCallback)
+      callbackHandler.registerOnActionCallback(antoxOnActionCallback)
+      callbackHandler.registerOnConnectionStatusCallback(antoxOnConnectionStatusCallback)
+      callbackHandler.registerOnNameChangeCallback(antoxOnNameChangeCallback)
+      callbackHandler.registerOnReadReceiptCallback(antoxOnReadReceiptCallback)
+      callbackHandler.registerOnStatusMessageCallback(antoxOnStatusMessageCallback)
+      callbackHandler.registerOnUserStatusCallback(antoxOnUserStatusCallback)
+      callbackHandler.registerOnTypingChangeCallback(antoxOnTypingChangeCallback)
+      callbackHandler.registerOnFileSendRequestCallback(antoxOnFileSendRequestCallback)
+      callbackHandler.registerOnFileControlCallback(antoxOnFileControlCallback)
+      callbackHandler.registerOnFileDataCallback(antoxOnFileDataCallback)
+      callbackHandler.registerOnAudioDataCallback(antoxOnAudioDataCallback)
+      callbackHandler.registerOnAvCallbackCallback(antoxOnAvCallbackCallback)
+      callbackHandler.registerOnVideoDataCallback(antoxOnVideoDataCallback)
       try {
-        if (DhtNode.ipv4.size == 0) new DHTNodeDetails(ctx).execute().get
-        for (i <- 0 until DhtNode.ipv4.size) {
-          jTox.bootstrap(DhtNode.ipv4.get(i), java.lang.Integer.parseInt(DhtNode.port.get(i)), DhtNode.key.get(i))
-        }
+        jTox.setName(preferences.getString("nickname", ""))
+        jTox.setStatusMessage(preferences.getString("status_message", ""))
+        var newStatus: ToxUserStatus = null
+        val newStatusString = preferences.getString("status", "")
+        newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
+        jTox.setUserStatus(newStatus)
       } catch {
-        case e: Exception => 
+        case e: ToxException => 
       }
-    }
-    isInited = true
+      updateDhtNodes(ctx)
   }
 }
+
