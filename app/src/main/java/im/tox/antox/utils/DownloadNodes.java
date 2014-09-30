@@ -17,7 +17,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
+public class DownloadNodes extends AsyncTask<Void, Void, Void> {
 
     private static class JsonReader {
         private static String readAll(Reader rd) throws IOException {
@@ -46,7 +46,7 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
     final String TAG = "DHTNODEDETAILS";
     Context ctx;
 
-    public DHTNodeDetails(Context ctx) {
+    public DownloadNodes(Context ctx) {
         this.ctx = ctx;
     }
 
@@ -59,11 +59,11 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
             JSONArray serverArray = json.getJSONArray("servers");
             for(int i = 0; i < serverArray.length(); i++) {
                 JSONObject jsonObject = serverArray.getJSONObject(i);
-                DhtNode.owner.add(jsonObject.getString("owner"));
-                DhtNode.ipv6.add(jsonObject.getString("ipv6"));
-                DhtNode.key.add(jsonObject.getString("pubkey"));
-                DhtNode.ipv4.add(jsonObject.getString("ipv4"));
-                DhtNode.port.add(String.valueOf(jsonObject.getInt("port")));
+                DhtNodes.owner.add(jsonObject.getString("owner"));
+                DhtNodes.ipv6.add(jsonObject.getString("ipv6"));
+                DhtNodes.key.add(jsonObject.getString("pubkey"));
+                DhtNodes.ipv4.add(jsonObject.getString("ipv4"));
+                DhtNodes.port.add(String.valueOf(jsonObject.getInt("port")));
             }
 
             Log.d(TAG, "Nodes fetched from online");
@@ -71,38 +71,38 @@ public class DHTNodeDetails extends AsyncTask<Void, Void, Void> {
         } catch (Exception exp) {
                 Log.d(TAG, "Failed to connect to Tox CDN for nodes");
 
-                DhtNode.ipv4.add("192.254.75.98");
-                DhtNode.ipv6.add("2607:5600:284::2");
-                DhtNode.owner.add("stqism");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("951C88B7E75C867418ACDB5D273821372BB5BD652740BCDF623A4FA293E75D2F");
+                DhtNodes.ipv4.add("192.254.75.98");
+                DhtNodes.ipv6.add("2607:5600:284::2");
+                DhtNodes.owner.add("stqism");
+                DhtNodes.port.add("33445");
+                DhtNodes.key.add("951C88B7E75C867418ACDB5D273821372BB5BD652740BCDF623A4FA293E75D2F");
 
-                DhtNode.ipv4.add("144.76.60.215");
-                DhtNode.ipv6.add("2a01:4f8:191:64d6::1");
-                DhtNode.owner.add("sonofra");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
+                DhtNodes.ipv4.add("144.76.60.215");
+                DhtNodes.ipv6.add("2a01:4f8:191:64d6::1");
+                DhtNodes.owner.add("sonofra");
+                DhtNodes.port.add("33445");
+                DhtNodes.key.add("04119E835DF3E78BACF0F84235B300546AF8B936F035185E2A8E9E0A67C8924F");
 
-                DhtNode.ipv4.add("37.187.46.132");
-                DhtNode.ipv6.add("2001:41d0:0052:0300::0507");
-                DhtNode.owner.add("mouseym");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("A9D98212B3F972BD11DA52BEB0658C326FCCC1BFD49F347F9C2D3D8B61E1B927");
+                DhtNodes.ipv4.add("37.187.46.132");
+                DhtNodes.ipv6.add("2001:41d0:0052:0300::0507");
+                DhtNodes.owner.add("mouseym");
+                DhtNodes.port.add("33445");
+                DhtNodes.key.add("A9D98212B3F972BD11DA52BEB0658C326FCCC1BFD49F347F9C2D3D8B61E1B927");
 
-                DhtNode.ipv4.add("37.59.102.176");
-                DhtNode.ipv6.add("2001:41d0:51:1:0:0:0:cc");
-                DhtNode.owner.add("astonex");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("B98A2CEAA6C6A2FADC2C3632D284318B60FE5375CCB41EFA081AB67F500C1B0B");
+                DhtNodes.ipv4.add("37.59.102.176");
+                DhtNodes.ipv6.add("2001:41d0:51:1:0:0:0:cc");
+                DhtNodes.owner.add("astonex");
+                DhtNodes.port.add("33445");
+                DhtNodes.key.add("B98A2CEAA6C6A2FADC2C3632D284318B60FE5375CCB41EFA081AB67F500C1B0B");
 
-                DhtNode.ipv4.add("54.199.139.199");
-                DhtNode.ipv6.add("");
-                DhtNode.owner.add("aitjcize");
-                DhtNode.port.add("33445");
-                DhtNode.key.add("7F9C31FE850E97CEFD4C4591DF93FC757C7C12549DDD55F8EEAECC34FE76C029");
+                DhtNodes.ipv4.add("54.199.139.199");
+                DhtNodes.ipv6.add("");
+                DhtNodes.owner.add("aitjcize");
+                DhtNodes.port.add("33445");
+                DhtNodes.key.add("7F9C31FE850E97CEFD4C4591DF93FC757C7C12549DDD55F8EEAECC34FE76C029");
         }
 
-        Log.d(TAG, "DhtNode size: " + DhtNode.ipv4.size());
+        Log.d(TAG, "DhtNode size: " + DhtNodes.ipv4.size());
 
         return null;
     }
