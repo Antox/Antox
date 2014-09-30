@@ -8,7 +8,6 @@
     <color name="gray_darker">@android:color/darker_gray</color>
 
     <color name="green">#5ec245</color>
-    <color name="blue">#4c689d</color>
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
 </resources>
