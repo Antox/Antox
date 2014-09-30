@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Used for storing either the downloaded node details or the details of a node the user has entered
  * themselves in SettingsFragment
  */
-public final class DhtNode {
+public final class DhtNodes {
     public static ArrayList<String> ipv4 = new ArrayList<String>();
     public static ArrayList<String> ipv6 = new ArrayList<String>();
     public static ArrayList<String> port = new ArrayList<String>();

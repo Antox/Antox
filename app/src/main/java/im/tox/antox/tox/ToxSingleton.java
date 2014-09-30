@@ -39,8 +39,8 @@ import im.tox.antox.data.AntoxDB;
 import im.tox.antox.utils.AntoxFriend;
 import im.tox.antox.utils.AntoxFriendList;
 import im.tox.antox.utils.Constants;
-import im.tox.antox.utils.DHTNodeDetails;
-import im.tox.antox.utils.DhtNode;
+import im.tox.antox.utils.DhtNodes;
+import im.tox.antox.utils.DownloadNodes;
 import im.tox.antox.utils.Friend;
 import im.tox.antox.utils.FriendInfo;
 import im.tox.antox.utils.FriendRequest;
@@ -737,12 +737,12 @@ public class ToxSingleton {
         /* If connected to internet, download nodes */
         if (networkInfo != null && networkInfo.isConnected()) {
             try {
-                if(DhtNode.ipv4.size() == 0)
-                    new DHTNodeDetails(ctx).execute().get(); // Make sure finished getting nodes first
+                if(DhtNodes.ipv4.size() == 0)
+                    new DownloadNodes(ctx).execute().get(); // Make sure finished getting nodes first
 
                 /* Attempt to connect to all the nodes */
-                for(int i = 0; i < DhtNode.ipv4.size(); i++) {
-                    jTox.bootstrap(DhtNode.ipv4.get(i), Integer.parseInt(DhtNode.port.get(i)), DhtNode.key.get(i));
+                for(int i = 0; i < DhtNodes.ipv4.size(); i++) {
+                    jTox.bootstrap(DhtNodes.ipv4.get(i), Integer.parseInt(DhtNodes.port.get(i)), DhtNodes.key.get(i));
                 }
 
             } catch (Exception e) {
