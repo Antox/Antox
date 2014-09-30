@@ -79,7 +79,7 @@ public class SettingsFragment extends com.github.machinarius.preferencefragment.
         toxIDPreference.setOnPreferenceClickListener(new EditTextPreference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                DialogFragment dialog = new DialogToxID();
+                DialogFragment dialog = new DialogToxID(getActivity());
                 Bundle bundle = new Bundle();
                 bundle.putString("Enter Friend's Pin", "Enter Friend's Pin");
                 dialog.setArguments(bundle);

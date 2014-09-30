@@ -3,6 +3,7 @@ package im.tox.antox.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,16 +29,16 @@ import java.io.IOException;
 import im.tox.QR.Contents;
 import im.tox.QR.QRCodeEncode;
 import im.tox.antox.R;
+import im.tox.antox.activities.MainActivity;
 
 public class DialogToxID extends DialogFragment {
 
-    public interface DialogToxIDListener {
-        public void onDialogClick(DialogFragment fragment);
-    }
-
     DialogToxIDListener mListener;
+    Context mContext;
 
-    public DialogToxID() {}
+    public DialogToxID(Context context) {
+        mContext = context;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -54,22 +55,32 @@ public class DialogToxID extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = (View) inflater.inflate(R.layout.dialog_tox_id, null);
+        final View view = inflater.inflate(R.layout.dialog_tox_id, null);
         builder.setView(view);
-        builder.setNeutralButton(getString(R.string.button_ok), new Dialog.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.button_ok), new Dialog.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int ID) {
                 mListener.onDialogClick(DialogToxID.this);
             }
         });
+        builder.setNeutralButton(getString(R.string.dialog_tox_id), new Dialog.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int ID) {
+                /* Copy ID to clipboard */
+                SharedPreferences sharedPreferences
+                        = PreferenceManager.getDefaultSharedPreferences(mContext);
+                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) mContext
+                        .getSystemService(mContext.CLIPBOARD_SERVICE);
+                clipboard.setText(sharedPreferences.getString("tox_id", ""));
+            }
+        });
 
         /* Generate or load QR image of Tox ID */
-        File file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/");
-        if(!file.exists()){
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/");
+        if (!file.exists()) {
             file.mkdirs();
         }
 
-        File noMedia = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/",".nomedia");
-        if(!noMedia.exists()){
+        File noMedia = new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/", ".nomedia");
+        if (!noMedia.exists()) {
             try {
                 noMedia.createNewFile();
             } catch (IOException e) {
@@ -77,12 +88,12 @@ public class DialogToxID extends DialogFragment {
             }
         }
 
-        file = new File(Environment.getExternalStorageDirectory().getPath()+"/Antox/userkey_qr.png");
+        file = new File(Environment.getExternalStorageDirectory().getPath() + "/Antox/userkey_qr.png");
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         generateQR(pref.getString("tox_id", ""));
         Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
 
-        ImageButton qrCode = (ImageButton)view.findViewById(R.id.qr_image);
+        ImageButton qrCode = (ImageButton) view.findViewById(R.id.qr_image);
         qrCode.setImageBitmap(bmp);
         qrCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,5 +129,9 @@ public class DialogToxID extends DialogFragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public interface DialogToxIDListener {
+        public void onDialogClick(DialogFragment fragment);
     }
 }
