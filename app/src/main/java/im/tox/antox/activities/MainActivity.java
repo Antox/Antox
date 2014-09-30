@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 import im.tox.antox.R;
