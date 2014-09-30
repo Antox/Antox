@@ -20,13 +20,14 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         if (networkInfo != null && networkInfo.isConnected()) {
             if (DhtNodes.ipv4.size() == 0) {
                 new DownloadNodes(context).execute();
-                ToxSingleton toxSingleton = ToxSingleton.getInstance();
-                // Bootstrap again
-                for (int i = 0; i < DhtNodes.ipv4.size(); i++) {
-                    try {
-                        toxSingleton.jTox.bootstrap(DhtNodes.ipv4.get(i), Integer.parseInt(DhtNodes.port.get(i)), DhtNodes.key.get(i));
-                    } catch (Exception e) {
-                    }
+            }
+
+            ToxSingleton toxSingleton = ToxSingleton.getInstance();
+            // Bootstrap again
+            for (int i = 0; i < DhtNodes.ipv4.size(); i++) {
+                try {
+                    toxSingleton.jTox.bootstrap(DhtNodes.ipv4.get(i), Integer.parseInt(DhtNodes.port.get(i)), DhtNodes.key.get(i));
+                } catch (Exception e) {
                 }
             }
         }
