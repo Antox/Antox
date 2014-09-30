@@ -67,7 +67,6 @@ class ChatActivity extends Activity {
     var messageBox: EditText = null
     var isTypingBox: TextView = null
     var statusTextBox: TextView = null
-    val toxSingleton: ToxSingleton = ToxSingleton.getInstance()
     var chatListView: ListView = null
     var messagesSub: JSubscription = null
     //var progressSub: Subscription
@@ -110,10 +109,10 @@ class ChatActivity extends Activity {
         messageBox.addTextChangedListener(new TextWatcher() {
             override def beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
                 val isTyping = (i3 > 0)
-                val friend = toxSingleton.getAntoxFriend(key)
+                val friend = ToxSingleton.getAntoxFriend(key)
                 if (friend != null && friend.isOnline()) {
                     try {
-                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping)
+                        ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping)
                     } catch {
                         case te: ToxException => {
                         }
@@ -140,10 +139,10 @@ class ChatActivity extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             override def onClick(v: View) {
                 sendMessage()
-                val friend = toxSingleton.getAntoxFriend(key)
+                val friend = ToxSingleton.getAntoxFriend(key)
                 if (friend != null) {
                     try {
-                        toxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false)
+                        ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false)
                     } catch {
                         case te: ToxException => {
                         }
@@ -200,7 +199,7 @@ class ChatActivity extends Activity {
         //                        FileDialog fileDialog = new FileDialog(getActivity(), mPath);
         //                        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
         //                            public void fileSelected(File file) {
-        //                                toxSingleton.sendFileSendRequest(file.getPath(), activeKey, getActivity());
+        //                                ToxSingleton.sendFileSendRequest(file.getPath(), activeKey, getActivity());
         //                            }
         //                        });
         //                        fileDialog.showDialog();
@@ -215,8 +214,8 @@ class ChatActivity extends Activity {
 
     override def onResume() = {
         super.onResume()
-        messagesSub = toxSingleton.updatedMessagesSubject.subscribe(new Action1[java.lang.Boolean]() {
-            override def call(b: java.lang.Boolean) {
+        messagesSub = ToxSingleton.updatedMessagesSubject.subscribe(new Action1[Boolean]() {
+            override def call(b: Boolean) {
                 Log.d(TAG,"Messages updated")
             }
         })
@@ -242,7 +241,7 @@ class ChatActivity extends Activity {
                                 val generator: Random = new Random()
                                 val id = generator.nextInt()
                                 try {
-                                    friend = toxSingleton.getAntoxFriend(key)
+                                    friend = ToxSingleton.getAntoxFriend(key)
                                 } catch {
                                     case e: Exception => {
                                         Log.d(TAG, e.toString())
@@ -269,17 +268,17 @@ class ChatActivity extends Activity {
                                             for (i <- 0 until msg.length) {
                                                 if ((msg.charAt(i) & OneByte) == 0) total += 1 else if ((msg.charAt(i) & TwoByte) == 0) total += 2 else if ((msg.charAt(i) & ThreeByte) == 0) total += 3 else total += 4
                                                 if (numberOfMessagesSent == numOfMessages - 1) {
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous))
+                                                    ToxSingleton.jTox.sendMessage(friend, msg.substring(previous))
                                                     //break
                                                 } else if (total >= 1366) {
-                                                    toxSingleton.jTox.sendMessage(friend, msg.substring(previous, i))
+                                                    ToxSingleton.jTox.sendMessage(friend, msg.substring(previous, i))
                                                     numberOfMessagesSent += 1
                                                     previous = i
                                                     total = 0
                                                 }
                                             }
                                         } else {
-                                            toxSingleton.jTox.sendMessage(friend, msg)
+                                            ToxSingleton.jTox.sendMessage(friend, msg)
                                         }
                                     } catch {
                                         case e: ToxException => {
@@ -291,7 +290,7 @@ class ChatActivity extends Activity {
                                     var db = new AntoxDB(this)
                                     db.addMessage(id, key, msg, false, false, sendingSucceeded, 1)
                                     db.close()
-                                    toxSingleton.updateMessages(this)
+                                    ToxSingleton.updateMessages(this)
                                 }
                                 subscriber.onCompleted()
                             } catch {
