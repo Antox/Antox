@@ -88,16 +88,14 @@ public class ToxSingleton {
     public Observable friendListAndRequestsSubject;
     public Observable rightPaneActiveAndKeyAndIsFriendSubject;
     public Observable friendInfoListAndActiveSubject;
-    public HashMap<Integer, Integer> progressMap = new HashMap<Integer, Integer>();
-    public HashMap<Integer, ArrayList<Tuple<Integer, Long>>> progressHistoryMap
-            = new HashMap<Integer, ArrayList<Tuple<Integer, Long>>>();
-    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<Integer, FileStatus>();
-    public HashMap<Integer, Integer> fileSizeMap = new HashMap<Integer, Integer>();
-    public HashMap<Integer, FileOutputStream> fileStreamMap
-            = new HashMap<Integer, FileOutputStream>();
-    public HashMap<Integer, File> fileMap = new HashMap<Integer, File>();
-    public HashSet<Integer> fileIds = new HashSet<Integer>();
-    public HashMap<String, Boolean> typingMap = new HashMap<String, Boolean>();
+    public HashMap<Integer, Integer> progressMap = new HashMap<>();
+    public HashMap<Integer, ArrayList<Tuple<Integer, Long>>> progressHistoryMap = new HashMap<>();
+    public HashMap<Integer, FileStatus> fileStatusMap = new HashMap<>();
+    public HashMap<Integer, Integer> fileSizeMap = new HashMap<>();
+    public HashMap<Integer, FileOutputStream> fileStreamMap = new HashMap<>();
+    public HashMap<Integer, File> fileMap = new HashMap<>();
+    public HashSet<Integer> fileIds = new HashSet<>();
+    public HashMap<String, Boolean> typingMap = new HashMap<>();
     public boolean isInited = false;
 
     public String activeKey; //ONLY FOR USE BY CALLBACKS
