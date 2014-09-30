@@ -31,6 +31,7 @@
     <string name="create_name_hint">Nome Profilo</string>
     <string name="create_text">Crea un nouvo profilo Antox\nOgni profilo ha il suo Tox ID personale</string>
     <string name="create_register">Crea profilo</string>
+    <string name="create_register_incog">Crea profilo nascosto</string>
     <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
     <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/" o "\\"</string>

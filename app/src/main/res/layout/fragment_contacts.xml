@@ -7,35 +7,36 @@
     android:layout_height="fill_parent"
     android:background="@color/white_absolute"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="@color/white_absolute">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_search"
-            android:id="@+id/imageView"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="15dp" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_action_search" />
 
         <EditText
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/search_all_contacts"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageView"
             android:layout_marginLeft="19dp"
-            android:textColor="@color/black"
-            android:inputType="text"
-            android:typeface="normal"
-            android:windowSoftInputMode="stateHidden"
+            android:layout_toRightOf="@+id/imageView"
             android:background="@color/white_absolute"
-            android:singleLine="true" />
+            android:hint="@string/search_all_contacts"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:typeface="normal"
+            android:windowSoftInputMode="stateHidden" />
 
     </RelativeLayout>
 
@@ -43,31 +44,33 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/list_divider"/>
+        android:background="@drawable/list_divider" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-                    <ListView
-                        android:id="@+id/contacts_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:background="@color/white_absolute"
-                        android:cacheColorHint="@android:color/transparent"
-                        android:headerDividersEnabled="true"
-                        android:footerDividersEnabled="false"
-                        android:divider="@drawable/list_divider"
-                        android:dividerHeight="0dp" />
+
+        <ListView
+            android:id="@+id/contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white_absolute"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true" />
     </FrameLayout>
 
     <com.shamanland.fab.FloatingActionButton
         android:id="@+id/fab"
-        android:onClick="onClickAddFriend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        app:floatingActionButtonColor="#6BC25F"
-        />
-    
+        android:layout_margin="@dimen/margin_medium"
+        android:onClick="onClickAddFriend"
+        app:floatingActionButtonColor="@color/fab_colors_list" />
+
 </LinearLayout>
 

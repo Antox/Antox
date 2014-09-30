@@ -20,7 +20,7 @@
     <CheckBoxPreference
         android:key="action_messages"
         android:title="@string/pref_title_connection_status_messages"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 
     <PreferenceScreen
         android:title="@string/pref_advanced" >
