@@ -128,7 +128,6 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
 
   override def onDestroy() {
     super.onDestroy()
-    ToxSingleton.activeKey = ""
   }
 
   override def onResume() {
