@@ -85,12 +85,12 @@
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:layout_width="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
-                    android:layout_height="25dp"
                     android:background="@drawable/circle_green"/>
             </LinearLayout>
         </LinearLayout>
