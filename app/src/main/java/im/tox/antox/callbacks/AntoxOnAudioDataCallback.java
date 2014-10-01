@@ -27,7 +27,7 @@ public class AntoxOnAudioDataCallback implements OnAudioDataCallback<AntoxFriend
             AudioTrack audioTrack = new  AudioTrack(
                     AudioManager.STREAM_VOICE_CALL,
                     48000,
-                    AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                    AudioFormat.CHANNEL_OUT_STEREO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     data.length,
                     AudioTrack.MODE_STREAM);
