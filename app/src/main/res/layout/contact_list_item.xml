@@ -37,6 +37,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textSize="19sp"
                     android:textStyle="bold" />
                 <TextView
@@ -67,6 +68,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_marginRight="10dp"
                     android:textSize="15sp"/>
                 <TextView
@@ -79,7 +81,7 @@
                     android:textStyle="bold"
                     android:text="2"
                     android:layout_height="25dp"
-                    android:background="@color/green"/>
+                    android:background="@drawable/circle_green"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -1,4 +1,3 @@
-
 package im.tox.antox.activities
 
 import android.content.Context
@@ -64,6 +63,7 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
+    overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out)
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN && 
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -108,6 +108,11 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
       setResult(Activity.RESULT_OK, i)
       finish()
     }
+  }
+
+  override def onPause() = {
+    super.onPause()
+    if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom);
   }
 
   private def isKeyOwn(key: String): Boolean = {

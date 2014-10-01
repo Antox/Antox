@@ -98,17 +98,7 @@ class ContactsFragment extends Fragment {
       }
     }
     contactsListView.setAdapter(leftPaneAdapter)
-    setSelectionToKey(activeKey)
     println("updated contacts")
-  }
-
-  private def setSelectionToKey(key: String) {
-    if (key != null && key != "") {
-      for (i <- 0 until leftPaneAdapter.getCount if leftPaneAdapter.getKey(i) == key) {
-        contactsListView.setSelection(i)
-        //break
-      }
-    }
   }
 
   override def onResume() {
@@ -126,7 +116,6 @@ class ContactsFragment extends Fragment {
       override def call(s: String) {
         Log.d("ContactsFragment", "key subject")
         activeKey = s
-        setSelectionToKey(activeKey)
       }
     })
     val fab = getActivity.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
@@ -158,7 +147,6 @@ class ContactsFragment extends Fragment {
         if (`type` != Constants.TYPE_FRIEND_REQUEST) {
           val key = item.key
           if (key != "") {
-            setSelectionToKey(key)
             ToxSingleton.changeActiveKey(key)
             val intent = new Intent(getActivity, classOf[ChatActivity])
             intent.putExtra("key", key)

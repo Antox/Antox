@@ -45,16 +45,12 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
 
   var request: View = _
 
-  var activeKeySub: Subscription = _
-
-  var chatActiveSub: Subscription = _
-
   var preferences: SharedPreferences = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
     val test = new TestScala()
     test.test()
     val language = preferences.getString("language", "-1")
@@ -126,54 +122,9 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
     }
   }
 
-  override def onDestroy() {
-    super.onDestroy()
-  }
-
-  override def onResume() {
-    super.onResume()
-    preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    //activeKeySub = ToxSingleton
-    //  .rightPaneActiveAndKeyAndIsFriendSubject
-    //  //.observeOn(AndroidSchedulers.mainThread())
-    //  .subscribe(new Action1[Triple[Boolean, String, Boolean]]() {
-
-    //  override def call(rightPaneActiveAndActiveKeyAndIfFriend: Triple[Boolean, String, Boolean]) {
-    //    var rightPaneActive = rightPaneActiveAndActiveKeyAndIfFriend.x
-    //    var activeKey = rightPaneActiveAndActiveKeyAndIfFriend.y
-    //    var isFriend = rightPaneActiveAndActiveKeyAndIfFriend.z
-    //    Log.d("activeKeySub", "oldkey: " + ToxSingleton.activeKey + " newkey: " + activeKey + 
-    //      " isfriend: " + 
-    //      isFriend)
-    //    if (activeKey == "") {
-    //    } else {
-    //      if (activeKey != ToxSingleton.activeKey) {
-    //        ToxSingleton.doClosePaneSubject.onNext(true)
-    //        if (isFriend) {
-    //        } else {
-    //        }
-    //      }
-    //    }
-    //    ToxSingleton.activeKey = activeKey
-    //    if (activeKey != "" && rightPaneActive && isFriend) {
-    //      var antoxDB = new AntoxDB(getApplicationContext)
-    //      antoxDB.markIncomingMessagesRead(activeKey)
-    //      ToxSingleton.clearUselessNotifications(activeKey)
-    //      ToxSingleton.updateMessages(getApplicationContext)
-    //      antoxDB.close()
-    //      ToxSingleton.chatActive = true
-    //    } else {
-    //      ToxSingleton.chatActive = false
-    //    }
-    //  }
-    //})
-  }
-
   override def onPause() {
     super.onPause()
-    preferences = PreferenceManager.getDefaultSharedPreferences(this)
     if (preferences.getBoolean("beenLoaded", false)) {
-      //activeKeySub.unsubscribe()
       ToxSingleton.chatActive = false
     }
   }
