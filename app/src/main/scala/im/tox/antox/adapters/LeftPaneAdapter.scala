@@ -115,7 +115,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         holder.countText.setVisibility(View.GONE)
       }
       holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false))
-      holder.icon.setBackgroundColor(IconColor.iconColorAsColor(item.isOnline, item.status))
+      holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
     }
     if (holder.timeText != null) {
       holder.timeText.setTextColor(context.getResources.getColor(R.color.gray_darker))
