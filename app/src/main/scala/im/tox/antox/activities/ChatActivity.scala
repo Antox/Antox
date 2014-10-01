@@ -225,7 +225,8 @@ class ChatActivity extends Activity {
                 antoxDB.close()
             }
         })
-        titleSub = ToxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
+        titleSub = ToxSingleton.friendInfoListSubject
+              .observeOn(AndroidSchedulers.mainThread())
               .subscribe(new Action1[ArrayList[FriendInfo]]() {
 
               override def call(fi: ArrayList[FriendInfo]) {

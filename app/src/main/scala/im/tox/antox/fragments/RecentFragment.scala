@@ -41,8 +41,6 @@ class RecentFragment extends Fragment {
 
   private var rootView: View = _
 
-  private var paused: Boolean = _
-
   var noConversations: LinearLayout = _
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -84,22 +82,19 @@ class RecentFragment extends Fragment {
 
   override def onResume() {
     super.onResume()
-    sub = ToxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
+    sub = ToxSingleton.friendInfoListSubject
+      .observeOn(AndroidSchedulers.mainThread())
       .distinctUntilChanged()
       .subscribe(new Action1[ArrayList[FriendInfo]]() {
 
       override def call(friends_list: ArrayList[FriendInfo]) {
-        if (!paused) {
           updateRecentConversations(friends_list)
-        }
-        paused = false
       }
     })
   }
 
   override def onPause() {
     super.onPause()
-    paused = true
     sub.unsubscribe()
   }
 
