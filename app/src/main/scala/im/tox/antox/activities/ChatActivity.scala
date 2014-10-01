@@ -73,7 +73,7 @@ class ChatActivity extends Activity {
     var messagesSub: JSubscription = null
     //var progressSub: Subscription
     //var activeKeySub: Subscription
-    //var titleSub: Subscription
+    var titleSub: JSubscription = null
     //var typingSub: Subscription
     //var chatMessages: ArrayList<ChatMessages>
     var activeKey: String = null
@@ -210,6 +210,7 @@ class ChatActivity extends Activity {
 
     override def onResume() = {
         super.onResume()
+        val thisActivity = this
         ToxSingleton.activeKeySubject.onNext(activeKey)
         Reactive.activeKey.onNext(Some(activeKey))
         Reactive.chatActive.onNext(true)
@@ -224,6 +225,35 @@ class ChatActivity extends Activity {
                 antoxDB.close()
             }
         })
+        titleSub = ToxSingleton.friendInfoListSubject.observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Action1[ArrayList[FriendInfo]]() {
+
+              override def call(fi: ArrayList[FriendInfo]) {
+                val key = activeKey
+                val mFriend: Option[FriendInfo] = fi
+                                      .toArray(Array[FriendInfo]())
+                                      .filter(f => f.friendKey == key)
+                                      .headOption
+                mFriend match {
+                  case Some(friend) => {
+                    if (friend.alias != "") {
+                      thisActivity.setTitle(friend.alias)
+                    } else {
+                      thisActivity.setTitle(friend.friendName)
+                    }
+                  }
+                  case None => {
+                    thisActivity.setTitle("")
+                  }
+                }
+                  //var chatName = thisActivity.findViewById(R.id.chatActiveName).asInstanceOf[TextView]
+                  //if (friendAlias != "") chatName.setText(friendAlias) else chatName.setText(friendName)
+                  //var statusText = thisActivity.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
+                  //statusText.setText(friendNote)
+                  //var statusIcon = thisActivity.findViewById(R.id.chat_friend_status_icon).asInstanceOf[TextView]
+                  //statusIcon.setBackgroundColor(IconColor.iconColorAsColor(friendIsOnline, friendStatus))
+              }
+            })
     }
 
     private def sendMessage() {
@@ -338,5 +368,6 @@ class ChatActivity extends Activity {
         Reactive.chatActive.onNext(false)
         if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
         messagesSub.unsubscribe()
+        titleSub.unsubscribe()
     }
 }
