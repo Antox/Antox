@@ -64,7 +64,7 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     holder.friendStatus.setText(message)
     holder.unreadCount.setText(java.lang.Integer.toString(unreadCount))
     holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(time, false))
-    holder.icon.setBackgroundColor(IconColor.iconColorAsColor(online, UserStatus.getToxUserStatusFromString(status)))
+    holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(online, UserStatus.getToxUserStatusFromString(status))))
     if (unreadCount == 0) {
       holder.unreadCount.setVisibility(View.GONE)
     } else {
