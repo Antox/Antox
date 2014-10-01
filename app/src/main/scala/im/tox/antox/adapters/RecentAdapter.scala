@@ -73,7 +73,6 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     view.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        view.setSelected(true)
         ToxSingleton.changeActiveKey(tox_key)
         val intent = new Intent(context, classOf[ChatActivity])
         intent.putExtra("key", tox_key)

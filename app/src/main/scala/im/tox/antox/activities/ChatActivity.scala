@@ -79,7 +79,7 @@ class ChatActivity extends Activity {
     var activeKey: String = null
     var scrolling: Boolean = false
     var antoxDB: AntoxDB = null
-    //var photoPath: String
+    var photoPath: String = null
     override def onCreate(savedInstanceState: Bundle) = {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
@@ -158,61 +158,54 @@ class ChatActivity extends Activity {
 
         val attachmentButton = this.findViewById(R.id.attachmentButton)
 
-        //attachmentButton.setOnClickListener(new View.OnClickListener() {
-        //    override def onClick(v: View) {
-        //        val builder = new AlertDialog.Builder(getActivity())
-        //        val items = Array(
-        //                getResources().getString(R.string.attachment_photo),
-        //                getResources().getString(R.string.attachment_takephoto),
-        //                getResources().getString(R.string.attachment_file)
-        //        )
-        //        builder.setItems(items, new DialogInterface.OnClickListener() {
-        //            override def onClick(dialogInterface: DialogInterface, i: Int) {
-        //                switch (i) {
-        //                    case 0:
-        //                        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //                        startActivityForResult(intent, Constants.IMAGE_RESULT);
-        //                        break;
+        val thisActivity = this
 
-        //                    case 1:
-        //                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        //                        String image_name = "Antoxpic" + new Date().toString();
-        //                        File storageDir = Environment.getExternalStoragePublicDirectory(
-        //                                Environment.DIRECTORY_PICTURES);
-        //                        File file = null;
-        //                        try {
-        //                            file = File.createTempFile(
-        //                                    image_name,  /* prefix */
-        //                                    ".jpg",         /* suffix */
-        //                                    storageDir      /* directory */
-        //                            );
-        //                        } catch (IOException e) {
-        //                            e.printStackTrace();
-        //                        }
-        //                        if (file != null) {
-        //                            Uri imageUri = Uri.fromFile(file);
-        //                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        //                            photoPath = file.getAbsolutePath();
-        //                        }
-        //                        startActivityForResult(cameraIntent, Constants.PHOTO_RESULT);
-        //                        break;
+        attachmentButton.setOnClickListener(new View.OnClickListener() {
 
-        //                    case 2:
-        //                        File mPath = new File(Environment.getExternalStorageDirectory() + "//DIR//");
-        //                        FileDialog fileDialog = new FileDialog(getActivity(), mPath);
-        //                        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-        //                            public void fileSelected(File file) {
-        //                                ToxSingleton.sendFileSendRequest(file.getPath(), activeKey, getActivity());
-        //                            }
-        //                        });
-        //                        fileDialog.showDialog();
-        //                        break;
-        //                }
-        //            }
-        //        })
-        //        builder.create().show();
-        //    }
-        //})
+          override def onClick(v: View) {
+            val builder = new AlertDialog.Builder(thisActivity)
+            var items: Array[CharSequence] = null
+            items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+              override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
+                case 0 => 
+                  var intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                  startActivityForResult(intent, Constants.IMAGE_RESULT)
+
+                case 1 => 
+                  var cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                  var image_name = "Antoxpic" + new Date().toString
+                  var storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                  var file: File = null
+                  try {
+                    file = File.createTempFile(image_name, ".jpg", storageDir)
+                  } catch {
+                    case e: IOException => e.printStackTrace()
+                  }
+                  if (file != null) {
+                    val imageUri = Uri.fromFile(file)
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                    photoPath = file.getAbsolutePath
+                  }
+                  startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+
+                    case 2 => 
+                      var mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+                        var fileDialog = new FileDialog(thisActivity, mPath)
+                        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+
+                          def fileSelected(file: File) {
+                            ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
+                          }
+                        })
+                      fileDialog.showDialog()
+
+              }
+            })
+          builder.create().show()
+          }
+        })
     }
 
     override def onResume() = {
