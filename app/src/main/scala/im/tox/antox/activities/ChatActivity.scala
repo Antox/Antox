@@ -35,6 +35,7 @@ import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.Reactive
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.ChatMessages
 import im.tox.antox.utils.Constants
@@ -59,6 +60,7 @@ import rx.lang.scala.Subscriber
 import rx.lang.scala.Subscription
 import rx.lang.scala.Subject
 import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 class ChatActivity extends Activity {
     val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -80,6 +82,7 @@ class ChatActivity extends Activity {
     //var photoPath: String
     override def onCreate(savedInstanceState: Bundle) = {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
         setContentView(R.layout.activity_chat)
         val extras: Bundle = getIntent().getExtras()
         val key = extras.getString("key")
@@ -88,7 +91,7 @@ class ChatActivity extends Activity {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         adapter = new ChatMessagesAdapter(this, getCursor(), antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", true)))
         chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-        //chatListView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL)
+        chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
         chatListView.setStackFromBottom(true)
         chatListView.setAdapter(adapter)
         chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -214,9 +217,18 @@ class ChatActivity extends Activity {
 
     override def onResume() = {
         super.onResume()
+        ToxSingleton.activeKeySubject.onNext(activeKey)
+        Reactive.activeKey.onNext(Some(activeKey))
+        Reactive.chatActive.onNext(true)
+        val antoxDB = new AntoxDB(getApplicationContext())
+        antoxDB.markIncomingMessagesRead(activeKey)
+        ToxSingleton.clearUselessNotifications(activeKey)
+        ToxSingleton.updateMessages(getApplicationContext())
         messagesSub = ToxSingleton.updatedMessagesSubject.subscribe(new Action1[Boolean]() {
             override def call(b: Boolean) {
                 Log.d(TAG,"Messages updated")
+                updateChat()
+                antoxDB.close()
             }
         })
     }
@@ -311,6 +323,7 @@ class ChatActivity extends Activity {
         })
         observable
                 .subscribeOn(IOScheduler())
+                .observeOn(AndroidMainThreadScheduler())
                 .subscribe((cursor: Cursor) => {
                     adapter.changeCursor(cursor)
                     Log.d(TAG, "changing chat list cursor")
@@ -329,6 +342,8 @@ class ChatActivity extends Activity {
 
     override def onPause() = {
         super.onPause()
+        Reactive.chatActive.onNext(false)
+        if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
         messagesSub.unsubscribe()
     }
 }

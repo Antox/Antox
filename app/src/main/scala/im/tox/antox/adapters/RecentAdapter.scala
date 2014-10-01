@@ -1,7 +1,7 @@
-
 package im.tox.antox.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.support.v4.widget.ResourceCursorAdapter
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import java.sql.Timestamp
 import im.tox.antox.R
+import im.tox.antox.activities.ChatActivity
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.IconColor
 import im.tox.antox.utils.PrettyTimestamp
@@ -74,6 +75,9 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
       override def onClick(view: View) {
         view.setSelected(true)
         ToxSingleton.changeActiveKey(tox_key)
+        val intent = new Intent(context, classOf[ChatActivity])
+        intent.putExtra("key", tox_key)
+        context.startActivity(intent)
       }
     })
   }

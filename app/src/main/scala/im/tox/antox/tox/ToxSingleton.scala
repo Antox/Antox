@@ -230,15 +230,6 @@ object ToxSingleton {
             o2.asInstanceOf[Tuple[String, Boolean]])
         }
       })
-    rightPaneActiveAndKeyAndIsFriendSubject = combineLatest(rightPaneActiveSubject, activeKeyAndIsFriendSubject, 
-      new Func2[Boolean, Tuple[String, Boolean], Triple[Boolean, String, Boolean]]() {
-
-        override def call(rightPaneActive: Boolean, activeKeyAndIsFriend: Tuple[String, Boolean]): Triple[Boolean, String, Boolean] = {
-          var activeKey = activeKeyAndIsFriend.x
-          var isFriend = activeKeyAndIsFriend.y
-          new Triple[Boolean, String, Boolean](rightPaneActive, activeKey, isFriend)
-        }
-      })
   }
 
   private def isKeyFriend(key: String, fl: ArrayList[Friend]): Boolean = {
