@@ -47,6 +47,10 @@ object ChatMessagesAdapter {
 
     var background: LinearLayout = _
 
+    var sentTriangle: View = _
+
+    var receivedTriangle: View = _
+
     var message: TextView = _
 
     var time: TextView = _
@@ -81,8 +85,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
   var layoutResourceId: Int = R.layout.chat_message_row
 
   private var density: Int = context.getResources.getDisplayMetrics.density.toInt
-
-  private var paddingscale: Int = 8
 
   private var anim: Animation = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom)
 
@@ -123,6 +125,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
     holder.accept = view.findViewById(R.id.file_accept_button).asInstanceOf[View]
     holder.reject = view.findViewById(R.id.file_reject_button).asInstanceOf[View]
+    holder.sentTriangle = view.findViewById(R.id.sent_triangle).asInstanceOf[View]
+    holder.receivedTriangle = view.findViewById(R.id.received_triangle).asInstanceOf[View]
     holder.message.setTextSize(16)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
@@ -135,6 +139,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.progressText.setVisibility(View.GONE)
     holder.padding.setVisibility(View.GONE)
     holder.buttons.setVisibility(View.GONE)
+    holder.sentTriangle.setVisibility(View.GONE)
+    holder.receivedTriangle.setVisibility(View.GONE)
     messageType match {
       case Constants.MESSAGE_TYPE_OWN => 
         ownMessage(holder)
@@ -346,21 +352,21 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
   private def ownMessage(holder: ChatMessagesHolder) {
     holder.time.setGravity(Gravity.RIGHT)
+    holder.sentTriangle.setVisibility(View.VISIBLE)
     holder.layout.setGravity(Gravity.RIGHT)
     holder.message.setTextColor(context.getResources.getColor(R.color.white_absolute))
     holder.row.setGravity(Gravity.RIGHT)
-    holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.chatright))
-    holder.background.setPadding(1 * density * paddingscale, 1 * density * paddingscale, 6 * density + 1 * density * paddingscale, 
-      1 * density * paddingscale)
+    holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
+    holder.background.setPadding(8*density,8*density,8*density,8*density)
   }
 
   private def friendMessage(holder: ChatMessagesHolder) {
     holder.message.setTextColor(context.getResources.getColor(R.color.black))
-    holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.chatleft))
-    holder.background.setPadding(6 * density + 1 * density * paddingscale, 1 * density * paddingscale, 
-      1 * density * paddingscale, 1 * density * paddingscale)
+    holder.receivedTriangle.setVisibility(View.VISIBLE)
     holder.time.setGravity(Gravity.LEFT)
     holder.layout.setGravity(Gravity.LEFT)
     holder.row.setGravity(Gravity.LEFT)
+    holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
+    holder.background.setPadding(8*density,8*density,8*density,8*density)
   }
 }

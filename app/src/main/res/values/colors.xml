@@ -5,9 +5,10 @@
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
     <color name="gray_darker">@android:color/darker_gray</color>
+    <color name="grey_darkest">#444444</color>
     <color name="black">#222222</color>
 
-    <color name="green">#5ec245</color>
+    <color name="green">#81BF89</color>
     <color name="green_dark">#33512c</color>
-    <color name="blue">#4c689d</color>
+    <color name="blue">#6c5170</color>
 </resources>
