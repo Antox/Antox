@@ -127,7 +127,7 @@ class ContactsFragment extends Fragment {
     })
     val fab = getActivity.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
     fab.setSize(FloatingActionButton.SIZE_NORMAL)
-    fab.setColor(Color.parseColor("#6BC25F"))
+    fab.setColor(R.color.fab_normal)
     fab.initBackground()
     fab.setImageResource(R.drawable.ic_action_new)
     contactsListView.setOnTouchListener(new ShowHideOnScroll(fab))

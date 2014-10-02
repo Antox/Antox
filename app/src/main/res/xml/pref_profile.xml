@@ -39,6 +39,16 @@
         android:enabled="false" />
 
     <Preference
+        android:key="tox_id"
+        android:title="@string/pref_title_tox_id"
+        android:defaultValue="@string/pref_default_tox_id"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:editable="false"
+        android:textIsSelectable="true"
+        android:maxLines="1" />
+
+    <Preference
         android:key="logout"
         android:title="@string/pref_title_logout"
         />

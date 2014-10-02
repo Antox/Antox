@@ -19,8 +19,9 @@
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Profile Name</string>
-    <string name="create_text">Create a new Tox profile\nEach profile gets its own Tox ID</string>
+    <string name="create_text">Slogan Here</string>
     <string name="create_register">Register</string>
+    <string name="create_register_incog">Register Incognito</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
     <string name="create_must_fill_in">You must fill in all fields</string>
     <string name="create_bad_profile_name">Profile name can\'t contain spaces or backslashes/forwardslashes</string>

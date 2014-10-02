@@ -10,4 +10,6 @@
 
     <color name="green">#81BF89</color>
     <color name="blue">#6c5170</color>
+    <color name="fab_normal">@color/green</color>
+    <color name="fab_pressed">@color/green</color>
 </resources>

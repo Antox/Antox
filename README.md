@@ -61,7 +61,7 @@ I haven't figured out how to get an IDE going (or really tried), and I don't kno
 - File transfers
 
 ###Screenshots Of Progress
-<img src="http://a.pomf.se/fggnpw.png" width="230px" height="400px"/><img src="http://a.pomf.se/qvvvxf.png" width="230px" height="400px"/><img src="http://a.pomf.se/fjlawy.png" width="230px" height="400px"/>
+<img src="http://a.pomf.se/lltmgv.png" width="230px" height="400px"/><img src="http://a.pomf.se/nzrkzv.png" width="230px" height="400px"/><img src="http://a.pomf.se/npaodg.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
