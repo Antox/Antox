@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.os.AsyncTask
 import android.os.Environment
 import android.os.SystemClock
 import android.preference.PreferenceManager
@@ -251,10 +250,12 @@ object ToxSingleton {
     val fileName = splitPath(splitPath.length - 1)
     Log.d("sendFileSendRequest", "name: " + fileName)
     if (fileName != null) {
-      getAntoxFriend(activeKey)
+      require(key != null)
+      getAntoxFriend(key)
         .map(_.getFriendnumber)
         .flatMap(friendNumber => {
           try {
+            Log.d(TAG, "Creating tox file sender")
             val fn = jTox.newFileSender(friendNumber, file.length, fileName)
             fn match {
               case -1 => None
@@ -268,6 +269,7 @@ object ToxSingleton {
           }
         }).foreach(fileNumber => {
             val antoxDB = new AntoxDB(context)
+            Log.d(TAG, "adding File Transfer")
             val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, true)
             fileIds.add(id.toInt)
             antoxDB.close()
@@ -504,21 +506,14 @@ object ToxSingleton {
     fileNumber: Int, 
     startPosition: Int, 
     context: Context) {
-      class sendFileTask extends AsyncTask[Void, Void, Void] {
-
-        protected override def doInBackground(params: Void*): Void = {
+      Observable[Boolean](subscriber => {
           val result = doSendFileData(key, fileNumber, startPosition, context)
-          Log.d("doSendFileData finished, result: ", java.lang.Boolean.toString(result))
+          Log.d(TAG, "doSendFileData finished, result: " + result)
           val db = new AntoxDB(context)
           db.clearFileNumber(key, fileNumber)
           db.close()
-          return null
-        }
-
-        protected override def onPostExecute(result: Void) {
-        }
-      }
-      new sendFileTask().execute()
+          subscriber.onCompleted()
+      }).subscribeOn(IOScheduler()).subscribe()
   }
 
   def doSendFileData(key: String, 

@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Environment
 import android.support.v4.widget.ResourceCursorAdapter
 import android.text.ClipboardManager
@@ -33,6 +32,14 @@ import im.tox.antox.utils.ChatMessages
 import im.tox.antox.utils.Constants
 import im.tox.antox.utils.PrettyTimestamp
 import im.tox.antox.utils.Tuple
+import rx.lang.scala.JavaConversions
+import rx.lang.scala.Observable
+import rx.lang.scala.Observer
+import rx.lang.scala.Subscriber
+import rx.lang.scala.Subscription
+import rx.lang.scala.Subject
+import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import ChatMessagesAdapter._
 //remove if not needed
 import scala.collection.JavaConversions._
@@ -289,20 +296,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
                 clipboard.setText(m)
 
               case 1 => 
-                class DeleteMessage extends AsyncTask[Void, Void, Void] {
-
-                  protected override def doInBackground(params: Void*): Void = {
+                Observable[Boolean](subscriber => {
                     val antoxDB = new AntoxDB(context.getApplicationContext)
                     antoxDB.deleteMessage(id)
                     antoxDB.close()
-                    return null
-                  }
-
-                  protected override def onPostExecute(result: Void) {
                     ToxSingleton.updateMessages(context)
-                  }
-                }
-                new DeleteMessage().execute()
+                    subscriber.onCompleted()
+                }).subscribeOn(IOScheduler()).subscribe()
 
             }
           })
@@ -315,20 +315,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 => 
-                class DeleteMessage extends AsyncTask[Void, Void, Void] {
-
-                  protected override def doInBackground(params: Void*): Void = {
+                Observable[Boolean](subscriber => {
                     val antoxDB = new AntoxDB(context.getApplicationContext)
                     antoxDB.deleteMessage(id)
                     antoxDB.close()
-                    return null
-                  }
-
-                  protected override def onPostExecute(result: Void) {
                     ToxSingleton.updateMessages(context)
-                  }
-                }
-                new DeleteMessage().execute()
+                    subscriber.onCompleted()
+                }).subscribeOn(IOScheduler()).subscribe()
 
             }
           })

@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.Editable
@@ -41,9 +40,17 @@ import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.utils.Tuple
 import im.tox.jtoxcore.FriendExistsException
 import im.tox.jtoxcore.ToxException
-import rx.Subscription
+import rx.{Subscription => JSubscription}
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
+import rx.lang.scala.JavaConversions
+import rx.lang.scala.Observable
+import rx.lang.scala.Observer
+import rx.lang.scala.Subscriber
+import rx.lang.scala.Subscription
+import rx.lang.scala.Subject
+import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -53,9 +60,9 @@ class ContactsFragment extends Fragment {
 
   private var leftPaneAdapter: LeftPaneAdapter = _
 
-  private var friendInfoSub: Subscription = _
+  private var friendInfoSub: JSubscription = _
 
-  private var keySub: Subscription = _
+  private var keySub: JSubscription = _
 
   private var activeKey: String = _
 
@@ -237,9 +244,7 @@ class ContactsFragment extends Fragment {
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
       def onClick(dialog: DialogInterface, id: Int) {
-        class DeleteFriendAndChat extends AsyncTask[Void, Void, Void] {
-
-          protected override def doInBackground(params: Void*): Void = {
+        Observable[Boolean](subscriber => {
             val db = new AntoxDB(getActivity)
             if (deleteLogsCheckboxView.isChecked) db.deleteChat(key)
             db.deleteFriend(key)
@@ -252,15 +257,10 @@ class ContactsFragment extends Fragment {
                 case e: ToxException => 
               }
             })
-            return null
-          }
-
-          protected override def onPostExecute(result: Void) {
+            subscriber.onCompleted()
             ToxSingleton.updateFriendsList(getActivity)
             ToxSingleton.updateMessages(getActivity)
-          }
-        }
-        new DeleteFriendAndChat().execute()
+        }).subscribeOn(IOScheduler()).subscribe()
       }
     })
       .setNegativeButton("No", new DialogInterface.OnClickListener() {

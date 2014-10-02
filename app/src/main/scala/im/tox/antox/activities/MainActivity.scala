@@ -11,7 +11,6 @@ import android.content.res.Configuration
 import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
