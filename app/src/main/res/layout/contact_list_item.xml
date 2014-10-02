@@ -14,7 +14,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp">
             <TextView
-                android:id="@+id/avater"
+                android:id="@+id/avatar"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/circle_grey_light"
