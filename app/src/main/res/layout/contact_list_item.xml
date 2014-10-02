@@ -48,8 +48,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
+                    android:textSize="19sp"/>
                 <TextView
                     android:id="@+id/last_message_timestamp"
                     android:duplicateParentState="true"
