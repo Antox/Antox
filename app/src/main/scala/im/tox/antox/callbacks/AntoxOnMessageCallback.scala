@@ -44,7 +44,8 @@ class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback
     if (preferences.getBoolean("notifications_enable_notifications", true) && 
       preferences.getBoolean("notifications_new_message", true)) {
       if (!(State.chatActive && State.activeKey.map(_ == friend.getId).getOrElse(false))) {
-        val name = ToxSingleton.getAntoxFriend(friend.getId).getName
+        val mName = ToxSingleton.getAntoxFriend(friend.getId).map(_.getName)
+        mName.foreach(name => {
         val mBuilder = new NotificationCompat.Builder(this.ctx).setSmallIcon(R.drawable.ic_actionbar)
           .setContentTitle(name)
           .setContentText(message)
@@ -60,6 +61,7 @@ class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback
         val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
         mBuilder.setContentIntent(resultPendingIntent)
         ToxSingleton.mNotificationManager.notify(friend.getFriendnumber, mBuilder.build())
+        })
       }
     }
   }

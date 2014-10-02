@@ -28,11 +28,15 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     }
   }
 
+  def getByKey(key: String): Option[AntoxFriend] = {
+    friends.filter(friend => friend.getId == key).headOption
+  }
+
   override def getById(id: String): AntoxFriend = {
-    friends.filter(friend => friend.getId == id).headOption match {
-        case Some(f) => f
-        case None => null
-    }
+     getByKey(id) match {
+       case Some(x) => x
+       case None => null
+     }
   }
 
   override def getByName(name: String, ignorecase: Boolean): List[AntoxFriend] = {

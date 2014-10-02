@@ -10,10 +10,11 @@
         android:layout_width="300dp"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/message_bubble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -30,10 +31,6 @@
                 android:id="@+id/message_text_background"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="4dp"
-                android:paddingTop="4dp"
                 android:background="@drawable/conversation_item_sent_shape">
 
                 <TextView
@@ -144,46 +141,18 @@
                 android:visibility="gone"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:id="@+id/message_text_date"
-                android:textColor="@color/gray_darker"
-                android:text="Asdsd"
-                android:textSize="@dimen/text_tiny" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:id="@+id/message_text_date"
+            android:textColor="@color/gray_darker"
+            android:text="Asdsd"
+            android:textSize="@dimen/text_tiny" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_message_sent"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="-2dp"
-                android:maxHeight="13dp"
-                android:adjustViewBounds="true"
-                android:layout_marginLeft="4dp"
-                android:id="@+id/chat_row_sent"
-                android:visibility="visible"
-                android:layout_gravity="top"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_message_received"
-                android:layout_marginTop="1dp"
-                android:maxHeight="13dp"
-                android:layout_marginBottom="-2dp"
-                android:adjustViewBounds="true"
-                android:layout_marginLeft="6dp"
-                android:id="@+id/chat_row_received"
-                android:visibility="visible"
-                android:layout_gravity="top"/>
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

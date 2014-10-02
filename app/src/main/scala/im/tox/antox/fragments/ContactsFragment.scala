@@ -244,14 +244,14 @@ class ContactsFragment extends Fragment {
             if (deleteLogsCheckboxView.isChecked) db.deleteChat(key)
             db.deleteFriend(key)
             db.close()
-            val friend = ToxSingleton.getAntoxFriend(key)
-            if (friend != null) {
+            val mFriend = ToxSingleton.getAntoxFriend(key)
+            mFriend.foreach(friend => {
               try {
                 ToxSingleton.jTox.deleteFriend(friend.getFriendnumber)
               } catch {
                 case e: ToxException => 
               }
-            }
+            })
             return null
           }
 

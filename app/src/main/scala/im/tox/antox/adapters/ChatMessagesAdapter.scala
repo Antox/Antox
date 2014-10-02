@@ -55,10 +55,6 @@ object ChatMessagesAdapter {
 
     var time: TextView = _
 
-    var sent: ImageView = _
-
-    var received: ImageView = _
-
     var imageMessage: ImageView = _
 
     var imageMessageFrame: FrameLayout = _
@@ -76,6 +72,8 @@ object ChatMessagesAdapter {
     var accept: View = _
 
     var reject: View = _
+
+    var bubble: LinearLayout = _
   }
 }
 
@@ -114,8 +112,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
     holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
     holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
-    holder.sent = view.findViewById(R.id.chat_row_sent).asInstanceOf[ImageView]
-    holder.received = view.findViewById(R.id.chat_row_received).asInstanceOf[ImageView]
     holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
     holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
     holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
@@ -127,11 +123,10 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.reject = view.findViewById(R.id.file_reject_button).asInstanceOf[View]
     holder.sentTriangle = view.findViewById(R.id.sent_triangle).asInstanceOf[View]
     holder.receivedTriangle = view.findViewById(R.id.received_triangle).asInstanceOf[View]
+    holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
     holder.message.setTextSize(16)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
-    holder.sent.setVisibility(View.GONE)
-    holder.received.setVisibility(View.GONE)
     holder.title.setVisibility(View.GONE)
     holder.progress.setVisibility(View.GONE)
     holder.imageMessage.setVisibility(View.GONE)
@@ -141,17 +136,14 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.buttons.setVisibility(View.GONE)
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
+    holder.bubble.setAlpha(1.0f)
     messageType match {
       case Constants.MESSAGE_TYPE_OWN => 
         ownMessage(holder)
         holder.message.setText(msg.message)
         holder.message.setVisibility(View.VISIBLE)
-        if (msg.sent) {
-          if (msg.received) {
-            holder.received.setVisibility(View.VISIBLE)
-          } else {
-            holder.sent.setVisibility(View.VISIBLE)
-          }
+        if (!(msg.received)) {
+          holder.bubble.setAlpha(0.5f)
         }
 
       case Constants.MESSAGE_TYPE_FRIEND => 
