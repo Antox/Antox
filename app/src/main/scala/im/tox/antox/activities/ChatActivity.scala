@@ -191,37 +191,34 @@ class ChatActivity extends ActionBarActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
           override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
-            case 0 => 
+            case 0 => {
               var intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
               startActivityForResult(intent, Constants.IMAGE_RESULT)
-
-            case 1 => 
-              var cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-              var image_name = "Antoxpic" + new Date().toString
-              var storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-              var file: File = null
+            }
+            case 1 => {
+              val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+              val image_name = "Antoxpic" + new Date().toString
+              val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
               try {
-                file = File.createTempFile(image_name, ".jpg", storageDir)
-              } catch {
-                case e: IOException => e.printStackTrace()
-              }
-              if (file != null) {
+                val file = File.createTempFile(image_name, ".jpg", storageDir)
                 val imageUri = Uri.fromFile(file)
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                 photoPath = file.getAbsolutePath
+                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+              } catch {
+                case e: IOException => e.printStackTrace()
               }
-              startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-
-                case 2 => 
-                  var mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-                    var fileDialog = new FileDialog(thisActivity, mPath)
-                    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-
-                      def fileSelected(file: File) {
-                        ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
-                      }
-                    })
-                  fileDialog.showDialog()
+            }
+            case 2 => {
+              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+              val fileDialog = new FileDialog(thisActivity, mPath)
+              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                  def fileSelected(file: File) {
+                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
+                  }
+              })
+              fileDialog.showDialog()
+            }
 
           }
         })
@@ -319,40 +316,46 @@ class ChatActivity extends ActionBarActivity {
       Log.d("ChatFragment", "new key: " + activeKey)
   }
 
+  private def updateProgress() {
+    val start = chatListView.getFirstVisiblePosition
+    val end = chatListView.getLastVisiblePosition
+    for (i <- start to end) {
+      val view = chatListView.getChildAt(i - start)
+      chatListView.getAdapter.getView(i, view, chatListView)
+    }
+  }
+
+
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
-    Log.d("ChatFragment ImageResult resultCode", java.lang.Integer.toString(resultCode))
-    Log.d("ChatFragment ImageResult requestCode", java.lang.Integer.toString(requestCode))
-    if (requestCode == Constants.IMAGE_RESULT && resultCode == Activity.RESULT_OK) {
-      val uri = data.getData
-      var path: String = null
-      val filePathColumn = Array(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME)
-      var filePath: String = null
-      var fileName: String = null
-      val loader = new CursorLoader(this, uri, filePathColumn, null, null, null)
-      val cursor = loader.loadInBackground()
-      if (cursor != null) {
-        if (cursor.moveToFirst()) {
-          val columnIndex = cursor.getColumnIndexOrThrow(filePathColumn(0))
-          filePath = cursor.getString(columnIndex)
-          val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
-          fileName = cursor.getString(fileNameIndex)
+    if (resultCode == Activity.RESULT_OK) {
+      if (requestCode == Constants.IMAGE_RESULT) {
+        val uri = data.getData
+        val filePathColumn = Array(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME)
+        val loader = new CursorLoader(this, uri, filePathColumn, null, null, null)
+        val cursor = loader.loadInBackground()
+        if (cursor != null) {
+          if (cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndexOrThrow(filePathColumn(0))
+            val filePath = cursor.getString(columnIndex)
+            val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
+            val fileName = cursor.getString(fileNameIndex)
+            try {
+              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, this)
+            } catch {
+              case e: Exception => Log.d("onActivityResult", e.toString)
+            }
+          }
         }
       }
-      try {
-        path = filePath
-      } catch {
-        case e: Exception => Log.d("onActivityResult", e.toString)
+      if (requestCode == Constants.PHOTO_RESULT) {
+        if (photoPath != null) {
+          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, this)
+          photoPath = null
+        }
       }
-      if (path != null) {
-        ToxSingleton.sendFileSendRequest(path, this.activeKey, this)
-      }
-    }
-    if (requestCode == Constants.PHOTO_RESULT && resultCode == Activity.RESULT_OK) {
-      if (photoPath != null) {
-        ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, this)
-        photoPath = null
-      }
+    } else {
+      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
     }
   }
 

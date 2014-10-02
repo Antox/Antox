@@ -9,6 +9,14 @@ import im.tox.jtoxcore.FriendExistsException
 import im.tox.jtoxcore.FriendList
 import im.tox.jtoxcore.ToxFriend
 import im.tox.jtoxcore.ToxUserStatus
+import rx.lang.scala.JavaConversions
+import rx.lang.scala.Observable
+import rx.lang.scala.Observer
+import rx.lang.scala.Subscriber
+import rx.lang.scala.Subscription
+import rx.lang.scala.Subject
+import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 //remove if not needed
 import scala.collection.JavaConversions._
 
