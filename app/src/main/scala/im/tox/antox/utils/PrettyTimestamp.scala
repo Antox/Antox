@@ -33,15 +33,15 @@ object PrettyTimestamp {
       ""
     } else if (isChat) {
       if (time.after(startOfDay)) {
-        time.format("%H:%M")
+        time.format("%k:%M")
       } else if (time.after(startOfYear)) {
-        time.format("%b %d, %H:%M")
+        time.format("%b %d, %k:%M")
       } else {
-        time.format("%b %d %Y, %H:%M")
+        time.format("%b %d %Y, %k:%M")
       }
     } else {
       if (time.after(startOfDay)) {
-        time.format("%H:%M")
+        time.format("%k:%M")
       } else if (time.after(startOfYear)) {
         time.format("%b %d")
       } else {
