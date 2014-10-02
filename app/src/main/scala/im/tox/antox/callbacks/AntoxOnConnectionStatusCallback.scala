@@ -4,6 +4,7 @@ import android.content.Context
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.Methods
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.Constants
 import im.tox.jtoxcore.callbacks.OnConnectionStatusCallback
@@ -33,7 +34,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends OnConnec
       db.close()
     }
     if (online) {
-      ToxSingleton.sendUnsentMessages(ctx)
+      Methods.sendUnsentMessages(ctx)
     } else {
       ToxSingleton.typingMap.put(friend.getId, false)
       ToxSingleton.typingSubject.onNext(true)

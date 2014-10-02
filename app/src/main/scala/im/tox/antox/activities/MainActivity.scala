@@ -103,13 +103,15 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
 
   def onClickVoiceCallFriend(v: View) {
     val toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 0, 0, 0, 64000, 20, 48000, 1)
-    val friend = ToxSingleton.getAntoxFriend(ToxSingleton.activeKey)
-    val userID = friend.getFriendnumber
-    try {
-      ToxSingleton.jTox.avCall(userID, toxCodecSettings, 10)
-    } catch {
-      case e: ToxException => 
-    }
+    val mFriend = ToxSingleton.getAntoxFriend(ToxSingleton.activeKey)
+    mFriend.foreach(friend => {
+      val userID = friend.getFriendnumber
+      try {
+        ToxSingleton.jTox.avCall(userID, toxCodecSettings, 10)
+      } catch {
+        case e: ToxException => 
+      }
+    })
   }
 
   def onClickVideoCallFriend(v: View) {

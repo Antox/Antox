@@ -162,7 +162,16 @@ object ToxSingleton {
 
   var dhtNodes: Array[DhtNode] = Array()
 
-  def getAntoxFriend(key: String): AntoxFriend = antoxFriendList.getById(key)
+  def getAntoxFriend(key: String): Option[AntoxFriend] = {
+    try {
+      antoxFriendList.getByKey(key)
+    } catch {
+      case e: Exception => {
+        e.printStackTrace()
+        None
+      }
+    }
+  }
 
   def initSubjects(ctx: Context) {
     friendListSubject = BehaviorSubject.create(new ArrayList[Friend]())
@@ -242,18 +251,27 @@ object ToxSingleton {
     val fileName = splitPath(splitPath.length - 1)
     Log.d("sendFileSendRequest", "name: " + fileName)
     if (fileName != null) {
-      var fileNumber = -1
-      try {
-        fileNumber = jTox.newFileSender(getAntoxFriend(activeKey).getFriendnumber, file.length, fileName)
-      } catch {
-        case e: Exception => Log.d("toxNewFileSender error", e.toString)
-      }
-      if (fileNumber != -1) {
-        val antoxDB = new AntoxDB(context)
-        val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, true)
-        fileIds.add(id.toInt)
-        antoxDB.close()
-      }
+      getAntoxFriend(activeKey)
+        .map(_.getFriendnumber)
+        .flatMap(friendNumber => {
+          try {
+            val fn = jTox.newFileSender(friendNumber, file.length, fileName)
+            fn match {
+              case -1 => None
+              case x => Some(x)
+            }
+          } catch {
+            case e: Exception => {
+              e.printStackTrace()
+              None
+            }
+          }
+        }).foreach(fileNumber => {
+            val antoxDB = new AntoxDB(context)
+            val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, true)
+            fileIds.add(id.toInt)
+            antoxDB.close()
+        })
     }
   }
 
@@ -309,14 +327,16 @@ object ToxSingleton {
     val antoxDB = new AntoxDB(context)
     val id = antoxDB.getFileId(key, fileNumber)
     if (id != -1) {
-      try {
-        jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), 
-          Array.ofDim[Byte](0))
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
-        antoxDB.fileTransferStarted(key, fileNumber)
-        fileStatusMap.put(id, FileStatus.INPROGRESS)
+      val mFriend = antoxFriendList.getByKey(key)
+      mFriend.foreach(friend => {
+        try {
+          jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), Array.ofDim[Byte](0))
+          antoxDB.fileTransferStarted(key, fileNumber)
+          fileStatusMap.put(id, FileStatus.INPROGRESS)
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+      })
     }
     antoxDB.close()
     updatedMessagesSubject.onNext(true)
@@ -326,14 +346,16 @@ object ToxSingleton {
     val antoxDB = new AntoxDB(context)
     val id = antoxDB.getFileId(key, fileNumber)
     if (id != -1) {
-      try {
-        jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), 
-          Array.ofDim[Byte](0))
+      val mFriend = antoxFriendList.getByKey(key)
+      mFriend.foreach(friend => {
+        try {
+          jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), Array.ofDim[Byte](0))
+          antoxDB.clearFileNumber(key, fileNumber)
+          fileStatusMap.put(id, FileStatus.CANCELLED)
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        antoxDB.clearFileNumber(key, fileNumber)
-        fileStatusMap.put(id, FileStatus.CANCELLED)
+      })
     }
     antoxDB.close()
     updatedMessagesSubject.onNext(true)
@@ -375,15 +397,17 @@ object ToxSingleton {
           Log.d("ToxSingleton", "file size so far: " + fileMap.get(id).length + " final file size: " + 
             fileSizeMap.get(id))
           if (fileMap.get(id).length == fileSizeMap.get(id)) {
-            try {
-              fileStreamMap.get(id).close()
-              jTox.fileSendControl(antoxFriendList.getById(key).getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
-                Array.ofDim[Byte](0))
-              fileFinished(key, fileNumber, context)
-              Log.d("ToxSingleton", "receiveFileData finished receiving file")
-            } catch {
-              case e: Exception => e.printStackTrace()
-            }
+            fileStreamMap.get(id).close()
+            val mFriend = antoxFriendList.getByKey(key)
+            mFriend.foreach(friend => {
+              try {
+                jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), Array.ofDim[Byte](0))
+                fileFinished(key, fileNumber, context)
+                Log.d("ToxSingleton", "receiveFileData finished receiving file")
+              } catch {
+                case e: Exception => e.printStackTrace()
+              }
+            })
           }
       }
   }
@@ -512,11 +536,14 @@ object ToxSingleton {
       var result = -1
       if (path != "") {
         var chunkSize = 1
-        try {
-          chunkSize = jTox.fileDataSize(getAntoxFriend(key).getFriendnumber)
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
+        val mFriend = antoxFriendList.getByKey(key)
+        mFriend.foreach(friend => {
+          try {
+            chunkSize = jTox.fileDataSize(friend.getFriendnumber)
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+        })
         val file = new File(path)
         val bytes = Array.ofDim[Byte](file.length.toInt)
         var buf: BufferedInputStream = null
@@ -539,14 +566,16 @@ object ToxSingleton {
                 //break
               }
             }
-            try {
-              result = jTox.fileSendData(getAntoxFriend(key).getFriendnumber, fileNumber, data)
-            } catch {
-              case e: Exception => {
-                e.printStackTrace()
-                //break
+            val mFriend = antoxFriendList.getByKey(key)
+            mFriend.foreach(friend => {
+              try {
+                result = jTox.fileSendData(friend.getFriendnumber, fileNumber, data)
+              } catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                }
               }
-            }
+            })
             if (!(fileStatusMap.containsKey(id) && fileStatusMap.get(id) == FileStatus.INPROGRESS)) {
               //break
             }
@@ -578,15 +607,18 @@ object ToxSingleton {
           }
         }
         if (result != -1 && fileStatusMap.get(id) == FileStatus.INPROGRESS) {
-          try {
-            Log.d("toxFileSendControl", "FINISHED")
-            jTox.fileSendControl(getAntoxFriend(key).getFriendnumber, true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
-              Array.ofDim[Byte](0))
-            fileFinished(key, fileNumber, context)
-            return true
-          } catch {
-            case e: Exception => Log.d("toxFileSendControl error", e.toString)
-          }
+          val mFriend = antoxFriendList.getByKey(key)
+          mFriend.foreach(friend => {
+            try {
+              Log.d("toxFileSendControl", "FINISHED")
+              jTox.fileSendControl(friend.getFriendnumber, true, fileNumber, ToxFileControl.TOX_FILECONTROL_FINISHED.ordinal(), 
+                Array.ofDim[Byte](0))
+              fileFinished(key, fileNumber, context)
+              return true
+            } catch {
+              case e: Exception => Log.d("toxFileSendControl error", e.toString)
+            }
+          })
           } else {
             return false
           }
@@ -607,44 +639,17 @@ object ToxSingleton {
 
   def clearUselessNotifications(key: String) {
     if (key != null && key != "") {
-      try {
-        mNotificationManager.cancel(getAntoxFriend(key).getFriendnumber)
-      } catch {
-        case e: Exception => 
-      }
+      val mFriend = antoxFriendList.getByKey(key)
+      mFriend.foreach(friend => {
+        try {
+          mNotificationManager.cancel(friend.getFriendnumber)
+        } catch {
+          case e: Exception => e.printStackTrace()
+        }
+      })
     }
   }
 
-  def sendUnsentMessages(ctx: Context) {
-    val db = new AntoxDB(ctx)
-    val unsentMessageList = db.getUnsentMessageList
-    for (i <- 0 until unsentMessageList.size) {
-      var friend: AntoxFriend = null
-      val id = unsentMessageList.get(i).message_id
-      var sendingSucceeded = true
-      try {
-        friend = getAntoxFriend(unsentMessageList.get(i).key)
-      } catch {
-        case e: Exception => Log.d(TAG, e.toString)
-      }
-      try {
-        if (friend != null && friend.isOnline && jTox != null) {
-          jTox.sendMessage(friend, unsentMessageList.get(i).message)
-        }
-      } catch {
-        case e: ToxException => {
-          Log.d(TAG, e.toString)
-          e.printStackTrace()
-          sendingSucceeded = false
-        }
-      }
-      if (sendingSucceeded) {
-        db.updateUnsentMessage(id)
-      }
-    }
-    db.close()
-    updateMessages(ctx)
-  }
 
   def updateFriendRequests(ctx: Context) {
     try {

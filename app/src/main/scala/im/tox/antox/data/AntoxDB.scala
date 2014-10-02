@@ -437,7 +437,7 @@ class AntoxDB(ctx: Context) {
     friendRequests
   }
 
-  def getUnsentMessageList(): ArrayList[Message] = {
+  def getUnsentMessageList(): Array[Message] = {
     this.open(false)
     val messageList = new ArrayList[Message]()
     val selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " + 
@@ -464,12 +464,10 @@ class AntoxDB(ctx: Context) {
     }
     cursor.close()
     this.close()
-    messageList
+    messageList.toArray(new Array[Message](messageList.size))
   }
 
-  def updateUnsentMessage(m_id: Int) {
-    Log.d("UPDATE UNSENT MESSAGE - ID : ", "" + m_id)
-    val messageId = m_id + ""
+  def updateUnsentMessage(message_id: Integer, id: Integer) {
     this.open(true)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, "1")
@@ -478,7 +476,8 @@ class AntoxDB(ctx: Context) {
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     val date = new Date()
     values.put(Constants.COLUMN_NAME_TIMESTAMP, dateFormat.format(date))
-    mDb.update(Constants.TABLE_CHAT_LOGS, values, Constants.COLUMN_NAME_MESSAGE_ID + "=" + messageId + " AND " + 
+    values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id)
+    mDb.update(Constants.TABLE_CHAT_LOGS, values, "_id" + "=" + id + " AND " + 
       Constants.COLUMN_NAME_SUCCESSFULLY_SENT + 
       "=0", null)
     this.close()

@@ -36,6 +36,7 @@ import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.tox.Reactive
+import im.tox.antox.tox.Methods
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.ChatMessages
 import im.tox.antox.utils.Constants
@@ -112,17 +113,19 @@ class ChatActivity extends Activity {
         messageBox.addTextChangedListener(new TextWatcher() {
             override def beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
                 val isTyping = (i3 > 0)
-                val friend = ToxSingleton.getAntoxFriend(key)
-                if (friend != null && friend.isOnline()) {
+                val mFriend = ToxSingleton.getAntoxFriend(key)
+                mFriend.foreach(friend => {
+                  if (friend.isOnline()) {
                     try {
-                        ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping)
+                      ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping)
                     } catch {
-                        case te: ToxException => {
-                        }
-                        case e: Exception => {
-                        }
+                      case te: ToxException => {
+                      }
+                      case e: Exception => {
+                      }
                     }
-                }
+                  }
+                })
             }
 
             override def onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
@@ -142,8 +145,8 @@ class ChatActivity extends Activity {
         b.setOnClickListener(new View.OnClickListener() {
             override def onClick(v: View) {
                 sendMessage()
-                val friend = ToxSingleton.getAntoxFriend(key)
-                if (friend != null) {
+                val mFriend = ToxSingleton.getAntoxFriend(key)
+                mFriend.foreach(friend => {
                     try {
                         ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false)
                     } catch {
@@ -152,7 +155,7 @@ class ChatActivity extends Activity {
                         case e: Exception => {
                         }
                     }
-                }
+                })
             }
         })
 
@@ -257,6 +260,8 @@ class ChatActivity extends Activity {
             })
     }
 
+
+
     private def sendMessage() {
         Log.d(TAG,"sendMessage")
         if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
@@ -270,73 +275,7 @@ class ChatActivity extends Activity {
         }
         val key = activeKey
         messageBox.setText("")
-        val send: Observable[Boolean] = Observable(subscriber => {
-                            try {
-                                /* Send message */
-                                var friend: AntoxFriend = null
-                                val generator: Random = new Random()
-                                val id = generator.nextInt()
-                                try {
-                                    friend = ToxSingleton.getAntoxFriend(key)
-                                } catch {
-                                    case e: Exception => {
-                                        Log.d(TAG, e.toString())
-                                    }
-                                }
-                                if (friend != null) {
-                                    var sendingSucceeded: Boolean = true
-                                    try {
-                                        // NB: substring includes from start up to but not including the end position
-                                        // Max message length in tox is 1368 bytes
-                                        // jToxCore seems to append a null byte so split around 1367
-                                        val utf8Bytes: Array[Byte] = msg.getBytes("UTF-8")
-                                        val numOfMessages: Int = (utf8Bytes.length/1367) + 1
-
-                                        if(numOfMessages > 1) {
-
-                                            val OneByte = 0xFFFFFF80
-                                            val TwoByte = 0xFFFFF800
-                                            val ThreeByte = 0xFFFF0000
-
-                                            var total = 0
-                                            var previous = 0
-                                            var numberOfMessagesSent = 0
-                                            for (i <- 0 until msg.length) {
-                                                if ((msg.charAt(i) & OneByte) == 0) total += 1 else if ((msg.charAt(i) & TwoByte) == 0) total += 2 else if ((msg.charAt(i) & ThreeByte) == 0) total += 3 else total += 4
-                                                if (numberOfMessagesSent == numOfMessages - 1) {
-                                                    ToxSingleton.jTox.sendMessage(friend, msg.substring(previous))
-                                                    //break
-                                                } else if (total >= 1366) {
-                                                    ToxSingleton.jTox.sendMessage(friend, msg.substring(previous, i))
-                                                    numberOfMessagesSent += 1
-                                                    previous = i
-                                                    total = 0
-                                                }
-                                            }
-                                        } else {
-                                            ToxSingleton.jTox.sendMessage(friend, msg)
-                                        }
-                                    } catch {
-                                        case e: ToxException => {
-                                            Log.d(TAG, e.toString)
-                                            e.printStackTrace()
-                                            sendingSucceeded = false
-                                        }
-                                    }
-                                    var db = new AntoxDB(this)
-                                    db.addMessage(id, key, msg, false, false, sendingSucceeded, 1)
-                                    db.close()
-                                    ToxSingleton.updateMessages(this)
-                                }
-                                subscriber.onCompleted()
-                            } catch {
-                                case e: Exception => {
-                                    Log.e("ChatFragment", "Subscriber error: " + e.getMessage)
-                                    subscriber.onError(e)
-                                }
-                            }
-                })
-        send.subscribeOn(IOScheduler()).subscribe()
+        Methods.sendMessage(this, key, msg, None)
     }
 
     def updateChat() = {
