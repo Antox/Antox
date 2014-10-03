@@ -2,29 +2,23 @@ package im.tox.antox.tox
 
 import android.app.NotificationManager
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Environment
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.util.Log
-import android.util.JsonReader
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.sql.Timestamp
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.Reader
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
-import java.net.URL;
-import java.nio.charset.Charset;
+import java.net.URL
+import java.nio.charset.Charset
 import im.tox.antox.callbacks.AntoxOnActionCallback
 import im.tox.antox.callbacks.AntoxOnAudioDataCallback
 import im.tox.antox.callbacks.AntoxOnAvCallbackCallback
@@ -46,11 +40,8 @@ import im.tox.antox.utils.AntoxFriendList
 import im.tox.antox.utils.Constants
 import im.tox.antox.utils.DhtNode
 import im.tox.antox.utils.Friend
-import im.tox.antox.utils.FriendInfo
 import im.tox.antox.utils.FriendRequest
-import im.tox.antox.utils.Message
 import im.tox.antox.utils.Options
-import im.tox.antox.utils.Triple
 import im.tox.antox.utils.Tuple
 import im.tox.antox.utils.UserStatus
 import im.tox.jtoxcore.JTox
@@ -59,17 +50,10 @@ import im.tox.jtoxcore.ToxFileControl
 import im.tox.jtoxcore.ToxOptions
 import im.tox.jtoxcore.ToxUserStatus
 import im.tox.jtoxcore.callbacks.CallbackHandler
-import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
 import rx.lang.scala.schedulers.IOScheduler
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-import ToxSingleton._
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -205,6 +189,7 @@ object ToxSingleton {
     val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, false)
     fileIds.add(id.toInt)
     antoxDB.close()
+    updateMessages(context)
   }
 
   def changeActiveKey(key: String) {

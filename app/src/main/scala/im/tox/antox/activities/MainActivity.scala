@@ -1,5 +1,7 @@
 package im.tox.antox.activities
 
+import java.util
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.NotificationManager
@@ -7,6 +9,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.{Editor, OnSharedPreferenceChangeListener}
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.net.ConnectivityManager
@@ -32,7 +35,7 @@ import java.util.ArrayList
 import java.util.Locale
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.BitmapManager
 import im.tox.antox.utils.Constants
@@ -59,10 +62,10 @@ class MainActivity extends ActionBarActivity {
 
   private def selectItem(position: Int) {
     if (position == 0) {
-      val intent = new Intent(this, classOf[Settings])
+      val intent = new Intent(this, classOf[ProfileSettingsActivity])
       startActivity(intent)
     } else if (position == 1) {
-      val intent = new Intent(this, classOf[ProfileSettingsActivity])
+      val intent = new Intent(this, classOf[Settings])
       startActivity(intent)
     } else if (position == 2) {
       Toast.makeText(this, "Coming soon...", Toast.LENGTH_LONG)
@@ -73,6 +76,22 @@ class MainActivity extends ActionBarActivity {
     } else if (position == 4) {
       val intent = new Intent(this, classOf[License])
       startActivity(intent)
+    } else if (position == 5) {
+      val intent = new Intent(this, classOf[LoginActivity])
+
+      // Set logged out
+      val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+      val editor = preferences.edit()
+      editor.putBoolean("loggedin", false)
+      editor.apply()
+
+      // Stop Tox service
+      val service = new Intent(this, classOf[ToxDoService])
+      getApplicationContext.stopService(service)
+
+      // Launch login activity and stop this one
+      startActivity(intent)
+      finish()
     }
     mDrawerList.setItemChecked(position, true)
     mDrawerLayout.closeDrawer(mDrawerList)
@@ -120,11 +139,12 @@ class MainActivity extends ActionBarActivity {
     mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
     val list = new ArrayList[DrawerItem]()
-    list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_menu_settings))
     list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_profile))
+    list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_menu_settings))
     list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_social_add_group))
     list.add(new DrawerItem(getString(R.string.n_about), R.drawable.ic_menu_help))
     list.add(new DrawerItem(getString(R.string.n_open_source), R.drawable.ic_opensource))
+    list.add(new DrawerItem(getString(R.string.n_logout), R.drawable.ic_action_remove))
     val drawerListAdapter = new DrawerArrayAdapter(this, R.layout.rowlayout_drawer, list)
     mDrawerList.setAdapter(drawerListAdapter)
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener())
