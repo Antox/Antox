@@ -5,17 +5,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.ActionBarActivity
 import android.view.View
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget._
 import java.util.ArrayList
 import java.util.Arrays
 import im.tox.antox.R
@@ -67,6 +64,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
     pos: Int,
     id: Long) {
     profileSelected = parent.getItemAtPosition(pos).toString
+    parent.getChildAt(0).asInstanceOf[TextView].setTextColor(Color.BLACK)
   }
 
   def onNothingSelected(parent: AdapterView[_]) {

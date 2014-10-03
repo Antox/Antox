@@ -31,7 +31,7 @@ For a list of which devices currently run Antox, visit our <a href="https://wiki
 You can localize the application via github pull request or by requesting a new language or join an existing translation team on Transifex.
 Transifex page - https://www.transifex.com/projects/p/antox/
 
-###Compiling Antox From Source
+###Compiling Antox From Source with IntelliJ IDE
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools (22.6.3 and 19.0.3 respectively as of writing)
@@ -40,10 +40,10 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 - Copy libjtoxcore.so to app/src/main/jniLibs/armeabi (you will need to create some of these folders)
 - Copy jToxcore.jar to app/libs/jToxcore.jar
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
+- Install the Scala plugin in IntelliJ, restart, and wait for IntelliJ to set itself up
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 
-###Compiling Scala Antox From Source
-I haven't figured out how to get an IDE going (or really tried), and I don't know how this all works on anything but Linux, OS X is probably the same, but I know nothing about on Windows.
+###Compiling Scala Antox From Source via CLI
 - Download android sdk http://developer.android.com/sdk/index.html and unpack
 - Set the environmental variable ANDROID_HOME to point to it
 - Add $ANDROID_HOME/tools and $ANDROID_HOME/platform-tools to your PATH environmental variable
