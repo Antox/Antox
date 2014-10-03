@@ -15,15 +15,16 @@ import im.tox.antox.R
 import im.tox.antox.adapters.RecentAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.Reactive
 import im.tox.antox.utils.FriendInfo
-import rx.Observable
-import rx.Observer
-import rx.Subscriber
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
-import rx.schedulers.Schedulers
-import rx.subscriptions.Subscriptions
+import rx.lang.scala.Observable
+import rx.lang.scala.Observer
+import rx.lang.scala.Subscriber
+import rx.lang.scala.Subscription
+import rx.lang.scala.Subject
+import rx.lang.scala.subjects.BehaviorSubject
+import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -52,45 +53,33 @@ class RecentFragment extends Fragment {
     } else {
       rootView.getParent.asInstanceOf[ViewGroup].removeView(rootView)
     }
-    Observable.create(new Observable.OnSubscribe[Cursor]() {
-
-      override def call(observer: Subscriber[_ >: Cursor]) {
+    Observable[Cursor](subscriber => {
         try {
           val cursor = getCursor
-          observer.onNext(cursor)
-          observer.onCompleted()
+          subscriber.onNext(cursor)
+          subscriber.onCompleted()
         } catch {
-          case e: Exception => observer.onError(e)
+          case e: Exception => subscriber.onError(e)
         }
-      }
     })
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1[Cursor]() {
-
-      override def call(cursor: Cursor) {
+      .subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(cursor => {
         if (adapter == null) {
           adapter = new RecentAdapter(getActivity, cursor)
           conversationListView.setAdapter(adapter)
         } else {
           adapter.changeCursor(cursor)
         }
-      }
     })
     rootView
   }
 
   override def onResume() {
     super.onResume()
-    sub = ToxSingleton.friendInfoListSubject
-      .observeOn(AndroidSchedulers.mainThread())
-      .distinctUntilChanged()
-      .subscribe(new Action1[ArrayList[FriendInfo]]() {
-
-      override def call(friends_list: ArrayList[FriendInfo]) {
-          updateRecentConversations(friends_list)
-      }
-    })
+    sub = Reactive.friendInfoList
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(updateRecentConversations(_))
   }
 
   override def onPause() {
@@ -106,32 +95,25 @@ class RecentFragment extends Fragment {
     cursor
   }
 
-  def updateRecentConversations(friendsList: ArrayList[FriendInfo]) {
+  def updateRecentConversations(friendsList: Array[FriendInfo]) {
     if (friendsList.size == 0) {
       noConversations.setVisibility(View.VISIBLE)
     } else {
       noConversations.setVisibility(View.GONE)
     }
-    Observable.create(new Observable.OnSubscribeFunc[Cursor]() {
-
-      override def onSubscribe(observer: Observer[_ >: Cursor]): Subscription = {
+    Observable[Cursor](subscriber => {
         try {
           val cursor = getCursor
-          observer.onNext(cursor)
-          observer.onCompleted()
+          subscriber.onNext(cursor)
+          subscriber.onCompleted()
         } catch {
-          case e: Exception => observer.onError(e)
+          case e: Exception => subscriber.onError(e)
         }
-        return Subscriptions.empty()
-      }
     })
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1[Cursor]() {
-
-      override def call(cursor: Cursor) {
+      .subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(cursor => {
         adapter.changeCursor(cursor)
-      }
     })
     println("updated recent fragment")
   }

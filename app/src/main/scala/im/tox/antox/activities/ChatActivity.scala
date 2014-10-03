@@ -78,10 +78,10 @@ class ChatActivity extends ActionBarActivity {
   var displayNameView: TextView = null
   var statusIconView: View = null
   var avatarActionView: View = null
-  var messagesSub: JSubscription = null
+  var messagesSub: Subscription = null
   //var progressSub: Subscription
   //var activeKeySub: Subscription
-  var titleSub: JSubscription = null
+  var titleSub: Subscription = null
   //var typingSub: Subscription
   //var chatMessages: ArrayList<ChatMessages>
   var activeKey: String = null
@@ -209,16 +209,16 @@ class ChatActivity extends ActionBarActivity {
                 case e: IOException => e.printStackTrace()
               }
             }
-            case 2 => {
-              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath)
-              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                  def fileSelected(file: File) {
-                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
-                  }
-              })
-              fileDialog.showDialog()
-            }
+                case 2 => {
+                  val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+                    val fileDialog = new FileDialog(thisActivity, mPath)
+                    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                      def fileSelected(file: File) {
+                        ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
+                      }
+                    })
+                  fileDialog.showDialog()
+                }
 
           }
         })
@@ -241,44 +241,38 @@ class ChatActivity extends ActionBarActivity {
   override def onResume() = {
     super.onResume()
     val thisActivity = this
-    ToxSingleton.activeKeySubject.onNext(activeKey)
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
     val antoxDB = new AntoxDB(getApplicationContext())
     antoxDB.markIncomingMessagesRead(activeKey)
     ToxSingleton.clearUselessNotifications(activeKey)
     ToxSingleton.updateMessages(getApplicationContext())
-    messagesSub = ToxSingleton.updatedMessagesSubject.subscribe(new Action1[Boolean]() {
-      override def call(b: Boolean) {
-        Log.d(TAG,"Messages updated")
-        updateChat()
-        antoxDB.close()
-      }
+    messagesSub = Reactive.updatedMessages.subscribe(x => {
+      Log.d(TAG,"Messages updated")
+      updateChat()
+      antoxDB.close()
     })
-    titleSub = ToxSingleton.friendInfoListSubject
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1[ArrayList[FriendInfo]]() {
-
-        override def call(fi: ArrayList[FriendInfo]) {
-          val key = activeKey
-          val mFriend: Option[FriendInfo] = fi
-            .toArray(Array[FriendInfo]())
-            .filter(f => f.friendKey == key)
-            .headOption
-            mFriend match {
-              case Some(friend) => {
-                if (friend.alias != "") {
-                  thisActivity.setDisplayName(friend.alias)
-                } else {
-                  thisActivity.setDisplayName(friend.friendName)
-                }
-                thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+    titleSub = Reactive.friendInfoList
+      .subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(fi => {
+        val key = activeKey
+        val mFriend: Option[FriendInfo] = fi
+          .filter(f => f.friendKey == key)
+          .headOption
+          mFriend match {
+            case Some(friend) => {
+              if (friend.alias != "") {
+                thisActivity.setDisplayName(friend.alias)
+              } else {
+                thisActivity.setDisplayName(friend.friendName)
               }
-              case None => {
-                thisActivity.setDisplayName("")
-              }
+              thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
             }
-        }
+            case None => {
+              thisActivity.setDisplayName("")
+            }
+          }
       })
   }
 
@@ -354,9 +348,9 @@ class ChatActivity extends ActionBarActivity {
           photoPath = null
         }
       }
-    } else {
-      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
-    }
+      } else {
+        Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
+      }
   }
 
   def getCursor():Cursor = {

@@ -5,6 +5,7 @@ import android.util.Log
 import java.nio.ByteBuffer
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.Reactive
 import im.tox.antox.utils.AntoxFriend
 import im.tox.jtoxcore.ToxFileControl
 import im.tox.jtoxcore.callbacks.OnFileControlCallback
@@ -46,7 +47,7 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends OnFileControl
         if (!ToxSingleton.fileStatusMap.containsKey(id) || 
           ToxSingleton.fileStatusMap.get(id) == ToxSingleton.FileStatus.REQUESTSENT) {
           antoxDB.fileTransferStarted(friend.getId, fileNumber)
-          ToxSingleton.updatedMessagesSubject.onNext(true)
+          Reactive.updatedMessages.onNext(true)
           ToxSingleton.sendFileData(friend.getId, fileNumber, 0, ctx)
         } else if (ToxSingleton.fileStatusMap.get(id) == ToxSingleton.FileStatus.PAUSED) {
           ToxSingleton.sendFileData(friend.getId, fileNumber, ToxSingleton.getProgress(id), ctx)

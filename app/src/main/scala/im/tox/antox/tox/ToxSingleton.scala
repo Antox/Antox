@@ -62,16 +62,6 @@ import im.tox.jtoxcore.callbacks.CallbackHandler
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import rx.{Observable => JObservable}
-import rx.{Observer => JObserver}
-import rx.{Subscriber => JSubscriber}
-import rx.{Subscription => JSubscription}
-import rx.functions.Func2
-import rx.functions.Func3
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
-import rx.subjects.PublishSubject
-import rx.Observable.combineLatest
 import rx.lang.scala.Observable
 import rx.lang.scala.Observer
 import rx.lang.scala.Subscriber
@@ -107,35 +97,6 @@ object ToxSingleton {
 
   var qrFile: File = _
 
-  var friendListSubject: BehaviorSubject[ArrayList[Friend]] = _
-
-  var friendRequestSubject: BehaviorSubject[ArrayList[FriendRequest]] = _
-
-  var lastMessagesSubject: BehaviorSubject[HashMap[String, Tuple[String,Timestamp]]] = _
-
-  var unreadCountsSubject: BehaviorSubject[HashMap[String, Int]] = _
-
-  var typingSubject: BehaviorSubject[Boolean] = _
-
-  var activeKeySubject: BehaviorSubject[String] = _
-
-  var updatedMessagesSubject: BehaviorSubject[Boolean] = _
-
-  var updatedProgressSubject: BehaviorSubject[Boolean] = _
-
-  var rightPaneActiveSubject: BehaviorSubject[Boolean] = _
-
-  var doClosePaneSubject: PublishSubject[Boolean] = _
-
-  var friendInfoListSubject: JObservable[ArrayList[FriendInfo]] = _
-
-  var activeKeyAndIsFriendSubject: JObservable[Tuple[String,Boolean]] = _
-
-  var friendListAndRequestsSubject: JObservable[Tuple[ArrayList[FriendInfo],ArrayList[FriendRequest]]] = _
-
-  var rightPaneActiveAndKeyAndIsFriendSubject: JObservable[Triple[Boolean, String, Boolean]] = _
-
-  var friendInfoListAndActiveSubject: JObservable[Tuple[ArrayList[FriendInfo],Tuple[String,Boolean]]] = _
 
   var progressMap: HashMap[Integer, Integer] = new HashMap[Integer, Integer]()
 
@@ -170,74 +131,6 @@ object ToxSingleton {
         None
       }
     }
-  }
-
-  def initSubjects(ctx: Context) {
-    friendListSubject = BehaviorSubject.create(new ArrayList[Friend]())
-    friendListSubject.subscribeOn(Schedulers.io())
-    friendRequestSubject = BehaviorSubject.create(new ArrayList[FriendRequest]())
-    friendRequestSubject.subscribeOn(Schedulers.io())
-    rightPaneActiveSubject = BehaviorSubject.create(false)
-    rightPaneActiveSubject.subscribeOn(Schedulers.io())
-    lastMessagesSubject = BehaviorSubject.create(new HashMap[String, Tuple[String, Timestamp]]())
-    lastMessagesSubject.subscribeOn(Schedulers.io())
-    unreadCountsSubject = BehaviorSubject.create(new HashMap[String, Int]())
-    unreadCountsSubject.subscribeOn(Schedulers.io())
-    activeKeySubject = BehaviorSubject.create("")
-    activeKeySubject.subscribeOn(Schedulers.io())
-    doClosePaneSubject = PublishSubject.create()
-    doClosePaneSubject.subscribeOn(Schedulers.io())
-    updatedMessagesSubject = BehaviorSubject.create(true)
-    updatedMessagesSubject.subscribeOn(Schedulers.io())
-    updatedProgressSubject = BehaviorSubject.create(true)
-    updatedProgressSubject.subscribeOn(Schedulers.io())
-    typingSubject = BehaviorSubject.create(true)
-    typingSubject.subscribeOn(Schedulers.io())
-    friendInfoListSubject = combineLatest(friendListSubject, lastMessagesSubject, unreadCountsSubject, 
-      new Func3[ArrayList[Friend], HashMap[String, Tuple[String,Timestamp]], HashMap[String, Int], ArrayList[FriendInfo]]() {
-
-        override def call(fl: ArrayList[Friend], lm: HashMap[String, Tuple[String, Timestamp]], uc: HashMap[String, Int]): ArrayList[FriendInfo] = {
-          var fi = new ArrayList[FriendInfo]()
-          for (f <- fl) {
-            var lastMessage: String = null
-            var lastMessageTimestamp: Timestamp = null
-            var unreadCount: Int = 0
-            if (lm.containsKey(f.friendKey)) {
-              lastMessage = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].x.asInstanceOf[String]
-              lastMessageTimestamp = lm.get(f.friendKey).asInstanceOf[Tuple[String, Timestamp]].y.asInstanceOf[Timestamp]
-            } else {
-              lastMessage = ""
-              lastMessageTimestamp = new Timestamp(0, 0, 0, 0, 0, 0, 0)
-            }
-            unreadCount = if (uc.containsKey(f.friendKey)) uc.get(f.friendKey).asInstanceOf[java.lang.Integer] else 0
-            fi.add(new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, 
-              lastMessage, lastMessageTimestamp, unreadCount, f.alias))
-          }
-          return fi
-        }
-      })
-    friendListAndRequestsSubject = combineLatest(friendInfoListSubject, friendRequestSubject, new Func2[ArrayList[FriendInfo], ArrayList[FriendRequest], Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]]]() {
-
-      override def call(fl: ArrayList[FriendInfo], fr: ArrayList[FriendRequest]): Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]] = {
-        return new Tuple(fl, fr)
-      }
-    })
-    activeKeyAndIsFriendSubject = combineLatest(activeKeySubject, friendListSubject, new Func2[String, ArrayList[Friend], Tuple[String, Boolean]]() {
-
-      override def call(key: String, fl: ArrayList[Friend]): Tuple[String, Boolean] = {
-        var isFriend: Boolean = false
-        isFriend = isKeyFriend(key, fl)
-        return new Tuple[String, Boolean](key, isFriend)
-      }
-    })
-    friendInfoListAndActiveSubject = combineLatest(friendInfoListSubject, activeKeyAndIsFriendSubject, 
-      new Func2[ArrayList[FriendInfo], Tuple[String, Boolean], Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]]]() {
-
-        override def call(o: ArrayList[FriendInfo], o2: Tuple[String, Boolean]): Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]] = {
-          return new Tuple[ArrayList[FriendInfo], Tuple[String, Boolean]](o.asInstanceOf[ArrayList[FriendInfo]], 
-            o2.asInstanceOf[Tuple[String, Boolean]])
-        }
-      })
   }
 
   private def isKeyFriend(key: String, fl: ArrayList[Friend]): Boolean = {
@@ -316,13 +209,11 @@ object ToxSingleton {
   }
 
   def changeActiveKey(key: String) {
-    activeKeySubject.onNext(key)
-    doClosePaneSubject.onNext(true)
+    Reactive.activeKey.onNext(Some(key))
   }
 
   def clearActiveKey() {
-    activeKeySubject.onNext("")
-    doClosePaneSubject.onNext(false)
+    Reactive.activeKey.onNext(None)
   }
 
   def acceptFile(key: String, fileNumber: Int, context: Context) {
@@ -341,7 +232,7 @@ object ToxSingleton {
       })
     }
     antoxDB.close()
-    updatedMessagesSubject.onNext(true)
+    Reactive.updatedMessages.onNext(true)
   }
 
   def rejectFile(key: String, fileNumber: Int, context: Context) {
@@ -360,7 +251,7 @@ object ToxSingleton {
       })
     }
     antoxDB.close()
-    updatedMessagesSubject.onNext(true)
+    Reactive.updatedMessages.onNext(true)
   }
 
   def receiveFileData(key: String, 
@@ -431,7 +322,7 @@ object ToxSingleton {
         progressHistoryMap.put(idObject, a)
       }
     }
-    updatedProgressSubject.onNext(true)
+    Reactive.updatedProgress.onNext(true)
   }
 
   def getProgressSinceXAgo(id: Int, ms: Int): Tuple[Integer, Long] = {
@@ -465,7 +356,7 @@ object ToxSingleton {
       a = if (!progressHistoryMap.containsKey(idObject)) new ArrayList[Tuple[Integer, Long]]() else progressHistoryMap.get(idObject)
       a.add(new Tuple[Integer, Long](progress, time))
       progressHistoryMap.put(idObject, a)
-      updatedProgressSubject.onNext(true)
+      Reactive.updatedProgress.onNext(true)
     }
   }
 
@@ -479,7 +370,7 @@ object ToxSingleton {
     }
     db.fileFinished(key, fileNumber)
     db.close()
-    updatedMessagesSubject.onNext(true)
+    Reactive.updatedMessages.onNext(true)
   }
 
   def cancelFile(key: String, fileNumber: Int, context: Context) {
@@ -491,7 +382,7 @@ object ToxSingleton {
     }
     db.clearFileNumber(key, fileNumber)
     db.close()
-    updatedMessagesSubject.onNext(true)
+    Reactive.updatedMessages.onNext(true)
   }
 
   def getProgress(id: Int): Int = {
@@ -626,9 +517,9 @@ object ToxSingleton {
       val antoxDB = new AntoxDB(ctx)
       val friendList = antoxDB.getFriendList
       antoxDB.close()
-      friendListSubject.onNext(friendList)
+      Reactive.friendList.onNext(friendList)
     } catch {
-      case e: Exception => friendListSubject.onError(e)
+      case e: Exception => Reactive.friendList.onError(e)
     }
   }
 
@@ -651,14 +542,14 @@ object ToxSingleton {
       val antoxDB = new AntoxDB(ctx)
       val friendRequest = antoxDB.getFriendRequestsList
       antoxDB.close()
-      friendRequestSubject.onNext(friendRequest)
+      Reactive.friendRequests.onNext(friendRequest.toArray(new Array[FriendRequest](friendRequest.size)))
     } catch {
-      case e: Exception => friendRequestSubject.onError(e)
+      case e: Exception => Reactive.friendRequests.onError(e)
     }
   }
 
   def updateMessages(ctx: Context) {
-    updatedMessagesSubject.onNext(true)
+    Reactive.updatedMessages.onNext(true)
     updateLastMessageMap(ctx)
     updateUnreadCountMap(ctx)
   }
@@ -668,9 +559,9 @@ object ToxSingleton {
       val antoxDB = new AntoxDB(ctx)
       val map = antoxDB.getLastMessages
       antoxDB.close()
-      lastMessagesSubject.onNext(map)
+      Reactive.lastMessages.onNext(map)
     } catch {
-      case e: Exception => lastMessagesSubject.onError(e)
+      case e: Exception => Reactive.lastMessages.onError(e)
     }
   }
 
@@ -679,9 +570,9 @@ object ToxSingleton {
       val antoxDB = new AntoxDB(ctx)
       val map = antoxDB.getUnreadCounts
       antoxDB.close()
-      unreadCountsSubject.onNext(map)
+      Reactive.unreadCounts.onNext(map)
     } catch {
-      case e: Exception => unreadCountsSubject.onError(e)
+      case e: Exception => Reactive.unreadCounts.onError(e)
     }
   }
 
@@ -800,11 +691,11 @@ object ToxSingleton {
       val friends = db.getFriendList
       db.close()
       if (friends.size > 0) {
-        for (i <- 0 until friends.size) {
+        for (friend <- friends) {
           try {
-            jTox.confirmRequest(friends.get(i).friendKey)
+            jTox.confirmRequest(friend.friendKey)
           } catch {
-            case e: Exception => 
+            case e: Exception => e.printStackTrace()
           }
         }
       }
