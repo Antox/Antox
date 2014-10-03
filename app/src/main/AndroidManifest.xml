@@ -93,8 +93,22 @@
 
         <activity
             android:name=".activities.CreateAcccountActivity"
-            android:label="@string/title_activity_create_acccount" >
-        </activity>
+            android:label="@string/title_activity_create_acccount" />
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/action_settings"/>
+
+        <activity
+            android:name=".activities.ProfileSettingsActivity"
+            android:label="@string/title_activity_profile_settings"/>
+
+        <activity
+            android:name=".activities.About"
+            android:label="@string/about" />
+
+        <activity
+            android:name=".activities.License"
+            android:label="@string/open_source_license" />   
     </application>
 
 </manifest>

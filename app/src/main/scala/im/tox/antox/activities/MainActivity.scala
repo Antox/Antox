@@ -14,50 +14,100 @@ import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.ActionBarDrawerToggle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarActivity
 import android.util.Log
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ListAdapter
+import android.widget.ListView
+import android.widget.Toast
+import java.util.ArrayList
 import java.util.Locale
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.fragments.DialogToxID
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.BitmapManager
 import im.tox.antox.utils.Constants
+import im.tox.antox.utils.DrawerArrayAdapter
+import im.tox.antox.utils.DrawerItem
 import im.tox.antox.utils.Triple
-import im.tox.antox.TestScala
 import im.tox.jtoxcore.ToxCallType
 import im.tox.jtoxcore.ToxCodecSettings
 import im.tox.jtoxcore.ToxException
-import rx.Subscription
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
 //remove if not needed
 import scala.collection.JavaConversions._
 
-class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListener {
+class MainActivity extends ActionBarActivity {
 
   var request: View = _
 
   var preferences: SharedPreferences = _
 
+  private var mDrawerLayout: DrawerLayout = _
+
+  private var mDrawerList: ListView = _
+
+  private var mDrawerToggle: ActionBarDrawerToggle = _
+
+  private def selectItem(position: Int) {
+    if (position == 0) {
+      val intent = new Intent(this, classOf[Settings])
+      startActivity(intent)
+    } else if (position == 1) {
+      val intent = new Intent(this, classOf[ProfileSettingsActivity])
+      startActivity(intent)
+    } else if (position == 2) {
+      Toast.makeText(this, "Coming soon...", Toast.LENGTH_LONG)
+        .show()
+    } else if (position == 3) {
+      val intent = new Intent(this, classOf[About])
+      startActivity(intent)
+    } else if (position == 4) {
+      val intent = new Intent(this, classOf[License])
+      startActivity(intent)
+    }
+    mDrawerList.setItemChecked(position, true)
+    mDrawerLayout.closeDrawer(mDrawerList)
+  }
+
+  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    val id = item.getItemId
+    if (id == android.R.id.home) {
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+        return true
+      }
+    }
+    super.onOptionsItemSelected(item)
+  }
+
+  protected override def onPostCreate(savedInstanceState: Bundle) {
+    super.onPostCreate(savedInstanceState)
+    mDrawerToggle.syncState()
+  }
+
+  override def onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    mDrawerToggle.onConfigurationChanged(newConfig)
+  }
+
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
-    val test = new TestScala()
-    test.test()
     val language = preferences.getString("language", "-1")
     if (language == "-1") {
       val editor = preferences.edit()
       val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase()
       editor.putString("language", currentLanguage)
-      editor.commit()
+      editor.apply()
     } else {
       val locale = new Locale(language)
       Locale.setDefault(locale)
@@ -66,6 +116,34 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
       getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
     }
     setContentView(R.layout.activity_main)
+    mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
+    mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
+    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
+    val list = new ArrayList[DrawerItem]()
+    list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_menu_settings))
+    list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_profile))
+    list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_social_add_group))
+    list.add(new DrawerItem(getString(R.string.n_about), R.drawable.ic_menu_help))
+    list.add(new DrawerItem(getString(R.string.n_open_source), R.drawable.ic_opensource))
+    val drawerListAdapter = new DrawerArrayAdapter(this, R.layout.rowlayout_drawer, list)
+    mDrawerList.setAdapter(drawerListAdapter)
+    mDrawerList.setOnItemClickListener(new DrawerItemClickListener())
+    if (getSupportActionBar != null) {
+      getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+      getSupportActionBar.setHomeButtonEnabled(true)
+    }
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, 
+      R.string.drawer_close) {
+
+     override def onDrawerClosed(view: View) {
+        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
+      }
+
+     override def onDrawerOpened(drawerView: View) {
+        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
+      }
+    }
+    mDrawerLayout.setDrawerListener(mDrawerToggle)
     getSupportActionBar.hide()
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN && 
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -142,13 +220,13 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
     alertDialog.show()
   }
 
-  override def onDialogClick(fragment: DialogFragment) {
-  }
+  private class DrawerItemClickListener extends AdapterView.OnItemClickListener {
 
-  def copyToxID(view: View) {
-    val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val context = getApplicationContext
-    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-    clipboard.setText(sharedPreferences.getString("tox_id", ""))
+    override def onItemClick(parent: AdapterView[_], 
+        view: View, 
+        position: Int, 
+        id: Long) {
+      selectItem(position)
+    }
   }
 }

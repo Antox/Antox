@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_header_notifications">
+        <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifications_enable_notifications"
+            android:title="@string/pref_title_enable_notifications" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_enable_notifications"
+            android:key="notifications_new_message"
+            android:title="@string/pref_title_new_message_notifications" />
+
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notifications_enable_notifications"
+            android:key="notifications_friend_request"
+            android:title="@string/pref_title_new_friend_notifications" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_other">
+        <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+        <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+        <ListPreference
+            android:defaultValue="-1"
+            android:entries="@array/pref_language_list_titles"
+            android:entryValues="@array/pref_language_list_values"
+            android:key="language"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_language" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="wifi_only"
+            android:title="@string/pref_title_wifi_only" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="action_messages"
+            android:title="@string/pref_title_connection_status_messages" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_udp"
+            android:title="@string/pref_udp" />
+
+        <Preference
+            android:key="nospam"
+            android:title="@string/pref_nospam" />
+    </PreferenceCategory>
+</PreferenceScreen>

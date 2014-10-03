@@ -216,16 +216,16 @@ object ToxSingleton {
     Reactive.activeKey.onNext(None)
   }
 
-  def acceptFile(key: String, fileNumber: Int, context: Context) {
+  def fileAcceptReject(key: String, fileNumber: Integer, context: Context, accept: Boolean) {
     val antoxDB = new AntoxDB(context)
     val id = antoxDB.getFileId(key, fileNumber)
     if (id != -1) {
       val mFriend = antoxFriendList.getByKey(key)
       mFriend.foreach(friend => {
         try {
-          jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(), Array.ofDim[Byte](0))
+          jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, if (accept) {ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal()} else {ToxFileControl.TOX_FILECONTROL_KILL.ordinal()}, Array.ofDim[Byte](0))
           antoxDB.fileTransferStarted(key, fileNumber)
-          fileStatusMap.put(id, FileStatus.INPROGRESS)
+          fileStatusMap.put(id, if (accept) FileStatus.INPROGRESS else FileStatus.CANCELLED)
           } catch {
             case e: Exception => e.printStackTrace()
           }
@@ -235,24 +235,9 @@ object ToxSingleton {
     Reactive.updatedMessages.onNext(true)
   }
 
-  def rejectFile(key: String, fileNumber: Int, context: Context) {
-    val antoxDB = new AntoxDB(context)
-    val id = antoxDB.getFileId(key, fileNumber)
-    if (id != -1) {
-      val mFriend = antoxFriendList.getByKey(key)
-      mFriend.foreach(friend => {
-        try {
-          jTox.fileSendControl(friend.getFriendnumber, false, fileNumber, ToxFileControl.TOX_FILECONTROL_KILL.ordinal(), Array.ofDim[Byte](0))
-          antoxDB.clearFileNumber(key, fileNumber)
-          fileStatusMap.put(id, FileStatus.CANCELLED)
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
-      })
-    }
-    antoxDB.close()
-    Reactive.updatedMessages.onNext(true)
-  }
+  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptReject(key, fileNumber, context, true)
+  
+  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptReject(key, fileNumber, context, false)
 
   def receiveFileData(key: String, 
     fileNumber: Int, 
