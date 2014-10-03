@@ -50,6 +50,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.ChatActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.AddFriendActivity"
             android:label="@string/title_activity_add_friend">
             <meta-data
@@ -85,8 +93,22 @@
 
         <activity
             android:name=".activities.CreateAcccountActivity"
-            android:label="@string/title_activity_create_acccount" >
-        </activity>
+            android:label="@string/title_activity_create_acccount" />
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/action_settings"/>
+
+        <activity
+            android:name=".activities.ProfileSettingsActivity"
+            android:label="@string/title_activity_profile_settings"/>
+
+        <activity
+            android:name=".activities.About"
+            android:label="@string/about" />
+
+        <activity
+            android:name=".activities.License"
+            android:label="@string/open_source_license" />   
     </application>
 
 </manifest>
