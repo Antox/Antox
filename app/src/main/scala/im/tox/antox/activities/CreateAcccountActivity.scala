@@ -44,6 +44,9 @@ import im.tox.jtoxcore.JTox
 import im.tox.jtoxcore.ToxException
 import im.tox.jtoxcore.ToxOptions
 import im.tox.jtoxcore.callbacks.CallbackHandler
+
+import scala.beans.BeanProperty
+
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -94,6 +97,49 @@ class CreateAcccountActivity extends ActionBarActivity {
     toast.show()
   }
 
+  def saveAccountAndStartMain(accountName : String, toxID : String) {
+    // Save preferences
+    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    val editor = preferences.edit()
+    editor.putString("active_account", accountName)
+    editor.putString("nickname", accountName)
+    editor.putString("status", "1")
+    editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
+    editor.putString("tox_id", toxID)
+    editor.putBoolean("loggedin", true)
+    editor.apply()
+
+    // Start the activity
+    val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
+    getApplicationContext.startService(startTox)
+    val main = new Intent(getApplicationContext, classOf[MainActivity])
+    startActivity(main)
+    setResult(Activity.RESULT_OK)
+
+    finish()
+  }
+
+  class ToxData {
+    @BeanProperty
+    var fileBytes: Array[Byte] = null
+    @BeanProperty
+    var ID: String = _
+  }
+
+  def createToxData(accountName: String): ToxData = {
+    var toxData = new ToxData
+
+    val antoxFriendList = new AntoxFriendList()
+    val callbackHandler = new CallbackHandler(antoxFriendList)
+    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled)
+    val jTox = new JTox(antoxFriendList, callbackHandler, toxOptions)
+    val toxDataFile = new ToxDataFile(this, accountName)
+    toxDataFile.saveFile(jTox.save())
+    toxData.ID = jTox.getAddress
+    toxData.fileBytes = toxDataFile.loadFile()
+    toxData
+  }
+
   def onClickRegisterIncogAccount(view: View) {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
@@ -106,39 +152,10 @@ class CreateAcccountActivity extends ActionBarActivity {
       db.addUser(account, "")
       db.close()
 
-      // Create the tox data file for this account and save preferences
-      var ID = ""
-      var fileBytes: Array[Byte] = null
-
       try {
-        val antoxFriendList = new AntoxFriendList()
-        val callbackHandler = new CallbackHandler(antoxFriendList)
-        val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled)
-        val jTox = new JTox(antoxFriendList, callbackHandler, toxOptions)
-        val toxDataFile = new ToxDataFile(this, account)
-        toxDataFile.saveFile(jTox.save())
-        ID = jTox.getAddress
-        fileBytes = toxDataFile.loadFile()
+        var toxData = createToxData(account)
 
-        // Save preferences
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = preferences.edit()
-        editor.putString("active_account", account)
-        editor.putString("nickname", account)
-        editor.putString("status", "1")
-        editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
-        editor.putString("tox_id", ID)
-        editor.putBoolean("loggedin", true)
-        editor.apply()
-
-        // Start the activity
-        val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
-        getApplicationContext.startService(startTox)
-        val main = new Intent(getApplicationContext, classOf[MainActivity])
-        startActivity(main)
-        setResult(Activity.RESULT_OK)
-
-        finish()
+        saveAccountAndStartMain(account, toxData.ID)
       } catch {
         case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
       }
@@ -158,18 +175,10 @@ class CreateAcccountActivity extends ActionBarActivity {
       db.close()
 
       // Create tox data save file
-      var ID = ""
-      var fileBytes: Array[Byte] = null
+      var toxData = new ToxData
 
       try {
-        val antoxFriendList = new AntoxFriendList()
-        val callbackHandler = new CallbackHandler(antoxFriendList)
-        val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled)
-        val jTox = new JTox(antoxFriendList, callbackHandler, toxOptions)
-        val toxDataFile = new ToxDataFile(this, account)
-        toxDataFile.saveFile(jTox.save())
-        ID = jTox.getAddress
-        fileBytes = toxDataFile.loadFile()
+        toxData = createToxData(account)
       } catch {
         case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
       }
@@ -187,7 +196,7 @@ class CreateAcccountActivity extends ActionBarActivity {
 
       try {
         val unencryptedPayload = new JSONObject()
-        unencryptedPayload.put("tox_id", ID)
+        unencryptedPayload.put("tox_id", toxData.ID)
         unencryptedPayload.put("name", account)
         unencryptedPayload.put("privacy", allow)
         unencryptedPayload.put("bio", "")
@@ -198,7 +207,7 @@ class CreateAcccountActivity extends ActionBarActivity {
         val toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
         val serverPublicKey = hexEncoder.decode(toxmepk)
         val ourSecretKey = Array.ofDim[Byte](32)
-        System.arraycopy(fileBytes, 52, ourSecretKey, 0, 32)
+        System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
         val box = new Box(serverPublicKey, ourSecretKey)
         val random = new org.abstractj.kalium.crypto.Random()
         var nonce = random.randomBytes(24)
@@ -209,7 +218,7 @@ class CreateAcccountActivity extends ActionBarActivity {
         val nonceString = rawEncoder.encode(nonce)
         val json = new JSONObject()
         json.put("action", 1)
-        json.put("public_key", ID.substring(0, 64))
+        json.put("public_key", toxData.ID.substring(0, 64))
         json.put("encrypted", payload)
         json.put("nonce", nonceString)
         jsonPost.setJSON(json.toString)
@@ -227,21 +236,7 @@ class CreateAcccountActivity extends ActionBarActivity {
       val errorCode = jsonPost.getErrorCode
 
       if ("0" == errorCode) {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = preferences.edit()
-        editor.putString("active_account", account)
-        editor.putString("nickname", account)
-        editor.putString("status", "1")
-        editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
-        editor.putString("tox_id", ID)
-        editor.putBoolean("loggedin", true)
-        editor.apply()
-        val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
-        getApplicationContext.startService(startTox)
-        val main = new Intent(getApplicationContext, classOf[MainActivity])
-        startActivity(main)
-        setResult(Activity.RESULT_OK)
-        finish()
+        saveAccountAndStartMain(account, toxData.ID)
       } else if ("-25" == errorCode) {
         toastMessage = "This name is already taken"
         toast = Toast.makeText(context, toastMessage, duration)
