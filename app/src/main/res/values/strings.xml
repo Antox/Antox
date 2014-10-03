@@ -24,7 +24,7 @@
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
     <string name="create_must_fill_in">You must fill in all fields</string>
-    <string name="create_bad_profile_name">Profile name can\'t contain spaces or backslashes/forwardslashes</string>
+    <string name="create_bad_profile_name">Profile name can\'t contain spaces or slashes or be empty</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
