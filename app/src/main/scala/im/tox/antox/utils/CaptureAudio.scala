@@ -13,19 +13,19 @@ class CaptureAudio extends AsyncTask[String, Void, Void] {
 
   protected override def doInBackground(params: String*): Void = {
     val bufferSizeBytes = AudioRecord.getMinBufferSize(48000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
-    val audioRecord = new AudioRecord(1, 48000, AudioFormat.CHANNEL_IN_MONO, 
+    val audioRecord = new AudioRecord(1, 48000, AudioFormat.CHANNEL_IN_MONO,
       AudioFormat.ENCODING_PCM_16BIT, bufferSizeBytes)
     audioRecord.startRecording()
     while (true) {
       if (isCancelled) //break
-      try {
-        val buffer = Array.ofDim[Byte](bufferSizeBytes)
-        val read = audioRecord.read(buffer, 0, bufferSizeBytes)
-        ToxSingleton.jTox.avSendAudio(java.lang.Integer.parseInt(params(0)), buffer)
-        Log.d("Mic", "Sending audio to:" + params(0))
-      } catch {
-        case e: Exception => 
-      }
+        try {
+          val buffer = Array.ofDim[Byte](bufferSizeBytes)
+          val read = audioRecord.read(buffer, 0, bufferSizeBytes)
+          ToxSingleton.jTox.avSendAudio(java.lang.Integer.parseInt(params(0)), buffer)
+          Log.d("Mic", "Sending audio to:" + params(0))
+        } catch {
+          case e: Exception =>
+        }
     }
     audioRecord.stop()
     audioRecord.release()

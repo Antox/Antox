@@ -16,10 +16,10 @@ object AntoxOnFileSendRequestCallback {
 
 class AntoxOnFileSendRequestCallback(private var ctx: Context) extends OnFileSendRequestCallback[AntoxFriend] {
 
-  def execute(friend: AntoxFriend, 
-      filenumber: Int, 
-      filesize: Long, 
-      filename: Array[Byte]) {
+  def execute(friend: AntoxFriend,
+    filenumber: Int,
+    filesize: Long,
+    filename: Array[Byte]) {
     Log.d(TAG, "execute")
     ToxSingleton.fileSendRequest(friend.getId, filenumber, new String(filename), filesize, ctx)
   }

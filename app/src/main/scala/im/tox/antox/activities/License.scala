@@ -11,7 +11,7 @@ import scala.collection.JavaConversions._
 class License extends ActionBarActivity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
-    case android.R.id.home => 
+    case android.R.id.home =>
       finish()
       true
   }

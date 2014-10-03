@@ -28,24 +28,24 @@ object Reactive {
   val updatedMessages = BehaviorSubject[Boolean](true)
   val updatedProgress = BehaviorSubject[Boolean](true)
   val friendInfoList = friendList
-                        .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
-                        .combineLatestWith(unreadCounts)((tup, uc) => {
-    tup match {
-      case (fl, lm) => {
+    .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
+    .combineLatestWith(unreadCounts)((tup, uc) => {
+      tup match {
+        case (fl, lm) => {
           fl.map(f => {
-              val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.friendKey)
-              val unreadCount: Option[Integer] = uc.get(f.friendKey)
-              (lastMessageTup, unreadCount) match {
-                case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
-                  new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
-                }
-                case _ =>{
-              new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
-                }
+            val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.friendKey)
+            val unreadCount: Option[Integer] = uc.get(f.friendKey)
+            (lastMessageTup, unreadCount) match {
+              case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
+                new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
+              }
+              case _ => {
+                new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
+              }
             }
           })
         }
       }
-  })
+    })
   val friendListAndRequests = friendInfoList.combineLatestWith(friendRequests)((fi, fr) => (fi, fr))
 }

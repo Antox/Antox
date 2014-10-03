@@ -21,20 +21,20 @@ class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCa
     Log.d("OnAvCallbackCallback", "Received a callback from: " + callID)
     val toxSingleton = ToxSingleton.getInstance
     try callbackID match {
-      case ToxAvCallbackID.ON_INVITE => 
+      case ToxAvCallbackID.ON_INVITE =>
         Log.d("OnAvCallbackCallback", "Callback type: ON_INVITE")
-        var toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500, 1280, 720, 64000, 20, 
+        var toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500, 1280, 720, 64000, 20,
           48000, 1)
         toxSingleton.jTox.avAnswer(callID, toxCodecSettings)
 
-      case ToxAvCallbackID.ON_START => 
+      case ToxAvCallbackID.ON_START =>
         Log.d("OnAvCallbackCallback", "Callback type: ON_START")
         toxSingleton.jTox.avPrepareTransmission(0, 3, 40, false)
         captureAudio.execute(String.valueOf(callID))
 
       case ToxAvCallbackID.ON_CANCEL => Log.d("OnAvCallbackCallback", "Callback type: ON_CANCEL")
       case ToxAvCallbackID.ON_REJECT => Log.d("OnAvCallbackCallback", "Callback type: ON_REJECT")
-      case ToxAvCallbackID.ON_END => 
+      case ToxAvCallbackID.ON_END =>
         Log.d("OnAvCallbackCallback", "Callback type: ON_END")
         captureAudio.cancel(true)
 
@@ -45,7 +45,7 @@ class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCa
       case ToxAvCallbackID.ON_PEER_TIMEOUT => Log.d("OnAvCallbackCallback", "Callback type: ON_PEER_TIMEOUT")
       case ToxAvCallbackID.ON_MEDIA_CHANGE => Log.d("OnAvCallbackCallback", "Callback type: ON_MEDIA_CHANGE")
     } catch {
-      case e: ToxException => 
+      case e: ToxException =>
     }
   }
 }

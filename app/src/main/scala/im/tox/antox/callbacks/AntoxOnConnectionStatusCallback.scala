@@ -29,8 +29,8 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends OnConnec
     val epochNow = System.currentTimeMillis() / 1000
     if (epochNow - Constants.epoch > 30) {
       val tmp2 = if (online) this.ctx.getString(R.string.connection_online) else this.ctx.getString(R.string.connection_offline)
-      db.addMessage(-1, friend.getId, tmp + " " + this.ctx.getString(R.string.connection_has) + 
-        " " + 
+      db.addMessage(-1, friend.getId, tmp + " " + this.ctx.getString(R.string.connection_has) +
+        " " +
         tmp2, true, true, true, 5)
       db.close()
     }

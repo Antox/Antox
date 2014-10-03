@@ -35,7 +35,7 @@ object RecentAdapter {
   }
 }
 
-class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapter(context, R.layout.contact_list_item, 
+class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapter(context, R.layout.contact_list_item,
   c, 0) {
 
   var layoutResourceId: Int = R.layout.contact_list_item

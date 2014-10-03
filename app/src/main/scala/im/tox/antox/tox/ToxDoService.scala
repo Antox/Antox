@@ -39,7 +39,7 @@ class ToxDoService extends Service() {
             try {
               Thread.sleep(10000)
             } catch {
-              case e: Exception => 
+              case e: Exception =>
             }
           } else {
             try {
@@ -50,7 +50,7 @@ class ToxDoService extends Service() {
               ToxSingleton.jTox.doTox()
               wakeLock.release()
             } catch {
-              case e: Exception => 
+              case e: Exception =>
             }
           }
         }

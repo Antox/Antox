@@ -69,7 +69,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.pref_profile)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
       getActionBar != null) {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
@@ -152,7 +152,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
   private def generateQR(userKey: String) {
     val qrData = "tox:" + userKey
     val qrCodeSize = 400
-    val qrCodeEncoder = new QRCodeEncode(qrData, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString, 
+    val qrCodeEncoder = new QRCodeEncode(qrData, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString,
       qrCodeSize)
     var out: FileOutputStream = null
     try {
@@ -185,7 +185,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key, 
+      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key,
         ""))
     }
     if (key == "status") {
@@ -196,7 +196,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status", sharedPreferences.getString(key, 
+      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status", sharedPreferences.getString(key,
         ""))
     }
     if (key == "status_message") {
@@ -205,13 +205,13 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key, 
+      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key,
         ""))
     }
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
-    case android.R.id.home => 
+    case android.R.id.home =>
       finish()
       true
 

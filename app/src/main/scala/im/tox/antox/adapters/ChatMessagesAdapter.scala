@@ -85,7 +85,7 @@ object ChatMessagesAdapter {
 }
 
 class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer])
-    extends ResourceCursorAdapter(context, R.layout.chat_message_row, c, 0) {
+  extends ResourceCursorAdapter(context, R.layout.chat_message_row, c, 0) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
@@ -145,7 +145,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
     messageType match {
-      case Constants.MESSAGE_TYPE_OWN => 
+      case Constants.MESSAGE_TYPE_OWN =>
         ownMessage(holder)
         holder.message.setText(msg.message)
         holder.message.setVisibility(View.VISIBLE)
@@ -153,12 +153,12 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
           holder.bubble.setAlpha(0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_FRIEND => 
+      case Constants.MESSAGE_TYPE_FRIEND =>
         friendMessage(holder)
         holder.message.setText(msg.message)
         holder.message.setVisibility(View.VISIBLE)
 
-      case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND => 
+      case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
         ToxSingleton.fileSizeMap.put(id, size)
         if (messageType == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
           ownMessage(holder)
@@ -186,8 +186,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
               bytesPerSecond = if (progress != null) ((progress.x * 1000).toLong / progress.y).toInt else 0
               if (bytesPerSecond != 0) {
                 val secondsToComplete = msg.size / bytesPerSecond
-                holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " + 
-                  secondsToComplete + 
+                holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " +
+                  secondsToComplete +
                   " seconds left")
               } else {
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s")
@@ -228,7 +228,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
           if (msg.message.contains("/")) {
             f = new File(msg.message)
           } else {
-            f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), 
+            f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
               Constants.DOWNLOAD_DIRECTORY)
             f = new File(f.getAbsolutePath + "/" + msg.message)
           }
@@ -267,7 +267,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
           }
         }
 
-      case Constants.MESSAGE_TYPE_ACTION => 
+      case Constants.MESSAGE_TYPE_ACTION =>
         holder.time.setGravity(Gravity.CENTER)
         holder.layout.setGravity(Gravity.CENTER)
         holder.message.setTextColor(context.getResources.getColor(R.color.gray_darker))
@@ -291,17 +291,17 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
           builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
-              case 0 => 
+              case 0 =>
                 var clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
                 clipboard.setText(m)
 
-              case 1 => 
+              case 1 =>
                 Observable[Boolean](subscriber => {
-                    val antoxDB = new AntoxDB(context.getApplicationContext)
-                    antoxDB.deleteMessage(id)
-                    antoxDB.close()
-                    ToxSingleton.updateMessages(context)
-                    subscriber.onCompleted()
+                  val antoxDB = new AntoxDB(context.getApplicationContext)
+                  antoxDB.deleteMessage(id)
+                  antoxDB.close()
+                  ToxSingleton.updateMessages(context)
+                  subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 
             }
@@ -314,13 +314,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
           builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
-              case 0 => 
+              case 0 =>
                 Observable[Boolean](subscriber => {
-                    val antoxDB = new AntoxDB(context.getApplicationContext)
-                    antoxDB.deleteMessage(id)
-                    antoxDB.close()
-                    ToxSingleton.updateMessages(context)
-                    subscriber.onCompleted()
+                  val antoxDB = new AntoxDB(context.getApplicationContext)
+                  antoxDB.deleteMessage(id)
+                  antoxDB.close()
+                  ToxSingleton.updateMessages(context)
+                  subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 
             }
@@ -342,7 +342,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.message.setTextColor(context.getResources.getColor(R.color.white_absolute))
     holder.row.setGravity(Gravity.RIGHT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
-    holder.background.setPadding(8*density,8*density,8*density,8*density)
+    holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
 
   private def friendMessage(holder: ChatMessagesHolder) {
@@ -352,6 +352,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.layout.setGravity(Gravity.LEFT)
     holder.row.setGravity(Gravity.LEFT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
-    holder.background.setPadding(8*density,8*density,8*density,8*density)
+    holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
 }

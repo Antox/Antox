@@ -50,10 +50,10 @@ import im.tox.antox.utils.Tuple
 import im.tox.antox.utils.UserStatus
 import im.tox.jtoxcore.ToxException
 import im.tox.jtoxcore.ToxUserStatus
-import rx.{Observable => JObservable}
-import rx.{Observer => JObserver}
-import rx.{Subscriber => JSubscriber}
-import rx.{Subscription => JSubscription}
+import rx.{ Observable => JObservable }
+import rx.{ Observer => JObserver }
+import rx.{ Subscriber => JSubscriber }
+import rx.{ Subscription => JSubscription }
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.schedulers.Schedulers
@@ -181,7 +181,6 @@ class ChatActivity extends ActionBarActivity {
 
     val attachmentButton = this.findViewById(R.id.attachmentButton)
 
-
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(v: View) {
@@ -209,20 +208,20 @@ class ChatActivity extends ActionBarActivity {
                 case e: IOException => e.printStackTrace()
               }
             }
-                case 2 => {
-                  val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-                    val fileDialog = new FileDialog(thisActivity, mPath)
-                    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                      def fileSelected(file: File) {
-                        ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
-                      }
-                    })
-                  fileDialog.showDialog()
+            case 2 => {
+              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+              val fileDialog = new FileDialog(thisActivity, mPath)
+              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                def fileSelected(file: File) {
+                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
                 }
+              })
+              fileDialog.showDialog()
+            }
 
           }
         })
-      builder.create().show()
+        builder.create().show()
       }
     })
   }
@@ -248,7 +247,7 @@ class ChatActivity extends ActionBarActivity {
     ToxSingleton.clearUselessNotifications(activeKey)
     ToxSingleton.updateMessages(getApplicationContext())
     messagesSub = Reactive.updatedMessages.subscribe(x => {
-      Log.d(TAG,"Messages updated")
+      Log.d(TAG, "Messages updated")
       updateChat()
       antoxDB.close()
     })
@@ -260,31 +259,29 @@ class ChatActivity extends ActionBarActivity {
         val mFriend: Option[FriendInfo] = fi
           .filter(f => f.friendKey == key)
           .headOption
-          mFriend match {
-            case Some(friend) => {
-              if (friend.alias != "") {
-                thisActivity.setDisplayName(friend.alias)
-              } else {
-                thisActivity.setDisplayName(friend.friendName)
-              }
-              thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+        mFriend match {
+          case Some(friend) => {
+            if (friend.alias != "") {
+              thisActivity.setDisplayName(friend.alias)
+            } else {
+              thisActivity.setDisplayName(friend.friendName)
             }
-            case None => {
-              thisActivity.setDisplayName("")
-            }
+            thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
           }
+          case None => {
+            thisActivity.setDisplayName("")
+          }
+        }
       })
   }
 
-
-
   private def sendMessage() {
-    Log.d(TAG,"sendMessage")
+    Log.d(TAG, "sendMessage")
     if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
       return
     }
     var msg: String = null
-    if (messageBox.getText() != null ) {
+    if (messageBox.getText() != null) {
       msg = messageBox.getText().toString()
     } else {
       msg = ""
@@ -307,7 +304,7 @@ class ChatActivity extends ActionBarActivity {
         adapter.changeCursor(cursor)
         Log.d(TAG, "changing chat list cursor")
       })
-      Log.d("ChatFragment", "new key: " + activeKey)
+    Log.d("ChatFragment", "new key: " + activeKey)
   }
 
   private def updateProgress() {
@@ -318,7 +315,6 @@ class ChatActivity extends ActionBarActivity {
       chatListView.getAdapter.getView(i, view, chatListView)
     }
   }
-
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
@@ -348,12 +344,12 @@ class ChatActivity extends ActionBarActivity {
           photoPath = null
         }
       }
-      } else {
-        Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
-      }
+    } else {
+      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
+    }
   }
 
-  def getCursor():Cursor = {
+  def getCursor(): Cursor = {
     if (antoxDB == null) {
       antoxDB = new AntoxDB(this)
     }
@@ -367,6 +363,6 @@ class ChatActivity extends ActionBarActivity {
     Reactive.chatActive.onNext(false)
     if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
     messagesSub.unsubscribe()
-  titleSub.unsubscribe()
+    titleSub.unsubscribe()
   }
 }

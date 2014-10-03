@@ -31,8 +31,8 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
 
   override def getByFriendNumber(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
-        case Some(f) => f
-        case None => null
+      case Some(f) => f
+      case None => null
     }
   }
 
@@ -41,17 +41,17 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
   }
 
   override def getById(id: String): AntoxFriend = {
-     getByKey(id) match {
-       case Some(x) => x
-       case None => null
-     }
+    getByKey(id) match {
+      case Some(x) => x
+      case None => null
+    }
   }
 
   override def getByName(name: String, ignorecase: Boolean): List[AntoxFriend] = {
     if (ignorecase) {
-        return getByNameIgnoreCase(name)
+      return getByNameIgnoreCase(name)
     } else {
-        friends.filter(friend => (friend.name == null && name == null) || (name != null && name == friend.name))
+      friends.filter(friend => (friend.name == null && name == null) || (name != null && name == friend.name))
     }
   }
 
@@ -85,23 +85,23 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
 
   override def addFriend(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
-        case Some(f) => throw new FriendExistsException(f.getFriendnumber)
-        case None => {
-            val f = new AntoxFriend(friendnumber)
-            this.friends.add(f)
-            f
-        }
+      case Some(f) => throw new FriendExistsException(f.getFriendnumber)
+      case None => {
+        val f = new AntoxFriend(friendnumber)
+        this.friends.add(f)
+        f
+      }
     }
   }
 
   override def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
-        case Some(f) => f
-        case None => {
-            val f = new AntoxFriend(friendnumber)
-            this.friends.add(f)
-            f
-        }
+      case Some(f) => f
+      case None => {
+        val f = new AntoxFriend(friendnumber)
+        this.friends.add(f)
+        f
+      }
     }
   }
 

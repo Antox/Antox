@@ -52,7 +52,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.settings_main)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
       getActionBar != null) {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
@@ -116,7 +116,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
-    case android.R.id.home => 
+    case android.R.id.home =>
       finish()
       true
 

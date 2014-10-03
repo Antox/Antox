@@ -53,7 +53,7 @@ class CreateAcccountActivity extends ActionBarActivity {
     super.onCreate(savedInstanceState)
     getSupportActionBar.hide()
     setContentView(R.layout.activity_create_acccount)
-    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN && 
+    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
@@ -171,7 +171,7 @@ class CreateAcccountActivity extends ActionBarActivity {
           toxmeThread.join()
         } catch {
           case e: JSONException => Log.d("CreateAcccount", "JSON Exception " + e.getMessage)
-          case e: InterruptedException => 
+          case e: InterruptedException =>
         }
         var toastMessage = ""
         val context = getApplicationContext
@@ -248,8 +248,8 @@ class CreateAcccountActivity extends ActionBarActivity {
     }
 
     def getErrorCode(): String = synchronized {
-  errorCode
-}
+      errorCode
+    }
 
     def setJSON(json: String) {
       synchronized {
