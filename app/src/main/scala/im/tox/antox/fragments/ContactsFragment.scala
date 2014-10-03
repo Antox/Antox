@@ -32,6 +32,7 @@ import im.tox.antox.activities.ChatActivity
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.Reactive
 import im.tox.antox.utils.AntoxFriend
 import im.tox.antox.utils.Constants
 import im.tox.antox.utils.FriendInfo
@@ -40,9 +41,6 @@ import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.utils.Tuple
 import im.tox.jtoxcore.FriendExistsException
 import im.tox.jtoxcore.ToxException
-import rx.{Subscription => JSubscription}
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
 import rx.lang.scala.JavaConversions
 import rx.lang.scala.Observable
 import rx.lang.scala.Observer
@@ -60,71 +58,53 @@ class ContactsFragment extends Fragment {
 
   private var leftPaneAdapter: LeftPaneAdapter = _
 
-  private var friendInfoSub: JSubscription = _
-
-  private var keySub: JSubscription = _
+  private var friendInfoSub: Subscription = _
 
   private var activeKey: String = _
 
-  def updateContacts(friendstuple: Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]]) {
-    val friendsList = friendstuple.x
-    val friendRequests = friendstuple.y
-    Collections.sort(friendsList, new NameComparator())
-    Collections.sort(friendsList, new OnlineComparator())
-    leftPaneAdapter = new LeftPaneAdapter(getActivity)
-    var friend_requests = Array.ofDim[FriendRequest](friendRequests.size)
-    friend_requests = friendRequests.toArray(friend_requests)
-    if (friend_requests.length > 0) {
-      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
-      for (i <- 0 until friend_requests.length) {
-        val request = new LeftPaneItem(friend_requests(i).requestKey, friend_requests(i).requestMessage)
-        leftPaneAdapter.addItem(request)
+  def updateContacts(friendsTuple: (Array[FriendInfo], Array[FriendRequest])) {
+    friendsTuple match {
+      case (friendsList, friendRequests) => {
+        val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
+        leftPaneAdapter = new LeftPaneAdapter(getActivity)
+        if (friendRequests.length > 0) {
+          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
+          for (r <- friendRequests) {
+            val request = new LeftPaneItem(r.requestKey, r.requestMessage)
+            leftPaneAdapter.addItem(request)
+          }
+        }
+        if (sortedFriendsList.length > 0) {
+          if (friendRequests.length > 0) {
+            leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_friends)))
+          }
+          var onlineAdded = false
+          var offlineAdded = false
+          for (f <- sortedFriendsList) {
+            if (!offlineAdded && !f.isOnline) {
+              leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
+              offlineAdded = true
+            }
+            if (!onlineAdded && f.isOnline) {
+              leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
+              onlineAdded = true
+            }
+            val friend = new LeftPaneItem(f.friendKey, f.friendName, f.lastMessage, 
+              f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount, 
+              f.lastMessageTimestamp)
+            leftPaneAdapter.addItem(friend)
+          }
+        }
+        contactsListView.setAdapter(leftPaneAdapter)
+        println("updated contacts")
       }
     }
-    var friends_list = Array.ofDim[FriendInfo](friendsList.size)
-    friends_list = friendsList.toArray(friends_list)
-    if (friends_list.length > 0) {
-      if (friend_requests.length > 0) {
-        leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_friends)))
-      }
-      var onlineAdded = false
-      var offlineAdded = false
-      for (i <- 0 until friends_list.length) {
-        if (!offlineAdded && !friends_list(i).isOnline) {
-          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
-          offlineAdded = true
-        }
-        if (!onlineAdded && friends_list(i).isOnline) {
-          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
-          onlineAdded = true
-        }
-        val friend = new LeftPaneItem(friends_list(i).friendKey, friends_list(i).friendName, friends_list(i).lastMessage, 
-          friends_list(i).isOnline, friends_list(i).getFriendStatusAsToxUserStatus, friends_list(i).unreadCount, 
-          friends_list(i).lastMessageTimestamp)
-        leftPaneAdapter.addItem(friend)
-      }
-    }
-    contactsListView.setAdapter(leftPaneAdapter)
-    println("updated contacts")
   }
 
   override def onResume() {
     super.onResume()
-    friendInfoSub = ToxSingleton.friendListAndRequestsSubject.observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1[Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]]]() {
-
-      override def call(friendstuple: Tuple[ArrayList[FriendInfo], ArrayList[FriendRequest]]) {
-        updateContacts(friendstuple)
-      }
-    })
-    keySub = ToxSingleton.activeKeySubject.observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Action1[String]() {
-
-      override def call(s: String) {
-        Log.d("ContactsFragment", "key subject")
-        activeKey = s
-      }
-    })
+    friendInfoSub = Reactive.friendListAndRequests.observeOn(AndroidMainThreadScheduler())
+      .subscribe(updateContacts(_))
     val fab = getActivity.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
     fab.setSize(FloatingActionButton.SIZE_NORMAL)
     fab.setColor(R.color.fab_normal)
@@ -136,7 +116,6 @@ class ContactsFragment extends Fragment {
   override def onPause() {
     super.onPause()
     friendInfoSub.unsubscribe()
-    keySub.unsubscribe()
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -294,21 +273,16 @@ class ContactsFragment extends Fragment {
     builder.show()
   }
 
-  private class NameComparator extends Comparator[FriendInfo] {
 
-    override def compare(a: FriendInfo, b: FriendInfo): Int = {
-      if (a.alias != "") {
-        if (b.alias != "") a.alias.toUpperCase().compareTo(b.alias.toUpperCase()) else a.alias.toUpperCase().compareTo(b.friendName.toUpperCase())
-      } else {
-        if (b.alias != "") a.friendName.toUpperCase().compareTo(b.alias.toUpperCase()) else a.friendName.toUpperCase().compareTo(b.friendName.toUpperCase())
-      }
+  def compareNames(a: FriendInfo, b: FriendInfo): Boolean = {
+    if (a.alias != "") {
+      if (b.alias != "") (a.alias.toUpperCase().compareTo(b.alias.toUpperCase()) == -1) else (a.alias.toUpperCase().compareTo(b.friendName.toUpperCase()) == -1)
+    } else {
+      if (b.alias != "") (a.friendName.toUpperCase().compareTo(b.alias.toUpperCase()) == -1) else (a.friendName.toUpperCase().compareTo(b.friendName.toUpperCase()) == -1)
     }
   }
 
-  private class OnlineComparator extends Comparator[FriendInfo] {
-
-    override def compare(a: FriendInfo, b: FriendInfo): Int = {
-      if (a.isOnline && !b.isOnline) -1 else if (!a.isOnline && b.isOnline) 1 else 0
-    }
+  def compareOnline(a: FriendInfo, b: FriendInfo): Boolean = {
+    if (a.isOnline && !b.isOnline) true else false
   }
 }

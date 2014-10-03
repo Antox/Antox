@@ -79,7 +79,6 @@ class MainActivity extends ActionBarActivity with DialogToxID.DialogToxIDListene
     ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) new BitmapManager()
     Constants.epoch = System.currentTimeMillis() / 1000
-    ToxSingleton.initSubjects(this)
     ToxSingleton.updateFriendsList(this)
     ToxSingleton.updateLastMessageMap(this)
     ToxSingleton.updateUnreadCountMap(this)

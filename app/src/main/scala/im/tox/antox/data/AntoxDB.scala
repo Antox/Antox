@@ -24,6 +24,7 @@ import im.tox.antox.utils.Tuple
 import im.tox.antox.utils.UserStatus
 import im.tox.jtoxcore.ToxUserStatus
 import AntoxDB._
+import scala.collection.mutable.ArrayBuffer
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -193,9 +194,9 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def getUnreadCounts(): HashMap[String,Int] = {
+  def getUnreadCounts(): Map[String,Integer] = {
     this.open(false)
-    val map = new HashMap[String,Int]()
+    val map = scala.collection.mutable.Map.empty[String,Integer]
     val selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " + "FROM messages " + 
       "JOIN friends ON friends.tox_key = messages.tox_key " + 
       "WHERE messages.has_been_read == 0 AND (messages.type == 2 OR messages.type == 4)" + 
@@ -204,13 +205,13 @@ class AntoxDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       do {
         val key = cursor.getString(0)
-        val count = cursor.getInt(1)
+        val count = cursor.getInt(1).intValue
         map.put(key, count)
       } while (cursor.moveToNext());
     }
     cursor.close()
     this.close()
-    map
+    map.toMap
   }
 
 
@@ -278,9 +279,9 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def getLastMessages(): HashMap[String, Tuple[String, Timestamp]] = {
+  def getLastMessages(): Map[String, (String, Timestamp)] = {
     this.open(false)
-    val map = new HashMap[String, Tuple[String, Timestamp]]()
+    val map = scala.collection.mutable.Map.empty[String, (String, Timestamp)]
     val selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" + 
       "SELECT MAX(_id) " + 
       "FROM messages WHERE (type == 1 OR type == 2) " + 
@@ -291,12 +292,12 @@ class AntoxDB(ctx: Context) {
         val key = cursor.getString(0)
         val message = cursor.getString(1)
         val timestamp = Timestamp.valueOf(cursor.getString(2))
-        map.put(key, new Tuple[String, Timestamp](message, timestamp))
+        map.put(key, (message, timestamp))
       } while (cursor.moveToNext());
     }
     cursor.close()
     this.close()
-    map
+    map.toMap
   }
 
   def getMessageList(key: String, actionMessages: Boolean): ArrayList[Message] = {
@@ -533,9 +534,9 @@ class AntoxDB(ctx: Context) {
     Log.d("", "Deleted message")
   }
 
-  def getFriendList(): ArrayList[Friend] = {
+  def getFriendList(): Array[Friend] = {
     this.open(false)
-    val friendList = new ArrayList[Friend]()
+    val friendList = new ArrayBuffer[Friend]()
     val selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
@@ -549,12 +550,12 @@ class AntoxDB(ctx: Context) {
         val isBlocked = cursor.getInt(6) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = key.substring(0, 7)
-        if (!isBlocked) friendList.add(new Friend(isOnline, name, status, note, key, alias))
+        if (!isBlocked) (friendList += (new Friend(isOnline, name, status, note, key, alias)))
       } while (cursor.moveToNext());
     }
     cursor.close()
     this.close()
-    friendList
+    friendList.toArray
   }
 
   def doesFriendExist(key: String): Boolean = {
