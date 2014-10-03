@@ -119,8 +119,13 @@ class MainActivity extends ActionBarActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
+
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
+    // The app will control the voice call audio level
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
+
+    // Set the right language
     val language = preferences.getString("language", "-1")
     if (language == "-1") {
       val editor = preferences.edit()
@@ -134,7 +139,10 @@ class MainActivity extends ActionBarActivity {
       config.locale = locale
       getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
     }
+
     setContentView(R.layout.activity_main)
+
+    // Create the drawer navi
     mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
     mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -164,25 +172,35 @@ class MainActivity extends ActionBarActivity {
       }
     }
     mDrawerLayout.setDrawerListener(mDrawerToggle)
-    getSupportActionBar.hide()
+
+    // Fix for Android 4.1.x
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
+
+    // Check to see if Internet is available and show a warning if it isn't
     val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
     val networkInfo = connMgr.getActiveNetworkInfo
     if (networkInfo != null && !networkInfo.isConnected) {
       showAlertDialog(MainActivity.this, getString(R.string.main_no_internet), getString(R.string.main_not_connected))
     }
+
     ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) new BitmapManager()
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+      new BitmapManager()
+
     Constants.epoch = System.currentTimeMillis() / 1000
+
     ToxSingleton.updateFriendsList(this)
     ToxSingleton.updateLastMessageMap(this)
     ToxSingleton.updateUnreadCountMap(this)
+
     val db = new AntoxDB(getApplicationContext)
     db.clearFileNumbers()
     db.close()
+
     updateLeftPane()
   }
 
