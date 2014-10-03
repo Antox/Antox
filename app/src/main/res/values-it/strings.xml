@@ -34,7 +34,7 @@
     <string name="create_register_incog">Crea profilo nascosto</string>
     <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
     <string name="create_must_fill_in">Devi compilare tutti i campi</string>
-    <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/" o "\\"</string>
+    <string name="create_bad_profile_name">Il nome profilo non può contenere " ", "/", "\\" o essere vuoto</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Tox ID del contatto</string>
@@ -122,5 +122,31 @@
     <string name="qr_default_message">Antox richiede Barcode Scanner per poter leggere i codici QR.\n\nVuoi installare Barcode Scanner?</string>
     <string name="qr_button_yes">Sì</string>
     <string name="qr_button_no">No</string>
+
+    <!-- Navigation Bar -->
+    <string name="n_settings">IMPOSTAZIONI</string>
+    <string name="n_profile_options">PROFILO</string>
+    <string name="n_create_group">CREA GRUPPO</string>
+    <string name="n_add_person">AGGIUNGI CONTATTO</string>
+    <string name="n_about">INFORMAZIONI</string>
+    <string name="n_open_source">LICENZA</string>
+
+    <string name="drawer_open">Apri navigation drawer</string>
+    <string name="drawer_close">Chiudi navigation drawer</string>
+
+    <string name="open_source_license">Licenza</string>
+
+    <string name="license1">Copyright © 2014 Mark Winter (Astonex) &amp; Antox Team</string>
+    <string name="license2">Distribuito sotto licenza GNU GPL v3.</string>
+    <string name="license3">Codice sorgente disponibile all\'indirizzo https://github.com/Astonex/Antox</string>
+
+    <string name="ver">Versione</string>
+    <string name="about">Informazioni</string>
+    <string name="about_antox_1">Antox è un client Tox per Android. L\'obiettivo è portare le caratteristiche di Tox sul tuo dispositivo mobile, tuttavia è ancora in forte sviluppo. Una volta ultimato, Antox sarà disponibile su Google Play e su F-Droid.</string>
+    <string name="about_antox_2">Cosa Funziona:</string>
+    <string name="about_antox_3">-Chat base - questo non include le chat di gruppo</string>
+    <string name="about_antox_4">-Trasferimento file</string>
+    <string name="about_antox_5">In Sviluppo:</string>
+    <string name="about_antox_6">-Audio/Video</string>
 
 </resources>
