@@ -16,8 +16,8 @@ apply plugin: "com.android.application"
 apply plugin: "android-scala"
 
 android {
-    compileSdkVersion "android-19"
-    buildToolsVersion '19.0.1'
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 8
