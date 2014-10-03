@@ -18,14 +18,13 @@ class LeftPaneFragment extends Fragment {
 
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {
 
-    private val TITLES = Array(getString(R.string.titles_recent), getString(R.string.titles_contacts), getString(R.string.titles_settings))
+    private val TITLES = Array(getString(R.string.titles_recent), getString(R.string.titles_contacts))
 
     override def getPageTitle(position: Int): CharSequence = TITLES(position)
 
     override def getItem(pos: Int): Fragment = pos match {
       case 0 => new RecentFragment()
       case 1 => new ContactsFragment()
-      case 2 => new SettingsFragment()
       case _ => new ContactsFragment()
     }
 

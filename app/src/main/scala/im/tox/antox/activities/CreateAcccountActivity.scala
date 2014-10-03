@@ -1,4 +1,3 @@
-
 package im.tox.antox.activities
 
 import android.app.Activity
