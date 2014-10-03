@@ -43,10 +43,8 @@ android {
 }
 
 dependencies {
-    compile files('libs/wearable-preview-support.jar')
     compile files('libs/jToxcore.jar')
     compile files('libs/core.jar')
-    compile files('libs/jsoup-1.7.3.jar')
     compile files('libs/dnsjava-2.1.6.jar')
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile "org.scala-lang:scala-library:2.11.2"

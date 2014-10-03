@@ -7,7 +7,7 @@ public protected *;
 -dontobfuscate
 -dontoptimize
 -dontpreverify
--dontwarn scala.**
+-dontwarn **
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**
