@@ -41,26 +41,26 @@ class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback
     db.close()
     ToxSingleton.updateMessages(ctx)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
-    if (preferences.getBoolean("notifications_enable_notifications", true) && 
+    if (preferences.getBoolean("notifications_enable_notifications", true) &&
       preferences.getBoolean("notifications_new_message", true)) {
       if (!(State.chatActive && State.activeKey.map(_ == friend.getId).getOrElse(false))) {
         val mName = ToxSingleton.getAntoxFriend(friend.getId).map(_.getName)
         mName.foreach(name => {
-        val mBuilder = new NotificationCompat.Builder(this.ctx).setSmallIcon(R.drawable.ic_actionbar)
-          .setContentTitle(name)
-          .setContentText(message)
-          .setDefaults(Notification.DEFAULT_ALL)
-        val resultIntent = new Intent(this.ctx, classOf[MainActivity])
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-        resultIntent.putExtra("key", friend.getId)
-        resultIntent.putExtra("name", name)
-        val stackBuilder = TaskStackBuilder.create(this.ctx)
-        stackBuilder.addParentStack(classOf[MainActivity])
-        stackBuilder.addNextIntent(resultIntent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-        mBuilder.setContentIntent(resultPendingIntent)
-        ToxSingleton.mNotificationManager.notify(friend.getFriendnumber, mBuilder.build())
+          val mBuilder = new NotificationCompat.Builder(this.ctx).setSmallIcon(R.drawable.ic_actionbar)
+            .setContentTitle(name)
+            .setContentText(message)
+            .setDefaults(Notification.DEFAULT_ALL)
+          val resultIntent = new Intent(this.ctx, classOf[MainActivity])
+          resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+          resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
+          resultIntent.putExtra("key", friend.getId)
+          resultIntent.putExtra("name", name)
+          val stackBuilder = TaskStackBuilder.create(this.ctx)
+          stackBuilder.addParentStack(classOf[MainActivity])
+          stackBuilder.addNextIntent(resultIntent)
+          val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+          mBuilder.setContentIntent(resultPendingIntent)
+          ToxSingleton.mNotificationManager.notify(friend.getFriendnumber, mBuilder.build())
         })
       }
     }

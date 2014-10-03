@@ -79,12 +79,12 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (newConvertView == null) {
       holder = new ViewHolder()
       `type` match {
-        case Constants.TYPE_FRIEND_REQUEST => 
+        case Constants.TYPE_FRIEND_REQUEST =>
           newConvertView = mInflater.inflate(R.layout.friendrequest_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.request_key).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.request_message).asInstanceOf[TextView]
 
-        case Constants.TYPE_CONTACT => 
+        case Constants.TYPE_CONTACT =>
           newConvertView = mInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.friend_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.friend_status).asInstanceOf[TextView]
@@ -92,7 +92,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
 
-        case Constants.TYPE_HEADER => 
+        case Constants.TYPE_HEADER =>
           newConvertView = mInflater.inflate(R.layout.header_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.left_pane_header).asInstanceOf[TextView]
 
@@ -135,7 +135,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
             ToxSingleton.jTox.confirmRequest(key)
             ToxSingleton.jTox.save()
           } catch {
-            case e: Exception => 
+            case e: Exception =>
           }
           ToxSingleton.updateFriendRequests(context)
           ToxSingleton.updateFriendsList(context)

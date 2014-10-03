@@ -12,7 +12,7 @@ object PrettyTimestamp {
     val time = new Time("UTC")
     val cal = Calendar.getInstance
     cal.setTime(t)
-    time.set(cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.DAY_OF_MONTH), 
+    time.set(cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.DAY_OF_MONTH),
       cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
     time.switchTimezone(Time.getCurrentTimezone)
     val startOfDay = new Time(Time.getCurrentTimezone)

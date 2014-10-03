@@ -35,12 +35,12 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends OnFriendReq
     ToxSingleton.updateFriendRequests(ctx)
     Log.d("FriendRequestCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
-    if (preferences.getBoolean("notifications_enable_notifications", true) != 
-      false && 
-      preferences.getBoolean("notifications_friend_request", true) != 
+    if (preferences.getBoolean("notifications_enable_notifications", true) !=
+      false &&
+      preferences.getBoolean("notifications_friend_request", true) !=
       false) {
       val vibratePattern = Array[Long](0, 500)
-      if (preferences.getBoolean("notifications_new_message_vibrate", true) == 
+      if (preferences.getBoolean("notifications_new_message_vibrate", true) ==
         false) {
         vibratePattern(1) = 0
       }

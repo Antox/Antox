@@ -47,7 +47,7 @@ class FileDialog(private val activity: Activity, path: File) {
 
   private var fileEndsWith: String = _
 
-  val newPath = if (!path.exists()) { 
+  val newPath = if (!path.exists()) {
     Environment.getExternalStorageDirectory
   } else {
     path

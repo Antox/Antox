@@ -25,7 +25,7 @@ class About extends ActionBarActivity {
     val tw11 = findViewById(R.id.textView11).asInstanceOf[TextView]
     val pattern = Pattern.compile("https://github.com/Astonex/Antox")
     Linkify.addLinks(tw10, pattern, "")
-    tw11.setText(Html.fromHtml("<a href=\"\">" + getString(R.string.open_source_license) + 
+    tw11.setText(Html.fromHtml("<a href=\"\">" + getString(R.string.open_source_license) +
       "</a>"))
     var version = "-.-.-"
     try {
@@ -37,7 +37,7 @@ class About extends ActionBarActivity {
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
-    case android.R.id.home => 
+    case android.R.id.home =>
       finish()
       true
 

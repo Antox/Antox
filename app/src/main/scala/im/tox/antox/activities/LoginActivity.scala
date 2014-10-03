@@ -32,7 +32,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
-    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN && 
+    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
@@ -62,10 +62,10 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
     }
   }
 
-  def onItemSelected(parent: AdapterView[_], 
-      view: View, 
-      pos: Int, 
-      id: Long) {
+  def onItemSelected(parent: AdapterView[_],
+    view: View,
+    pos: Int,
+    id: Long) {
     profileSelected = parent.getItemAtPosition(pos).toString
   }
 

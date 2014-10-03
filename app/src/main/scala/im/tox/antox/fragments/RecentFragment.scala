@@ -54,13 +54,13 @@ class RecentFragment extends Fragment {
       rootView.getParent.asInstanceOf[ViewGroup].removeView(rootView)
     }
     Observable[Cursor](subscriber => {
-        try {
-          val cursor = getCursor
-          subscriber.onNext(cursor)
-          subscriber.onCompleted()
-        } catch {
-          case e: Exception => subscriber.onError(e)
-        }
+      try {
+        val cursor = getCursor
+        subscriber.onNext(cursor)
+        subscriber.onCompleted()
+      } catch {
+        case e: Exception => subscriber.onError(e)
+      }
     })
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
@@ -71,7 +71,7 @@ class RecentFragment extends Fragment {
         } else {
           adapter.changeCursor(cursor)
         }
-    })
+      })
     rootView
   }
 
@@ -102,19 +102,19 @@ class RecentFragment extends Fragment {
       noConversations.setVisibility(View.GONE)
     }
     Observable[Cursor](subscriber => {
-        try {
-          val cursor = getCursor
-          subscriber.onNext(cursor)
-          subscriber.onCompleted()
-        } catch {
-          case e: Exception => subscriber.onError(e)
-        }
+      try {
+        val cursor = getCursor
+        subscriber.onNext(cursor)
+        subscriber.onCompleted()
+      } catch {
+        case e: Exception => subscriber.onError(e)
+      }
     })
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(cursor => {
         adapter.changeCursor(cursor)
-    })
+      })
     println("updated recent fragment")
   }
 }

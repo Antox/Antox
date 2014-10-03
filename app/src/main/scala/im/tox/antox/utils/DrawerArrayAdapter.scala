@@ -14,7 +14,7 @@ import im.tox.antox.R
 import scala.collection.JavaConversions._
 
 class DrawerArrayAdapter(context: Context, resourceId: Int, items: List[DrawerItem])
-    extends ArrayAdapter[DrawerItem](context, resourceId, items) {
+  extends ArrayAdapter[DrawerItem](context, resourceId, items) {
 
   private var mItems: List[DrawerItem] = items
 
@@ -33,7 +33,6 @@ class DrawerArrayAdapter(context: Context, resourceId: Int, items: List[DrawerIt
     newConvertView.setTag(holder)
     newConvertView
   }
-
 
   private class ViewHolder {
 

@@ -132,20 +132,20 @@ class MainActivity extends ActionBarActivity {
       getSupportActionBar.setDisplayHomeAsUpEnabled(true)
       getSupportActionBar.setHomeButtonEnabled(true)
     }
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, 
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open,
       R.string.drawer_close) {
 
-     override def onDrawerClosed(view: View) {
+      override def onDrawerClosed(view: View) {
         ActivityCompat.invalidateOptionsMenu(MainActivity.this)
       }
 
-     override def onDrawerOpened(drawerView: View) {
+      override def onDrawerOpened(drawerView: View) {
         ActivityCompat.invalidateOptionsMenu(MainActivity.this)
       }
     }
     mDrawerLayout.setDrawerListener(mDrawerToggle)
     getSupportActionBar.hide()
-    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN && 
+    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
@@ -185,7 +185,7 @@ class MainActivity extends ActionBarActivity {
       try {
         ToxSingleton.jTox.avCall(userID, toxCodecSettings, 10)
       } catch {
-        case e: ToxException => 
+        case e: ToxException =>
       }
     })
   }
@@ -222,10 +222,10 @@ class MainActivity extends ActionBarActivity {
 
   private class DrawerItemClickListener extends AdapterView.OnItemClickListener {
 
-    override def onItemClick(parent: AdapterView[_], 
-        view: View, 
-        position: Int, 
-        id: Long) {
+    override def onItemClick(parent: AdapterView[_],
+      view: View,
+      position: Int,
+      id: Long) {
       selectItem(position)
     }
   }

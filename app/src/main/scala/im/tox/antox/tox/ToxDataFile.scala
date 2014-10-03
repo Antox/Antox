@@ -15,9 +15,9 @@ import scala.collection.JavaConversions._
 class ToxDataFile(ctx: Context, fileName: String) {
 
   def this(context: Context) = this(context, {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        preferences.getString("active_account", "")
-    })
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    preferences.getString("active_account", "")
+  })
 
   def doesFileExist(): Boolean = {
     if (ctx == null) {

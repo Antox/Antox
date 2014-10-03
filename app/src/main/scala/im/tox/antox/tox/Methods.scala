@@ -20,15 +20,15 @@ object Methods {
     Observable[Boolean](subscriber => {
       val mFriend = ToxSingleton.getAntoxFriend(key)
       mFriend match {
-        case None => 
+        case None =>
         case Some(friend) => {
           // NB: substring includes from start up to but not including the end position
           // Max message length in tox is 1368 bytes
           // jToxCore seems to append a null byte so split around 1367
           val utf8Bytes: Array[Byte] = msg.getBytes("UTF-8")
-          val numOfMessages: Int = (utf8Bytes.length/1367) + 1
+          val numOfMessages: Int = (utf8Bytes.length / 1367) + 1
 
-          if(numOfMessages > 1) {
+          if (numOfMessages > 1) {
 
             val OneByte = 0xFFFFFF80
             val TwoByte = 0xFFFFF800
@@ -49,9 +49,9 @@ object Methods {
                 total = 0
               }
             }
-            } else {
-              sendMessageHelper(ctx, key, friend, msg, mId)
-            }
+          } else {
+            sendMessageHelper(ctx, key, friend, msg, mId)
+          }
         }
       }
       subscriber.onCompleted()

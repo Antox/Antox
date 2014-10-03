@@ -12,11 +12,11 @@ import scala.collection.JavaConversions._
 
 class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 
-  private var CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " + 
-    "username text," + 
-    "password text," + 
-    "nickname text," + 
-    "status text," + 
+  private var CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " +
+    "username text," +
+    "password text," +
+    "nickname text," +
+    "status text," +
     "status_message text);"
 
   override def onCreate(db: SQLiteDatabase) {
@@ -40,7 +40,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 
   def login(username: String): Boolean = {
     val db = this.getReadableDatabase
-    val cursor = db.rawQuery("SELECT count(*) FROM users WHERE username='" + username + 
+    val cursor = db.rawQuery("SELECT count(*) FROM users WHERE username='" + username +
       "'", null)
     cursor.moveToFirst()
     val count = cursor.getInt(0)
@@ -66,8 +66,8 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 
   def updateUserDetail(username: String, detail: String, newDetail: String) {
     val db = this.getReadableDatabase
-    val query = "UPDATE users SET " + detail + "='" + newDetail + "' WHERE username='" + 
-      username + 
+    val query = "UPDATE users SET " + detail + "='" + newDetail + "' WHERE username='" +
+      username +
       "'"
     db.execSQL(query)
     db.close()

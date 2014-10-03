@@ -44,16 +44,16 @@ class PinDialogFragment extends DialogFragment {
     builder.setMessage(getResources.getString(R.string.dialog_pin))
       .setPositiveButton(getResources.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
 
-      def onClick(dialog: DialogInterface, id: Int) {
-        mListener.onDialogPositiveClick(PinDialogFragment.this, pin.getText.toString)
-      }
-    })
+        def onClick(dialog: DialogInterface, id: Int) {
+          mListener.onDialogPositiveClick(PinDialogFragment.this, pin.getText.toString)
+        }
+      })
       .setNegativeButton(getResources.getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
 
-      def onClick(dialog: DialogInterface, id: Int) {
-        mListener.onDialogNegativeClick(PinDialogFragment.this)
-      }
-    })
+        def onClick(dialog: DialogInterface, id: Int) {
+          mListener.onDialogNegativeClick(PinDialogFragment.this)
+        }
+      })
     builder.create()
   }
 

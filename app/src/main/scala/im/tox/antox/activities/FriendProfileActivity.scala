@@ -30,7 +30,7 @@ class FriendProfileActivity extends ActionBarActivity {
     friendName = friendDetails(0)
     val friendAlias = friendDetails(1)
     val friendNote = friendDetails(2)
-    if (friendAlias == "") setTitle(getResources.getString(R.string.friend_profile_title, friendName)) else setTitle(getResources.getString(R.string.friend_profile_title, 
+    if (friendAlias == "") setTitle(getResources.getString(R.string.friend_profile_title, friendName)) else setTitle(getResources.getString(R.string.friend_profile_title,
       friendAlias))
     val editFriendAlias = findViewById(R.id.friendAliasText).asInstanceOf[EditText]
     editFriendAlias.setText(friendAlias)
