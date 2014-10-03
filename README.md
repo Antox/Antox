@@ -42,6 +42,20 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 
+###Compiling Scala Antox From Source
+I haven't figured out how to get an IDE going (or really tried), and I don't know how this all works on anything but Linux, OS X is probably the same, but I know nothing about on Windows.
+- Download android sdk http://developer.android.com/sdk/index.html and unpack
+- Set the environmental variable ANDROID_HOME to point to it
+- Add $ANDROID_HOME/tools and $ANDROID_HOME/platform-tools to your PATH environmental variable
+- run the command `android` and use it to install SDK Platform for API 10, and the latest SDK tools and SDK build tools, and Android Support Library
+- Clone the Antox repo
+- Download the latest jToxcore binaries from https://jenkins.libtoxcore.so/job/jtoxcore_android_arm/
+- Copy libjtoxcore.so to app/src/main/jniLibs/armeabi (you will need to create some of these folders)
+- Copy jToxcore.jar to app/libs/jToxcore.jar
+- These dependencies are updated from time to time, so you might need to check back if the binary link changed
+- Connect your phone with USB in developer mode and run `./gradle installDebug` from the root Antox directory. It will install Antox on to your phone, and you can now run it.
+- Run `adb logcat` to display the logs of your USB connected phone, to read error messages and crash logs etc.
+
 ###What Is Currently Working
 - Basic messaging - this does not include group chats
 - File transfers
