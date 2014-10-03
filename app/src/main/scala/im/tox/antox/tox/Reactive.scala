@@ -39,6 +39,9 @@ object Reactive {
               case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
                 new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
               }
+              case (Some((lastMessage, lastMessageTimestamp)), None) => {
+                new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, lastMessage, lastMessageTimestamp, 0, f.alias)
+              }
               case _ => {
                 new FriendInfo(f.isOnline, f.friendName, f.friendStatus, f.personalNote, f.friendKey, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
               }
