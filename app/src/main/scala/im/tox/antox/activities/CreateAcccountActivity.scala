@@ -126,7 +126,7 @@ class CreateAcccountActivity extends ActionBarActivity {
     var ID: String = _
   }
 
-  def createSaveFile(accountName: String): ToxData = {
+  def createToxData(accountName: String): ToxData = {
     var toxData = new ToxData
 
     val antoxFriendList = new AntoxFriendList()
@@ -152,12 +152,8 @@ class CreateAcccountActivity extends ActionBarActivity {
       db.addUser(account, "")
       db.close()
 
-      // Create the tox data file for this account and save preferences
-      var ID = ""
-      var fileBytes: Array[Byte] = null
-
       try {
-        var toxData = createSaveFile(account)
+        var toxData = createToxData(account)
 
         saveAccountAndStartMain(account, toxData.ID)
       } catch {
@@ -179,10 +175,10 @@ class CreateAcccountActivity extends ActionBarActivity {
       db.close()
 
       // Create tox data save file
-      var toxData = new ToxData 
+      var toxData = new ToxData
 
       try {
-        toxData = createSaveFile(account)
+        toxData = createToxData(account)
       } catch {
         case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
       }
