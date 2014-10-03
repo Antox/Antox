@@ -44,7 +44,7 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 //remove if not needed
 import scala.collection.JavaConversions._
 
-class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDialogListener {
+class AddFriendActivity extends ActionBarActivity {
 
   var _friendID: String = ""
 
@@ -68,50 +68,34 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
+
     overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out)
+
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
+
     setContentView(R.layout.activity_add_friend)
+
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       getSupportActionBar.setIcon(R.drawable.ic_actionbar)
     }
+
     context = getApplicationContext
+
     text = getString(R.string.addfriend_friend_added)
     friendID = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
     friendMessage = findViewById(R.id.addfriend_message).asInstanceOf[EditText]
     friendAlias = findViewById(R.id.addfriend_friendAlias).asInstanceOf[EditText]
+
     val intent = getIntent
     if (Intent.ACTION_VIEW == intent.getAction && intent != null) {
+      // Handle incoming tox uri links
       val friendID = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
       var uri: Uri = null
       uri = intent.getData
       if (uri != null) friendID.setText(uri.getHost)
-    } else if (intent.getAction == "toxv2") {
-      friendID.setText(intent.getStringExtra("originalUsername"))
-      friendAlias.setText(intent.getStringExtra("alias"))
-      friendMessage.setText(intent.getStringExtra("message"))
-      if (checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) ==
-        0) {
-        toast = Toast.makeText(context, text, duration)
-        toast.show()
-      } else if (checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) ==
-        -1) {
-        toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
-        toast.show()
-        return
-      } else if (checkAndSend(intent.getStringExtra("key"), intent.getStringExtra("originalUsername")) ==
-        -2) {
-        toast = Toast.makeText(context, getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
-        toast.show()
-      }
-      val update = new Intent(Constants.BROADCAST_ACTION)
-      update.putExtra("action", Constants.UPDATE)
-      LocalBroadcastManager.getInstance(this).sendBroadcast(update)
-      val i = new Intent()
-      setResult(Activity.RESULT_OK, i)
-      finish()
     }
   }
 
@@ -123,8 +107,14 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
   private def isKeyOwn(key: String): Boolean = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     var tmp = preferences.getString("tox_id", "")
-    if (tmp.toLowerCase().startsWith("tox:")) tmp = tmp.substring(4)
-    if (tmp == key) true else false
+
+    if (tmp.toLowerCase().startsWith("tox:"))
+      tmp = tmp.substring(4)
+
+    if (tmp == key)
+      true
+    else
+      false
   }
 
   private def checkAndSend(key: String, originalUsername: String): Int = {
@@ -146,14 +136,23 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
           Log.d("AddFriendActivity", "Adding friend to database")
           db.addFriend(ID, "Friend Request Sent", alias, originalUsername)
         } else {
-          return -2
+          db.close()
+          toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
+          toast.show()
+          -2
         }
         db.close()
+        toast = Toast.makeText(context, text, duration)
+        toast.show()
         0
       } else {
+        toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
+        toast.show()
         -1
       }
     } else {
+      toast = Toast.makeText(context, getResources.getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT)
+      toast.show()
       -3
     }
   }
@@ -164,45 +163,38 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
   }
 
   def addFriend(view: View) {
-    if (friendID.getText.toString.contains("@") || friendID.getText.length != 76) {
+    if (friendID.length == 76) {
+      // Attempt to use ID as a Tox ID
+      val result = checkAndSend(friendID.getText.toString, _originalUsername)
+      if (result == 0) {
+        val update = new Intent(Constants.BROADCAST_ACTION)
+        update.putExtra("action", Constants.UPDATE)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(update)
+        val i = new Intent()
+        setResult(Activity.RESULT_OK, i)
+        finish()
+      }
+    } else {
+      // Attempt to use ID as a dns account name
       _originalUsername = friendID.getText.toString
       try {
-        DNSLookup(friendID.getText.toString)
+        DNSLookup(_originalUsername)
           .subscribeOn(IOScheduler())
           .observeOn(AndroidMainThreadScheduler())
           .subscribe((tup: (String, Option[String])) => {
             tup match {
               case (key, mCheck) => {
                 mCheck match {
-                  case Some(check) => {
-                    val dialog = new PinDialogFragment()
-                    val bundle = new Bundle()
-                    bundle.putString(getResources.getString(R.string.addfriend_friend_pin_title), getResources.getString(R.string.addfriend_friend_pin_text))
-                    dialog.setArguments(bundle)
-                    dialog.show(getSupportFragmentManager, "NoticeDialogFragment")
-                  }
                   case None => {
                     val result = checkAndSend(key, _originalUsername)
                     if (result == 0) {
-                      toast = Toast.makeText(context, text, duration)
-                      toast.show()
-                    } else if (result == -1) {
-                      toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
-                      toast.show()
-                      return
-                    } else if (result == -2) {
-                      toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
-                      toast.show()
-                    } else if (result == -3) {
-                      toast = Toast.makeText(context, getResources.getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT)
-                      toast.show()
+                      val update = new Intent(Constants.BROADCAST_ACTION)
+                      update.putExtra("action", Constants.UPDATE)
+                      LocalBroadcastManager.getInstance(this).sendBroadcast(update)
+                      val i = new Intent()
+                      setResult(Activity.RESULT_OK, i)
+                      finish()
                     }
-                    val update = new Intent(Constants.BROADCAST_ACTION)
-                    update.putExtra("action", Constants.UPDATE)
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(update)
-                    val i = new Intent()
-                    setResult(Activity.RESULT_OK, i)
-                    finish()
                   }
                 }
               }
@@ -212,37 +204,6 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
         case e: Exception => e.printStackTrace()
       }
     }
-  }
-
-  override def onDialogPositiveClick(dialog: DialogFragment, pin: String) {
-    val newpin = pin + "=="
-    try {
-      val decoded = Base64.decode(newpin, Base64.DEFAULT)
-      val sb = new StringBuilder()
-      for (b <- decoded) sb.append("%02x".format(b & 0xff))
-      val encodedString = sb.toString
-      _friendID = _friendID + encodedString + _friendCHECK
-      val restart = new Intent(this, classOf[AddFriendActivity])
-      restart.putExtra("key", _friendID)
-      restart.putExtra("alias", friendAlias.getText.toString)
-      restart.putExtra("message", friendMessage.getText.toString)
-      restart.putExtra("originalUsername", _originalUsername)
-      restart.setAction("toxv2")
-      startActivity(restart)
-      finish()
-    } catch {
-      case e: IllegalArgumentException => {
-        val context = getApplicationContext
-        val text = getString(R.string.addfriend_invalid_pin)
-        val duration = Toast.LENGTH_SHORT
-        val toast = Toast.makeText(context, text, duration)
-        toast.show()
-        e.printStackTrace()
-      }
-    }
-  }
-
-  override def onDialogNegativeClick(dialog: DialogFragment) {
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
@@ -318,10 +279,6 @@ class AddFriendActivity extends ActionBarActivity with PinDialogFragment.PinDial
         if (txtString.contains("tox1")) {
           val key = txtString.substring(11, 11 + 76)
           subscriber.onNext((key, None))
-        } else if (txtString.contains("tox2")) {
-          val key = txtString.substring(12, 12 + 64)
-          val check = txtString.substring(12 + 64 + 7, 12 + 64 + 7 + 4)
-          subscriber.onNext((key, Some(check)))
         }
       } catch {
         case e: Exception => e.printStackTrace()
