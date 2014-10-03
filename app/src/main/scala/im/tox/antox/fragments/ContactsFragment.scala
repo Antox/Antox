@@ -75,9 +75,6 @@ class ContactsFragment extends Fragment {
           }
         }
         if (sortedFriendsList.length > 0) {
-          if (friendRequests.length > 0) {
-            leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_friends)))
-          }
           var onlineAdded = false
           var offlineAdded = false
           for (f <- sortedFriendsList) {

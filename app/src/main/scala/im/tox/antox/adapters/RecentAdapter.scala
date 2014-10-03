@@ -16,8 +16,6 @@ import im.tox.antox.utils.IconColor
 import im.tox.antox.utils.PrettyTimestamp
 import im.tox.antox.utils.UserStatus
 import RecentAdapter._
-//remove if not needed
-import scala.collection.JavaConversions._
 
 object RecentAdapter {
 
@@ -73,10 +71,12 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     view.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        ToxSingleton.changeActiveKey(tox_key)
-        val intent = new Intent(context, classOf[ChatActivity])
-        intent.putExtra("key", tox_key)
-        context.startActivity(intent)
+        if (tox_key != "") {
+          ToxSingleton.changeActiveKey(tox_key)
+          val intent = new Intent(context, classOf[ChatActivity])
+          intent.putExtra("key", tox_key)
+          context.startActivity(intent)
+        }
       }
     })
   }

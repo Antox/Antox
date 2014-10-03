@@ -1,27 +1,19 @@
 package im.tox.antox.activities
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.os.Build
-import android.os.Bundle
-import android.preference.ListPreference
-import android.preference.Preference
-import android.preference.PreferenceActivity
-import android.preference.PreferenceManager
-import android.view.MenuItem
 import java.util.Random
+
+import android.content.{Context, Intent, SharedPreferences}
+import android.net.ConnectivityManager
+import android.os.{Build, Bundle}
+import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
+import android.view.MenuItem
 import im.tox.antox.R
+import im.tox.antox.activities.Settings._
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxDoService
-import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.jtoxcore.ToxException
-import Settings._
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object Settings {
 
