@@ -10,18 +10,28 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
         android:layout_height="50dp">
-        <TextView
-            android:id="@+id/icon"
-            android:layout_width="5dp"
-            android:layout_height="match_parent"
-            android:background="@color/green"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="@dimen/margin_medium"/>
+        <RelativeLayout
+            android:layout_width="50dp"
+            android:layout_height="50dp">
+            <TextView
+                android:id="@+id/avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/circle_grey_light"
+                />
+            <TextView
+                android:id="@+id/icon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@color/green"/>
+        </RelativeLayout>
         <LinearLayout
             android:duplicateParentState="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="15dp"
             android:layout_height="match_parent">
             <LinearLayout
                 android:duplicateParentState="true"
@@ -37,8 +47,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:textSize="19sp"
-                    android:textStyle="bold" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textSize="19sp"/>
                 <TextView
                     android:id="@+id/last_message_timestamp"
                     android:duplicateParentState="true"
@@ -67,19 +77,20 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
                     android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_marginRight="10dp"
                     android:textSize="15sp"/>
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:layout_width="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
-                    android:layout_height="25dp"
-                    android:background="@color/green"/>
+                    android:background="@drawable/circle_green"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
