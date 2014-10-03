@@ -24,7 +24,7 @@
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
     <string name="create_must_fill_in">You must fill in all fields</string>
-    <string name="create_bad_profile_name">Profile name can\'t contain spaces or backslashes/forwardslashes</string>
+    <string name="create_bad_profile_name">Profile name can\'t contain spaces or slashes or be empty</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
@@ -122,5 +122,32 @@
     <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>
     <string name="qr_button_yes">Yes</string>
     <string name="qr_button_no">No</string>
+
+    <!-- nav bar -->
+    <string name="n_settings">SETTINGS</string>
+    <string name="n_profile_options">PROFILE OPTIONS</string>
+    <string name="n_create_group">CREATE GROUP</string>
+    <string name="n_add_person">ADD PERSON</string>
+    <string name="n_about">ABOUT</string>
+    <string name="n_open_source">OPEN SOURCE LICENSE</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
+    <string name="open_source_license">Open source license</string>
+
+    <string name="license1">Copyright © 2014 Mark Winter (Astonex) &amp; Antox Team</string>
+    <string name="license2">Distributed under the GNU GPL v3.</string>
+    <string name="license3">Source code is available at https://github.com/Astonex/Antox</string>
+
+    <string name="ver">Version</string>
+    <string name="about">About</string>
+    <string name="about_antox_1">Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it\'s still currently in heavy development. Once ready, Antox will be available on Google Play and on F-Droid.</string>
+    <string name="about_antox_2">What Is Currently Working:</string>
+    <string name="about_antox_3">-Basic messaging - this does not include group chats</string>
+    <string name="about_antox_4">-File transfers</string>
+    <string name="about_antox_5">Current development:</string>
+    <string name="about_antox_6">-Currently implementing A/V in Antox</string>
 
 </resources>
