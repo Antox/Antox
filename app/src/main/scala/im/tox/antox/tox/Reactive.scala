@@ -1,19 +1,10 @@
 package im.tox.antox.tox
 
-import android.util.Log
 import java.sql.Timestamp
+
 import im.tox.antox.data.State
-import im.tox.antox.utils.Friend
-import im.tox.antox.utils.FriendInfo
-import im.tox.antox.utils.FriendRequest
-import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
+import im.tox.antox.utils.{Friend, FriendInfo, FriendRequest}
 import rx.lang.scala.subjects.BehaviorSubject
-import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 object Reactive {
   val chatActive = BehaviorSubject[Boolean](false)

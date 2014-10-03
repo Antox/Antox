@@ -1,48 +1,26 @@
 package im.tox.antox.activities
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.app.Activity
+import android.content.{Context, Intent}
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.NavUtils
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarActivity
-import android.app.Activity
-import android.util.Base64
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.Toast
-import org.xbill.DNS.Lookup
-import org.xbill.DNS.Record
-import org.xbill.DNS.TXTRecord
-import org.xbill.DNS.Type
+import android.view.{Menu, MenuItem, View, WindowManager}
+import android.widget.{EditText, Toast}
 import im.tox.QR.IntentIntegrator
-import im.tox.QR.IntentResult
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.fragments.PinDialogFragment
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Constants
-import im.tox.jtoxcore.FriendExistsException
-import im.tox.jtoxcore.ToxException
-import rx.lang.scala.JavaConversions
+import im.tox.jtoxcore.{FriendExistsException, ToxException}
+import org.xbill.DNS.{Lookup, TXTRecord, Type}
 import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
-import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class AddFriendActivity extends ActionBarActivity {
 

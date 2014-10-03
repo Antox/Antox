@@ -2,24 +2,17 @@
 package im.tox.antox.activities
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
-import android.os.Build
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.v7.app.ActionBarActivity
-import android.view.View
-import android.view.WindowManager
+import android.view.{View, WindowManager}
 import android.widget._
-import java.util.ArrayList
-import java.util.Arrays
 import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.ToxDoService
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedListener {
 

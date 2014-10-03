@@ -20,7 +20,8 @@
             android:layout_toStartOf="@id/reject"
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@id/reject"
-            android:layout_marginRight="21dp" />
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"/>
 
         <TextView
             android:id="@+id/request_key"
@@ -30,7 +31,8 @@
             android:singleLine="true"
             android:textSize="@dimen/text_small"
             android:textStyle="bold"
-            android:layout_toLeftOf="@id/accept"/>
+            android:layout_toLeftOf="@id/accept"
+            android:layout_toStartOf="@id/accept"/>
 
         <TextView
             android:id="@+id/request_message"

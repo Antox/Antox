@@ -1,12 +1,13 @@
 package im.tox.antox.activities
 
+import java.util.regex.Pattern
+
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.text.util.Linkify
 import android.view.MenuItem
 import android.widget.TextView
-import java.util.regex.Pattern
 import im.tox.antox.R
 
 class About extends ActionBarActivity {

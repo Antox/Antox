@@ -1,54 +1,33 @@
 package im.tox.antox.activities
 
+import java.io.{File, IOException, UnsupportedEncodingException}
+import java.util.Scanner
+import java.util.regex.Pattern
+
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.v7.app.ActionBarActivity
-import android.util.Base64
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Toast
+import android.util.{Base64, Log}
+import android.view.{Menu, MenuItem, View, WindowManager}
+import android.widget.{EditText, Toast}
+import im.tox.antox.R
+import im.tox.antox.data.UserDB
+import im.tox.antox.tox.{ToxDataFile, ToxDoService}
+import im.tox.antox.utils.{AntoxFriendList, Options}
+import im.tox.jtoxcore.{JTox, ToxException, ToxOptions}
+import im.tox.jtoxcore.callbacks.CallbackHandler
 import org.abstractj.kalium.crypto.Box
-import org.abstractj.kalium.encoders.Hex
-import org.abstractj.kalium.encoders.Raw
-import org.apache.http.HttpEntity
-import org.apache.http.HttpResponse
-import org.apache.http.client.HttpClient
+import org.abstractj.kalium.encoders.{Hex, Raw}
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.File
-import java.io.IOException
-import java.io.UnsupportedEncodingException
-import java.util.Scanner
-import java.util.regex.Matcher
-import java.util.regex.Pattern
-import im.tox.antox.R
-import im.tox.antox.data.UserDB
-import im.tox.antox.tox.ToxDataFile
-import im.tox.antox.tox.ToxDoService
-import im.tox.antox.utils.AntoxFriendList
-import im.tox.antox.utils.Options
-import im.tox.jtoxcore.JTox
-import im.tox.jtoxcore.ToxException
-import im.tox.jtoxcore.ToxOptions
-import im.tox.jtoxcore.callbacks.CallbackHandler
+import org.json.{JSONException, JSONObject}
 
 import scala.beans.BeanProperty
 
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class CreateAcccountActivity extends ActionBarActivity {
 
