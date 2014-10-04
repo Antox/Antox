@@ -125,7 +125,7 @@ class MainActivity extends ActionBarActivity {
     list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_social_add_group))
     list.add(new DrawerItem(getString(R.string.n_about), R.drawable.ic_menu_help))
     list.add(new DrawerItem(getString(R.string.n_open_source), R.drawable.ic_opensource))
-    list.add(new DrawerItem(getString(R.string.n_logout), R.drawable.ic_action_remove))
+    list.add(new DrawerItem(getString(R.string.n_logout), R.drawable.ic_logout))
     val drawerListAdapter = new DrawerArrayAdapter(this, R.layout.rowlayout_drawer, list)
     mDrawerList.setAdapter(drawerListAdapter)
     mDrawerList.setOnItemClickListener(new DrawerItemClickListener())
@@ -133,7 +133,7 @@ class MainActivity extends ActionBarActivity {
       getSupportActionBar.setDisplayHomeAsUpEnabled(true)
       getSupportActionBar.setHomeButtonEnabled(true)
     }
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open,
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open,
       R.string.drawer_close) {
 
       override def onDrawerClosed(view: View) {

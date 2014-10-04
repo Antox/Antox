@@ -1,5 +1,7 @@
 package im.tox.antox.fragments
 
+import android.app.ActionBar
+import android.app.FragmentTransaction
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,7 +10,6 @@ import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.astuetz.PagerSlidingTabStrip
 import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 //remove if not needed
@@ -31,15 +32,44 @@ class LeftPaneFragment extends Fragment {
     override def getCount(): Int = TITLES.length
   }
 
-  private var main_act: MainActivity = _
-
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
-    main_act = getActivity.asInstanceOf[MainActivity]
+    val thisActivity = this.getActivity.asInstanceOf[MainActivity]
+    val actionBar = thisActivity.getActionBar()
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
+
+    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS)
+
+    val tabListener = new ActionBar.TabListener() {
+        def onTabSelected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
+          pager.setCurrentItem(tab.getPosition())
+        }
+
+        def onTabUnselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
+        }
+
+        def onTabReselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
+        }
+    }
+
+    actionBar.addTab(
+            actionBar.newTab()
+              .setIcon(R.drawable.ic_action_recent_tab)
+                    .setTabListener(tabListener))
+
+    actionBar.addTab(
+            actionBar.newTab()
+              .setIcon(R.drawable.ic_action_contacts_tab)
+                    .setTabListener(tabListener))
+
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
-    val tabs = rootView.findViewById(R.id.tabs).asInstanceOf[PagerSlidingTabStrip]
-    tabs.setViewPager(pager)
+    pager.setOnPageChangeListener(
+            new ViewPager.SimpleOnPageChangeListener() {
+                override def onPageSelected(position: Int) = {
+                    thisActivity.getActionBar().setSelectedNavigationItem(position);
+                }
+            })
+
     rootView
   }
 }

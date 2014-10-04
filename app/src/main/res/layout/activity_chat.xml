@@ -21,7 +21,7 @@
             android:id="@+id/divider_comment"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/gray_darker" />
+            android:background="@color/grey_dark" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
