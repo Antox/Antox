@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white_absolute">#ffffff</color>
-    <color name="white">#f0f0f0</color>
+    <color name="white">#f3f3f3</color>
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
     <color name="grey_dark">@android:color/darker_gray</color>
