@@ -138,8 +138,8 @@
 
     <string name="open_source_license">Licenza</string>
 
-    <string name="license2">Distribuito sotto licenza GNU GPL v3</string>
-    <string name="license3">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Astonex/Antox</string>
+    <string name="license1">Distribuito sotto licenza GNU GPL v3</string>
+    <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Astonex/Antox</string>
 
     <string name="ver">Versione</string>
     <string name="about">Informazioni</string>
