@@ -133,7 +133,7 @@ class MainActivity extends ActionBarActivity {
       getSupportActionBar.setDisplayHomeAsUpEnabled(true)
       getSupportActionBar.setHomeButtonEnabled(true)
     }
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open,
+    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open,
       R.string.drawer_close) {
 
       override def onDrawerClosed(view: View) {
