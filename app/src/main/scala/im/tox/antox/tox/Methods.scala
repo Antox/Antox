@@ -2,17 +2,9 @@ package im.tox.antox.tox
 
 import android.content.Context
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.Message
-import rx.lang.scala.JavaConversions
 import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
 import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 object Methods {
 

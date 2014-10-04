@@ -6,6 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_add_friend">Add Friend</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
+    <string name="title_activity_profile_settings">Profile options</string>
 
     <!-- Navigation / Action Bar -->
     <string name="add_friend">Add Friend</string>
@@ -125,25 +126,24 @@
 
     <!-- nav bar -->
     <string name="n_settings">SETTINGS</string>
-    <string name="n_profile_options">PROFILE OPTIONS</string>
+    <string name="n_profile_options">PROFILE</string>
     <string name="n_create_group">CREATE GROUP</string>
     <string name="n_add_person">ADD PERSON</string>
     <string name="n_about">ABOUT</string>
     <string name="n_open_source">OPEN SOURCE LICENSE</string>
+    <string name="n_logout">LOGOUT</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-
     <string name="open_source_license">Open source license</string>
 
-    <string name="license1">Copyright © 2014 Mark Winter (Astonex) &amp; Antox Team</string>
     <string name="license2">Distributed under the GNU GPL v3.</string>
-    <string name="license3">Source code is available at https://github.com/Astonex/Antox</string>
+    <string name="license3">Source code is available at\nhttps://github.com/Astonex/Antox</string>
 
     <string name="ver">Version</string>
     <string name="about">About</string>
-    <string name="about_antox_1">Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it\'s still currently in heavy development. Once ready, Antox will be available on Google Play and on F-Droid.</string>
+    <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
     <string name="about_antox_2">What Is Currently Working:</string>
     <string name="about_antox_3">-Basic messaging - this does not include group chats</string>
     <string name="about_antox_4">-File transfers</string>

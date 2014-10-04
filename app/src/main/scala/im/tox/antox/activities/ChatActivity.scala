@@ -1,71 +1,28 @@
 package im.tox.antox.activities
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.CursorLoader
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
+import java.io.{File, IOException}
+import java.util.Date
+
+import android.app.{Activity, AlertDialog}
+import android.content.{CursorLoader, DialogInterface, Intent, SharedPreferences}
 import android.database.Cursor
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
+import android.os.{Bundle, Environment}
 import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBarActivity
-import android.support.v7.app.ActionBar
-import android.text.Editable
-import android.text.TextWatcher
+import android.support.v7.app.{ActionBar, ActionBarActivity}
+import android.text.{Editable, TextWatcher}
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.TextView
-import java.io.File
-import java.io.IOException
-import java.util.ArrayList
-import java.util.Date
-import java.util.List
-import java.util.Random
-import java.util.concurrent.TimeUnit
+import android.view.{Menu, MenuInflater, View}
+import android.widget.{AbsListView, EditText, ListView, TextView}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.tox.Reactive
-import im.tox.antox.tox.Methods
-import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.ChatMessages
-import im.tox.antox.utils.Constants
-import im.tox.antox.utils.FileDialog
-import im.tox.antox.utils.FriendInfo
-import im.tox.antox.utils.IconColor
-import im.tox.antox.utils.Tuple
-import im.tox.antox.utils.UserStatus
+import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
+import im.tox.antox.utils.{Constants, FileDialog, FriendInfo, IconColor, UserStatus}
 import im.tox.jtoxcore.ToxException
-import im.tox.jtoxcore.ToxUserStatus
-import rx.{ Observable => JObservable }
-import rx.{ Observer => JObserver }
-import rx.{ Subscriber => JSubscriber }
-import rx.{ Subscription => JSubscription }
-import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Action1
-import rx.schedulers.Schedulers
-import rx.subscriptions.Subscriptions
-import rx.lang.scala.JavaConversions
-import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
-import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import rx.lang.scala.{Observable, Subscription}
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class ChatActivity extends ActionBarActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -88,24 +45,25 @@ class ChatActivity extends ActionBarActivity {
   var scrolling: Boolean = false
   var antoxDB: AntoxDB = null
   var photoPath: String = null
+
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
     setContentView(R.layout.activity_chat)
-    val actionBar = getSupportActionBar()
+    val actionBar = getSupportActionBar
     val avatarView = getLayoutInflater.inflate(R.layout.avatar_actionview, null)
     actionBar.setCustomView(avatarView)
     actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
-    val extras: Bundle = getIntent().getExtras()
+    val extras: Bundle = getIntent.getExtras
     val key = extras.getString("key")
     activeKey = key
     val thisActivity = this
     Log.d(TAG, "key = " + key)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor(), antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", true)))
+    adapter = new ChatMessagesAdapter(this, getCursor(), antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
-    statusIconView = this.findViewById(R.id.icon).asInstanceOf[View]
-    avatarActionView = this.findViewById(R.id.avatarActionView).asInstanceOf[View]
+    statusIconView = this.findViewById(R.id.icon)
+    avatarActionView = this.findViewById(R.id.avatarActionView)
     avatarActionView.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         thisActivity.finish()

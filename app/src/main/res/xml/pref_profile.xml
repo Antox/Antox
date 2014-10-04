@@ -39,10 +39,6 @@
         android:title="@string/pref_title_account_name" />
 
     <Preference
-        android:key="logout"
-        android:title="@string/pref_title_logout" />
-
-    <Preference
         android:defaultValue="@string/pref_default_tox_id"
         android:editable="false"
         android:key="tox_id"
@@ -51,5 +47,9 @@
         android:singleLine="true"
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
+
+    <Preference
+        android:key="logout"
+        android:title="@string/pref_title_logout" />
 
 </PreferenceScreen>
