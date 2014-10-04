@@ -52,12 +52,15 @@ class LeftPaneFragment extends Fragment {
         }
     }
 
-    for (name <- Array("Recent","Contacts")) {
-        actionBar.addTab(
-                actionBar.newTab()
-                        .setText(name)
-                        .setTabListener(tabListener))
-    }
+    actionBar.addTab(
+            actionBar.newTab()
+              .setIcon(R.drawable.ic_action_recent_tab)
+                    .setTabListener(tabListener))
+
+    actionBar.addTab(
+            actionBar.newTab()
+              .setIcon(R.drawable.ic_action_contacts_tab)
+                    .setTabListener(tabListener))
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
     pager.setOnPageChangeListener(
