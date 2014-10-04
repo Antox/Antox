@@ -15,7 +15,7 @@ class AntoxOnAudioDataCallback(private var ctx: Context) extends OnAudioDataCall
   def execute(callID: Int, data: Array[Byte]) {
     Log.d("OnAudioDataCallback", "Received callback from: " + callID)
     try {
-      val audioTrack = new AudioTrack(AudioManager.STREAM_VOICE_CALL, 48000, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+      val audioTrack = new AudioTrack(AudioManager.STREAM_VOICE_CALL, 48000, AudioFormat.CHANNEL_OUT_DEFAULT,
         AudioFormat.ENCODING_PCM_16BIT, data.length, AudioTrack.MODE_STREAM)
       audioTrack.play()
       audioTrack.write(data, 0, data.length)

@@ -1,16 +1,10 @@
 package im.tox.antox.tox
 
+import java.io.{FileInputStream, FileNotFoundException, FileOutputStream, IOException}
+
 import android.content.Context
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.util.Log
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
-//remove if not needed
-import scala.collection.JavaConversions._
 
 class ToxDataFile(ctx: Context, fileName: String) {
 

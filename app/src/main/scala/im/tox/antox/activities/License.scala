@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.webkit.WebView
 import im.tox.antox.R
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class License extends ActionBarActivity {
 
@@ -21,6 +20,8 @@ class License extends ActionBarActivity {
     setContentView(R.layout.license_menu)
     if (getSupportActionBar != null) getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     val localWebView = findViewById(R.id.webView).asInstanceOf[WebView]
+    val webSettings = localWebView.getSettings
+    webSettings.setJavaScriptEnabled(false)
     localWebView.loadUrl("file:///android_res/raw/license.html")
   }
 }
