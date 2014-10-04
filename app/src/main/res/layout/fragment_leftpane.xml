@@ -7,18 +7,6 @@
     android:layout_height="fill_parent"
     android:background="@color/white"
     android:orientation="vertical">
-    <com.astuetz.PagerSlidingTabStrip
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:background="@color/blue"
-        android:textColor="@color/white_absolute"
-        app:pstsDividerColor="@color/blue"
-        app:pstsIndicatorColor="@color/white_absolute"
-        app:pstsUnderlineHeight="1dp"
-        app:pstsIndicatorHeight="4dp"
-        app:pstsShouldExpand="true"
-        app:pstsTabPaddingLeftRight="5dp"
-        android:layout_height="48dip" />
     <android.support.v4.widget.DrawerLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawer_layout"
