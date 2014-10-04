@@ -12,4 +12,7 @@
     <color name="blue">#6c5170</color>
     <color name="fab_normal">@color/green</color>
     <color name="fab_pressed">@color/green</color>
+
+    <color name="tab_selected">@color/white</color>
+    <color name="tab_highlight">#aaaaaaaa</color>
 </resources>
