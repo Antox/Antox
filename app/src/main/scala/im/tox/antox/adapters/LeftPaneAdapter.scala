@@ -117,7 +117,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
     }
     if (holder.timeText != null) {
-      holder.timeText.setTextColor(context.getResources.getColor(R.color.gray_darker))
+      holder.timeText.setTextColor(context.getResources.getColor(R.color.grey_dark))
     }
     if (`type` == Constants.TYPE_FRIEND_REQUEST) {
       val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]

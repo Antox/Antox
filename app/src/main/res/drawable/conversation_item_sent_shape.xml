@@ -10,7 +10,7 @@
 
     <item android:bottom="0dp">
         <shape xmlns:android="http://schemas.android.com/apk/res/android">
-            <solid android:color="@color/blue" />
+            <solid android:color="@color/sent_message_background" />
             <!--stroke android:width="0.5dp" android:color="#03000000" /-->
             <corners android:radius="4dp" />
         </shape>

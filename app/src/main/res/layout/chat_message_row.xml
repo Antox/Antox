@@ -39,7 +39,7 @@
                     android:id="@+id/message_title"
                     android:text="Title"
                     android:textSize="@dimen/text_smallish"
-                    android:textColor="@color/gray_darker"/>
+                    android:textColor="@color/grey_dark"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:id="@+id/file_transfer_progress_text"
                     android:text="Finished"
                     android:textSize="@dimen/text_smallish"
-                    android:textColor="@color/gray_darker"
+                    android:textColor="@color/grey_dark"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp" />
@@ -149,7 +149,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:id="@+id/message_text_date"
-            android:textColor="@color/gray_darker"
+            android:textColor="@color/grey_dark"
             android:text="Asdsd"
             android:textSize="@dimen/text_tiny" />
 
