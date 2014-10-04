@@ -270,7 +270,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
       case Constants.MESSAGE_TYPE_ACTION =>
         holder.time.setGravity(Gravity.CENTER)
         holder.layout.setGravity(Gravity.CENTER)
-        holder.message.setTextColor(context.getResources.getColor(R.color.gray_darker))
+        holder.message.setTextColor(context.getResources.getColor(R.color.grey_dark))
         holder.row.setGravity(Gravity.CENTER)
         holder.background.setBackgroundColor(context.getResources.getColor(R.color.white_absolute))
         holder.message.setTextSize(12)
