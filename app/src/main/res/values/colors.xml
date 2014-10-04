@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white_absolute">#ffffff</color>
-    <color name="white">#f0f0f0</color>
+    <color name="white">#f3f3f3</color>
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
-    <color name="gray_darker">@android:color/darker_gray</color>
+    <color name="grey_dark">@android:color/darker_gray</color>
     <color name="grey_darkest">#444444</color>
     <color name="black">#222222</color>
 
     <color name="green">#81BF89</color>
-    <color name="blue">#6c5170</color>
-    <color name="fab_normal">@color/green</color>
-    <color name="fab_pressed">@color/green</color>
+    <color name="purple_dark">#6c5170</color>
+
+    <color name="brand_primary">@color/purple_dark</color>
+    <color name="brand_secondary">@color/green</color>
+
+    <color name="online">@color/green</color>
+    <color name="away">@color/green</color>
+    <color name="busy">@color/green</color>
+    <color name="offline">@color/grey_dark</color>
+    <color name="action_bar_background">@color/brand_primary</color>
+    <color name="sent_message_background">@color/brand_primary</color>
+    <color name="fab_normal">@color/brand_secondary</color>
+    <color name="fab_pressed">@color/brand_secondary</color>
+    <color name="unread_indicator_background">@color/brand_secondary</color>
+
+    <color name="tab_selected">@color/white</color>
+    <color name="tab_highlight">#aaaaaaaa</color>
 </resources>
