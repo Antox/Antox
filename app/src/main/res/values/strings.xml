@@ -138,8 +138,8 @@
 
     <string name="open_source_license">Open source license</string>
 
-    <string name="license2">Distributed under the GNU GPL v3.</string>
-    <string name="license3">Source code is available at\nhttps://github.com/Astonex/Antox</string>
+    <string name="license1">Distributed under the GNU GPL v3.</string>
+    <string name="license2">Source code is available at\nhttps://github.com/Astonex/Antox</string>
 
     <string name="ver">Version</string>
     <string name="about">About</string>
