@@ -3,10 +3,12 @@ package im.tox.antox.callbacks
 import android.content.Context
 import android.util.Log
 import java.nio.ByteBuffer
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.tox.Reactive
 import im.tox.antox.utils.AntoxFriend
+import im.tox.antox.utils.FileTransfer
+import im.tox.antox.utils.FileStatus
 import im.tox.jtoxcore.ToxFileControl
 import im.tox.jtoxcore.callbacks.OnFileControlCallback
 import AntoxOnFileControlCallback._
@@ -25,57 +27,33 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends OnFileControl
     fileNumber: Int,
     control_type: ToxFileControl,
     data: Array[Byte]) {
-    Log.d(TAG, "execute, control type: " + control_type.name() + " sending: " +
-      sending)
-    if (control_type == ToxFileControl.TOX_FILECONTROL_FINISHED &&
-      !sending) {
-      Log.d(TAG, "TOX_FILECONTROL_FINISHED")
-      ToxSingleton.fileFinished(friend.getId, fileNumber, ctx)
-    }
-    if (control_type == ToxFileControl.TOX_FILECONTROL_ACCEPT &&
-      sending) {
-      val antoxDB = new AntoxDB(ctx)
-      val id = antoxDB.getFileId(friend.getId, fileNumber)
-      if (id != -1) {
-        if (!ToxSingleton.fileStatusMap.containsKey(id) ||
-          ToxSingleton.fileStatusMap.get(id) == ToxSingleton.FileStatus.REQUESTSENT) {
-          antoxDB.fileTransferStarted(friend.getId, fileNumber)
+    Log.d(TAG, "control type: " + control_type.name() + ", sending: " + sending)
+    val mTransfer = State.transfers.get(friend.getId, fileNumber)
+    mTransfer match {
+      case Some(t) => {
+        (control_type, t.status, sending) match {
+          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.REQUESTSENT, true) => 
+            Log.d(TAG, "fileTransferStarted")
+            ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.PAUSED, true) => 
+            Log.d(TAG, "fileTransferStarted")
+            ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+          case (ToxFileControl.TOX_FILECONTROL_FINISHED, _, false) => 
+            Log.d(TAG, "fileFinished")
+            ToxSingleton.fileFinished(t.key, t.fileNumber, sending, ctx)
+          case (ToxFileControl.TOX_FILECONTROL_PAUSE, _, true) => 
+            Log.d(TAG, "pauseFile")
+            ToxSingleton.pauseFile(t.id, ctx)
+          case (ToxFileControl.TOX_FILECONTROL_KILL, _, true) => 
+            Log.d(TAG, "cancelFile")
+            ToxSingleton.cancelFile(t.key, t.fileNumber, ctx)
+          case _ =>
+            Log.d(TAG, "not matched: " + control_type + ", " + t.status + ", " + sending)
+
         }
       }
-      antoxDB.close()
-      if (id != -1) {
-        if (!ToxSingleton.fileStatusMap.containsKey(id) ||
-          ToxSingleton.fileStatusMap.get(id) == ToxSingleton.FileStatus.REQUESTSENT) {
-          antoxDB.fileTransferStarted(friend.getId, fileNumber)
-          Reactive.updatedMessages.onNext(true)
-          ToxSingleton.sendFileData(friend.getId, fileNumber, 0, ctx)
-        } else if (ToxSingleton.fileStatusMap.get(id) == ToxSingleton.FileStatus.PAUSED) {
-          ToxSingleton.sendFileData(friend.getId, fileNumber, ToxSingleton.getProgress(id), ctx)
-        }
-      }
+      case None => Log.d(TAG, "Transfer not found")
     }
-    if (control_type == ToxFileControl.TOX_FILECONTROL_RESUME_BROKEN &&
-      sending) {
-      try {
-        ToxSingleton.jTox.fileSendControl(friend.getFriendnumber, true, fileNumber, ToxFileControl.TOX_FILECONTROL_ACCEPT.ordinal(),
-          Array.ofDim[Byte](0))
-      } catch {
-        case e: Exception => e.printStackTrace()
-      }
-      ToxSingleton.sendFileData(friend.getId, fileNumber, ByteBuffer.wrap(data).getLong.toInt, ctx)
-    }
-    if (control_type == ToxFileControl.TOX_FILECONTROL_PAUSE &&
-      sending) {
-      val antoxDB = new AntoxDB(ctx)
-      val id = antoxDB.getFileId(friend.getId, fileNumber)
-      antoxDB.close()
-      if (id != -1) {
-        ToxSingleton.fileStatusMap.put(id, ToxSingleton.FileStatus.PAUSED)
-      }
-    }
-    if (control_type == ToxFileControl.TOX_FILECONTROL_KILL &&
-      sending) {
-      ToxSingleton.cancelFile(friend.getId, fileNumber, ctx)
-    }
+    Reactive.updatedMessages.onNext(true)
   }
 }

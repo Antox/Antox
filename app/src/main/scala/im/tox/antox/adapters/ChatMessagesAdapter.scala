@@ -81,6 +81,9 @@ object ChatMessagesAdapter {
     var reject: View = _
 
     var bubble: LinearLayout = _
+    
+    var wrapper: LinearLayout = _
+
   }
 }
 
@@ -131,6 +134,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.sentTriangle = view.findViewById(R.id.sent_triangle).asInstanceOf[View]
     holder.receivedTriangle = view.findViewById(R.id.received_triangle).asInstanceOf[View]
     holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
+    holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
     holder.message.setTextSize(16)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
@@ -159,7 +163,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
         holder.message.setVisibility(View.VISIBLE)
 
       case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
-        ToxSingleton.fileSizeMap.put(id, size)
         if (messageType == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
           ownMessage(holder)
           val split = msg.message.split("/")
@@ -180,10 +183,12 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
             if (msg.message_id != -1) {
               holder.progress.setVisibility(View.VISIBLE)
               holder.progress.setMax(msg.size)
-              holder.progress.setProgress(ToxSingleton.getProgress(msg.id))
-              val progress = ToxSingleton.getProgressSinceXAgo(msg.id, 5000)
-              var bytesPerSecond: Int = 0
-              bytesPerSecond = if (progress != null) ((progress.x * 1000).toLong / progress.y).toInt else 0
+              holder.progress.setProgress(ToxSingleton.getProgress(msg.id).toInt)
+              val mProgress = ToxSingleton.getProgressSinceXAgo(msg.id, 500)
+              val bytesPerSecond = mProgress match {
+                case Some(p) => ((p._1 * 1000) / p._2).toInt
+                case None => 0
+              }
               if (bytesPerSecond != 0) {
                 val secondsToComplete = msg.size / bytesPerSecond
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " +
@@ -341,6 +346,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.layout.setGravity(Gravity.RIGHT)
     holder.message.setTextColor(context.getResources.getColor(R.color.white_absolute))
     holder.row.setGravity(Gravity.RIGHT)
+    holder.wrapper.setGravity(Gravity.RIGHT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
@@ -351,6 +357,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.time.setGravity(Gravity.LEFT)
     holder.layout.setGravity(Gravity.LEFT)
     holder.row.setGravity(Gravity.LEFT)
+    holder.wrapper.setGravity(Gravity.LEFT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }

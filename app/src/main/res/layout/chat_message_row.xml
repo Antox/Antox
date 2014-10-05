@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/message_bubble"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <View 
@@ -26,6 +26,11 @@
                 android:layout_height="15dp"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/message_background_wrapper"
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/message_text_background"
@@ -132,6 +137,7 @@
                         />
                 </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
             <View 
                 android:id="@+id/sent_triangle"
                 android:background="@drawable/conversation_item_sent_triangle_shape"
