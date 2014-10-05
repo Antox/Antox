@@ -23,6 +23,7 @@ import im.tox.antox.utils.{Constants, FileDialog, FriendInfo, IconColor, UserSta
 import im.tox.jtoxcore.ToxException
 import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import scala.concurrent.duration._
 
 class ChatActivity extends ActionBarActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -36,7 +37,7 @@ class ChatActivity extends ActionBarActivity {
   var statusIconView: View = null
   var avatarActionView: View = null
   var messagesSub: Subscription = null
-  //var progressSub: Subscription
+  var progressSub: Subscription = null
   //var activeKeySub: Subscription
   var titleSub: Subscription = null
   //var typingSub: Subscription
@@ -209,6 +210,13 @@ class ChatActivity extends ActionBarActivity {
       updateChat()
       antoxDB.close()
     })
+    progressSub = Observable.interval(500 milliseconds)
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(x => {
+        if (!scrolling) {
+          updateProgress()
+        }
+      })
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
@@ -291,7 +299,7 @@ class ChatActivity extends ActionBarActivity {
             try {
               ToxSingleton.sendFileSendRequest(filePath, this.activeKey, this)
             } catch {
-              case e: Exception => Log.d("onActivityResult", e.toString)
+              case e: Exception => e.printStackTrace()
             }
           }
         }
@@ -322,5 +330,6 @@ class ChatActivity extends ActionBarActivity {
     if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
     messagesSub.unsubscribe()
     titleSub.unsubscribe()
+    progressSub.unsubscribe()
   }
 }

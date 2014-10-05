@@ -1,9 +1,15 @@
 package im.tox.antox.data
 
+import im.tox.antox.utils.FileTransferManager
+
 object State {
 
   private var _chatActive: Boolean = false
   private var _activeKey: Option[String] = None
+
+  val transfers: FileTransferManager = new FileTransferManager()
+
+  var db: AntoxDB = _
 
   def chatActive = _chatActive
 
