@@ -17,7 +17,6 @@ object Reactive {
   val unreadCounts = BehaviorSubject[Map[String, Integer]](Map.empty[String, Integer])
   val typing = BehaviorSubject[Boolean](false)
   val updatedMessages = BehaviorSubject[Boolean](true)
-  val updatedProgress = BehaviorSubject[Boolean](true)
   val friendInfoList = friendList
     .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
     .combineLatestWith(unreadCounts)((tup, uc) => {

@@ -412,7 +412,7 @@ class AntoxDB(ctx: Context) {
       "m2 ON (f.tox_key = m2.tox_key) " +
       "WHERE m1._id = (SELECT MAX(_id) FROM " +
       Constants.TABLE_CHAT_LOGS +
-      " WHERE (tox_key = f.tox_key AND NOT type = 5)) " +
+      " WHERE (tox_key = f.tox_key AND (type = 1 OR type = 2))) " +
       "GROUP BY f.tox_key " +
       "ORDER BY m1._id DESC"
     val cursor = mDb.rawQuery(selectQuery, null)
