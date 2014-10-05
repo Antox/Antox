@@ -237,7 +237,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
               Constants.DOWNLOAD_DIRECTORY)
             f = new File(f.getAbsolutePath + "/" + msg.message)
           }
-          if (f.exists()) {
+          if (f.exists() && (msg.received || msg.isMine)) {
             val file = f
             val okFileExtensions = Array("jpg", "png", "gif", "jpeg")
             for (extension <- okFileExtensions) {
