@@ -181,21 +181,15 @@ object ToxSingleton {
     data: Array[Byte],
     context: Context) {
       Log.d(TAG, "receiveFileData")
-      Observable[Boolean](subscriber => {
-        val mTransfer = State.transfers.get(key, fileNumber)
-        val state = Environment.getExternalStorageState
-        if (Environment.MEDIA_MOUNTED == state) {
-          mTransfer match {
-            case Some(t) =>
-              val finished = t.writeData(data)
-              if (finished) {
-                fileFinished(t.key, t.fileNumber, false, context)
-              }
-            case None =>
-          }
+      val mTransfer = State.transfers.get(key, fileNumber)
+      val state = Environment.getExternalStorageState
+      if (Environment.MEDIA_MOUNTED == state) {
+        mTransfer match {
+          case Some(t) =>
+            val finished = t.writeData(data)
+          case None =>
         }
-        subscriber.onCompleted()
-      }).subscribeOn(IOScheduler()).subscribe()
+      }
   }
 
   def getProgressSinceXAgo(id: Long, ms: Long): Option[(Long, Long)] = {
