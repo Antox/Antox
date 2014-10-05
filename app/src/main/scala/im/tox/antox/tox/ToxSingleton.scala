@@ -69,6 +69,11 @@ object ToxSingleton {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
+    val splitFileName = fileName.span(_ != '.')
+    val extension = splitFileName._2
+    val name = splitFileName._1
+    val nameTruncated = name.slice(0, 64 - 1 - extension.length)
+    val fileNameTruncated = nameTruncated + extension
     Log.d(TAG, "sendFileSendRequest")
     if (fileName != null) {
       require(key != null)
@@ -77,7 +82,7 @@ object ToxSingleton {
         .flatMap(friendNumber => {
           try {
             Log.d(TAG, "Creating tox file sender")
-            val fn = jTox.newFileSender(friendNumber, file.length, fileName)
+            val fn = jTox.newFileSender(friendNumber, file.length, fileNameTruncated)
             fn match {
               case -1 => None
               case x => Some(x)
