@@ -18,8 +18,8 @@
     <color name="brand_secondary_dark">@color/green_dark</color>
 
     <color name="online">@color/green</color>
-    <color name="away">@color/green</color>
-    <color name="busy">@color/green</color>
+    <color name="away">@color/orange</color>
+    <color name="busy">@color/red</color>
     <color name="offline">@color/grey_dark</color>
     
     <color name="action_bar_background">@color/brand_primary</color>
