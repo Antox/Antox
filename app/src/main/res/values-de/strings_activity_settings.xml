@@ -1,23 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="title_activity_settings">Einstellungen</string>
+
   <!--Profile-->
   <string name="pref_header_profile">Profil</string>
+
   <string name="pref_title_nickname">Name</string>
   <string name="pref_default_nickname">Antox Benutzer</string>
+
   <string name="pref_title_status">Status</string>
   <string-array name="pref_status_list_titles">
     <item>Online</item>
     <item>Abwesend</item>
     <item>Beschäftigt</item>
   </string-array>
+
   <string name="pref_title_status_message">Statusnachricht</string>
   <string name="pref_default_status_message">Hallo! Ich benutze Antox</string>
   <string name="pref_title_tox_id">Tox-ID</string>
   <string name="pref_default_tox_id">Voreingestellte Tox-ID - Du solltest dies nicht sehen</string>
   <string name="pref_title_account_name">Profilname</string>
   <string name="pref_title_logout">Abmelden</string>
-  <!--Notifications-->
+
+    <!--Notifications-->
   <string name="pref_header_notifications">Benachrichtigungen</string>
   <string name="pref_title_enable_notifications">Benachrichtigungen aktivieren</string>
   <string name="pref_title_new_message_notifications">Benachrichtigung bei Nachrichten</string>
@@ -26,12 +31,18 @@
   <string name="pref_title_ringtone">Klingelton</string>
   <string name="pref_ringtone_silent">Lautlos</string>
   <string name="pref_title_vibrate">Vibration</string>
-  <!--Other-->
+
+    <!--Other-->
   <string name="pref_header_other">Andere</string>
+  <string name="pref_title_connection_status_messages">Online/Offline Nachrichten</string>
+  <string name="pref_title_wifi_only">Nur WLAN</string>
   <string name="pref_title_language">Sprache</string>
+
   <!--Menu strings-->
   <string name="copy_tox_id">Tox-ID kopieren</string>
+
   <!--Advanced strings-->
+    <string name="pref_udp">UDP aktiviern</string>
   <string name="pref_advanced">Erweitert</string>
   <string name="pref_nospam">Nospam</string>
 </resources>
