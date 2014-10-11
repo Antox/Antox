@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Nastavení</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Jméno</string>
+  <string name="pref_default_nickname">Antox uživatel</string>
+  <string name="pref_title_status">Stav</string>
+  <string-array name="pref_status_list_titles">
+    <item>Online</item>
+    <item>Pryč</item>
+    <item>Zaneprázdněn</item>
+  </string-array>
+  <string name="pref_title_status_message">Stavová zpráva</string>
+  <string name="pref_default_status_message">Hej! Já používám Antox</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Výchozí Tox ID - Toto nemá být vidět</string>
+  <string name="pref_title_account_name">Jméno profilu</string>
+  <string name="pref_title_logout">Odhlásit</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Upozornění</string>
+  <string name="pref_title_enable_notifications">Povolit upozornění</string>
+  <string name="pref_title_new_message_notifications">Upozornění na zprávy</string>
+  <string name="pref_title_new_friend_notifications">Upozornění na žádosti o přidání</string>
+  <!--Other-->
+  <string name="pref_header_other">Jiné</string>
+  <string name="pref_title_connection_status_messages">Zprávy o připojení/odpojení</string>
+  <string name="pref_title_wifi_only">Pouze na Wi-Fi</string>
+  <string name="pref_title_language">Jazyk</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Zkopírovat Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Povolit UDP</string>
+  <string name="pref_advanced">Pokročilé</string>
+  <string name="pref_nospam">Generovat nový Nospam</string>
+</resources>

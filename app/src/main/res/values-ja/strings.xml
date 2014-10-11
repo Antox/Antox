@@ -1,91 +1,84 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Antox</string>
   <!--Activity titles-->
-  <string name="title_activity_login">ログイン</string>
-  <string name="title_activity_add_friend">友達を追加</string>
-  <string name="title_activity_friend_profile">友達のプロファイル</string>
+  <string name="title_activity_add_friend">フレンドの追加</string>
+  <string name="title_activity_friend_profile">フレンドのプロファイル</string>
+  <string name="title_activity_profile_settings">プロファイルのオプション</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">友達を追加</string>
+  <string name="add_friend">フレンドを追加</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">プロファイル名を入力してください</string>
-  <string name="login_alpha_warning">このクライアントはまだアルファテスト前です</string>
   <string name="login_login">ログイン</string>
   <string name="login_account_hint">プロファイル名</string>
-  <string name="login_create_account_text">Tox プロファイルを作成</string>
-  <string name="login_already_have_account">既にアカウントをお持ちですか？</string>
+  <string name="login_create_account_text">Toxプロファイルを作成</string>
   <string name="login_bad_login">プロファイルが見つかりませんでした</string>
   <!--Create Account Activity-->
   <string name="create_name_hint">プロファイル名</string>
-  <string name="create_password_hint">パスワード</string>
-  <string name="create_password_again_hint">パスワードの確認</string>
-  <string name="create_text">新しいToxプロファイルを作成\nプロファイル毎に独自のTox IDが与えられます</string>
+  <string name="create_text">スローガン</string>
   <string name="create_register">登録</string>
-  <string name="create_skip">誰でもプロファイル名からあなたを追加できるようにする</string>
-  <string name="create_password_bad_match">パスワードが一致しません</string>
-  <string name="create_allow_search">他人があなたを検索できるようにする</string>
-  <string name="create_bio_string">あなたについて、少し</string>
+  <string name="create_register_incog">匿名で登録</string>
+  <string name="create_skip">誰でもプロファイル名から
+あなたを追加できるようにする</string>
+  <string name="create_must_fill_in">すべての欄は必須です</string>
+  <string name="create_bad_profile_name">プロファイル名は必須でスペースやスラッシュを含めません</string>
   <!--Main Activity-->
-  <string name="title">antox</string>
-  <string name="main_avatar">アバター</string>
-  <string name="main_username">ユーザー名</string>
-  <string name="main_status">状況</string>
-  <string name="icon_description">接続状況</string>
+  <string name="main_no_active_chat">アクティブな会話がありません。フレンドを選択して会話を始めることが出来ます。</string>
   <string name="main_recent_no">最近の会話はありません</string>
-  <string name="main_try_adding">始めるには友達を追加しましょう</string>
-  <string name="main_friend_requests">友達申請</string>
-  <string name="main_friends">友達</string>
-  <string name="main_no_internet">インターネット接続なし</string>
-  <string name="main_node_list_download_error">ノードリストをダウンロードできませんでした</string>
+  <string name="main_no_internet">インターネット接続がありません</string>
+  <string name="main_not_connected">インターネット接続が見つかりませんでした。ローカルでの使用以外は機能が限定されます。</string>
   <string name="search_all_contacts">すべてのコンタクトを検索</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">メッセージを送信</string>
   <string name="chat_file_transfer">ファイルの転送</string>
-  <string name="accept_caps">受理</string>
-  <string name="reject_caps">拒否</string>
   <!--Add Friend Activity-->
-  <string name="addfriend_friend_key">友達のTox ID</string>
-  <string name="addfriend_friend_message">申請と共にメッセージを送る</string>
-  <string name="addfriend_button">友達を追加</string>
-  <string name="addfriend_friend_added">友達を追加しました</string>
-  <string name="addfriend_friend_exists">友達は既に存在します</string>
+  <string name="addfriend_friend_key">フレンドのTox ID</string>
+  <string name="addfriend_friend_message">リクエストにメッセージを追加</string>
+  <string name="addfriend_button">フレンドを追加</string>
+  <string name="addfriend_friend_added">フレンドを追加しました</string>
+  <string name="addfriend_friend_exists">フレンドは既に存在します</string>
   <string name="scanqr_button">QRコードを読み込む</string>
-  <string name="invalid_friend_ID">無効なTox ID</string>
-  <string name="addfriend_nick_hint">友達にニックネームを割り当てる</string>
+  <string name="invalid_friend_ID">無効なTox IDです</string>
+  <string name="addfriend_nick_hint">フレンドにニックネームをつける</string>
+  <string name="addfriend_optional_title">その他のオプション</string>
+  <string name="dialog_pin">フレンドのPINを入力してください</string>
+  <string name="addfriend_invalid_pin">無効なPINです</string>
   <string name="addfriend_own_key">自分を足すことはできません</string>
+  <string name="addfriend_friend_pin_title">フレンドのPIN入力</string>
+  <string name="addfriend_friend_pin_text">フレンドのPINを入力</string>
+  <string name="addfriend_default_message">こんにちは、フレンドリクエストの受理お願いします</string>
   <!--Friend Profile Activity-->
-  <string name="friend_profile_name">名前</string>
   <string name="friend_profile_nick">ニックネーム</string>
-  <string name="friend_profile_group">グループ</string>
   <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">状況</string>
+  <string name="friend_profile_note">ステータス</string>
   <string name="friend_profile_button">更新</string>
   <string name="friend_profile_updated">プロファイルが更新されました</string>
-  <string name="friend_profile_copy">Tox IDをコピー</string>
   <string name="friend_profile_copied">Tox IDがコピーされました</string>
   <!--Friend request fragment-->
-  <string name="friend_profile_title">%1$s のプロファイル</string>
+  <string name="friend_profile_title">%1$sのプロファイル</string>
   <string name="friendrequest_accept">受理</string>
   <string name="friendrequest_reject">拒否</string>
-  <string name="friendrequest_accepted">友達申請が受理されました</string>
-  <string name="friendrequest_deleted">友達申請が削除されました</string>
-  <string name="friendrequest">友達申請</string>
-  <string name="friendrequest_recieved">友達申請を受け取りました</string>
-  <string name="friend_request">たらしい友達申請</string>
+  <string name="friend_request">新しいフレンドリクエスト</string>
   <!--Contacts Fragment-->
   <string name="friend_action_profile">プロファイル</string>
-  <string name="friend_action_sendfile">ファイル送信</string>
-  <string name="friend_action_delete">友達を削除</string>
+  <string name="friend_action_delete">フレンドを削除</string>
   <string name="friend_action_delete_chat">会話ログを削除</string>
-  <string name="friend_action_move_to_group">グループを移動</string>
   <string name="friend_action_block">ブロック</string>
-  <string name="friend_action_unblock">ブロック解除</string>
-  <string name="group_action_leave">グループを抜ける</string>
+  <string name="contacts_actions_on">アクション：</string>
+  <string name="contacts_delimiter_requests">申請</string>
+  <string name="contacts_delimiter_friends">友達</string>
+  <string name="contacts_delimiter_offline">オフライン</string>
+  <string name="contacts_delimiter_online">オンライン</string>
+  <string name="contacts_resend_friend_request">フレンドリクエストを再送信</string>
   <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">本当にこのフレンドを削除しますか？</string>
   <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">本当に会話ログを削除しますか？</string>
   <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">このユーザをブロックするとフレンドリストからは除かれ、今後フレンドリクエストも表示されなくなります。
+本当にブロックしますか？</string>
   <!--Chat Fragment-->
-  <string name="attachment_photo">写真を追加</string>
+  <string name="attachment_photo">写真を添付</string>
+  <string name="attachment_file">ファイルを添付</string>
   <string name="attachment_takephoto">写真を撮る</string>
   <string name="message_copy">メッセージをコピー</string>
   <string name="message_delete">メッセージを削除</string>
@@ -94,14 +87,42 @@
   <string name="titles_contacts">コンタクト</string>
   <string name="titles_settings">設定</string>
   <!--Misc-->
-  <string name="button_confirm">確証</string>
+  <string name="button_confirm">確認</string>
   <string name="button_cancel">キャンセル</string>
   <string name="button_yes">はい</string>
   <string name="button_no">いいえ</string>
   <string name="button_ok">OK</string>
-  <string name="hello_world">ハローワールド</string>
+  <string name="dialog_tox_id">クリップボードにTox IDをコピー</string>
+  <string name="share_with">共有</string>
+  <string name="connection_has">が</string>
+  <string name="connection_online">オンラインになりました</string>
+  <string name="connection_offline">オフラインになりました</string>
+  <string name="title_activity_create_acccount">アカウントの作成</string>
   <string name="action_settings">設定</string>
   <!--QR-->
+  <string name="qr_default_title">QRコードリーダーのインストール</string>
+  <string name="qr_default_message">QRコードリーダーが必要です。インストールしますか？</string>
   <string name="qr_button_yes">はい</string>
   <string name="qr_button_no">いいえ</string>
+  <!--nav bar-->
+  <string name="n_settings">設定</string>
+  <string name="n_profile_options">プロファイル</string>
+  <string name="n_create_group">グループを作成</string>
+  <string name="n_add_person">コンタクト追加</string>
+  <string name="n_about">Antoxについて</string>
+  <string name="n_open_source">オープンソースライセンス</string>
+  <string name="n_logout">ログアウト</string>
+  <string name="drawer_open">ナビゲーションドロワーを開く</string>
+  <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
+  <string name="open_source_license">オープンソースライセンス</string>
+  <string name="license1">GNU GPL v3の下で配布されています</string>
+  <string name="license2">ソースコードは以下より取得できます\nhttps://github.com/Astonex/Antox</string>
+  <string name="ver">バージョン</string>
+  <string name="about">Antoxについて</string>
+  <string name="about_antox_1">政府による監視が広がる中、Toxは盗み聞きされずに友達や家族と通信できる、誰にでも使えるアプリを提供します。</string>
+  <string name="about_antox_2">実装済み機能：</string>
+  <string name="about_antox_3">-基本的なメッセージング（グループチャット含まず）</string>
+  <string name="about_antox_4">-ファイル転送</string>
+  <string name="about_antox_5">現在開発中：</string>
+  <string name="about_antox_6">-A/Vの実装</string>
 </resources>

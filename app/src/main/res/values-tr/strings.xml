@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Antox</string>
   <!--Activity titles-->
   <string name="title_activity_add_friend">Arkadaş Ekleyin</string>
   <!--Navigation / Action Bar-->
@@ -8,14 +7,7 @@
   <!--Login Activity-->
   <!--Create Account Activity-->
   <!--Main Activity-->
-  <string name="icon_description">Bağlantı Durumu</string>
-  <string name="main_no_friends">Arkadaşınız yoktur</string>
-  <string name="main_try_adding">Eklemeye ne dersiniz?</string>
-  <string name="main_friend_requests">Arkadaşlık İstekleri</string>
-  <string name="main_friends">Arkadaşlar</string>
   <string name="main_no_internet">İnternete bağlantı yok</string>
-  <string name="main_not_connected">İnternete baglı değilsiniz</string>
-  <string name="main_node_list_download_error">Node listesi yüklenirken hata oluştu</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">İleti Gönder</string>
   <!--Add Friend Activity-->
@@ -30,18 +22,11 @@
   <!--Friend request fragment-->
   <string name="friendrequest_accept">Kabul et</string>
   <string name="friendrequest_reject">Reddet</string>
-  <string name="friendrequest_accepted">Arkadaşlık isteği kabul edildi</string>
-  <string name="friendrequest_deleted">Arkadaşlık isteği silindi</string>
-  <string name="friendrequest">Arkadaşlık İsteği</string>
-  <string name="friendrequest_recieved">Arkadaşlık isteği alındı</string>
   <string name="friend_request">Yeni arkadaşlık isteği</string>
   <!--Contacts Fragment-->
-  <string name="friend_action_sendfile">Dosya Gönder</string>
   <string name="friend_action_delete">Sil</string>
   <string name="friend_action_block">Engelle</string>
-  <string name="group_action_leave">Gruptan Ayrıl</string>
   <string name="contacts_actions_on">Eylemler açık</string>
-  <string name="contacts_clear_saved_logs">Kayıtlı sohbetleri de silmek ister misiniz?</string>
   <!--Delete Friend Dialog-->
   <!--Delete Chat Logs Dialog-->
   <!--Block Friend Dialog-->
@@ -53,4 +38,5 @@
   <string name="button_yes">Evet</string>
   <string name="button_no">Hayır</string>
   <!--QR-->
+  <!--nav bar-->
 </resources>
