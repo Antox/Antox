@@ -1,32 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Antox</string>
   <!--Activity titles-->
   <string name="title_activity_add_friend">Agregar amigo</string>
   <string name="title_activity_friend_profile">Perfil de amigo</string>
   <!--Navigation / Action Bar-->
   <string name="add_friend">Agregar amigo</string>
   <!--Login Activity-->
-  <string name="login_alpha_warning">Este cliente todavía es pre-alfa</string>
   <!--Create Account Activity-->
-  <string name="create_password_hint">Contraseña</string>
-  <string name="create_password_again_hint">Confirmar la contraseña</string>
   <string name="create_register">Registrar</string>
   <!--Main Activity-->
-  <string name="title">antox</string>
-  <string name="main_avatar">Avatar</string>
-  <string name="main_username">Nombre de usuario</string>
-  <string name="main_status">Estado</string>
-  <string name="icon_description">Estado de conexión</string>
-  <string name="main_no_friends">No tienes amigos</string>
   <string name="main_recent_no">No hay conversaciones recientes.</string>
-  <string name="main_try_adding">¿Por qué no intentas agregar algunos?</string>
-  <string name="main_friend_requests">Solicitudes de amistad</string>
-  <string name="main_friends">Amigos</string>
   <string name="main_no_internet">No hay conexión a internet</string>
-  <string name="main_not_connected">No estás conectado a internet. Sin una conexion a internet
-        Antox tendra una funcionalidad limitada a menos de que lo uses en una red LAN</string>
-  <string name="main_node_list_download_error">Error al descargar la lista de nodos</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">Enviar mensaje</string>
   <!--Add Friend Activity-->
@@ -41,35 +25,22 @@
   <string name="addfriend_optional_title">Extras opcionales</string>
   <string name="dialog_pin">Ingresa el pin de tu amigo</string>
   <string name="addfriend_invalid_pin">Pin invalido</string>
-  <string name="addfriend_no_internet">No hay conexion a la red TOX</string>
   <!--Friend Profile Activity-->
-  <string name="friend_profile_name">Nombre</string>
   <string name="friend_profile_nick">Apodo</string>
-  <string name="friend_profile_group">Grupo</string>
   <string name="friend_profile_key">Tox ID</string>
   <string name="friend_profile_note">Estado</string>
   <string name="friend_profile_button">Guardar cambios</string>
   <string name="friend_profile_updated">El perfil ha sido actualizado</string>
-  <string name="friend_profile_copy">Copiar la Tox ID</string>
   <string name="friend_profile_copied">Tox ID copiada</string>
   <!--Friend request fragment-->
   <string name="friendrequest_accept">Aceptar</string>
   <string name="friendrequest_reject">Rechazar</string>
-  <string name="friendrequest_accepted">Solicitud de amistad aceptada</string>
-  <string name="friendrequest_deleted">Solicitud de amistad borrada</string>
-  <string name="friendrequest">Solicitud de Amistad</string>
-  <string name="friendrequest_recieved">Solicitud de amistad recibida</string>
   <string name="friend_request">Solicitud de Amistad</string>
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Perfil</string>
-  <string name="friend_action_sendfile">Enviar Archivo</string>
   <string name="friend_action_delete">Borrar amigo</string>
   <string name="friend_action_block">Bloquear</string>
-  <string name="friend_action_unblock">Desbloquear</string>
-  <string name="group_action_leave">Salir del grupo</string>
-  <string name="toast_succ_move_user">El contacto se ha cambiado exitosamente</string>
   <string name="contacts_actions_on">Acciones para</string>
-  <string name="contacts_clear_saved_logs">¿También deseas borrar el historial de mensajes?</string>
   <!--Delete Friend Dialog-->
   <!--Delete Chat Logs Dialog-->
   <!--Block Friend Dialog-->
@@ -81,8 +52,8 @@
   <string name="button_yes">Sí</string>
   <string name="button_no">No</string>
   <string name="button_ok">OK</string>
-  <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="dialog_tox_id">Copiar Tox ID al portapapeles</string>
   <string name="share_with">Compartir con</string>
   <!--QR-->
+  <!--nav bar-->
 </resources>

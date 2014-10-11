@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Поставке</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Профил</string>
+  <string name="pref_title_nickname">Име</string>
+  <string name="pref_default_nickname">Антокс корисник</string>
+  <string name="pref_title_status">Стање</string>
+  <string-array name="pref_status_list_titles">
+    <item>Присутан</item>
+    <item>Одсутан</item>
+    <item>Заузет</item>
+  </string-array>
+  <string name="pref_title_status_message">Порука стања</string>
+  <string name="pref_default_status_message">Хеј! Ја користим Антокс</string>
+  <string name="pref_title_tox_id">Токс ИД</string>
+  <string name="pref_default_tox_id">Подразумевани Токс ИД — не бисте требали да видите ово</string>
+  <string name="pref_title_account_name">Име профила</string>
+  <string name="pref_title_logout">Одјава</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Обавештења</string>
+  <string name="pref_title_enable_notifications">Омогући обавештења</string>
+  <string name="pref_title_new_message_notifications">Обавештења о порукама</string>
+  <string name="pref_title_new_friend_notifications">Обавештења о захтевима</string>
+  <!--Other-->
+  <string name="pref_header_other">Остало</string>
+  <string name="pref_title_connection_status_messages">Поруке на/ван везе</string>
+  <string name="pref_title_wifi_only">Само бежична</string>
+  <string name="pref_title_language">Језик</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Копирај Токс ИД</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Омогући УДП</string>
+  <string name="pref_advanced">Напредно</string>
+  <string name="pref_nospam">Направи нови „носпам“</string>
+</resources>

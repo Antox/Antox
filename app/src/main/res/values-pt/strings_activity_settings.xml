@@ -16,22 +16,21 @@
   <string name="pref_title_tox_id">ID Tox</string>
   <string name="pref_default_tox_id">ID Tox padrão - Você não deveria ver isso</string>
   <string name="pref_title_account_name">Nome do perfil</string>
-  <string name="pref_title_logout">Logout</string>
+  <string name="pref_title_logout">Sair</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Notificações</string>
   <string name="pref_title_enable_notifications">Habilitar notificações</string>
   <string name="pref_title_new_message_notifications">Notificações de mensagens</string>
   <string name="pref_title_new_friend_notifications">Notificações de pedidos de amizade</string>
-  <string name="pref_title_action_messages">Mensagens de ações</string>
-  <string name="pref_title_ringtone">Toque</string>
-  <string name="pref_ringtone_silent">Silencioso</string>
-  <string name="pref_title_vibrate">Vibrar</string>
   <!--Other-->
   <string name="pref_header_other">Outro</string>
+  <string name="pref_title_connection_status_messages">Mensagens online/offline</string>
+  <string name="pref_title_wifi_only">Apenas WiFi</string>
   <string name="pref_title_language">Idioma</string>
   <!--Menu strings-->
   <string name="copy_tox_id">Copiar ID Tox</string>
   <!--Advanced strings-->
+  <string name="pref_udp">Habilitar UDP</string>
   <string name="pref_advanced">Avançado</string>
-  <string name="pref_nospam">Sem spam</string>
+  <string name="pref_nospam">Gerar novo anti-spam</string>
 </resources>
