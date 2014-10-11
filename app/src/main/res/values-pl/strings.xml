@@ -8,7 +8,7 @@
   <string name="title_activity_friend_profile">Profil znajomego</string>
 
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Dodaj znajomego</string>
+  <string name="add_friend">Dodaj kontakt</string>
 
   <!--Login Activity-->
   <string name="login_must_fill_in">Musisz podać nazwę profilu</string>
@@ -43,24 +43,24 @@
   <!--Add Friend Activity-->
   <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
   <string name="addfriend_friend_message">Dołącz wiadomość</string>
-  <string name="addfriend_button">Dodaj znajomego</string>
-  <string name="addfriend_friend_added">Dodano znajomego</string>
-  <string name="addfriend_friend_exists">Znajomy już istnieje</string>
+  <string name="addfriend_button">Dodaj kontakt</string>
+  <string name="addfriend_friend_added">Dodano kontakt</string>
+  <string name="addfriend_friend_exists">Kontakt już istnieje</string>
   <string name="scanqr_button">Skanuj kod QR</string>
   <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
-  <string name="addfriend_nick_hint">Ustaw nick dla znajomego</string>
+  <string name="addfriend_nick_hint">Ustaw nick dla kontaktu</string>
   <string name="addfriend_optional_title">Dodatkowe</string>
-  <string name="dialog_pin">Wprowadź Pin znajomego</string>
+  <string name="dialog_pin">Wprowadź Pin kontaktu</string>
   <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
   <string name="addfriend_own_key">Nie możesz dodać samego siebie</string>
-  <string name="addfriend_friend_pin_title">Wpisz Pin znajomego</string>
-  <string name="addfriend_friend_pin_text">Wpisz Pin znajomego</string>
-  <string name="addfriend_default_message">Hej! Proszę, zaakceptuj moją prośbę o dodanie cię do znajomych</string>
+  <string name="addfriend_friend_pin_title">Wpisz Pin kontaktu</string>
+  <string name="addfriend_friend_pin_text">Wpisz Pin kontaktu</string>
+  <string name="addfriend_default_message">Hej! Proszę, zaakceptuj moją prośbę o dodanie Cię do kontaktów</string>
 
   <!--Friend Profile Activity-->
   <string name="friend_profile_nick">Nick</string>
   <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Status</string>
+  <string name="friend_profile_note">Opis</string>
   <string name="friend_profile_button">Aktualizuj</string>
   <string name="friend_profile_updated">Profil został zaktualizowany</string>
   <string name="friend_profile_copied">ID skopiowany</string>
@@ -69,27 +69,28 @@
   <string name="friend_profile_title">Profil %1$s</string>
   <string name="friendrequest_accept">Zaakceptuj</string>
   <string name="friendrequest_reject">Odrzuć</string>
-  <string name="friend_request">Nowa prośba o dodanie do znajomych</string>
+  <string name="friend_request">Nowa prośba o dodanie do kontaktów</string>
 
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Profil</string>
-  <string name="friend_action_delete">Usuń znajomego</string>
+  <string name="friend_action_delete">Usuń kontakt</string>
   <string name="friend_action_delete_chat">Usuń historię czatu</string>
   <string name="friend_action_block">Zablokuj</string>
   <string name="group_action_leave">Opuść grupę</string>
   <string name="contacts_actions_on"></string>
   <string name="contacts_delimiter_requests">Zaproszenia</string>
-  <string name="contacts_delimiter_friends">Znajomi</string>
+  <string name="contacts_delimiter_friends">Kontakty</string>
 
   <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Czy na pewno chcesz usunąć tego znajomego?</string>
+  <string name="friend_action_delete_friend_confirmation">Czy na pewno chcesz usunąć ten kontakt?</string>
 
   <!--Delete Chat Logs Dialog-->
   <string name="friend_action_delete_chat_confirmation">Czy na pewno chcesz usunąć historię czatu?</string>
 
   <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Zablokowanie tego znajomego usunie go z listy znajomych i uniemożliwi dodawanie cię do
-      jego znajomych.\n\nCzy na pewno chcesz kontynuować?</string>
+  <string name="friend_action_block_friend_confirmation">Zablokowanie tego kontaktu usunie go z listy i
+      uniemożliwi dodawanie cię do
+      jego kontaktów.\n\nCzy na pewno chcesz kontynuować?</string>
 
   <!--Chat Fragment-->
   <string name="attachment_photo">Dołącz zdjęcie</string>
@@ -117,8 +118,8 @@
   <string name="action_settings">Ustawienia</string>
 
   <!--QR-->
-  <string name="qr_default_title">Zainstalować skaner kodów?</string>
-  <string name="qr_default_message">Ta aplikacja wymaga skanera kodów kreskowych. Czy chciałbyś go zainstalować?</string>
+  <string name="qr_default_title">Zainstalować skaner kodów QR?</string>
+  <string name="qr_default_message">Ta aplikacja wymaga skanera kodów QR. Czy chciałbyś go zainstalować?</string>
   <string name="qr_button_yes">Tak</string>
   <string name="qr_button_no">Nie</string>
 
