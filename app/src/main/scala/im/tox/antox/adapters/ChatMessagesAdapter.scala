@@ -241,8 +241,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
             val file = f
             val okFileExtensions = Array("jpg", "png", "gif", "jpeg")
             for (extension <- okFileExtensions) {
-              Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
-              Log.d("ChatMessagesAdapter", extension)
+              //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
+              //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase().endsWith(extension)) {
                 Log.d("ChatMessagesAdapter", "true")
                 if (BitmapManager.checkValidImage(file)) {

@@ -97,7 +97,7 @@ class FileTransfer(val key: String,
     }
 
     def readData(reset: Boolean, chunkSize: Integer): Option[Array[Byte]] = {
-      Log.d(TAG, "reading data from " + file.getPath)
+      //Log.d(TAG, "reading data from " + file.getPath)
       createInputStream()
       _bInputStream match {
         case Some(s) =>
@@ -115,7 +115,7 @@ class FileTransfer(val key: String,
     }
 
     def writeData(data: Array[Byte]): Boolean = { //returns true if finished
-      Log.d(TAG, "writing data to " + file.getPath)
+      //Log.d(TAG, "writing data to " + file.getPath)
       createOutputStream()
       _bOutputStream match {
         case Some(s) =>
