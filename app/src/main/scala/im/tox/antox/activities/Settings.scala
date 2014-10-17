@@ -17,7 +17,7 @@ import im.tox.jtoxcore.ToxException
 
 object Settings {
 
-  private var sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
+  private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
@@ -62,7 +62,6 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
           val editor = preferences.edit()
           editor.putString("tox_id", toxSingleton.jTox.getAddress)
           editor.apply()
-          bindPreferenceSummaryToValue(findPreference("tox_id"))
         } catch {
           case e: ToxException => e.printStackTrace()
         }
