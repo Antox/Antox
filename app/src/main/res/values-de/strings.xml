@@ -123,7 +123,7 @@ Freundschaftsanfragen mehr von ihm erhalten. Bist du sicher, dass du diesen Benu
   <string name="qr_default_message">Diese Anwendung benötigt einen Barcodescanner. Möchtest du einen installieren?</string>
   <string name="qr_button_yes">Ja</string>
   <string name="qr_button_no">Nein</string>
-    
+
     <!-- nav bar -->
     <string name="n_settings">EINSTELLUNGEN</string>
     <string name="n_profile_options">PROFILE</string>
