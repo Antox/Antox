@@ -21,10 +21,6 @@
   <string name="pref_title_enable_notifications">Activar notificaciones</string>
   <string name="pref_title_new_message_notifications">Avisos de mensajes</string>
   <string name="pref_title_new_friend_notifications">Solicitud de amistad notificaciones</string>
-  <string name="pref_title_action_messages">Mensajes de acción</string>
-  <string name="pref_title_ringtone">Tono</string>
-  <string name="pref_ringtone_silent">Silencioso</string>
-  <string name="pref_title_vibrate">Vibrar</string>
   <!--Other-->
   <string name="pref_header_other">Otro</string>
   <string name="pref_title_language">Idioma</string>
@@ -32,5 +28,4 @@
   <string name="copy_tox_id">Copiar la Identificación Tox</string>
   <!--Advanced strings-->
   <string name="pref_advanced">Avanzado</string>
-  <string name="pref_nospam">Nospam</string>
 </resources>

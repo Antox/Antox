@@ -22,16 +22,15 @@
   <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
   <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
   <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
-  <string name="pref_title_action_messages">Handlingsmeddelanden</string>
-  <string name="pref_title_ringtone">Ringsignal</string>
-  <string name="pref_ringtone_silent">Tyst</string>
-  <string name="pref_title_vibrate">Vibrera</string>
   <!--Other-->
   <string name="pref_header_other">Annat</string>
+  <string name="pref_title_connection_status_messages">Online-/Offlinemeddelanden</string>
+  <string name="pref_title_wifi_only">Endast Wi-Fi</string>
   <string name="pref_title_language">Språk</string>
   <!--Menu strings-->
   <string name="copy_tox_id">Kopiera Tox ID</string>
   <!--Advanced strings-->
+  <string name="pref_udp">Aktivera UDP</string>
   <string name="pref_advanced">Avancerat</string>
-  <string name="pref_nospam">Nospam</string>
+  <string name="pref_nospam">Generera Nytt Nospam</string>
 </resources>

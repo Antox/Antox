@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
   <!--Activity titles-->
   <string name="title_activity_add_friend">Freund hinzufügen</string>
   <string name="title_activity_friend_profile">Profil des Freundes</string>
@@ -33,6 +32,7 @@
         Du bist nicht mit dem Internet verbunden. Ohne Internetverbindung
         funktioniert Antox nur eingeschränkt.
   </string>
+
   <string name="search_all_contacts">Durchsuche alle Kontakte</string>
 
   <!--Chat Activity-->
@@ -65,7 +65,7 @@
   <string name="friend_profile_copied">Tox ID kopiert</string>
 
   <!--Friend request fragment-->
-  <string name="friend_profile_title">%1$s\' Profil</string>
+  <string name="friend_profile_title">%1$s\'s Profil</string>
   <string name="friendrequest_accept">Akzeptieren</string>
   <string name="friendrequest_reject">Ablehnen</string>
   <string name="friend_request">Neue Freundschaftsanfrage</string>
@@ -123,7 +123,7 @@ Freundschaftsanfragen mehr von ihm erhalten. Bist du sicher, dass du diesen Benu
   <string name="qr_default_message">Diese Anwendung benötigt einen Barcodescanner. Möchtest du einen installieren?</string>
   <string name="qr_button_yes">Ja</string>
   <string name="qr_button_no">Nein</string>
-
+    
     <!-- nav bar -->
     <string name="n_settings">EINSTELLUNGEN</string>
     <string name="n_profile_options">PROFILE</string>
@@ -149,5 +149,4 @@ Freundschaftsanfragen mehr von ihm erhalten. Bist du sicher, dass du diesen Benu
     <string name="about_antox_4">-Dateiübertragungen</string>
     <string name="about_antox_5">In Arbeit:</string>
     <string name="about_antox_6">-A/V in Antox</string>
-
 </resources>

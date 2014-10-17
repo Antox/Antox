@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="app_name">Antox</string>
   <!--Activity titles-->
   <string name="title_activity_add_friend">Voeg vriend toe</string>
   <!--Navigation / Action Bar-->
@@ -8,17 +7,7 @@
   <!--Login Activity-->
   <!--Create Account Activity-->
   <!--Main Activity-->
-  <string name="main_avatar">Avatar</string>
-  <string name="main_username">Gebruikersnaam</string>
-  <string name="main_status">Status</string>
-  <string name="icon_description">Verbindingsstatus</string>
-  <string name="main_no_friends">Je hebt geen vrienden</string>
-  <string name="main_try_adding">Voeg wat vrienden toe om te beginnen</string>
-  <string name="main_friend_requests">Vriendschapsverzoeken</string>
-  <string name="main_friends">Vrienden</string>
   <string name="main_no_internet">Geen internetverbinding</string>
-  <string name="main_not_connected">Geen internetverbinding gevonden. Zonder een internetverbinding, zal je beperkte functionaliteit hebben.</string>
-  <string name="main_node_list_download_error">Kan nodelijst niet verkrijgen</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">Verstuur bericht</string>
   <!--Add Friend Activity-->
@@ -33,9 +22,7 @@
   <string name="addfriend_optional_title">Optionele extra\'s</string>
   <string name="dialog_pin">Voer de pin van je vriend in</string>
   <string name="addfriend_invalid_pin">Ongeldige Pin</string>
-  <string name="addfriend_no_internet">Geen Tox-netwerkverbinding</string>
   <!--Friend Profile Activity-->
-  <string name="friend_profile_name">Naam</string>
   <string name="friend_profile_nick">Bijnaam</string>
   <string name="friend_profile_key">Tox ID</string>
   <string name="friend_profile_note">Status</string>
@@ -44,20 +31,12 @@
   <!--Friend request fragment-->
   <string name="friendrequest_accept">Accepteer</string>
   <string name="friendrequest_reject">Weiger</string>
-  <string name="friendrequest_accepted">Vriendschapsverzoek geaccepteerd</string>
-  <string name="friendrequest_deleted">Vriendschapsverzoek verwijderd</string>
-  <string name="friendrequest">Vriendschapsverzoek</string>
-  <string name="friendrequest_recieved">Nieuw vriendschapsverzoek ontvangen</string>
   <string name="friend_request">Nieuw vriendschapsverzoek</string>
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Profiel</string>
-  <string name="friend_action_sendfile">Verstuur bestand</string>
   <string name="friend_action_delete">Verwijder</string>
   <string name="friend_action_block">Blokkeer</string>
-  <string name="friend_action_unblock">Deblokkeren</string>
-  <string name="group_action_leave">Verlaat groep</string>
   <string name="contacts_actions_on">Acties aan</string>
-  <string name="contacts_clear_saved_logs">Moeten de opgeslagen chatlogs meeverwijderd worden?</string>
   <!--Delete Friend Dialog-->
   <!--Delete Chat Logs Dialog-->
   <!--Block Friend Dialog-->
@@ -69,4 +48,5 @@
   <string name="button_yes">Ja</string>
   <string name="button_no">Nee</string>
   <!--QR-->
+  <!--nav bar-->
 </resources>

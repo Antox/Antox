@@ -15,22 +15,22 @@
   <string name="pref_default_status_message">Всем привет! Я пользуюсь Antox\'ом!</string>
   <string name="pref_title_tox_id">Tox ID</string>
   <string name="pref_default_tox_id">Tox ID по умолчанию - Вы будете видеть его</string>
+  <string name="pref_title_account_name">Имя профиля</string>
   <string name="pref_title_logout">Выход</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Уведомления</string>
   <string name="pref_title_enable_notifications">Включить уведомления</string>
   <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
-  <string name="pref_title_new_friend_notifications">Уведомления о запросе друга</string>
-  <string name="pref_title_action_messages">Сообщения о действиях</string>
-  <string name="pref_title_ringtone">Рингтон</string>
-  <string name="pref_ringtone_silent">Без звука</string>
-  <string name="pref_title_vibrate">Вибрировать</string>
+  <string name="pref_title_new_friend_notifications">Уведомления о добавления в друзья</string>
   <!--Other-->
   <string name="pref_header_other">Другое</string>
+  <string name="pref_title_connection_status_messages">Онлайн/Оффлайн сообщения</string>
+  <string name="pref_title_wifi_only">Только через Wi-Fi</string>
   <string name="pref_title_language">Язык</string>
   <!--Menu strings-->
   <string name="copy_tox_id">Скопировать Tox ID</string>
   <!--Advanced strings-->
+  <string name="pref_udp">Использовать UDP</string>
   <string name="pref_advanced">Дополнительно</string>
-  <string name="pref_nospam">Nospam</string>
+  <string name="pref_nospam">Создать новый NoSpam</string>
 </resources>

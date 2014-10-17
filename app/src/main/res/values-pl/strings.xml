@@ -1,45 +1,35 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-
-  <string name="app_name">Antox</string>
-
   <!--Activity titles-->
   <string name="title_activity_add_friend">Dodaj znajomego</string>
   <string name="title_activity_friend_profile">Profil znajomego</string>
-
+  <string name="title_activity_profile_settings">Opcje profilu</string>
   <!--Navigation / Action Bar-->
   <string name="add_friend">Dodaj kontakt</string>
 
   <!--Login Activity-->
-  <string name="login_must_fill_in">Musisz podać nazwę profilu</string>
+  <string name="login_must_fill_in">Musisz uzupełnić nazwę użytkownika</string>
   <string name="login_login">Login</string>
   <string name="login_account_hint">Nazwa profilu</string>
-  <string name="login_create_account_text">Utwórz profil Tox</string>
-  <string name="login_bad_login">Profil o takiej nazwie nie istnieje</string>
-
+  <string name="login_create_account_text">Utwórz profil Toxa</string>
+  <string name="login_bad_login">Nazwa profilu nie została rozpoznana</string>
   <!--Create Account Activity-->
   <string name="create_name_hint">Nazwa profilu</string>
-  <string name="create_text">Utwórz nowy profil\nKażdy profil używa osobnego Tox ID</string>
+  <string name="create_text">Twój slogan</string>
   <string name="create_register">Zarejestruj</string>
-  <string name="create_skip">Pozwól każdemu mnie dodać po mojej nazwie profilu</string>
-  <string name="create_must_fill_in">Musisz wypełnić wszystkie pola</string>
-  <string name="create_bad_profile_name">Nazwa profilu nie może zawierać spacji lub ukośników</string>
-
+  <string name="create_register_incog">Zarejestruj w trybie prywatnym</string>
+  <string name="create_skip">Pozwól każdemu na dodanie do listy z twoją nazwą profilu</string>
+  <string name="create_must_fill_in">Musisz uzupełnić wszystkie pola</string>
+  <string name="create_bad_profile_name">Nazwa profilu nie może być pusta lub zawierać spacje lub ukośniki</string>
   <!--Main Activity-->
-  <string name="title">antox</string>
-  <string name="main_no_active_chat">Brak aktywnych rozmów. Możesz zacząć rozmowę wybierając znajomego z panelu po lewej.</string>
-  <string name="main_recent_no">Brak ostatnich rozmów</string>
+  <string name="main_no_active_chat">Chat nieaktywny. Uruchom jakiś wybierając znajomego z panelu po lewej.</string>
+  <string name="main_recent_no">Brak niedawnych rozmów</string>
   <string name="main_no_internet">Brak połączenia z Internetem</string>
-  <string name="main_not_connected">Nie wykryto połączenia z internetem. Bez połączenia z internetem funkcjonalność
-      będzie ograniczona, za wyjątkiem sytuacji w której Antox jest używany tylko w LAN-ie</string>
-  <string name="search_all_contacts">Znajdź kontakty</string>
-
+  <string name="main_not_connected">Nie wykryto połączenia z Internetem. Bez połączenia z Internetem funkcjonalność Antoxa jest ograniczona do sieci lokalnej</string>
+  <string name="search_all_contacts">Przeszukaj wszystkie kontakty</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">Wyślij wiadomość</string>
   <string name="chat_file_transfer">Przesyłanie plików</string>
-  <string name="accept_caps">ZAAKCPETUJ</string>
-  <string name="reject_caps">ODMÓW</string>
-
   <!--Add Friend Activity-->
   <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
   <string name="addfriend_friend_message">Dołącz wiadomość</string>
@@ -63,10 +53,9 @@
   <string name="friend_profile_note">Opis</string>
   <string name="friend_profile_button">Aktualizuj</string>
   <string name="friend_profile_updated">Profil został zaktualizowany</string>
-  <string name="friend_profile_copied">ID skopiowany</string>
-
+  <string name="friend_profile_copied">ID skopiowane</string>
   <!--Friend request fragment-->
-  <string name="friend_profile_title">Profil %1$s</string>
+  <string name="friend_profile_title">Profil użytkownika %1$s\'</string>
   <string name="friendrequest_accept">Zaakceptuj</string>
   <string name="friendrequest_reject">Odrzuć</string>
   <string name="friend_request">Nowa prośba o dodanie do kontaktów</string>
@@ -85,8 +74,7 @@
   <string name="friend_action_delete_friend_confirmation">Czy na pewno chcesz usunąć ten kontakt?</string>
 
   <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Czy na pewno chcesz usunąć historię czatu?</string>
-
+  <string name="friend_action_delete_chat_confirmation">Jesteś pewien, że chcesz usunąć rozmowy?</string>
   <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Zablokowanie tego kontaktu usunie go z listy i
       uniemożliwi dodawanie cię do
@@ -94,15 +82,14 @@
 
   <!--Chat Fragment-->
   <string name="attachment_photo">Dołącz zdjęcie</string>
+  <string name="attachment_file">Załącz plik</string>
   <string name="attachment_takephoto">Zrób zdjęcie</string>
   <string name="message_copy">Skopiuj wiadomość</string>
   <string name="message_delete">Usuń wiadomość</string>
-
   <!--Left Pane Fragment-->
   <string name="titles_recent">Ostatnie</string>
   <string name="titles_contacts">Kontakty</string>
   <string name="titles_settings">Ustawienia</string>
-
   <!--Misc-->
   <string name="button_confirm">Potwierdź</string>
   <string name="button_cancel">Anuluj</string>
@@ -110,17 +97,37 @@
   <string name="button_no">Nie</string>
   <string name="button_ok">OK</string>
   <string name="dialog_tox_id">Kopiuj Tox ID do schowka</string>
-  <string name="share_with">Udostępnij</string>
+  <string name="share_with">Podziel się z</string>
   <string name="connection_has">jest</string>
   <string name="connection_online">online</string>
   <string name="connection_offline">offline</string>
   <string name="title_activity_create_acccount">CreateAcccountActivity</string>
   <string name="action_settings">Ustawienia</string>
-
   <!--QR-->
   <string name="qr_default_title">Zainstalować skaner kodów QR?</string>
   <string name="qr_default_message">Ta aplikacja wymaga skanera kodów QR. Czy chciałbyś go zainstalować?</string>
+
   <string name="qr_button_yes">Tak</string>
   <string name="qr_button_no">Nie</string>
-
+  <!--nav bar-->
+  <string name="n_settings">USTAWIENIA</string>
+  <string name="n_profile_options">PROFIL</string>
+  <string name="n_create_group">UTWÓRZ GRUPĘ</string>
+  <string name="n_add_person">DODAJ OSOBĘ</string>
+  <string name="n_about">O</string>
+  <string name="n_open_source">LICENCJA OPEN SOURCE</string>
+  <string name="n_logout">WYLOGUJ SIĘ</string>
+  <string name="drawer_open">Otwórz pasek nawigacyjny</string>
+  <string name="drawer_close">Zamknij pasek nawigacyjny</string>
+  <string name="open_source_license">Licencja open source</string>
+  <string name="license1">Rozpowszechniany jako GNU GPL v3.</string>
+  <string name="license2">Kod źródłowy jest dostępny na\nhttps://github.com/Astonex/Antox</string>
+  <string name="ver">Wersja</string>
+  <string name="about">O</string>
+  <string name="about_antox_1">Wraz ze wzrostem państwowych programów monitorujących, Tox stanowi łatwy w użyciu program, który pozwala łączyć się z rodziną i znajomymi bez obawy o podsłuch.</string>
+  <string name="about_antox_2">Co obecnie działa:</string>
+  <string name="about_antox_3">-Wiadomości - bez czatu grupowego</string>
+  <string name="about_antox_4">-Transfer plików</string>
+  <string name="about_antox_5">Bieżący postęp:</string>
+  <string name="about_antox_6">-Obecnie wdrażana jest usługa A/V</string>
 </resources>

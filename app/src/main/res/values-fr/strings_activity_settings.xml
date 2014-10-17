@@ -11,10 +11,10 @@
     <item>Absent</item>
     <item>Occupé</item>
   </string-array>
-  <string name="pref_title_status_message">Message de statut</string>
-  <string name="pref_default_status_message">Salut! J\'utilise Antox</string>
-  <string name="pref_title_tox_id">ID Tox</string>
-  <string name="pref_default_tox_id">ID Tox par défaut - Vous ne devriez pas le voir</string>
+  <string name="pref_title_status_message">Message d\'humeur</string>
+  <string name="pref_default_status_message">Bonjour! J\'utilise Antox</string>
+  <string name="pref_title_tox_id">Identifiant Tox</string>
+  <string name="pref_default_tox_id">Identifiant Tox par défaut - ce champ devrait être caché normalement</string>
   <string name="pref_title_account_name">Nom du profil</string>
   <string name="pref_title_logout">Se déconnecter</string>
   <!--Notifications-->
@@ -22,16 +22,15 @@
   <string name="pref_title_enable_notifications">Activer les notifications</string>
   <string name="pref_title_new_message_notifications">Notifications de message</string>
   <string name="pref_title_new_friend_notifications">Notifications de demandes d\'amis</string>
-  <string name="pref_title_action_messages">Utiliser les message d\'action</string>
-  <string name="pref_title_ringtone">Sonnerie</string>
-  <string name="pref_ringtone_silent">Mode silencieux</string>
-  <string name="pref_title_vibrate">Vibreur</string>
   <!--Other-->
   <string name="pref_header_other">Autres paramètres</string>
+  <string name="pref_title_connection_status_messages">Messages en ligne/hors-ligne</string>
+  <string name="pref_title_wifi_only">Se connecter exclusivement en Wi-Fi</string>
   <string name="pref_title_language">Langue</string>
   <!--Menu strings-->
-  <string name="copy_tox_id">Copier l\'ID Tox</string>
+  <string name="copy_tox_id">Copier l\'identifiant Tox</string>
   <!--Advanced strings-->
+  <string name="pref_udp">Activer UDP</string>
   <string name="pref_advanced">Paramètres Avancés</string>
-  <string name="pref_nospam">Nospam</string>
+  <string name="pref_nospam">Générer un nouveau code antispam</string>
 </resources>
