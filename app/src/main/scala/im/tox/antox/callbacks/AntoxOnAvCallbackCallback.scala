@@ -18,6 +18,7 @@ class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCa
   var captureAudio: CaptureAudio = new CaptureAudio()
 
   def execute(callID: Int, callbackID: ToxAvCallbackID) {
+    /*
     Log.d("OnAvCallbackCallback", "Received a callback from: " + callID)
     val toxSingleton = ToxSingleton.getInstance
     try callbackID match {
@@ -47,5 +48,6 @@ class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCa
     } catch {
       case e: ToxException =>
     }
+    */
   }
 }
