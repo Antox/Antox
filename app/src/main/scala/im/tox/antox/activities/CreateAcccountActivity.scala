@@ -123,8 +123,17 @@ class CreateAcccountActivity extends ActionBarActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
+    val db = new UserDB(this)
+
     if (!validAccountName(account)) {
       showBadAccountNameError()
+    } else if (db.login(account)) {
+      /* Check if user exists. This login() function simply checks if the username is in the database */
+      val context = getApplicationContext
+      val text = getString(R.string.create_profile_exists)
+      val duration = Toast.LENGTH_LONG
+      val toast = Toast.makeText(context, text, duration)
+      toast.show()
     } else {
       // Add user to db
       val db = new UserDB(this)
