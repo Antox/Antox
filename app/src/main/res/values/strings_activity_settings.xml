@@ -41,6 +41,7 @@
     <string-array name="pref_language_list_titles" translatable="false">
         <item>Български</item>
         <item>Català</item>
+        <item>čeština</item>
         <item>English</item>
         <item>Deutsch</item>
         <item>Español</item>
@@ -53,12 +54,14 @@
         <item>Svenska</item>
         <item>Türkçe</item>
         <item>Русский</item>
+        <item>Српски</item>
         <item>Український</item>
         <item>Português</item>
     </string-array>
     <string-array name="pref_language_list_values" translatable="false">
         <item>bg</item>
         <item>ca</item>
+        <item>cs</item>
         <item>en</item>
         <item>de</item>
         <item>es</item>
@@ -71,6 +74,7 @@
         <item>sv</item>
         <item>tr</item>
         <item>ru</item>
+        <item>sr</item>
         <item>uk</item>
         <item>pt</item>
     </string-array>

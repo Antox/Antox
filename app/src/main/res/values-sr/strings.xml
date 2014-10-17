@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add_friend">Додавање пријатеља</string>
+  <string name="title_activity_friend_profile">Пријатељев профил</string>
+  <string name="title_activity_profile_settings">Опције профила</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_friend">Додај пријатеља</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Морате унети име профила</string>
+  <string name="login_login">Пријава</string>
+  <string name="login_account_hint">Име профила</string>
+  <string name="login_create_account_text">Направи Токс профил</string>
+  <string name="login_bad_login">Име профила није препознато</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Име профила</string>
+  <string name="create_text">Парола овде</string>
+  <string name="create_register">Региструј</string>
+  <string name="create_register_incog">Региструј инкогнито</string>
+  <string name="create_skip">Дозволите свима да вас додају користећи ваше име профила</string>
+  <string name="create_must_fill_in">Морате испунити сва поља</string>
+  <string name="create_bad_profile_name">Име профила не може да садржи размаке, косе црте или да буде празно</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">Нема активног ћаскања. Почните избором пријатеља са окна с лева.</string>
+  <string name="main_recent_no">Нема недавних разговора</string>
+  <string name="main_no_internet">Нема везе са интернетом</string>
+  <string name="main_not_connected">Интернет веза није откривена. Без интернет везе имаћете ограничену функционалност, осим ако не користите Антокс само за ЛАН</string>
+  <string name="search_all_contacts">Претражи све контакте</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Пошаљи поруку</string>
+  <string name="chat_file_transfer">Пренос фајлова</string>
+  <!--Add Friend Activity-->
+  <string name="addfriend_friend_key">Токс ИД вашег пријатеља</string>
+  <string name="addfriend_friend_message">Пошаљи поруку са захтевом</string>
+  <string name="addfriend_button">Додај пријатеља</string>
+  <string name="addfriend_friend_added">Пријатељ је додат</string>
+  <string name="addfriend_friend_exists">Пријатељ већ постоји</string>
+  <string name="scanqr_button">Очитај бар-код</string>
+  <string name="invalid_friend_ID">Неисправан Токс ИД</string>
+  <string name="addfriend_nick_hint">Поставите надимак за пријатеља</string>
+  <string name="addfriend_optional_title">Опциони додаци</string>
+  <string name="dialog_pin">Унесите пријатељев ПИН</string>
+  <string name="addfriend_invalid_pin">Неисправан ПИН</string>
+  <string name="addfriend_own_key">Не можете да додате себе</string>
+  <string name="addfriend_friend_pin_title">Унесите пријатељев ПИН</string>
+  <string name="addfriend_friend_pin_text">Унесите пријатељев ПИН</string>
+  <string name="addfriend_default_message">Здраво! Молим те прихвати мој захтев за пријатељство</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Надимак</string>
+  <string name="friend_profile_key">Токс ИД</string>
+  <string name="friend_profile_note">Стање</string>
+  <string name="friend_profile_button">Ажурирај</string>
+  <string name="friend_profile_updated">Профил је ажуриран</string>
+  <string name="friend_profile_copied">Токс ИД је копиран</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">Профил од %1$s</string>
+  <string name="friendrequest_accept">Прихвати</string>
+  <string name="friendrequest_reject">Одбиј</string>
+  <string name="friend_request">Нови захтев за пријатељством</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Профил</string>
+  <string name="friend_action_delete">Уклони пријатеља</string>
+  <string name="friend_action_delete_chat">Обриши дневнике ћаскања</string>
+  <string name="friend_action_block">Блокирај</string>
+  <string name="contacts_actions_on">Радње на</string>
+  <string name="contacts_delimiter_requests">Захтеви</string>
+  <string name="contacts_delimiter_friends">Пријатељи</string>
+  <string name="contacts_delimiter_offline">Није на вези</string>
+  <string name="contacts_delimiter_online">Присутан</string>
+  <string name="contacts_resend_friend_request">Поново пошаљи захтев</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Желите ли заиста да уклоните овог пријатеља?</string>
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Желите ли заиста да обришете дневнике ћаскања?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Блокирањем ових корисника уклонићете их са списка пријатеља и више нећете
+видети захтеве од њих.\n\nЖелите ли да наставите?</string>
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Приложи слику</string>
+  <string name="attachment_file">Приложи фајл</string>
+  <string name="attachment_takephoto">Фотографиши</string>
+  <string name="message_copy">Копирај поруку</string>
+  <string name="message_delete">Обриши поруку</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Недавно</string>
+  <string name="titles_contacts">Контакти</string>
+  <string name="titles_settings">Поставке</string>
+  <!--Misc-->
+  <string name="button_confirm">Потврди</string>
+  <string name="button_cancel">Одустани</string>
+  <string name="button_yes">Да</string>
+  <string name="button_no">Не</string>
+  <string name="button_ok">У реду</string>
+  <string name="dialog_tox_id">Копирај Токс ИД на клипборд</string>
+  <string name="share_with">Подели са</string>
+  <string name="connection_has">је</string>
+  <string name="connection_online">на вези</string>
+  <string name="connection_offline">ван везе</string>
+  <string name="title_activity_create_acccount">Активност прављења налога</string>
+  <string name="action_settings">Поставке</string>
+  <!--QR-->
+  <string name="qr_default_title">Да инсталирам Скенер бар-кода?</string>
+  <string name="qr_default_message">Ова апликација захтева читач бар-ко̂да. Желите ли да га инсталирате?</string>
+  <string name="qr_button_yes">Да</string>
+  <string name="qr_button_no">Не</string>
+  <!--nav bar-->
+  <string name="n_settings">ПОСТАВКЕ</string>
+  <string name="n_profile_options">ПРОФИЛ</string>
+  <string name="n_create_group">НАПРАВИ ГРУПУ</string>
+  <string name="n_add_person">ДОДАЈ ОСОБУ</string>
+  <string name="n_about">О ПРОГРАМУ</string>
+  <string name="n_open_source">ЛИЦЕНЦА ОТВОРЕНОГ КОДА</string>
+  <string name="n_logout">Одјава</string>
+  <string name="drawer_open">Отвори навигациону фиоку</string>
+  <string name="drawer_close">Затвори навигациону фиоку</string>
+  <string name="open_source_license">Лиценца отвореног кода</string>
+  <string name="ver">Издање</string>
+  <string name="about">О програму</string>
+  <string name="about_antox_1">Са успоном владиних програма за праћење, Токс пружа апликацију лаку за коришћење која вам омогућује да се повежете са пријатељима и породицом а да вас нико не прислушкује.</string>
+  <string name="about_antox_2">Шта тренутно ради:</string>
+  <string name="about_antox_3">- основна размена порука — ово не укључује групна ћаскања</string>
+  <string name="about_antox_4">- преноси фајлова</string>
+  <string name="about_antox_5">Тренутно у развоју:</string>
+  <string name="about_antox_6">- имплементација аудио/видео ћаскања у Антокс</string>
+</resources>

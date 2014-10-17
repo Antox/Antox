@@ -27,6 +27,7 @@
   <string name="pref_title_enable_notifications">Benachrichtigungen aktivieren</string>
   <string name="pref_title_new_message_notifications">Benachrichtigung bei Nachrichten</string>
   <string name="pref_title_new_friend_notifications">Benachrichtigung bei Freundschaftsanfragen</string>
+<<<<<<< HEAD
   <string name="pref_title_action_messages">Aktionsnachrichten</string>
   <string name="pref_title_ringtone">Klingelton</string>
   <string name="pref_ringtone_silent">Lautlos</string>
@@ -36,13 +37,23 @@
   <string name="pref_header_other">Andere</string>
   <string name="pref_title_connection_status_messages">Online/Offline Nachrichten</string>
   <string name="pref_title_wifi_only">Nur WLAN</string>
+=======
+  <!--Other-->
+  <string name="pref_header_other">Andere</string>
+  <string name="pref_title_connection_status_messages">Online/Offline Nachrichten</string>
+  <string name="pref_title_wifi_only">nur WLAN</string>
+>>>>>>> fireflystorm-master
   <string name="pref_title_language">Sprache</string>
 
   <!--Menu strings-->
   <string name="copy_tox_id">Tox-ID kopieren</string>
 
   <!--Advanced strings-->
+<<<<<<< HEAD
     <string name="pref_udp">UDP aktiviern</string>
+=======
+  <string name="pref_udp">UDP aktivieren</string>
+>>>>>>> fireflystorm-master
   <string name="pref_advanced">Erweitert</string>
-  <string name="pref_nospam">Nospam</string>
+  <string name="pref_nospam">Neuen Nospam-Wert generieren</string>
 </resources>

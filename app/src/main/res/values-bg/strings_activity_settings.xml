@@ -22,16 +22,15 @@
   <string name="pref_title_enable_notifications">Включи известия</string>
   <string name="pref_title_new_message_notifications">Известия за съобщения</string>
   <string name="pref_title_new_friend_notifications">Известия за покани за приятелство</string>
-  <string name="pref_title_action_messages">Съобщения за действия</string>
-  <string name="pref_title_ringtone">Мелодия</string>
-  <string name="pref_ringtone_silent">Тихо</string>
-  <string name="pref_title_vibrate">Вибриране</string>
   <!--Other-->
   <string name="pref_header_other">Други</string>
+  <string name="pref_title_connection_status_messages">На линия/Отписан Съобщения</string>
+  <string name="pref_title_wifi_only">Само през Wi-Fi</string>
   <string name="pref_title_language">Език</string>
   <!--Menu strings-->
   <string name="copy_tox_id">Копирай Tox ID</string>
   <!--Advanced strings-->
+  <string name="pref_udp">Разреши UDP</string>
   <string name="pref_advanced">Допълнителни</string>
-  <string name="pref_nospam">Защита против спам</string>
+  <string name="pref_nospam">Генерирай нов Nospam</string>
 </resources>
