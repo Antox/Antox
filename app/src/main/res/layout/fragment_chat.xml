@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:src="@drawable/abc_ic_ab_back_holo_dark"/>
+            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
         </LinearLayout>
         <TextView
             android:id="@+id/chat_friend_status_icon"
