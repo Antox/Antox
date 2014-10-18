@@ -53,7 +53,7 @@ Transifex page - https://www.transifex.com/projects/p/antox/
 - Copy libjtoxcore.so to app/src/main/jniLibs/armeabi (you will need to create some of these folders)
 - Copy jToxcore.jar to app/libs/jToxcore.jar
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
-- Connect your phone with USB in developer mode and run `./gradle installDebug` from the root Antox directory. It will install Antox on to your phone, and you can now run it.
+- Connect your phone with USB in developer mode and run `./gradlew installDebug` from the root Antox directory. It will install Antox on to your phone, and you can now run it.
 - Run `adb logcat` to display the logs of your USB connected phone, to read error messages and crash logs etc.
 
 ###What Is Currently Working
