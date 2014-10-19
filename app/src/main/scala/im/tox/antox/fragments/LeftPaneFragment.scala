@@ -2,11 +2,17 @@ package im.tox.antox.fragments
 
 import android.app.ActionBar
 import android.app.FragmentTransaction
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v4.view.PagerTabStrip
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ImageSpan
+import android.text.style.DynamicDrawableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,17 +25,25 @@ class LeftPaneFragment extends Fragment {
 
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {
 
-    private val TITLES = Array(getString(R.string.titles_recent), getString(R.string.titles_contacts))
-
-    override def getPageTitle(position: Int): CharSequence = TITLES(position)
+    override def getPageTitle(position: Int): CharSequence = {
+      val drawableId = position match {
+        case 0 => R.drawable.ic_action_recent_tab
+        case _ => R.drawable.ic_action_contacts_tab
+      }
+      val drawable: Drawable = getResources.getDrawable(drawableId)
+      val sb: SpannableStringBuilder = new SpannableStringBuilder("")
+      drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
+      val span: ImageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BASELINE); 
+      sb.setSpan(span, 0, 0, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); 
+      return sb;
+    }
 
     override def getItem(pos: Int): Fragment = pos match {
       case 0 => new RecentFragment()
-      case 1 => new ContactsFragment()
       case _ => new ContactsFragment()
     }
 
-    override def getCount(): Int = TITLES.length
+    override def getCount(): Int = 2
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -37,8 +51,6 @@ class LeftPaneFragment extends Fragment {
     val actionBar = thisActivity.getActionBar()
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
-
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS)
 
     val tabListener = new ActionBar.TabListener() {
         def onTabSelected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
@@ -51,24 +63,11 @@ class LeftPaneFragment extends Fragment {
         def onTabReselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
         }
     }
-
-    actionBar.addTab(
-            actionBar.newTab()
-              .setIcon(R.drawable.ic_action_recent_tab)
-                    .setTabListener(tabListener))
-
-    actionBar.addTab(
-            actionBar.newTab()
-              .setIcon(R.drawable.ic_action_contacts_tab)
-                    .setTabListener(tabListener))
+    val pagerTabStrip = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerTabStrip]
+    pagerTabStrip.setDrawFullUnderline(true)
+    pagerTabStrip.setTabIndicatorColorResource(R.color.white_absolute)
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
-    pager.setOnPageChangeListener(
-            new ViewPager.SimpleOnPageChangeListener() {
-                override def onPageSelected(position: Int) = {
-                    thisActivity.getActionBar().setSelectedNavigationItem(position);
-                }
-            })
 
     rootView
   }
