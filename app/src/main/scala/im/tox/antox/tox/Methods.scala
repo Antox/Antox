@@ -1,12 +1,20 @@
 package im.tox.antox.tox
 
 import android.content.Context
+import android.util.Log
 import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.State
 import im.tox.antox.utils.AntoxFriend
+import im.tox.antox.utils.CaptureAudio
+import im.tox.antox.utils.Call
+import im.tox.antox.utils.CallManager
+import im.tox.jtoxcore.ToxCodecSettings
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
 object Methods {
+
+  val TAG = "im.tox.antox.tox.Methods"
 
   def sendMessage(ctx: Context, key: String, msg: String, mId: Option[Integer]) = {
     Observable[Boolean](subscriber => {
@@ -87,5 +95,16 @@ object Methods {
         }
       })
     }
+  }
+
+  def avAnswer(callID: Integer, toxCodecSettings: ToxCodecSettings) = {
+    ToxSingleton.jTox.avAnswer(callID, toxCodecSettings)
+    Log.d(TAG, "avAnswer audio sample rate: " + toxCodecSettings.audio_sample_rate)
+    val call = new Call(callID, toxCodecSettings, CaptureAudio.makeObservable(callID, toxCodecSettings).subscribeOn(IOScheduler()).subscribe())
+    State.calls.add(call)
+  }
+
+  def avEnd(callID: Integer) = {
+    State.calls.remove(callID)
   }
 }
