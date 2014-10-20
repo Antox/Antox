@@ -433,7 +433,7 @@ object ToxSingleton {
         }
         try {
           Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
-          val json = JsonReader.readJsonFromUrl("http://jfk.us.cdn.libtoxcore.so/elizabeth_remote/config/Nodefile.json")
+          val json = JsonReader.readJsonFromUrl("https://dist-build.tox.im/Nodefile.json")
             subscriber.onNext(json)
             subscriber.onCompleted()
           } catch {
