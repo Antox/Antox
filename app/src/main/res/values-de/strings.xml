@@ -3,7 +3,7 @@
   <!--Activity titles-->
   <string name="title_activity_add_friend">Freund hinzufügen</string>
   <string name="title_activity_friend_profile">Profil des Freundes</string>
-  <string name="title_activity_profile_settings">Profile options</string>
+  <string name="title_activity_profile_settings">Profil Einstellungen</string>
 
   <!--Navigation / Action Bar-->
   <string name="add_friend">Freund hinzufügen</string>
@@ -54,7 +54,7 @@
   <string name="addfriend_own_key">Du kannst dich nicht selbst hinzufügen</string>
   <string name="addfriend_friend_pin_title">Gib die Pin deines Freundes ein</string>
   <string name="addfriend_friend_pin_text">Gib die Pin deines Freundes ein</string>
-  <string name="addfriend_default_message">Hi! Bitte nimm mein Freundesanfrage an</string>
+  <string name="addfriend_default_message">Hi! Bitte nimm meine Freundesanfrage an</string>
 
   <!--Friend Profile Activity-->
   <string name="friend_profile_nick">Spitzname</string>
