@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ActionBar styles -->
+    <style name="ActionBar"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_background</item>
+        <item name="android:backgroundStacked">@color/action_bar_background</item>
+        <item name="android:backgroundSplit">@color/action_bar_background</item>
+        <!-- Support library compatibility -->
+        <item name="background">@color/action_bar_background</item>
+        <item name="backgroundStacked">@color/action_bar_background</item>
+        <item name="backgroundSplit">@color/action_bar_background</item>
+    </style>
+</resources>
