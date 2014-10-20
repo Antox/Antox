@@ -3,9 +3,6 @@
     <!-- the theme applied to the application or activity -->
     <style name="CustomActionBarTheme"
         parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/ActionBar</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabs</item>
-
         <!-- Support library compatibility -->
         <item name="actionBarStyle">@style/ActionBar</item>
         <item name="actionBarTabStyle">@style/ActionBarTabs</item>
@@ -14,9 +11,6 @@
     <!-- ActionBar styles -->
     <style name="ActionBar"
         parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/action_bar_background</item>
-        <item name="android:backgroundStacked">@color/action_bar_background</item>
-        <item name="android:backgroundSplit">@color/action_bar_background</item>
         <!-- Support library compatibility -->
         <item name="background">@color/action_bar_background</item>
         <item name="backgroundStacked">@color/action_bar_background</item>
