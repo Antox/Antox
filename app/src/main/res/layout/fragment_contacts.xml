@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contact_list"
@@ -46,31 +45,39 @@
         android:layout_height="1dp"
         android:background="@drawable/list_divider" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <ListView
-            android:id="@+id/contacts_list"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/white_absolute"
-            android:cacheColorHint="@android:color/transparent"
-            android:divider="@drawable/list_divider"
-            android:dividerHeight="0dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="true" />
-    </FrameLayout>
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true">
 
-    <com.shamanland.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_margin="@dimen/margin_medium"
-        android:onClick="onClickAddFriend"
-        app:floatingActionButtonColor="@color/fab_colors_list" />
+            <ListView
+                android:id="@+id/contacts_list"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/white_absolute"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/list_divider"
+                android:dividerHeight="0dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="true" />
+        </FrameLayout>
+
+        <com.shamanland.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:onClick="onClickAddFriend"
+            app:floatingActionButtonColor="@color/fab_colors_list"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_medium" />
+
+    </RelativeLayout>
 
 </LinearLayout>
-
