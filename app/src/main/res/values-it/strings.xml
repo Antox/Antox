@@ -3,6 +3,7 @@
   <!--Activity titles-->
   <string name="title_activity_add_friend">Aggiungi Contatto</string>
   <string name="title_activity_friend_profile">Profilo</string>
+  <string name="title_activity_profile_settings">Opzioni profilo</string>
   <!--Navigation / Action Bar-->
   <string name="add_friend">Aggiungi Contatto</string>
   <!--Login Activity-->
@@ -18,6 +19,8 @@
   <string name="create_register_incog">Crea profilo nascosto</string>
   <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
+  <string name="create_bad_profile_name">Il nome profilo non può contenere \" \", \"/\", \"\\" o essere vuoto</string>
+  <string name="create_profile_exists">Questo nome profilo esiste già</string>
   <!--Main Activity-->
   <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
   <string name="main_recent_no">Nessuna coversazione recente</string>
@@ -103,4 +106,24 @@ richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <string name="qr_button_yes">Sì</string>
   <string name="qr_button_no">No</string>
   <!--nav bar-->
+  <string name="n_settings">IMPOSTAZIONI</string>
+  <string name="n_profile_options">PROFILO</string>
+  <string name="n_create_group">CREA GRUPPO</string>
+  <string name="n_add_person">AGGIUNGI CONTATTO</string>
+  <string name="n_about">INFORMAZIONI</string>
+  <string name="n_open_source">LICENZA</string>
+  <string name="n_logout">LOGOUT</string>
+  <string name="drawer_open">Apri navigation drawer</string>
+  <string name="drawer_close">Chuidi navigation drawer</string>
+  <string name="open_source_license">Licenza</string>
+  <string name="license1">Distribuito sotto licenza GNU GPL v3</string>
+  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Astonex/Antox</string>
+  <string name="ver">Versione</string>
+  <string name="about">Informazioni</string>
+  <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>
+  <string name="about_antox_2">Cosa Funziona:</string>
+  <string name="about_antox_3">-Chat base - questo non include le chat di gruppo</string>
+  <string name="about_antox_4">-Trasferimento file</string>
+  <string name="about_antox_5">In Sviluppo:</string>
+  <string name="about_antox_6">-Audio/Video</string>
 </resources>
