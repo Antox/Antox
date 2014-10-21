@@ -29,12 +29,12 @@ import scala.beans.BeanProperty
 
 //remove if not needed
 
-class CreateAcccountActivity extends ActionBarActivity {
+class CreateAccountActivity extends ActionBarActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     getSupportActionBar.hide()
-    setContentView(R.layout.activity_create_acccount)
+    setContentView(R.layout.activity_create_account)
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -42,7 +42,7 @@ class CreateAcccountActivity extends ActionBarActivity {
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
-    getMenuInflater.inflate(R.menu.create_acccount, menu)
+    getMenuInflater.inflate(R.menu.create_account, menu)
     true
   }
 
@@ -60,9 +60,9 @@ class CreateAcccountActivity extends ActionBarActivity {
     var matcher = pattern.matcher(account)
     val containsSpaces = matcher.find()
     matcher = pattern2.matcher(account)
-    val containsFileSeperator = matcher.find()
+    val containsFileSeparator = matcher.find()
 
-    if(account == "" || containsSpaces || containsFileSeperator)
+    if (account == "" || containsSpaces || containsFileSeparator)
       return false
 
     true
@@ -76,7 +76,7 @@ class CreateAcccountActivity extends ActionBarActivity {
     toast.show()
   }
 
-  def saveAccountAndStartMain(accountName : String, toxID : String) {
+  def saveAccountAndStartMain(accountName: String, toxID: String) {
     // Save preferences
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val editor = preferences.edit()
@@ -106,7 +106,7 @@ class CreateAcccountActivity extends ActionBarActivity {
   }
 
   def createToxData(accountName: String): ToxData = {
-    var toxData = new ToxData
+    val toxData = new ToxData
 
     val antoxFriendList = new AntoxFriendList()
     val callbackHandler = new CallbackHandler(antoxFriendList)
@@ -119,7 +119,7 @@ class CreateAcccountActivity extends ActionBarActivity {
     toxData
   }
 
-  def onClickRegisterIncogAccount(view: View) {
+  def onClickRegisterIncognitoAccount(view: View) {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
@@ -141,7 +141,7 @@ class CreateAcccountActivity extends ActionBarActivity {
       db.close()
 
       try {
-        var toxData = createToxData(account)
+        val toxData = createToxData(account)
 
         saveAccountAndStartMain(account, toxData.ID)
       } catch {
@@ -179,21 +179,21 @@ class CreateAcccountActivity extends ActionBarActivity {
       }
 
       val allow = 0
-      val jsonPost = new JSONPost()
+      val jsonPost = new JSONPost
       val toxmeThread = new Thread(jsonPost)
 
       try {
-        val unencryptedPayload = new JSONObject()
+        val unencryptedPayload = new JSONObject
         unencryptedPayload.put("tox_id", toxData.ID)
         unencryptedPayload.put("name", account)
         unencryptedPayload.put("privacy", allow)
         unencryptedPayload.put("bio", "")
         val epoch = System.currentTimeMillis() / 1000
         unencryptedPayload.put("timestamp", epoch)
-        val hexEncoder = new Hex()
-        val rawEncoder = new Raw()
-        val toxmepk = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
-        val serverPublicKey = hexEncoder.decode(toxmepk)
+        val hexEncoder = new Hex
+        val rawEncoder = new Raw
+        val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
+        val serverPublicKey = hexEncoder.decode(toxmePK)
         val ourSecretKey = Array.ofDim[Byte](32)
         System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
         val box = new Box(serverPublicKey, ourSecretKey)
@@ -204,7 +204,7 @@ class CreateAcccountActivity extends ActionBarActivity {
         nonce = Base64.encode(nonce, Base64.NO_WRAP)
         val payload = rawEncoder.encode(payloadBytes)
         val nonceString = rawEncoder.encode(nonce)
-        val json = new JSONObject()
+        val json = new JSONObject
         json.put("action", 1)
         json.put("public_key", toxData.ID.substring(0, 64))
         json.put("encrypted", payload)
@@ -213,30 +213,23 @@ class CreateAcccountActivity extends ActionBarActivity {
         toxmeThread.start()
         toxmeThread.join()
       } catch {
-        case e: JSONException => Log.d("CreateAcccount", "JSON Exception " + e.getMessage)
+        case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
         case e: InterruptedException =>
       }
 
-      var toastMessage = ""
-      val context = getApplicationContext
-      val duration = Toast.LENGTH_SHORT
-      var toast: Toast = null
-      val errorCode = jsonPost.getErrorCode
+      val toastMessage = jsonPost.getErrorCode match {
+        case "0" =>
+          saveAccountAndStartMain(account, toxData.ID)
+          null
+        case "-25" => "This name is already taken"
+        case "-26" => "Internal Antox Error. Please restart and try again"
+        case "-4" => "You can only register 13 accounts an hour. You have reached this limit"
+      }
 
-      if ("0" == errorCode) {
-        saveAccountAndStartMain(account, toxData.ID)
-      } else if ("-25" == errorCode) {
-        toastMessage = "This name is already taken"
-        toast = Toast.makeText(context, toastMessage, duration)
-        toast.show()
-      } else if ("-26" == errorCode) {
-        toastMessage = "Internal Antox Error. Please restart and try again"
-        toast = Toast.makeText(context, toastMessage, duration)
-        toast.show()
-      } else if ("-4" == errorCode) {
-        toastMessage = "You can only register 13 accounts an hour. You have reached this limit"
-        toast = Toast.makeText(context, toastMessage, duration)
-        toast.show()
+      if (toastMessage != null) {
+        val context = getApplicationContext
+        val duration = Toast.LENGTH_SHORT
+        Toast.makeText(context, toastMessage, duration).show()
       }
     }
   }
@@ -245,14 +238,14 @@ class CreateAcccountActivity extends ActionBarActivity {
 
     @volatile private var errorCode: String = "notdone"
 
-    private var finaljson: String = _
+    private var finalJson: String = _
 
     def run() {
       val httpClient = new DefaultHttpClient()
       try {
         val post = new HttpPost("https://toxme.se/api")
         post.setHeader("Content-Type", "application/json")
-        post.setEntity(new StringEntity(finaljson.toString))
+        post.setEntity(new StringEntity(finalJson.toString))
         val response = httpClient.execute(post)
         Log.d("CreateAccount", "Response code: " + response.toString)
         val entity = response.getEntity
@@ -283,7 +276,7 @@ class CreateAcccountActivity extends ActionBarActivity {
 
     def setJSON(json: String) {
       synchronized {
-        finaljson = json
+        finalJson = json
       }
     }
   }

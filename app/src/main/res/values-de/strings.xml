@@ -115,7 +115,7 @@ Freundschaftsanfragen mehr von ihm erhalten. Bist du sicher, dass du diesen Benu
   <string name="connection_has">ist</string>
   <string name="connection_online">nun Online</string>
   <string name="connection_offline">nun Offline</string>
-  <string name="title_activity_create_acccount">Konto erstellen</string>
+  <string name="title_activity_create_account">Konto erstellen</string>
   <string name="action_settings">Einstellungen</string>
 
   <!--QR-->
