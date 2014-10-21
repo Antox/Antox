@@ -3,6 +3,7 @@ package im.tox.antox.adapters
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.os.Build
 import android.support.v4.widget.ResourceCursorAdapter
 import android.view.LayoutInflater
 import android.view.View
@@ -62,7 +63,11 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     holder.friendStatus.setText(message)
     holder.unreadCount.setText(java.lang.Integer.toString(unreadCount))
     holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(time, false))
-    holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(online, UserStatus.getToxUserStatusFromString(status))))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(online, UserStatus.getToxUserStatusFromString(status))))
+    } else {
+      holder.icon.setBackgroundDrawable(context.getResources.getDrawable(IconColor.iconDrawable(online, UserStatus.getToxUserStatusFromString(status))))
+    }
     if (unreadCount == 0) {
       holder.unreadCount.setVisibility(View.GONE)
     } else {
