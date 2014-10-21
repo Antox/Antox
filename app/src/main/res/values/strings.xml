@@ -116,7 +116,7 @@
     <string name="connection_has">has</string>
     <string name="connection_online">come online</string>
     <string name="connection_offline">gone offline</string>
-    <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="action_settings">Settings</string>
 
     <!-- QR -->

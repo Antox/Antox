@@ -101,7 +101,7 @@
   <string name="connection_has">jest</string>
   <string name="connection_online">online</string>
   <string name="connection_offline">offline</string>
-  <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+  <string name="title_activity_create_account">CreateAccountActivity</string>
   <string name="action_settings">Ustawienia</string>
   <!--QR-->
   <string name="qr_default_title">Zainstalować skaner kodów QR?</string>

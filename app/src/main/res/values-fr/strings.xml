@@ -97,7 +97,7 @@ Sans connexion à internet, les fonctionnalités auxquelles vous avez accès son
   <string name="connection_has">a</string>
   <string name="connection_online">s\'est connecté</string>
   <string name="connection_offline">s\'est déconnecté</string>
-  <string name="title_activity_create_acccount">Créer un compte</string>
+  <string name="title_activity_create_account">Créer un compte</string>
   <string name="action_settings">Paramètres</string>
   <!--QR-->
   <string name="qr_default_title">Installer un lecteur de codes-barres?</string>

@@ -90,8 +90,8 @@
         </receiver>
 
         <activity
-            android:name=".activities.CreateAcccountActivity"
-            android:label="@string/title_activity_create_acccount" />
+            android:name=".activities.CreateAccountActivity"
+            android:label="@string/title_activity_create_account" />
         <activity
             android:name=".activities.Settings"
             android:label="@string/action_settings"/>

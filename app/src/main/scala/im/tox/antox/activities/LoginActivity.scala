@@ -30,7 +30,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
     val db = new UserDB(this)
     if (!db.doUsersExist()) {
       db.close()
-      val createAccount = new Intent(getApplicationContext, classOf[CreateAcccountActivity])
+      val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
       startActivity(createAccount)
       finish()
     } else if (preferences.getBoolean("loggedin", false)) {
@@ -100,7 +100,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
   }
 
   def onClickCreateAccount(view: View) {
-    val createAccount = new Intent(getApplicationContext, classOf[CreateAcccountActivity])
+    val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
     startActivityForResult(createAccount, 1)
   }
 
