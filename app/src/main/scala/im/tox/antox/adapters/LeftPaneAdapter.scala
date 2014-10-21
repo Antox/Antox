@@ -2,6 +2,7 @@ package im.tox.antox.adapters
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -114,7 +115,11 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         holder.countText.setVisibility(View.GONE)
       }
       holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false))
-      holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+      } else {
+        holder.icon.setBackgroundDrawable(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+      }
     }
     if (holder.timeText != null) {
       holder.timeText.setTextColor(context.getResources.getColor(R.color.grey_dark))

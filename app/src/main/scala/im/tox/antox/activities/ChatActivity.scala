@@ -7,7 +7,7 @@ import android.app.{Activity, AlertDialog}
 import android.content.{CursorLoader, DialogInterface, Intent, SharedPreferences}
 import android.database.Cursor
 import android.net.Uri
-import android.os.{Bundle, Environment}
+import android.os.{Build, Bundle, Environment}
 import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.support.v7.app.{ActionBar, ActionBarActivity}
@@ -232,7 +232,11 @@ class ChatActivity extends ActionBarActivity {
             } else {
               thisActivity.setDisplayName(friend.friendName)
             }
-            thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+              thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+            } else {
+              thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+            }
           }
           case None => {
             thisActivity.setDisplayName("")
