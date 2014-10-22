@@ -114,7 +114,7 @@
     <string name="connection_has">s\'ha</string>
     <string name="connection_online">connetat</string>
     <string name="connection_offline">desconnectat</string>
-    <string name="title_activity_create_acccount">Crear compte</string>
+    <string name="title_activity_create_account">Crear compte</string>
     <string name="action_settings">Configuració</string>
 
     <!-- QR -->

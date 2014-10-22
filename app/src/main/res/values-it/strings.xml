@@ -98,7 +98,7 @@ richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <string name="connection_has">è</string>
   <string name="connection_online">online</string>
   <string name="connection_offline">offline</string>
-  <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+  <string name="title_activity_create_account">CreateAccountActivity</string>
   <string name="action_settings">Impostazioni</string>
   <!--QR-->
   <string name="qr_default_title">Installare Barcode Scanner?</string>

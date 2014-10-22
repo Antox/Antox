@@ -96,7 +96,7 @@
   <string name="connection_has">ficou</string>
   <string name="connection_online">online</string>
   <string name="connection_offline">offline</string>
-  <string name="title_activity_create_acccount">Atividade de criação de contas</string>
+  <string name="title_activity_create_account">Atividade de criação de contas</string>
   <string name="action_settings">Configurações</string>
   <!--QR-->
   <string name="qr_default_title">instalar leitor de código de barras?</string>

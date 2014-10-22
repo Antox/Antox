@@ -94,7 +94,7 @@
   <string name="connection_has">перешел</string>
   <string name="connection_online">в онлайн</string>
   <string name="connection_offline">в оффлайн</string>
-  <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+  <string name="title_activity_create_account">CreateAccountActivity</string>
   <string name="action_settings">Настройки</string>
   <!--QR-->
   <string name="qr_default_title">Установить Сканер штрих-кодов?</string>

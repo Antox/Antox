@@ -95,7 +95,7 @@
   <string name="connection_has">се</string>
   <string name="connection_online">появи на линия</string>
   <string name="connection_offline">отписа</string>
-  <string name="title_activity_create_acccount">Създай Акаунт</string>
+  <string name="title_activity_create_account">Създай Акаунт</string>
   <string name="action_settings">Настройки</string>
   <!--QR-->
   <string name="qr_default_title">Инсталирай Баркод Скенер?</string>

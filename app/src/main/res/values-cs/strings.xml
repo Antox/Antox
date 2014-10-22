@@ -95,7 +95,7 @@ požadavky na přidání.\n\nOpravdu si přejete pokračovat?</string>
   <string name="connection_has">je</string>
   <string name="connection_online">připojen</string>
   <string name="connection_offline">odpojen</string>
-  <string name="title_activity_create_acccount">Vytvořit aktivitu účtu</string>
+  <string name="title_activity_create_account">Vytvořit aktivitu účtu</string>
   <string name="action_settings">Nastavení</string>
   <!--QR-->
   <string name="qr_default_title">Instalovat čtečku čárových kódů?</string>
