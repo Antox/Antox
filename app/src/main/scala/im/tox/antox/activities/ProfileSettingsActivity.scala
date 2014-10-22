@@ -22,7 +22,7 @@ import im.tox.jtoxcore.ToxException
 
 object ProfileSettingsActivity {
 
-  private var sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
+  private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
