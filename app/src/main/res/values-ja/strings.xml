@@ -97,7 +97,7 @@
   <string name="connection_has">が</string>
   <string name="connection_online">オンラインになりました</string>
   <string name="connection_offline">オフラインになりました</string>
-  <string name="title_activity_create_acccount">アカウントの作成</string>
+  <string name="title_activity_create_account">アカウントの作成</string>
   <string name="action_settings">設定</string>
   <!--QR-->
   <string name="qr_default_title">QRコードリーダーのインストール</string>

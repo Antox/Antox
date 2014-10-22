@@ -93,7 +93,7 @@
   <string name="connection_has">har</string>
   <string name="connection_online">loggat in</string>
   <string name="connection_offline">loggat ut</string>
-  <string name="title_activity_create_acccount">CreateAcccountActivity</string>
+  <string name="title_activity_create_account">CreateAccountActivity</string>
   <string name="action_settings">Inställningar</string>
   <!--QR-->
   <string name="qr_default_title">Installera Barcode Scanner?</string>

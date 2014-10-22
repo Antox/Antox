@@ -96,7 +96,7 @@
   <string name="connection_has">је</string>
   <string name="connection_online">на вези</string>
   <string name="connection_offline">ван везе</string>
-  <string name="title_activity_create_acccount">Активност прављења налога</string>
+  <string name="title_activity_create_account">Активност прављења налога</string>
   <string name="action_settings">Поставке</string>
   <!--QR-->
   <string name="qr_default_title">Да инсталирам Скенер бар-кода?</string>
