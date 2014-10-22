@@ -18,24 +18,27 @@ import android.view.View
 import android.view.ViewGroup
 import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
-//remove if not needed
-import scala.collection.JavaConversions._
 
 class LeftPaneFragment extends Fragment {
 
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {
 
     override def getPageTitle(position: Int): CharSequence = {
-      val drawableId = position match {
-        case 0 => R.drawable.ic_action_recent_tab
-        case _ => R.drawable.ic_action_contacts_tab
+
+      position match {
+        case 0 => return "Recent"
+        case _ => return "Contacts"
       }
+/*
       val drawable: Drawable = getResources.getDrawable(drawableId)
       val sb: SpannableStringBuilder = new SpannableStringBuilder("")
-      drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
-      val span: ImageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BASELINE); 
-      sb.setSpan(span, 0, 0, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); 
-      return sb;
+      drawable.setBounds(0, 0, drawable.getIntrinsicWidth, drawable.getIntrinsicHeight)
+      val span: ImageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BASELINE)
+      sb.setSpan(span, 0, 0, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+      sb
+      */
+
+      null
     }
 
     override def getItem(pos: Int): Fragment = pos match {
@@ -48,13 +51,13 @@ class LeftPaneFragment extends Fragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val thisActivity = this.getActivity.asInstanceOf[MainActivity]
-    val actionBar = thisActivity.getActionBar()
+    val actionBar = thisActivity.getActionBar
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
 
     val tabListener = new ActionBar.TabListener() {
         def onTabSelected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
-          pager.setCurrentItem(tab.getPosition())
+          pager.setCurrentItem(tab.getPosition)
         }
 
         def onTabUnselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
@@ -63,6 +66,7 @@ class LeftPaneFragment extends Fragment {
         def onTabReselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
         }
     }
+
     val pagerTabStrip = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerTabStrip]
     pagerTabStrip.setDrawFullUnderline(true)
     pagerTabStrip.setTabIndicatorColorResource(R.color.white_absolute)
