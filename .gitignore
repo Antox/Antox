@@ -1,3 +1,6 @@
+# Top-level generated gradle build file
+/build.gradle
+
 # built application files
 *.apk
 *.ap_
