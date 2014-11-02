@@ -8,6 +8,7 @@ public protected *;
 -dontoptimize
 -dontpreverify
 -dontwarn **
+-ignorewarnings
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**

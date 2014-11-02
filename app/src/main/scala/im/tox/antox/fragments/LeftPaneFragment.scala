@@ -2,17 +2,12 @@ package im.tox.antox.fragments
 
 import android.app.ActionBar
 import android.app.FragmentTransaction
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v4.view.PagerTabStrip
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ImageSpan
-import android.text.style.DynamicDrawableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
