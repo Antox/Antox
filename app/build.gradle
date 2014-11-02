@@ -52,9 +52,9 @@ dependencies {
     compile files('libs/dnsjava-2.1.6.jar')
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile 'org.scala-lang:scala-library:2.11.2'
-    compile 'com.android.support:support-v4:21.0.1'
+    compile 'com.android.support:support-v4:21.0.+'
     compile 'org.scaloid:scaloid_2.11:3.5-10'
-    compile 'com.android.support:appcompat-v7:21.0.1'
+    compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.netflix.rxjava:rxjava-core:0.20.4'
     compile 'com.netflix.rxjava:rxjava-android:0.20.4'
     compile 'com.netflix.rxjava:rxjava-scala:0.20.4'
