@@ -26,7 +26,6 @@
 
     <!--Main Activity-->
   <string name="main_recent_no">Keine kürzlichen Konversationen</string>
-  <string name="main_try_adding">Warum fügst du nicht welche hinzu?</string>
   <string name="main_no_internet">Keine Internetverbindung</string>
   <string name="main_not_connected">
         Du bist nicht mit dem Internet verbunden. Ohne Internetverbindung
