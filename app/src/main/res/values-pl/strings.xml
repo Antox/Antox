@@ -65,7 +65,6 @@
   <string name="friend_action_delete">Usuń kontakt</string>
   <string name="friend_action_delete_chat">Usuń historię czatu</string>
   <string name="friend_action_block">Zablokuj</string>
-  <string name="group_action_leave">Opuść grupę</string>
   <string name="contacts_actions_on"></string>
   <string name="contacts_delimiter_requests">Zaproszenia</string>
   <string name="contacts_delimiter_friends">Kontakty</string>

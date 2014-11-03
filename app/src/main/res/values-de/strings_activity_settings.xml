@@ -27,10 +27,6 @@
   <string name="pref_title_enable_notifications">Benachrichtigungen aktivieren</string>
   <string name="pref_title_new_message_notifications">Benachrichtigung bei Nachrichten</string>
   <string name="pref_title_new_friend_notifications">Benachrichtigung bei Freundschaftsanfragen</string>
-  <string name="pref_title_action_messages">Aktionsnachrichten</string>
-  <string name="pref_title_ringtone">Klingelton</string>
-  <string name="pref_ringtone_silent">Lautlos</string>
-  <string name="pref_title_vibrate">Vibration</string>
 
     <!--Other-->
   <string name="pref_header_other">Andere</string>

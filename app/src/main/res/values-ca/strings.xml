@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">Antox</string>
-
     <!-- Activity titles -->
     <string name="title_activity_add_friend">Afegir un amic</string>
     <string name="title_activity_friend_profile">Perfil de l\'amic</string>
@@ -38,8 +36,6 @@
     <!-- Chat Activity -->
     <string name="chat_enter_message">Envia un missatge</string>
     <string name="chat_file_transfer">Transferència de fitxer</string>
-    <string name="accept_caps">ACCEPTAR</string>
-    <string name="reject_caps">REBUTJAR</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">El Tox ID del teu amic</string>
