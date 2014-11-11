@@ -3,16 +3,17 @@ package im.tox.antox.activities
 import java.util.{ArrayList, Locale}
 
 import android.app.{Activity, AlertDialog, NotificationManager}
-import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.content.res.Configuration
+import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.support.v4.app.{ActionBarDrawerToggle, ActivityCompat}
+import android.support.v4.app.ActivityCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.{ActionBarActivity, ActionBarDrawerToggle}
+import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
 import im.tox.antox.R
@@ -28,6 +29,8 @@ class MainActivity extends ActionBarActivity {
   var preferences: SharedPreferences = _
 
   private var mDrawerLayout: DrawerLayout = _
+
+  private var mToolbar: Toolbar = _
 
   private var mDrawerList: ListView = _
 
@@ -102,7 +105,7 @@ class MainActivity extends ActionBarActivity {
     val language = preferences.getString("language", "-1")
     if (language == "-1") {
       val editor = preferences.edit()
-      val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase()
+      val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase
       editor.putString("language", currentLanguage)
       editor.apply()
     } else {
@@ -115,7 +118,7 @@ class MainActivity extends ActionBarActivity {
 
     setContentView(R.layout.activity_main)
 
-    // Create the drawer navi
+    mToolbar = findViewById(R.drawable.ic_navigation_drawer).asInstanceOf[Toolbar]
     mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
     mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
@@ -133,8 +136,9 @@ class MainActivity extends ActionBarActivity {
       getSupportActionBar.setDisplayHomeAsUpEnabled(true)
       getSupportActionBar.setHomeButtonEnabled(true)
     }
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open,
-      R.string.drawer_close) {
+    mDrawerToggle = new ActionBarDrawerToggle(
+      this, mDrawerLayout, mToolbar,
+      R.string.drawer_open, R.string.drawer_close) {
 
       override def onDrawerClosed(view: View) {
         ActivityCompat.invalidateOptionsMenu(MainActivity.this)
@@ -145,6 +149,7 @@ class MainActivity extends ActionBarActivity {
       }
     }
     mDrawerLayout.setDrawerListener(mDrawerToggle)
+    mDrawerToggle.syncState()
 
     // Fix for Android 4.1.x
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
@@ -232,10 +237,11 @@ class MainActivity extends ActionBarActivity {
   private class DrawerItemClickListener extends AdapterView.OnItemClickListener {
 
     override def onItemClick(parent: AdapterView[_],
-      view: View,
-      position: Int,
-      id: Long) {
+                             view: View,
+                             position: Int,
+                             id: Long) {
       selectItem(position)
     }
   }
+
 }
