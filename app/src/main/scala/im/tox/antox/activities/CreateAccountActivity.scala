@@ -119,7 +119,7 @@ class CreateAccountActivity extends ActionBarActivity {
     toxData
   }
 
-  def onClickRegisterIncognitoAccount(view: View) {
+  def onClickRegisterIncogAccount(view: View) {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
