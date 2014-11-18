@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="im.tox.antox"
     android:versionCode="45"
     android:versionName="0.14.2" >
@@ -14,7 +15,8 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="19"
+        tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple" />
 
     <supports-screens
         android:anyDensity="true"

@@ -179,6 +179,8 @@ class MainActivity extends ActionBarActivity {
     db.clearFileNumbers()
     db.close()
 
+    getSupportActionBar.setElevation(0)
+
     updateLeftPane()
   }
 

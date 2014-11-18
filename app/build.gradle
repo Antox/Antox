@@ -10,6 +10,9 @@ buildscript {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
 
 apply plugin: "com.android.application"
@@ -59,4 +62,6 @@ dependencies {
     compile 'com.netflix.rxjava:rxjava-android:0.20.6'
     compile 'com.netflix.rxjava:rxjava-scala:0.20.6'
     compile 'com.shamanland:fab:0.0.5'
+    compile 'com.jpardogo.materialtabstrip:library:1.0.3'
+    compile 'com.balysv:material-ripple:0.9.3-SNAPSHOT@aar'
 }
