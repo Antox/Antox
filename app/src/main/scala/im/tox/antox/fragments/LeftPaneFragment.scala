@@ -8,15 +8,28 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v4.view.PagerTabStrip
+import com.astuetz.PagerSlidingTabStrip
+import com.balysv.materialripple.MaterialRippleLayout
+import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 
 class LeftPaneFragment extends Fragment {
 
-  class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {
+  class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) with CustomTabProvider {
+
+    val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
+
+    override def getCustomTabView(parent: ViewGroup, position: Int): View = {
+         val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity)
+            .inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
+         materialRippleLayout.findViewById(R.id.image).asInstanceOf[ImageView].setImageResource(ICONS(position))
+         materialRippleLayout
+    }
 
     override def getPageTitle(position: Int): CharSequence = {
 
@@ -49,6 +62,7 @@ class LeftPaneFragment extends Fragment {
     val actionBar = thisActivity.getActionBar
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
+    val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
 
     val tabListener = new ActionBar.TabListener() {
         def onTabSelected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
@@ -62,11 +76,10 @@ class LeftPaneFragment extends Fragment {
         }
     }
 
-    val pagerTabStrip = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerTabStrip]
-    pagerTabStrip.setDrawFullUnderline(true)
-    pagerTabStrip.setTabIndicatorColorResource(R.color.white_absolute)
-
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
+    tabs.setViewPager(pager)
+    tabs.setElevation(10)
+    
 
     rootView
   }
