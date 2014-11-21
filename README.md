@@ -1,6 +1,8 @@
 ![Antox](http://vexx.us/Images/AntoxFull.png "Antox Tox Android Client")
 =====
 
+Disclaimer: This is not the real Antox. It is a fork by a totally incompetent idiot. I have no idea what I'm doing. This will be dead within a week.
+
 Antox is an Android 2.2+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. 
 Once ready, Antox will be available on Google Play and on F-Droid.
 
