@@ -20,7 +20,7 @@
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Profile Name</string>
-    <string name="create_text">Slogan Here</string>
+    <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
