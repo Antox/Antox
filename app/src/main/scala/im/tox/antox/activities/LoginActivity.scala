@@ -102,6 +102,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
   def onClickCreateAccount(view: View) {
     val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
     startActivityForResult(createAccount, 1)
+    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

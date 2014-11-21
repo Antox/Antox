@@ -1,14 +1,13 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:background="@drawable/test_bg"
-    android:gravity="top"
     android:fillViewport="true"
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/test_bg"
+        android:background="@color/material_blue_grey_950"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
@@ -16,7 +15,6 @@
         android:focusableInTouchMode="true">
 
         <ImageView
-            android:paddingTop="130dp"
             android:contentDescription="Antox Logo"
             android:id="@+id/imageView1"
             android:layout_width="200dp"
@@ -31,7 +29,7 @@
             android:gravity="center"
             android:layout_marginBottom="20dp"
             android:textStyle="italic"
-            android:textSize="40dp"
+            android:textSize="20dp"
             android:text="@string/create_text"
             android:layout_height="wrap_content" />
 
@@ -62,20 +60,21 @@
             android:layout_height="50dp"
             android:text="@string/create_register"
             android:textColor="@color/white"
-            android:background="#6BC25F"
+            android:background="@color/brand_secondary"
             android:layout_marginTop="10dp"
             android:onClick="onClickRegisterAccount"/>
 
-        <Button
-            android:id="@+id/create_account_incog"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:text="@string/create_register_incog"
-            android:textColor="@color/white"
-            android:background="#414141"
-            android:layout_marginTop="75dp"
-            android:onClick="onClickRegisterIncogAccount"/>
-
     </LinearLayout>
-</ScrollView>
+
+    <Button
+        android:id="@+id/create_account_incog"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/create_register_incog"
+        android:textColor="@color/white"
+        android:background="#414141"
+        android:layout_marginBottom="40dp"
+        android:onClick="onClickRegisterIncogAccount"/>
+</RelativeLayout>

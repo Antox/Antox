@@ -78,8 +78,6 @@ class LeftPaneFragment extends Fragment {
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
     tabs.setViewPager(pager)
-    tabs.setElevation(10)
-    
 
     rootView
   }
