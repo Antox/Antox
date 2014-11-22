@@ -8,7 +8,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.widget.ResourceCursorAdapter
-import android.text.ClipboardManager
+import android.text.{Html, ClipboardManager}
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -16,11 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget._
 import java.io.File
 import java.sql.Timestamp
 import java.util.HashSet
@@ -273,12 +269,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
         }
 
       case Constants.MESSAGE_TYPE_ACTION =>
-        holder.time.setGravity(Gravity.CENTER)
-        holder.layout.setGravity(Gravity.CENTER)
-        holder.message.setTextColor(context.getResources.getColor(R.color.grey_dark))
-        holder.row.setGravity(Gravity.CENTER)
-        holder.background.setBackgroundColor(context.getResources.getColor(R.color.white_absolute))
-        holder.message.setTextSize(12)
+        actionMessage(holder)
+        holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make name bold
 
     }
     holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true))
@@ -340,6 +332,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
   override def getViewTypeCount(): Int = 4
 
+  override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
+
   private def ownMessage(holder: ChatMessagesHolder) {
     holder.time.setGravity(Gravity.RIGHT)
     holder.sentTriangle.setVisibility(View.VISIBLE)
@@ -360,5 +354,19 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.wrapper.setGravity(Gravity.LEFT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
+  }
+
+
+  private def actionMessage(holder: ChatMessagesHolder) {
+    holder.message.setVisibility(View.VISIBLE)
+    holder.message.setTextSize(18)
+    holder.message.setTextColor(context.getResources.getColor(R.color.black))
+    holder.time.setGravity(Gravity.CENTER)
+    holder.layout.setGravity(Gravity.CENTER)
+    holder.row.setGravity(Gravity.CENTER)
+    holder.wrapper.setGravity(Gravity.CENTER)
+    holder.background.setBackgroundColor(context.getResources.getColor(R.color.white_absolute))
+    holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
+    holder.time.setVisibility(View.VISIBLE)
   }
 }
