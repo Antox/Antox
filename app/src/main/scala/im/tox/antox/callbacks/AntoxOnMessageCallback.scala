@@ -24,38 +24,35 @@ import scala.collection.JavaConversions._
 object AntoxOnMessageCallback {
 
   val TAG = "im.tox.antox.callbacks.AntoxOnMessageCallback"
-}
 
-class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback[AntoxFriend] {
-
-  override def execute(friend: AntoxFriend, message: String) {
-    val db = new AntoxDB(this.ctx)
+ def handleMessage(ctx: Context, friend: AntoxFriend, message: String, messageType: Int): Unit ={
+    val db = new AntoxDB(ctx)
     Log.d(TAG, "friend id: " + friend.getId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friend.getId)) {
       if (!(State.chatActive && State.activeKey.map(_ == friend.getId).getOrElse(false))) {
-        db.addMessage(-1, friend.getId, message, true, false, true, 2)
+        db.addMessage(-1, friend.getId, message, true, false, true, messageType)
       } else {
-        db.addMessage(-1, friend.getId, message, true, true, true, 2)
+        db.addMessage(-1, friend.getId, message, true, true, true, messageType)
       }
     }
     db.close()
     ToxSingleton.updateMessages(ctx)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
+    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&
       preferences.getBoolean("notifications_new_message", true)) {
       if (!(State.chatActive && State.activeKey.map(_ == friend.getId).getOrElse(false))) {
         val mName = ToxSingleton.getAntoxFriend(friend.getId).map(_.getName)
         mName.foreach(name => {
-          val mBuilder = new NotificationCompat.Builder(this.ctx).setSmallIcon(R.drawable.ic_actionbar)
+          val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
             .setContentTitle(name)
             .setContentText(message)
             .setDefaults(Notification.DEFAULT_ALL)
-          val resultIntent = new Intent(this.ctx, classOf[MainActivity])
+          val resultIntent = new Intent(ctx, classOf[MainActivity])
           resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
           resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
           resultIntent.putExtra("key", friend.getId)
           resultIntent.putExtra("name", name)
-          val stackBuilder = TaskStackBuilder.create(this.ctx)
+          val stackBuilder = TaskStackBuilder.create(ctx)
           stackBuilder.addParentStack(classOf[MainActivity])
           stackBuilder.addNextIntent(resultIntent)
           val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -64,5 +61,12 @@ class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback
         })
       }
     }
+  }
+}
+
+class AntoxOnMessageCallback(private var ctx: Context) extends OnMessageCallback[AntoxFriend] {
+
+  override def execute(friend: AntoxFriend, message: String) {
+    handleMessage(ctx, friend, message, Constants.MESSAGE_TYPE_FRIEND)
   }
 }

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/message_row_layout"
     android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/message_text_layout"
@@ -18,7 +18,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <View 
+            <View
                 android:id="@+id/received_triangle"
                 android:background="@drawable/conversation_item_received_triangle_shape"
                 android:layout_marginTop="6dp"
@@ -138,7 +138,7 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-            <View 
+            <View
                 android:id="@+id/sent_triangle"
                 android:background="@drawable/conversation_item_sent_triangle_shape"
                 android:layout_marginTop="6dp"
