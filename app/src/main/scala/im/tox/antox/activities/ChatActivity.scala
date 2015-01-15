@@ -20,9 +20,10 @@ import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
 import im.tox.antox.utils.{Constants, FileDialog, FriendInfo, IconColor, UserStatus}
-import im.tox.jtoxcore.ToxException
-import rx.lang.scala.{Observable, Subscription}
+import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.{Observable, Subscription}
+
 import scala.concurrent.duration._
 
 class ChatActivity extends ActionBarActivity {
@@ -96,7 +97,7 @@ class ChatActivity extends ActionBarActivity {
         mFriend.foreach(friend => {
           if (friend.isOnline()) {
             try {
-              ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), isTyping)
+              ToxSingleton.tox.setTyping(friend.getFriendnumber(), isTyping)
             } catch {
               case te: ToxException => {
               }
@@ -127,7 +128,7 @@ class ChatActivity extends ActionBarActivity {
         val mFriend = ToxSingleton.getAntoxFriend(key)
         mFriend.foreach(friend => {
           try {
-            ToxSingleton.jTox.sendIsTyping(friend.getFriendnumber(), false)
+            ToxSingleton.tox.setTyping(friend.getFriendnumber(), false)
           } catch {
             case te: ToxException => {
             }
@@ -233,9 +234,11 @@ class ChatActivity extends ActionBarActivity {
               thisActivity.setDisplayName(friend.friendName)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-              thisActivity.statusIconView.setBackground(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+              thisActivity.statusIconView.setBackground(thisActivity.getResources
+                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
             } else {
-              thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources.getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+              thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
             }
           }
           case None => {
@@ -317,6 +320,15 @@ class ChatActivity extends ActionBarActivity {
     } else {
       Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
     }
+  }
+
+
+  def onClickVoiceCallFriend(v: View){
+    println("This button (Audio Call) doesn't work yet.")
+  }
+
+  def onClickVideoCallFriend(v: View): Unit = {
+    println("This button (Video Call) doesn't work yet.")
   }
 
   def getCursor(): Cursor = {

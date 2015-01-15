@@ -17,8 +17,7 @@ import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.UserStatus
-import im.tox.jtoxcore.ToxException
-//remove if not needed
+import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
 
@@ -161,7 +160,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     val db = new UserDB(this)
     if (key == "nickname") {
       try {
-        ToxSingleton.jTox.setName(sharedPreferences.getString(key, ""))
+        ToxSingleton.tox.setName(sharedPreferences.getString(key, ""))
       } catch {
         case e: ToxException => e.printStackTrace()
       }
@@ -172,7 +171,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       val newStatusString = sharedPreferences.getString(key, "")
       val newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
       try {
-        ToxSingleton.jTox.setUserStatus(newStatus)
+        ToxSingleton.tox.setStatus(newStatus)
       } catch {
         case e: ToxException => e.printStackTrace()
       }
@@ -181,7 +180,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     }
     if (key == "status_message") {
       try {
-        ToxSingleton.jTox.setStatusMessage(sharedPreferences.getString(key, ""))
+        ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(key, ""))
       } catch {
         case e: ToxException => e.printStackTrace()
       }

@@ -8,7 +8,6 @@ public protected *;
 -dontoptimize
 -dontpreverify
 -dontwarn **
--ignorewarnings
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**
@@ -54,4 +53,7 @@ public static ** valueOf(java.lang.String);
 }
 -keep class * implements android.os.Parcelable {
 public static final android.os.Parcelable$Creator *;
+}
+-keep public class im.tox.** {
+public protected *;
 }

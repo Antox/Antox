@@ -4,21 +4,27 @@ import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AntoxFriend
-import im.tox.jtoxcore.callbacks.OnNameChangeCallback
-import AntoxOnNameChangeCallback._
+import im.tox.tox4j.core.callbacks.FriendNameCallback
+
+import scala.None
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object AntoxOnNameChangeCallback {
 
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnNameChangeCallback(private var ctx: Context) extends OnNameChangeCallback[AntoxFriend] {
+class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback {
+  override def friendName(friendNumber: Int, name: Array[Byte]): Unit = {
+    val nameString = new String(name, "UTF-8")
+    ToxSingleton.getAntoxFriend(friendNumber) match {
+      case Some(friend) => friend.setName(nameString)
+      case None => throw new Exception("Friend not found.")
+    }
 
-  override def execute(friend: AntoxFriend, newName: String) {
     val db = new AntoxDB(ctx)
-    db.updateFriendName(friend.getId, newName)
+    db.updateFriendName(ToxSingleton.addressFromClientId(ToxSingleton.getIdFromFriendNumber(friendNumber)), nameString)
     db.close()
     ToxSingleton.updateFriendsList(ctx)
   }

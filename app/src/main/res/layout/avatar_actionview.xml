@@ -30,6 +30,40 @@
             android:layout_alignParentBottom="true"
             android:background="@drawable/circle_online"/>
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/videoFriend"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_centerVertical="true"
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="Video Call Friend"
+            android:onClick="onClickVideoCallFriend"
+            android:src="@drawable/ic_action_video"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/callFriend"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/videoFriend"
+        android:layout_centerVertical="true"
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="Voice Call Friend"
+            android:onClick="onClickVoiceCallFriend"
+            android:src="@drawable/ic_action_call"/>
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/displayName"
         android:layout_width="200dp"

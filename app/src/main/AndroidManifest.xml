@@ -5,6 +5,11 @@
     android:versionCode="45"
     android:versionName="0.14.2" >
 
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="19"
+        tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,17 +18,14 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="19"
-        tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple" />
-
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
         android:smallScreens="true" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -36,6 +38,7 @@
             android:name=".tox.ToxDoService"
             android:exported="false"
             android:label="Antox" />
+
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"
@@ -43,23 +46,23 @@
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.ChatActivity" >
+        <activity android:name=".activities.ChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.AddFriendActivity"
-            android:label="@string/title_activity_add_friend">
+            android:label="@string/title_activity_add_friend" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
@@ -97,19 +100,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Settings"
-            android:label="@string/action_settings"/>
-
+            android:label="@string/action_settings" />
         <activity
             android:name=".activities.ProfileSettingsActivity"
-            android:label="@string/title_activity_profile_settings"/>
-
+            android:label="@string/title_activity_profile_settings" />
         <activity
             android:name=".activities.About"
             android:label="@string/about" />
-
         <activity
             android:name=".activities.License"
-            android:label="@string/open_source_license" />   
+            android:label="@string/open_source_license" />
     </application>
 
 </manifest>

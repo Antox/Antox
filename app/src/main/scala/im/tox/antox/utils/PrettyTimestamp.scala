@@ -1,10 +1,10 @@
 package im.tox.antox.utils
 
-import android.text.format.Time
 import java.sql.Timestamp
 import java.util.Calendar
+
+import android.text.format.Time
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object PrettyTimestamp {
 

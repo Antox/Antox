@@ -36,6 +36,6 @@ local.properties
 *.swp
 app/build/
 build/
-app/libs/jToxcore.jar
+app/libs/tox4j_2.11.jar
 app/src/main/jniLibs
 atlassian-ide-plugin.xml

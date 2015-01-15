@@ -1,7 +1,6 @@
 package im.tox.antox.data
 
-import im.tox.antox.utils.FileTransferManager
-import im.tox.antox.utils.CallManager
+import im.tox.antox.utils.{CallManager, FileTransferManager}
 
 object State {
 

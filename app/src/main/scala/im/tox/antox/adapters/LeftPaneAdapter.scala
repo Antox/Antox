@@ -1,30 +1,19 @@
 package im.tox.antox.adapters
 
+import java.util.ArrayList
+
 import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Filter
+import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
-import android.widget.Filterable
-import android.widget.ImageView
-import android.widget.TextView
-import java.util.ArrayList
+import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
 import im.tox.antox.R
+import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.Constants
-import im.tox.antox.utils.IconColor
-import im.tox.antox.utils.LeftPaneItem
-import im.tox.antox.utils.PrettyTimestamp
-import LeftPaneAdapter._
-//remove if not needed
-import scala.collection.JavaConversions._
+import im.tox.antox.utils._
 
 object LeftPaneAdapter {
 
@@ -137,8 +126,12 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           db.deleteFriendRequest(key)
           db.close()
           try {
-            ToxSingleton.jTox.confirmRequest(key)
-            ToxSingleton.jTox.save()
+            val friendNumber = ToxSingleton.tox.addFriendNoRequest(key)
+            ToxSingleton.getAntoxFriendList().addFriend(friendNumber)
+            val antoxFriend = ToxSingleton.getAntoxFriendList().getByFriendNumber(friendNumber).get
+            antoxFriend.setAddress(key)
+            antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(key))
+            ToxSingleton.tox.save()
           } catch {
             case e: Exception =>
           }

@@ -36,8 +36,8 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              Thread.sleep(ToxSingleton.jTox.doToxInterval())
-              ToxSingleton.jTox.doTox()
+              Thread.sleep(ToxSingleton.tox.iterationInterval())
+              ToxSingleton.tox.iteration()
             } catch {
               case e: Exception =>
             }

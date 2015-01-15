@@ -1,9 +1,7 @@
 package im.tox.antox.utils
 
 import android.util.Log
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.IOScheduler
-import CallManager._
+import im.tox.antox.utils.CallManager._
 
 object CallManager {
   private val TAG = "im.tox.antox.utils.CallManager"
@@ -18,7 +16,7 @@ class CallManager () {
   }
 
   def get(id: Integer): Option[Call] = {
-    _calls.get(id).asInstanceOf[Option[Call]]
+    _calls.get(id)
   }
 
   def remove(id: Integer): Unit = {
@@ -27,8 +25,13 @@ class CallManager () {
     mCall match {
       case Some(c) => 
         c.subscription.unsubscribe()
+        c.playAudio.cleanUp()
         _calls = _calls - id
       case None =>
     }
+  }
+
+  def removeAll(): Unit = {
+    _calls.foreach { case (k, call) => call.subscription.unsubscribe() }
   }
 }

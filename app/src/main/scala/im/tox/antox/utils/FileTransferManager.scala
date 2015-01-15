@@ -1,7 +1,7 @@
 package im.tox.antox.utils
 
 import android.util.Log
-import FileTransferManager._
+import im.tox.antox.utils.FileTransferManager._
 
 object FileTransferManager {
   private val TAG = "im.tox.antox.utils.FileTransferManager"

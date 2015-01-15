@@ -1,14 +1,11 @@
 
 package im.tox.antox.data
 
-import android.content.ContentValues
-import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import java.util.ArrayList
+
+import android.content.{ContentValues, Context}
+import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 

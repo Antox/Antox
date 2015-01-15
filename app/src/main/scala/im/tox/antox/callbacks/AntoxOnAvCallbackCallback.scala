@@ -2,33 +2,29 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.tox.Methods
+import im.tox.antox.tox.{Methods, ToxSingleton}
 import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.CaptureAudio
-import im.tox.jtoxcore.ToxAvCallbackID
-import im.tox.jtoxcore.ToxCallType
-import im.tox.jtoxcore.ToxCodecSettings
-import im.tox.jtoxcore.ToxException
-import im.tox.jtoxcore.callbacks.OnAvCallbackCallback
+import im.tox.tox4j.exceptions.ToxException
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
-class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCallback[AntoxFriend] {
+class AntoxOnAvCallbackCallback(private var ctx: Context){
 
-  def execute(callID: Int, callbackID: ToxAvCallbackID) {
-    Log.d("OnAvCallbackCallback", "Received a callback from: " + callID)
+  //val toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500,
+  //  1280, 720, 64000, 20, 48000, 1)
+
+  //def execute(callID: Int, callbackID: ToxAvCallbackID) {
+   /* Log.d("OnAvCallbackCallback", "Received a callback from: " + callID)
     val toxSingleton = ToxSingleton.getInstance
     try callbackID match {
       case ToxAvCallbackID.ON_INVITE =>
         Log.d("OnAvCallbackCallback", "Callback type: ON_INVITE")
-        var toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500,
-          1280, 720, 64000, 20, 48000, 1)
-        //Methods.avAnswer(callID, toxCodecSettings)
+        Methods.avAnswer(callID, toxCodecSettings)
 
       case ToxAvCallbackID.ON_START =>
         Log.d("OnAvCallbackCallback", "Callback type: ON_START")
-        toxSingleton.jTox.avPrepareTransmission(0, 3, 40, false)
+        toxSingleton.tox.avPrepareTransmission(callID, 3, 40, false)
+        Methods.avStart(callID, toxCodecSettings)
 
       case ToxAvCallbackID.ON_CANCEL => Log.d("OnAvCallbackCallback", "Callback type: ON_CANCEL")
       case ToxAvCallbackID.ON_REJECT => Log.d("OnAvCallbackCallback", "Callback type: ON_REJECT")
@@ -44,6 +40,6 @@ class AntoxOnAvCallbackCallback(private var ctx: Context) extends OnAvCallbackCa
       case ToxAvCallbackID.ON_MEDIA_CHANGE => Log.d("OnAvCallbackCallback", "Callback type: ON_MEDIA_CHANGE")
     } catch {
       case e: ToxException => e.printStackTrace
-    }
-  }
+    } */
+  //}
 }

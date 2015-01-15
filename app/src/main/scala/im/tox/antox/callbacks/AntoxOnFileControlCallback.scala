@@ -2,25 +2,20 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import java.nio.ByteBuffer
-import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.tox.Reactive
-import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.FileTransfer
-import im.tox.antox.utils.FileStatus
-import im.tox.jtoxcore.ToxFileControl
-import im.tox.jtoxcore.callbacks.OnFileControlCallback
-import AntoxOnFileControlCallback._
+import im.tox.antox.callbacks.AntoxOnFileControlCallback._
+import im.tox.antox.data.State
+import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.utils.{AntoxFriend, FileStatus}
+import im.tox.tox4j.core.enums.ToxFileControl
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object AntoxOnFileControlCallback {
 
   private val TAG = "OnFileControlCallback"
 }
 
-class AntoxOnFileControlCallback(private var ctx: Context) extends OnFileControlCallback[AntoxFriend] {
+class AntoxOnFileControlCallback(private var ctx: Context) {
 
   def execute(friend: AntoxFriend,
     sending: Boolean,
@@ -28,11 +23,11 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends OnFileControl
     control_type: ToxFileControl,
     data: Array[Byte]) {
     Log.d(TAG, "control type: " + control_type.name() + ", sending: " + sending)
-    val mTransfer = State.transfers.get(friend.getId, fileNumber)
+    /* val mTransfer = State.transfers.get(friend.getId, fileNumber)
     mTransfer match {
       case Some(t) => {
         (control_type, t.status, sending) match {
-          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.REQUESTSENT, true) => 
+          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.REQUESTSENT, true) =>
             Log.d(TAG, "fileTransferStarted")
             ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
           case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.PAUSED, true) => 
@@ -54,6 +49,6 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends OnFileControl
       }
       case None => Log.d(TAG, "Transfer not found")
     }
-    Reactive.updatedMessages.onNext(true)
+    Reactive.updatedMessages.onNext(true) */
   }
 }

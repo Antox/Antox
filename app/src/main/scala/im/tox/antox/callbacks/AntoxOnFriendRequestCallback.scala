@@ -1,10 +1,7 @@
 package im.tox.antox.callbacks
 
-import android.app.Notification
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.app.{Notification, PendingIntent}
+import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
@@ -12,10 +9,10 @@ import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.jtoxcore.callbacks.OnFriendRequestCallback
-import AntoxOnFriendRequestCallback._
+import im.tox.antox.utils.Hex
+import im.tox.tox4j.core.callbacks.FriendRequestCallback
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object AntoxOnFriendRequestCallback {
 
@@ -26,11 +23,13 @@ object AntoxOnFriendRequestCallback {
   val FRIEND_MESSAGE = "im.tox.antox.FRIEND_MESSAGE"
 }
 
-class AntoxOnFriendRequestCallback(private var ctx: Context) extends OnFriendRequestCallback {
+class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
 
-  override def execute(publicKey: String, message: String) {
+  override def friendRequest(clientId: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
-    if (!db.isFriendBlocked(publicKey)) db.addFriendRequest(publicKey, message)
+    if (!db.isFriendBlocked(Hex.bytesToHexString(clientId))){
+      db.addFriendRequest(Hex.bytesToHexString(clientId), new String(message, "UTF-8"))
+    }
     db.close()
     ToxSingleton.updateFriendRequests(ctx)
     Log.d("FriendRequestCallback", "")
@@ -38,7 +37,7 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends OnFriendReq
     if (preferences.getBoolean("notifications_enable_notifications", true) !=
       false &&
       preferences.getBoolean("notifications_friend_request", true) !=
-      false) {
+        false) {
       val vibratePattern = Array[Long](0, 500)
       if (preferences.getBoolean("notifications_new_message_vibrate", true) ==
         false) {
@@ -47,7 +46,7 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends OnFriendReq
       val mBuilder = new NotificationCompat.Builder(this.ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(this.ctx.getString(R.string.friend_request))
-        .setContentText(message)
+        .setContentText(new String(message, "UTF-8"))
         .setVibrate(vibratePattern)
         .setDefaults(Notification.DEFAULT_ALL)
         .setAutoCancel(true)

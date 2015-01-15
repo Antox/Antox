@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="im.tox.antox.CallActivity">
+
+    <Button
+        android:id="@+id/end_call"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/end_call"
+        android:textSize="@dimen/text_medium"
+        android:background="@color/red"
+        android:layout_alignParentBottom="true"
+        android:onClick="onClickEndCall"/>
+
+    <Button
+        android:id="@+id/mute_mic"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:layout_above="@id/end_call"
+        android:background="@color/purple_dark"
+        android:text="@string/mute_mic"
+        />
+
+    <Button
+        android:id="@+id/mute_call"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:layout_above="@id/end_call"
+        android:layout_toRightOf="@+id/mute_mic"
+        android:background="@color/purple_dark"
+        android:text="@string/mute_call"
+        />
+
+</RelativeLayout>

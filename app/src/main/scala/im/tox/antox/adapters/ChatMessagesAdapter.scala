@@ -1,44 +1,27 @@
 package im.tox.antox.adapters
 
+import java.io.File
+import java.sql.Timestamp
+import java.util.HashSet
+
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.{Context, DialogInterface, Intent}
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.widget.ResourceCursorAdapter
-import android.text.{Html, ClipboardManager}
+import android.text.{ClipboardManager, Html}
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.view.{Gravity, LayoutInflater, View, ViewGroup}
+import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
-import java.io.File
-import java.sql.Timestamp
-import java.util.HashSet
 import im.tox.antox.R
+import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.BitmapManager
-import im.tox.antox.utils.ChatMessages
-import im.tox.antox.utils.Constants
-import im.tox.antox.utils.PrettyTimestamp
-import im.tox.antox.utils.Tuple
-import rx.lang.scala.JavaConversions
+import im.tox.antox.utils.{BitmapManager, ChatMessages, Constants, PrettyTimestamp}
 import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
 import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-import ChatMessagesAdapter._
-//remove if not needed
-import scala.collection.JavaConversions._
 
 object ChatMessagesAdapter {
 

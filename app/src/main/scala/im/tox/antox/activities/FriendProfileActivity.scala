@@ -1,19 +1,13 @@
 
 package im.tox.antox.activities
 
-import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.support.v7.app.ActionBarActivity
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.{EditText, TextView, Toast}
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
-//remove if not needed
-import scala.collection.JavaConversions._
 
 class FriendProfileActivity extends ActionBarActivity {
 
