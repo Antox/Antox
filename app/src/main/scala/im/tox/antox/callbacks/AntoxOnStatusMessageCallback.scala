@@ -3,22 +3,21 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.AntoxFriend
-import im.tox.jtoxcore.callbacks.OnStatusMessageCallback
-import AntoxOnStatusMessageCallback._
+import im.tox.antox.utils.{Hex, AntoxFriend}
+import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object AntoxOnStatusMessageCallback {
 
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnStatusMessageCallback(private var ctx: Context) extends OnStatusMessageCallback[AntoxFriend] {
+class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatusMessageCallback {
 
-  override def execute(friend: AntoxFriend, newStatus: String) {
+  override def friendStatusMessage(friendNumber: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(ctx)
-    db.updateStatusMessage(friend.getId, newStatus)
+    db.updateStatusMessage(ToxSingleton.addressFromClientId(ToxSingleton.tox.getClientId(friendNumber)), new String(message, "UTF-8"))
     db.close()
     ToxSingleton.updateFriendsList(ctx)
   }

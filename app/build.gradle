@@ -3,8 +3,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:0.14.2"
-        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.1"
+        classpath ('com.android.tools.build:gradle:1.0.0') {
+            exclude module: 'proguard-gradle'
+        }
+        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.3.1"
+        classpath ('net.sf.proguard:proguard-gradle:5.0') {
+            force = true
+        }
     }
 }
 
@@ -50,7 +55,6 @@ android {
 }
 
 dependencies {
-    compile files('libs/jToxcore.jar')
     compile files('libs/core.jar')
     compile files('libs/dnsjava-2.1.6.jar')
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
@@ -64,4 +68,6 @@ dependencies {
     compile 'com.shamanland:fab:0.0.5'
     compile 'com.jpardogo.materialtabstrip:library:1.0.3'
     compile 'com.balysv:material-ripple:0.9.3-SNAPSHOT@aar'
+    compile files('libs/protobuf-java-2.6.1.jar')
+    compile files('libs/tox4j_2.11.jar')
 }

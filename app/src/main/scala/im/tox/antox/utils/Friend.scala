@@ -1,8 +1,8 @@
 package im.tox.antox.utils
 
-import im.tox.jtoxcore.ToxUserStatus
+import im.tox.tox4j.core.enums.ToxStatus
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class Friend(
   val isOnline: Boolean,
@@ -12,7 +12,7 @@ class Friend(
   val friendKey: String,
   val alias: String) {
 
-  def getFriendStatusAsToxUserStatus(): ToxUserStatus = {
+  def getFriendStatusAsToxUserStatus(): ToxStatus = {
     UserStatus.getToxUserStatusFromString(friendStatus)
   }
 

@@ -1,32 +1,22 @@
 package im.tox.antox.data
 
-import android.content.ContentValues
-import android.content.Context
-import android.content.SharedPreferences
-import android.database.Cursor
-import android.database.SQLException
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-import android.preference.PreferenceManager
-import android.util.Log
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.HashMap
-import java.util.HashSet
-import java.util.TimeZone
-import im.tox.antox.utils.Constants
-import im.tox.antox.utils.Friend
-import im.tox.antox.utils.FriendRequest
-import im.tox.antox.utils.Message
-import im.tox.antox.utils.Tuple
-import im.tox.antox.utils.UserStatus
-import im.tox.jtoxcore.ToxUserStatus
-import AntoxDB._
+import java.util.{ArrayList, Date, HashSet, TimeZone}
+
+import android.content.{ContentValues, Context}
+import android.database.Cursor
+import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
+import android.preference.PreferenceManager
+import android.util.Log
+import im.tox.antox.data.AntoxDB._
+import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.{Constants, Friend, FriendRequest, Message, UserStatus}
+import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.exceptions.ToxException
+
 import scala.collection.mutable.ArrayBuffer
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object AntoxDB {
 
@@ -541,10 +531,12 @@ class AntoxDB(ctx: Context) {
       do {
         var name = cursor.getString(1)
         val key = cursor.getString(0)
+        println("THE KEY IS " + key)
         val status = cursor.getString(2)
         val note = cursor.getString(3)
         var alias = cursor.getString(4)
         val isOnline = cursor.getInt(5) != 0
+        println(" for that key " + isOnline)
         val isBlocked = cursor.getInt(6) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = key.substring(0, 7)
@@ -633,7 +625,7 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def updateUserStatus(key: String, status: ToxUserStatus) {
+  def updateUserStatus(key: String, status: ToxStatus) {
     this.open(false)
     val values = new ContentValues()
     val tmp = UserStatus.getStringFromToxUserStatus(status)
@@ -646,6 +638,7 @@ class AntoxDB(ctx: Context) {
     this.open(false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_ISONLINE, online)
+    println(" put key " + key + " is online ? " + online)
     mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }

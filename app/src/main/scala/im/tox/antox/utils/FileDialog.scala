@@ -1,18 +1,15 @@
 
 package im.tox.antox.utils
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
+import java.io.{File, FilenameFilter}
+import java.util.{ArrayList, List}
+
+import android.app.{Activity, AlertDialog, Dialog}
 import android.content.DialogInterface
 import android.os.Environment
 import android.util.Log
-import java.io.File
-import java.io.FilenameFilter
-import java.util.ArrayList
-import java.util.List
-import FileDialog._
-import ListenerList._
+import im.tox.antox.utils.FileDialog._
+import im.tox.antox.utils.ListenerList._
 //remove if not needed
 import scala.collection.JavaConversions._
 

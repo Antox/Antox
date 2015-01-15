@@ -1,9 +1,10 @@
 package im.tox.antox.utils
 
 import java.sql.Timestamp
-import im.tox.jtoxcore.ToxUserStatus
+
+import im.tox.tox4j.core.enums.ToxStatus
+
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class LeftPaneItem(
   val viewType: Int,
@@ -11,7 +12,7 @@ class LeftPaneItem(
   val first: String,
   val second: String,
   val isOnline: Boolean,
-  val status: ToxUserStatus,
+  val status: ToxStatus,
   val count: Int,
   val timestamp: Timestamp) {
 
@@ -20,7 +21,7 @@ class LeftPaneItem(
     first: String,
     second: String,
     isOnline: Boolean,
-    status: ToxUserStatus,
+    status: ToxStatus,
     count: Int,
     timestamp: Timestamp) = this(Constants.TYPE_CONTACT, key, first, second, isOnline, status, count, timestamp)
 

@@ -16,8 +16,9 @@ import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDataFile, ToxDoService}
 import im.tox.antox.utils.{AntoxFriendList, Options}
-import im.tox.jtoxcore.{JTox, ToxException, ToxOptions}
-import im.tox.jtoxcore.callbacks.CallbackHandler
+import im.tox.tox4j.ToxCoreImpl
+import im.tox.tox4j.core.ToxOptions
+import im.tox.tox4j.exceptions.ToxException
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.{Hex, Raw}
 import org.apache.http.client.methods.HttpPost
@@ -26,8 +27,6 @@ import org.apache.http.impl.client.DefaultHttpClient
 import org.json.{JSONException, JSONObject}
 
 import scala.beans.BeanProperty
-
-//remove if not needed
 
 class CreateAccountActivity extends ActionBarActivity {
 
@@ -109,12 +108,14 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxData = new ToxData
 
     val antoxFriendList = new AntoxFriendList()
-    val callbackHandler = new CallbackHandler(antoxFriendList)
-    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled, Options.proxyEnabled)
-    val jTox = new JTox(antoxFriendList, callbackHandler, toxOptions)
+    val toxOptions = new ToxOptions()
+    toxOptions.setIpv6Enabled(Options.ipv6Enabled)
+    toxOptions.setUdpEnabled(Options.udpEnabled)
+    val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
-    toxDataFile.saveFile(jTox.save())
-    toxData.ID = jTox.getAddress
+    toxDataFile.saveFile(tox.save())
+    toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+    println("MY TOX ID IS: " + toxData.ID)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
   }
@@ -220,6 +221,7 @@ class CreateAccountActivity extends ActionBarActivity {
       val toastMessage = jsonPost.getErrorCode match {
         case "0" =>
           saveAccountAndStartMain(account, toxData.ID)
+          println("YEP IT SURE IS " + toxData.ID)
           null
         case "-25" => "This name is already taken"
         case "-26" => "Internal Antox Error. Please restart and try again"

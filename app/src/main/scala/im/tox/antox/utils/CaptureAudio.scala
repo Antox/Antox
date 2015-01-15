@@ -1,10 +1,8 @@
 package im.tox.antox.utils
 
-import android.media.{MediaRecorder, AudioFormat, AudioRecord}
-import android.os.AsyncTask
+import android.media.{AudioFormat, AudioRecord}
 import android.util.Log
 import im.tox.antox.tox.ToxSingleton
-import im.tox.jtoxcore.ToxCodecSettings
 import rx.lang.scala.Observable
 
 object CaptureAudio {
@@ -12,27 +10,32 @@ object CaptureAudio {
   val TAG = "im.tox.antox.utils.CaptureAudio"
 
   var bufferSizeBytes: Int = _
-  private val sampleRates: Array[Int] = Array(8000, 11025, 22050, 44100)
 
-  def makeObservable(callID: Integer, codecSettings: ToxCodecSettings): Observable[Boolean] = {
+  def sendAudio(callID: Int, audioRecord: AudioRecord, audioBitRate: Int): Unit = {
+    /* var channels = 1
+    var frameSize = (codecSettings.audio_frame_duration * codecSettings.audio_sample_rate) / 1000 * channels
+
+    val buffer = Array.ofDim[Short](CaptureAudio.bufferSizeBytes)
+    audioRecord.read(buffer, 0, CaptureAudio.bufferSizeBytes)
+    val intBuffer = buffer.map(x => x: Int)
+    val preparedBuffer = ToxSingleton.tox.avPrepareAudioFrame(callID,
+      frameSize * 2, intBuffer, frameSize)
+    ToxSingleton.tox.avSendAudio(callID, preparedBuffer) */
+    Log.d("Mic", "Sending audio to:" + callID)
+  }
+
+  def makeObservable(callID: Integer, audioBitRate: Int): Observable[Boolean] = {
     Observable[Boolean](subscriber => {
-      val mAudioRecord = findAudioRecord()
-      val rtpPayloadSize = 65535
+     /* val mAudioRecord = findAudioRecord()
       mAudioRecord match {
         case Some(audioRecord) => {
           audioRecord.startRecording()
 
           while (!subscriber.isUnsubscribed) {
             try {
-              val buffer = Array.ofDim[Short](CaptureAudio.bufferSizeBytes)
-              audioRecord.read(buffer, 0, CaptureAudio.bufferSizeBytes)
-              val intBuffer = buffer.map(x => x: Int)
-              val preparedBuffer = ToxSingleton.jTox.avPrepareAudioFrame(callID,
-                rtpPayloadSize, intBuffer, codecSettings.audio_frame_duration)
-              ToxSingleton.jTox.avSendAudio(callID, preparedBuffer)
-              Log.d("Mic", "Sending audio to:" + callID)
+              sendAudio(callID, audioRecord, codecSettings)
             } catch {
-              case e: Exception => 
+              case e: Exception =>
                 e.printStackTrace
                 subscriber.onError(e)
             }
@@ -42,7 +45,7 @@ object CaptureAudio {
           audioRecord.release()
         }
         case None => Log.d(TAG, "Audio record: None!")
-      }
+      } */
       subscriber.onCompleted()
     })
   }
@@ -69,7 +72,7 @@ object CaptureAudio {
         None
       }
     } catch {
-      case e: Exception => 
+      case e: Exception =>
         e.printStackTrace
         None
     }

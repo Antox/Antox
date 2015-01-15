@@ -1,14 +1,11 @@
 package im.tox.antox.tox
 
+import java.nio.{ByteBuffer, ByteOrder}
+
 import android.content.Context
 import android.util.Log
-import im.tox.antox.data.AntoxDB
-import im.tox.antox.data.State
-import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.CaptureAudio
-import im.tox.antox.utils.Call
-import im.tox.antox.utils.CallManager
-import im.tox.jtoxcore.ToxCodecSettings
+import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.utils.{AntoxFriend, Call, CaptureAudio}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
@@ -61,7 +58,7 @@ object Methods {
   private def sendMessageHelper(ctx: Context, key: String, friend: AntoxFriend, msg: String, mDbId: Option[Integer]) = {
     Observable[Boolean](subscriber => {
       val mId = try {
-        Some(ToxSingleton.jTox.sendMessage(friend, msg))
+        Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber(), msg))
       } catch {
         case e: Exception => {
           None
@@ -90,21 +87,10 @@ object Methods {
     for (unsentMessage <- unsentMessageList) {
       val mFriend = ToxSingleton.getAntoxFriend(unsentMessage.key)
       mFriend.foreach(friend => {
-        if (friend.isOnline && ToxSingleton.jTox != null) {
+        if (friend.isOnline && ToxSingleton.tox != null) {
           sendMessage(ctx, unsentMessage.key, unsentMessage.message, Some(unsentMessage.id))
         }
       })
     }
-  }
-
-  def avAnswer(callID: Integer, toxCodecSettings: ToxCodecSettings) = {
-    ToxSingleton.jTox.avAnswer(callID, toxCodecSettings)
-    Log.d(TAG, "avAnswer audio sample rate: " + toxCodecSettings.audio_sample_rate)
-    val call = new Call(callID, toxCodecSettings, CaptureAudio.makeObservable(callID, toxCodecSettings).subscribeOn(IOScheduler()).subscribe())
-    State.calls.add(call)
-  }
-
-  def avEnd(callID: Integer) = {
-    State.calls.remove(callID)
   }
 }

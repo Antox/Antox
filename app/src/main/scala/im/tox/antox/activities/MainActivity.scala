@@ -17,10 +17,9 @@ import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
 import im.tox.antox.R
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.{BitmapManager, Constants, DrawerArrayAdapter, DrawerItem}
-import im.tox.jtoxcore.{ToxCallType, ToxCodecSettings, ToxException}
 
 class MainActivity extends ActionBarActivity {
 
@@ -195,22 +194,6 @@ class MainActivity extends ActionBarActivity {
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
   }
 
-  def onClickVoiceCallFriend(v: View) {
-    val toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 0, 0, 0, 64000, 20, 48000, 1)
-    val mFriend = ToxSingleton.getAntoxFriend(ToxSingleton.activeKey)
-    mFriend.foreach(friend => {
-      val userID = friend.getFriendnumber
-      try {
-        ToxSingleton.jTox.avCall(userID, toxCodecSettings, 10)
-      } catch {
-        case e: ToxException =>
-      }
-    })
-  }
-
-  def onClickVideoCallFriend(v: View) {
-  }
-
   protected override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
@@ -221,6 +204,11 @@ class MainActivity extends ActionBarActivity {
   override def onPause() {
     super.onPause()
     ToxSingleton.chatActive = false
+  }
+
+  override def onDestroy() {
+    super.onDestroy();
+    State.calls.removeAll()
   }
 
   def showAlertDialog(context: Context, title: String, message: String) {

@@ -1,56 +1,23 @@
 package im.tox.antox.fragments
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Color
+import android.content.{Context, DialogInterface, Intent}
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AbsListView
-import android.widget.Adapter
-import android.widget.AdapterView
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
-import com.shamanland.fab.FloatingActionButton
-import com.shamanland.fab.ShowHideOnScroll
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
+import android.text.{Editable, TextWatcher}
+import android.view.{LayoutInflater, View, ViewGroup}
+import android.widget.{AbsListView, Adapter, AdapterView, CheckBox, EditText, ListView}
+import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
 import im.tox.antox.R
-import im.tox.antox.activities.FriendProfileActivity
-import im.tox.antox.activities.ChatActivity
+import im.tox.antox.activities.{ChatActivity, FriendProfileActivity}
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.tox.Reactive
-import im.tox.antox.utils.AntoxFriend
-import im.tox.antox.utils.Constants
-import im.tox.antox.utils.FriendInfo
-import im.tox.antox.utils.FriendRequest
-import im.tox.antox.utils.LeftPaneItem
-import im.tox.antox.utils.Tuple
-import im.tox.jtoxcore.FriendExistsException
-import im.tox.jtoxcore.ToxException
-import rx.lang.scala.JavaConversions
-import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
-import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.utils._
+import im.tox.tox4j.exceptions.ToxException
+import rx.lang.scala.{Observable, Subscription}
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class ContactsFragment extends Fragment {
 
@@ -78,6 +45,7 @@ class ContactsFragment extends Fragment {
           var onlineAdded = false
           var offlineAdded = false
           for (f <- sortedFriendsList) {
+            println(f.friendKey + " is they online " + f.isOnline)
             if (!offlineAdded && !f.isOnline) {
               leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
               offlineAdded = true
@@ -170,10 +138,9 @@ class ContactsFragment extends Fragment {
                   case 1 => showDeleteFriendDialog(getActivity, key)
                   case 2 => showDeleteChatDialog(getActivity, key)
                   case 3 => try {
-                    ToxSingleton.jTox.addFriend(key, getResources.getString(R.string.addfriend_default_message))
+                    ToxSingleton.tox.addFriend(key, getResources.getString(R.string.addfriend_default_message))
                   } catch {
                     case e: ToxException =>
-                    case e: FriendExistsException =>
                   }
                 }
               }
@@ -228,7 +195,8 @@ class ContactsFragment extends Fragment {
             val mFriend = ToxSingleton.getAntoxFriend(key)
             mFriend.foreach(friend => {
               try {
-                ToxSingleton.jTox.deleteFriend(friend.getFriendnumber)
+                ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+                ToxSingleton.getAntoxFriendList().removeFriend(friend.getFriendnumber())
               } catch {
                 case e: ToxException =>
               }

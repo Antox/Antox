@@ -1,22 +1,22 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.utils.{Constants, AntoxFriend}
-import im.tox.jtoxcore.callbacks.OnActionCallback
-import AntoxOnActionCallback._
-//remove if not needed
-import scala.collection.JavaConversions._
+import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.{AntoxFriend, Constants}
+import im.tox.tox4j.core.callbacks.FriendActionCallback
 
 object AntoxOnActionCallback {
 
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnActionCallback(private var ctx: Context) extends OnActionCallback[AntoxFriend] {
+class AntoxOnActionCallback(private var ctx: Context) extends FriendActionCallback {
 
-  override def execute(friend: AntoxFriend, action: String): Unit = {
-    AntoxOnMessageCallback.handleMessage(ctx, friend, formatAction(action, friend.name),
-                                        Constants.MESSAGE_TYPE_ACTION)
+  override def friendAction(friendNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
+    AntoxOnMessageCallback.handleMessage(ctx, friendNumber,
+      ToxSingleton.getIdFromFriendNumber(friendNumber),
+      formatAction(new String(message, "UTF-8"), ToxSingleton.getNameFromFriendNumber(friendNumber)),
+      Constants.MESSAGE_TYPE_ACTION)
   }
 
   def formatAction(action: String, friendName: String): String = {

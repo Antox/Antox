@@ -15,8 +15,8 @@ import im.tox.QR.IntentIntegrator
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.Constants
-import im.tox.jtoxcore.{FriendExistsException, ToxException}
+import im.tox.antox.utils.{Constants, Hex}
+import im.tox.tox4j.exceptions.ToxException
 import org.xbill.DNS.{Lookup, TXTRecord, Type}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -106,10 +106,9 @@ class AddFriendActivity extends ActionBarActivity {
         val db = new AntoxDB(getApplicationContext)
         if (!db.doesFriendExist(ID)) {
           try {
-            ToxSingleton.jTox.addFriend(friendData(0), friendData(1))
+            ToxSingleton.tox.addFriend(friendData(0), friendData(1))
           } catch {
             case e: ToxException => e.printStackTrace()
-            case e: FriendExistsException => e.printStackTrace()
           }
           Log.d("AddFriendActivity", "Adding friend to database")
           db.addFriend(ID, "Friend Request Sent", alias, originalUsername)
@@ -174,6 +173,7 @@ class AddFriendActivity extends ActionBarActivity {
                       finish()
                     }
                   }
+                  case Some(_) => throw new Exception("this shouldn't happen")
                 }
               }
             }

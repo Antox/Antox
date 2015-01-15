@@ -1,20 +1,14 @@
 package im.tox.antox.fragments
 
-import android.app.ActionBar
-import android.app.FragmentTransaction
+import android.app.{ActionBar, FragmentTransaction}
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.{Fragment, FragmentManager, FragmentPagerAdapter}
 import android.support.v4.view.ViewPager
-import android.support.v4.view.PagerTabStrip
-import com.astuetz.PagerSlidingTabStrip
-import com.balysv.materialripple.MaterialRippleLayout
-import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.ImageView
+import com.astuetz.PagerSlidingTabStrip
+import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
+import com.balysv.materialripple.MaterialRippleLayout
 import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 

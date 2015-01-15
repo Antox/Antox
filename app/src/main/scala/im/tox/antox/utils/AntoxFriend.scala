@@ -1,26 +1,28 @@
 package im.tox.antox.utils
 
 import java.util.ArrayList
-import im.tox.jtoxcore.JTox
-import im.tox.jtoxcore.ToxFriend
-import im.tox.jtoxcore.ToxUserStatus
-import scala.beans.BeanProperty
-import scala.beans.BooleanBeanProperty
+
+import im.tox.antox.tox.ToxSingleton
+import im.tox.tox4j.core.enums.ToxStatus
+
+import scala.beans.{BeanProperty, BooleanBeanProperty}
 //remove if not needed
-import scala.collection.JavaConversions._
 
-class AntoxFriend(friendnumber: Int) extends ToxFriend {
+class AntoxFriend(friendnumber: Int) {
 
-  @transient private var friendNumber: Int = friendnumber
-
-  @BeanProperty
-  var id: String = _
+  @transient private val friendNumber: Int = friendnumber
 
   @BeanProperty
   var name: String = _
 
   @BeanProperty
-  var status: ToxUserStatus = ToxUserStatus.TOX_USERSTATUS_NONE
+  var address: String = _
+
+  @BeanProperty
+  var clientId: String = _
+
+  @BeanProperty
+  var status: ToxStatus = ToxStatus.NONE
 
   @BeanProperty
   var statusMessage: String = _
@@ -36,9 +38,9 @@ class AntoxFriend(friendnumber: Int) extends ToxFriend {
   @BeanProperty
   var previousNames: ArrayList[String] = _
 
-  override def getFriendnumber(): Int = this.friendNumber
+  def getFriendnumber(): Int = this.friendNumber
 
-  override def setTyping(isTyping: Boolean) {
+  def setTyping(isTyping: Boolean) {
     this.isTyping = isTyping
   }
 }

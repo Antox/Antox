@@ -2,7 +2,6 @@ package im.tox.antox.utils
 
 import java.sql.Timestamp
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class Message(
   val id: Int,

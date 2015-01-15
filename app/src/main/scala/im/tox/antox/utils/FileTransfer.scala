@@ -1,10 +1,10 @@
 package im.tox.antox.utils
 
+import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
+
 import android.util.Log
-import java.io.{File, FileOutputStream, FileInputStream, BufferedInputStream, BufferedOutputStream}
-import im.tox.antox.tox.ToxSingleton
-import FileStatus._
-import FileTransfer._
+import im.tox.antox.utils.FileStatus._
+import im.tox.antox.utils.FileTransfer._
 
 object FileTransfer {
   private val TAG = "im.tox.antox.utils.FileTransfer"

@@ -1,17 +1,12 @@
 package im.tox.antox.utils
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
-import android.util.LruCache
+import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
+
+import android.graphics.{Bitmap, BitmapFactory}
+import android.util.{Log, LruCache}
 import android.widget.ImageView
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.InputStream
-import BitmapManager._
+import im.tox.antox.utils.BitmapManager._
 //remove if not needed
-import scala.collection.JavaConversions._
 
 object BitmapManager {
 

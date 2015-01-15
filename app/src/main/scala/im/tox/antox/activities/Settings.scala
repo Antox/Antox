@@ -11,9 +11,8 @@ import im.tox.antox.R
 import im.tox.antox.activities.Settings._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.Options
-import im.tox.jtoxcore.ToxException
-//remove if not needed
+import im.tox.antox.utils.{Hex, Options}
+import im.tox.tox4j.exceptions.ToxException
 
 object Settings {
 
@@ -57,10 +56,11 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
         try {
           val random = new Random()
           val nospam = random.nextInt(1234567890)
-          toxSingleton.jTox.setNospam(nospam)
+          toxSingleton.tox.setNospam(nospam)
           val preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this)
           val editor = preferences.edit()
-          editor.putString("tox_id", toxSingleton.jTox.getAddress)
+          editor.putString("tox_id", toxSingleton.tox.getAddress)
+          println("MY TOX ID IS2: " + toxSingleton.tox.getAddress)
           editor.apply()
         } catch {
           case e: ToxException => e.printStackTrace()

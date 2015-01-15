@@ -68,33 +68,6 @@
             android:ellipsize="end"
             android:singleLine="true"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/callFriend"
-            android:gravity="center"
-            android:layout_width="48dp"
-            android:layout_height="48dp">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:contentDescription="Voice Call Friend"
-            android:onClick="onClickVoiceCallFriend"
-            android:src="@drawable/ic_action_call"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/videoFriend"
-            android:gravity="center"
-            android:layout_marginRight="5dp"
-            android:layout_width="48dp"
-            android:layout_height="48dp">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:contentDescription="Video Call Friend"
-            android:onClick="onClickVideoCallFriend"
-            android:src="@drawable/ic_action_video"/>
-        </LinearLayout>
     </LinearLayout>
 
     <ListView

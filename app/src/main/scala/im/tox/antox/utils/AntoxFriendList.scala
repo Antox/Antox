@@ -1,26 +1,16 @@
 package im.tox.antox.utils
 
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Iterator
-import java.util.List
-import java.util.Locale
-import im.tox.jtoxcore.FriendExistsException
-import im.tox.jtoxcore.FriendList
-import im.tox.jtoxcore.ToxFriend
-import im.tox.jtoxcore.ToxUserStatus
-import rx.lang.scala.JavaConversions
-import rx.lang.scala.Observable
-import rx.lang.scala.Observer
-import rx.lang.scala.Subscriber
-import rx.lang.scala.Subscription
-import rx.lang.scala.Subject
-import rx.lang.scala.schedulers.IOScheduler
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import java.util.{ArrayList, Collections, List, Locale}
+
+import im.tox.antox.tox.ToxSingleton
+import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.exceptions.ToxFriendAddException
+import im.tox.tox4j.exceptions.ToxException
+
 //remove if not needed
 import scala.collection.JavaConversions._
 
-class AntoxFriendList extends FriendList[AntoxFriend] {
+class AntoxFriendList {
 
   private var friends: List[AntoxFriend] = Collections.synchronizedList(new ArrayList[AntoxFriend]())
 
@@ -29,25 +19,26 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     this.friends = friends
   }
 
-  override def getByFriendNumber(friendnumber: Int): AntoxFriend = {
-    friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
-      case Some(f) => f
-      case None => null
-    }
+  def getByFriendNumber(friendNumber: Int): Option[AntoxFriend] = {
+    friends.filter(friend => friend.getFriendnumber == friendNumber).headOption
   }
 
-  def getByKey(key: String): Option[AntoxFriend] = {
-    friends.filter(friend => friend.getId == key).headOption
+  def getByClientAddress(address: String): Option[AntoxFriend] = {
+    friends.filter(friend => friend.getAddress == address).headOption
   }
 
-  override def getById(id: String): AntoxFriend = {
-    getByKey(id) match {
+  def getByClientId(id: String): Option[AntoxFriend] = {
+    friends.filter(friend => friend.getClientId == id).headOption
+  }
+
+  def getByAddress(address: String): AntoxFriend = {
+    getByClientAddress(address) match {
       case Some(x) => x
       case None => null
     }
   }
 
-  override def getByName(name: String, ignorecase: Boolean): List[AntoxFriend] = {
+  def getByName(name: String, ignorecase: Boolean): List[AntoxFriend] = {
     if (ignorecase) {
       return getByNameIgnoreCase(name)
     } else {
@@ -59,7 +50,7 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     friends.filter(friend => (friend.name == null && name == null) || (name != null && name.equalsIgnoreCase(friend.name)))
   }
 
-  override def searchFriend(partial: String): List[AntoxFriend] = {
+  def searchFriend(partial: String): List[AntoxFriend] = {
     val partialLowered = partial.toLowerCase(Locale.US)
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
@@ -67,25 +58,25 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     friends.filter(friend => (friend.name != null && friend.name.contains(partialLowered)))
   }
 
-  override def getByStatus(status: ToxUserStatus): List[AntoxFriend] = {
+  def getByStatus(status: ToxStatus): List[AntoxFriend] = {
     friends.filter(friend => friend.isOnline && friend.getStatus == status)
   }
 
-  override def getOnlineFriends(): List[AntoxFriend] = {
+  def getOnlineFriends(): List[AntoxFriend] = {
     friends.filter(friend => friend.isOnline)
   }
 
-  override def getOfflineFriends(): List[AntoxFriend] = {
+  def getOfflineFriends(): List[AntoxFriend] = {
     friends.filter(friend => !friend.isOnline)
   }
 
-  override def all(): List[AntoxFriend] = {
+  def all(): List[AntoxFriend] = {
     new ArrayList[AntoxFriend](this.friends)
   }
 
-  override def addFriend(friendnumber: Int): AntoxFriend = {
+  def addFriend(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
-      case Some(f) => throw new FriendExistsException(f.getFriendnumber)
+      case Some(f) => throw new Exception()
       case None => {
         val f = new AntoxFriend(friendnumber)
         this.friends.add(f)
@@ -94,7 +85,7 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     }
   }
 
-  override def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
+  def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
       case Some(f) => f
       case None => {
@@ -105,7 +96,15 @@ class AntoxFriendList extends FriendList[AntoxFriend] {
     }
   }
 
-  override def removeFriend(friendnumber: Int) {
+  def updateFromFriend(friend: Friend): Unit = {
+    val antoxFriend = getByClientId(ToxSingleton.clientIdFromAddress(friend.friendKey)).get
+    antoxFriend.setAddress(friend.friendKey)
+    antoxFriend.setName(friend.friendName)
+    antoxFriend.setStatusMessage(friend.friendStatus)
+    antoxFriend.setOnline(friend.isOnline)
+  }
+
+  def removeFriend(friendnumber: Int) {
     friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber))
   }
 }

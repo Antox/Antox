@@ -1,13 +1,9 @@
 package im.tox.antox.utils
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
+import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import im.tox.antox.tox.ToxSingleton
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class ConnectionChangeReceiver extends BroadcastReceiver {
 
