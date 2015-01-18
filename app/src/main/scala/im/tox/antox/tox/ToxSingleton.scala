@@ -11,20 +11,17 @@ import android.net.ConnectivityManager
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
-import im.tox.antox.callbacks.{AntoxOnActionCallback, AntoxOnAudioDataCallback, AntoxOnAvCallbackCallback, AntoxOnConnectionStatusCallback, AntoxOnFileControlCallback, AntoxOnFileDataCallback, AntoxOnFileSendRequestCallback, AntoxOnFriendRequestCallback, AntoxOnMessageCallback, AntoxOnNameChangeCallback, AntoxOnReadReceiptCallback, AntoxOnStatusMessageCallback, AntoxOnTypingChangeCallback, AntoxOnUserStatusCallback, AntoxOnVideoDataCallback}
+import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper.ToxCore
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
-//remove if not needed
-import scala.collection.JavaConversions._
 
 object ToxSingleton {
 
@@ -134,7 +131,7 @@ object ToxSingleton {
     }
   }
 
-  def fileSendRequest(key: String,
+  def fileSendRequest(address: String,
     fileNumber: Int,
     fileName: String,
     fileSize: Long,
@@ -167,8 +164,8 @@ object ToxSingleton {
         } while (file.exists());
       }
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, false)
-      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
+      val id = antoxDB.addFileTransfer(address, fileN, fileNumber, fileSize.toInt, false)
+      State.transfers.add(new FileTransfer(address, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
       antoxDB.close()
       updateMessages(context)
   }
@@ -181,21 +178,22 @@ object ToxSingleton {
     Reactive.activeKey.onNext(None)
   }
 
-  def fileAcceptReject(address: String, fileNumber: Integer, context: Context, accept: Boolean) {
+  private def fileAcceptOrReject(address: String, fileNumber: Integer, context: Context, accept: Boolean) {
     Log.d(TAG, "fileAcceptReject, accepting: " + accept)
     val id = State.db.getFileId(address, fileNumber)
     if (id != -1) {
       val mFriend = antoxFriendList.getByClientAddress(address)
       mFriend.foreach(friend => {
         try {
-          if (!accept) {
-            tox.fileControl(friend.getFriendnumber, fileNumber, ToxFileControl.CANCEL)
-          }
-            if (accept) {
+          tox.fileControl(friend.getFriendnumber(), fileNumber,
+              if (accept) ToxFileControl.RESUME else ToxFileControl.CANCEL)
+          
+          if (accept) {
             State.db.fileTransferStarted(address, fileNumber)
           } else {
             State.db.clearFileNumber(address, fileNumber)
-          }
+          } 
+          
           val transfer = State.transfers.get(id)
           transfer match {
             case Some(t) =>
@@ -210,9 +208,9 @@ object ToxSingleton {
     }
   }
 
-  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptReject(key, fileNumber, context, true)
+  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, true)
 
-  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptReject(key, fileNumber, context, false)
+  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, false)
 
   def receiveFileData(key: String,
     fileNumber: Int,
@@ -238,7 +236,7 @@ object ToxSingleton {
     }
   }
 
-  def fileFinished(key: String, fileNumber: Integer, sending: Boolean, context: Context) {
+  def fileFinished(key: String, fileNumber: Integer, context: Context) {
     Log.d(TAG, "fileFinished")
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
@@ -273,10 +271,6 @@ object ToxSingleton {
     Log.d(TAG, "fileTransferStarted")
     State.db.fileTransferStarted(key, fileNumber)
     val mTransfer = State.transfers.get(key, fileNumber)
-    mTransfer match {
-      case Some(t) => sendFileData(key, fileNumber, t.progress, ctx)
-      case None =>
-    }
   }
 
   def pauseFile(id: Long, ctx: Context) {
@@ -286,75 +280,6 @@ object ToxSingleton {
       case Some(t) => t.status = FileStatus.PAUSED
       case None =>
     }
-  }
-
-  def sendFileData(key: String,
-    fileNumber: Integer,
-    startPosition: Long,
-    context: Context) {
-      Log.d(TAG, "sendFileData")
-      Observable[Boolean](subscriber => {
-        doSendFileData(key, fileNumber, startPosition, context)
-        Log.d(TAG, "doSendFileData finished")
-        State.db.clearFileNumber(key, fileNumber)
-        subscriber.onCompleted()
-      }).subscribeOn(IOScheduler()).subscribe()
-  }
-
-  def doSendFileData(key: String,
-    fileNumber: Integer,
-    startPosition: Long,
-    context: Context) = {
-      /* Log.d(TAG, "doSendFileData")
-      val mTransfer = State.transfers.get(key, fileNumber)
-      mTransfer match {
-        case Some(t) =>
-          t.status = FileStatus.INPROGRESS
-          val mFriend = antoxFriendList.getByKey(key)
-          mFriend.foreach(friend => {
-            try {
-              val chunkSize = tox.fileDataSize(friend.getFriendnumber)
-              try {
-                var i: Long = 0
-                var reset = false
-                while (i < (t.size/chunkSize)) {
-                  val data = t.readData(reset, chunkSize)
-                  reset = true
-                  data match {
-                    case Some(d) =>
-                      val result = tox.fileSendData(friend.getFriendnumber, fileNumber, d)
-                      if (result == -1) {
-                        Log.d("sendFileDataTask", "toxFileSendData failed")
-                        try {
-                          tox.doTox()
-                          SystemClock.sleep(50)
-                        } catch {
-                          case e: Exception => e.printStackTrace()
-                        }
-                      } else {
-                        i += 1
-                        reset = false
-                        t.addToProgress(t.progress + chunkSize)
-                      }
-                    case None => 
-                  }
-                }
-                fileFinished(t.key, t.fileNumber, true, context)
-              } catch {
-                case e: Exception => {
-                  e.printStackTrace()
-                }
-              }
-            } catch {
-              case e: Exception => {
-                e.printStackTrace()
-              }
-            }
-          })
-        case None => {
-          Log.d(TAG, "Can't find file transfer")
-        }
-      } */
   }
 
   def updateFriendsList(ctx: Context) {
@@ -572,9 +497,11 @@ object ToxSingleton {
       tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
       tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
       tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
-      //tox.callbackFileRequestChunk(new AntoxOnFileSendRequestCallback(ctx))
-      //tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
-      //tox.callbackFileReceiveChunk(new AntoxOnFileDataCallback(ctx))
+      tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
+      tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
+      tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
+      tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+
 
       try {
         tox.setName(preferences.getString("nickname", ""))

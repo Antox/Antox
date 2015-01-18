@@ -6,49 +6,41 @@ import im.tox.antox.callbacks.AntoxOnFileControlCallback._
 import im.tox.antox.data.State
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.utils.{AntoxFriend, FileStatus}
+import im.tox.tox4j.core.callbacks.FileControlCallback
 import im.tox.tox4j.core.enums.ToxFileControl
-
-//remove if not needed
 
 object AntoxOnFileControlCallback {
 
   private val TAG = "OnFileControlCallback"
 }
 
-class AntoxOnFileControlCallback(private var ctx: Context) {
+class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCallback {
+  
+  override def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = {
+      Log.d(TAG, "control type: " + control.name())
+      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getAddress, fileNumber)
+      mTransfer match {
+        case Some(t) => {
+          (control, t.status) match {
+            case (ToxFileControl.RESUME, FileStatus.REQUESTSENT) =>
+              Log.d(TAG, "fileTransferStarted")
+              ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+            case (ToxFileControl.RESUME, FileStatus.PAUSED) =>
+              Log.d(TAG, "fileTransferResumed")
+              ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+            case (ToxFileControl.PAUSE, _) =>
+              Log.d(TAG, "pauseFile")
+              ToxSingleton.pauseFile(t.id, ctx)
+            case (ToxFileControl.CANCEL, _) =>
+              Log.d(TAG, "cancelFile")
+              ToxSingleton.cancelFile(t.key, t.fileNumber, ctx)
+            case _ =>
+              Log.d(TAG, "not matched: " + control + ", " + t.status)
 
-  def execute(friend: AntoxFriend,
-    sending: Boolean,
-    fileNumber: Int,
-    control_type: ToxFileControl,
-    data: Array[Byte]) {
-    Log.d(TAG, "control type: " + control_type.name() + ", sending: " + sending)
-    /* val mTransfer = State.transfers.get(friend.getId, fileNumber)
-    mTransfer match {
-      case Some(t) => {
-        (control_type, t.status, sending) match {
-          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.REQUESTSENT, true) =>
-            Log.d(TAG, "fileTransferStarted")
-            ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
-          case (ToxFileControl.TOX_FILECONTROL_ACCEPT, FileStatus.PAUSED, true) => 
-            Log.d(TAG, "fileTransferStarted")
-            ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
-          case (ToxFileControl.TOX_FILECONTROL_FINISHED, _, false) => 
-            Log.d(TAG, "fileFinished")
-            ToxSingleton.fileFinished(t.key, t.fileNumber, sending, ctx)
-          case (ToxFileControl.TOX_FILECONTROL_PAUSE, _, true) => 
-            Log.d(TAG, "pauseFile")
-            ToxSingleton.pauseFile(t.id, ctx)
-          case (ToxFileControl.TOX_FILECONTROL_KILL, _, true) => 
-            Log.d(TAG, "cancelFile")
-            ToxSingleton.cancelFile(t.key, t.fileNumber, ctx)
-          case _ =>
-            Log.d(TAG, "not matched: " + control_type + ", " + t.status + ", " + sending)
-
+          }
         }
+        case None => Log.d(TAG, "Transfer not found")
       }
-      case None => Log.d(TAG, "Transfer not found")
+      Reactive.updatedMessages.onNext(true)
     }
-    Reactive.updatedMessages.onNext(true) */
-  }
 }
