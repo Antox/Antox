@@ -40,10 +40,10 @@ class FileTransferManager () {
     _transfers.get(id).asInstanceOf[Option[FileTransfer]]
   }
 
-  def get(key: String, fileNumber: Integer): Option[FileTransfer] = {
-    val mId = _keyAndFileNumberToId.get(key, fileNumber)
+  def get(address: String, fileNumber: Integer): Option[FileTransfer] = {
+    val mId = _keyAndFileNumberToId.get(address, fileNumber)
     mId match {
-      case Some(id) => this.get(id)
+      case Some(address) => this.get(address)
       case None => None
     }
   }

@@ -3,7 +3,7 @@ package im.tox.antox.wrapper
 ;
 
 import android.util.Log
-import im.tox.antox.callbacks.{AntoxOnActionCallback, AntoxOnAudioDataCallback, AntoxOnAvCallbackCallback, AntoxOnConnectionStatusCallback, AntoxOnFileControlCallback, AntoxOnFileDataCallback, AntoxOnFileSendRequestCallback, AntoxOnFriendRequestCallback, AntoxOnMessageCallback, AntoxOnNameChangeCallback, AntoxOnReadReceiptCallback, AntoxOnStatusMessageCallback, AntoxOnTypingChangeCallback, AntoxOnUserStatusCallback, AntoxOnVideoDataCallback}
+import im.tox.antox.callbacks.{AntoxOnActionCallback, AntoxOnAudioDataCallback, AntoxOnAvCallbackCallback, AntoxOnConnectionStatusCallback, AntoxOnFileControlCallback, AntoxOnFileReceiveChunkCallback, AntoxOnFileSendRequestCallback, AntoxOnFriendRequestCallback, AntoxOnMessageCallback, AntoxOnNameChangeCallback, AntoxOnReadReceiptCallback, AntoxOnStatusMessageCallback, AntoxOnTypingChangeCallback, AntoxOnUserStatusCallback, AntoxOnVideoDataCallback}
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils._
 import im.tox.tox4j.core.ToxOptions
