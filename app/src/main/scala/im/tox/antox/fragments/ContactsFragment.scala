@@ -45,7 +45,6 @@ class ContactsFragment extends Fragment {
           var onlineAdded = false
           var offlineAdded = false
           for (f <- sortedFriendsList) {
-            println(f.friendKey + " is they online " + f.isOnline)
             if (!offlineAdded && !f.isOnline) {
               leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
               offlineAdded = true

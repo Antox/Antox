@@ -127,7 +127,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
-    println("rendering a message containing " + msg.message + " of type " + messageType)
     messageType match {
       case Constants.MESSAGE_TYPE_OWN =>
         ownMessage(holder)

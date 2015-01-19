@@ -101,6 +101,5 @@ class RecentFragment extends Fragment {
       .subscribe(cursor => {
         adapter.changeCursor(cursor)
       })
-    println("updated recent fragment")
   }
 }

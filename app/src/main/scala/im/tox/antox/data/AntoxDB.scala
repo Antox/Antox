@@ -531,12 +531,10 @@ class AntoxDB(ctx: Context) {
       do {
         var name = cursor.getString(1)
         val key = cursor.getString(0)
-        println("THE KEY IS " + key)
         val status = cursor.getString(2)
         val note = cursor.getString(3)
         var alias = cursor.getString(4)
         val isOnline = cursor.getInt(5) != 0
-        println(" for that key " + isOnline)
         val isBlocked = cursor.getInt(6) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = key.substring(0, 7)

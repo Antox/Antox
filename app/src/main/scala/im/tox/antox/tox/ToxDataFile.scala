@@ -46,7 +46,7 @@ class ToxDataFile(ctx: Context, fileName: String) {
           fin.close()
         }
       } catch {
-        case ioe: IOException => println("Error while closing stream: " + ioe)
+        case ioe: IOException => ioe.printStackTrace()
       }
     }
     data
