@@ -190,6 +190,7 @@ class AddFriendActivity extends ActionBarActivity {
       if (scanResult.getContents != null) {
         val addFriendKey = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
         val friendKey = (if (scanResult.getContents.toLowerCase().contains("tox:")) scanResult.getContents.substring(4) else scanResult.getContents)
+                        .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
         if (validateFriendKey(friendKey)) {
           addFriendKey.setText(friendKey)
         } else {
