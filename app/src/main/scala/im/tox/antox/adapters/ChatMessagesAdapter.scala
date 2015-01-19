@@ -127,6 +127,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
+    println("rendering a message containing " + msg.message + " of type " + messageType)
     messageType match {
       case Constants.MESSAGE_TYPE_OWN =>
         ownMessage(holder)
@@ -253,7 +254,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
       case Constants.MESSAGE_TYPE_ACTION =>
         actionMessage(holder)
-        holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make name bold
+        holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
 
     }
     holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true))
@@ -341,6 +342,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
 
   private def actionMessage(holder: ChatMessagesHolder) {
+    println("rendering a action message")
     holder.message.setVisibility(View.VISIBLE)
     holder.message.setTextSize(18)
     holder.message.setTextColor(context.getResources.getColor(R.color.black))

@@ -19,11 +19,17 @@ object AntoxOnMessageCallback {
 
   val TAG = "im.tox.antox.callbacks.AntoxOnMessageCallback"
 
- def handleMessage(ctx: Context, friendNumber: Int, friendId: String, message: String, messageType: Int): Unit ={
+  def handleMessage(ctx: Context, friendNumber: Int, friendId: String, rawMessage: String, messageType: Int): Unit = {
     val db = new AntoxDB(ctx)
     val friendAddress = ToxSingleton.addressFromClientId(friendId)
+    val message = if (messageType == Constants.MESSAGE_TYPE_ACTION) {
+      val friendDetails = db.getFriendDetails(friendAddress)
+      formatAction(rawMessage, if (friendDetails(1) == "") friendDetails(0) else friendDetails(1))
+    } else {
+      rawMessage
+    }
 
-     Log.d(TAG, "friend id: " + friendAddress + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
+    Log.d(TAG, "friend id: " + friendAddress + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendAddress)) {
       if (!(State.chatActive && State.activeKey.map(_ == friendAddress).getOrElse(false))) {
         db.addMessage(-1, friendAddress, message, true, false, true, messageType)
@@ -57,6 +63,15 @@ object AntoxOnMessageCallback {
         })
       }
     }
+  }
+
+  def formatAction(action: String, friendName: String): String = {
+    var formattedAction = ""
+    if (!action.startsWith(friendName)) {
+      formattedAction = friendName + " " + action
+    }
+
+    formattedAction
   }
 }
 
