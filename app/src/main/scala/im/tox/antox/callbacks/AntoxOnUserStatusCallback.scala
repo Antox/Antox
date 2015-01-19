@@ -17,7 +17,6 @@ object AntoxOnUserStatusCallback {
 class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCallback {
 
   override def friendStatus (friendNumber: Int, status: ToxStatus): Unit = {
-    println("USER STATUS " + friendNumber + " IS NOW " + status)
     val db = new AntoxDB(ctx)
     db.updateUserStatus(ToxSingleton.tox.getClientId(friendNumber), status)
     db.close()

@@ -19,7 +19,6 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
   override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection): Unit = {
     val online = if(connectionStatus == ToxConnection.NONE) false else true;
-    println("I AM  " + online + " with " + connectionStatus)
 
     val db = new AntoxDB(ctx)
     val friendAddress = ToxSingleton.addressFromClientId(ToxSingleton.getIdFromFriendNumber(friendNumber))
@@ -29,7 +28,6 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     tmp = if (det(1) != "") det(1) else det(0)
     val epochNow = System.currentTimeMillis() / 1000
     if (epochNow - Constants.epoch > 30) {
-      println("REACHED HERE")
       val tmp2 = if (online) this.ctx.getString(R.string.connection_online) else this.ctx.getString(R.string.connection_offline)
       db.addMessage(-1, friendAddress, tmp + " " + this.ctx.getString(R.string.connection_has) +
         " " +

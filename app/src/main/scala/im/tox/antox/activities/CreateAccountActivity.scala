@@ -114,7 +114,6 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
-    println("MY TOX ID IS: " + toxData.ID)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
   }

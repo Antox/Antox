@@ -60,7 +60,6 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
           val preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this)
           val editor = preferences.edit()
           editor.putString("tox_id", toxSingleton.tox.getAddress)
-          println("MY TOX ID IS2: " + toxSingleton.tox.getAddress)
           editor.apply()
         } catch {
           case e: ToxException => e.printStackTrace()

@@ -127,7 +127,6 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           db.close()
           try {
             ToxSingleton.tox.addFriendNoRequest(key)
-            println("key is " + key)
             ToxSingleton.tox.save()
           } catch {
             case e: Exception =>

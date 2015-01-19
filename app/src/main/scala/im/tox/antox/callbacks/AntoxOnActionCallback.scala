@@ -13,7 +13,6 @@ object AntoxOnActionCallback {
 class AntoxOnActionCallback(private var ctx: Context) extends FriendActionCallback {
 
   override def friendAction(friendNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
-    println("GOT A FRIEND ACTION")
     AntoxOnMessageCallback.handleMessage(ctx, friendNumber,
       ToxSingleton.getIdFromFriendNumber(friendNumber),
       new String(message, "UTF-8"),
