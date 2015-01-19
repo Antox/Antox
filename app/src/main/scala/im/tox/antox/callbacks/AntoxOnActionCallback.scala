@@ -13,18 +13,10 @@ object AntoxOnActionCallback {
 class AntoxOnActionCallback(private var ctx: Context) extends FriendActionCallback {
 
   override def friendAction(friendNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
+    println("GOT A FRIEND ACTION")
     AntoxOnMessageCallback.handleMessage(ctx, friendNumber,
       ToxSingleton.getIdFromFriendNumber(friendNumber),
-      formatAction(new String(message, "UTF-8"), ToxSingleton.getNameFromFriendNumber(friendNumber)),
+      new String(message, "UTF-8"),
       Constants.MESSAGE_TYPE_ACTION)
-  }
-
-  def formatAction(action: String, friendName: String): String = {
-    var formattedAction = ""
-    if (!action.startsWith(friendName)) {
-      formattedAction = friendName + " " + action
-    }
-
-    return formattedAction
   }
 }
