@@ -3,8 +3,8 @@ package im.tox.antox.wrapper
 ;
 
 import android.util.Log
-import im.tox.antox.callbacks.{AntoxOnActionCallback, AntoxOnAudioDataCallback, AntoxOnAvCallbackCallback, AntoxOnConnectionStatusCallback, AntoxOnFileControlCallback, AntoxOnFileReceiveChunkCallback, AntoxOnFileSendRequestCallback, AntoxOnFriendRequestCallback, AntoxOnMessageCallback, AntoxOnNameChangeCallback, AntoxOnReadReceiptCallback, AntoxOnStatusMessageCallback, AntoxOnTypingChangeCallback, AntoxOnUserStatusCallback, AntoxOnVideoDataCallback}
 import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.callbacks._
@@ -74,9 +74,23 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
 
   def getStatus: ToxStatus = tox.getStatus
 
-  def addFriend(address: String, message: String): Int = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes())
+  def addFriend(address: String, message: String): Int = {
+    val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes())
+    antoxFriendList.addFriend(friendNumber)
+    val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
+    antoxFriend.setAddress(address)
+    antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(address))
+    return friendNumber
+  }
 
-  def addFriendNoRequest(clientId: String): Int = tox.addFriendNoRequest(Hex.hexStringToBytes(clientId))
+  def addFriendNoRequest(address: String): Int = {
+    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(address))
+    antoxFriendList.addFriend(friendNumber)
+    val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
+    antoxFriend.setAddress(address)
+    antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(address))
+    return friendNumber
+  }
 
   def deleteFriend(friendNumber: Int): Unit = tox.deleteFriend(friendNumber)
 
