@@ -47,14 +47,16 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
   }
 
   def getUserDetails(username: String): Array[String] = {
-    val details = Array.ofDim[String](3)
+    val details = Array.ofDim[String](4)
     val db = this.getReadableDatabase
     val query = "SELECT * FROM users WHERE username='" + username + "'"
     val cursor = db.rawQuery(query, null)
     if (cursor.moveToFirst()) {
-      details(0) = cursor.getString(3)
-      details(1) = cursor.getString(4)
-      details(2) = cursor.getString(5)
+      //WHY WOULD ANY SANE MAN DO THIS
+      details(0) = cursor.getString(3) //nickname
+      details(1) = cursor.getString(2) //password
+      details(2) = cursor.getString(4) //status
+      details(3) = cursor.getString(5) //status message
     }
     cursor.close()
     db.close()

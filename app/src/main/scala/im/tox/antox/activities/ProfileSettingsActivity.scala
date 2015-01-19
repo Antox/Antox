@@ -53,6 +53,15 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
     bindPreferenceSummaryToValue(findPreference("nickname"))
+
+    val passwordPreference = findPreference("password")
+    if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
+        .getString(passwordPreference.getKey, "").isEmpty) {
+      getPreferenceScreen().removePreference(passwordPreference)
+    } else {
+      bindPreferenceSummaryToValue(passwordPreference)
+    }
+
     bindPreferenceSummaryToValue(findPreference("status"))
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
@@ -62,7 +71,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
       override def onPreferenceClick(preference: Preference): Boolean = {
         createDialog()
-        return true
+        true
       }
     })
     val logoutPreference = findPreference("logout")
@@ -165,6 +174,10 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         case e: ToxException => e.printStackTrace()
       }
       db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key,
+        ""))
+    }
+    if (key == "password") {
+      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "password", sharedPreferences.getString(key,
         ""))
     }
     if (key == "status") {

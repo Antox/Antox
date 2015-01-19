@@ -75,12 +75,13 @@ class CreateAccountActivity extends ActionBarActivity {
     toast.show()
   }
 
-  def saveAccountAndStartMain(accountName: String, toxID: String) {
+  def saveAccountAndStartMain(accountName: String, password: String, toxID: String) {
     // Save preferences
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val editor = preferences.edit()
     editor.putString("active_account", accountName)
     editor.putString("nickname", accountName)
+    editor.putString("password", password)
     editor.putString("status", "1")
     editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
     editor.putString("tox_id", toxID)
@@ -106,8 +107,6 @@ class CreateAccountActivity extends ActionBarActivity {
 
   def createToxData(accountName: String): ToxData = {
     val toxData = new ToxData
-
-    val antoxFriendList = new AntoxFriendList()
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
     toxOptions.setUdpEnabled(Options.udpEnabled)
@@ -144,7 +143,7 @@ class CreateAccountActivity extends ActionBarActivity {
       try {
         val toxData = createToxData(account)
 
-        saveAccountAndStartMain(account, toxData.ID)
+        saveAccountAndStartMain(account, "", toxData.ID)
       } catch {
         case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
       }
@@ -158,11 +157,9 @@ class CreateAccountActivity extends ActionBarActivity {
     if (!validAccountName(account)) {
       showBadAccountNameError()
     } else {
-      // Add user to db
       val db = new UserDB(this)
       db.addUser(account, "")
-      db.close()
-
+      
       // Create tox data save file
       var toxData = new ToxData
 
@@ -171,7 +168,7 @@ class CreateAccountActivity extends ActionBarActivity {
       } catch {
         case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
       }
-
+      
       // Register on toxme.se
       try {
         System.load("/data/data/im.tox.antox/lib/libkaliumjni.so")
@@ -220,12 +217,13 @@ class CreateAccountActivity extends ActionBarActivity {
 
       val toastMessage = jsonPost.getErrorCode match {
         case "0" =>
-          saveAccountAndStartMain(account, toxData.ID)
-          println("YEP IT SURE IS " + toxData.ID)
+          db.updateUserDetail(account, "password", jsonPost.getPassword)
+          saveAccountAndStartMain(account, jsonPost.getPassword, toxData.ID)
           null
         case "-25" => "This name is already taken"
         case "-26" => "Internal Antox Error. Please restart and try again"
         case "-4" => "You can only register 13 accounts an hour. You have reached this limit"
+        case _ => "Unknown registration error " + jsonPost.getErrorCode
       }
 
       if (toastMessage != null) {
@@ -233,13 +231,16 @@ class CreateAccountActivity extends ActionBarActivity {
         val duration = Toast.LENGTH_SHORT
         Toast.makeText(context, toastMessage, duration).show()
       }
+
+      db.close()
     }
   }
 
   private class JSONPost extends Runnable {
 
     @volatile private var errorCode: String = "notdone"
-
+    @volatile private var password: String = ""
+    
     private var finalJson: String = _
 
     def run() {
@@ -262,6 +263,14 @@ class CreateAccountActivity extends ActionBarActivity {
             errorCode = errorCode.replaceAll("\\}", "")
             Log.d("CreateAccount", "Error Code: " + errorCode)
           }
+
+          if (responseString.contains("\"password\":")) {
+            password = in.next()
+            password = password.replaceAll("\"", "")
+            password = password.replaceAll(",", "")
+            password = password.replaceAll("\\}", "")
+            Log.d("CreateAccount", "Password: " + password)
+          }
         }
         in.close()
       } catch {
@@ -272,8 +281,12 @@ class CreateAccountActivity extends ActionBarActivity {
       }
     }
 
-    def getErrorCode(): String = synchronized {
+    def getErrorCode: String = synchronized {
       errorCode
+    }
+    
+    def getPassword: String = synchronized {
+      password
     }
 
     def setJSON(json: String) {

@@ -126,11 +126,8 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           db.deleteFriendRequest(key)
           db.close()
           try {
-            val friendNumber = ToxSingleton.tox.addFriendNoRequest(key)
-            ToxSingleton.getAntoxFriendList().addFriend(friendNumber)
-            val antoxFriend = ToxSingleton.getAntoxFriendList().getByFriendNumber(friendNumber).get
-            antoxFriend.setAddress(key)
-            antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(key))
+            ToxSingleton.tox.addFriendNoRequest(key)
+            println("key is " + key)
             ToxSingleton.tox.save()
           } catch {
             case e: Exception =>
