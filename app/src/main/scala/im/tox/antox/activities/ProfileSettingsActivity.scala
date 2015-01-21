@@ -57,7 +57,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     val passwordPreference = findPreference("password")
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
         .getString(passwordPreference.getKey, "").isEmpty) {
-      getPreferenceScreen().removePreference(passwordPreference)
+      getPreferenceScreen.removePreference(passwordPreference)
     } else {
       bindPreferenceSummaryToValue(passwordPreference)
     }

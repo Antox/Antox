@@ -34,7 +34,7 @@ class PinDialogFragment extends DialogFragment {
   override def onCreateDialog(savedInstanceState: Bundle): Dialog = {
     val builder = new AlertDialog.Builder(getActivity)
     val inflater = getActivity.getLayoutInflater
-    val view = inflater.inflate(R.layout.dialog_pin, null).asInstanceOf[View]
+    val view = inflater.inflate(R.layout.dialog_pin, null)
     builder.setView(view)
     pin = view.findViewById(R.id.pin).asInstanceOf[EditText]
     builder.setMessage(getResources.getString(R.string.dialog_pin))

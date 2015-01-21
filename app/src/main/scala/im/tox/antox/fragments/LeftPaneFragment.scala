@@ -48,7 +48,7 @@ class LeftPaneFragment extends Fragment {
       case _ => new ContactsFragment()
     }
 
-    override def getCount(): Int = 2
+    override def getCount: Int = 2
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {

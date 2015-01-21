@@ -73,7 +73,7 @@ class RecentFragment extends Fragment {
     sub.unsubscribe()
   }
 
-  private def getCursor(): Cursor = {
+  private def getCursor: Cursor = {
     if (this.antoxDB == null) {
       this.antoxDB = new AntoxDB(getActivity)
     }

@@ -52,7 +52,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
     nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val toxSingleton = ToxSingleton.getInstance
+        val toxSingleton = ToxSingleton.getInstance()
         try {
           val random = new Random()
           val nospam = random.nextInt(1234567890)
@@ -81,7 +81,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
     if (key == "enable_udp") {
-      val toxSingleton = ToxSingleton.getInstance
+      val toxSingleton = ToxSingleton.getInstance()
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
       val service = new Intent(this, classOf[ToxDoService])
       this.stopService(service)

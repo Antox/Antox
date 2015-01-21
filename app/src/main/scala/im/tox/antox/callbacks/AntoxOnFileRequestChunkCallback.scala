@@ -17,7 +17,7 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
 
   override def fileRequestChunk(friendNumber: Int, fileNumber: Int, position: Long, length: Int): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)
-    val mTransfer = State.transfers.get(mFriend.get.getAddress(), fileNumber)
+    val mTransfer = State.transfers.get(mFriend.get.getAddress, fileNumber)
 
     mTransfer match {
       case Some(t) =>
@@ -28,7 +28,7 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
             State.db.clearFileNumber(friend.getAddress, fileNumber)
             ToxSingleton.fileFinished(friend.getAddress, t.fileNumber, ctx) //make this on lenght 0 or whatever TODO
           } else {
-            val reset = if (position < t.progress) true else false;
+            val reset = if (position < t.progress) true else false
             val data = t.readData(reset, length)
             data match {
               case Some(d) =>

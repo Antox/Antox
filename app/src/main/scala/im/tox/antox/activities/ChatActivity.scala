@@ -62,7 +62,7 @@ class ChatActivity extends ActionBarActivity {
     val thisActivity = this
     Log.d(TAG, "key = " + key)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor(), antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
+    adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -95,9 +95,9 @@ class ChatActivity extends ActionBarActivity {
         val isTyping = (i3 > 0)
         val mFriend = ToxSingleton.getAntoxFriend(key)
         mFriend.foreach(friend => {
-          if (friend.isOnline()) {
+          if (friend.isOnline) {
             try {
-              ToxSingleton.tox.setTyping(friend.getFriendnumber(), isTyping)
+              ToxSingleton.tox.setTyping(friend.getFriendnumber, isTyping)
             } catch {
               case te: ToxException => {
               }
@@ -128,7 +128,7 @@ class ChatActivity extends ActionBarActivity {
         val mFriend = ToxSingleton.getAntoxFriend(key)
         mFriend.foreach(friend => {
           try {
-            ToxSingleton.tox.setTyping(friend.getFriendnumber(), false)
+            ToxSingleton.tox.setTyping(friend.getFriendnumber, typing = false)
           } catch {
             case te: ToxException => {
             }
@@ -188,7 +188,7 @@ class ChatActivity extends ActionBarActivity {
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
     // Inflate the menu items for use in the action bar
-    val inflater: MenuInflater = getMenuInflater()
+    val inflater: MenuInflater = getMenuInflater
     inflater.inflate(R.menu.chat_activity, menu)
     super.onCreateOptionsMenu(menu)
   }
@@ -202,10 +202,10 @@ class ChatActivity extends ActionBarActivity {
     val thisActivity = this
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
-    val antoxDB = new AntoxDB(getApplicationContext())
+    val antoxDB = new AntoxDB(getApplicationContext)
     antoxDB.markIncomingMessagesRead(activeKey)
     ToxSingleton.clearUselessNotifications(activeKey)
-    ToxSingleton.updateMessages(getApplicationContext())
+    ToxSingleton.updateMessages(getApplicationContext)
     messagesSub = Reactive.updatedMessages.subscribe(x => {
       Log.d(TAG, "Messages updated")
       updateChat()
@@ -224,21 +224,21 @@ class ChatActivity extends ActionBarActivity {
       .subscribe(fi => {
         val key = activeKey
         val mFriend: Option[FriendInfo] = fi
-          .filter(f => f.friendKey == key)
+          .filter(f => f.address == key)
           .headOption
         mFriend match {
           case Some(friend) => {
             if (friend.alias != "") {
               thisActivity.setDisplayName(friend.alias)
             } else {
-              thisActivity.setDisplayName(friend.friendName)
+              thisActivity.setDisplayName(friend.name)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
               thisActivity.statusIconView.setBackground(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
             } else {
               thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.friendStatus))))
+                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
             }
           }
           case None => {
@@ -250,12 +250,12 @@ class ChatActivity extends ActionBarActivity {
 
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
-    if (messageBox.getText() != null && messageBox.getText().toString().length() == 0) {
+    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
       return
     }
     var msg: String = null
-    if (messageBox.getText() != null) {
-      msg = messageBox.getText().toString()
+    if (messageBox.getText != null) {
+      msg = messageBox.getText.toString
     } else {
       msg = ""
     }
@@ -266,7 +266,7 @@ class ChatActivity extends ActionBarActivity {
 
   def updateChat() = {
     val observable: Observable[Cursor] = Observable((observer) => {
-      val cursor: Cursor = getCursor()
+      val cursor: Cursor = getCursor
       observer.onNext(cursor)
       observer.onCompleted()
     })
@@ -331,7 +331,7 @@ class ChatActivity extends ActionBarActivity {
     println("This button (Video Call) doesn't work yet.")
   }
 
-  def getCursor(): Cursor = {
+  def getCursor: Cursor = {
     if (antoxDB == null) {
       antoxDB = new AntoxDB(this)
     }
@@ -343,7 +343,7 @@ class ChatActivity extends ActionBarActivity {
   override def onPause() = {
     super.onPause()
     Reactive.chatActive.onNext(false)
-    if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right);
+    if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
     titleSub.unsubscribe()
     progressSub.unsubscribe()

@@ -28,7 +28,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
     this(antoxFriendList: AntoxFriendList, new ToxOptions)
   }
 
-  def getTox() = tox
+  def getTox = tox
 
   def close(): Unit = tox.close()
 
@@ -62,11 +62,11 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
 
   def getAddress: String = Hex.bytesToHexString(tox.getAddress)
 
-  def setName(name: String): Unit = tox.setName(name.getBytes())
+  def setName(name: String): Unit = tox.setName(name.getBytes)
 
   def getName: String = new String(tox.getName, "UTF-8")
 
-  def setStatusMessage(message: String): Unit = tox.setStatusMessage(message.getBytes())
+  def setStatusMessage(message: String): Unit = tox.setStatusMessage(message.getBytes)
 
   def getStatusMessage: String = new String(tox.getStatusMessage, "UTF-8")
 
@@ -75,7 +75,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
   def getStatus: ToxStatus = tox.getStatus
 
   def addFriend(address: String, message: String): Int = {
-    val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes())
+    val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes)
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setAddress(address)
@@ -104,9 +104,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
 
   def setTyping(friendNumber: Int, typing: Boolean): Unit = tox.setTyping(friendNumber, typing)
 
-  def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, message.getBytes())
+  def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, message.getBytes)
 
-  def sendAction(friendNumber: Int, action: String): Int = tox.sendAction(friendNumber, action.getBytes())
+  def sendAction(friendNumber: Int, action: String): Int = tox.sendAction(friendNumber, action.getBytes)
 
   def callbackFriendName(callback: FriendNameCallback): Unit = tox.callbackFriendName(callback)
 
@@ -130,7 +130,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
 
   def callbackFileControl(callback: FileControlCallback): Unit = tox.callbackFileControl(callback)
 
-  def fileSend(friendNumber: Int, fileNumber: ToxFileKind, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, fileNumber, fileSize, filename.getBytes())
+  def fileSend(friendNumber: Int, fileNumber: ToxFileKind, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, fileNumber, fileSize, filename.getBytes)
 
   def fileSendChunk(friendNumber: Int, fileNumber: Int, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, data)
 

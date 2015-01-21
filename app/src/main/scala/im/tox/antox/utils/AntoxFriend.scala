@@ -1,5 +1,6 @@
 package im.tox.antox.utils
 
+import java.util
 import java.util.ArrayList
 
 import im.tox.antox.tox.ToxSingleton
@@ -36,9 +37,9 @@ class AntoxFriend(friendnumber: Int) {
   var nickname: String = _
 
   @BeanProperty
-  var previousNames: ArrayList[String] = _
+  var previousNames: util.ArrayList[String] = _
 
-  def getFriendnumber(): Int = this.friendNumber
+  def getFriendnumber: Int = this.friendNumber
 
   def setTyping(isTyping: Boolean) {
     this.isTyping = isTyping

@@ -1,5 +1,6 @@
 package im.tox.antox.utils
 
+import java.util
 import java.util.{ArrayList, Collections, List, Locale}
 
 import im.tox.antox.tox.ToxSingleton
@@ -12,9 +13,9 @@ import scala.collection.JavaConversions._
 
 class AntoxFriendList {
 
-  private var friends: List[AntoxFriend] = Collections.synchronizedList(new ArrayList[AntoxFriend]())
+  private var friends: util.List[AntoxFriend] = Collections.synchronizedList(new util.ArrayList[AntoxFriend]())
 
-  def this(friends: ArrayList[AntoxFriend]) {
+  def this(friends: util.ArrayList[AntoxFriend]) {
     this()
     this.friends = friends
   }
@@ -38,7 +39,7 @@ class AntoxFriendList {
     }
   }
 
-  def getByName(name: String, ignorecase: Boolean): List[AntoxFriend] = {
+  def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
     if (ignorecase) {
       return getByNameIgnoreCase(name)
     } else {
@@ -46,11 +47,11 @@ class AntoxFriendList {
     }
   }
 
-  private def getByNameIgnoreCase(name: String): List[AntoxFriend] = {
+  private def getByNameIgnoreCase(name: String): util.List[AntoxFriend] = {
     friends.filter(friend => (friend.name == null && name == null) || (name != null && name.equalsIgnoreCase(friend.name)))
   }
 
-  def searchFriend(partial: String): List[AntoxFriend] = {
+  def searchFriend(partial: String): util.List[AntoxFriend] = {
     val partialLowered = partial.toLowerCase(Locale.US)
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
@@ -58,20 +59,20 @@ class AntoxFriendList {
     friends.filter(friend => (friend.name != null && friend.name.contains(partialLowered)))
   }
 
-  def getByStatus(status: ToxStatus): List[AntoxFriend] = {
+  def getByStatus(status: ToxStatus): util.List[AntoxFriend] = {
     friends.filter(friend => friend.isOnline && friend.getStatus == status)
   }
 
-  def getOnlineFriends(): List[AntoxFriend] = {
+  def getOnlineFriends: util.List[AntoxFriend] = {
     friends.filter(friend => friend.isOnline)
   }
 
-  def getOfflineFriends(): List[AntoxFriend] = {
+  def getOfflineFriends: util.List[AntoxFriend] = {
     friends.filter(friend => !friend.isOnline)
   }
 
-  def all(): List[AntoxFriend] = {
-    new ArrayList[AntoxFriend](this.friends)
+  def all(): util.List[AntoxFriend] = {
+    new util.ArrayList[AntoxFriend](this.friends)
   }
 
   def addFriend(friendnumber: Int): AntoxFriend = {
@@ -97,10 +98,10 @@ class AntoxFriendList {
   }
 
   def updateFromFriend(friend: Friend): Unit = {
-    val antoxFriend = getByClientId(ToxSingleton.clientIdFromAddress(friend.friendKey)).get
-    antoxFriend.setAddress(friend.friendKey)
-    antoxFriend.setName(friend.friendName)
-    antoxFriend.setStatusMessage(friend.friendStatus)
+    val antoxFriend = getByClientId(ToxSingleton.clientIdFromAddress(friend.address)).get
+    antoxFriend.setAddress(friend.address)
+    antoxFriend.setName(friend.name)
+    antoxFriend.setStatusMessage(friend.status)
     antoxFriend.setOnline(friend.isOnline)
   }
 
