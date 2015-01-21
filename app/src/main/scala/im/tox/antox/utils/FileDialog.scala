@@ -2,6 +2,7 @@
 package im.tox.antox.utils
 
 import java.io.{File, FilenameFilter}
+import java.util
 import java.util.{ArrayList, List}
 
 import android.app.{Activity, AlertDialog, Dialog}
@@ -110,16 +111,16 @@ class FileDialog(private val activity: Activity, path: File) {
 
   private def loadFileList(path: File) {
     this.currentPath = path
-    val r = new ArrayList[CharSequence]()
+    val r = new util.ArrayList[CharSequence]()
     if (path.exists()) {
       if (path.getParentFile != null) r.add(PARENT_DIR)
       val filter = new FilenameFilter() {
 
         def accept(dir: File, filename: String): Boolean = {
           var sel = new File(dir, filename)
-          if (!sel.canRead()) return false
+          if (!sel.canRead) return false
           if (selectDirectoryOption) return sel.isDirectory else {
-            var endsWith = if (fileEndsWith != null) filename.toLowerCase().endsWith(fileEndsWith) else true
+            var endsWith = if (fileEndsWith != null) filename.toLowerCase.endsWith(fileEndsWith) else true
             return endsWith || sel.isDirectory
           }
         }
@@ -148,14 +149,14 @@ object ListenerList {
 
 class ListenerList[L] {
 
-  private var listenerList: List[L] = new ArrayList[L]()
+  private var listenerList: util.List[L] = new util.ArrayList[L]()
 
   def add(listener: L) {
     listenerList.add(listener)
   }
 
   def fireEvent(fireHandler: FireHandler[L]) {
-    val copy = new ArrayList[L](listenerList)
+    val copy = new util.ArrayList[L](listenerList)
     for (l <- copy) {
       fireHandler.fireEvent(l)
     }

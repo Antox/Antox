@@ -3,6 +3,7 @@ package im.tox.antox.tox
 import java.io.{BufferedReader, File, InputStreamReader, Reader}
 import java.net.URL
 import java.nio.charset.Charset
+import java.util
 import java.util.{ArrayList, HashMap}
 
 import android.app.NotificationManager
@@ -41,7 +42,7 @@ object ToxSingleton {
 
   var qrFile: File = _
 
-  var typingMap: HashMap[String, Boolean] = new HashMap[String, Boolean]()
+  var typingMap: util.HashMap[String, Boolean] = new util.HashMap[String, Boolean]()
 
   var isInited: Boolean = false
 
@@ -73,7 +74,7 @@ object ToxSingleton {
     }
   }
 
-  def getAntoxFriendList(): AntoxFriendList = antoxFriendList
+  def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
   def getIdFromFriendNumber(friendNumber: Int): String = {
     ToxSingleton.tox.getClientId(friendNumber)
@@ -110,7 +111,7 @@ object ToxSingleton {
         .flatMap(friendNumber => {
           try {
             Log.d(TAG, "Creating tox file sender")
-            val fn = tox.fileSend(friendNumber, ToxFileKind.DATA, file.length(), fileName);
+            val fn = tox.fileSend(friendNumber, ToxFileKind.DATA, file.length(), fileName)
             fn match {
               case -1 => None
               case x => Some(x)
@@ -124,7 +125,7 @@ object ToxSingleton {
           }).foreach(fileNumber => {
             val antoxDB = new AntoxDB(context)
             Log.d(TAG, "adding File Transfer")
-            val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, true)
+            val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, sending = true)
             State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id))
             antoxDB.close()
           })
@@ -161,10 +162,10 @@ object ToxSingleton {
           fileExt
           file = new File(dirfile.getPath, fileN)
           i += 1
-        } while (file.exists());
+        } while (file.exists())
       }
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(address, fileN, fileNumber, fileSize.toInt, false)
+      val id = antoxDB.addFileTransfer(address, fileN, fileNumber, fileSize.toInt, sending = false)
       State.transfers.add(new FileTransfer(address, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
       antoxDB.close()
       updateMessages(context)
@@ -185,7 +186,7 @@ object ToxSingleton {
       val mFriend = antoxFriendList.getByClientAddress(address)
       mFriend.foreach(friend => {
         try {
-          tox.fileControl(friend.getFriendnumber(), fileNumber,
+          tox.fileControl(friend.getFriendnumber, fileNumber,
               if (accept) ToxFileControl.RESUME else ToxFileControl.CANCEL)
           
           if (accept) {
@@ -208,9 +209,9 @@ object ToxSingleton {
     }
   }
 
-  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, true)
+  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = true)
 
-  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, false)
+  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = false)
 
   def receiveFileData(key: String,
     fileNumber: Int,
@@ -362,7 +363,7 @@ object ToxSingleton {
               sb.append(cp.toChar)
               cp = rd.read()
             }
-            sb.toString
+            sb.toString()
           }
 
           def readJsonFromUrl(url: String): JSONObject = {
@@ -389,7 +390,7 @@ object ToxSingleton {
             subscriber.onCompleted()
           } catch {
             case e: Exception => {
-              Log.e(TAG, "update dht nodes error: " + e);
+              Log.e(TAG, "update dht nodes error: " + e)
               subscriber.onError(e)
             }
           }
@@ -436,7 +437,7 @@ object ToxSingleton {
   }
 
   def initTox(ctx: Context) {
-    State.db = new AntoxDB(ctx).open(true)
+    State.db = new AntoxDB(ctx).open(writeable = true)
     antoxFriendList = new AntoxFriendList()
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
     dataFile = new ToxDataFile(ctx)
@@ -467,7 +468,7 @@ object ToxSingleton {
         }
       }
 
-      toxAv = new ToxAvImpl(tox.getTox())
+      toxAv = new ToxAvImpl(tox.getTox)
 
       val db = new AntoxDB(ctx)
       db.setAllOffline()
@@ -476,7 +477,7 @@ object ToxSingleton {
       if (friends.size > 0) {
         for (friend <- friends) {
           try {
-            tox.addFriendNoRequest(clientIdFromAddress(friend.friendKey))
+            tox.addFriendNoRequest(clientIdFromAddress(friend.address))
           } catch {
             case e: Exception => e.printStackTrace()
           }

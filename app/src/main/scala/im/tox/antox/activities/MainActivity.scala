@@ -1,5 +1,6 @@
 package im.tox.antox.activities
 
+import java.util
 import java.util.{ArrayList, Locale}
 
 import android.app.{Activity, AlertDialog, NotificationManager}
@@ -121,7 +122,7 @@ class MainActivity extends ActionBarActivity {
     mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
     mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
-    val list = new ArrayList[DrawerItem]()
+    val list = new util.ArrayList[DrawerItem]()
     list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_profile))
     list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_menu_settings))
     list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_social_add_group))
@@ -207,7 +208,7 @@ class MainActivity extends ActionBarActivity {
   }
 
   override def onDestroy() {
-    super.onDestroy();
+    super.onDestroy()
     State.calls.removeAll()
   }
 

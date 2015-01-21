@@ -13,9 +13,9 @@ class ChatMessages(
   val size: Int,
   val `type`: Int) {
 
-  def isMine(): Boolean = {
+  def isMine: Boolean = {
     if (`type` == 1 || `type` == 3) true else false
   }
 
-  def getType(): Int = `type`
+  def getType: Int = `type`
 }

@@ -53,7 +53,7 @@ class ContactsFragment extends Fragment {
               leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
               onlineAdded = true
             }
-            val friend = new LeftPaneItem(f.friendKey, f.friendName, f.lastMessage,
+            val friend = new LeftPaneItem(f.address, f.name, f.statusMessage,
               f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount,
               f.lastMessageTimestamp)
             leftPaneAdapter.addItem(friend)
@@ -168,7 +168,7 @@ class ContactsFragment extends Fragment {
         i: Int,
         i2: Int,
         i3: Int) {
-        if (leftPaneAdapter != null) leftPaneAdapter.getFilter.filter(charSequence)
+        if (leftPaneAdapter != null) leftPaneAdapter.getFilter().filter(charSequence)
       }
 
       override def afterTextChanged(editable: Editable) {
@@ -195,7 +195,7 @@ class ContactsFragment extends Fragment {
             mFriend.foreach(friend => {
               try {
                 ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
-                ToxSingleton.getAntoxFriendList().removeFriend(friend.getFriendnumber())
+                ToxSingleton.getAntoxFriendList.removeFriend(friend.getFriendnumber)
               } catch {
                 case e: ToxException =>
               }
@@ -239,9 +239,9 @@ class ContactsFragment extends Fragment {
 
   def compareNames(a: FriendInfo, b: FriendInfo): Boolean = {
     if (a.alias != "") {
-      if (b.alias != "") (a.alias.toUpperCase().compareTo(b.alias.toUpperCase()) == -1) else (a.alias.toUpperCase().compareTo(b.friendName.toUpperCase()) == -1)
+      if (b.alias != "") (a.alias.toUpperCase.compareTo(b.alias.toUpperCase) == -1) else (a.alias.toUpperCase.compareTo(b.name.toUpperCase) == -1)
     } else {
-      if (b.alias != "") (a.friendName.toUpperCase().compareTo(b.alias.toUpperCase()) == -1) else (a.friendName.toUpperCase().compareTo(b.friendName.toUpperCase()) == -1)
+      if (b.alias != "") (a.name.toUpperCase.compareTo(b.alias.toUpperCase) == -1) else (a.name.toUpperCase.compareTo(b.name.toUpperCase) == -1)
     }
   }
 

@@ -6,15 +6,15 @@ import im.tox.tox4j.core.enums.ToxStatus
 
 class Friend(
   val isOnline: Boolean,
-  val friendName: String,
-  val friendStatus: String,
-  val personalNote: String,
-  val friendKey: String,
+  val name: String,
+  val status: String,
+  val statusMessage: String,
+  val address: String,
   val alias: String) {
 
-  def getFriendStatusAsToxUserStatus(): ToxStatus = {
-    UserStatus.getToxUserStatusFromString(friendStatus)
+  def getFriendStatusAsToxUserStatus: ToxStatus = {
+    UserStatus.getToxUserStatusFromString(status)
   }
 
-  override def toString(): String = friendName
+  override def toString: String = name
 }

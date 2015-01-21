@@ -15,7 +15,6 @@ object State {
   def chatActive = _chatActive
 
   def chatActive(b: Boolean) = {
-    require(b != null)
     _chatActive = b
   }
 

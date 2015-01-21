@@ -37,7 +37,7 @@ class FileTransferManager () {
   }
 
   def get(id: Long): Option[FileTransfer] = {
-    _transfers.get(id).asInstanceOf[Option[FileTransfer]]
+    _transfers.get(id)
   }
 
   def get(address: String, fileNumber: Integer): Option[FileTransfer] = {

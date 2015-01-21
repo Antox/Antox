@@ -18,7 +18,7 @@ object AntoxOnConnectionStatusCallback {
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback {
 
   override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection): Unit = {
-    val online = if(connectionStatus == ToxConnection.NONE) false else true;
+    val online = if(connectionStatus == ToxConnection.NONE) false else true
 
     val db = new AntoxDB(ctx)
     val friendAddress = ToxSingleton.addressFromClientId(ToxSingleton.getIdFromFriendNumber(friendNumber))
@@ -31,7 +31,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
       val tmp2 = if (online) this.ctx.getString(R.string.connection_online) else this.ctx.getString(R.string.connection_offline)
       db.addMessage(-1, friendAddress, tmp + " " + this.ctx.getString(R.string.connection_has) +
         " " +
-        tmp2, true, true, true, 5)
+        tmp2, has_been_received = true, has_been_read = true, successfully_sent = true, 5)
       db.close()
     }
     if (online) {

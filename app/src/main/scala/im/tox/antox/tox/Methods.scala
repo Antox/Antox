@@ -58,21 +58,21 @@ object Methods {
   private def sendMessageHelper(ctx: Context, key: String, friend: AntoxFriend, msg: String, mDbId: Option[Integer]) = {
     Observable[Boolean](subscriber => {
       val mId = try {
-        Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber(), msg))
+        Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, msg))
       } catch {
         case e: Exception => {
           None
         }
       }
-      var db = new AntoxDB(ctx).open(true)
+      var db = new AntoxDB(ctx).open(writeable = true)
       mId match {
         case Some(id) => {
           mDbId match {
             case Some(dbId) => db.updateUnsentMessage(id, dbId)
-            case None => db.addMessage(id, key, msg, false, false, true, 1)
+            case None => db.addMessage(id, key, msg, has_been_received = false, has_been_read = false, successfully_sent = true, 1)
           }
         }
-        case None => db.addMessage(-1, key, msg, false, false, false, 1)
+        case None => db.addMessage(-1, key, msg, has_been_received = false, has_been_read = false, successfully_sent = false, 1)
       }
       db.close()
       ToxSingleton.updateMessages(ctx)
@@ -81,7 +81,7 @@ object Methods {
   }
 
   def sendUnsentMessages(ctx: Context) {
-    val db = new AntoxDB(ctx).open(false)
+    val db = new AntoxDB(ctx).open(writeable = false)
     val unsentMessageList = db.getUnsentMessageList
     db.close()
     for (unsentMessage <- unsentMessageList) {

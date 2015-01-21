@@ -1,6 +1,7 @@
 
 package im.tox.antox.data
 
+import java.util
 import java.util.ArrayList
 
 import android.content.{ContentValues, Context}
@@ -82,15 +83,15 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
     count > 0
   }
 
-  def getAllProfiles(): ArrayList[String] = {
-    val profiles = new ArrayList[String]()
+  def getAllProfiles: util.ArrayList[String] = {
+    val profiles = new util.ArrayList[String]()
     val sqLiteDatabase = this.getReadableDatabase
     val query = "SELECT username FROM users"
     val cursor = sqLiteDatabase.rawQuery(query, null)
     if (cursor.moveToFirst()) {
       do {
         profiles.add(cursor.getString(0))
-      } while (cursor.moveToNext());
+      } while (cursor.moveToNext())
     }
     profiles
   }

@@ -1,5 +1,6 @@
 package im.tox.antox.adapters
 
+import java.util
 import java.util.ArrayList
 
 import android.app.Activity
@@ -33,9 +34,9 @@ object LeftPaneAdapter {
 
 class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
-  private var mDataOriginal: ArrayList[LeftPaneItem] = new ArrayList[LeftPaneItem]()
+  private var mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private var mData: ArrayList[LeftPaneItem] = new ArrayList[LeftPaneItem]()
+  private var mData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
   private var mInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
 
@@ -52,9 +53,9 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     `type`
   }
 
-  override def getViewTypeCount(): Int = Constants.TYPE_MAX_COUNT
+  override def getViewTypeCount: Int = Constants.TYPE_MAX_COUNT
 
-  override def getCount(): Int = mData.size
+  override def getCount: Int = mData.size
 
   override def getItem(position: Int): LeftPaneItem = mData.get(position)
 
@@ -103,7 +104,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       } else {
         holder.countText.setVisibility(View.GONE)
       }
-      holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false))
+      holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, isChat = false))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
       } else {
@@ -150,7 +151,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     newConvertView
   }
 
-  override def getFilter(): Filter = {
+  override def getFilter: Filter = {
     if (mFilter == null) {
       mFilter = new Filter() {
 
@@ -162,13 +163,13 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
               filterResults.count = mDataOriginal.size
             } else {
               mData = mDataOriginal
-              var tempList1 = new ArrayList[LeftPaneItem]()
-              var tempList2 = new ArrayList[LeftPaneItem]()
+              var tempList1 = new util.ArrayList[LeftPaneItem]()
+              var tempList2 = new util.ArrayList[LeftPaneItem]()
               var length = mData.size
               var i = 0
               while (i < length) {
                 var item = mData.get(i)
-                if (item.first.toUpperCase().startsWith(constraint.toString.toUpperCase())) tempList1.add(item) else if (item.first.toLowerCase().contains(constraint.toString.toLowerCase())) tempList2.add(item)
+                if (item.first.toUpperCase.startsWith(constraint.toString.toUpperCase)) tempList1.add(item) else if (item.first.toLowerCase.contains(constraint.toString.toLowerCase)) tempList2.add(item)
                 i += 1
               }
               tempList1.addAll(tempList2)
@@ -180,7 +181,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         }
 
         protected override def publishResults(contraint: CharSequence, results: FilterResults) {
-          mData = results.values.asInstanceOf[ArrayList[LeftPaneItem]]
+          mData = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
           if (results.count > 0) {
             notifyDataSetChanged()
           } else {

@@ -31,18 +31,16 @@ object AntoxOnMessageCallback {
 
     Log.d(TAG, "friend id: " + friendAddress + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendAddress)) {
-      if (!(State.chatActive && State.activeKey.map(_ == friendAddress).getOrElse(false))) {
-        db.addMessage(-1, friendAddress, message, true, false, true, messageType)
-      } else {
-        db.addMessage(-1, friendAddress, message, true, true, true, messageType)
-      }
+      val chatActive = (State.chatActive && State.activeKey.contains(friendAddress))
+        db.addMessage(-1, friendAddress, message, has_been_received = true,
+                      has_been_read = chatActive, successfully_sent = true, messageType)
     }
     db.close()
     ToxSingleton.updateMessages(ctx)
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&
       preferences.getBoolean("notifications_new_message", true)) {
-      if (!(State.chatActive && State.activeKey.map(_ == friendAddress).getOrElse(false))) {
+      if (!(State.chatActive && State.activeKey.contains(friendAddress))) {
         val mName = ToxSingleton.getAntoxFriend(friendAddress).map(_.getName)
         mName.foreach(name => {
           val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)

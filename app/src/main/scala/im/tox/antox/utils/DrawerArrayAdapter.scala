@@ -1,5 +1,6 @@
 package im.tox.antox.utils
 
+import java.util
 import java.util.List
 
 import android.content.Context
@@ -8,12 +9,12 @@ import android.widget.{ArrayAdapter, ImageView, TextView}
 import im.tox.antox.R
 //remove if not needed
 
-class DrawerArrayAdapter(context: Context, resourceId: Int, items: List[DrawerItem])
+class DrawerArrayAdapter(context: Context, resourceId: Int, items: util.List[DrawerItem])
   extends ArrayAdapter[DrawerItem](context, resourceId, items) {
 
-  private var mItems: List[DrawerItem] = items
+  private var mItems: util.List[DrawerItem] = items
 
-  def getList(): List[DrawerItem] = mItems
+  def getList: util.List[DrawerItem] = mItems
 
   override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
     var holder: ViewHolder = null

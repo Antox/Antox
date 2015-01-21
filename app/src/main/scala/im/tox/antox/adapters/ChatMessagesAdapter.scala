@@ -2,6 +2,7 @@ package im.tox.antox.adapters
 
 import java.io.File
 import java.sql.Timestamp
+import java.util
 import java.util.HashSet
 
 import android.app.AlertDialog
@@ -66,7 +67,7 @@ object ChatMessagesAdapter {
   }
 }
 
-class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer])
+class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Integer])
   extends ResourceCursorAdapter(context, R.layout.chat_message_row, c, 0) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
@@ -77,7 +78,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
   private var mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
 
-  private var animatedIds: HashSet[Integer] = ids
+  private var animatedIds: util.HashSet[Integer] = ids
 
   override def newView(context: Context, cursor: Cursor, parent: ViewGroup): View = {
     mInflater.inflate(this.layoutResourceId, parent, false)
@@ -106,12 +107,12 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
     holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
     holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
-    holder.padding = view.findViewById(R.id.file_transfer_padding).asInstanceOf[View]
+    holder.padding = view.findViewById(R.id.file_transfer_padding)
     holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
-    holder.accept = view.findViewById(R.id.file_accept_button).asInstanceOf[View]
-    holder.reject = view.findViewById(R.id.file_reject_button).asInstanceOf[View]
-    holder.sentTriangle = view.findViewById(R.id.sent_triangle).asInstanceOf[View]
-    holder.receivedTriangle = view.findViewById(R.id.received_triangle).asInstanceOf[View]
+    holder.accept = view.findViewById(R.id.file_accept_button)
+    holder.reject = view.findViewById(R.id.file_reject_button)
+    holder.sentTriangle = view.findViewById(R.id.sent_triangle)
+    holder.receivedTriangle = view.findViewById(R.id.received_triangle)
     holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
     holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
     holder.message.setTextSize(16)
@@ -222,7 +223,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
             for (extension <- okFileExtensions) {
               //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
               //Log.d("ChatMessagesAdapter", extension)
-              if (file.getName.toLowerCase().endsWith(extension)) {
+              if (file.getName.toLowerCase.endsWith(extension)) {
                 Log.d("ChatMessagesAdapter", "true")
                 if (BitmapManager.checkValidImage(file)) {
                   BitmapManager.loadBitmap(file, file.getPath.hashCode, holder.imageMessage)
@@ -256,7 +257,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
         holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
 
     }
-    holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, true))
+    holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
     holder.time.setVisibility(View.VISIBLE)
     if (!animatedIds.contains(id)) {
       holder.row.startAnimation(anim)
@@ -272,7 +273,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
-                var clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+1                var clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
                 clipboard.setText(m)
 
               case 1 =>
@@ -313,7 +314,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
     })
   }
 
-  override def getViewTypeCount(): Int = 4
+  override def getViewTypeCount: Int = 4
 
   override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
@@ -341,7 +342,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: HashSet[Integer]
 
 
   private def actionMessage(holder: ChatMessagesHolder) {
-    println("rendering a action message")
     holder.message.setVisibility(View.VISIBLE)
     holder.message.setTextSize(18)
     holder.message.setTextColor(context.getResources.getColor(R.color.black))

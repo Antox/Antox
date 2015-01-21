@@ -219,10 +219,10 @@ class CreateAccountActivity extends ActionBarActivity {
           db.updateUserDetail(account, "password", jsonPost.getPassword)
           saveAccountAndStartMain(account, jsonPost.getPassword, toxData.ID)
           null
-        case "-25" => "This name is already taken"
-        case "-26" => "Internal Antox Error. Please restart and try again"
-        case "-4" => "You can only register 13 accounts an hour. You have reached this limit"
-        case _ => "Unknown registration error " + jsonPost.getErrorCode
+        case "-25" => getString(R.string.create_account_exists)
+        case "-26" => getString(R.string.create_account_internal_error)
+        case "-4" => getString(R.string.create_account_reached_registration_limit)
+        case _ => getString(R.string.create_account_unknown_error) + jsonPost.getErrorCode
       }
 
       if (toastMessage != null) {

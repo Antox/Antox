@@ -79,14 +79,14 @@ class AddFriendActivity extends ActionBarActivity {
 
   override def onPause() = {
     super.onPause()
-    if (isFinishing()) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom);
+    if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom)
   }
 
   private def isKeyOwn(key: String): Boolean = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     var tmp = preferences.getString("tox_id", "")
 
-    if (tmp.toLowerCase().startsWith("tox:"))
+    if (tmp.toLowerCase.startsWith("tox:"))
       tmp = tmp.substring(4)
 
     if (tmp == key)
@@ -189,7 +189,7 @@ class AddFriendActivity extends ActionBarActivity {
     if (scanResult != null) {
       if (scanResult.getContents != null) {
         val addFriendKey = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-        val friendKey = (if (scanResult.getContents.toLowerCase().contains("tox:")) scanResult.getContents.substring(4) else scanResult.getContents)
+        val friendKey = (if (scanResult.getContents.toLowerCase.contains("tox:")) scanResult.getContents.substring(4) else scanResult.getContents)
                         .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
         if (validateFriendKey(friendKey)) {
           addFriendKey.setText(friendKey)

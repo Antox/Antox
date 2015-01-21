@@ -27,6 +27,10 @@
     <string name="create_must_fill_in">You must fill in all fields</string>
     <string name="create_bad_profile_name">Profile name can\'t contain spaces or slashes or be empty</string>
     <string name="create_profile_exists">This profile name already exists</string>
+    <string name="create_account_exists">This name is already taken</string>
+    <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
+    <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
+    <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>

@@ -73,7 +73,7 @@ object CaptureAudio {
       }
     } catch {
       case e: Exception =>
-        e.printStackTrace
+        e.printStackTrace()
         None
     }
   }
