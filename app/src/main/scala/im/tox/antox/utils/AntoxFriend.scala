@@ -17,9 +17,6 @@ class AntoxFriend(friendnumber: Int) {
   var name: String = _
 
   @BeanProperty
-  var address: String = _
-
-  @BeanProperty
   var clientId: String = _
 
   @BeanProperty

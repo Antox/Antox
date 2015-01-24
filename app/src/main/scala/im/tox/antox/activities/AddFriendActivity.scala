@@ -82,7 +82,7 @@ class AddFriendActivity extends ActionBarActivity {
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom)
   }
 
-  private def isKeyOwn(key: String): Boolean = {
+  private def isAddressOwn(key: String): Boolean = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     var tmp = preferences.getString("tox_id", "")
 
@@ -95,23 +95,23 @@ class AddFriendActivity extends ActionBarActivity {
       false
   }
 
-  private def checkAndSend(key: String, originalUsername: String): Int = {
-    if (!isKeyOwn(key)) {
-      if (validateFriendKey(key)) {
-        val ID = key
+  private def checkAndSend(address: String, originalUsername: String): Int = {
+    if (!isAddressOwn(address)) {
+      if (validateFriendKey(address)) {
+        val clientId = ToxSingleton.clientIdFromAddress(address)
         var message = friendMessage.getText.toString
         val alias = friendAlias.getText.toString
         if (message == "") message = getString(R.string.addfriend_default_message)
-        val friendData = Array(ID, message, alias)
+        val friendData = Array(message, alias)
         val db = new AntoxDB(getApplicationContext)
-        if (!db.doesFriendExist(ID)) {
+        if (!db.doesFriendExist(clientId)) {
           try {
-            ToxSingleton.tox.addFriend(friendData(0), friendData(1))
+            ToxSingleton.tox.addFriend(address, friendData(0))
           } catch {
             case e: ToxException => e.printStackTrace()
           }
           Log.d("AddFriendActivity", "Adding friend to database")
-          db.addFriend(ID, "Friend Request Sent", alias, originalUsername)
+          db.addFriend(clientId, "Friend Request Sent", alias, originalUsername)
         } else {
           db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)

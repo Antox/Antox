@@ -1,5 +1,7 @@
 package im.tox.antox.fragments
 
+import java.text.Collator
+
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
 import android.os.Bundle
@@ -53,14 +55,13 @@ class ContactsFragment extends Fragment {
               leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
               onlineAdded = true
             }
-            val friend = new LeftPaneItem(f.address, f.name, f.statusMessage,
+            val friend = new LeftPaneItem(f.clientId, f.name, f.statusMessage,
               f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount,
               f.lastMessageTimestamp)
             leftPaneAdapter.addItem(friend)
           }
         }
         contactsListView.setAdapter(leftPaneAdapter)
-        println("updated contacts")
       }
     }
   }
@@ -158,16 +159,10 @@ class ContactsFragment extends Fragment {
     val search = rootView.findViewById(R.id.searchBar).asInstanceOf[EditText]
     search.addTextChangedListener(new TextWatcher() {
 
-      override def beforeTextChanged(charSequence: CharSequence,
-        i: Int,
-        i2: Int,
-        i3: Int) {
+      override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
       }
 
-      override def onTextChanged(charSequence: CharSequence,
-        i: Int,
-        i2: Int,
-        i3: Int) {
+      override def onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
         if (leftPaneAdapter != null) leftPaneAdapter.getFilter().filter(charSequence)
       }
 
@@ -237,11 +232,7 @@ class ContactsFragment extends Fragment {
   }
 
   def compareNames(a: FriendInfo, b: FriendInfo): Boolean = {
-    if (a.alias != "") {
-      if (b.alias != "") (a.alias.toUpperCase.compareTo(b.alias.toUpperCase) == -1) else (a.alias.toUpperCase.compareTo(b.name.toUpperCase) == -1)
-    } else {
-      if (b.alias != "") (a.name.toUpperCase.compareTo(b.alias.toUpperCase) == -1) else (a.name.toUpperCase.compareTo(b.name.toUpperCase) == -1)
-    }
+    Collator.getInstance().compare(a.getAliasOrName().toLowerCase, b.getAliasOrName().toLowerCase) < 0
   }
 
   def compareOnline(a: FriendInfo, b: FriendInfo): Boolean = {

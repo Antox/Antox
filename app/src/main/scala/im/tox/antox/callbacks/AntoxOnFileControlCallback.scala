@@ -18,7 +18,7 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCa
   
   override def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = {
       Log.d(TAG, "control type: " + control.name())
-      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getAddress, fileNumber)
+      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getClientId, fileNumber)
       mTransfer match {
         case Some(t) => {
           (control, t.status) match {

@@ -9,7 +9,7 @@ class Friend(
   val name: String,
   val status: String,
   val statusMessage: String,
-  val address: String,
+  val clientId: String,
   val alias: String) {
 
   def getFriendStatusAsToxUserStatus: ToxStatus = {

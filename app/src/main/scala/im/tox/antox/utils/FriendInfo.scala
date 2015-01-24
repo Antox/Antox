@@ -14,4 +14,10 @@ class FriendInfo(
   val unreadCount: Int,
   alias: String) extends Friend(isOnline, friendName, userStatus, personalNote, friendKey, alias) {
 
+  /**
+  Returns 'alias' if it has been set, otherwise returns 'name'.
+   */
+  def getAliasOrName(): String = {
+    if (alias != "") alias else name
+  }
 }

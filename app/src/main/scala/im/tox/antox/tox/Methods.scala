@@ -64,7 +64,7 @@ object Methods {
           None
         }
       }
-      var db = new AntoxDB(ctx).open(writeable = true)
+      val db = new AntoxDB(ctx).open(writeable = true)
       mId match {
         case Some(id) => {
           mDbId match {

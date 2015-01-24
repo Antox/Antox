@@ -117,17 +117,17 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (`type` == Constants.TYPE_FRIEND_REQUEST) {
       val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
       val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
-      val key = item.first
+      val clientId = item.first
       acceptButton.setOnClickListener(new View.OnClickListener() {
 
         override def onClick(view: View) {
-          Log.d("OnClick", "Accepting Friend: " + key)
+          Log.d("OnClick", "Accepting Friend: " + clientId)
           val db = new AntoxDB(context)
-          db.addFriend(key, "Friend Accepted", "", "")
-          db.deleteFriendRequest(key)
+          db.addFriend(clientId, "Friend Accepted", "", "")
+          db.deleteFriendRequest(clientId)
           db.close()
           try {
-            ToxSingleton.tox.addFriendNoRequest(key)
+            ToxSingleton.tox.addFriendNoRequest(clientId)
             ToxSingleton.tox.save()
           } catch {
             case e: Exception =>
@@ -139,9 +139,9 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       rejectButton.setOnClickListener(new View.OnClickListener() {
 
         override def onClick(view: View) {
-          Log.d("OnClick", "Rejecting Friend: " + key)
+          Log.d("OnClick", "Rejecting Friend: " + clientId)
           val antoxDB = new AntoxDB(context)
-          antoxDB.deleteFriendRequest(key)
+          antoxDB.deleteFriendRequest(clientId)
           antoxDB.close()
           ToxSingleton.updateFriendsList(context)
           ToxSingleton.updateFriendRequests(context)
@@ -172,7 +172,6 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
                 if (item.first.toUpperCase().startsWith(constraint.toString.toUpperCase())) tempList1.add(item) else if (item.first.toLowerCase().contains(constraint.toString.toLowerCase())) tempList2.add(item)
                 i += 1
               }
-              println("filtering")
               tempList1.addAll(tempList2)
               filterResults.values = tempList1
               filterResults.count = tempList1.size
