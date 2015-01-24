@@ -52,9 +52,9 @@ object ToxSingleton {
 
   var dhtNodes: Array[DhtNode] = Array()
 
-  def getAntoxFriend(address: String): Option[AntoxFriend] = {
+  def getAntoxFriend(clientId: String): Option[AntoxFriend] = {
     try {
-      antoxFriendList.getByClientAddress(address)
+      antoxFriendList.getByClientId(clientId)
     } catch {
       case e: Exception => {
         e.printStackTrace()
@@ -86,12 +86,6 @@ object ToxSingleton {
 
   def clientIdFromAddress(address: String): String = {
     address.substring(0, 64) //Cut to the length of the clientId portion of a tox address. TODO: make a class that represents the full tox address
-  }
-
-  //This is used at the start of all callbacks to convert between the client id (64 bytes) provided
-  //by the callbacks to the full Tox address (72 bytes) used for the database internally.
-  def addressFromClientId(clientId: String): String = {
-    antoxFriendList.getByClientId(clientId).get.getAddress
   }
 
   def sendFileSendRequest(path: String, key: String, context: Context) {
@@ -132,7 +126,7 @@ object ToxSingleton {
     }
   }
 
-  def fileSendRequest(address: String,
+  def fileSendRequest(clientId: String,
     fileNumber: Int,
     fileName: String,
     fileSize: Long,
@@ -165,8 +159,8 @@ object ToxSingleton {
         } while (file.exists())
       }
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(address, fileN, fileNumber, fileSize.toInt, sending = false)
-      State.transfers.add(new FileTransfer(address, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
+      val id = antoxDB.addFileTransfer(clientId, fileN, fileNumber, fileSize.toInt, sending = false)
+      State.transfers.add(new FileTransfer(clientId, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
       antoxDB.close()
       updateMessages(context)
   }
@@ -179,20 +173,20 @@ object ToxSingleton {
     Reactive.activeKey.onNext(None)
   }
 
-  private def fileAcceptOrReject(address: String, fileNumber: Integer, context: Context, accept: Boolean) {
+  private def fileAcceptOrReject(clientId: String, fileNumber: Integer, context: Context, accept: Boolean) {
     Log.d(TAG, "fileAcceptReject, accepting: " + accept)
-    val id = State.db.getFileId(address, fileNumber)
+    val id = State.db.getFileId(clientId, fileNumber)
     if (id != -1) {
-      val mFriend = antoxFriendList.getByClientAddress(address)
+      val mFriend = antoxFriendList.getByClientId(clientId)
       mFriend.foreach(friend => {
         try {
           tox.fileControl(friend.getFriendnumber, fileNumber,
               if (accept) ToxFileControl.RESUME else ToxFileControl.CANCEL)
           
           if (accept) {
-            State.db.fileTransferStarted(address, fileNumber)
+            State.db.fileTransferStarted(clientId, fileNumber)
           } else {
-            State.db.clearFileNumber(address, fileNumber)
+            State.db.clearFileNumber(clientId, fileNumber)
           } 
           
           val transfer = State.transfers.get(id)
@@ -243,7 +237,7 @@ object ToxSingleton {
     transfer match {
       case Some(t) => {
         t.status = FileStatus.FINISHED
-        val mFriend = antoxFriendList.getByClientAddress(t.key)
+        val mFriend = antoxFriendList.getByClientId(t.key)
         State.db.fileFinished(key, fileNumber)
         Reactive.updatedMessages.onNext(true)
       }
@@ -294,9 +288,9 @@ object ToxSingleton {
     }
   }
 
-  def clearUselessNotifications(address: String) {
-    if (address != null && address != "") {
-      val mFriend = antoxFriendList.getByClientAddress(address)
+  def clearUselessNotifications(clientId: String) {
+    if (clientId != null && clientId != "") {
+      val mFriend = antoxFriendList.getByClientId(clientId)
       mFriend.foreach(friend => {
         try {
           mNotificationManager.cancel(friend.getFriendnumber)
@@ -477,7 +471,7 @@ object ToxSingleton {
       if (friends.size > 0) {
         for (friend <- friends) {
           try {
-            tox.addFriendNoRequest(clientIdFromAddress(friend.address))
+            tox.addFriendNoRequest(friend.clientId)
           } catch {
             case e: Exception => e.printStackTrace()
           }

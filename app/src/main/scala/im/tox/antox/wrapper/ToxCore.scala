@@ -78,17 +78,15 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
     val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes)
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setAddress(address)
     antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(address))
     return friendNumber
   }
 
-  def addFriendNoRequest(address: String): Int = {
-    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(address))
+  def addFriendNoRequest(clientId: String): Int = {
+    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(clientId))
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setAddress(address)
-    antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(address))
+    antoxFriend.setClientId(clientId)
     return friendNumber
   }
 

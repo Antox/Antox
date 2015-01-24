@@ -24,7 +24,7 @@ object Constants {
 
   val DOWNLOAD_DIRECTORY = "Tox received files"
 
-  val DATABASE_VERSION = 1
+  val DATABASE_VERSION = 3
 
   val TABLE_FRIENDS = "friends"
 

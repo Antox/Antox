@@ -21,22 +21,11 @@ class AntoxFriendList {
   }
 
   def getByFriendNumber(friendNumber: Int): Option[AntoxFriend] = {
-    friends.filter(friend => friend.getFriendnumber == friendNumber).headOption
-  }
-
-  def getByClientAddress(address: String): Option[AntoxFriend] = {
-    friends.filter(friend => friend.getAddress == address).headOption
+    friends.find(friend => friend.getFriendnumber == friendNumber)
   }
 
   def getByClientId(id: String): Option[AntoxFriend] = {
-    friends.filter(friend => friend.getClientId == id).headOption
-  }
-
-  def getByAddress(address: String): AntoxFriend = {
-    getByClientAddress(address) match {
-      case Some(x) => x
-      case None => null
-    }
+    friends.find(friend => friend.getClientId == id)
   }
 
   def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
@@ -98,8 +87,7 @@ class AntoxFriendList {
   }
 
   def updateFromFriend(friend: Friend): Unit = {
-    val antoxFriend = getByClientId(ToxSingleton.clientIdFromAddress(friend.address)).get
-    antoxFriend.setAddress(friend.address)
+    val antoxFriend = getByClientId(friend.clientId).get
     antoxFriend.setName(friend.name)
     antoxFriend.setStatusMessage(friend.status)
     antoxFriend.setOnline(friend.isOnline)

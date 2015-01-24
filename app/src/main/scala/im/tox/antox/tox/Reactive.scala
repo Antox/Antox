@@ -23,17 +23,17 @@ object Reactive {
       tup match {
         case (fl, lm) => {
           fl.map(f => {
-            val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.address)
-            val unreadCount: Option[Integer] = uc.get(f.address)
+            val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.clientId)
+            val unreadCount: Option[Integer] = uc.get(f.clientId)
             (lastMessageTup, unreadCount) match {
               case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.address, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
+                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.clientId, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
               }
               case (Some((lastMessage, lastMessageTimestamp)), None) => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.address, lastMessage, lastMessageTimestamp, 0, f.alias)
+                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.clientId, lastMessage, lastMessageTimestamp, 0, f.alias)
               }
               case _ => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.address, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
+                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.clientId, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
               }
             }
           })

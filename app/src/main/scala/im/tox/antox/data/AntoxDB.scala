@@ -637,7 +637,6 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_ISONLINE, online)
-    println(" put key " + key + " is online ? " + online)
     mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
