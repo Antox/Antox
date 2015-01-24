@@ -273,7 +273,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
-1                var clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
                 clipboard.setText(m)
 
               case 1 =>
