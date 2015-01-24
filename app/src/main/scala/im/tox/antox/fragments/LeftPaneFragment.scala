@@ -26,19 +26,10 @@ class LeftPaneFragment extends Fragment {
     }
 
     override def getPageTitle(position: Int): CharSequence = {
-
       position match {
         case 0 => return "Recent"
         case _ => return "Contacts"
       }
-/*
-      val drawable: Drawable = getResources.getDrawable(drawableId)
-      val sb: SpannableStringBuilder = new SpannableStringBuilder("")
-      drawable.setBounds(0, 0, drawable.getIntrinsicWidth, drawable.getIntrinsicHeight)
-      val span: ImageSpan = new ImageSpan(drawable, DynamicDrawableSpan.ALIGN_BASELINE)
-      sb.setSpan(span, 0, 0, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-      sb
-      */
 
       null
     }

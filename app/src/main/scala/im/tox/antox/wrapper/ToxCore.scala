@@ -92,7 +92,10 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
     return friendNumber
   }
 
-  def deleteFriend(friendNumber: Int): Unit = tox.deleteFriend(friendNumber)
+  def deleteFriend(friendNumber: Int): Unit = {
+    ToxSingleton.getAntoxFriendList.removeFriend(friendNumber)
+    tox.deleteFriend(friendNumber)
+  }
 
   def getFriendByClientId(clientId: String): Int = tox.getFriendByClientId(Hex.hexStringToBytes(clientId))
 

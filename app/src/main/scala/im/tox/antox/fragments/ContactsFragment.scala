@@ -195,7 +195,6 @@ class ContactsFragment extends Fragment {
             mFriend.foreach(friend => {
               try {
                 ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
-                ToxSingleton.getAntoxFriendList.removeFriend(friend.getFriendnumber)
               } catch {
                 case e: ToxException =>
               }
