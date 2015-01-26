@@ -89,4 +89,6 @@ object Constants {
   val MESSAGE_TYPE_ACTION = 5
 
   var epoch: Long = _
+
+  val UNREAD_COUNT_LIMIT = 99
 }
