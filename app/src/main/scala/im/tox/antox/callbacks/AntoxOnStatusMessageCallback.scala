@@ -17,7 +17,7 @@ class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatu
 
   override def friendStatusMessage(friendNumber: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(ctx)
-    db.updateStatusMessage(ToxSingleton.tox.getClientId(friendNumber), new String(message, "UTF-8"))
+    db.updateStatusMessage(ToxSingleton.tox.getFriendKey(friendNumber), new String(message, "UTF-8"))
     db.close()
     ToxSingleton.updateFriendsList(ctx)
   }

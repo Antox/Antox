@@ -21,14 +21,14 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     val online = if(connectionStatus == ToxConnection.NONE) false else true
 
     val db = new AntoxDB(ctx)
-    val friendClientId = ToxSingleton.getIdFromFriendNumber(friendNumber)
-    db.updateUserOnline(friendClientId, online)
+    val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
+    db.updateUserOnline(friendKey, online)
     ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
 
     if (online) {
       Methods.sendUnsentMessages(ctx)
     } else {
-      ToxSingleton.typingMap.put(friendClientId, false)
+      ToxSingleton.typingMap.put(friendKey, false)
       Reactive.typing.onNext(true)
     }
     ToxSingleton.updateFriendsList(ctx)

@@ -24,8 +24,8 @@ class AntoxFriendList {
     friends.find(friend => friend.getFriendnumber == friendNumber)
   }
 
-  def getByClientId(id: String): Option[AntoxFriend] = {
-    friends.find(friend => friend.getClientId == id)
+  def getByKey(key: String): Option[AntoxFriend] = {
+    friends.find(friend => friend.getKey == key)
   }
 
   def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
@@ -87,7 +87,7 @@ class AntoxFriendList {
   }
 
   def updateFromFriend(friend: Friend): Unit = {
-    val antoxFriend = getByClientId(friend.clientId).get
+    val antoxFriend = getByKey(friend.key).get
     antoxFriend.setName(friend.name)
     antoxFriend.setStatusMessage(friend.status)
     antoxFriend.setOnline(friend.isOnline)

@@ -117,17 +117,17 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (`type` == Constants.TYPE_FRIEND_REQUEST) {
       val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
       val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
-      val clientId = item.first
+      val key = item.first
       acceptButton.setOnClickListener(new View.OnClickListener() {
 
         override def onClick(view: View) {
-          Log.d("OnClick", "Accepting Friend: " + clientId)
+          Log.d("OnClick", "Accepting Friend: " + key)
           val db = new AntoxDB(context)
-          db.addFriend(clientId, "Friend Accepted", "", "")
-          db.deleteFriendRequest(clientId)
+          db.addFriend(key, "Friend Accepted", "", "")
+          db.deleteFriendRequest(key)
           db.close()
           try {
-            ToxSingleton.tox.addFriendNoRequest(clientId)
+            ToxSingleton.tox.addFriendNoRequest(key)
             ToxSingleton.tox.save()
           } catch {
             case e: Exception =>
@@ -139,9 +139,9 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       rejectButton.setOnClickListener(new View.OnClickListener() {
 
         override def onClick(view: View) {
-          Log.d("OnClick", "Rejecting Friend: " + clientId)
+          Log.d("OnClick", "Rejecting Friend: " + key)
           val antoxDB = new AntoxDB(context)
-          antoxDB.deleteFriendRequest(clientId)
+          antoxDB.deleteFriendRequest(key)
           antoxDB.close()
           ToxSingleton.updateFriendsList(context)
           ToxSingleton.updateFriendRequests(context)

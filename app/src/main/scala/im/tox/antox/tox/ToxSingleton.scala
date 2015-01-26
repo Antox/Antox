@@ -52,9 +52,9 @@ object ToxSingleton {
 
   var dhtNodes: Array[DhtNode] = Array()
 
-  def getAntoxFriend(clientId: String): Option[AntoxFriend] = {
+  def getAntoxFriend(key: String): Option[AntoxFriend] = {
     try {
-      antoxFriendList.getByClientId(clientId)
+      antoxFriendList.getByKey(key)
     } catch {
       case e: Exception => {
         e.printStackTrace()
@@ -76,16 +76,8 @@ object ToxSingleton {
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
-  def getIdFromFriendNumber(friendNumber: Int): String = {
-    ToxSingleton.tox.getClientId(friendNumber)
-  }
-
-  def getNameFromFriendNumber(friendNumber: Int): String = {
-    getAntoxFriend(getIdFromFriendNumber(friendNumber)).get.name
-  }
-
-  def clientIdFromAddress(address: String): String = {
-    address.substring(0, 64) //Cut to the length of the clientId portion of a tox address. TODO: make a class that represents the full tox address
+  def keyFromAddress(address: String): String = {
+    address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
 
   def sendFileSendRequest(path: String, key: String, context: Context) {
@@ -126,7 +118,7 @@ object ToxSingleton {
     }
   }
 
-  def fileSendRequest(clientId: String,
+  def fileSendRequest(key: String,
     fileNumber: Int,
     fileName: String,
     fileSize: Long,
@@ -159,8 +151,8 @@ object ToxSingleton {
         } while (file.exists())
       }
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(clientId, fileN, fileNumber, fileSize.toInt, sending = false)
-      State.transfers.add(new FileTransfer(clientId, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
+      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, sending = false)
+      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
       antoxDB.close()
       updateMessages(context)
   }
@@ -173,20 +165,20 @@ object ToxSingleton {
     Reactive.activeKey.onNext(None)
   }
 
-  private def fileAcceptOrReject(clientId: String, fileNumber: Integer, context: Context, accept: Boolean) {
+  private def fileAcceptOrReject(key: String, fileNumber: Integer, context: Context, accept: Boolean) {
     Log.d(TAG, "fileAcceptReject, accepting: " + accept)
-    val id = State.db.getFileId(clientId, fileNumber)
+    val id = State.db.getFileId(key, fileNumber)
     if (id != -1) {
-      val mFriend = antoxFriendList.getByClientId(clientId)
+      val mFriend = antoxFriendList.getByKey(key)
       mFriend.foreach(friend => {
         try {
           tox.fileControl(friend.getFriendnumber, fileNumber,
               if (accept) ToxFileControl.RESUME else ToxFileControl.CANCEL)
           
           if (accept) {
-            State.db.fileTransferStarted(clientId, fileNumber)
+            State.db.fileTransferStarted(key, fileNumber)
           } else {
-            State.db.clearFileNumber(clientId, fileNumber)
+            State.db.clearFileNumber(key, fileNumber)
           } 
           
           val transfer = State.transfers.get(id)
@@ -237,7 +229,7 @@ object ToxSingleton {
     transfer match {
       case Some(t) => {
         t.status = FileStatus.FINISHED
-        val mFriend = antoxFriendList.getByClientId(t.key)
+        val mFriend = antoxFriendList.getByKey(t.key)
         State.db.fileFinished(key, fileNumber)
         Reactive.updatedMessages.onNext(true)
       }
@@ -288,9 +280,9 @@ object ToxSingleton {
     }
   }
 
-  def clearUselessNotifications(clientId: String) {
-    if (clientId != null && clientId != "") {
-      val mFriend = antoxFriendList.getByClientId(clientId)
+  def clearUselessNotifications(key: String) {
+    if (key != null && key != "") {
+      val mFriend = antoxFriendList.getByKey(key)
       mFriend.foreach(friend => {
         try {
           mNotificationManager.cancel(friend.getFriendnumber)
@@ -426,7 +418,7 @@ object ToxSingleton {
       //this doesn't set the name, status message, status
       //or online status of the friend because they are now set during callbacks
       antoxFriendList.addFriendIfNotExists(i)
-      antoxFriendList.getByFriendNumber(i).get.setClientId(tox.getClientId(i))
+      antoxFriendList.getByFriendNumber(i).get.setKey(tox.getFriendKey(i))
     }
   }
 
@@ -471,7 +463,7 @@ object ToxSingleton {
       if (friends.size > 0) {
         for (friend <- friends) {
           try {
-            tox.addFriendNoRequest(friend.clientId)
+            tox.addFriendNoRequest(friend.key)
           } catch {
             case e: Exception => e.printStackTrace()
           }

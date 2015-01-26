@@ -55,7 +55,7 @@ class ContactsFragment extends Fragment {
               leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
               onlineAdded = true
             }
-            val friend = new LeftPaneItem(f.clientId, f.name, f.statusMessage,
+            val friend = new LeftPaneItem(f.key, f.name, f.statusMessage,
               f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount,
               f.lastMessageTimestamp)
             leftPaneAdapter.addItem(friend)
