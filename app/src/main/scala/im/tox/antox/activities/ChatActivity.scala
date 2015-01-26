@@ -224,7 +224,7 @@ class ChatActivity extends ActionBarActivity {
       .subscribe(fi => {
         val key = activeKey
         val mFriend: Option[FriendInfo] = fi
-          .filter(f => f.clientId == key)
+          .filter(f => f.key == key)
           .headOption
         mFriend match {
           case Some(friend) => {

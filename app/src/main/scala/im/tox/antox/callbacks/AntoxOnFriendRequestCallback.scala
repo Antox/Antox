@@ -25,10 +25,10 @@ object AntoxOnFriendRequestCallback {
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
 
-  override def friendRequest(clientId: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
+  override def friendRequest(key: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
-    if (!db.isFriendBlocked(Hex.bytesToHexString(clientId))){
-      db.addFriendRequest(Hex.bytesToHexString(clientId), new String(message, "UTF-8"))
+    if (!db.isFriendBlocked(Hex.bytesToHexString(key))){
+      db.addFriendRequest(Hex.bytesToHexString(key), new String(message, "UTF-8"))
     }
     db.close()
     ToxSingleton.updateFriendRequests(ctx)
