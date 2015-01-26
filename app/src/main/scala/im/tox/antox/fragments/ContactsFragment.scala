@@ -114,9 +114,11 @@ class ContactsFragment extends Fragment {
         id: Long): Boolean = {
         val item = parent.getAdapter.asInstanceOf[Adapter].getItem(index).asInstanceOf[LeftPaneItem]
         val builder = new AlertDialog.Builder(getActivity)
-        val isFriendRequest = item.viewType == Constants.TYPE_FRIEND_REQUEST
-        var items = if (!isFriendRequest) {
-          Array[CharSequence](getResources.getString(R.string.friend_action_profile), getResources.getString(R.string.friend_action_delete), getResources.getString(R.string.friend_action_delete_chat), getResources.getString(R.string.contacts_resend_friend_request))
+        val isContact = item.viewType == Constants.TYPE_CONTACT
+        val items = if (isContact) {
+          Array[CharSequence](getResources.getString(R.string.friend_action_profile),
+            getResources.getString(R.string.friend_action_delete),
+            getResources.getString(R.string.friend_action_delete_chat))
         } else {
           Array[CharSequence]("")
         }
@@ -127,7 +129,7 @@ class ContactsFragment extends Fragment {
           .setItems(items, new DialogInterface.OnClickListener() {
 
             def onClick(dialog: DialogInterface, index: Int) {
-              if (!isFriendRequest) {
+              if (isContact) {
                 val key = item.key
                 if (key != "") index match {
                   case 0 =>
@@ -137,11 +139,6 @@ class ContactsFragment extends Fragment {
 
                   case 1 => showDeleteFriendDialog(getActivity, key)
                   case 2 => showDeleteChatDialog(getActivity, key)
-                  case 3 => try {
-                    ToxSingleton.tox.addFriend(key, getResources.getString(R.string.addfriend_default_message))
-                  } catch {
-                    case e: ToxException =>
-                  }
                 }
               }
               dialog.cancel()
