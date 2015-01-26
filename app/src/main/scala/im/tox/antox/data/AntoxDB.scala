@@ -60,6 +60,12 @@ object AntoxDB {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST)
       onCreate(mDb)
     }
+
+    override def onDowngrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST)
+    }
   }
 }
 

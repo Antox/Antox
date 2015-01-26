@@ -94,6 +94,6 @@ class AntoxFriendList {
   }
 
   def removeFriend(friendnumber: Int) {
-    friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber))
+    friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber).get)
   }
 }
