@@ -12,7 +12,7 @@ import im.tox.antox.R
 import im.tox.antox.activities.ChatActivity
 import im.tox.antox.adapters.RecentAdapter._
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{IconColor, PrettyTimestamp, UserStatus}
+import im.tox.antox.utils.{Constants, IconColor, PrettyTimestamp, UserStatus}
 
 object RecentAdapter {
 
@@ -48,7 +48,9 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     val status = cursor.getString(3)
     val time = Timestamp.valueOf(cursor.getString(4))
     val message = cursor.getString(5)
-    val unreadCount = cursor.getInt(6)
+    var unreadCount = cursor.getInt(6)
+    //limit unread counter to 99
+    if (unreadCount > Constants.UNREAD_COUNT_LIMIT) unreadCount = Constants.UNREAD_COUNT_LIMIT
     val holder = new FriendsListHolder()
     holder.icon = view.findViewById(R.id.icon).asInstanceOf[TextView]
     holder.friendName = view.findViewById(R.id.friend_name).asInstanceOf[TextView]
