@@ -15,7 +15,7 @@ object AntoxOnTypingChangeCallback {
 class AntoxOnTypingChangeCallback(private var ctx: Context) extends FriendTypingCallback {
 
   override def friendTyping(friendNumber: Int, isTyping: Boolean): Unit = {
-    ToxSingleton.typingMap.put(ToxSingleton.getIdFromFriendNumber(friendNumber), isTyping)
+    ToxSingleton.typingMap.put(ToxSingleton.getAntoxFriend(friendNumber).get.getKey(), isTyping)
     Reactive.typing.onNext(true)
   }
 }
