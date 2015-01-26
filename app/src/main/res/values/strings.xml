@@ -75,6 +75,12 @@
     <string name="friendrequest_reject">Reject</string>
     <string name="friend_request">New Friend Request</string>
 
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">Accept</string>
+    <string name="groupinvite_reject">Reject</string>
+    <string name="group_invite">New Group Invite</string>
+    <string name="invited_by">You were invited by </string>
+
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_delete">Remove Friend</string>
@@ -82,6 +88,7 @@
     <string name="friend_action_block">Block</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
+    <string name="contacts_delimiter_invites">Group Invites</string>
     <string name="contacts_delimiter_friends">Friends</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>

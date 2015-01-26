@@ -27,6 +27,6 @@ class LeftPaneItem(
 
   def this(header: String) = this(Constants.TYPE_HEADER, "", header, null, false, null, 0, null)
 
-  def this(key: String, message: String) = this(Constants.TYPE_FRIEND_REQUEST, key, key, message, false, null, 0, null)
+  def this(viewType: Int, key: String, message: String) = this(viewType, key, key, message, false, null, 0, null)
 
 }

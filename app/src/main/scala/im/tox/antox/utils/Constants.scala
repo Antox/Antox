@@ -12,6 +12,8 @@ object Constants {
 
   val TYPE_MAX_COUNT = 3
 
+  val TYPE_GROUP_INVITE = 4
+
   val START_TOX = "im.tox.antox.START_TOX"
 
   val STOP_TOX = "im.tox.antox.STOP_TOX"
@@ -24,15 +26,23 @@ object Constants {
 
   val DOWNLOAD_DIRECTORY = "Tox received files"
 
-  val DATABASE_VERSION = 3
+  val DATABASE_VERSION = 4
 
   val TABLE_FRIENDS = "friends"
 
   val TABLE_CHAT_LOGS = "messages"
 
-  val TABLE_FRIEND_REQUEST = "friend_requests"
+  val TABLE_FRIEND_REQUESTS = "friend_requests"
+
+  val TABLE_GROUP_INVITES = "group_invites"
 
   val COLUMN_NAME_KEY = "tox_key"
+
+  val COLUMN_NAME_GROUP_ID = "group_id"
+
+  val COLUMN_NAME_GROUP_INVITER = "group_inviter"
+
+  val COLUMN_NAME_GROUP_DATA = "group_data"
 
   val COLUMN_NAME_MESSAGE = "message"
 

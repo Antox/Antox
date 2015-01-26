@@ -12,36 +12,32 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
 
-object AntoxOnFriendRequestCallback {
+object AntoxOnGroupInviteCallback {
 
-  private val TAG = "im.tox.antox.TAG"
-
-  val FRIEND_KEY = "im.tox.antox.FRIEND_KEY"
-
-  val FRIEND_MESSAGE = "im.tox.antox.FRIEND_MESSAGE"
 }
 
-class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
+class AntoxOnGroupInviteCallback(private var ctx: Context) {
 
-  override def friendRequest(clientId: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
+  def groupInvite(friendNumber: Int, groupId: Array[Byte], inviteData: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
-    if (!db.isFriendBlocked(Hex.bytesToHexString(clientId))){
-      db.addFriendRequest(Hex.bytesToHexString(clientId), new String(message, "UTF-8"))
-    }
+    val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
+    if (db.isFriendBlocked(inviter.getClientId)) return
+
+    db.addGroupInvite(Hex.bytesToHexString(groupId), inviter.getName, inviteData)
     db.close()
-    ToxSingleton.updateFriendRequests(ctx)
-    Log.d("FriendRequestCallback", "")
+
+    ToxSingleton.updateGroupInvites(ctx)
+    Log.d("GroupInviteCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&
-      preferences.getBoolean("notifications_friend_request", true)) {
+      preferences.getBoolean("notifications_group_invite", true)) {
       val vibratePattern = Array[Long](0, 500)
       if (!preferences.getBoolean("notifications_new_message_vibrate", true)) {
         vibratePattern(1) = 0
       }
       val mBuilder = new NotificationCompat.Builder(this.ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
-        .setContentTitle(this.ctx.getString(R.string.friend_request))
-        .setContentText(new String(message, "UTF-8"))
+        .setContentTitle(this.ctx.getString(R.string.group_invite))
         .setVibrate(vibratePattern)
         .setDefaults(Notification.DEFAULT_ALL)
         .setAutoCancel(true)

@@ -27,49 +27,69 @@ class ContactsFragment extends Fragment {
 
   private var leftPaneAdapter: LeftPaneAdapter = _
 
-  private var friendInfoSub: Subscription = _
+  private var contactChangeSub: Subscription = _
 
   private var activeKey: String = _
 
-  def updateContacts(friendsTuple: (Array[FriendInfo], Array[FriendRequest])) {
-    friendsTuple match {
-      case (friendsList, friendRequests) => {
-        val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
+  def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest], Array[GroupInvite])) {
+    contactInfoTuple match {
+      case (friendsList, friendRequests, groupInvites) =>
         leftPaneAdapter = new LeftPaneAdapter(getActivity)
-        if (friendRequests.length > 0) {
-          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
-          for (r <- friendRequests) {
-            val request = new LeftPaneItem(r.requestKey, r.requestMessage)
-            leftPaneAdapter.addItem(request)
-          }
-        }
-        if (sortedFriendsList.length > 0) {
-          var onlineAdded = false
-          var offlineAdded = false
-          for (f <- sortedFriendsList) {
-            if (!offlineAdded && !f.isOnline) {
-              leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
-              offlineAdded = true
-            }
-            if (!onlineAdded && f.isOnline) {
-              leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
-              onlineAdded = true
-            }
-            val friend = new LeftPaneItem(f.clientId, f.name, f.statusMessage,
-              f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount,
-              f.lastMessageTimestamp)
-            leftPaneAdapter.addItem(friend)
-          }
-        }
+        updateFriendsList(leftPaneAdapter, friendsList)
+        updateFriendRequests(leftPaneAdapter, friendRequests)
+        updateGroupInvites(leftPaneAdapter, groupInvites)
+
         contactsListView.setAdapter(leftPaneAdapter)
+    }
+  }
+
+  def updateFriendsList(leftPaneAdapter: LeftPaneAdapter, friendsList: Array[FriendInfo]): Unit = {
+    val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
+    if (sortedFriendsList.length > 0) {
+      var onlineAdded = false
+      var offlineAdded = false
+      for (f <- sortedFriendsList) {
+        if (!offlineAdded && !f.isOnline) {
+          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
+          offlineAdded = true
+        }
+        if (!onlineAdded && f.isOnline) {
+          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
+          onlineAdded = true
+        }
+        val friend = new LeftPaneItem(f.clientId, f.name, f.statusMessage,
+          f.isOnline, f.getFriendStatusAsToxUserStatus, f.unreadCount,
+          f.lastMessageTimestamp)
+        leftPaneAdapter.addItem(friend)
+      }
+    }
+  }
+
+  def updateFriendRequests(leftPaneAdapter: LeftPaneAdapter, friendRequests: Array[FriendRequest]): Unit = {
+    if (friendRequests.length > 0) {
+      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
+      for (r <- friendRequests) {
+        val request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, r.requestKey, r.requestMessage)
+        leftPaneAdapter.addItem(request)
+      }
+    }
+  }
+
+  def updateGroupInvites(leftPaneAdapter: LeftPaneAdapter, groupInvites: Array[GroupInvite]): Unit = {
+    if (groupInvites.length > 0) {
+      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
+      for (invite <- groupInvites) {
+        val request = new LeftPaneItem(Constants.TYPE_GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
+        leftPaneAdapter.addItem(request)
       }
     }
   }
 
   override def onResume() {
     super.onResume()
-    friendInfoSub = Reactive.friendListAndRequests.observeOn(AndroidMainThreadScheduler())
+    contactChangeSub = Reactive.friendInfoAndReqestsAndInvites.observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
+
     val fab = getActivity.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
     fab.setSize(FloatingActionButton.SIZE_NORMAL)
     fab.setColor(R.color.fab_normal)
@@ -80,7 +100,7 @@ class ContactsFragment extends Fragment {
 
   override def onPause() {
     super.onPause()
-    friendInfoSub.unsubscribe()
+    contactChangeSub.unsubscribe()
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {

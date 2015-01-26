@@ -304,11 +304,22 @@ object ToxSingleton {
   def updateFriendRequests(ctx: Context) {
     try {
       val antoxDB = new AntoxDB(ctx)
-      val friendRequest = antoxDB.getFriendRequestsList
+      val friendRequests = antoxDB.getFriendRequestsList
       antoxDB.close()
-      Reactive.friendRequests.onNext(friendRequest.toArray(new Array[FriendRequest](friendRequest.size)))
+      Reactive.friendRequests.onNext(friendRequests.toArray(new Array[FriendRequest](friendRequests.size)))
     } catch {
       case e: Exception => Reactive.friendRequests.onError(e)
+    }
+  }
+
+  def updateGroupInvites(ctx: Context) {
+    try {
+      val antoxDB = new AntoxDB(ctx)
+      val groupInvites = antoxDB.getGroupInvitesList
+      antoxDB.close()
+      Reactive.groupInvites.onNext(groupInvites.toArray(new Array[GroupInvite](groupInvites.size)))
+    } catch {
+      case e: Exception => Reactive.groupInvites.onError(e)
     }
   }
 

@@ -10,7 +10,7 @@ import im.tox.antox.activities.MainActivity
 import im.tox.antox.callbacks.AntoxOnMessageCallback._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{AntoxFriend, Constants}
+import im.tox.antox.utils.{Hex, AntoxFriend, Constants}
 import im.tox.tox4j.core.callbacks.FriendMessageCallback
 
 //remove if not needed
@@ -26,6 +26,14 @@ object AntoxOnMessageCallback {
       formatAction(rawMessage, if (friendDetails(1) == "") friendDetails(0) else friendDetails(1))
     } else {
       rawMessage
+    }
+
+    if (message.equals("group")) {
+      new AntoxOnGroupInviteCallback(ctx)
+      .groupInvite(friendNumber,
+        Hex.hexStringToBytes("FB21BD88F0ECBBBA92EDE8BEFF35F627EB6B46FBF7021019933F209710526B4" +
+                             "81CC3BAB15720FDCD94A50D8EB897167FB850DF1E77EA23C3E34EED224161550D"),
+        new Array[Byte](0))
     }
 
     Log.d(TAG, "friend id: " + friendClientId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)

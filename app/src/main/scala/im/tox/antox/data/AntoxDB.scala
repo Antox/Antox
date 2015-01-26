@@ -12,7 +12,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, Friend, FriendRequest, Message, UserStatus}
+import im.tox.antox.utils._
 import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.exceptions.ToxException
 
@@ -48,16 +48,23 @@ object AntoxDB {
       "tox_key text, " +
       "message text)"
 
+    var CREATE_TABLE_GROUP_INVITES: String = "CREATE TABLE IF NOT EXISTS group_invites" + " ( _id integer primary key, " +
+      "group_id text, " +
+      "group_inviter text, " +
+      "group_data BLOB)"
+
     def onCreate(mDb: SQLiteDatabase) {
       mDb.execSQL(CREATE_TABLE_FRIENDS)
       mDb.execSQL(CREATE_TABLE_FRIEND_REQUESTS)
+      mDb.execSQL(CREATE_TABLE_GROUP_INVITES)
       mDb.execSQL(CREATE_TABLE_MESSAGES)
     }
 
     override def onUpgrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
       onCreate(mDb)
     }
   }
@@ -71,7 +78,7 @@ class AntoxDB(ctx: Context) {
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-  private var activeDatabase: String = preferences.getString("active_account", "")
+  private val activeDatabase: String = preferences.getString("active_account", "")
 
   def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
@@ -161,7 +168,17 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key)
     values.put(Constants.COLUMN_NAME_MESSAGE, message)
-    mDb.insert(Constants.TABLE_FRIEND_REQUEST, null, values)
+    mDb.insert(Constants.TABLE_FRIEND_REQUESTS, null, values)
+    this.close()
+  }
+
+  def addGroupInvite(groupId: String, inviter: String, data: Array[Byte]) {
+    this.open(writeable = true)
+    val values = new ContentValues()
+    values.put(Constants.COLUMN_NAME_GROUP_ID, groupId)
+    values.put(Constants.COLUMN_NAME_GROUP_INVITER, inviter)
+    values.put(Constants.COLUMN_NAME_GROUP_DATA, data)
+    mDb.insert(Constants.TABLE_GROUP_INVITES, null, values)
     this.close()
   }
 
@@ -414,7 +431,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val friendRequests = new util.ArrayList[FriendRequest]()
     val projection = Array(Constants.COLUMN_NAME_KEY, Constants.COLUMN_NAME_MESSAGE)
-    val cursor = mDb.query(Constants.TABLE_FRIEND_REQUEST, projection, null, null, null, null, null)
+    val cursor = mDb.query(Constants.TABLE_FRIEND_REQUESTS, projection, null, null, null, null, null)
     if (cursor.moveToFirst()) {
       do {
         val key = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY))
@@ -425,6 +442,24 @@ class AntoxDB(ctx: Context) {
     cursor.close()
     this.close()
     friendRequests
+  }
+
+  def getGroupInvitesList: util.ArrayList[GroupInvite] = {
+    this.open(writeable = false)
+    val groupInvites = new util.ArrayList[GroupInvite]()
+    val projection = Array(Constants.COLUMN_NAME_GROUP_ID, Constants.COLUMN_NAME_GROUP_INVITER, Constants.COLUMN_NAME_GROUP_DATA)
+    val cursor = mDb.query(Constants.TABLE_GROUP_INVITES, projection, null, null, null, null, null)
+    if (cursor.moveToFirst()) {
+      do {
+        val groupId = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_ID))
+        val inviter = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_INVITER))
+        val data = cursor.getBlob(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_DATA))
+        groupInvites.add(new GroupInvite(groupId, inviter, data))
+      } while (cursor.moveToNext())
+    }
+    cursor.close()
+    this.close()
+    groupInvites
   }
 
   def getUnsentMessageList: Array[Message] = {
@@ -582,13 +617,19 @@ class AntoxDB(ctx: Context) {
 
   def deleteFriendRequest(key: String) {
     this.open(writeable = false)
-    mDb.delete(Constants.TABLE_FRIEND_REQUEST, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.delete(Constants.TABLE_FRIEND_REQUESTS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    this.close()
+  }
+
+  def deleteGroupInvite(groupId: String) {
+    this.open(writeable = false)
+    mDb.delete(Constants.TABLE_GROUP_INVITES, Constants.COLUMN_NAME_GROUP_ID + "='" + groupId + "'", null)
     this.close()
   }
 
   def getFriendRequestMessage(key: String): String = {
     this.open(writeable = false)
-    val selectQuery = "SELECT message FROM " + Constants.TABLE_FRIEND_REQUEST +
+    val selectQuery = "SELECT message FROM " + Constants.TABLE_FRIEND_REQUESTS +
       " WHERE tox_key='" +
       key +
       "'"

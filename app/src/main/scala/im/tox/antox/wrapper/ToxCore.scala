@@ -150,4 +150,14 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
   def callbackFriendLosslessPacket(callback: FriendLosslessPacketCallback): Unit = tox.callbackFriendLosslessPacket(callback)
 
   def callback(handler: ToxEventListener): Unit = tox.callback(handler)
+
+  /*
+  ==========================
+  GROUP FUNCTIONS START HERE
+  ==========================
+   */
+
+  def acceptGroupInvite(inviteData: Array[Byte]): Unit = {
+    println("accepted group invite!")
+  }
 }
