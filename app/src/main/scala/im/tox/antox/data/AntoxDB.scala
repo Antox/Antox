@@ -32,6 +32,14 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean);"
 
+    var CREATE_TABLE_GROUPS: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key, " +
+      "username text, " +
+      "status text, " +
+      "note text, " +
+      "alias text, " +
+      "isonline boolean, " +
+      "isblocked boolean);"
+
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
       "message_id integer, " +
@@ -104,7 +112,7 @@ class AntoxDB(ctx: Context) {
   }
 
   def addFriend(key: String,
-    message: String,
+    statusMessage: String,
     alias: String,
     username: String) {
     this.open(writeable = true)
@@ -118,7 +126,7 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key)
     values.put(Constants.COLUMN_NAME_STATUS, "0")
-    values.put(Constants.COLUMN_NAME_NOTE, message)
+    values.put(Constants.COLUMN_NAME_NOTE, statusMessage)
     values.put(Constants.COLUMN_NAME_USERNAME, username)
     values.put(Constants.COLUMN_NAME_ISONLINE, false)
     values.put(Constants.COLUMN_NAME_ALIAS, alias)

@@ -36,6 +36,8 @@ object ToxSingleton {
 
   private var antoxFriendList: AntoxFriendList = _
 
+  private var groupList: GroupList = _
+
   var mNotificationManager: NotificationManager = _
 
   var dataFile: ToxDataFile = _
@@ -444,6 +446,7 @@ object ToxSingleton {
   def initTox(ctx: Context) {
     State.db = new AntoxDB(ctx).open(writeable = true)
     antoxFriendList = new AntoxFriendList()
+    groupList = new GroupList()
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
     dataFile = new ToxDataFile(ctx)
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -454,7 +457,7 @@ object ToxSingleton {
 
     if (!dataFile.doesFileExist()) {
       try {
-        tox = new ToxCore(antoxFriendList, options)
+        tox = new ToxCore(antoxFriendList, groupList, options)
         dataFile.saveFile(tox.save())
         val editor = preferences.edit()
         editor.putString("tox_id", tox.getAddress)
@@ -464,7 +467,7 @@ object ToxSingleton {
       }
       } else {
         try {
-          tox = new ToxCore(antoxFriendList, options, dataFile.loadFile())
+          tox = new ToxCore(antoxFriendList, groupList, options, dataFile.loadFile())
           val editor = preferences.edit()
           editor.putString("tox_id", tox.getAddress)
           editor.commit()

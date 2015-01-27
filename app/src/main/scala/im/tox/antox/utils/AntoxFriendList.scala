@@ -41,7 +41,7 @@ class AntoxFriendList {
   }
 
   def searchFriend(partial: String): util.List[AntoxFriend] = {
-    val partialLowered = partial.toLowerCase(Locale.US)
+    val partialLowered = partial.toLowerCase(Locale.getDefault)
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
     }

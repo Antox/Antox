@@ -130,16 +130,16 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.bubble.setAlpha(1.0f)
     messageType match {
       case Constants.MESSAGE_TYPE_OWN =>
-        ownMessage(holder)
         holder.message.setText(msg.message)
+        ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
         if (!(msg.received)) {
           holder.bubble.setAlpha(0.5f)
         }
 
       case Constants.MESSAGE_TYPE_FRIEND =>
-        friendMessage(holder)
         holder.message.setText(msg.message)
+        friendMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
 
       case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
@@ -318,11 +318,20 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
   override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
+  private def shouldGreentext(message: String): Boolean = {
+    message.startsWith(">")
+  }
+
   private def ownMessage(holder: ChatMessagesHolder) {
     holder.time.setGravity(Gravity.RIGHT)
     holder.sentTriangle.setVisibility(View.VISIBLE)
     holder.layout.setGravity(Gravity.RIGHT)
-    holder.message.setTextColor(context.getResources.getColor(R.color.white_absolute))
+    if (shouldGreentext(holder.message.getText.toString)) {
+      holder.message.setTextColor(context.getResources.getColor(R.color.green_light))
+    } else {
+      holder.message.setTextColor(context.getResources.getColor(R.color.white))
+    }
+
     holder.row.setGravity(Gravity.RIGHT)
     holder.wrapper.setGravity(Gravity.RIGHT)
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
@@ -330,7 +339,11 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
   }
 
   private def friendMessage(holder: ChatMessagesHolder) {
-    holder.message.setTextColor(context.getResources.getColor(R.color.black))
+    if (shouldGreentext(holder.message.getText.toString)) {
+      holder.message.setTextColor(context.getResources.getColor(R.color.green))
+    } else {
+      holder.message.setTextColor(context.getResources.getColor(R.color.black))
+    }
     holder.receivedTriangle.setVisibility(View.VISIBLE)
     holder.time.setGravity(Gravity.LEFT)
     holder.layout.setGravity(Gravity.LEFT)
@@ -339,7 +352,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
-
 
   private def actionMessage(holder: ChatMessagesHolder) {
     holder.message.setVisibility(View.VISIBLE)

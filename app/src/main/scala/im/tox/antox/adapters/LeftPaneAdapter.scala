@@ -166,7 +166,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         val db = new AntoxDB(context)
         try {
           val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
-          ToxSingleton.tox.acceptGroupInvite(inviteData)
+//          ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception =>
