@@ -14,13 +14,17 @@
   <string name="login_bad_login">Il nome profilo non è corretto</string>
   <!--Create Account Activity-->
   <string name="create_name_hint">Nome Profilo</string>
-  <string name="create_text">Crea un nouvo profilo Antox\nOgni profilo ha il suo Tox ID personale</string>
+  <string name="create_text">Messaggistica sicura per tutti.</string>
   <string name="create_register">Registrazione</string>
   <string name="create_register_incog">Crea profilo nascosto</string>
   <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
   <string name="create_bad_profile_name">Il nome profilo non può contenere \" \", \"/\", \"\\" o essere vuoto</string>
   <string name="create_profile_exists">Questo nome profilo esiste già</string>
+  <string name="create_account_exists">Questo nome è già stato scelto</string>
+  <string name="create_account_internal_error">Antox: errore interno. Riavvia l\'applicazione e riprova</string>
+  <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
+  <string name="create_account_unknown_error">Errore sconosciuto durante la registrazione, riprova più tardi</string>
   <!--Main Activity-->
   <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
   <string name="main_recent_no">Nessuna coversazione recente</string>
@@ -126,4 +130,8 @@ richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <string name="about_antox_4">-Trasferimento file</string>
   <string name="about_antox_5">In Sviluppo:</string>
   <string name="about_antox_6">-Audio/Video</string>
+  <string name="title_activity_call">CallActivity</string>
+  <string name="end_call">Termina Chiamata</string>
+  <string name="mute_call">Disattiva Audio</string>
+  <string name="mute_mic">Disattiva Microfono</string>
 </resources>
