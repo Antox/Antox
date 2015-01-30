@@ -30,6 +30,8 @@ object Constants {
 
   val TABLE_FRIENDS = "friends"
 
+  val TABLE_GROUPS = "groups"
+
   val TABLE_CHAT_LOGS = "messages"
 
   val TABLE_FRIEND_REQUESTS = "friend_requests"

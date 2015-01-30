@@ -1,0 +1,48 @@
+package im.tox.antox.utils
+
+import java.util
+import java.util.{ArrayList, Collections, List, Locale}
+
+//remove if not needed
+import scala.collection.JavaConversions._
+
+class GroupPeerList {
+
+  private var peers: util.List[GroupPeer] = Collections.synchronizedList(new util.ArrayList[GroupPeer]())
+
+  def this(peers: util.ArrayList[GroupPeer]) {
+    this()
+    this.peers = peers
+  }
+
+  def getByGroupPeerNumber(peerNumber: Int): Option[GroupPeer] = {
+    peers.find(peer => peer.peerNumber == peerNumber)
+  }
+
+  def getByGroupPeerId(id: String): Option[GroupPeer] = {
+    peers.find(peer => peer.id == id)
+  }
+
+  def all(): util.List[GroupPeer] = {
+    new util.ArrayList[GroupPeer](this.peers)
+  }
+
+  def addGroupPeer(peer: GroupPeer): Unit = {
+    peers.find(existingGroupPeer => existingGroupPeer.peerNumber == peer.peerNumber) match {
+      case Some(f) => throw new Exception()
+      case None => this.peers.add(peer)
+    }
+  }
+
+  def addGroupPeerIfNotExists(peer: GroupPeer): Unit = {
+    peers.find(existingGroupPeer => existingGroupPeer.peerNumber == peer.peerNumber).headOption match {
+      case Some(f) => return
+      case None =>
+        this.peers.add(peer)
+    }
+  }
+
+  def removeGroupPeer(peerNumber: Int) {
+    peers.remove(peers.find(peer => peer.peerNumber == peerNumber))
+  }
+}

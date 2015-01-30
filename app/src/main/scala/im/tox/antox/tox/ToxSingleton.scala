@@ -78,6 +78,8 @@ object ToxSingleton {
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
+  def getGroupList: GroupList = groupList
+
   def getIdFromFriendNumber(friendNumber: Int): String = {
     ToxSingleton.tox.getClientId(friendNumber)
   }
@@ -300,6 +302,14 @@ object ToxSingleton {
           case e: Exception => e.printStackTrace()
         }
       })
+    }
+  }
+
+  def updateGroupsList(ctx: Context) {
+    try {
+      Reactive.groupList.onNext(groupList.getGroupArray())
+    } catch {
+      case e: Exception => Reactive.friendList.onError(e)
     }
   }
 

@@ -26,7 +26,7 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
           println("progress " + t.progress + " assumed progress " + position)
           if (length <= 0) {
             State.db.clearFileNumber(friend.getClientId, fileNumber)
-            ToxSingleton.fileFinished(friend.getClientId, t.fileNumber, ctx) //make this on lenght 0 or whatever TODO
+            ToxSingleton.fileFinished(friend.getClientId, t.fileNumber, ctx) //make this on length 0 or whatever TODO
           } else {
             val reset = if (position < t.progress) true else false
             val data = t.readData(reset, length)

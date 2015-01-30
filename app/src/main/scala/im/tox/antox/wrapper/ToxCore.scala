@@ -157,37 +157,39 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   ==========================
    */
 
-/*
   /** Adds a new groupchat to group chats array.
     *
     * @return groupNumber
     */
   def newGroup(name: String): Int = {
     println("Made a new group with name " + name)
-    return 0
+    0
   }
 
   /** Joins a groupchat using the supplied public key.
     *
     * @return groupNumber
     */
-  def joinGroup(invite_key: String): Int = {
-    return 0
+  def joinGroup(inviteKey: String): Int = {
+    println("Joined a group with key" + inviteKey)
+    0
   }
 
   /** Joins a group using the invite data received in a friend's group invite.
     *
     * @return groupNumber on success.
     */
-  def acceptGroupInvite(invite_data: Array[Byte]): Int = {
-    return 0
+  def acceptGroupInvite(inviteData: Array[Byte]): Int = {
+      println("Accepted a group invite.")
+    0
   }
 
   /**
    * Invites friendnumber to groupNumber.
    */
-  def inviteFriendToGroup(groupnumber: Int, friendnumber: Int): Boolean = {
-    return true
+  def inviteFriendToGroup(groupNumber: Int, friendNumber: Int): Boolean = {
+    println("Invited friend " + friendNumber + " to group " + groupNumber)
+    true
   }
 
   /**
@@ -195,88 +197,78 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
    * The maximum parting message length is TOX_MAX_GROUP_PART_LENGTH.
    */
   def deleteGroup(groupNumber: Int, partMessage: String): Unit = {
-
+    println("Deleted group " + groupNumber)
   }
 
   /** Sends a groupchat message to groupnumber. Messages should be split at TOX_MAX_MESSAGE_LENGTH bytes.
     */
   def sendGroupMessage(groupNumber: Int, message: String): Unit =  {
-
+    println("Sent group message " + message + " to group " + groupNumber)
   }
 
   /** Sends a private message to peernumber in groupnumber. Messages should be split at TOX_MAX_MESSAGE_LENGTH bytes.
     */
-  def sendGroupPrivateMessage(groupNumber: Int, peernumber: Int, message: String): Unit =  {
-
+  def sendGroupPrivateMessage(groupNumber: Int, peerNumber: Int, message: String): Unit =  {
+    println("Sent group private message " + message + " to peer " + peerNumber + " in group " + groupNumber)
   }
 
   /** Sends a groupchat action message to groupnumber. Messages should be split at TOX_MAX_MESSAGE_LENGTH bytes.
     */
   def sendGroupAction(groupNumber: Int, message: String): Unit =  {
-
+    println("Sent group action " + message + " to group " + groupNumber)
   }
 
-  /** Issues a groupchat operator certificate for peernumber to groupnumber.
+  /*/** Issues a groupchat operator certificate for peernumber to groupnumber.
     * type must be a TOX_GROUP_OP_CERTIFICATE.
     */
   def sendGroupOpCertificate(groupNumber: Int, peernumber: Int, certType: Int) {
 
-  }
+  } */
 
   /** Sets your name for groupnumber. length should be no larger than TOX_MAX_NAME_LENGTH bytes.
     */
   def setGroupSelfName(groupNumber: Int, name: String) {
-
+    println("Set name in group " + groupNumber + " to name " + name)
   }
 
   /** Get peernumber's name in groupnumber's group chat.
-    * name buffer must be at least TOX_MAX_NAME_LENGTH bytes.
     */
-  def getGroupPeerName(groupNumber: Int, peernumber: Int, name: String) {
-
+  def getGroupPeerName(groupNumber: Int, peerNumber: Int): String = {
+    println("Got group peer name in group " + groupNumber)
+    "PEERNAME" + peerNumber
   }
 
   /** Get your own name for groupnumber's group.
     * name buffer must be at least TOX_MAX_NAME_LENGTH bytes.
     */
-  def getGroupSelfName(groupNumber: Int
-  {
-
+  def getGroupSelfName(groupNumber: Int): String = {
+    println("Got name of group " + groupNumber)
+    "GROUPNAME" + groupNumber
   }
 
   /**
     * Sets groupnumber's topic.
     */
-  def setGroupTopic(groupNumber: Int, topic: String)
-  {
-
+  def setGroupTopic(groupNumber: Int, topic: String) {
+    println("Set group " + groupNumber + "'s topic to " + topic)
   }
 
   /** Gets groupnumber's topic. topic buffer must be at least TOX_MAX_GROUP_TOPIC_LENGTH bytes.
     */
-  def tox_group_get_topic(groupNumber: Int, uint8_t
-
-  * topic)
-  {
-
+  def getGroupTopic(groupNumber: Int): String = {
+    "TOPIC" + groupNumber
   }
 
   /** Gets groupnumber's group name. groupname buffer must be at least TOX_MAX_GROUP_NAME_LENGTH bytes.
     */
-  def getGroupName(groupNumber: Int, uint8_t
-
-  * groupname)
-  {
-
+  def getGroupName(groupNumber: Int): String = {
+    "NAME" + groupNumber
   }
 
   /** Sets your status for groupnumber.
     */
-  def tox_group_set_status(groupNumber: Int, uint8_t
-
-  status_type)
-  {
-
+  def setSelfStatusInGroup(groupNumber: Int, status: String) = {
+    println("Set group " + groupNumber + "'s status to " + status)
   }
 
   /** Get peernumber's status in groupnumber's group chat.
@@ -284,51 +276,46 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     * @return a TOX_GROUP_STATUS on success.
     * @return TOX_GS_INVALID on failure.
     */
-  uint8_t tox_group_get_status (groupNumber: Int, uint32_t peernumber) {
-
+  def getGroupPeerStatus(groupNumber: Int, peernumber: Int): ToxStatus = {
+    return ToxStatus.AWAY
   }
 
-  /** Get peernumber's group role in groupnumber's group chat.
+  /* /** Get peernumber's group role in groupnumber's group chat.
     *
     * @return a TOX_GROUP_ROLE on success.
     * @return TOX_GR_INVALID on failure.
     */
-  uint8_t tox_group_get_role (groupNumber: Int, uint32_t peernumber) {
+  def getPeerInGroupRole(groupNumber: Int, peernumber: Int) {
 
+  } */
+
+  /**
+   * Get invite key for the groupchat from the groupnumber.
+    */
+  def getGroupInviteKey(groupNumber: Int): String = {
+    "FB21BD88F0ECBBBA92EDE8BEFF35F627EB6B46FBF7021019933F209710526B4" +
+    "81CC3BAB15720FDCD94A50D8EB897167FB850DF1E77EA23C3E34EED224161550D"
   }
 
-  /** Get invite key for the groupchat from the groupnumber.
-    * The result is stored in 'dest' which must have space for TOX_GROUP_CHAT_ID_SIZE bytes.
+    /**
+    * @return the nicks of the peers in groupnumber
     */
-  def tox_group_get_invite_key(groupNumber: Int) {
-
-  }
-
-  /** Copies the nicks of the peers in groupnumber to the nicks array.
-    * Copies the lengths of the nicks to the lengths array.
-    *
-    * Arrays must have room for num_peers items.
-    *
-    * Should be used with tox_callback_group_peerlist_update.
-    *
-    * @return number of peers.
-    */
-  def tox_group_get_names(groupNumber: Int) {
-
+  def getGroupNames(groupNumber: Int): Array[String] = {
+    Array("Zetok", "subliun", "I-hate-gentoo", "downwithgroupbot")
   }
 
   /**
    * @return the number of peers in groupnumber.
    */
-  def tox_group_get_number_peers(groupNumber: Int) {
-
+  def getGroupNumberPeers(groupNumber: Int): Int = {
+    4
   }
 
   /** Toggle ignore on peernumber in groupnumber.
     * If ignore is true, group and private messages from peernumber are ignored, as well as A/V.
     * If ignore is false, peer is unignored.
     */
-  def tox_group_toggle_ignore(groupnumber: Int, peernumber: Int, ignore: Boolean) {
+  def toggleGroupIgnorePeer(groupNumber: Int, peernumber: Int, ignore: Boolean): Unit = {
 
-  } */
+  }
 }

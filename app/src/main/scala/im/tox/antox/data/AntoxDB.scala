@@ -32,13 +32,7 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean);"
 
-    var CREATE_TABLE_GROUPS: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key, " +
-      "username text, " +
-      "status text, " +
-      "note text, " +
-      "alias text, " +
-      "isonline boolean, " +
-      "isblocked boolean);"
+    var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key);"
 
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
@@ -57,12 +51,13 @@ object AntoxDB {
       "message text)"
 
     var CREATE_TABLE_GROUP_INVITES: String = "CREATE TABLE IF NOT EXISTS group_invites" + " ( _id integer primary key, " +
-      "group_id text, " +
+      "tox_key text, " +
       "group_inviter text, " +
       "group_data BLOB)"
 
     def onCreate(mDb: SQLiteDatabase) {
       mDb.execSQL(CREATE_TABLE_FRIENDS)
+      mDb.execSQL(CREATE_TABLE_GROUP)
       mDb.execSQL(CREATE_TABLE_FRIEND_REQUESTS)
       mDb.execSQL(CREATE_TABLE_GROUP_INVITES)
       mDb.execSQL(CREATE_TABLE_MESSAGES)
@@ -70,6 +65,7 @@ object AntoxDB {
 
     override def onUpgrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_GROUPS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
@@ -133,6 +129,13 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
     mDb.insert(Constants.TABLE_FRIENDS, null, values)
     this.close()
+  }
+
+  def addGroup(key: String): Unit = {
+    this.open(writeable = true)
+    val values = new ContentValues()
+    values.put(Constants.COLUMN_NAME_KEY, key)
+    mDb.insert(Constants.TABLE_FRIENDS, null, values)
   }
 
   def addFileTransfer(key: String,
@@ -590,9 +593,23 @@ class AntoxDB(ctx: Context) {
     friendList.toArray
   }
 
-  def doesFriendExist(key: String): Boolean = {
+  def getGroupKeyList: Array[String] = {
     this.open(writeable = false)
-    val mCount = mDb.rawQuery("SELECT count(*) FROM " + Constants.TABLE_FRIENDS + " WHERE " +
+    val groupList = new ArrayBuffer[String]()
+    val selectQuery = "SELECT  * FROM" + Constants.TABLE_GROUPS
+    val cursor = mDb.rawQuery(selectQuery, null)
+    do {
+      var key = cursor.getString(0)
+      groupList += key
+    } while (cursor.moveToNext())
+    cursor.close()
+    this.close()
+    groupList.toArray
+  }
+
+  private def doesExist(key: String, tableName: String): Boolean = {
+    this.open(writeable = false)
+    val mCount = mDb.rawQuery("SELECT count(*) FROM " + tableName + " WHERE " +
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +
@@ -609,6 +626,14 @@ class AntoxDB(ctx: Context) {
     false
   }
 
+  def doesFriendExist(key: String): Boolean = {
+    doesExist(key, Constants.TABLE_FRIENDS)
+  }
+
+  def doesGroupExist(key: String): Boolean = {
+    doesExist(key, Constants.TABLE_GROUPS)
+  }
+
   def setAllOffline() {
     this.open(writeable = false)
     val values = new ContentValues()
@@ -617,22 +642,26 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def deleteFriend(key: String) {
+  private def deleteWithToxKey(key: String, tableName: String): Unit = {
     this.open(writeable = false)
-    mDb.delete(Constants.TABLE_FRIENDS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.delete(tableName, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
-  def deleteFriendRequest(key: String) {
-    this.open(writeable = false)
-    mDb.delete(Constants.TABLE_FRIEND_REQUESTS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
+  def deleteFriend(key: String): Unit = {
+    deleteWithToxKey(key, Constants.TABLE_FRIENDS)
   }
 
-  def deleteGroupInvite(groupId: String) {
-    this.open(writeable = false)
-    mDb.delete(Constants.TABLE_GROUP_INVITES, Constants.COLUMN_NAME_GROUP_ID + "='" + groupId + "'", null)
-    this.close()
+  def deleteFriendRequest(key: String): Unit = {
+    deleteWithToxKey(key, Constants.TABLE_FRIEND_REQUESTS)
+  }
+
+  def deleteGroup(key: String): Unit = {
+    deleteWithToxKey(key, Constants.TABLE_GROUPS)
+  }
+
+  def deleteGroupInvite(key: String): Unit = {
+    deleteWithToxKey(key, Constants.TABLE_GROUP_INVITES)
   }
 
   def getFriendRequestMessage(key: String): String = {
@@ -652,9 +681,7 @@ class AntoxDB(ctx: Context) {
   }
 
   def deleteChat(key: String) {
-    this.open(writeable = false)
-    mDb.delete(Constants.TABLE_CHAT_LOGS, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
+    deleteWithToxKey(key, Constants.TABLE_CHAT_LOGS)
   }
 
   def updateFriendName(key: String, newName: String) {

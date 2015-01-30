@@ -65,4 +65,8 @@ class GroupList {
   def removeGroup(groupNumber: Int) {
     groups.remove(groups.find(group => group.groupNumber == groupNumber))
   }
+
+  def getGroupArray(): Array[Group] {
+    groups.toArray
+  }
 }

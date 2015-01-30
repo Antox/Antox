@@ -3,7 +3,7 @@ package im.tox.antox.tox
 import java.sql.Timestamp
 
 import im.tox.antox.data.State
-import im.tox.antox.utils.{GroupInvite, Friend, FriendInfo, FriendRequest}
+import im.tox.antox.utils.{Group, GroupInvite, Friend, FriendInfo, FriendRequest}
 import rx.lang.scala.subjects.BehaviorSubject
 
 object Reactive {
@@ -12,6 +12,7 @@ object Reactive {
   val activeKey = BehaviorSubject[Option[String]](None)
   val activeKeySub = activeKey.subscribe(x => State.activeKey(x))
   val friendList = BehaviorSubject[Array[Friend]](new Array[Friend](0))
+  val groupList = BehaviorSubject[Array[Group]](new Array[Group](0))
   val friendRequests = BehaviorSubject[Array[FriendRequest]](new Array[FriendRequest](0))
   val groupInvites = BehaviorSubject[Array[GroupInvite]](new Array[GroupInvite](0))
   val lastMessages = BehaviorSubject[Map[String, (String, Timestamp)]](Map.empty[String, (String, Timestamp)])
@@ -43,7 +44,8 @@ object Reactive {
     })
 
   //this is bad FIXME
-  val friendInfoAndReqestsAndInvites = friendInfoList
+  val contactListElements = friendInfoList
     .combineLatestWith(friendRequests)((friendInfos, friendRequests) => (friendInfos, friendRequests)) //combine friendinfolist and friend requests and return them in a tuple
-    .combineLatestWith(groupInvites)((fir, gi) => (fir._1, fir._2, gi)) //reutrn friendinfolist, friendrequests and groupinvites in a tuple
+    .combineLatestWith(groupInvites)((a, gi) => (a._1, a._2, gi)) //return friendinfolist, friendrequests (a) and groupinvites (gi) in a tuple
+    .combineLatestWith(groupList)((a, gl) => (a._1, a._2, a._3, gl)) //return friendinfolist, friendrequests and groupinvites (a), and groupList (gl)  in a tuple
 }

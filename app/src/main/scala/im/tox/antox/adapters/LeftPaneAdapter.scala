@@ -166,14 +166,15 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         val db = new AntoxDB(context)
         try {
           val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
-//          ToxSingleton.tox.acceptGroupInvite(inviteData)
+          ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception =>
         }
-        //TODO MAKE ADD GROUP FUNCTION db.addGroup(groupId, "Group Joined", "", "")
+        db.addGroup(groupId)
         db.deleteGroupInvite(groupId)
         db.close()
+        ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)
       }
     })
@@ -183,6 +184,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         val antoxDB = new AntoxDB(context)
         antoxDB.deleteGroupInvite(groupId)
         antoxDB.close()
+        ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)
       }
     })

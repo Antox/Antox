@@ -87,7 +87,7 @@ class ContactsFragment extends Fragment {
 
   override def onResume() {
     super.onResume()
-    contactChangeSub = Reactive.friendInfoAndReqestsAndInvites.observeOn(AndroidMainThreadScheduler())
+    contactChangeSub = Reactive.contactListElements.observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
 
     val fab = getActivity.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
