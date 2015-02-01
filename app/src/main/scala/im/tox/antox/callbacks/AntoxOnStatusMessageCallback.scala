@@ -6,8 +6,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Hex, AntoxFriend}
 import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
 
-//remove if not needed
-
 object AntoxOnStatusMessageCallback {
 
   private val TAG = "im.tox.antox.TAG"

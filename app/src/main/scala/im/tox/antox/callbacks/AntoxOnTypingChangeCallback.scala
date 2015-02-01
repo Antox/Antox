@@ -5,8 +5,6 @@ import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.utils.{Hex, AntoxFriend}
 import im.tox.tox4j.core.callbacks.FriendTypingCallback
 
-//remove if not needed
-
 object AntoxOnTypingChangeCallback {
 
   private val TAG = "OnTypingChangeCallback"

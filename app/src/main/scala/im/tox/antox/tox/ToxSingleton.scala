@@ -80,6 +80,10 @@ object ToxSingleton {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
 
+  def exportDataFile(): Unit = {
+    dataFile.exportFile()
+  }
+
   def sendFileSendRequest(path: String, key: String, context: Context) {
     val file = new File(path)
     val splitPath = path.split("/")
@@ -443,7 +447,7 @@ object ToxSingleton {
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-      } else {
+    } else {
         try {
           tox = new ToxCore(antoxFriendList, options, dataFile.loadFile())
           val editor = preferences.edit()
@@ -458,8 +462,17 @@ object ToxSingleton {
 
       val db = new AntoxDB(ctx)
       db.setAllOffline()
+
       val friends = db.getFriendList
       db.close()
+
+      for (friendNumber <- tox.getFriendList) {
+        val friendKey = tox.getFriendKey(friendNumber)
+        if (!db.doesFriendExist(friendKey)) {
+          db.addFriend(tox.getFriendKey(friendNumber), "", "", "")
+        }
+      }
+
       if (friends.size > 0) {
         for (friend <- friends) {
           try {

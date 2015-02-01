@@ -22,7 +22,9 @@ object Constants {
 
   val UPDATE = "im.tox.antox.UPDATE"
 
-  val DOWNLOAD_DIRECTORY = "Tox received files"
+  val DOWNLOAD_DIRECTORY = "Tox Received Files"
+
+  val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
   val DATABASE_VERSION = 3
 
