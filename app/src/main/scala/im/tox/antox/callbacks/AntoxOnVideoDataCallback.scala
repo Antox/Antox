@@ -3,7 +3,6 @@ package im.tox.antox.callbacks
 import android.content.Context
 import android.util.Log
 import im.tox.antox.utils.AntoxFriend
-//remove if not needed
 
 class AntoxOnVideoDataCallback(private var ctx: Context) {
 

@@ -8,7 +8,6 @@ import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.core.exceptions.ToxFriendAddException
 import im.tox.tox4j.exceptions.ToxException
 
-//remove if not needed
 import scala.collection.JavaConversions._
 
 class AntoxFriendList {

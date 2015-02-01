@@ -2,8 +2,6 @@ package im.tox.antox.utils
 
 import im.tox.tox4j.core.enums.ToxStatus
 
-//remove if not needed
-
 class Friend(
   val isOnline: Boolean,
   val name: String,

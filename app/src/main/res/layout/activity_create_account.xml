@@ -74,6 +74,18 @@
         android:text="@string/create_register_incog"
         android:textColor="@color/white"
         android:background="#414141"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="100dp"
         android:onClick="onClickRegisterIncogAccount"/>
+
+    <Button
+        android:id="@+id/create_account_import"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:text="@string/create_import_profile"
+        android:textColor="@color/white"
+        android:background="#414141"
+        android:layout_marginBottom="40dp"
+        android:onClick="onClickImportProfile"/>
 </RelativeLayout>

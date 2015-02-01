@@ -8,8 +8,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AntoxFriend
 import im.tox.tox4j.core.callbacks.ReadReceiptCallback
 
-//remove if not needed
-
 object AntoxOnReadReceiptCallback {
 
   private val TAG = "im.tox.antox.callbacks.AntoxOnReadReceiptCallback"

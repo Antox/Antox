@@ -13,8 +13,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{AntoxFriend, Constants}
 import im.tox.tox4j.core.callbacks.FriendMessageCallback
 
-//remove if not needed
-
 object AntoxOnMessageCallback {
 
   val TAG = "im.tox.antox.callbacks.AntoxOnMessageCallback"

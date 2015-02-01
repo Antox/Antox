@@ -109,7 +109,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = true)
     val parsedUsername = if (username.contains("@")) {
       username.substring(0, username.indexOf("@"))
-    } else if (username == null || username.length == 0) {
+    } else if (username.length == 0) {
       key.substring(0, 7)
     } else {
       username

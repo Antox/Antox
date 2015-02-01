@@ -7,16 +7,17 @@ import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
+import android.preference.Preference.{OnPreferenceClickListener, OnPreferenceChangeListener}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
-import android.widget.ImageButton
+import android.widget.{Toast, ImageButton}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.UserStatus
+import im.tox.antox.utils.{Constants, UserStatus}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
@@ -53,7 +54,6 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
     bindPreferenceSummaryToValue(findPreference("nickname"))
-
     val passwordPreference = findPreference("password")
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
         .getString(passwordPreference.getKey, "").isEmpty) {
@@ -61,7 +61,6 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     } else {
       bindPreferenceSummaryToValue(passwordPreference)
     }
-
     bindPreferenceSummaryToValue(findPreference("status"))
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
@@ -71,6 +70,15 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
       override def onPreferenceClick(preference: Preference): Boolean = {
         createDialog()
+        true
+      }
+    })
+    val exportProfile = findPreference("export")
+    exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        ToxSingleton.exportDataFile()
+        Toast.makeText(getApplicationContext(), "Exported data file to Documents/" + Constants.PROFILE_EXPORT_DIRECTORY, Toast.LENGTH_LONG)
+          .show()
         true
       }
     })

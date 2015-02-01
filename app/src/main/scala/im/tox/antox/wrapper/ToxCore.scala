@@ -1,7 +1,5 @@
 package im.tox.antox.wrapper
 
-;
-
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
@@ -14,7 +12,7 @@ import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array[Byte]) {
 
-  val tox: ToxCoreImpl = new ToxCoreImpl(options, data)
+  val tox: ToxCoreImpl = if (data != null) new ToxCoreImpl(options, data) else new ToxCoreImpl(options)
 
   def this(antoxFriendList: AntoxFriendList, data: Array[Byte]) {
     this(antoxFriendList: AntoxFriendList, new ToxOptions, data)
@@ -84,7 +82,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, options: ToxOptions, data: Array
 
   def addFriendNoRequest(key: String): Int = {
     val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(key))
-    antoxFriendList.addFriend(friendNumber)
+    antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setKey(key)
     return friendNumber
