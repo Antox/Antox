@@ -14,7 +14,7 @@ import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
-import android.widget._
+import android.widget.{AbsListView, EditText, ListView, TextView}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -36,7 +36,7 @@ class ChatActivity extends ActionBarActivity {
   var chatListView: ListView = null
   var displayNameView: TextView = null
   var statusIconView: View = null
-  var backButton: ImageButton = null
+  var avatarActionView: View = null
   var messagesSub: Subscription = null
   var progressSub: Subscription = null
   //var activeKeySub: Subscription
@@ -65,8 +65,8 @@ class ChatActivity extends ActionBarActivity {
     adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
-    backButton = (ImageButton) this.findViewById(R.id.backButton)
-    backButton.setOnClickListener(new View.OnClickListener() {
+    avatarActionView = this.findViewById(R.id.avatarActionView)
+    avatarActionView.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         thisActivity.finish()
       }
@@ -139,7 +139,7 @@ class ChatActivity extends ActionBarActivity {
       }
     })
 
-    /* val attachmentButton = this.findViewById(R.id.attachmentButton)
+    val attachmentButton = this.findViewById(R.id.attachmentButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
@@ -183,7 +183,7 @@ class ChatActivity extends ActionBarActivity {
         })
         builder.create().show()
       }
-    }) */
+    })
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -214,38 +214,38 @@ class ChatActivity extends ActionBarActivity {
     progressSub = Observable.interval(500 milliseconds)
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(x => {
-        if (!scrolling) {
-          updateProgress()
-        }
-      })
+      if (!scrolling) {
+        updateProgress()
+      }
+    })
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-        val key = activeKey
-        val mFriend: Option[FriendInfo] = fi
-          .filter(f => f.key == key)
-          .headOption
-        mFriend match {
-          case Some(friend) => {
-            if (friend.alias != "") {
-              thisActivity.setDisplayName(friend.alias)
-            } else {
-              thisActivity.setDisplayName(friend.name)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-              thisActivity.statusIconView.setBackground(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-            } else {
-              thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-            }
+      val key = activeKey
+      val mFriend: Option[FriendInfo] = fi
+        .filter(f => f.key == key)
+        .headOption
+      mFriend match {
+        case Some(friend) => {
+          if (friend.alias != "") {
+            thisActivity.setDisplayName(friend.alias)
+          } else {
+            thisActivity.setDisplayName(friend.name)
           }
-          case None => {
-            thisActivity.setDisplayName("")
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            thisActivity.statusIconView.setBackground(thisActivity.getResources
+              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
+          } else {
+            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
           }
         }
-      })
+        case None => {
+          thisActivity.setDisplayName("")
+        }
+      }
+    })
   }
 
   private def sendMessage() {
@@ -274,9 +274,9 @@ class ChatActivity extends ActionBarActivity {
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe((cursor: Cursor) => {
-        adapter.changeCursor(cursor)
-        Log.d(TAG, "changing chat list cursor")
-      })
+      adapter.changeCursor(cursor)
+      Log.d(TAG, "changing chat list cursor")
+    })
     Log.d("ChatFragment", "new key: " + activeKey)
   }
 
