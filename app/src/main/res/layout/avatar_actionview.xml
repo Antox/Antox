@@ -2,7 +2,7 @@
     android:id="@+id/avatarActionView"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
-    <ImageView
+    <ImageButton
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:background="@drawable/circle_online"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:id="@+id/videoFriend"
         android:gravity="center"
         android:layout_alignParentRight="true"
@@ -46,9 +46,9 @@
             android:contentDescription="Video Call Friend"
             android:onClick="onClickVideoCallFriend"
             android:src="@drawable/ic_action_video"/>
-    </RelativeLayout>
+    </RelativeLayout> -->
 
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:id="@+id/callFriend"
         android:gravity="center"
         android:layout_toLeftOf="@+id/videoFriend"
@@ -62,7 +62,7 @@
             android:contentDescription="Voice Call Friend"
             android:onClick="onClickVoiceCallFriend"
             android:src="@drawable/ic_action_call"/>
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <TextView
         android:id="@+id/displayName"

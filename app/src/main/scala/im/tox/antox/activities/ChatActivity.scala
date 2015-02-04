@@ -14,7 +14,7 @@ import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
-import android.widget.{AbsListView, EditText, ListView, TextView}
+import android.widget._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -36,7 +36,7 @@ class ChatActivity extends ActionBarActivity {
   var chatListView: ListView = null
   var displayNameView: TextView = null
   var statusIconView: View = null
-  var avatarActionView: View = null
+  var backButton: ImageButton = null
   var messagesSub: Subscription = null
   var progressSub: Subscription = null
   //var activeKeySub: Subscription
@@ -65,8 +65,8 @@ class ChatActivity extends ActionBarActivity {
     adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
-    avatarActionView = this.findViewById(R.id.avatarActionView)
-    avatarActionView.setOnClickListener(new View.OnClickListener() {
+    backButton = (ImageButton) this.findViewById(R.id.backButton)
+    backButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         thisActivity.finish()
       }
@@ -139,7 +139,7 @@ class ChatActivity extends ActionBarActivity {
       }
     })
 
-    val attachmentButton = this.findViewById(R.id.attachmentButton)
+    /* val attachmentButton = this.findViewById(R.id.attachmentButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
@@ -183,7 +183,7 @@ class ChatActivity extends ActionBarActivity {
         })
         builder.create().show()
       }
-    })
+    }) */
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
