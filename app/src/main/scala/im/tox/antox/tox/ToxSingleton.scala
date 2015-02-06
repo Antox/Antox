@@ -15,7 +15,7 @@ import android.util.Log
 import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils._
-import im.tox.antox.wrapper.ToxCore
+import im.tox.antox.wrapper.{ToxAv, ToxCore}
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
 import im.tox.tox4j.exceptions.ToxException
@@ -32,7 +32,7 @@ object ToxSingleton {
 
   var tox: ToxCore = _
 
-  var toxAv: ToxAvImpl = _
+  var toxAv: ToxAv = _
 
   private var antoxFriendList: AntoxFriendList = _
 

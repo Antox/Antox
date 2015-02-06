@@ -1,37 +1,37 @@
 package im.tox.antox.utils
 
 import android.util.Log
-import im.tox.antox.utils.CallManager._
+import im.tox.antox.utils.CallList._
 
-object CallManager {
+object CallList {
   private val TAG = "im.tox.antox.utils.CallManager"
 }
 
-class CallManager () {
+class CallList () {
   private var _calls: Map[Integer, Call] = Map[Integer, Call]()
 
   def add(c: Call) = {
     Log.d(TAG, "Adding call")
-    _calls = _calls + (c.id -> c)
+    _calls = _calls + (c.friendNumber -> c)
   }
 
-  def get(id: Integer): Option[Call] = {
-    _calls.get(id)
+  def get(friendNumber: Integer): Option[Call] = {
+    _calls.get(friendNumber)
   }
 
-  def remove(id: Integer): Unit = {
+  def remove(friendNumber: Integer): Unit = {
     Log.d(TAG, "Removing call")
-    val mCall = this.get(id)
+    val mCall = this.get(friendNumber)
     mCall match {
       case Some(c) => 
-        c.subscription.unsubscribe()
+        c.end()
         c.playAudio.cleanUp()
-        _calls = _calls - id
+        _calls = _calls - friendNumber
       case None =>
     }
   }
 
   def removeAll(): Unit = {
-    _calls.foreach { case (k, call) => call.subscription.unsubscribe() }
+    _calls.foreach { case (k, call) => call.end() }
   }
 }

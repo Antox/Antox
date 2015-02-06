@@ -36,8 +36,10 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              Thread.sleep(ToxSingleton.tox.iterationInterval())
+              val sleepTime = Math.min(ToxSingleton.tox.iterationInterval(), ToxSingleton.toxAv.iterationInterval())
+              Thread.sleep(sleepTime)
               ToxSingleton.tox.iteration()
+              ToxSingleton.toxAv.iteration()
             } catch {
               case e: Exception =>
             }

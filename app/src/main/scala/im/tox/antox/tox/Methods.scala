@@ -5,7 +5,7 @@ import java.nio.{ByteBuffer, ByteOrder}
 import android.content.Context
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.utils.{AntoxFriend, Call, CaptureAudio}
+import im.tox.antox.utils.{AntoxFriend, Call, AudioCapture}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 

@@ -1,14 +1,25 @@
 package im.tox.antox.utils
 
-import rx.lang.scala.Subscription
+import im.tox.tox4j.av.enums.ToxCallState
 
-object Call {
-  private val TAG = "im.tox.antox.utils.Call"
-}
+class Call(val friendNumber: Integer,
+           var state: Option[ToxCallState],
+           val audioBitRate: Int,
+           val videoBitRate: Int) {
 
-class Call(val id: Integer, 
-  val audioBitRate: Int,
-  val videoBitRate: Int,
-  val subscription: Subscription) {
-    val playAudio = new PlayAudio()
+  val audioCapture: AudioCapture = new AudioCapture()
+
+  val playAudio = new PlayAudio()
+
+  def start(): Unit = {
+    audioCapture.startCapture(audioBitRate)
   }
+
+  def mute(): Unit = {
+    audioCapture.stopCapture()
+  }
+
+  def end(): Unit = {
+    audioCapture.stopCapture()
+  }
+}
