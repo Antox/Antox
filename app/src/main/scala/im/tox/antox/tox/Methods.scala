@@ -1,6 +1,7 @@
 package im.tox.antox.tox
 
 import java.nio.{ByteBuffer, ByteOrder}
+import java.util
 
 import android.content.Context
 import android.util.Log
@@ -8,76 +9,66 @@ import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils.{AntoxFriend, Call, CaptureAudio}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
+import collection.JavaConverters._
 
 object Methods {
 
   val TAG = "im.tox.antox.tox.Methods"
+  val MAX_MESSAGE_LENGTH = 1367
 
-  def sendMessage(ctx: Context, key: String, msg: String, mId: Option[Integer]) = {
-    Observable[Boolean](subscriber => {
+  def sendMessage(ctx: Context, key: String, msg: String, mDbId: Option[Integer]) = {
       val mFriend = ToxSingleton.getAntoxFriend(key)
       mFriend match {
         case None =>
         case Some(friend) => {
-          // NB: substring includes from start up to but not including the end position
-          // Max message length in tox is 1368 bytes
-          // jToxCore seems to append a null byte so split around 1367
-          val utf8Bytes: Array[Byte] = msg.getBytes("UTF-8")
-          val numOfMessages: Int = (utf8Bytes.length / 1367) + 1
-
-          if (numOfMessages > 1) {
-
-            val OneByte = 0xFFFFFF80
-            val TwoByte = 0xFFFFF800
-            val ThreeByte = 0xFFFF0000
-
-            var total = 0
-            var previous = 0
-            var numberOfMessagesSent = 0
-            for (i <- 0 until msg.length) {
-              if ((msg.charAt(i) & OneByte) == 0) total += 1 else if ((msg.charAt(i) & TwoByte) == 0) total += 2 else if ((msg.charAt(i) & ThreeByte) == 0) total += 3 else total += 4
-              if (numberOfMessagesSent == numOfMessages - 1) {
-                sendMessageHelper(ctx, key, friend, msg.substring(previous), mId)
-                //break
-              } else if (total >= 1366) {
-                sendMessageHelper(ctx, key, friend, msg.substring(previous, i), mId)
-                numberOfMessagesSent += 1
-                previous = i
-                total = 0
+          val db = new AntoxDB(ctx).open(writeable = true)
+          for (splitMsg <- splitMessage(msg)) {
+            val mId = try {
+              println("sent message of length " + splitMsg.length)
+              Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, splitMsg))
+            } catch {
+              case e: Exception => {
+                None
               }
             }
-          } else {
-            sendMessageHelper(ctx, key, friend, msg, mId)
+
+            mId match {
+              case Some(id) => {
+                mDbId match {
+                  case Some(dbId) => db.updateUnsentMessage(id, dbId)
+                  case None => db.addMessage(id, key, splitMsg, has_been_received = false, has_been_read = false, successfully_sent = true, 1)
+                }
+              }
+              case None => db.addMessage(-1, key, splitMsg, has_been_received = false, has_been_read = false, successfully_sent = false, 1)
+            }
           }
+          db.close()
+          ToxSingleton.updateMessages(ctx)
         }
       }
-      subscriber.onCompleted()
-    }).subscribeOn(IOScheduler()).subscribe()
   }
 
-  private def sendMessageHelper(ctx: Context, key: String, friend: AntoxFriend, msg: String, mDbId: Option[Integer]) = {
-    Observable[Boolean](subscriber => {
-      val mId = try {
-        Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, msg))
-      } catch {
-        case e: Exception => {
-          None
-        }
+  def splitMessage(msg: String): Array[String] = {
+    var currSplitPos = 0
+    val result: util.ArrayList[String] = new util.ArrayList[String]()
+
+    while (msg.length - currSplitPos > MAX_MESSAGE_LENGTH) {
+      val str = msg.substring(currSplitPos, currSplitPos + MAX_MESSAGE_LENGTH)
+      val spacePos = str.lastIndexOf(' ')
+
+      if (spacePos <= 0) {
+        result.add(str)
+        currSplitPos += MAX_MESSAGE_LENGTH
+      } else {
+        result.add(str.substring(0, spacePos))
+        currSplitPos += spacePos + 1
       }
-      val db = new AntoxDB(ctx).open(writeable = true)
-      mId match {
-        case Some(id) => {
-          mDbId match {
-            case Some(dbId) => db.updateUnsentMessage(id, dbId)
-            case None => db.addMessage(id, key, msg, has_been_received = false, has_been_read = false, successfully_sent = true, 1)
-          }
-        }
-        case None => db.addMessage(-1, key, msg, has_been_received = false, has_been_read = false, successfully_sent = false, 1)
-      }
-      db.close()
-      ToxSingleton.updateMessages(ctx)
-      subscriber.onCompleted()
-    }).subscribeOn(IOScheduler()).subscribe()
+    }
+    if (msg.length - currSplitPos > 0) {
+      result.add(msg.substring(currSplitPos))
+    }
+
+    result.asScala.toArray
   }
 
   def sendUnsentMessages(ctx: Context) {
