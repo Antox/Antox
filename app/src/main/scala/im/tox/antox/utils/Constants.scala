@@ -62,6 +62,8 @@ object Constants {
 
   val ADD_FRIEND_REQUEST_CODE = 0
 
+  val SCAN_REQUEST_CODE = 1
+
   val WELCOME_ACTIVITY_REQUEST_CODE = 3
 
   val IMAGE_RESULT = 0

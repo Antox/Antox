@@ -12,7 +12,8 @@ import android.preference.{ListPreference, Preference, PreferenceActivity, Prefe
 import android.view.{MenuItem, View}
 import android.widget.{Toast, ImageButton}
 import com.google.zxing.{BarcodeFormat, WriterException}
-import im.tox.QR.{Contents, QRCodeEncode}
+import com.jwetherell.quick_response_code.qrcode.QRCodeEncoder
+import com.jwetherell.quick_response_code.data.Contents
 import im.tox.antox.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
@@ -154,7 +155,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
   private def generateQR(userKey: String) {
     val qrData = "tox:" + userKey
     val qrCodeSize = 400
-    val qrCodeEncoder = new QRCodeEncode(qrData, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString,
+    val qrCodeEncoder = new QRCodeEncoder(qrData, null, Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString,
       qrCodeSize)
     var out: FileOutputStream = null
     try {
