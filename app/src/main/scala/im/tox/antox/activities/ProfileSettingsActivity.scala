@@ -76,9 +76,15 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     val exportProfile = findPreference("export")
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        ToxSingleton.exportDataFile()
-        Toast.makeText(getApplicationContext(), "Exported data file to Documents/" + Constants.PROFILE_EXPORT_DIRECTORY, Toast.LENGTH_LONG)
-          .show()
+        try {
+          ToxSingleton.exportDataFile()
+          Toast.makeText(getApplicationContext(), "Exported data file to Documents/" + Constants.PROFILE_EXPORT_DIRECTORY, Toast.LENGTH_LONG)
+            .show()
+        } catch {
+          case e: Exception => {
+            Toast.makeText(getApplicationContext(), "Error: Could not export data file.", Toast.LENGTH_LONG).show()
+          }
+        }
         true
       }
     })
