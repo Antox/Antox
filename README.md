@@ -13,7 +13,7 @@ For those who used to test Antox on Google Play, we apologize that we will no lo
 ###Directly Installing Antox
 PLEASE NOTE this app is still alpha and will contain bugs and missing features (compared to other Tox clients)
 
-1. Download the latest APK <a href="https://jenkins.libtoxcore.so/job/tox4j-antox/lastSuccessfulBuild/artifact/antox.apk">here</a> [<a href="antox.qr.png">QR Code</a>]
+1. Download the latest APK <a href="https://repo.tox.im/android/antox.apk">here</a>
 2. Sideload the APK to your phone, or just download the file from step 1 directly to your phone
 3. Ensure that you allow applications from unknown sources to be installed (Tick the option "Unkown Source", found in Settings>Security)
 4. Install the APK by either using a file manager or ADB.
