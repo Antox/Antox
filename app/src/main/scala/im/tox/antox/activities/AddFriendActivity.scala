@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarActivity
 import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
-import im.tox.QR.IntentIntegrator
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
@@ -135,8 +134,10 @@ class AddFriendActivity extends ActionBarActivity {
   }
 
   private def scanIntent() {
-    val integrator = new IntentIntegrator(this)
-    integrator.initiateScan()
+    val intent = new Intent(this,classOf[com.jwetherell.quick_response_code.CaptureActivity])
+    startActivityForResult(intent, Constants.SCAN_REQUEST_CODE)
+    /*val integrator = new IntentIntegrator(this)
+    integrator.initiateScan()*/
   }
 
   def addFriend(view: View) {
@@ -185,19 +186,17 @@ class AddFriendActivity extends ActionBarActivity {
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
-    val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent)
-    if (scanResult != null) {
-      if (scanResult.getContents != null) {
-        val addFriendKey = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-        val friendKey = (if (scanResult.getContents.toLowerCase.contains("tox:")) scanResult.getContents.substring(4) else scanResult.getContents)
-                        .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
-        if (validateFriendKey(friendKey)) {
-          addFriendKey.setText(friendKey)
-        } else {
-          val context = getApplicationContext
-          val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
-          toast.show()
-        }
+    if(requestCode == Constants.SCAN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+      val scannedResult = intent.getCharSequenceExtra("result").toString
+      val addFriendKey = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
+      val friendKey = (if (scannedResult.toLowerCase.contains("tox:")) scannedResult.substring(4) else scannedResult)
+        .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
+      if (validateFriendKey(friendKey)) {
+        addFriendKey.setText(friendKey)
+      } else {
+        val context = getApplicationContext
+        val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
+        toast.show()
       }
     }
   }

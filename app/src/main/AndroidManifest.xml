@@ -77,6 +77,25 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|keyboardHidden"
+            android:name="com.jwetherell.quick_response_code.CaptureActivity"
+            android:label="@string/addfriend_button" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.activities.AddFriendActivity" />
+
+            <!-- Intent filter for handling tox: links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tox" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".activities.FriendProfileActivity"
             android:label="@string/title_activity_friend_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >

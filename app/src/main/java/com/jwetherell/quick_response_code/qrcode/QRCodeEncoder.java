@@ -1,4 +1,3 @@
-package im.tox.QR;
 /*
  * Copyright (C) 2008 ZXing authors
  * 
@@ -15,10 +14,19 @@ package im.tox.QR;
  * limitations under the License.
  */
 
+package com.jwetherell.quick_response_code.qrcode;
+
+import android.provider.ContactsContract;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
+
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import com.jwetherell.quick_response_code.data.Contents;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -26,12 +34,15 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
+/**
+ * This class does the work of decoding the user's request and extracting all
+ * the data to be encoded in a barcode.
+ * 
+ * @author Justin Wetherell (phishman3579@gmail.com )
+ * @author dswitkin@google.com (Daniel Switkin)
+ */
+public final class QRCodeEncoder {
 
-public final class QRCodeEncode {
     private static final int WHITE = 0xFFFFFFFF;
     private static final int BLACK = 0xFF000000;
 
@@ -42,7 +53,7 @@ public final class QRCodeEncode {
     private BarcodeFormat format = null;
     private boolean encoded = false;
 
-    public QRCodeEncode(String data, Bundle bundle, String type, String format, int dimension) {
+    public QRCodeEncoder(String data, Bundle bundle, String type, String format, int dimension) {
         this.dimension = dimension;
         encoded = encodeContents(data, bundle, type, format);
     }
@@ -153,7 +164,8 @@ public final class QRCodeEncode {
 
                 String url = trim(bundle.getString(Contents.URL_KEY));
                 if (url != null) {
-                    // escapeMECARD(url) -> wrong escape e.g. http\://zxing.google.com
+                    // escapeMECARD(url) -> wrong escape e.g.
+                    // http\://zxing.google.com
                     newContents.append("URL:").append(url).append(';');
                     newDisplayContents.append('\n').append(url);
                 }
@@ -178,7 +190,8 @@ public final class QRCodeEncode {
             }
         } else if (type.equals(Contents.Type.LOCATION)) {
             if (bundle != null) {
-                // These must use Bundle.getFloat(), not getDouble(), it's part of the API.
+                // These must use Bundle.getFloat(), not getDouble(), it's part
+                // of the API.
                 float latitude = bundle.getFloat("LAT", Float.MAX_VALUE);
                 float longitude = bundle.getFloat("LONG", Float.MAX_VALUE);
                 if (latitude != Float.MAX_VALUE && longitude != Float.MAX_VALUE) {
@@ -191,7 +204,8 @@ public final class QRCodeEncode {
     }
 
     public Bitmap encodeAsBitmap() throws WriterException {
-        if (!encoded) return null;
+        if (!encoded)
+            return null;
 
         Map<EncodeHintType, Object> hints = null;
         String encoding = guessAppropriateEncoding(contents);
@@ -220,19 +234,25 @@ public final class QRCodeEncode {
     private static String guessAppropriateEncoding(CharSequence contents) {
         // Very crude at the moment
         for (int i = 0; i < contents.length(); i++) {
-            if (contents.charAt(i) > 0xFF) { return "UTF-8"; }
+            if (contents.charAt(i) > 0xFF) {
+                return "UTF-8";
+            }
         }
         return null;
     }
 
     private static String trim(String s) {
-        if (s == null) { return null; }
+        if (s == null) {
+            return null;
+        }
         String result = s.trim();
         return result.length() == 0 ? null : result;
     }
 
     private static String escapeMECARD(String input) {
-        if (input == null || (input.indexOf(':') < 0 && input.indexOf(';') < 0)) { return input; }
+        if (input == null || (input.indexOf(':') < 0 && input.indexOf(';') < 0)) {
+            return input;
+        }
         int length = input.length();
         StringBuilder result = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
@@ -245,4 +265,3 @@ public final class QRCodeEncode {
         return result.toString();
     }
 }
-
