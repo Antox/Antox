@@ -18,7 +18,7 @@ class About extends ActionBarActivity {
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     val tw = findViewById(R.id.textView).asInstanceOf[TextView]
     val tw10 = findViewById(R.id.textView10).asInstanceOf[TextView]
-    val pattern = Pattern.compile("https://github.com/Astonex/Antox")
+    val pattern = Pattern.compile("https://github.com/subliun/Antox")
     Linkify.addLinks(tw10, pattern, "")
     var version = "-.-.-"
     try {
