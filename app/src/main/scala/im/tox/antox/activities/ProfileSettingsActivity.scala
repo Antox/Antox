@@ -2,7 +2,7 @@ package im.tox.antox.activities
 
 import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
 
-import android.app.AlertDialog
+import android.app.{Activity, AlertDialog}
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
@@ -17,7 +17,8 @@ import im.tox.antox.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.{Constants, UserStatus}
+import im.tox.antox.utils.FileDialog.DirectorySelectedListener
+import im.tox.antox.utils.{FileDialog, Constants, UserStatus}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
@@ -74,17 +75,16 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
     val exportProfile = findPreference("export")
+    val literallythis = this
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        try {
-          ToxSingleton.exportDataFile()
-          Toast.makeText(getApplicationContext(), "Exported data file to Documents/" + Constants.PROFILE_EXPORT_DIRECTORY, Toast.LENGTH_LONG)
-            .show()
-        } catch {
-          case e: Exception => {
-            Toast.makeText(getApplicationContext(), "Error: Could not export data file.", Toast.LENGTH_LONG).show()
+        val fileDialog = new FileDialog(literallythis, Environment.getExternalStorageDirectory, true)
+        fileDialog.addDirectoryListener(new DirectorySelectedListener {
+          override def directorySelected(directory: File): Unit = {
+            onExportDataFileSelected(directory)
           }
-        }
+        })
+        fileDialog.showDialog()
         true
       }
     })
@@ -149,6 +149,19 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
     builder.create().show()
+  }
+
+  def onExportDataFileSelected(dest: File): Unit = {
+    try {
+      ToxSingleton.exportDataFile(dest)
+      Toast.makeText(getApplicationContext, "Exported data file to " + dest.getPath, Toast.LENGTH_LONG)
+        .show()
+    } catch {
+      case e: Exception => {
+        e.printStackTrace()
+        Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
+      }
+    }
   }
 
   private def generateQR(userKey: String) {

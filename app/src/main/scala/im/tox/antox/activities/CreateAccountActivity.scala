@@ -241,8 +241,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
     val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
-    val fileDialog = new FileDialog(this, path)
-    var selectedFile: Option[File] = None
+    val fileDialog = new FileDialog(this, path, false)
     fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
       def fileSelected(file: File) {
         onImportFileSelected(Some(file), accountField.getText.toString)

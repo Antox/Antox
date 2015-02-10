@@ -170,7 +170,7 @@ class ChatActivity extends ActionBarActivity {
             }
             case 2 => {
               val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath)
+              val fileDialog = new FileDialog(thisActivity, mPath, false)
               fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                 def fileSelected(file: File) {
                   ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
