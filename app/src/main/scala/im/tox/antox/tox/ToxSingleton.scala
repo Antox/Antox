@@ -80,8 +80,8 @@ object ToxSingleton {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
 
-  def exportDataFile(): Unit = {
-    dataFile.exportFile()
+  def exportDataFile(dest: File): Unit = {
+    dataFile.exportFile(dest)
   }
 
   def sendFileSendRequest(path: String, key: String, context: Context) {
