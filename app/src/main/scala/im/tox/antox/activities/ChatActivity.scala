@@ -14,7 +14,7 @@ import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
-import android.widget.{AbsListView, EditText, ListView, TextView}
+import android.widget._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -248,11 +248,20 @@ class ChatActivity extends ActionBarActivity {
     })
   }
 
+  val MESSAGE_LENGTH_LIMIT = 1367 * 100
+
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
       return
     }
+
+    //limit to 100 max length messages
+    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
+      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
+      return
+    }
+
     var msg: String = null
     if (messageBox.getText != null) {
       msg = messageBox.getText.toString
