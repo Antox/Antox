@@ -17,7 +17,7 @@ class AntoxFriend(friendnumber: Int) {
   var name: String = _
 
   @BeanProperty
-  var clientId: String = _
+  var key: String = _
 
   @BeanProperty
   var status: ToxStatus = ToxStatus.NONE

@@ -29,7 +29,7 @@ object FileDialog {
   }
 }
 
-class FileDialog(private val activity: Activity, path: File) {
+class FileDialog(private val activity: Activity, path: File, selectDirectoryOption: Boolean) {
 
   private val TAG = getClass.getName
 
@@ -40,8 +40,6 @@ class FileDialog(private val activity: Activity, path: File) {
   private var fileListenerList: ListenerList[FileSelectedListener] = new ListenerList[FileDialog.FileSelectedListener]()
 
   private var dirListenerList: ListenerList[DirectorySelectedListener] = new ListenerList[FileDialog.DirectorySelectedListener]()
-
-  private var selectDirectoryOption: Boolean = _
 
   private var fileEndsWith: String = _
 
@@ -85,6 +83,10 @@ class FileDialog(private val activity: Activity, path: File) {
 
   def addFileListener(listener: FileSelectedListener) {
     fileListenerList.add(listener)
+  }
+
+  def addDirectoryListener(listener: DirectorySelectedListener) {
+    dirListenerList.add(listener)
   }
 
   def showDialog() {

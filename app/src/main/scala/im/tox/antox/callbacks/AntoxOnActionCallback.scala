@@ -14,7 +14,7 @@ class AntoxOnActionCallback(private var ctx: Context) extends FriendActionCallba
 
   override def friendAction(friendNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
     AntoxOnMessageCallback.handleMessage(ctx, friendNumber,
-      ToxSingleton.getIdFromFriendNumber(friendNumber),
+      ToxSingleton.getAntoxFriend(friendNumber).get.getKey(),
       new String(message, "UTF-8"),
       Constants.MESSAGE_TYPE_ACTION)
   }

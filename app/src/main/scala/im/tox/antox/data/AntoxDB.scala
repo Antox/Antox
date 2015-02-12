@@ -71,6 +71,12 @@ object AntoxDB {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
       onCreate(mDb)
     }
+
+    override def onDowngrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST)
+    }
   }
 }
 
@@ -114,7 +120,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = true)
     val parsedUsername = if (username.contains("@")) {
       username.substring(0, username.indexOf("@"))
-    } else if (username == null || username.length == 0) {
+    } else if (username.length == 0) {
       key.substring(0, 7)
     } else {
       username

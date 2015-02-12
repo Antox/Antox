@@ -1,7 +1,5 @@
 package im.tox.antox.wrapper
 
-;
-
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
@@ -14,7 +12,7 @@ import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions, data: Array[Byte]) {
 
-  val tox: ToxCoreImpl = new ToxCoreImpl(options, data)
+  val tox: ToxCoreImpl = if (data != null) new ToxCoreImpl(options, data) else new ToxCoreImpl(options)
 
   def this(antoxFriendList: AntoxFriendList, groupList: GroupList, data: Array[Byte]) {
     this(antoxFriendList: AntoxFriendList, groupList: GroupList, new ToxOptions, data)
@@ -52,7 +50,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iteration(): Unit = tox.iteration()
 
-  def getClientId: String = Hex.bytesToHexString(tox.getClientId)
+  def getSelfKey: String = Hex.bytesToHexString(tox.getClientId)
 
   def getPrivateKey: Array[Byte] = tox.getPrivateKey
 
@@ -78,15 +76,15 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes)
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setClientId(ToxSingleton.clientIdFromAddress(address))
+    antoxFriend.setKey(ToxSingleton.keyFromAddress(address))
     return friendNumber
   }
 
-  def addFriendNoRequest(clientId: String): Int = {
-    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(clientId))
-    antoxFriendList.addFriend(friendNumber)
+  def addFriendNoRequest(key: String): Int = {
+    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(key))
+    antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setClientId(clientId)
+    antoxFriend.setKey(key)
     return friendNumber
   }
 
@@ -95,9 +93,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     tox.deleteFriend(friendNumber)
   }
 
-  def getFriendByClientId(clientId: String): Int = tox.getFriendByClientId(Hex.hexStringToBytes(clientId))
+  def getFriendByKey(key: String): Int = tox.getFriendByClientId(Hex.hexStringToBytes(key))
 
-  def getClientId(friendNumber: Int): String = Hex.bytesToHexString(tox.getClientId(friendNumber))
+  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getClientId(friendNumber))
 
   def friendExists(friendNumber: Int): Boolean = tox.friendExists(friendNumber)
 

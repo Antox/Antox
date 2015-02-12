@@ -61,7 +61,7 @@ object ChatMessagesAdapter {
     var reject: View = _
 
     var bubble: LinearLayout = _
-    
+
     var wrapper: LinearLayout = _
 
   }

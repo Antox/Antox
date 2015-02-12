@@ -23,10 +23,12 @@
     <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
     <string name="create_register_incog">Register Incognito</string>
+    <string name="create_import_profile">Import Profile</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
     <string name="create_must_fill_in">You must fill in all fields</string>
     <string name="create_bad_profile_name">Profile name can\'t contain spaces or slashes or be empty</string>
     <string name="create_profile_exists">This profile name already exists</string>
+    <string name="import_profile_invalid_file">The file chosen is not a valid tox profile </string>
     <string name="create_account_exists">This name is already taken</string>
     <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
@@ -43,6 +45,7 @@
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
+    <string name="chat_message_too_long">This message is too long and cannot be sent</string>
 
     <!-- Add Friend Activity -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>

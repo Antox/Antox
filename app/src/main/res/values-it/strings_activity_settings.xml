@@ -5,6 +5,8 @@
   <string name="pref_header_profile">Profilo</string>
   <string name="pref_title_nickname">Nome</string>
   <string name="pref_default_nickname">Utente Antox</string>
+  <string name="pref_title_password">Password per Toxme.se</string>
+  <string name="pref_default_password">Nessuna Password Impostata</string>
   <string name="pref_title_status">Stato</string>
   <string-array name="pref_status_list_titles">
     <item>Online</item>
@@ -16,6 +18,7 @@
   <string name="pref_title_tox_id">Tox ID</string>
   <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
   <string name="pref_title_account_name">Nome Profilo</string>
+  <string name="pref_title_export">Esporta Profilo</string>
   <string name="pref_title_logout">Logout</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Notifiche</string>

@@ -1,10 +1,12 @@
 package im.tox.antox.tox
 
-import java.io.{FileInputStream, FileNotFoundException, FileOutputStream, IOException}
+import java.io._
 
 import android.content.Context
+import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
+import im.tox.antox.utils.{FileDialog, Constants, FileUtils}
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
@@ -23,6 +25,14 @@ class ToxDataFile(ctx: Context, fileName: String) {
       Log.d("ToxDataFile", "myFile is null!")
     }
     myFile.exists()
+  }
+
+  def exportFile(dest: File): Unit = {
+    if (!dest.exists()) {
+      throw new IllegalArgumentException("dest must exist")
+    }
+
+    FileUtils.copy(ctx.getFileStreamPath(fileName), new File(dest + "/" + fileName + ".tox"))
   }
 
   def deleteFile() {

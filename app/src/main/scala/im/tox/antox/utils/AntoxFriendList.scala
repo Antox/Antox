@@ -8,7 +8,6 @@ import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.core.exceptions.ToxFriendAddException
 import im.tox.tox4j.exceptions.ToxException
 
-//remove if not needed
 import scala.collection.JavaConversions._
 
 class AntoxFriendList {
@@ -24,8 +23,8 @@ class AntoxFriendList {
     friends.find(friend => friend.getFriendnumber == friendNumber)
   }
 
-  def getByClientId(id: String): Option[AntoxFriend] = {
-    friends.find(friend => friend.getClientId == id)
+  def getByKey(key: String): Option[AntoxFriend] = {
+    friends.find(friend => friend.getKey == key)
   }
 
   def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
@@ -87,13 +86,13 @@ class AntoxFriendList {
   }
 
   def updateFromFriend(friend: Friend): Unit = {
-    val antoxFriend = getByClientId(friend.clientId).get
+    val antoxFriend = getByKey(friend.key).get
     antoxFriend.setName(friend.name)
     antoxFriend.setStatusMessage(friend.status)
     antoxFriend.setOnline(friend.isOnline)
   }
 
   def removeFriend(friendnumber: Int) {
-    friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber))
+    friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber).get)
   }
 }

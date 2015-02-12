@@ -73,7 +73,7 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
       toast.show()
     } else {
       val db = new UserDB(this)
-      if (db.login(account)) {
+      if (db.doesUserExist(account)) {
         val details = db.getUserDetails(account)
         db.close()
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)

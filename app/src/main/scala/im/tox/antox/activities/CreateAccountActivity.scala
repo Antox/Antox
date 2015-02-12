@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 
 import android.app.Activity
 import android.content.Intent
-import android.os.{Build, Bundle}
+import android.os.{Environment, Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.v7.app.ActionBarActivity
 import android.util.{Base64, Log}
@@ -15,7 +15,7 @@ import android.widget.{EditText, Toast}
 import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxSingleton, ToxDataFile, ToxDoService}
-import im.tox.antox.utils.{AntoxFriendList, Options}
+import im.tox.antox.utils.{FileUtils, FileDialog, Options}
 import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
@@ -118,34 +118,160 @@ class CreateAccountActivity extends ActionBarActivity {
     toxData
   }
 
-  def onClickRegisterIncogAccount(view: View) {
-    val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
-    val account = accountField.getText.toString
+  def loadToxData(fileName: String): ToxData = {
+    val toxData = new ToxData
+    val toxOptions = new ToxOptions()
+    toxOptions.setIpv6Enabled(Options.ipv6Enabled)
+    toxOptions.setUdpEnabled(Options.udpEnabled)
+    val toxDataFile = new ToxDataFile(this, fileName)
+    val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
+    toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+    toxData.fileBytes = toxDataFile.loadFile()
+    toxData
+  }
 
-    val db = new UserDB(this)
-
-    if (!validAccountName(account)) {
+  //db is expected to be open and is closed at the end of the method
+  def createAccount(accountName: String, db: UserDB, createDataFile: Boolean, shouldRegister: Boolean): Unit = {
+    try {
+    if (!validAccountName(accountName)) {
       showBadAccountNameError()
-    } else if (db.login(account)) {
-      /* Check if user exists. This login() function simply checks if the username is in the database */
+    } else if (db.doesUserExist(accountName)) {
       val context = getApplicationContext
       val text = getString(R.string.create_profile_exists)
       val duration = Toast.LENGTH_LONG
       val toast = Toast.makeText(context, text, duration)
       toast.show()
     } else {
-      // Add user to db
-      val db = new UserDB(this)
-      db.addUser(account, "")
-      db.close()
+      db.addUser(accountName, "")
+      var toxData = new ToxData
 
-      try {
-        val toxData = createToxData(account)
-
-        saveAccountAndStartMain(account, "", toxData.ID)
-      } catch {
-        case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
+      if (createDataFile) {
+        // Create tox data save file
+        try {
+          toxData = createToxData(accountName)
+        } catch {
+          case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
+        }
+      } else {
+        toxData = loadToxData(accountName)
       }
+
+      if (shouldRegister) {
+        // Register on toxme.se
+        try {
+          System.load("/data/data/im.tox.antox/lib/libkaliumjni.so")
+        } catch {
+          case e: Exception => Log.d("CreateAccount", "System.load() on kalium failed")
+        }
+
+        val allow = 0
+        val jsonPost = new JSONPost
+        val toxmeThread = new Thread(jsonPost)
+
+        try {
+          val unencryptedPayload = new JSONObject
+          unencryptedPayload.put("tox_id", toxData.ID)
+          unencryptedPayload.put("name", accountName)
+          unencryptedPayload.put("privacy", allow)
+          unencryptedPayload.put("bio", "")
+          val epoch = System.currentTimeMillis() / 1000
+          unencryptedPayload.put("timestamp", epoch)
+          val hexEncoder = new Hex
+          val rawEncoder = new Raw
+          val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
+          val serverPublicKey = hexEncoder.decode(toxmePK)
+          val ourSecretKey = Array.ofDim[Byte](32)
+          System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
+          val box = new Box(serverPublicKey, ourSecretKey)
+          val random = new org.abstractj.kalium.crypto.Random()
+          var nonce = random.randomBytes(24)
+          var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
+          payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
+          nonce = Base64.encode(nonce, Base64.NO_WRAP)
+          val payload = rawEncoder.encode(payloadBytes)
+          val nonceString = rawEncoder.encode(nonce)
+          val json = new JSONObject
+          json.put("action", 1)
+          json.put("public_key", toxData.ID.substring(0, 64))
+          json.put("encrypted", payload)
+          json.put("nonce", nonceString)
+          jsonPost.setJSON(json.toString)
+          toxmeThread.start()
+          toxmeThread.join()
+        } catch {
+          case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
+          case e: InterruptedException =>
+        }
+
+        val toastMessage = jsonPost.getErrorCode match {
+          case "0" =>
+            db.updateUserDetail(accountName, "password", jsonPost.getPassword)
+            saveAccountAndStartMain(accountName, jsonPost.getPassword, toxData.ID)
+            null
+          case "-25" => getString(R.string.create_account_exists)
+          case "-26" => getString(R.string.create_account_internal_error)
+          case "-4" => getString(R.string.create_account_reached_registration_limit)
+          case _ => getString(R.string.create_account_unknown_error) + jsonPost.getErrorCode
+        }
+
+        if (toastMessage != null) {
+          val context = getApplicationContext
+          val duration = Toast.LENGTH_SHORT
+          Toast.makeText(context, toastMessage, duration).show()
+        }
+
+      } else {
+        saveAccountAndStartMain(accountName, "", toxData.ID)
+      }
+    }
+    } finally {
+      db.close()
+    }
+  }
+
+  def onClickRegisterIncogAccount(view: View) {
+    val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
+    val account = accountField.getText.toString
+
+    val db = new UserDB(this)
+    createAccount(account, db, createDataFile = true, shouldRegister = false)
+  }
+
+  def onClickImportProfile(view: View): Unit = {
+    val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
+
+    val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
+    val fileDialog = new FileDialog(this, path, false)
+    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+      def fileSelected(file: File) {
+        onImportFileSelected(Some(file), accountField.getText.toString)
+      }
+    })
+    fileDialog.showDialog()
+  }
+
+  def onImportFileSelected(selectedFile: Option[File], accountFieldName: String): Unit = {
+    selectedFile match {
+      case Some(selectedFile) =>
+        if (!selectedFile.getName.contains(".tox")) {
+          val context = getApplicationContext
+          val duration = Toast.LENGTH_SHORT
+          Toast.makeText(context, getResources.getString(R.string.import_profile_invalid_file), duration).show()
+          return
+        }
+
+        val accountName =
+          if (accountFieldName.isEmpty) {
+            selectedFile.getName.replace(".tox", "")
+          } else {
+            accountFieldName
+          }
+
+          val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
+          FileUtils.copy(selectedFile, toxDataFile)
+          createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+
+      case None => throw new Exception("Could not load data file.")
     }
   }
 
@@ -153,86 +279,9 @@ class CreateAccountActivity extends ActionBarActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
-    if (!validAccountName(account)) {
-      showBadAccountNameError()
-    } else {
-      val db = new UserDB(this)
-      db.addUser(account, "")
-      
-      // Create tox data save file
-      var toxData = new ToxData
+    val db = new UserDB(this)
 
-      try {
-        toxData = createToxData(account)
-      } catch {
-        case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
-      }
-      
-      // Register on toxme.se
-      try {
-        System.load("/data/data/im.tox.antox/lib/libkaliumjni.so")
-      } catch {
-        case e: Exception => Log.d("CreateAccount", "System.load() on kalium failed")
-      }
-
-      val allow = 0
-      val jsonPost = new JSONPost
-      val toxmeThread = new Thread(jsonPost)
-
-      try {
-        val unencryptedPayload = new JSONObject
-        unencryptedPayload.put("tox_id", toxData.ID)
-        unencryptedPayload.put("name", account)
-        unencryptedPayload.put("privacy", allow)
-        unencryptedPayload.put("bio", "")
-        val epoch = System.currentTimeMillis() / 1000
-        unencryptedPayload.put("timestamp", epoch)
-        val hexEncoder = new Hex
-        val rawEncoder = new Raw
-        val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
-        val serverPublicKey = hexEncoder.decode(toxmePK)
-        val ourSecretKey = Array.ofDim[Byte](32)
-        System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
-        val box = new Box(serverPublicKey, ourSecretKey)
-        val random = new org.abstractj.kalium.crypto.Random()
-        var nonce = random.randomBytes(24)
-        var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
-        payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
-        nonce = Base64.encode(nonce, Base64.NO_WRAP)
-        val payload = rawEncoder.encode(payloadBytes)
-        val nonceString = rawEncoder.encode(nonce)
-        val json = new JSONObject
-        json.put("action", 1)
-        json.put("public_key", toxData.ID.substring(0, 64))
-        json.put("encrypted", payload)
-        json.put("nonce", nonceString)
-        jsonPost.setJSON(json.toString)
-        toxmeThread.start()
-        toxmeThread.join()
-      } catch {
-        case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
-        case e: InterruptedException =>
-      }
-
-      val toastMessage = jsonPost.getErrorCode match {
-        case "0" =>
-          db.updateUserDetail(account, "password", jsonPost.getPassword)
-          saveAccountAndStartMain(account, jsonPost.getPassword, toxData.ID)
-          null
-        case "-25" => getString(R.string.create_account_exists)
-        case "-26" => getString(R.string.create_account_internal_error)
-        case "-4" => getString(R.string.create_account_reached_registration_limit)
-        case _ => getString(R.string.create_account_unknown_error) + jsonPost.getErrorCode
-      }
-
-      if (toastMessage != null) {
-        val context = getApplicationContext
-        val duration = Toast.LENGTH_SHORT
-        Toast.makeText(context, toastMessage, duration).show()
-      }
-
-      db.close()
-    }
+    createAccount(account, db, createDataFile = true, shouldRegister = true)
   }
 
   private class JSONPost extends Runnable {

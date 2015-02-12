@@ -13,16 +13,14 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Hex, AntoxFriend, Constants}
 import im.tox.tox4j.core.callbacks.FriendMessageCallback
 
-//remove if not needed
-
 object AntoxOnMessageCallback {
 
   val TAG = "im.tox.antox.callbacks.AntoxOnMessageCallback"
 
-  def handleMessage(ctx: Context, friendNumber: Int, friendClientId: String, rawMessage: String, messageType: Int): Unit = {
+  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, rawMessage: String, messageType: Int): Unit = {
     val db = new AntoxDB(ctx)
     val message = if (messageType == Constants.MESSAGE_TYPE_ACTION) {
-      val friendDetails = db.getFriendDetails(friendClientId)
+      val friendDetails = db.getFriendDetails(friendKey)
       formatAction(rawMessage, if (friendDetails(1) == "") friendDetails(0) else friendDetails(1))
     } else {
       rawMessage
@@ -36,10 +34,10 @@ object AntoxOnMessageCallback {
         new Array[Byte](0))
     }
 
-    Log.d(TAG, "friend id: " + friendClientId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
-    if (!db.isFriendBlocked(friendClientId)) {
-      val chatActive = (State.chatActive && State.activeKey.contains(friendClientId))
-        db.addMessage(-1, friendClientId, message, has_been_received = true,
+    Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
+    if (!db.isFriendBlocked(friendKey)) {
+      val chatActive = (State.chatActive && State.activeKey.contains(friendKey))
+        db.addMessage(-1, friendKey, message, has_been_received = true,
                       has_been_read = chatActive, successfully_sent = true, messageType)
     }
     db.close()
@@ -47,8 +45,8 @@ object AntoxOnMessageCallback {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&
       preferences.getBoolean("notifications_new_message", true)) {
-      if (!(State.chatActive && State.activeKey.contains(friendClientId))) {
-        val mName = ToxSingleton.getAntoxFriend(friendClientId).map(_.getName)
+      if (!(State.chatActive && State.activeKey.contains(friendKey))) {
+        val mName = ToxSingleton.getAntoxFriend(friendKey).map(_.getName)
         mName.foreach(name => {
           val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
             .setContentTitle(name)
@@ -57,7 +55,7 @@ object AntoxOnMessageCallback {
           val resultIntent = new Intent(ctx, classOf[MainActivity])
           resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
           resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-          resultIntent.putExtra("key", friendClientId)
+          resultIntent.putExtra("key", friendKey)
           resultIntent.putExtra("name", name)
           val stackBuilder = TaskStackBuilder.create(ctx)
           stackBuilder.addParentStack(classOf[MainActivity])
@@ -83,6 +81,6 @@ object AntoxOnMessageCallback {
 class AntoxOnMessageCallback(private var ctx: Context) extends FriendMessageCallback {
 
   override def friendMessage(friendNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
-    handleMessage(ctx, friendNumber, ToxSingleton.getIdFromFriendNumber(friendNumber), new String(message, "UTF-8"), Constants.MESSAGE_TYPE_FRIEND)
+    handleMessage(ctx, friendNumber, ToxSingleton.getAntoxFriend(friendNumber).get.getKey, new String(message, "UTF-8"), Constants.MESSAGE_TYPE_FRIEND)
   }
 }

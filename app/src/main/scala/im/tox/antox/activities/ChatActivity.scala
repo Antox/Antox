@@ -14,7 +14,7 @@ import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
-import android.widget.{AbsListView, EditText, ListView, TextView}
+import android.widget._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -170,7 +170,7 @@ class ChatActivity extends ActionBarActivity {
             }
             case 2 => {
               val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath)
+              val fileDialog = new FileDialog(thisActivity, mPath, false)
               fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                 def fileSelected(file: File) {
                   ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
@@ -214,45 +214,54 @@ class ChatActivity extends ActionBarActivity {
     progressSub = Observable.interval(500 milliseconds)
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(x => {
-        if (!scrolling) {
-          updateProgress()
-        }
-      })
+      if (!scrolling) {
+        updateProgress()
+      }
+    })
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-        val key = activeKey
-        val mFriend: Option[FriendInfo] = fi
-          .filter(f => f.clientId == key)
-          .headOption
-        mFriend match {
-          case Some(friend) => {
-            if (friend.alias != "") {
-              thisActivity.setDisplayName(friend.alias)
-            } else {
-              thisActivity.setDisplayName(friend.name)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-              thisActivity.statusIconView.setBackground(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-            } else {
-              thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-                .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-            }
+      val key = activeKey
+      val mFriend: Option[FriendInfo] = fi
+        .filter(f => f.key == key)
+        .headOption
+      mFriend match {
+        case Some(friend) => {
+          if (friend.alias != "") {
+            thisActivity.setDisplayName(friend.alias)
+          } else {
+            thisActivity.setDisplayName(friend.name)
           }
-          case None => {
-            thisActivity.setDisplayName("")
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            thisActivity.statusIconView.setBackground(thisActivity.getResources
+              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
+          } else {
+            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
           }
         }
-      })
+        case None => {
+          thisActivity.setDisplayName("")
+        }
+      }
+    })
   }
+
+  val MESSAGE_LENGTH_LIMIT = 1367 * 100
 
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
       return
     }
+
+    //limit to 100 max length messages
+    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
+      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
+      return
+    }
+
     var msg: String = null
     if (messageBox.getText != null) {
       msg = messageBox.getText.toString
@@ -274,9 +283,9 @@ class ChatActivity extends ActionBarActivity {
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe((cursor: Cursor) => {
-        adapter.changeCursor(cursor)
-        Log.d(TAG, "changing chat list cursor")
-      })
+      adapter.changeCursor(cursor)
+      Log.d(TAG, "changing chat list cursor")
+    })
     Log.d("ChatFragment", "new key: " + activeKey)
   }
 

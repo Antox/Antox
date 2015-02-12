@@ -36,7 +36,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
     db.close()
   }
 
-  def login(username: String): Boolean = {
+  def doesUserExist(username: String): Boolean = {
     val db = this.getReadableDatabase
     val cursor = db.rawQuery("SELECT count(*) FROM users WHERE username='" + username +
       "'", null)
