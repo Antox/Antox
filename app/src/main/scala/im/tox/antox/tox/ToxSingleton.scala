@@ -301,7 +301,7 @@ object ToxSingleton {
     }
   }
 
-  def updateGroupsList(ctx: Context) {
+  def updateGroupList(ctx: Context) {
     try {
       Reactive.groupList.onNext(groupList.getGroupArray())
     } catch {

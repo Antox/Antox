@@ -116,17 +116,15 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (holder.timeText != null) {
       holder.timeText.setTextColor(context.getResources.getColor(R.color.grey_dark))
     }
-    if (`type` == Constants.TYPE_FRIEND_REQUEST || `type` == Constants.TYPE_GROUP_INVITE) {
-      val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
-      val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
-      val key = item.first
-      acceptButton.setOnClickListener(new View.OnClickListener() {
 
-      if (`type` == Constants.TYPE_FRIEND_REQUEST) {
-        createFriendRequestClickHandlers(item.first, acceptButton, rejectButton)
-      } else if (`type` == Constants.TYPE_GROUP_INVITE) {
-        createGroupInviteClickHandlers(item.first, acceptButton, rejectButton)
-      }
+    val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
+    val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
+    val key = item.first
+
+    if (`type` == Constants.TYPE_FRIEND_REQUEST || `type` == Constants.TYPE_GROUP_INVITE) {
+      createFriendRequestClickHandlers(key, acceptButton, rejectButton)
+    } else if (`type` == Constants.TYPE_GROUP_INVITE) {
+      createGroupInviteClickHandlers(key, acceptButton, rejectButton)
     }
     newConvertView
   }
