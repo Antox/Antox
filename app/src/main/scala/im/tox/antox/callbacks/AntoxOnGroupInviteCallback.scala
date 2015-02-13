@@ -21,7 +21,7 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) {
   def groupInvite(friendNumber: Int, groupId: Array[Byte], inviteData: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
-    if (db.isFriendBlocked(inviter.getClientId)) return
+    if (db.isFriendBlocked(inviter.getKey)) return
 
     db.addGroupInvite(Hex.bytesToHexString(groupId), inviter.getName, inviteData)
     db.close()

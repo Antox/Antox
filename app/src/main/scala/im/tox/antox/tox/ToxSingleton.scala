@@ -303,7 +303,7 @@ object ToxSingleton {
 
   def updateGroupList(ctx: Context) {
     try {
-      Reactive.groupList.onNext(groupList.getGroupArray())
+      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
     } catch {
       case e: Exception => Reactive.friendList.onError(e)
     }

@@ -32,14 +32,18 @@ object Methods {
               }
             }
 
+            val senderName = db.getFriendNameOrAlias(key)
             mId match {
               case Some(id) => {
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
-                  case None => db.addMessage(id, key, splitMsg, has_been_received = false, has_been_read = false, successfully_sent = true, 1)
+                  case None => db.addMessage(id, key, splitMsg,
+                    senderName, has_been_received =
+                    false, has_been_read = false, successfully_sent = true, 1)
                 }
               }
-              case None => db.addMessage(-1, key, splitMsg, has_been_received = false, has_been_read = false, successfully_sent = false, 1)
+              case None => db.addMessage(-1, key, splitMsg, senderName, has_been_received = false,
+                has_been_read = false, successfully_sent = false, 1)
             }
           }
           db.close()

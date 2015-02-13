@@ -10,7 +10,7 @@ class GroupList {
 
   private var groups: util.List[Group] = Collections.synchronizedList(new util.ArrayList[Group]())
 
-  def this(groups: util.ArrayList[Group]) {
+  def this(groups: util.List[Group]) {
     this()
     this.groups = groups
   }
@@ -64,9 +64,5 @@ class GroupList {
 
   def removeGroup(groupNumber: Int) {
     groups.remove(groups.find(group => group.groupNumber == groupNumber))
-  }
-
-  def getGroupArray: Array[Group] = {
-    groups.toArray
   }
 }

@@ -19,9 +19,9 @@ object AntoxOnMessageCallback {
 
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, rawMessage: String, messageType: Int): Unit = {
     val db = new AntoxDB(ctx)
+    val friendName = db.getFriendNameOrAlias(friendKey)
     val message = if (messageType == Constants.MESSAGE_TYPE_ACTION) {
-      val friendDetails = db.getFriendDetails(friendKey)
-      formatAction(rawMessage, if (friendDetails(1) == "") friendDetails(0) else friendDetails(1))
+      formatAction(rawMessage, friendName)
     } else {
       rawMessage
     }
@@ -37,7 +37,7 @@ object AntoxOnMessageCallback {
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendKey)) {
       val chatActive = (State.chatActive && State.activeKey.contains(friendKey))
-        db.addMessage(-1, friendKey, message, has_been_received = true,
+        db.addMessage(-1, friendKey, message, friendName, has_been_received = true,
                       has_been_read = chatActive, successfully_sent = true, messageType)
     }
     db.close()

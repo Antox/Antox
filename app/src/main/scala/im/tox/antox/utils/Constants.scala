@@ -14,6 +14,8 @@ object Constants {
 
   val TYPE_GROUP_INVITE = 4
 
+  val TYPE_GROUP = 5
+
   val START_TOX = "im.tox.antox.START_TOX"
 
   val STOP_TOX = "im.tox.antox.STOP_TOX"
@@ -28,7 +30,7 @@ object Constants {
 
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 4
+  val DATABASE_VERSION = 5
 
   val TABLE_FRIENDS = "friends"
 
@@ -47,6 +49,8 @@ object Constants {
   val COLUMN_NAME_GROUP_INVITER = "group_inviter"
 
   val COLUMN_NAME_GROUP_DATA = "group_data"
+
+  val COLUMN_NAME_SENDER_NAME = "sender_name"
 
   val COLUMN_NAME_MESSAGE = "message"
 
@@ -91,6 +95,10 @@ object Constants {
   val MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4
 
   val MESSAGE_TYPE_ACTION = 5
+
+  val MESSAGE_TYPE_GROUP_OWN = 6
+
+  val MESSAGE_TYPE_GROUP_PEER = 7
 
   var epoch: Long = _
 

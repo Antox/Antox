@@ -31,13 +31,15 @@ class ContactsFragment extends Fragment {
 
   private var activeKey: String = _
 
-  def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest], Array[GroupInvite])) {
+  def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest],
+    Array[GroupInvite], Array[Group])) {
     contactInfoTuple match {
-      case (friendsList, friendRequests, groupInvites) =>
+      case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new LeftPaneAdapter(getActivity)
         updateFriendsList(leftPaneAdapter, friendsList)
         updateFriendRequests(leftPaneAdapter, friendRequests)
         updateGroupInvites(leftPaneAdapter, groupInvites)
+        updateGroupList(leftPaneAdapter, groupList)
 
         contactsListView.setAdapter(leftPaneAdapter)
     }
@@ -81,6 +83,18 @@ class ContactsFragment extends Fragment {
       for (invite <- groupInvites) {
         val request = new LeftPaneItem(Constants.TYPE_GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
         leftPaneAdapter.addItem(request)
+      }
+    }
+  }
+
+  def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[Group]): Unit = {
+    if (groups.length > 0) {
+      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
+      for (group <- groups) {
+        //val group = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.title, group.topic,
+        //  true /* group is always online */, null, group.,
+         // group.lastMessageTimestamp)
+       // leftPaneAdapter.addItem(group)
       }
     }
   }

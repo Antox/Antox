@@ -38,6 +38,7 @@ object AntoxDB {
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
       "message_id integer, " +
       "tox_key text, " +
+      "sender_name text, " +
       "message text, " +
       "has_been_received boolean, " +
       "has_been_read boolean, " +
@@ -75,7 +76,7 @@ object AntoxDB {
     override def onDowngrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUEST)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
     }
   }
 }
@@ -201,6 +202,7 @@ class AntoxDB(ctx: Context) {
 
   def addMessage(message_id: Int,
     key: String,
+    sender_name: String,
     message: String,
     has_been_received: Boolean,
     has_been_read: Boolean,
@@ -210,6 +212,7 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
     values.put(Constants.COLUMN_NAME_KEY, key)
+    values.put(Constants.COLUMN_NAME_SENDER_NAME, sender_name)
     values.put(Constants.COLUMN_NAME_MESSAGE, message)
     values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received)
     values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read)
@@ -224,7 +227,10 @@ class AntoxDB(ctx: Context) {
     val map = scala.collection.mutable.Map.empty[String, Integer]
     val selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " + "FROM messages " +
       "JOIN friends ON friends.tox_key = messages.tox_key " +
-      "WHERE messages.has_been_read == 0 AND (messages.type == 2 OR messages.type == 4)" +
+      "WHERE messages.has_been_read == 0 " +
+      "AND (messages.type == " + Constants.MESSAGE_TYPE_FRIEND +
+      " OR messages.type == " + Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND +
+      " OR messages.type == " + Constants.MESSAGE_TYPE_GROUP_PEER + ")" +
       "GROUP BY friends.tox_key"
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
@@ -307,7 +313,7 @@ class AntoxDB(ctx: Context) {
     val map = scala.collection.mutable.Map.empty[String, (String, Timestamp)]
     val selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
       "SELECT MAX(_id) " +
-      "FROM messages WHERE (type == 1 OR type == 2) " +
+      "FROM messages WHERE (type == " + Constants.MESSAGE_TYPE_OWN +" OR type == 2) " +
       "GROUP BY tox_key)"
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
@@ -745,6 +751,11 @@ class AntoxDB(ctx: Context) {
     cursor.close()
     this.close()
     details
+  }
+
+  def getFriendNameOrAlias(key: String): String = {
+    val friendDetails = getFriendDetails(key)
+    if (friendDetails(1) == "") friendDetails(0) else friendDetails(1)
   }
 
   def updateAlias(alias: String, key: String) {
