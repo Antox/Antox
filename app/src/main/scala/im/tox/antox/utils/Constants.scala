@@ -44,8 +44,6 @@ object Constants {
 
   val COLUMN_NAME_KEY = "tox_key"
 
-  val COLUMN_NAME_GROUP_ID = "group_id"
-
   val COLUMN_NAME_GROUP_INVITER = "group_inviter"
 
   val COLUMN_NAME_GROUP_DATA = "group_data"

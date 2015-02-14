@@ -7,6 +7,7 @@ class Message(
   val id: Int,
   val message_id: Int,
   val key: String,
+  val sender_name: String,
   val message: String,
   val has_been_received: Boolean,
   val has_been_read: Boolean,

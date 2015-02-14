@@ -6,7 +6,7 @@ import java.util.{ArrayList, Collections, List, Locale}
 //remove if not needed
 import scala.collection.JavaConversions._
 
-class GroupPeerList {
+class PeerList {
 
   private var peers: util.List[GroupPeer] = Collections.synchronizedList(new util.ArrayList[GroupPeer]())
 
@@ -17,10 +17,6 @@ class GroupPeerList {
 
   def getByGroupPeerNumber(peerNumber: Int): Option[GroupPeer] = {
     peers.find(peer => peer.peerNumber == peerNumber)
-  }
-
-  def getByGroupPeerId(id: String): Option[GroupPeer] = {
-    peers.find(peer => peer.id == id)
   }
 
   def all(): util.List[GroupPeer] = {

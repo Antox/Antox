@@ -78,11 +78,11 @@ object ToxSingleton {
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
+  def getGroupList: GroupList = groupList
+
   def keyFromAddress(address: String): String = {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
-
-  def getGroupList: GroupList = groupList
 
   def exportDataFile(dest: File): Unit = {
     dataFile.exportFile(dest)
@@ -525,6 +525,7 @@ object ToxSingleton {
       tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
       tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
       tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+      tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
 
 
       try {

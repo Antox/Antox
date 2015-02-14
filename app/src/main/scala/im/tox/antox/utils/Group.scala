@@ -7,7 +7,7 @@ class Group(val id: String,
             val title: String,
             val alias: String,
             val topic: String,
-            val groupPeers: util.ArrayList[GroupPeer]) {
+            val peers: PeerList) {
 
   override def toString: String = title
 }

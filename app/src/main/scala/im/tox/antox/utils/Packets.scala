@@ -1,0 +1,10 @@
+package im.tox.antox.utils
+
+object Packets {
+
+  val GROUP_INVITE_PACKET = 170
+  val GROUP_ACCEPT_INVITE_PACKET = 171
+  val GROUP_PEER_JOIN_PACKET = 171
+  val GROUP_PEER_LEAVE_PACKET = 172
+  val GROUP_PEERLIST_CHANGE_PACKET = 173
+}

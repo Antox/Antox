@@ -121,7 +121,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
     val key = item.first
 
-    if (`type` == Constants.TYPE_FRIEND_REQUEST || `type` == Constants.TYPE_GROUP_INVITE) {
+    if (`type` == Constants.TYPE_FRIEND_REQUEST) {
       createFriendRequestClickHandlers(key, acceptButton, rejectButton)
     } else if (`type` == Constants.TYPE_GROUP_INVITE) {
       createGroupInviteClickHandlers(key, acceptButton, rejectButton)

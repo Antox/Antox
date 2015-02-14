@@ -142,7 +142,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = true)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key)
-    mDb.insert(Constants.TABLE_FRIENDS, null, values)
+    mDb.insert(Constants.TABLE_GROUPS, null, values)
   }
 
   def addFileTransfer(key: String,
@@ -190,10 +190,10 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def addGroupInvite(groupId: String, inviter: String, data: Array[Byte]) {
+  def addGroupInvite(key: String, inviter: String, data: Array[Byte]) {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_GROUP_ID, groupId)
+    values.put(Constants.COLUMN_NAME_KEY, key)
     values.put(Constants.COLUMN_NAME_GROUP_INVITER, inviter)
     values.put(Constants.COLUMN_NAME_GROUP_DATA, data)
     mDb.insert(Constants.TABLE_GROUP_INVITES, null, values)
@@ -357,13 +357,17 @@ class AntoxDB(ctx: Context) {
         val time = Timestamp.valueOf(cursor.getString(1))
         val message_id = cursor.getInt(2)
         val k = cursor.getString(3)
-        val m = cursor.getString(4)
-        val received = cursor.getInt(5) > 0
-        val read = cursor.getInt(6) > 0
-        val sent = cursor.getInt(7) > 0
-        val size = cursor.getInt(8)
-        val `type` = cursor.getInt(9)
-        messageList.add(new Message(id, message_id, k, m, received, read, sent, time, size, `type`))
+        val sender_name = cursor.getString(4)
+        val m = cursor.getString(5)
+        val received = cursor.getInt(6) > 0
+        val read = cursor.getInt(7) > 0
+        val sent = cursor.getInt(8) > 0
+        val size = cursor.getInt(9)
+        val `type` = cursor.getInt(10)
+        messageList.add(new Message(id, message_id, k, sender_name, m, received, read, sent,
+          time, size,
+          `type`))
+        println("type is " + `type`)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -470,11 +474,12 @@ class AntoxDB(ctx: Context) {
   def getGroupInvitesList: util.ArrayList[GroupInvite] = {
     this.open(writeable = false)
     val groupInvites = new util.ArrayList[GroupInvite]()
-    val projection = Array(Constants.COLUMN_NAME_GROUP_ID, Constants.COLUMN_NAME_GROUP_INVITER, Constants.COLUMN_NAME_GROUP_DATA)
+    val projection = Array(Constants.COLUMN_NAME_KEY, Constants.COLUMN_NAME_GROUP_INVITER,
+      Constants.COLUMN_NAME_GROUP_DATA)
     val cursor = mDb.query(Constants.TABLE_GROUP_INVITES, projection, null, null, null, null, null)
     if (cursor.moveToFirst()) {
       do {
-        val groupId = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_ID))
+        val groupId = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY))
         val inviter = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_INVITER))
         val data = cursor.getBlob(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_DATA))
         groupInvites.add(new GroupInvite(groupId, inviter, data))
@@ -501,13 +506,15 @@ class AntoxDB(ctx: Context) {
         val m_id = cursor.getInt(2)
         Log.d("UNSENT MESAGE ID: ", "" + m_id)
         val k = cursor.getString(3)
-        val m = cursor.getString(4)
-        val received = cursor.getInt(5) > 0
-        val read = cursor.getInt(6) > 0
-        val sent = cursor.getInt(7) > 0
-        val size = cursor.getInt(8)
-        val `type` = cursor.getInt(9)
-        messageList.add(new Message(id, m_id, k, m, received, read, sent, time, size, `type`))
+        val sender_name = cursor.getString(4)
+        val m = cursor.getString(5)
+        val received = cursor.getInt(6) > 0
+        val read = cursor.getInt(7) > 0
+        val sent = cursor.getInt(8) > 0
+        val size = cursor.getInt(9)
+        val `type` = cursor.getInt(10)
+        messageList.add(new Message(id, m_id, k, sender_name, m, received, read, sent, time, size,
+          `type`))
       } while (cursor.moveToNext())
     }
     cursor.close()
