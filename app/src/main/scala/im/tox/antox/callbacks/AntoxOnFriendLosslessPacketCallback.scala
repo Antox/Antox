@@ -13,7 +13,8 @@ class AntoxOnFriendLosslessPacketCallback(ctx: Context) extends FriendLosslessPa
     packetNumber match {
       case Packets.GROUP_INVITE_PACKET =>
         new AntoxOnGroupInviteCallback(ctx).groupInvite(friendNumber,
-          Hex.hexStringToBytes(new String(remainingData)), data)
+          Hex.hexStringToBytes(new String(remainingData)),
+          Array(xs = friendNumber.asInstanceOf[Byte]))
       case Packets.GROUP_PEER_JOIN_PACKET =>
         new AntoxOnGroupPeerJoinCallback(ctx).groupPeerJoin(remainingData(0),
           remainingData(1))

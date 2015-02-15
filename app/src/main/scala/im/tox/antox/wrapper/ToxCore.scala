@@ -179,7 +179,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     */
   def acceptGroupInvite(inviteData: Array[Byte]): Int = {
       println("Accepted a group invite.")
-      tox.sendLosslessPacket(0, Array[Byte](Packets.GROUP_ACCEPT_INVITE_PACKET.asInstanceOf[Byte]))
+      println("sent packet to " + inviteData(0))
+      tox.sendLosslessPacket(inviteData(0), Array(xs = Packets.GROUP_ACCEPT_INVITE_PACKET))
     0
   }
 

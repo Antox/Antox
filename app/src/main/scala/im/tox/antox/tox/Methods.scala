@@ -37,12 +37,12 @@ object Methods {
               case Some(id) => {
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
-                  case None => db.addMessage(id, key, splitMsg,
-                    senderName, has_been_received =
+                  case None => db.addMessage(id, key, senderName,
+                    splitMsg, has_been_received =
                     false, has_been_read = false, successfully_sent = true, 1)
                 }
               }
-              case None => db.addMessage(-1, key, splitMsg, senderName, has_been_received = false,
+              case None => db.addMessage(-1, key, senderName, splitMsg, has_been_received = false,
                 has_been_read = false, successfully_sent = false, 1)
             }
           }
