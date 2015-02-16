@@ -152,7 +152,7 @@
     <string name="about_antox_3">-Basic messaging (this does not include group chats)</string>
     <string name="about_antox_4">-Notifications</string>
     <string name="about_antox_5">Not Working:</string>
-    <string name="about_antox_6">-Audio/Video & File Transfers</string>
+    <string name="about_antox_6">-Audio/Video &amp; File Transfers</string>
     <string name="title_activity_call">CallActivity</string>
     <string name="end_call">End Call</string>
     <string name="mute_call">Mute</string>
