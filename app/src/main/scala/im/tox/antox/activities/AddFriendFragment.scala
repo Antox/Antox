@@ -5,11 +5,11 @@ import android.content.{Context, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.support.v4.app.NavUtils
+import android.support.v4.app.{Fragment, NavUtils}
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarActivity
 import android.util.Log
-import android.view.{Menu, MenuItem, View, WindowManager}
+import android.view._
 import android.widget.{EditText, Toast}
 import im.tox.QR.IntentIntegrator
 import im.tox.antox.R
@@ -22,7 +22,7 @@ import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
 
-class AddFriendActivity extends ActionBarActivity {
+class AddFriendFragment extends Fragment {
 
   var _friendID: String = ""
 
@@ -44,42 +44,37 @@ class AddFriendActivity extends ActionBarActivity {
 
   var friendAlias: EditText = _
 
-  override def onCreate(savedInstanceState: Bundle) {
+  override def onCreate(savedInstanceState: Bundle): Unit = {
+
+  }
+
+  override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
 
-    overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out)
+    val rootView = inflater.inflate(R.layout.fragment_add_friend, container, false);
+    getActivity.overridePendingTransition(R.anim.slide_from_bottom, R.anim.fade_scale_out)
 
-    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-    }
-
-    setContentView(R.layout.activity_add_friend)
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-      getSupportActionBar.setIcon(R.drawable.ic_actionbar)
-    }
-
-    context = getApplicationContext
+    context = getActivity.getApplicationContext
 
     text = getString(R.string.addfriend_friend_added)
-    friendID = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-    friendMessage = findViewById(R.id.addfriend_message).asInstanceOf[EditText]
-    friendAlias = findViewById(R.id.addfriend_friendAlias).asInstanceOf[EditText]
+    friendID = rootView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
+    friendMessage = rootView.findViewById(R.id.addfriend_message).asInstanceOf[EditText]
+    friendAlias = rootView.findViewById(R.id.addfriend_friendAlias).asInstanceOf[EditText]
 
-    val intent = getIntent
+    val intent = getActivity.getIntent
     if (Intent.ACTION_VIEW == intent.getAction && intent != null) {
       // Handle incoming tox uri links
-      val friendID = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
+      val friendID = rootView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
       var uri: Uri = null
       uri = intent.getData
       if (uri != null) friendID.setText(uri.getHost)
     }
+
+    rootView
   }
 
   override def onPause() = {
     super.onPause()
-    if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom)
   }
 
   private def isAddressOwn(key: String): Boolean = {
@@ -103,7 +98,7 @@ class AddFriendActivity extends ActionBarActivity {
         val alias = friendAlias.getText.toString
         if (message == "") message = getString(R.string.addfriend_default_message)
         val friendData = Array(message, alias)
-        val db = new AntoxDB(getApplicationContext)
+        val db = new AntoxDB(getActivity.getApplicationContext)
         if (!db.doesFriendExist(key)) {
           try {
             ToxSingleton.tox.addFriend(address, friendData(0))
@@ -134,11 +129,6 @@ class AddFriendActivity extends ActionBarActivity {
     }
   }
 
-  private def scanIntent() {
-    val integrator = new IntentIntegrator(this)
-    integrator.initiateScan()
-  }
-
   def addFriend(view: View) {
     if (friendID.length == 76) {
       // Attempt to use ID as a Tox ID
@@ -146,10 +136,10 @@ class AddFriendActivity extends ActionBarActivity {
       if (result == 0) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)
-        LocalBroadcastManager.getInstance(this).sendBroadcast(update)
+        LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
         val i = new Intent()
-        setResult(Activity.RESULT_OK, i)
-        finish()
+        getActivity.setResult(Activity.RESULT_OK, i)
+        getActivity.finish()
       }
     } else {
       // Attempt to use ID as a dns account name
@@ -167,10 +157,10 @@ class AddFriendActivity extends ActionBarActivity {
                     if (result == 0) {
                       val update = new Intent(Constants.BROADCAST_ACTION)
                       update.putExtra("action", Constants.UPDATE)
-                      LocalBroadcastManager.getInstance(this).sendBroadcast(update)
+                      LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
                       val i = new Intent()
-                      setResult(Activity.RESULT_OK, i)
-                      finish()
+                      getActivity.setResult(Activity.RESULT_OK, i)
+                      getActivity.finish()
                     }
                   }
                   case Some(_) => throw new Exception("this shouldn't happen")
@@ -184,21 +174,16 @@ class AddFriendActivity extends ActionBarActivity {
     }
   }
 
-  override def onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
-    val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent)
-    if (scanResult != null) {
-      if (scanResult.getContents != null) {
-        val addFriendKey = findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-        val friendKey = (if (scanResult.getContents.toLowerCase.contains("tox:")) scanResult.getContents.substring(4) else scanResult.getContents)
-                        .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
-        if (validateFriendKey(friendKey)) {
-          addFriendKey.setText(friendKey)
-        } else {
-          val context = getApplicationContext
-          val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
-          toast.show()
-        }
-      }
+  def onQRScanResult(scanResult: String) {
+    val addFriendKey = getView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
+    val friendKey = (if (scanResult.toLowerCase.contains("tox:")) scanResult.substring(4) else scanResult)
+                  .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
+    if (validateFriendKey(friendKey)) {
+      addFriendKey.setText(scanResult)
+    } else {
+      val context = getActivity.getApplicationContext
+      val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
+      toast.show()
     }
   }
 
@@ -218,22 +203,6 @@ class AddFriendActivity extends ActionBarActivity {
       case e: NumberFormatException => return false
     }
     x == 0
-  }
-
-  override def onCreateOptionsMenu(menu: Menu): Boolean = {
-    getMenuInflater.inflate(R.menu.add_friend, menu)
-    true
-  }
-
-  override def onOptionsItemSelected(item: MenuItem): Boolean = {
-    item.getItemId match {
-      case android.R.id.home =>
-        NavUtils.navigateUpFromSameTask(this)
-        true
-
-      case R.id.scanFriend => scanIntent()
-    }
-    return super.onOptionsItemSelected(item)
   }
 
   private def DNSLookup(input: String): Observable[(String, Option[String])] = {
