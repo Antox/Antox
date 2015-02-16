@@ -100,7 +100,9 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (`type` == Constants.TYPE_CONTACT) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
-        holder.countText.setText(java.lang.Integer.toString(item.count))
+        //limit unread counter to 99
+        holder.countText.setText(java.lang.Integer.toString(
+          if (item.count > Constants.UNREAD_COUNT_LIMIT) Constants.UNREAD_COUNT_LIMIT else item.count))
       } else {
         holder.countText.setVisibility(View.GONE)
       }
