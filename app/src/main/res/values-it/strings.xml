@@ -37,6 +37,7 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">Scrivi un messaggio</string>
   <string name="chat_file_transfer">Invia un file</string>
+  <string name="chat_message_too_long">Questo messaggio è troppo lungo e non può essere inviato</string>
   <!--Add Friend Activity-->
   <string name="addfriend_friend_key">Tox ID del contatto</string>
   <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
@@ -123,15 +124,15 @@ richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <string name="drawer_close">Chuidi navigation drawer</string>
   <string name="open_source_license">Licenza</string>
   <string name="license1">Distribuito sotto licenza GNU GPL v3</string>
-  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Astonex/Antox</string>
+  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/subliun/Antox</string>
   <string name="ver">Versione</string>
   <string name="about">Informazioni</string>
   <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>
   <string name="about_antox_2">Cosa Funziona:</string>
-  <string name="about_antox_3">-Chat base - questo non include le chat di gruppo</string>
-  <string name="about_antox_4">-Trasferimento file</string>
-  <string name="about_antox_5">In Sviluppo:</string>
-  <string name="about_antox_6">-Audio/Video</string>
+  <string name="about_antox_3">-Chat base (questo non include le chat di gruppo)</string>
+  <string name="about_antox_4">-Notifiche</string>
+  <string name="about_antox_5">Cosa Non Funziona:</string>
+  <string name="about_antox_6">-Audio/Video\n-Trasferimento files</string>
   <string name="title_activity_call">CallActivity</string>
   <string name="end_call">Termina Chiamata</string>
   <string name="mute_call">Disattiva Audio</string>
