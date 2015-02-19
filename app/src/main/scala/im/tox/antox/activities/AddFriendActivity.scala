@@ -107,6 +107,7 @@ class AddFriendActivity extends ActionBarActivity {
         if (!db.doesFriendExist(key)) {
           try {
             ToxSingleton.tox.addFriend(address, friendData(0))
+            ToxSingleton.save()
           } catch {
             case e: ToxException => e.printStackTrace()
           }

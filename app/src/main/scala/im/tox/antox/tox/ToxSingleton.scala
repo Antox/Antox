@@ -82,6 +82,7 @@ object ToxSingleton {
 
   def exportDataFile(dest: File): Unit = {
     dataFile.exportFile(dest)
+    ToxSingleton.save()
   }
 
   def sendFileSendRequest(path: String, key: String, context: Context) {
@@ -474,14 +475,6 @@ object ToxSingleton {
       }
 
       if (friends.size > 0) {
-        for (friend <- friends) {
-          try {
-            tox.addFriendNoRequest(friend.key)
-          } catch {
-            case e: Exception => e.printStackTrace()
-          }
-        }
-
         populateAntoxFriendList()
 
         for (friend <- friends) {
@@ -514,6 +507,10 @@ object ToxSingleton {
         case e: ToxException =>
       }
       updateDhtNodes(ctx)
+  }
+
+  def save(): Unit = {
+    dataFile.saveFile(tox.save())
   }
 }
 

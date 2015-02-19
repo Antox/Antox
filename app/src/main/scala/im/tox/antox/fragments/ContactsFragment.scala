@@ -187,6 +187,7 @@ class ContactsFragment extends Fragment {
             mFriend.foreach(friend => {
               try {
                 ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+                ToxSingleton.save()
               } catch {
                 case e: ToxException =>
               }

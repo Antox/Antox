@@ -57,6 +57,7 @@ class ToxDoService extends Service() {
     super.onDestroy()
     keepRunning = false
     serviceThread.interrupt()
+    ToxSingleton.save()
     ToxSingleton.isInited = false
     Log.d("ToxDoService", "onDestroy() called")
   }
