@@ -478,7 +478,17 @@ object ToxSingleton {
         populateAntoxFriendList()
 
         for (friend <- friends) {
-          antoxFriendList.updateFromFriend(friend)
+          try {
+            antoxFriendList.updateFromFriend(friend)
+          } catch {
+            case e: Exception =>
+              try {
+              tox.addFriendNoRequest(friend.key)
+              } catch {
+                case e: Exception =>
+                  Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
+              }
+          }
         }
       }
       tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
