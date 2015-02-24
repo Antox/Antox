@@ -81,6 +81,7 @@
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_delete">Remove Friend</string>
+    <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
     <string name="contacts_actions_on">Actions on</string>
@@ -92,6 +93,10 @@
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
+
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Chat log successfully exported to %s</string>
+    <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
 
     <!-- Delete Chat Logs Dialog -->
     <string name="friend_action_delete_chat_confirmation">Are you sure you want to delete the chat logs?</string>

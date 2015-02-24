@@ -1,6 +1,9 @@
 package im.tox.antox.utils
 
 import java.sql.Timestamp
+
+import im.tox.antox.tox.ToxSingleton
+
 //remove if not needed
 
 class Message(
@@ -14,4 +17,21 @@ class Message(
   val timestamp: Timestamp,
   val size: Int,
   val `type`: Int) {
+
+  def logFormat(): Option[String] = {
+    //TODO hack that will be fixed with groupchat db
+    if (this.isFileTransfer) return None
+
+    val name = if (`type` == Constants.MESSAGE_TYPE_OWN) {
+      ToxSingleton.tox.getName
+    } else {
+      ToxSingleton.getAntoxFriend(key).get.name
+    }
+    Some("<" + name + "> " +
+      message + "  [" + PrettyTimestamp.prettyTimestamp(timestamp, isChat = true) + "]")
+  }
+
+  def isFileTransfer: Boolean = {
+    `type` == Constants.MESSAGE_TYPE_FILE_TRANSFER || `type` == Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND
+  }
 }
