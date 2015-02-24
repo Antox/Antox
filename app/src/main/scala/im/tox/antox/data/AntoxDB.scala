@@ -11,10 +11,8 @@ import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.data.AntoxDB._
-import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, Friend, FriendRequest, Message, UserStatus}
 import im.tox.tox4j.core.enums.ToxStatus
-import im.tox.tox4j.exceptions.ToxException
 
 import scala.collection.mutable.ArrayBuffer
 //remove if not needed
