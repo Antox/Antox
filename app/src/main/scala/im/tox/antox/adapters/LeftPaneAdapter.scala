@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton

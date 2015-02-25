@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
 import im.tox.antox.utils.{AntoxFriend, Constants}

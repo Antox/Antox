@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="im.tox.antox"
+    package="im.tox.antoxnightly"
     android:versionCode="46"
     android:versionName="0.15" >
 
@@ -34,7 +34,7 @@
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/CustomActionBarTheme" >
         <service
-            android:name=".tox.ToxDoService"
+            android:name="im.tox.antox.tox.ToxDoService"
             android:exported="false"
             android:label="Antox" />
 
@@ -57,14 +57,14 @@
         <activity android:name="im.tox.antox.activities.ChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="ScClass: MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.AddFriendActivity"
             android:label="@string/title_activity_add_friend" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="ScClass: MainActivity" />
 
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
@@ -82,11 +82,11 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="ScClass: MainActivity" />
         </activity>
 
         <receiver
-            android:name=".utils.ConnectionChangeReceiver"
+            android:name="im.tox.antox.utils.ConnectionChangeReceiver"
             android:label="NetworkConnection" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

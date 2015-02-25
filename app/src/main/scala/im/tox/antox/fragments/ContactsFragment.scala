@@ -12,7 +12,7 @@ import android.text.{Editable, TextWatcher}
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.activities.{ChatActivity, FriendProfileActivity}
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB

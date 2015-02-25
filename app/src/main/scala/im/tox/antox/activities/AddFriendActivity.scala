@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, Hex}

@@ -12,7 +12,7 @@ import android.support.v7.app.ActionBarActivity
 import android.util.{Base64, Log}
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxSingleton, ToxDataFile, ToxDoService}
 import im.tox.antox.utils.{FileUtils, FileDialog, Options}
