@@ -69,6 +69,7 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Profilo</string>
   <string name="friend_action_delete">Rimuovi contatto</string>
+  <string name="friend_action_export_chat">Esporta cronologia chat</string>
   <string name="friend_action_delete_chat">Elimina chat</string>
   <string name="friend_action_block">Blocca</string>
   <string name="contacts_actions_on">Azioni per</string>
@@ -81,6 +82,9 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
   <!--Delete Chat Logs Dialog-->
   <string name="friend_action_delete_chat_confirmation">Sei sicuro di voler eliminare la chat?</string>
+  <!-- Export Chat Logs Toast -->
+  <string name="friend_action_chat_log_exported">Cronologia chat esportata con successo in %s</string>
+  <string name="friend_action_chat_log_export_failed">Esportazione cronologia chat fallita. </string>
   <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
 richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
