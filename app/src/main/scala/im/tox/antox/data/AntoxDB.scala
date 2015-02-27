@@ -394,7 +394,9 @@ class AntoxDB(ctx: Context) {
 
   def getRecentCursor: Cursor = {
     this.open(writeable = false)
-    val selectQuery = "SELECT f.tox_key, f.username, f.isonline, f.status, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
+    val selectQuery = "SELECT f.tox_key, f.username, f.alias, f.isonline, f.status, m1.timestamp," +
+      " " +
+      "m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
       "FROM " +
       Constants.TABLE_FRIENDS +
       " f " +

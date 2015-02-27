@@ -44,11 +44,12 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
   override def bindView(view: View, context: Context, cursor: Cursor) {
     val tox_key = cursor.getString(0)
     val username = cursor.getString(1)
-    val online = cursor.getInt(2) != 0
-    val status = cursor.getString(3)
-    val time = Timestamp.valueOf(cursor.getString(4))
-    val message = cursor.getString(5)
-    var unreadCount = cursor.getInt(6)
+    val alias = cursor.getString(2)
+    val online = cursor.getInt(3) != 0
+    val status = cursor.getString(4)
+    val time = Timestamp.valueOf(cursor.getString(5))
+    val message = cursor.getString(6)
+    var unreadCount = cursor.getInt(7)
     //limit unread counter to 99
     if (unreadCount > Constants.UNREAD_COUNT_LIMIT) unreadCount = Constants.UNREAD_COUNT_LIMIT
     val holder = new FriendsListHolder()
@@ -57,7 +58,9 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     holder.friendStatus = view.findViewById(R.id.friend_status).asInstanceOf[TextView]
     holder.timestamp = view.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
     holder.unreadCount = view.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
-    holder.friendName.setText(username)
+    holder.friendName.setText(
+      if (alias.equals("")) username else alias)
+
     holder.friendStatus.setText(message)
     holder.unreadCount.setText(java.lang.Integer.toString(unreadCount))
     holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(time, isChat = false))
