@@ -57,14 +57,14 @@
         <activity android:name="im.tox.antox.activities.ChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.AddFriendActivity"
             android:label="@string/title_activity_add_friend" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
 
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
@@ -82,7 +82,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="im.tox.antox.activities.MainActivity" />
         </activity>
 
         <receiver
