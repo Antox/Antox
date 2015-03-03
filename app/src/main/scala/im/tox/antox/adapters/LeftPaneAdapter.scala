@@ -95,7 +95,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     val item = getItem(position)
     holder.firstText.setText(item.first)
     if (`type` != Constants.TYPE_HEADER) {
-      if (item.second != "") holder.secondText.setText(Html.fromHtml("<i>" + item.second + "</i>")) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
+      if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
     }
     if (`type` == Constants.TYPE_CONTACT) {
       if (item.count > 0) {
