@@ -44,7 +44,7 @@ class LeftPaneFragment extends Fragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val thisActivity = this.getActivity.asInstanceOf[MainActivity]
-    val actionBar = thisActivity.getActionBar
+    val actionBar = thisActivity.getSupportActionBar
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
     val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
