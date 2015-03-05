@@ -50,9 +50,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iteration(): Unit = tox.iteration()
 
-  def getSelfKey: String = Hex.bytesToHexString(tox.getClientId)
+  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey())
 
-  def getPrivateKey: Array[Byte] = tox.getPrivateKey
+  def getSecretKey: Array[Byte] = tox.getSecretKey
 
   def setNospam(nospam: Int): Unit = tox.setNospam(nospam)
 
@@ -93,9 +93,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     tox.deleteFriend(friendNumber)
   }
 
-  def getFriendByKey(key: String): Int = tox.getFriendByClientId(Hex.hexStringToBytes(key))
+  def getFriendByKey(key: String): Int = tox.getFriendByPublicKey(Hex.hexStringToBytes(key))
 
-  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getClientId(friendNumber))
+  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getPublicKey(friendNumber))
 
   def friendExists(friendNumber: Int): Boolean = tox.friendExists(friendNumber)
 

@@ -5,7 +5,7 @@ import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.callbacks.AntoxOnMessageCallback._
 import im.tox.antox.data.{AntoxDB, State}

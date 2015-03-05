@@ -7,7 +7,7 @@ import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.MenuItem
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.activities.Settings._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}

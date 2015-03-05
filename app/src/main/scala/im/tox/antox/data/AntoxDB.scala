@@ -69,7 +69,6 @@ object AntoxDB {
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_GROUPS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
       onCreate(mDb)
     }
 
@@ -434,7 +433,9 @@ class AntoxDB(ctx: Context) {
 
   def getRecentCursor: Cursor = {
     this.open(writeable = false)
-    val selectQuery = "SELECT f.tox_key, f.username, f.isonline, f.status, m1.timestamp, m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
+    val selectQuery = "SELECT f.tox_key, f.username, f.alias, f.isonline, f.status, m1.timestamp," +
+      " " +
+      "m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
       "FROM " +
       Constants.TABLE_FRIENDS +
       " f " +
@@ -611,7 +612,7 @@ class AntoxDB(ctx: Context) {
     this.close()
     friendList.toArray
   }
-
+  
   def getGroupKeyList: Array[String] = {
     this.open(writeable = false)
     val groupList = new ArrayBuffer[String]()

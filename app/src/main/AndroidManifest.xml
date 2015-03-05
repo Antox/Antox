@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="im.tox.antox"
+    package="im.tox.antoxnightly"
     android:versionCode="46"
     android:versionName="0.15" >
 
@@ -34,17 +34,17 @@
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/CustomActionBarTheme" >
         <service
-            android:name=".tox.ToxDoService"
+            android:name="im.tox.antox.tox.ToxDoService"
             android:exported="false"
             android:label="Antox" />
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name="im.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="im.tox.antox.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" >
@@ -54,13 +54,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ChatActivity" >
+        <activity android:name="im.tox.antox.activities.ChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.AddFriendActivity"
+            android:name="im.tox.antox.activities.AddFriendActivity"
             android:label="@string/title_activity_add_friend" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -77,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.FriendProfileActivity"
+            android:name="im.tox.antox.activities.FriendProfileActivity"
             android:label="@string/title_activity_friend_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
@@ -86,7 +86,7 @@
         </activity>
 
         <receiver
-            android:name=".utils.ConnectionChangeReceiver"
+            android:name="im.tox.antox.utils.ConnectionChangeReceiver"
             android:label="NetworkConnection" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -94,20 +94,20 @@
         </receiver>
 
         <activity
-            android:name=".activities.CreateAccountActivity"
+            android:name="im.tox.antox.activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.Settings"
+            android:name="im.tox.antox.activities.Settings"
             android:label="@string/action_settings" />
         <activity
-            android:name=".activities.ProfileSettingsActivity"
+            android:name="im.tox.antox.activities.ProfileSettingsActivity"
             android:label="@string/title_activity_profile_settings" />
         <activity
-            android:name=".activities.About"
+            android:name="im.tox.antox.activities.About"
             android:label="@string/about" />
         <activity
-            android:name=".activities.License"
+            android:name="im.tox.antox.activities.License"
             android:label="@string/open_source_license" />
     </application>
 

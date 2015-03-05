@@ -12,7 +12,7 @@ import android.util.Log
 import android.view._
 import android.widget.{EditText, Toast}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, Hex}
@@ -102,6 +102,7 @@ class AddFriendFragment extends Fragment {
         if (!db.doesFriendExist(key)) {
           try {
             ToxSingleton.tox.addFriend(address, friendData(0))
+            ToxSingleton.save()
           } catch {
             case e: ToxException => e.printStackTrace()
           }

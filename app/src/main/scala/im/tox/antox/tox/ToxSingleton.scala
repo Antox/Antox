@@ -86,6 +86,7 @@ object ToxSingleton {
 
   def exportDataFile(dest: File): Unit = {
     dataFile.exportFile(dest)
+    ToxSingleton.save()
   }
 
   def sendFileSendRequest(path: String, key: String, context: Context) {
@@ -498,18 +499,20 @@ object ToxSingleton {
       }
 
       if (friends.size > 0) {
-        for (friend <- friends) {
-          try {
-            tox.addFriendNoRequest(friend.key)
-          } catch {
-            case e: Exception => e.printStackTrace()
-          }
-        }
-
         populateAntoxFriendList()
 
         for (friend <- friends) {
-          antoxFriendList.updateFromFriend(friend)
+          try {
+            antoxFriendList.updateFromFriend(friend)
+          } catch {
+            case e: Exception =>
+              try {
+              tox.addFriendNoRequest(friend.key)
+              } catch {
+                case e: Exception =>
+                  Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
+              }
+          }
         }
       }
       tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
@@ -539,6 +542,10 @@ object ToxSingleton {
         case e: ToxException =>
       }
       updateDhtNodes(ctx)
+  }
+
+  def save(): Unit = {
+    dataFile.saveFile(tox.save())
   }
 }
 

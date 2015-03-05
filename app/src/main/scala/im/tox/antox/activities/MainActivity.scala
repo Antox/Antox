@@ -17,7 +17,7 @@ import android.support.v7.app.{ActionBarActivity, ActionBarDrawerToggle}
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.{BitmapManager, Constants, DrawerArrayAdapter, DrawerItem}

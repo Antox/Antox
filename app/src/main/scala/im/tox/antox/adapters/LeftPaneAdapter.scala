@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
@@ -97,12 +97,14 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     val item = getItem(position)
     holder.firstText.setText(item.first)
     if (`type` != Constants.TYPE_HEADER) {
-      if (item.second != "") holder.secondText.setText(Html.fromHtml("<i>" + item.second + "</i>")) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
+      if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
     }
     if (`type` == Constants.TYPE_CONTACT) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
-        holder.countText.setText(java.lang.Integer.toString(item.count))
+        //limit unread counter to 99
+        holder.countText.setText(java.lang.Integer.toString(
+          if (item.count > Constants.UNREAD_COUNT_LIMIT) Constants.UNREAD_COUNT_LIMIT else item.count))
       } else {
         holder.countText.setVisibility(View.GONE)
       }

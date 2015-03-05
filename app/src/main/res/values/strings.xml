@@ -87,6 +87,7 @@
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_delete">Remove Friend</string>
+    <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
     <string name="contacts_actions_on">Actions on</string>
@@ -99,6 +100,10 @@
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
+
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Chat log successfully exported to %s</string>
+    <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
 
     <!-- Delete Chat Logs Dialog -->
     <string name="friend_action_delete_chat_confirmation">Are you sure you want to delete the chat logs?</string>
@@ -151,15 +156,15 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
     <string name="license1">Distributed under the GNU GPL v3.</string>
-    <string name="license2">Source code is available at\nhttps://github.com/Astonex/Antox</string>
+    <string name="license2">Source code is available at\nhttps://github.com/subliun/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>
     <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
     <string name="about_antox_2">What Is Currently Working:</string>
-    <string name="about_antox_3">-Basic messaging - this does not include group chats</string>
-    <string name="about_antox_4">-File transfers</string>
-    <string name="about_antox_5">Current development:</string>
-    <string name="about_antox_6">-Currently implementing A/V in Antox</string>
+    <string name="about_antox_3">-Basic messaging (this does not include group chats)</string>
+    <string name="about_antox_4">-Notifications</string>
+    <string name="about_antox_5">Not Working:</string>
+    <string name="about_antox_6">-Audio/Video &amp; File Transfers</string>
     <string name="title_activity_call">CallActivity</string>
     <string name="end_call">End Call</string>
     <string name="mute_call">Mute</string>

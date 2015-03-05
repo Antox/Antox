@@ -1,25 +1,29 @@
 package im.tox.antox.fragments
 
+import java.io.{FileOutputStream, PrintWriter, File}
 import java.text.Collator
+import java.util
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
-import android.os.Bundle
+import android.os.{Environment, Bundle}
 import android.support.v4.app.Fragment
 import android.text.{Editable, TextWatcher}
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.{AbsListView, Adapter, AdapterView, CheckBox, EditText, ListView}
+import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.activities.{ChatActivity, FriendProfileActivity}
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.utils.FileDialog.DirectorySelectedListener
 import im.tox.antox.utils._
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
-//remove if not needed
+
+import scala.collection.JavaConversions._
 
 class ContactsFragment extends Fragment {
 
@@ -152,6 +156,7 @@ class ContactsFragment extends Fragment {
         val items = if (isContact) {
           Array[CharSequence](getResources.getString(R.string.friend_action_profile),
             getResources.getString(R.string.friend_action_delete),
+            getResources.getString(R.string.friend_action_export_chat),
             getResources.getString(R.string.friend_action_delete_chat))
         } else {
           Array[CharSequence]("")
@@ -167,12 +172,13 @@ class ContactsFragment extends Fragment {
                 val key = item.key
                 if (key != "") index match {
                   case 0 =>
-                    var profile = new Intent(getActivity, classOf[FriendProfileActivity])
+                    val profile = new Intent(getActivity, classOf[FriendProfileActivity])
                     profile.putExtra("key", key)
                     startActivity(profile)
 
                   case 1 => showDeleteFriendDialog(getActivity, key)
-                  case 2 => showDeleteChatDialog(getActivity, key)
+                  case 2 => exportChat(getActivity, key)
+                  case 3 => showDeleteChatDialog(getActivity, key)
                 }
               }
               dialog.cancel()
@@ -221,6 +227,7 @@ class ContactsFragment extends Fragment {
             mFriend.foreach(friend => {
               try {
                 ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+                ToxSingleton.save()
               } catch {
                 case e: ToxException =>
               }
@@ -238,6 +245,36 @@ class ContactsFragment extends Fragment {
         }
       })
     builder.show()
+  }
+
+  def exportChat(context: Context, fkey: String) {
+    val key = fkey
+    val fileDialog = new FileDialog(this.getActivity, Environment.getExternalStorageDirectory, true)
+    fileDialog.addDirectoryListener(new DirectorySelectedListener {
+      override def directorySelected(directory: File): Unit = {
+        try {
+          println("exporting chat log")
+          val db = new AntoxDB(getActivity)
+          val messageList: util.ArrayList[Message] = db.getMessageList(key, actionMessages = true)
+          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + key.substring(0, 7) + "-log.txt"
+
+          val log = new PrintWriter(new FileOutputStream(exportPath, false))
+          for (message: Message <- messageList) {
+            val formattedMessage = message.logFormat()
+            if (formattedMessage.isDefined)
+              log.print(formattedMessage.get + '\n')
+          }
+          log.close()
+          Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
+          db.close()
+        } catch {
+          case e: Exception =>
+            Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+      }
+    })
+    fileDialog.showDialog()
   }
 
   def showDeleteChatDialog(context: Context, fkey: String) {
