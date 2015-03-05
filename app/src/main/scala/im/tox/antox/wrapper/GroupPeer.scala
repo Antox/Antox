@@ -1,4 +1,4 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 class GroupPeer(val peerNumber: Int,
                 var name: String,

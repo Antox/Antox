@@ -13,6 +13,7 @@ import android.util.Log
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.exceptions.ToxException
 

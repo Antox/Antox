@@ -4,7 +4,7 @@ import android.content.Context
 import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
-import im.tox.antox.utils.{AntoxFriend, Constants}
+import im.tox.antox.utils.Constants
 import im.tox.tox4j.core.callbacks.{FriendConnectionStatusCallback, ConnectionStatusCallback}
 import im.tox.tox4j.core.enums.ToxConnection
 

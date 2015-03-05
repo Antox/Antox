@@ -1,17 +1,16 @@
-package im.tox.antox.utils
+package im.tox.antox.av
 
 import android.util.Log
-import im.tox.antox.utils.CallManager._
 
 object CallManager {
-  private val TAG = "im.tox.antox.utils.CallManager"
+  val TAG = "im.tox.antox.av.CallManager"
 }
 
-class CallManager () {
+class CallManager {
   private var _calls: Map[Integer, Call] = Map[Integer, Call]()
 
   def add(c: Call) = {
-    Log.d(TAG, "Adding call")
+    Log.d(CallManager.TAG, "Adding call")
     _calls = _calls + (c.id -> c)
   }
 
@@ -20,7 +19,7 @@ class CallManager () {
   }
 
   def remove(id: Integer): Unit = {
-    Log.d(TAG, "Removing call")
+    Log.d(CallManager.TAG, "Removing call")
     val mCall = this.get(id)
     mCall match {
       case Some(c) => 

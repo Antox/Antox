@@ -2,7 +2,7 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{AntoxFriend, Constants}
+import im.tox.antox.utils.Constants
 import im.tox.tox4j.core.callbacks.FriendActionCallback
 
 object AntoxOnActionCallback {

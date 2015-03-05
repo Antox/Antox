@@ -1,10 +1,10 @@
-package im.tox.antox.utils
+package im.tox.antox.av
 
 import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
 
 class PlayAudio{
-  private val TAG = "im.tox.antox.utils.PlayAudio"
+  private val TAG = "im.tox.antox.av.PlayAudio"
 
   var audioTrack: AudioTrack = null
 

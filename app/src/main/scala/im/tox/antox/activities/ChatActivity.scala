@@ -15,11 +15,13 @@ import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.wrapper.{UserStatus, FriendInfo}
 import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
-import im.tox.antox.utils.{Constants, FileDialog, FriendInfo, IconColor, UserStatus}
+import im.tox.antox.utils.{Constants, IconColor}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}

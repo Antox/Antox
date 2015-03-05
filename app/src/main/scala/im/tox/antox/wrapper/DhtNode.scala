@@ -1,4 +1,4 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 //remove if not needed
 

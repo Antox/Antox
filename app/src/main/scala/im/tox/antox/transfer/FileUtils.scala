@@ -1,7 +1,6 @@
-package im.tox.antox.utils
+package im.tox.antox.transfer
 
-import java.io.{FileOutputStream, FileInputStream, File}
-import java.nio.channels.FileChannel
+import java.io.{File, FileInputStream, FileOutputStream}
 
 object FileUtils {
 

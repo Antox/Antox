@@ -1,14 +1,8 @@
-package im.tox.antox.utils
+package im.tox.antox.transfer
 
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
-import android.util.Log
-import im.tox.antox.utils.FileStatus._
-import im.tox.antox.utils.FileTransfer._
-
-object FileTransfer {
-  private val TAG = "im.tox.antox.utils.FileTransfer"
-}
+import im.tox.antox.transfer.FileStatus.FileStatus
 
 class FileTransfer(val key: String, 
   val file: File,
@@ -108,8 +102,7 @@ class FileTransfer(val key: String,
           var data = new Array[Byte](chunkSize)
           s.read(data, 0, chunkSize)
           Some(data)
-        case None => 
-          Log.d(TAG, "no input stream!")
+        case None =>
           None
       }
     }
@@ -136,7 +129,6 @@ class FileTransfer(val key: String,
             false
           }
         case None =>
-          Log.d(TAG, "no output stream!")
           false
       }
     }

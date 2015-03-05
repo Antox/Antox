@@ -188,10 +188,12 @@ class MainActivity extends ActionBarActivity {
     ToxSingleton.updateFriendRequests(getApplicationContext)
     ToxSingleton.updateFriendsList(getApplicationContext)
     ToxSingleton.updateMessages(getApplicationContext)
+    ToxSingleton.updateGroupInvites(getApplicationContext)
+    ToxSingleton.updateGroupList(getApplicationContext)
   }
 
   def onClickAdd(v: View) {
-    val intent = new Intent(this, classOf[AddFriendActivity])
+    val intent = new Intent(this, classOf[AddActivity])
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
   }
 

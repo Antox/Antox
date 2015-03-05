@@ -6,7 +6,6 @@ import java.util
 import android.content.Context
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.utils.{AntoxFriend, Call, CaptureAudio}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 import collection.JavaConverters._

@@ -5,7 +5,7 @@ import android.util.Log
 import im.tox.antox.callbacks.AntoxOnReadReceiptCallback._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.AntoxFriend
+import im.tox.antox.wrapper.AntoxFriend
 import im.tox.tox4j.core.callbacks.ReadReceiptCallback
 
 object AntoxOnReadReceiptCallback {

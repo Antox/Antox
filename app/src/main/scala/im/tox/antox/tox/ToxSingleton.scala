@@ -14,8 +14,9 @@ import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.transfer.{FileTransfer, FileStatus}
 import im.tox.antox.utils._
-import im.tox.antox.wrapper.ToxCore
+import im.tox.antox.wrapper._
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
 import im.tox.tox4j.exceptions.ToxException
@@ -304,7 +305,7 @@ object ToxSingleton {
 
   def updateGroupList(ctx: Context) {
     try {
-      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
+//      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
     } catch {
       case e: Exception => Reactive.friendList.onError(e)
     }

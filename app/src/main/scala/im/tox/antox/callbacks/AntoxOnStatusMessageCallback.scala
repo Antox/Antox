@@ -3,7 +3,7 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Hex, AntoxFriend}
+import im.tox.antox.utils.Hex
 import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
 
 object AntoxOnStatusMessageCallback {

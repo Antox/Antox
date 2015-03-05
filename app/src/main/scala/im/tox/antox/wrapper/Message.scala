@@ -1,8 +1,9 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 import java.sql.Timestamp
 
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.{Constants, PrettyTimestamp}
 
 //remove if not needed
 

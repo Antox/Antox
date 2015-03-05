@@ -1,7 +1,7 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 import java.util
-import java.util.{ArrayList, Collections, List, Locale}
+import java.util.Collections
 
 //remove if not needed
 import scala.collection.JavaConversions._

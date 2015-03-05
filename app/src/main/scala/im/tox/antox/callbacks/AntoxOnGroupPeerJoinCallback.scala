@@ -3,7 +3,8 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{GroupPeer, AntoxFriend}
+import im.tox.antox.wrapper.AntoxFriend
+import im.tox.antox.wrapper.GroupPeer
 import im.tox.tox4j.core.callbacks.FriendNameCallback
 
 import scala.None

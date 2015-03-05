@@ -1,4 +1,4 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 import java.sql.Timestamp
 //remove if not needed

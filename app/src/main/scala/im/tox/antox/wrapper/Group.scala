@@ -1,6 +1,4 @@
-package im.tox.antox.utils
-
-import java.util
+package im.tox.antox.wrapper
 
 class Group(val id: String,
             val groupNumber: Int,

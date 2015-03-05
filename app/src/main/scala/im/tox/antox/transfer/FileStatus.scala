@@ -1,4 +1,4 @@
-package im.tox.antox.utils
+package im.tox.antox.transfer
 
 object FileStatus extends Enumeration {
   type FileStatus = Value

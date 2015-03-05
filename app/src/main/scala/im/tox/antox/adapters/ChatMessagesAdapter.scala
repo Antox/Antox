@@ -16,11 +16,12 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
+import im.tox.antox.wrapper.ChatMessages
 import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{BitmapManager, ChatMessages, Constants, PrettyTimestamp}
+import im.tox.antox.utils.{BitmapManager, Constants, PrettyTimestamp}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 

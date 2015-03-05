@@ -1,4 +1,3 @@
-
 package im.tox.antox.activities
 
 import android.app.Activity
@@ -12,7 +11,6 @@ import android.widget._
 import im.tox.antoxnightly.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.ToxDoService
-//remove if not needed
 
 class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedListener {
 

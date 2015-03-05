@@ -3,7 +3,8 @@ package im.tox.antox.tox
 import java.sql.Timestamp
 
 import im.tox.antox.data.State
-import im.tox.antox.utils.{Group, GroupInvite, Friend, FriendInfo, FriendRequest}
+import im.tox.antox.wrapper.Friend
+import im.tox.antox.wrapper._
 import rx.lang.scala.subjects.BehaviorSubject
 
 object Reactive {

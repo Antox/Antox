@@ -12,12 +12,14 @@ import android.text.{Editable, TextWatcher}
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.wrapper._
 import im.tox.antoxnightly.R
 import im.tox.antox.activities.{ChatActivity, FriendProfileActivity}
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
-import im.tox.antox.utils.FileDialog.DirectorySelectedListener
+import FileDialog.DirectorySelectedListener
 import im.tox.antox.utils._
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.{Observable, Subscription}

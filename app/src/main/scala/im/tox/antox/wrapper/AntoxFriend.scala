@@ -1,9 +1,7 @@
-package im.tox.antox.utils
+package im.tox.antox.wrapper
 
 import java.util
-import java.util.ArrayList
 
-import im.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.core.enums.ToxStatus
 
 import scala.beans.{BeanProperty, BooleanBeanProperty}

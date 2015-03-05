@@ -1,8 +1,7 @@
-package im.tox.antox.utils
+package im.tox.antox.av
 
 import android.media.{AudioFormat, AudioRecord}
 import android.util.Log
-import im.tox.antox.tox.ToxSingleton
 import rx.lang.scala.Observable
 
 object CaptureAudio {

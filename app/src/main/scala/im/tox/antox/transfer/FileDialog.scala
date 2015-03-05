@@ -1,22 +1,20 @@
 
-package im.tox.antox.utils
+package im.tox.antox.transfer
 
 import java.io.{File, FilenameFilter}
 import java.util
-import java.util.{ArrayList, List}
 
 import android.app.{Activity, AlertDialog, Dialog}
 import android.content.DialogInterface
 import android.os.Environment
 import android.util.Log
-import im.tox.antox.utils.FileDialog._
-import im.tox.antox.utils.ListenerList._
+import im.tox.antox.transfer.FileDialog.{DirectorySelectedListener, FileSelectedListener}
+import im.tox.antox.transfer.ListenerList.FireHandler
+
 //remove if not needed
 import scala.collection.JavaConversions._
 
 object FileDialog {
-
-  private val PARENT_DIR = ".."
 
   trait FileSelectedListener {
 
@@ -32,6 +30,8 @@ object FileDialog {
 class FileDialog(private val activity: Activity, path: File, selectDirectoryOption: Boolean) {
 
   private val TAG = getClass.getName
+
+  private val PARENT_DIR = ".."
 
   private var fileList: Array[String] = _
 

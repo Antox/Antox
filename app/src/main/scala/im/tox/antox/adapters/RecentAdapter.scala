@@ -8,11 +8,12 @@ import android.os.Build
 import android.support.v4.widget.ResourceCursorAdapter
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.TextView
+import im.tox.antox.wrapper.UserStatus
 import im.tox.antoxnightly.R
 import im.tox.antox.activities.ChatActivity
 import im.tox.antox.adapters.RecentAdapter._
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, IconColor, PrettyTimestamp, UserStatus}
+import im.tox.antox.utils.{Constants, IconColor, PrettyTimestamp}
 
 object RecentAdapter {
 

@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{AbsListView, ArrayAdapter, LinearLayout, ListView}
+import im.tox.antox.wrapper.FriendInfo
 import im.tox.antoxnightly.R
 import im.tox.antox.adapters.RecentAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.Reactive
-import im.tox.antox.utils.FriendInfo
 import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
