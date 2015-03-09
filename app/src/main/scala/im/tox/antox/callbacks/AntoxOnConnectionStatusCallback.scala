@@ -1,9 +1,9 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
+import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.utils.Constants
 import im.tox.tox4j.core.callbacks.{FriendConnectionStatusCallback, ConnectionStatusCallback}
 import im.tox.tox4j.core.enums.ToxConnection
@@ -26,7 +26,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
 
     if (online) {
-      Methods.sendUnsentMessages(ctx)
+      MessageHelper.sendUnsentMessages(ctx)
     } else {
       ToxSingleton.typingMap.put(friendKey, false)
       Reactive.typing.onNext(true)

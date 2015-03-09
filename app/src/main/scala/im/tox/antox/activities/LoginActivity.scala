@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.ActionBarActivity
 import android.view.{View, WindowManager}
 import android.widget._
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.ToxDoService
 

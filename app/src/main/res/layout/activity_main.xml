@@ -8,5 +8,5 @@
         android:name="im.tox.antox.fragments.LeftPaneFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_leftpane" />
+        tools:layout="@layout/fragment_pane" />
 </LinearLayout>

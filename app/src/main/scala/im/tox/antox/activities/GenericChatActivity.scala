@@ -15,7 +15,7 @@ import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxSingleton, Reactive}
@@ -163,7 +163,6 @@ abstract class GenericChatActivity extends ActionBarActivity {
     Reactive.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
-    titleSub.unsubscribe()
     progressSub.unsubscribe()
   }
 }

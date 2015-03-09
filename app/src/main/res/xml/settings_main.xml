@@ -46,7 +46,7 @@
             android:title="@string/pref_title_connection_status_messages" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="enable_udp"
             android:title="@string/pref_udp" />
 

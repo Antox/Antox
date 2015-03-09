@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Dodaj znajomego</string>
+  <string name="title_activity_add">Dodaj znajomego</string>
   <string name="title_activity_friend_profile">Profil znajomego</string>
   <string name="title_activity_profile_settings">Opcje profilu</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Dodaj kontakt</string>
+  <string name="add_contact">Dodaj kontakt</string>
 
   <!--Login Activity-->
   <string name="login_must_fill_in">Musisz uzupełnić nazwę użytkownika</string>

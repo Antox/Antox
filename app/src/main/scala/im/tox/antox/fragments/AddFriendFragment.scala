@@ -14,7 +14,7 @@ import android.view._
 import android.widget.{Button, EditText, Toast}
 import im.tox.QR.IntentIntegrator
 import im.tox.antox.toxdns.ToxDNS
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, Hex}
@@ -24,7 +24,7 @@ import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
 
-class AddFriendFragment extends Fragment {
+class AddFriendFragment extends Fragment with InputableID {
 
   var _friendID: String = ""
 
@@ -69,6 +69,19 @@ class AddFriendFragment extends Fragment {
 
   override def onPause() = {
     super.onPause()
+  }
+
+  def inputID(input: String) {
+    val addFriendKey = getView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
+    val friendKey = (if (input.toLowerCase.contains("tox:")) input.substring(4) else input)
+      .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
+    if (validateFriendKey(friendKey)) {
+      addFriendKey.setText(friendKey)
+    } else {
+      val context = getActivity.getApplicationContext
+      val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
+      toast.show()
+    }
   }
 
   private def isAddressOwn(key: String): Boolean = {
@@ -167,19 +180,6 @@ class AddFriendFragment extends Fragment {
   def showToastInvalidID(): Unit = {
     toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
     toast.show()
-  }
-
-  def inputID(input: String) {
-    val addFriendKey = getView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-    val friendKey = (if (input.toLowerCase.contains("tox:")) input.substring(4) else input)
-      .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
-    if (validateFriendKey(friendKey)) {
-      addFriendKey.setText(friendKey)
-    } else {
-      val context = getActivity.getApplicationContext
-      val toast = Toast.makeText(context, getResources.getString(R.string.invalid_friend_ID), Toast.LENGTH_SHORT)
-      toast.show()
-    }
   }
 
   //TODO move this to somewhere sane (ToxAddress class)

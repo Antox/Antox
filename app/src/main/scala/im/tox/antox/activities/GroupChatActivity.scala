@@ -16,17 +16,17 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.{UserStatus, FriendInfo}
-import im.tox.antoxnightly.R
+import im.tox.antox.wrapper.{Message, UserStatus, FriendInfo}
+import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
+import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.utils.{Constants, IconColor}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
-import scala.concurrent.duration._
+import scala.collection.JavaConversions._
 
 class GroupChatActivity extends GenericChatActivity {
 
@@ -68,98 +68,11 @@ class GroupChatActivity extends GenericChatActivity {
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
     messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
-    messageBox.addTextChangedListener(new TextWatcher() {
-      override def beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-        val isTyping = (i3 > 0)
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          if (friend.isOnline) {
-            try {
-              ToxSingleton.tox.setTyping(friend.getFriendnumber, isTyping)
-            } catch {
-              case te: ToxException => {
-              }
-              case e: Exception => {
-              }
-            }
-          }
-        })
-      }
-
-      override def onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-      }
-
-      override def afterTextChanged(editable: Editable) {
-      }
-    })
-
-    messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      override def onFocusChange(v: View, hasFocus: Boolean) {
-        //chatListView.setSelection(adapter.getCount() - 1)
-      }
-    })
 
     val b = this.findViewById(R.id.sendMessageButton)
     b.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         sendMessage()
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          try {
-            ToxSingleton.tox.setTyping(friend.getFriendnumber, typing = false)
-          } catch {
-            case te: ToxException => {
-            }
-            case e: Exception => {
-            }
-          }
-        })
-      }
-    })
-
-    val attachmentButton = this.findViewById(R.id.attachmentButton)
-
-    attachmentButton.setOnClickListener(new View.OnClickListener() {
-
-      override def onClick(v: View) {
-        val builder = new AlertDialog.Builder(thisActivity)
-        var items: Array[CharSequence] = null
-        items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-
-          override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
-            case 0 => {
-              var intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-              startActivityForResult(intent, Constants.IMAGE_RESULT)
-            }
-            case 1 => {
-              val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-              val image_name = "Antoxpic" + new Date().toString
-              val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-              try {
-                val file = File.createTempFile(image_name, ".jpg", storageDir)
-                val imageUri = Uri.fromFile(file)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                photoPath = file.getAbsolutePath
-                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-              } catch {
-                case e: IOException => e.printStackTrace()
-              }
-            }
-            case 2 => {
-              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath, false)
-              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                def fileSelected(file: File) {
-                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
-                }
-              })
-              fileDialog.showDialog()
-            }
-
-          }
-        })
-        builder.create().show()
       }
     })
   }
@@ -167,34 +80,6 @@ class GroupChatActivity extends GenericChatActivity {
   override def onResume() = {
     super.onResume()
     val thisActivity = this
-    titleSub = Reactive.friendInfoList
-      .subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(fi => {
-      val key = activeKey
-      val mFriend: Option[FriendInfo] = fi
-        .filter(f => f.key == key)
-        .headOption
-      mFriend match {
-        case Some(friend) => {
-          if (friend.alias != "") {
-            thisActivity.setDisplayName(friend.alias)
-          } else {
-            thisActivity.setDisplayName(friend.name)
-          }
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            thisActivity.statusIconView.setBackground(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-          } else {
-            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-          }
-        }
-        case None => {
-          thisActivity.setDisplayName("")
-        }
-      }
-    })
   }
 
   private def sendMessage() {
@@ -215,9 +100,17 @@ class GroupChatActivity extends GenericChatActivity {
     } else {
       msg = ""
     }
+
+    val db = new AntoxDB(this)
+    db.open(false)
+    for (message: Message <- db.getMessageList(activeKey, true)) {
+      println("message of type " + message.`type` + " with content " + message.message + " active key " + activeKey)
+    }
+
     val key = activeKey
     messageBox.setText("")
-    Methods.sendMessage(this, key, msg, None)
+    MessageHelper.sendGroupMessage(this, key, msg, None)
+    db.close()
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

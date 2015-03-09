@@ -14,8 +14,8 @@ import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.wrapper._
-import im.tox.antoxnightly.R
-import im.tox.antox.activities.{ChatActivity, FriendProfileActivity}
+import im.tox.antox.R
+import im.tox.antox.activities.{GroupChatActivity, ChatActivity, FriendProfileActivity}
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
@@ -94,13 +94,13 @@ class ContactsFragment extends Fragment {
   }
 
   def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[Group]): Unit = {
+    println("update Gruop list " + groups.length)
     if (groups.length > 0) {
-      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
+      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
-        //val group = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.title, group.topic,
-        //  true /* group is always online */, null, group.,
-         // group.lastMessageTimestamp)
-       // leftPaneAdapter.addItem(group)
+        val groupPane: LeftPaneItem = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.name, group.topic,
+          true /* group is always online */, UserStatus.getToxUserStatusFromString("online"), 2, null)
+         leftPaneAdapter.addItem(groupPane)
       }
     }
   }
@@ -135,11 +135,15 @@ class ContactsFragment extends Fragment {
         id: Long) {
         val item = parent.getAdapter.asInstanceOf[Adapter].getItem(position).asInstanceOf[LeftPaneItem]
         val `type` = item.viewType
-        if (`type` != Constants.TYPE_FRIEND_REQUEST) {
+        if (`type` != Constants.TYPE_FRIEND_REQUEST && `type` != Constants.TYPE_GROUP_INVITE) {
           val key = item.key
           if (key != "") {
             ToxSingleton.changeActiveKey(key)
-            val intent = new Intent(getActivity, classOf[ChatActivity])
+            val intent = if (`type` == Constants.TYPE_FRIEND) {
+              new Intent(getActivity, classOf[ChatActivity])
+            } else {
+              new Intent(getActivity, classOf[GroupChatActivity])
+            }
             intent.putExtra("key", key)
             startActivity(intent)
           }
@@ -153,46 +157,8 @@ class ContactsFragment extends Fragment {
         index: Int,
         id: Long): Boolean = {
         val item = parent.getAdapter.asInstanceOf[Adapter].getItem(index).asInstanceOf[LeftPaneItem]
-        val builder = new AlertDialog.Builder(getActivity)
-        val isContact = item.viewType == Constants.TYPE_CONTACT
-        val items = if (isContact) {
-          Array[CharSequence](getResources.getString(R.string.friend_action_profile),
-            getResources.getString(R.string.friend_action_delete),
-            getResources.getString(R.string.friend_action_export_chat),
-            getResources.getString(R.string.friend_action_delete_chat))
-        } else {
-          Array[CharSequence]("")
-        }
-        builder.setTitle(getResources.getString(R.string.contacts_actions_on) +
-          " " +
-          item.first)
-          .setCancelable(true)
-          .setItems(items, new DialogInterface.OnClickListener() {
-
-            def onClick(dialog: DialogInterface, index: Int) {
-              if (isContact) {
-                val key = item.key
-                if (key != "") index match {
-                  case 0 =>
-                    val profile = new Intent(getActivity, classOf[FriendProfileActivity])
-                    profile.putExtra("key", key)
-                    startActivity(profile)
-
-                  case 1 => showDeleteFriendDialog(getActivity, key)
-                  case 2 => exportChat(getActivity, key)
-                  case 3 => showDeleteChatDialog(getActivity, key)
-                }
-              }
-              dialog.cancel()
-            }
-          })
-        val alert = builder.create()
-        if (item != null) {
-          if (item.viewType != Constants.TYPE_HEADER) {
-            alert.show()
-          }
-        }
-        return true
+        createLeftPanePopup(item)
+        true
       }
     })
     val search = rootView.findViewById(R.id.searchBar).asInstanceOf[EditText]
@@ -211,6 +177,74 @@ class ContactsFragment extends Fragment {
     rootView
   }
 
+  def createLeftPanePopup(parentItem: LeftPaneItem): Unit =  {
+    val items = if (parentItem.viewType == Constants.TYPE_FRIEND) {
+      Array[CharSequence](getResources.getString(R.string.friend_action_profile),
+        getResources.getString(R.string.friend_action_delete),
+        getResources.getString(R.string.friend_action_export_chat),
+        getResources.getString(R.string.friend_action_delete_chat))
+    } else if (parentItem.viewType == Constants.TYPE_GROUP) {
+      Array[CharSequence](getResources.getString(R.string.group_action_delete))
+    } else {
+      Array[CharSequence]("")
+    }
+
+    val builder = new AlertDialog.Builder(getActivity)
+
+    builder.setTitle(getResources.getString(R.string.contacts_actions_on) +
+      " " +
+      parentItem.first)
+      .setCancelable(true)
+      .setItems(items, new DialogInterface.OnClickListener() {
+
+      def onClick(dialog: DialogInterface, index: Int) {
+        val key = parentItem.key
+        if (parentItem.viewType == Constants.TYPE_FRIEND) {
+          if (key != "") index match {
+            case 0 =>
+              val profile = new Intent(getActivity, classOf[FriendProfileActivity])
+              profile.putExtra("key", key)
+              startActivity(profile)
+
+            case 1 => showDeleteFriendDialog(getActivity, key)
+            case 2 => exportChat(getActivity, key)
+            case 3 => showDeleteChatDialog(getActivity, key)
+          }
+        }
+
+        if (parentItem.viewType == Constants.TYPE_GROUP) {
+          if (key != "") index match {
+            case 0 =>
+              val db = new AntoxDB(getActivity)
+              db.deleteChat(key)
+              db.deleteGroup(key)
+              db.close()
+              val mGroup = ToxSingleton.getGroupList.getByGroupId(key)
+              mGroup.foreach(group => {
+                try {
+                  group.leave(getResources.getString(R.string.group_default_part_message))
+                } catch {
+                  case e: ToxException =>
+                }
+
+                ToxSingleton.save()
+                ToxSingleton.updateGroupList(getActivity)
+                ToxSingleton.updateMessages(getActivity)
+              })
+          }
+        }
+        dialog.cancel()
+      }
+    })
+
+    val alert = builder.create()
+    if (parentItem != null) {
+      if (parentItem.viewType != Constants.TYPE_HEADER) {
+        alert.show()
+      }
+    }
+  }
+
   def showDeleteFriendDialog(context: Context, fkey: String) {
     val key = fkey
     val delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend, null)
@@ -219,33 +253,33 @@ class ContactsFragment extends Fragment {
     builder.setView(delete_friend_dialog).setCancelable(false)
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-        def onClick(dialog: DialogInterface, id: Int) {
-          Observable[Boolean](subscriber => {
-            val db = new AntoxDB(getActivity)
-            if (deleteLogsCheckboxView.isChecked) db.deleteChat(key)
-            db.deleteFriend(key)
-            db.close()
-            val mFriend = ToxSingleton.getAntoxFriend(key)
-            mFriend.foreach(friend => {
-              try {
-                ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
-                ToxSingleton.save()
-              } catch {
-                case e: ToxException =>
-              }
-            })
-            subscriber.onCompleted()
-            ToxSingleton.updateFriendsList(getActivity)
-            ToxSingleton.updateMessages(getActivity)
-          }).subscribeOn(IOScheduler()).subscribe()
-        }
-      })
+      def onClick(dialog: DialogInterface, id: Int) {
+        Observable[Boolean](subscriber => {
+          val db = new AntoxDB(getActivity)
+          if (deleteLogsCheckboxView.isChecked) db.deleteChat(key)
+          db.deleteFriend(key)
+          db.close()
+          val mFriend = ToxSingleton.getAntoxFriend(key)
+          mFriend.foreach(friend => {
+            try {
+              ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+              ToxSingleton.save()
+            } catch {
+              case e: ToxException =>
+            }
+          })
+          subscriber.onCompleted()
+          ToxSingleton.updateFriendsList(getActivity)
+          ToxSingleton.updateMessages(getActivity)
+        }).subscribeOn(IOScheduler()).subscribe()
+      }
+    })
       .setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-        def onClick(dialog: DialogInterface, id: Int) {
-          dialog.cancel()
-        }
-      })
+      def onClick(dialog: DialogInterface, id: Int) {
+        dialog.cancel()
+      }
+    })
     builder.show()
   }
 

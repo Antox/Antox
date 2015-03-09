@@ -5,25 +5,26 @@ import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
-import im.tox.tox4j.core.callbacks.FriendRequestCallback
+import im.tox.tox4j.core.callbacks.{GroupInviteCallback, FriendRequestCallback}
 
 object AntoxOnGroupInviteCallback {
 
 }
 
-class AntoxOnGroupInviteCallback(private var ctx: Context) {
+class AntoxOnGroupInviteCallback(private var ctx: Context) extends GroupInviteCallback {
 
-  def groupInvite(friendNumber: Int, groupId: Array[Byte], inviteData: Array[Byte]): Unit = {
+  def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
     if (db.isFriendBlocked(inviter.getKey)) return
 
-    db.addGroupInvite(Hex.bytesToHexString(groupId), inviter.getName, inviteData)
+    println("invite key is " + Hex.bytesToHexString(inviteData.slice(0, 32)))
+    db.addGroupInvite(Hex.bytesToHexString(inviteData.slice(0, 32)), inviter.getName, inviteData)
     db.close()
 
     ToxSingleton.updateGroupInvites(ctx)

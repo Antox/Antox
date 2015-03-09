@@ -12,8 +12,8 @@ import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.fragments.AddFriendFragment
-import im.tox.antoxnightly.R
+import im.tox.antox.fragments.{InputableID, AddPaneFragment, AddFriendFragment}
+import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, Hex}
@@ -47,7 +47,8 @@ class AddActivity extends ActionBarActivity {
       var uri: Uri = null
       uri = intent.getData
       if (uri != null) {
-        getSupportFragmentManager.findFragmentById(R.id.fragment_add_friend).asInstanceOf[AddFriendFragment].inputID(uri.getHost)
+        getSupportFragmentManager.findFragmentById(R.id.fragment_add_pane)
+          .asInstanceOf[AddPaneFragment].getSelectedFragment
       }
     }
   }
@@ -66,8 +67,12 @@ class AddActivity extends ActionBarActivity {
     val scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent)
     if (scanResult != null) {
       if (scanResult.getContents != null) {
-        getSupportFragmentManager.findFragmentById(R.id.fragment_add_friend)
-          .asInstanceOf[AddFriendFragment].inputID(scanResult.getContents)
+        getSupportFragmentManager
+          .findFragmentById(R.id.fragment_add_pane)
+          .asInstanceOf[AddPaneFragment]
+          .getSelectedFragment
+          .asInstanceOf[InputableID]
+          .inputID(scanResult.getContents)
       }
     }
   }

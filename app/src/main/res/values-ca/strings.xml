@@ -2,11 +2,11 @@
 <resources>
 
     <!-- Activity titles -->
-    <string name="title_activity_add_friend">Afegir un amic</string>
+    <string name="title_activity_add">Afegir un amic</string>
     <string name="title_activity_friend_profile">Perfil de l\'amic</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">Afegir amic</string>
+    <string name="add_contact">Afegir amic</string>
 
     <!-- Login Activity -->
     <string name="login_must_fill_in">Cal que escriguis un nom de perfil</string>

@@ -4,12 +4,12 @@
     <string name="app_name" translatable="false">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_add_friend">Add Friend</string>
+    <string name="title_activity_add">Add Contact</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
     <string name="title_activity_profile_settings">Profile options</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">Add Friend</string>
+    <string name="add_contact">Add Contact</string>
 
     <!-- Login Activity -->
     <string name="login_must_fill_in">You must fill in a profile name</string>
@@ -47,7 +47,11 @@
     <string name="chat_file_transfer">File transfer</string>
     <string name="chat_message_too_long">This message is too long and cannot be sent</string>
 
-    <!-- Add Friend Activity -->
+    <!-- Add Pane Fragment -->
+    <string name="addpane_friend_label">Friend</string>
+    <string name="addpane_group_label">Group</string>
+
+    <!-- Add Friend Fragment -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
     <string name="addfriend_friend_message">Send a message with your request</string>
     <string name="addfriend_button">Add Friend</string>
@@ -63,6 +67,15 @@
     <string name="addfriend_friend_pin_title">Enter Friend\'s Pin</string>
     <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
     <string name="addfriend_default_message">Hey! Please accept my friend request</string>
+
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">The group\'s ID</string>
+    <string name="addgroup_button">Join Group</string>
+    <string name="addgroup_group_added">Group Joined</string>
+    <string name="addgroup_group_exists">Group already exists</string>
+    <string name="invalid_group_ID">Invalid Group ID</string>
+    <string name="addgroup_alias_hint">Set an alias for this group</string>
+    <string name="addgroup_optional_title">Optional Extras</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_nick">Nickname</string>
@@ -90,9 +103,11 @@
     <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
+    <string name="group_action_delete">Leave Group</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
     <string name="contacts_delimiter_invites">Group Invites</string>
+    <string name="contacts_delimiter_groups">Groups</string>
     <string name="contacts_delimiter_friends">Friends</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
@@ -111,6 +126,9 @@
     <!-- Block Friend Dialog -->
     <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them.\n\nAre you sure you wish to continue?</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">Goodbye</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>

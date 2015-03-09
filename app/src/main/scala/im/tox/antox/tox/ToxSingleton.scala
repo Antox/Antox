@@ -18,7 +18,8 @@ import im.tox.antox.transfer.{FileTransfer, FileStatus}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
+import im.tox.tox4j.core.callbacks.{GroupInviteCallback, GroupMessageCallback, GroupJoinRejectedCallback}
+import im.tox.tox4j.core.enums.{ToxGroupJoinRejected, ToxStatus, ToxFileControl, ToxFileKind}
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 import org.json.JSONObject
@@ -305,7 +306,7 @@ object ToxSingleton {
 
   def updateGroupList(ctx: Context) {
     try {
-//      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
+      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
     } catch {
       case e: Exception => Reactive.friendList.onError(e)
     }
@@ -430,7 +431,8 @@ object ToxSingleton {
               Log.d(TAG, "Trying to bootstrap")
               try {
                 for (i <- 0 until nodes.size) {
-                  tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+                  tox.bootstrap("192.254.75.104", 33445, "6058FF1DA1E013AD4F829CBE8E5DDFD30A4DE55901B0997832E3E8A64E19026C")
+                  //tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
                 }
               } catch {
                 case e: Exception =>
@@ -442,12 +444,17 @@ object ToxSingleton {
     }
   }
 
-  def populateAntoxFriendList(): Unit = {
-    for (i <-  tox.getFriendList) {
+  def populateAntoxLists(): Unit = {
+    for (i <- tox.getFriendList) {
       //this doesn't set the name, status message, status
       //or online status of the friend because they are now set during callbacks
       antoxFriendList.addFriendIfNotExists(i)
       antoxFriendList.getByFriendNumber(i).get.setKey(tox.getFriendKey(i))
+    }
+
+    for (i <- tox.getGroupList) {
+      println("groupnum " + i)
+      groupList.addGroupIfNotExists(new Group(tox.getGroupChatId(i), i, "test", "", "topic", new PeerList()))
     }
   }
 
@@ -460,7 +467,7 @@ object ToxSingleton {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val options = new ToxOptions()
-    options.setUdpEnabled(udpEnabled)
+    options.setUdpEnabled(true)
     options.setIpv6Enabled(Options.ipv6Enabled)
 
     if (!dataFile.doesFileExist()) {
@@ -490,6 +497,7 @@ object ToxSingleton {
       db.setAllOffline()
 
       val friends = db.getFriendList
+      val groups = db.getGroupKeyList
       db.close()
 
       for (friendNumber <- tox.getFriendList) {
@@ -499,8 +507,15 @@ object ToxSingleton {
         }
       }
 
-      if (friends.size > 0) {
-        populateAntoxFriendList()
+      for (groupNumber <- tox.getGroupList) {
+        val groupKey = tox.getGroupChatId(groupNumber)
+        if (!db.doesGroupExist(groupKey)) {
+          db.addGroup(groupKey)
+        }
+      }
+
+      if (friends.size > 0 || groups.size > 0) {
+        populateAntoxLists()
 
         for (friend <- friends) {
           try {
@@ -516,6 +531,7 @@ object ToxSingleton {
           }
         }
       }
+
       tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
       tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
       tox.callbackFriendAction(new AntoxOnActionCallback(ctx))
@@ -529,9 +545,20 @@ object ToxSingleton {
       tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
       tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
       tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+      tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
+      tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
+      tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
+      tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
       tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
+      tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
 
+      tox.callbackGroupJoinRejected(new GroupJoinRejectedCallback {
+        override def groupJoinRejected(p1: Int, reason: ToxGroupJoinRejected): Unit = {
+          println("group join rejected for reason " + reason)
+        }
+      })
 
+      tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx))
       try {
         tox.setName(preferences.getString("nickname", ""))
         tox.setStatusMessage(preferences.getString("status_message", ""))

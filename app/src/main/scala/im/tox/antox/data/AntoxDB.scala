@@ -33,7 +33,10 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean);"
 
-    var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key);"
+    var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
+      "name text, " +
+      "alias text, " +
+      "isblocked boolean);"
 
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
@@ -219,6 +222,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
     values.put("type", `type`: java.lang.Integer)
     mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
+    println("added message of type " + `type`)
     this.close()
   }
 
@@ -339,7 +343,7 @@ class AntoxDB(ctx: Context) {
         " DESC"
     } else {
       var act: String = null
-      act = if (actionMessages) "" else "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) "
+      act = getQueryTypes(actionMessages)
       selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
         Constants.COLUMN_NAME_KEY +
         " = '" +
@@ -375,6 +379,10 @@ class AntoxDB(ctx: Context) {
     messageList
   }
 
+  def getQueryTypes(actionMessages: Boolean): String = {
+    if (actionMessages) "" else "AND (type == 1 OR type == 2 OR type == 3 OR type == 4 OR type == 6 OR type == 7) "
+  }
+
   def getMessageIds(key: String, actionMessages: Boolean): util.HashSet[Integer] = {
     this.open(writeable = false)
     var selectQuery: String = null
@@ -385,7 +393,7 @@ class AntoxDB(ctx: Context) {
         " DESC"
     } else {
       var act: String = null
-      act = if (actionMessages) "" else "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) "
+      act = getQueryTypes(actionMessages)
       selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
         Constants.COLUMN_NAME_KEY +
         " = '" +
@@ -417,7 +425,7 @@ class AntoxDB(ctx: Context) {
         " DESC"
     } else {
       var act: String = null
-      act = if (actionMessages) "" else "AND (type == 1 OR type == 2 OR type == 3 OR type == 4) "
+      act = getQueryTypes(actionMessages)
       selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
         Constants.COLUMN_NAME_KEY +
         " = '" +
@@ -617,12 +625,14 @@ class AntoxDB(ctx: Context) {
   def getGroupKeyList: Array[String] = {
     this.open(writeable = false)
     val groupList = new ArrayBuffer[String]()
-    val selectQuery = "SELECT  * FROM" + Constants.TABLE_GROUPS
+    val selectQuery = "SELECT  * FROM " + Constants.TABLE_GROUPS
     val cursor = mDb.rawQuery(selectQuery, null)
-    do {
-      var key = cursor.getString(0)
-      groupList += key
-    } while (cursor.moveToNext())
+    if (cursor.moveToFirst()) {
+      do {
+        var key = cursor.getString(0)
+        groupList += key
+      } while (cursor.moveToNext())
+    }
     cursor.close()
     this.close()
     groupList.toArray
@@ -765,6 +775,29 @@ class AntoxDB(ctx: Context) {
   def getFriendNameOrAlias(key: String): String = {
     val friendDetails = getFriendDetails(key)
     if (friendDetails(1) == "") friendDetails(0) else friendDetails(1)
+  }
+
+  def getGroupNameOrAlias(key: String): String = {
+    var name: String = null
+    var alias: String = null
+    this.open(writeable = false)
+    val selectQuery = "SELECT * FROM " + Constants.TABLE_GROUPS + " WHERE " +
+      Constants.COLUMN_NAME_KEY +
+      "='" +
+      key +
+      "'"
+    val cursor = mDb.rawQuery(selectQuery, null)
+    if (cursor.moveToFirst()) {
+      do {
+        name = cursor.getString(1)
+        alias = cursor.getString(2)
+        if (name == null) name = ""
+        if (name == "") name = key.substring(0, 7)
+      } while (cursor.moveToNext())
+    }
+    cursor.close()
+    this.close()
+    if (alias == "") name else alias
   }
 
   def updateAlias(alias: String, key: String) {

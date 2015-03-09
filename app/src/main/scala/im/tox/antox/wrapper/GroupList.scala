@@ -27,12 +27,12 @@ class GroupList {
     if (ignorecase) {
       return getByTitleIgnoreCase(title)
     } else {
-      groups.filter(group => (group.title == null && title == null) || (title != null && title == group.title))
+      groups.filter(group => (group.name == null && title == null) || (title != null && title == group.name))
     }
   }
 
   private def getByTitleIgnoreCase(title: String): util.List[Group] = {
-    groups.filter(group => (group.title == null && title == null) || (title != null && title.equalsIgnoreCase(group.title)))
+    groups.filter(group => (group.name == null && title == null) || (title != null && title.equalsIgnoreCase(group.name)))
   }
 
   def searchGroup(partial: String): util.List[Group] = {
@@ -40,7 +40,7 @@ class GroupList {
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
     }
-    groups.filter(group => group.title != null && group.title.contains(partialLowered))
+    groups.filter(group => group.name != null && group.name.contains(partialLowered))
   }
 
   def all(): util.List[Group] = {
@@ -48,6 +48,7 @@ class GroupList {
   }
 
   def addGroup(group: Group): Unit = {
+    println("group " + group.groupNumber + " added")
     groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber) match {
       case Some(f) => throw new Exception()
       case None => this.groups.add(group)

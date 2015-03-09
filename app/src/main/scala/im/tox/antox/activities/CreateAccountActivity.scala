@@ -14,7 +14,7 @@ import android.widget.{EditText, Toast}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxData, ToxDNS}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDataFile, ToxDoService}
 import im.tox.antox.utils._
@@ -96,7 +96,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxData = new ToxData
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(Options.udpEnabled)
+    toxOptions.setUdpEnabled(true)
     val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
@@ -109,7 +109,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxData = new ToxData
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(Options.udpEnabled)
+    toxOptions.setUdpEnabled(true)
     val toxDataFile = new ToxDataFile(this, fileName)
     val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)

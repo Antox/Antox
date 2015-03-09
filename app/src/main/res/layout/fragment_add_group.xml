@@ -1,0 +1,57 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_group"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:focusableInTouchMode="true"
+        android:paddingTop="@dimen/margin_large"
+        tools:context=".AddgroupActivity">
+
+        <EditText
+            android:id="@+id/addgroup_key"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:layout_height="match_parent"
+            android:singleLine="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:hint="@string/addgroup_group_id" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:inputType="text"
+            android:layout_marginTop="20dp"
+            android:textSize="25sp"
+            android:text="@string/addgroup_optional_title"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addgroup_groupAlias"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:hint="@string/addgroup_alias_hint" />
+
+        <Button
+            android:id="@+id/add_group_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/addgroup_button" />
+
+    </LinearLayout>
+</ScrollView>

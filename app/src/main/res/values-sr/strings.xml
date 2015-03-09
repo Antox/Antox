@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Додавање пријатеља</string>
+  <string name="title_activity_add">Додавање пријатеља</string>
   <string name="title_activity_friend_profile">Пријатељев профил</string>
   <string name="title_activity_profile_settings">Опције профила</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Додај пријатеља</string>
+  <string name="add_contact">Додај пријатеља</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Морате унети име профила</string>
   <string name="login_login">Пријава</string>

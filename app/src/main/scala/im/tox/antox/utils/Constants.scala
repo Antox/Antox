@@ -8,7 +8,7 @@ object Constants {
 
   val TYPE_FRIEND_REQUEST = 1
 
-  val TYPE_CONTACT = 2
+  val TYPE_FRIEND = 2
 
   val TYPE_MAX_COUNT = 3
 
@@ -97,6 +97,8 @@ object Constants {
   val MESSAGE_TYPE_GROUP_OWN = 6
 
   val MESSAGE_TYPE_GROUP_PEER = 7
+
+  val MESSAGE_TYPE_ACTION_PEER = 8
 
   var epoch: Long = _
 

@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Ajouter un ami</string>
+  <string name="title_activity_add">Ajouter un ami</string>
   <string name="title_activity_friend_profile">Profil de l\'ami</string>
   <string name="title_activity_profile_settings">Options du profil</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Ajouter un ami</string>
+  <string name="add_contact">Ajouter un ami</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Vous devez rentrer un nom pour votre profil</string>
   <string name="login_login">Connexion</string>

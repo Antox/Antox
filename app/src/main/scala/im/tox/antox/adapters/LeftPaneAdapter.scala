@@ -10,7 +10,7 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
@@ -77,10 +77,10 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           holder.firstText = newConvertView.findViewById(R.id.request_key).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.request_message).asInstanceOf[TextView]
 
-        case Constants.TYPE_CONTACT =>
+        case Constants.TYPE_FRIEND | Constants.TYPE_GROUP =>
           newConvertView = mInflater.inflate(R.layout.contact_list_item, null)
-          holder.firstText = newConvertView.findViewById(R.id.friend_name).asInstanceOf[TextView]
-          holder.secondText = newConvertView.findViewById(R.id.friend_status).asInstanceOf[TextView]
+          holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
+          holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
@@ -88,6 +88,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         case Constants.TYPE_HEADER =>
           newConvertView = mInflater.inflate(R.layout.header_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.left_pane_header).asInstanceOf[TextView]
+
 
       }
       newConvertView.setTag(holder)
@@ -99,7 +100,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (`type` != Constants.TYPE_HEADER) {
       if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
     }
-    if (`type` == Constants.TYPE_CONTACT) {
+    if (`type` == Constants.TYPE_FRIEND) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
         //limit unread counter to 99
@@ -109,6 +110,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         holder.countText.setVisibility(View.GONE)
       }
       holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false))
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
       } else {
@@ -168,10 +170,11 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         val db = new AntoxDB(context)
         try {
           val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
+          println("data length " + inviteData.length)
           ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {
-          case e: Exception =>
+          case e: Exception => e.printStackTrace()
         }
         db.addGroup(groupId)
         db.deleteGroupInvite(groupId)

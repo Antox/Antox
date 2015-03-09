@@ -1,11 +1,17 @@
 package im.tox.antox.wrapper
 
+import im.tox.antox.tox.ToxSingleton
+
 class Group(val id: String,
             val groupNumber: Int,
-            val title: String,
-            val alias: String,
-            val topic: String,
+            var name: String,
+            var alias: String,
+            var topic: String,
             val peers: PeerList) {
 
-  override def toString: String = title
+  def leave(partMessage: String): Unit = {
+    ToxSingleton.tox.deleteGroup(groupNumber, partMessage)
+  }
+
+  override def toString: String = name
 }

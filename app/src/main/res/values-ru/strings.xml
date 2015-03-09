@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Добавить друга</string>
+  <string name="title_activity_add">Добавить друга</string>
   <string name="title_activity_friend_profile">Профиль друга</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Добавить друга</string>
+  <string name="add_contact">Добавить друга</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Вы должны указать имя профиля</string>
   <string name="login_login">Вход</string>

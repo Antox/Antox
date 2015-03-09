@@ -2,7 +2,7 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import im.tox.antox.tox.{Methods, ToxSingleton}
+import im.tox.antox.tox.{MessageHelper, ToxSingleton}
 import im.tox.antox.wrapper.AntoxFriend
 import im.tox.tox4j.exceptions.ToxException
 

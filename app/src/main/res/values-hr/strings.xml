@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Dodaj prijatelja</string>
+  <string name="title_activity_add">Dodaj prijatelja</string>
   <string name="title_activity_friend_profile">Prijateljov profil</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Dodaj prijatelja</string>
+  <string name="add_contact">Dodaj prijatelja</string>
   <!--Login Activity-->
   <!--Create Account Activity-->
   <!--Main Activity-->

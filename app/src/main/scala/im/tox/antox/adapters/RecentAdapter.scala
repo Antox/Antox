@@ -9,7 +9,7 @@ import android.support.v4.widget.ResourceCursorAdapter
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.TextView
 import im.tox.antox.wrapper.UserStatus
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.activities.ChatActivity
 import im.tox.antox.adapters.RecentAdapter._
 import im.tox.antox.tox.ToxSingleton
@@ -55,8 +55,8 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
     if (unreadCount > Constants.UNREAD_COUNT_LIMIT) unreadCount = Constants.UNREAD_COUNT_LIMIT
     val holder = new FriendsListHolder()
     holder.icon = view.findViewById(R.id.icon).asInstanceOf[TextView]
-    holder.friendName = view.findViewById(R.id.friend_name).asInstanceOf[TextView]
-    holder.friendStatus = view.findViewById(R.id.friend_status).asInstanceOf[TextView]
+    holder.friendName = view.findViewById(R.id.contact_name).asInstanceOf[TextView]
+    holder.friendStatus = view.findViewById(R.id.contact_status).asInstanceOf[TextView]
     holder.timestamp = view.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
     holder.unreadCount = view.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
     holder.friendName.setText(

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Lägg Till Vän</string>
+  <string name="title_activity_add">Lägg Till Vän</string>
   <string name="title_activity_friend_profile">Väns Profil</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Lägg Till Vän</string>
+  <string name="add_contact">Lägg Till Vän</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Du måste fylla i ett profilnamn</string>
   <string name="login_login">Logga in</string>

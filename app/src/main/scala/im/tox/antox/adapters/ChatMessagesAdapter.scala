@@ -17,7 +17,7 @@ import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
 import im.tox.antox.wrapper.ChatMessages
-import im.tox.antoxnightly.R
+import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
@@ -91,13 +91,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     val message_id = cursor.getInt(2)
     val k = cursor.getString(3)
     val sender_name = cursor.getString(4)
-    val m = cursor.getString(5)
+    val message = cursor.getString(5)
     val received = cursor.getInt(6) > 0
     val read = cursor.getInt(7) > 0
     val sent = cursor.getInt(8) > 0
     val size = cursor.getInt(9)
     val messageType = cursor.getInt(10)
-    val msg = new ChatMessages(id, message_id, m, time, received, sent, size, messageType)
+    val msg = new ChatMessages(id, message_id, message, time, received, sent, size, messageType)
     val holder = new ChatMessagesHolder()
     holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
     holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
@@ -131,7 +131,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
     messageType match {
-      case Constants.MESSAGE_TYPE_OWN =>
+      case Constants.MESSAGE_TYPE_OWN | Constants.MESSAGE_TYPE_GROUP_OWN =>
         holder.message.setText(msg.message)
         ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
@@ -139,7 +139,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           holder.bubble.setAlpha(0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_FRIEND =>
+      case Constants.MESSAGE_TYPE_FRIEND | Constants.MESSAGE_TYPE_GROUP_PEER =>
         holder.message.setText(msg.message)
         friendMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
@@ -276,7 +276,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
-                clipboard.setText(m)
+                clipboard.setText(message)
 
               case 1 =>
                 Observable[Boolean](subscriber => {

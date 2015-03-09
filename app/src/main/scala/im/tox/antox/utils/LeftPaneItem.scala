@@ -23,7 +23,7 @@ class LeftPaneItem(
     isOnline: Boolean,
     status: ToxStatus,
     count: Int,
-    timestamp: Timestamp) = this(Constants.TYPE_CONTACT, key, first, second, isOnline, status, count, timestamp)
+    timestamp: Timestamp) = this(Constants.TYPE_FRIEND, key, first, second, isOnline, status, count, timestamp)
 
   def this(header: String) = this(Constants.TYPE_HEADER, "", header, null, false, null, 0, null)
 
