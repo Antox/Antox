@@ -317,7 +317,7 @@ class AntoxDB(ctx: Context) {
     val map = scala.collection.mutable.Map.empty[String, (String, Timestamp)]
     val selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
       "SELECT MAX(_id) " +
-      "FROM messages WHERE (type == " + Constants.MESSAGE_TYPE_OWN +" OR type == 2) " +
+      "FROM messages WHERE (type == " + Constants.MESSAGE_TYPE_OWN +" OR type == 2 OR type == " + Constants.MESSAGE_TYPE_GROUP_OWN + " OR type == " + Constants.MESSAGE_TYPE_GROUP_PEER + ") " +
       "GROUP BY tox_key)"
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {

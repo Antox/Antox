@@ -56,6 +56,9 @@ object ToxSingleton {
 
   var dhtNodes: Array[DhtNode] = Array()
 
+
+  def getAntoxFriendList: AntoxFriendList = antoxFriendList
+
   def getAntoxFriend(key: String): Option[AntoxFriend] = {
     try {
       antoxFriendList.getByKey(key)
@@ -78,9 +81,11 @@ object ToxSingleton {
     }
   }
 
-  def getAntoxFriendList: AntoxFriendList = antoxFriendList
-
   def getGroupList: GroupList = groupList
+
+  def getGroup(groupNumber: Int): Group = getGroupList.getGroup(groupNumber)
+
+  def getGroup(groupId: String): Group = getGroupList.getGroup(groupId)
 
   def keyFromAddress(address: String): String = {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address

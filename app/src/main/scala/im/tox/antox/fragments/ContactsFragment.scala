@@ -94,7 +94,7 @@ class ContactsFragment extends Fragment {
   }
 
   def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[Group]): Unit = {
-    println("update Gruop list " + groups.length)
+    println("update group list " + groups.length)
     if (groups.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
@@ -214,23 +214,22 @@ class ContactsFragment extends Fragment {
 
         if (parentItem.viewType == Constants.TYPE_GROUP) {
           if (key != "") index match {
-            case 0 =>
+            case 0 => {
               val db = new AntoxDB(getActivity)
               db.deleteChat(key)
               db.deleteGroup(key)
               db.close()
-              val mGroup = ToxSingleton.getGroupList.getByGroupId(key)
-              mGroup.foreach(group => {
-                try {
-                  group.leave(getResources.getString(R.string.group_default_part_message))
-                } catch {
-                  case e: ToxException =>
-                }
+              val group = ToxSingleton.getGroupList.getGroup(key)
+              try {
+                group.leave(getResources.getString(R.string.group_default_part_message))
+              } catch {
+                case e: ToxException =>
+              }
 
-                ToxSingleton.save()
-                ToxSingleton.updateGroupList(getActivity)
-                ToxSingleton.updateMessages(getActivity)
-              })
+              ToxSingleton.save()
+              ToxSingleton.updateGroupList(getActivity)
+              ToxSingleton.updateMessages(getActivity)
+            }
           }
         }
         dialog.cancel()

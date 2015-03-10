@@ -209,6 +209,14 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getGroupNumberPeers(groupNumber: Int): Int = tox.getGroupNumberPeers(groupNumber)
 
+  def getGroupPeerlist(groupNumber: Int): Array[Int] = {
+    if (tox.getGroupNumberPeers(groupNumber) == 0) {
+      Array.empty[Int]
+    } else {
+      (0 to (tox.getGroupNumberPeers(groupNumber) - 1)).toArray
+    }
+  }
+
   def getActiveGroupCount: Int = tox.getActiveGroupsCount
 
   def getGroupList: Array[Int] = {

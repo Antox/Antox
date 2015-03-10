@@ -7,8 +7,7 @@ import im.tox.tox4j.core.callbacks.{GroupPeerExitCallback, GroupPeerJoinCallback
 
 class AntoxOnPeerExitCallback(private var ctx: Context) extends GroupPeerExitCallback {
   def groupPeerExit(groupNumber: Int, peerNumber: Int, partMessage: Array[Byte]): Unit = {
-    ToxSingleton.getGroupList.getByGroupNumber(groupNumber)
-      .get.peers.removeGroupPeer(peerNumber)
+    ToxSingleton.getGroup(groupNumber).peers.removeGroupPeer(peerNumber)
     println("peer exit")
     ToxSingleton.updateGroupList(ctx)
   }

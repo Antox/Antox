@@ -33,7 +33,7 @@ object MessageHelper {
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendKey)) {
       val chatActive = (State.chatActive && State.activeKey.contains(friendKey))
-      db.addMessage(-1, friendKey, message, friendName, has_been_received = true,
+      db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
         has_been_read = chatActive, successfully_sent = true, messageType)
     }
     db.close()
@@ -67,12 +67,12 @@ object MessageHelper {
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: Int) = {
     println("handling group message")
     val db = new AntoxDB(ctx)
-    val peerName = ToxSingleton.getGroupList.getByGroupNumber(groupNumber).get.peers.getByGroupPeerNumber(peerNumber).name
+    val peerName = ToxSingleton.getGroupList.getPeer(groupNumber, peerNumber).name
 
     println("group id: " + groupId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     val chatActive = State.chatActive && State.activeKey.contains(groupId)
 
-    db.addMessage(-1, groupId, message, peerName, has_been_received = true,
+    db.addMessage(-1, groupId, peerName, message, has_been_received = true,
       has_been_read = chatActive, successfully_sent = true, messageType)
     db.close()
     ToxSingleton.updateMessages(ctx)
@@ -124,33 +124,28 @@ object MessageHelper {
   }
 
   def sendGroupMessage(ctx: Context, key: String, msg: String, mDbId: Option[Integer]) = {
-    val mGroup = ToxSingleton.getGroupList.getByGroupId(key)
-    mGroup match {
-      case None =>
-      case Some(group) => {
-        val db = new AntoxDB(ctx).open(writeable = true)
-        for (splitMsg <- splitMessage(msg)) {
-          try {
-            println("sent message of length " + splitMsg.length)
-            ToxSingleton.tox.sendGroupMessage(group.groupNumber, splitMsg)
-          } catch {
-            case e: Exception => {
-              None
-            }
-          }
-
-          val senderName = db.getGroupNameOrAlias(key)
-          mDbId match {
-            case Some(dbId) => db.updateUnsentMessage(0, dbId)
-            case None => db.addMessage(0, key, senderName,
-              splitMsg, has_been_received =
-                true, has_been_read = true, successfully_sent = true, Constants.MESSAGE_TYPE_GROUP_OWN)
-          }
+    val group = ToxSingleton.getGroup(key)
+    val db = new AntoxDB(ctx).open(writeable = true)
+    for (splitMsg <- splitMessage(msg)) {
+      try {
+        println("sent message of length " + splitMsg.length)
+        ToxSingleton.tox.sendGroupMessage(group.groupNumber, splitMsg)
+      } catch {
+        case e: Exception => {
+          None
         }
-        db.close()
-        ToxSingleton.updateMessages(ctx)
+      }
+
+      val senderName = db.getGroupNameOrAlias(key)
+      mDbId match {
+        case Some(dbId) => db.updateUnsentMessage(0, dbId)
+        case None => db.addMessage(0, key, senderName,
+          splitMsg, has_been_received =
+            true, has_been_read = true, successfully_sent = true, Constants.MESSAGE_TYPE_GROUP_OWN)
       }
     }
+    db.close()
+    ToxSingleton.updateMessages(ctx)
   }
 
   def splitMessage(msg: String): Array[String] = {

@@ -8,14 +8,14 @@ import scala.collection.JavaConversions._
 
 class PeerList {
 
-  private var peers: util.List[GroupPeer] = Collections.synchronizedList(new util.ArrayList[GroupPeer]())
+  private var peers: util.List[GroupPeer] = new util.ArrayList[GroupPeer]()
 
   def this(peers: util.ArrayList[GroupPeer]) {
     this()
     this.peers = peers
   }
 
-  def getByGroupPeerNumber(peerNumber: Int): GroupPeer = {
+  def getPeer(peerNumber: Int): GroupPeer = {
     peers.get(peerNumber)
   }
 

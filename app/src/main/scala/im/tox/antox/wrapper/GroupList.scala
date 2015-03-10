@@ -8,19 +8,23 @@ import scala.collection.JavaConversions._
 
 class GroupList {
 
-  private var groups: util.List[Group] = Collections.synchronizedList(new util.ArrayList[Group]())
+  private var groups: util.List[Group] = new util.ArrayList[Group]()
 
   def this(groups: util.List[Group]) {
     this()
     this.groups = groups
   }
 
-  def getByGroupNumber(groupNumber: Int): Option[Group] = {
-    groups.find(group => group.groupNumber == groupNumber)
+  def getGroup(groupNumber: Int): Group = {
+    groups.find(group => group.groupNumber == groupNumber).get
   }
 
-  def getByGroupId(id: String): Option[Group] = {
-    groups.find(group => group.id == id)
+  def getGroup(id: String): Group = {
+    groups.find(group => group.id == id).get
+  }
+
+  def getPeer(groupNumber: Int, peerNumber: Int): GroupPeer = {
+    getGroup(groupNumber).peers.getPeer(peerNumber)
   }
 
   def getByTitle(title: String, ignorecase: Boolean): util.List[Group] = {
@@ -64,6 +68,14 @@ class GroupList {
   }
 
   def removeGroup(groupNumber: Int) {
+    println("before remove")
+    for (group <- groups) {
+      println("group " + group.name)
+    }
     groups.remove(groups.find(group => group.groupNumber == groupNumber))
+    println("after remove")
+    for (group <- groups) {
+      println("group " + group.name)
+    }
   }
 }

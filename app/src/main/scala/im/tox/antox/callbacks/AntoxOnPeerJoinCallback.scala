@@ -11,8 +11,7 @@ import scala.None
 
 class AntoxOnPeerJoinCallback(private var ctx: Context) extends GroupPeerJoinCallback {
   def groupPeerJoin(groupNumber: Int, peerNumber: Int): Unit = {
-    ToxSingleton.getGroupList.getByGroupNumber(groupNumber)
-      .get.peers.addGroupPeer(new GroupPeer(ToxSingleton.tox.getGroupPeerName(groupNumber, peerNumber), false))
+    ToxSingleton.getGroup(groupNumber).addPeer(ToxSingleton.tox, peerNumber)
     println("new peer")
     ToxSingleton.updateGroupList(ctx)
   }

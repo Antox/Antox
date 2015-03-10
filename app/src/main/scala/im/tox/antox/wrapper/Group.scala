@@ -9,6 +9,15 @@ class Group(val id: String,
             var topic: String,
             val peers: PeerList) {
 
+
+  def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
+    this.peers.addGroupPeer(new GroupPeer(tox.getGroupPeerName(groupNumber, peerNumber), ignored = false))
+  }
+
+  def getPeerCount: Int = {
+    peers.all().size()
+  }
+
   def leave(partMessage: String): Unit = {
     ToxSingleton.tox.deleteGroup(groupNumber, partMessage)
   }
