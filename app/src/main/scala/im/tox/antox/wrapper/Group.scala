@@ -4,11 +4,10 @@ import im.tox.antox.tox.ToxSingleton
 
 class Group(val id: String,
             val groupNumber: Int,
-            var name: String,
+            private var _name: String,
             var alias: String,
             var topic: String,
             val peers: PeerList) {
-
 
   def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
     this.peers.addGroupPeer(new GroupPeer(tox.getGroupPeerName(groupNumber, peerNumber), ignored = false))
@@ -23,4 +22,12 @@ class Group(val id: String,
   }
 
   override def toString: String = name
+
+  //Getters
+  def name = _name
+
+  //Setters
+  def name_= (name: String): Unit = {
+    _name = name
+  }
 }

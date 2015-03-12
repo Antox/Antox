@@ -99,7 +99,7 @@ class ContactsFragment extends Fragment {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
         val groupPane: LeftPaneItem = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.name, group.topic,
-          true /* group is always online */, UserStatus.getToxUserStatusFromString("online"), 2, null)
+          true /* group is always online */, UserStatus.getToxUserStatusFromString("online"), 0, null)
          leftPaneAdapter.addItem(groupPane)
       }
     }
@@ -218,6 +218,7 @@ class ContactsFragment extends Fragment {
               val db = new AntoxDB(getActivity)
               db.deleteChat(key)
               db.deleteGroup(key)
+              println("deleting group with key " + key)
               db.close()
               val group = ToxSingleton.getGroupList.getGroup(key)
               try {
@@ -291,7 +292,7 @@ class ContactsFragment extends Fragment {
           println("exporting chat log")
           val db = new AntoxDB(getActivity)
           val messageList: util.ArrayList[Message] = db.getMessageList(key, actionMessages = true)
-          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + key.substring(0, 7) + "-log.txt"
+          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + IDUtils.trimForUI(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
           for (message: Message <- messageList) {

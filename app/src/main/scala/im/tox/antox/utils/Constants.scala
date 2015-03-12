@@ -52,6 +52,10 @@ object Constants {
 
   val COLUMN_NAME_MESSAGE = "message"
 
+  val COLUMN_NAME_NAME = "name"
+
+  val COLUMN_NAME_TOPIC = "topic"
+
   val COLUMN_NAME_USERNAME = "username"
 
   val COLUMN_NAME_TIMESTAMP = "timestamp"
@@ -71,6 +75,8 @@ object Constants {
   val COLUMN_NAME_ISONLINE = "isonline"
 
   val COLUMN_NAME_ALIAS = "alias"
+
+  val COLUMN_NAME_IGNORED = "ignored"
 
   val COLUMN_NAME_ISBLOCKED = "isblocked"
 

@@ -35,7 +35,9 @@ object AntoxDB {
 
     var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
       "name text, " +
+      "topic text, " +
       "alias text, " +
+      "ignored boolean, " +
       "isblocked boolean);"
 
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
@@ -125,7 +127,7 @@ class AntoxDB(ctx: Context) {
     val parsedUsername = if (username.contains("@")) {
       username.substring(0, username.indexOf("@"))
     } else if (username.length == 0) {
-      key.substring(0, 7)
+      IDUtils.trimForUI(key)
     } else {
       username
     }
@@ -141,10 +143,15 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def addGroup(key: String): Unit = {
+  def addGroup(key: String, name: String, topic: String): Unit = {
     this.open(writeable = true)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key)
+    values.put(Constants.COLUMN_NAME_NAME, name)
+    values.put(Constants.COLUMN_NAME_TOPIC, topic)
+    values.put(Constants.COLUMN_NAME_ALIAS, "")
+    values.put(Constants.COLUMN_NAME_IGNORED, false)
+    values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
     mDb.insert(Constants.TABLE_GROUPS, null, values)
   }
 
@@ -613,7 +620,7 @@ class AntoxDB(ctx: Context) {
         val isOnline = cursor.getInt(5) != 0
         val isBlocked = cursor.getInt(6) > 0
         if (alias == null) alias = ""
-        if (alias != "") name = alias else if (name == "") name = key.substring(0, 7)
+        if (alias != "") name = alias else if (name == "") name = IDUtils.trimForUI(key)
         if (!isBlocked) (friendList += (new Friend(isOnline, name, status, note, key, alias)))
       } while (cursor.moveToNext())
     }
@@ -673,26 +680,26 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  private def deleteWithToxKey(key: String, tableName: String): Unit = {
+  private def deleteWithKey(key: String, tableName: String): Unit = {
     this.open(writeable = false)
     mDb.delete(tableName, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
   def deleteFriend(key: String): Unit = {
-    deleteWithToxKey(key, Constants.TABLE_FRIENDS)
+    deleteWithKey(key, Constants.TABLE_FRIENDS)
   }
 
   def deleteFriendRequest(key: String): Unit = {
-    deleteWithToxKey(key, Constants.TABLE_FRIEND_REQUESTS)
+    deleteWithKey(key, Constants.TABLE_FRIEND_REQUESTS)
   }
 
   def deleteGroup(key: String): Unit = {
-    deleteWithToxKey(key, Constants.TABLE_GROUPS)
+    deleteWithKey(key, Constants.TABLE_GROUPS)
   }
 
   def deleteGroupInvite(key: String): Unit = {
-    deleteWithToxKey(key, Constants.TABLE_GROUP_INVITES)
+    deleteWithKey(key, Constants.TABLE_GROUP_INVITES)
   }
 
   def getFriendRequestMessage(key: String): String = {
@@ -712,7 +719,7 @@ class AntoxDB(ctx: Context) {
   }
 
   def deleteChat(key: String) {
-    deleteWithToxKey(key, Constants.TABLE_CHAT_LOGS)
+    deleteWithKey(key, Constants.TABLE_CHAT_LOGS)
   }
 
   def updateFriendName(key: String, newName: String) {
@@ -763,7 +770,7 @@ class AntoxDB(ctx: Context) {
         val note = cursor.getString(3)
         val alias = cursor.getString(4)
         if (name == null) name = ""
-        if (name == "") name = key.substring(0, 7)
+        if (name == "") name = IDUtils.trimForUI(key)
         details = Array(name, alias, note)
       } while (cursor.moveToNext())
     }
@@ -792,7 +799,7 @@ class AntoxDB(ctx: Context) {
         name = cursor.getString(1)
         alias = cursor.getString(2)
         if (name == null) name = ""
-        if (name == "") name = key.substring(0, 7)
+        if (name == "") name = IDUtils.trimForUI(key)
       } while (cursor.moveToNext())
     }
     cursor.close()

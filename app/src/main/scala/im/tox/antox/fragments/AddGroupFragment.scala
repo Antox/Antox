@@ -13,7 +13,7 @@ import android.widget.{Button, EditText, Toast}
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.toxdns.ToxDNS
-import im.tox.antox.utils.Constants
+import im.tox.antox.utils.{IDUtils, Constants}
 import im.tox.antox.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -72,21 +72,21 @@ class AddGroupFragment extends Fragment with InputableID {
     }
   }
 
-  private def checkAndSend(groupID: String, originalUsername: String): Int = {
-      if (validateGroupKey(groupID)) {
+  private def checkAndSend(groupId: String, originalUsername: String): Int = {
+      if (validateGroupKey(groupId)) {
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = new AntoxDB(getActivity.getApplicationContext)
-        if (!db.doesGroupExist(groupID)) {
+        if (!db.doesGroupExist(groupId)) {
           try {
-            ToxSingleton.tox.joinGroup(groupID)
-            println("joined group : " + groupID)
+            ToxSingleton.tox.joinGroup(groupId)
+            println("joined group : " + groupId)
             ToxSingleton.save()
           } catch {
             case e: ToxException => e.printStackTrace()
           }
           Log.d("AddGroupID", "Adding group to database")
-          db.addGroup(groupID)
+          db.addGroup(groupId, IDUtils.trimForUI(groupId), topic = "")
         } else {
           db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)

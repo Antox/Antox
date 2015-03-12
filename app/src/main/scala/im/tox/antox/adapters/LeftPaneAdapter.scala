@@ -100,7 +100,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     if (`type` != Constants.TYPE_HEADER) {
       if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
     }
-    if (`type` == Constants.TYPE_FRIEND) {
+    if (`type` == Constants.TYPE_FRIEND || `type` == Constants.TYPE_GROUP) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
         //limit unread counter to 99
@@ -176,7 +176,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        db.addGroup(groupId)
+        db.addGroup(groupId, IDUtils.trimForUI(groupId), "")
         db.deleteGroupInvite(groupId)
         db.close()
         ToxSingleton.updateGroupList(context)

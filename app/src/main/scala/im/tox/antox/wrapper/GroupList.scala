@@ -3,6 +3,8 @@ package im.tox.antox.wrapper
 import java.util
 import java.util.{Collections, Locale}
 
+import im.tox.antox.utils.{IDUtils, Hex}
+
 //remove if not needed
 import scala.collection.JavaConversions._
 
@@ -59,6 +61,12 @@ class GroupList {
     }
   }
 
+  def addGroup(tox: ToxCore, groupNumber: Int): Unit = {
+    addGroup(new Group(tox.getGroupChatId(groupNumber),
+      groupNumber, IDUtils.trimForUI(tox.getGroupChatId(groupNumber)),
+      "", "", new PeerList()))
+  }
+
   def addGroupIfNotExists(group: Group): Unit = {
     groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber).headOption match {
       case Some(f) => return
@@ -72,7 +80,7 @@ class GroupList {
     for (group <- groups) {
       println("group " + group.name)
     }
-    groups.remove(groups.find(group => group.groupNumber == groupNumber))
+    groups.remove(groups.find(group => group.groupNumber == groupNumber).get)
     println("after remove")
     for (group <- groups) {
       println("group " + group.name)

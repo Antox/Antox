@@ -154,25 +154,22 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   def acceptGroupInvite(inviteData: Array[Byte]): Int = {
     val groupNumber = tox.acceptGroupInvite(inviteData)
     println("group invited with " + groupNumber + " and id ")
-    groupList.addGroup(
-      new Group(getGroupChatId(groupNumber), groupNumber, getGroupChatId(groupNumber).substring(0, 8),
-                "", "", new PeerList()))
+    groupList.addGroup(this, groupNumber)
     groupNumber
   }
 
   def newGroup(groupName: String): Int = {
     val groupNumber = tox.newGroup(groupName.getBytes)
     println("group created with " + groupNumber + " and id " + Hex.bytesToHexString(tox.getGroupChatId(groupNumber)))
-    groupList.addGroup(new Group(Hex.bytesToHexString(tox.getGroupChatId(groupNumber)),
-      groupNumber, Hex.bytesToHexString(tox.getGroupChatId(groupNumber)).substring(0, 8),
-      groupName, "", new PeerList()))
+    groupList.addGroup(this, groupNumber)
+    groupList.getGroup(groupNumber).name = groupName
     groupNumber
   }
 
   def joinGroup(groupId: String): Int = {
     val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupId))
     println("group number is " + groupNumber)
-    groupList.addGroup(new Group(groupId, groupNumber, groupId.substring(0, 8), "", "", new PeerList()))
+    groupList.addGroup(this, groupNumber)
     groupNumber
   }
 

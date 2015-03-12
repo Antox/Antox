@@ -87,6 +87,8 @@ object ToxSingleton {
 
   def getGroup(groupId: String): Group = getGroupList.getGroup(groupId)
 
+  def getGroupPeer(groupNumber: Int, peerNumber: Int): GroupPeer = getGroupList.getPeer(groupNumber, peerNumber)
+
   def keyFromAddress(address: String): String = {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
@@ -515,7 +517,7 @@ object ToxSingleton {
       for (groupNumber <- tox.getGroupList) {
         val groupKey = tox.getGroupChatId(groupNumber)
         if (!db.doesGroupExist(groupKey)) {
-          db.addGroup(groupKey)
+          db.addGroup(groupKey, tox.getGroupName(groupNumber), tox.getGroupTopic(groupNumber))
         }
       }
 
@@ -537,33 +539,8 @@ object ToxSingleton {
         }
       }
 
-      tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
-      tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
-      tox.callbackFriendAction(new AntoxOnActionCallback(ctx))
-      tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
-      tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
-      tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
-      tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
-      tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
-      tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
-      tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
-      tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
-      tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
-      tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
-      tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
-      tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
-      tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
-      tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
-      tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
-      tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
+      registerCallbacks(ctx)
 
-      tox.callbackGroupJoinRejected(new GroupJoinRejectedCallback {
-        override def groupJoinRejected(p1: Int, reason: ToxGroupJoinRejected): Unit = {
-          println("group join rejected for reason " + reason)
-        }
-      })
-
-      tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx))
       try {
         tox.setName(preferences.getString("nickname", ""))
         tox.setStatusMessage(preferences.getString("status_message", ""))
@@ -577,6 +554,38 @@ object ToxSingleton {
       updateDhtNodes(ctx)
   }
 
+  def registerCallbacks(ctx: Context): Unit = {
+    tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
+    tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
+    tox.callbackFriendAction(new AntoxOnActionCallback(ctx))
+    tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
+    tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
+    tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
+    tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
+    tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
+    tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
+    tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
+    tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
+    tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
+    tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+    tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
+    tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
+    tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
+    tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
+    tox.callbackGroupNickChange(new AntoxOnGroupNickChangeCallback(ctx))
+
+    tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
+
+    tox.callbackGroupJoinRejected(new GroupJoinRejectedCallback {
+      override def groupJoinRejected(p1: Int, reason: ToxGroupJoinRejected): Unit = {
+        println("group join rejected for reason " + reason)
+      }
+    })
+
+    tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx))
+
+    tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
+  }
   def save(): Unit = {
     dataFile.saveFile(tox.save())
   }

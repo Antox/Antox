@@ -13,6 +13,7 @@ class AntoxOnGroupPeerlistUpdateCallback(private var ctx: Context) extends Group
       }
     }
     ToxSingleton.getGroup(groupNumber).name = ToxSingleton.tox.getGroupName(groupNumber)
+    ToxSingleton.getGroup(groupNumber).topic = ToxSingleton.tox.getGroupTopic(groupNumber)
     ToxSingleton.updateGroupList(ctx)
   }
 }

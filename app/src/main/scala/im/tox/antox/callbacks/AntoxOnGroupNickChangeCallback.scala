@@ -10,7 +10,7 @@ import im.tox.tox4j.core.callbacks.{GroupNickChangeCallback, GroupPeerJoinCallba
 import scala.None
 
 class AntoxOnGroupNickChangeCallback(private var ctx: Context) extends GroupNickChangeCallback {
-  override def groupNickChange(groupNumber: Int, peerNumber: Int, p3: Array[Byte]): Unit = {
-
+  override def groupNickChange(groupNumber: Int, peerNumber: Int, nick: Array[Byte]): Unit = {
+    ToxSingleton.getGroupPeer(groupNumber, peerNumber).name = new String(nick, "UTF-8")
   }
 }

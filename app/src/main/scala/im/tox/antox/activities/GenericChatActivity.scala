@@ -103,7 +103,6 @@ abstract class GenericChatActivity extends ActionBarActivity {
 
   override def onResume() = {
     super.onResume()
-    val thisActivity = this
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
     val antoxDB = new AntoxDB(getApplicationContext)

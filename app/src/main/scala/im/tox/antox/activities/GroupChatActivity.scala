@@ -75,6 +75,8 @@ class GroupChatActivity extends GenericChatActivity {
         sendMessage()
       }
     })
+
+    statusIconView.setVisibility(View.GONE)
   }
 
   override def onResume() = {

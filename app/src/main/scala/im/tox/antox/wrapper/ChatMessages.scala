@@ -6,6 +6,8 @@ import java.sql.Timestamp
 class ChatMessages(
   val id: Int,
   val message_id: Int,
+  val key: String,
+  val sender_name: String,
   val message: String,
   val time: Timestamp,
   val received: Boolean,
@@ -18,4 +20,6 @@ class ChatMessages(
   }
 
   def getType: Int = `type`
+
+  override def toString: String = message
 }

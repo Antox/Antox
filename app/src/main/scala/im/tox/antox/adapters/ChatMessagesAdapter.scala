@@ -3,11 +3,12 @@ package im.tox.antox.adapters
 import java.io.File
 import java.sql.Timestamp
 import java.util
-import java.util.HashSet
+import java.util.{Random, HashSet}
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
 import android.database.Cursor
+import android.graphics.{Typeface, Color}
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.widget.ResourceCursorAdapter
@@ -24,6 +25,7 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{BitmapManager, Constants, PrettyTimestamp}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
+
 
 object ChatMessagesAdapter {
 
@@ -86,18 +88,19 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
   }
 
   override def bindView(view: View, context: Context, cursor: Cursor) {
-    val id = cursor.getInt(0)
-    val time = Timestamp.valueOf(cursor.getString(1))
-    val message_id = cursor.getInt(2)
-    val k = cursor.getString(3)
-    val sender_name = cursor.getString(4)
-    val message = cursor.getString(5)
-    val received = cursor.getInt(6) > 0
-    val read = cursor.getInt(7) > 0
-    val sent = cursor.getInt(8) > 0
-    val size = cursor.getInt(9)
-    val messageType = cursor.getInt(10)
-    val msg = new ChatMessages(id, message_id, message, time, received, sent, size, messageType)
+    val msg = chatMessageFromCursor(cursor)
+    var lastMsg: ChatMessages = null
+    if (cursor.moveToPrevious()) {
+      lastMsg = chatMessageFromCursor(cursor)
+      cursor.moveToNext()
+    }
+
+    var nextMessage: ChatMessages = null
+    if (cursor.moveToNext()) {
+      nextMessage = chatMessageFromCursor(cursor)
+      cursor.moveToPrevious()
+    }
+
     val holder = new ChatMessagesHolder()
     holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
     holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
@@ -130,7 +133,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
-    messageType match {
+    msg.`type` match {
       case Constants.MESSAGE_TYPE_OWN | Constants.MESSAGE_TYPE_GROUP_OWN =>
         holder.message.setText(msg.message)
         ownMessage(holder)
@@ -139,19 +142,31 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           holder.bubble.setAlpha(0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_FRIEND | Constants.MESSAGE_TYPE_GROUP_PEER =>
+      case Constants.MESSAGE_TYPE_GROUP_PEER =>
         holder.message.setText(msg.message)
-        friendMessage(holder)
+        holder.title.setText(msg.sender_name)
+        groupMessage(holder, genNameColor(msg.sender_name))
+        holder.message.setVisibility(View.VISIBLE)
+        if (lastMsg == null || msg.sender_name != lastMsg.sender_name) {
+          holder.title.setVisibility(View.VISIBLE)
+        }
+        if (!(msg.received)) {
+          holder.bubble.setAlpha(0.5f)
+        }
+
+      case Constants.MESSAGE_TYPE_FRIEND =>
+        holder.message.setText(msg.message)
+        contactMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
 
       case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
-        if (messageType == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
+        if (msg.`type` == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
           ownMessage(holder)
           val split = msg.message.split("/")
           holder.message.setText(split(split.length - 1))
           holder.message.setVisibility(View.VISIBLE)
         } else {
-          friendMessage(holder)
+          contactMessage(holder)
           holder.message.setText(msg.message)
           holder.message.setVisibility(View.VISIBLE)
         }
@@ -194,13 +209,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
                 holder.accept.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.acceptFile(k, message_id, context)
+                    ToxSingleton.acceptFile(msg.key, msg.message_id, context)
                   }
                 })
                 holder.reject.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.rejectFile(k, message_id, context)
+                    ToxSingleton.rejectFile(msg.key, msg.message_id, context)
                   }
                 })
               }
@@ -259,16 +274,31 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
         holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
 
     }
-    holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
-    holder.time.setVisibility(View.VISIBLE)
-    if (!animatedIds.contains(id)) {
+
+    if (msg.`type` == Constants.MESSAGE_TYPE_GROUP_PEER) {
+      val showTimestampInterval: Int = 61 * 1000 //in milliseconds
+      //TODO: Only show a timestamp if the next message is more than a second after this one
+      if (nextMessage == null ||
+        msg.sender_name != nextMessage.sender_name) {
+
+        holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
+        holder.time.setVisibility(View.VISIBLE)
+      } else {
+        holder.time.setVisibility(View.GONE)
+      }
+    } else {
+      holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
+      holder.time.setVisibility(View.VISIBLE)
+    }
+
+    if (!animatedIds.contains(msg.id)) {
       holder.row.startAnimation(anim)
-      animatedIds.add(id)
+      animatedIds.add(msg.id)
     }
     holder.row.setOnLongClickListener(new View.OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
-        if (messageType == Constants.MESSAGE_TYPE_OWN || messageType == Constants.MESSAGE_TYPE_FRIEND) {
+        if (msg.`type` == Constants.MESSAGE_TYPE_OWN || msg.`type` == Constants.MESSAGE_TYPE_FRIEND) {
           val builder = new AlertDialog.Builder(context)
           val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
           builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
@@ -276,12 +306,12 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
-                clipboard.setText(message)
+                clipboard.setText(msg.message)
 
               case 1 =>
                 Observable[Boolean](subscriber => {
                   val antoxDB = new AntoxDB(context.getApplicationContext)
-                  antoxDB.deleteMessage(id)
+                  antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
@@ -300,7 +330,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
               case 0 =>
                 Observable[Boolean](subscriber => {
                   val antoxDB = new AntoxDB(context.getApplicationContext)
-                  antoxDB.deleteMessage(id)
+                  antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
@@ -320,8 +350,30 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
   override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
+  private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
+    val id = cursor.getInt(0)
+    val time = Timestamp.valueOf(cursor.getString(1))
+    val message_id = cursor.getInt(2)
+    val key = cursor.getString(3)
+    val sender_name = cursor.getString(4)
+    val message = cursor.getString(5)
+    val received = cursor.getInt(6) > 0
+    val read = cursor.getInt(7) > 0
+    val sent = cursor.getInt(8) > 0
+    val size = cursor.getInt(9)
+    val messageType = cursor.getInt(10)
+
+    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, messageType)
+  }
+
   private def shouldGreentext(message: String): Boolean = {
     message.startsWith(">")
+  }
+
+  private def genNameColor(name: String): Int = {
+    val goldenRatio = 0.618033988749895
+    val hue: Double = (new Random(name.hashCode).nextFloat() + goldenRatio) % 1
+    Color.HSVToColor(Array(hue.asInstanceOf[Float] * 360, 0.5f, 0.7f))
   }
 
   private def ownMessage(holder: ChatMessagesHolder) {
@@ -340,7 +392,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
 
-  private def friendMessage(holder: ChatMessagesHolder) {
+  private def groupMessage(holder: ChatMessagesHolder, nameColor: Int) {
+    contactMessage(holder)
+    holder.title.setTextColor(nameColor)
+    holder.title.setTypeface(holder.title.getTypeface, Typeface.BOLD)
+  }
+
+  private def contactMessage(holder: ChatMessagesHolder) {
     if (shouldGreentext(holder.message.getText.toString)) {
       holder.message.setTextColor(context.getResources.getColor(R.color.green))
     } else {

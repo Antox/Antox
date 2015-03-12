@@ -49,6 +49,7 @@ class ChatActivity extends GenericChatActivity {
         thisActivity.finish()
       }
     })
+
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
     chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
     chatListView.setStackFromBottom(true)
@@ -177,11 +178,8 @@ class ChatActivity extends GenericChatActivity {
         .headOption
       mFriend match {
         case Some(friend) => {
-          if (friend.alias != "") {
-            thisActivity.setDisplayName(friend.alias)
-          } else {
-            thisActivity.setDisplayName(friend.name)
-          }
+          thisActivity.setDisplayName(friend.getAliasOrName())
+
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             thisActivity.statusIconView.setBackground(thisActivity.getResources
               .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
