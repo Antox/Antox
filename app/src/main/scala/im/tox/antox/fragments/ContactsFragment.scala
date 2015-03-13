@@ -38,7 +38,7 @@ class ContactsFragment extends Fragment {
   private var activeKey: String = _
 
   def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest],
-    Array[GroupInvite], Array[Group])) {
+    Array[GroupInvite], Array[GroupInfo])) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new LeftPaneAdapter(getActivity)
@@ -93,13 +93,14 @@ class ContactsFragment extends Fragment {
     }
   }
 
-  def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[Group]): Unit = {
+  def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[GroupInfo]): Unit = {
     println("update group list " + groups.length)
     if (groups.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
+        println("unread count is " + group.unreadCount)
         val groupPane: LeftPaneItem = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.name, group.topic,
-          true /* group is always online */, UserStatus.getToxUserStatusFromString("online"), 0, null)
+          true /* group is always online FIXME */, UserStatus.getToxUserStatusFromString("online"), group.unreadCount, group.lastMessageTimestamp)
          leftPaneAdapter.addItem(groupPane)
       }
     }

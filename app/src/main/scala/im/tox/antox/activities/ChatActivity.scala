@@ -197,25 +197,13 @@ class ChatActivity extends GenericChatActivity {
 
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
-    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
-      return
-    }
+    val mMessage = validateMessageBox()
 
-    //limit to 100 max length messages
-    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
-      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
-      return
+    if (mMessage.isDefined) {
+      val key = activeKey
+      messageBox.setText("")
+      MessageHelper.sendMessage(this, key, mMessage.get, None)
     }
-
-    var msg: String = null
-    if (messageBox.getText != null) {
-      msg = messageBox.getText.toString
-    } else {
-      msg = ""
-    }
-    val key = activeKey
-    messageBox.setText("")
-    MessageHelper.sendMessage(this, key, msg, None)
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

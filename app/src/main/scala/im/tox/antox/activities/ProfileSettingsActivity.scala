@@ -20,7 +20,6 @@ import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import FileDialog.DirectorySelectedListener
-import im.tox.antox.utils.Constants
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {

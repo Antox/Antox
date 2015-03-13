@@ -6,7 +6,7 @@ import java.util.Calendar
 import android.text.format.Time
 //remove if not needed
 
-object PrettyTimestamp {
+object TimestampUtils {
 
   def prettyTimestamp(t: Timestamp, isChat: Boolean): String = {
     val time = new Time("UTC")

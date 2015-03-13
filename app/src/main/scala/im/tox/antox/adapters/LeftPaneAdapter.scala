@@ -109,7 +109,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       } else {
         holder.countText.setVisibility(View.GONE)
       }
-      holder.timeText.setText(PrettyTimestamp.prettyTimestamp(item.timestamp, false))
+      holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, false))
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))

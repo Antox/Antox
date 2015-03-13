@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
+import im.tox.antox.R
 
 class ToxDoService extends Service() {
 
@@ -58,6 +59,10 @@ class ToxDoService extends Service() {
     keepRunning = false
     serviceThread.interrupt()
     ToxSingleton.save()
+    //TODO: this is a hack, make Jfreegman fix it
+    for (groupNumber <- ToxSingleton.tox.getGroupList) {
+      ToxSingleton.tox.deleteGroup(groupNumber, getResources.getString(R.string.group_default_part_message))
+    }
     ToxSingleton.isInited = false
     Log.d("ToxDoService", "onDestroy() called")
   }

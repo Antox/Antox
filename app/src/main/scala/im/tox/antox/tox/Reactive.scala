@@ -23,30 +23,52 @@ object Reactive {
   val friendInfoList = friendList
     .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
     .combineLatestWith(unreadCounts)((tup, uc) => {
-      tup match {
-        case (fl, lm) => {
-          fl.map(f => {
-            val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
-            val unreadCount: Option[Integer] = uc.get(f.key)
-            (lastMessageTup, unreadCount) match {
-              case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
-              }
-              case (Some((lastMessage, lastMessageTimestamp)), None) => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, 0, f.alias)
-              }
-              case _ => {
-                new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
-              }
+    tup match {
+      case (fl, lm) => {
+        fl.map(f => {
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
+          val unreadCount: Option[Integer] = uc.get(f.key)
+          (lastMessageTup, unreadCount) match {
+            case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
+              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
             }
-          })
-        }
+            case (Some((lastMessage, lastMessageTimestamp)), None) => {
+              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, 0, f.alias)
+            }
+            case _ => {
+              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
+            }
+          }
+        })
       }
-    })
+    }
+  })
+
+  val groupInfoList = groupList
+    .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
+    .combineLatestWith(unreadCounts)((tup, uc) => {
+    tup match {
+      case (gl, lm) => {
+        gl.map(g => {
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.id)
+          val unreadCount: Option[Integer] = uc.get(g.id)
+          (lastMessageTup, uc) match {
+            case (Some((lastMessage, lastMessageTimestamp)), _) => {
+              println("unread count infolist" + unreadCount)
+              new GroupInfo(g, lastMessage, lastMessageTimestamp, unreadCount.getOrElse(0).asInstanceOf[Int])
+            }
+            case _ => {
+              new GroupInfo(g, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0)
+            }
+          }
+        })
+      }
+    }
+  })
 
   //this is bad FIXME
   val contactListElements = friendInfoList
     .combineLatestWith(friendRequests)((friendInfos, friendRequests) => (friendInfos, friendRequests)) //combine friendinfolist and friend requests and return them in a tuple
-    .combineLatestWith(groupInvites)((a, gi) => (a._1, a._2, gi)) //return friendinfolist, friendrequests (a) and groupinvites (gi) in a tuple
-    .combineLatestWith(groupList)((a, gl) => (a._1, a._2, a._3, gl)) //return friendinfolist, friendrequests and groupinvites (a), and groupList (gl)  in a tuple
+    .combineLatestWith(groupInvites)((a, gil) => (a._1, a._2, gil)) //return friendinfolist, friendrequests (a) and groupinvites (gi) in a tuple
+    .combineLatestWith(groupInfoList)((a, gil) => (a._1, a._2, a._3, gil)) //return friendinfolist, friendrequests and groupinvites (a), and groupInfoList (gl) in a tuple
 }

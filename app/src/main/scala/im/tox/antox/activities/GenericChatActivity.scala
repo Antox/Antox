@@ -148,6 +148,27 @@ abstract class GenericChatActivity extends ActionBarActivity {
     }
   }
 
+  def validateMessageBox(): Option[String] = {
+    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
+      return None
+    }
+
+    //limit to 100 max length messages
+    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
+      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
+      return None
+    }
+
+    var msg: String = null
+    if (messageBox.getText != null) {
+      msg = messageBox.getText.toString
+    } else {
+      msg = ""
+    }
+
+    Some(msg)
+  }
+
   def getCursor: Cursor = {
     if (antoxDB == null) {
       antoxDB = new AntoxDB(this)

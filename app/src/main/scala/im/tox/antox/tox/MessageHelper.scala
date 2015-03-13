@@ -67,7 +67,7 @@ object MessageHelper {
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: Int) = {
     println("handling group message")
     val db = new AntoxDB(ctx)
-    val peerName = ToxSingleton.getGroupList.getPeer(groupNumber, peerNumber).name
+    val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
     println("group id: " + groupId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     val chatActive = State.chatActive && State.activeKey.contains(groupId)

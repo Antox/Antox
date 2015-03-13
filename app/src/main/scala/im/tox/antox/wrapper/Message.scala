@@ -3,7 +3,7 @@ package im.tox.antox.wrapper
 import java.sql.Timestamp
 
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, PrettyTimestamp}
+import im.tox.antox.utils.{Constants, TimestampUtils}
 
 //remove if not needed
 
@@ -30,7 +30,7 @@ class Message(
       ToxSingleton.getAntoxFriend(key).get.name
     }
     Some("<" + name + "> " +
-      message + "  [" + PrettyTimestamp.prettyTimestamp(timestamp, isChat = true) + "]")
+      message + "  [" + TimestampUtils.prettyTimestamp(timestamp, isChat = true) + "]")
   }
 
   def isFileTransfer: Boolean = {

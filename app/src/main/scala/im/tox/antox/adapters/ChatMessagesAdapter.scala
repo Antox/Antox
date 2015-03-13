@@ -22,7 +22,7 @@ import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{BitmapManager, Constants, PrettyTimestamp}
+import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
@@ -281,13 +281,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
       if (nextMessage == null ||
         msg.sender_name != nextMessage.sender_name) {
 
-        holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
+        holder.time.setText(TimestampUtils.prettyTimestamp(msg.time, isChat = true))
         holder.time.setVisibility(View.VISIBLE)
       } else {
         holder.time.setVisibility(View.GONE)
       }
     } else {
-      holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
+      holder.time.setText(TimestampUtils.prettyTimestamp(msg.time, isChat = true))
       holder.time.setVisibility(View.VISIBLE)
     }
 

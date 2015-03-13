@@ -60,7 +60,12 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getAddress: String = Hex.bytesToHexString(tox.getAddress)
 
-  def setName(name: String): Unit = tox.setName(name.getBytes)
+  def setName(name: String): Unit = {
+    tox.setName(name.getBytes)
+    for (groupNumber <- getGroupList) {
+      setGroupSelfName(groupNumber, name)
+    }
+  }
 
   def getName: String = new String(tox.getName, "UTF-8")
 

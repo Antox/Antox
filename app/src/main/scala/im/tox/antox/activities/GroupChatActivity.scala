@@ -16,7 +16,7 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.{Message, UserStatus, FriendInfo}
+import im.tox.antox.wrapper.{GroupInfo, Message, UserStatus, FriendInfo}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -82,37 +82,34 @@ class GroupChatActivity extends GenericChatActivity {
   override def onResume() = {
     super.onResume()
     val thisActivity = this
+    titleSub = Reactive.groupInfoList
+      .subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(groupInfo => {
+      val id = activeKey
+      val mGroup: Option[GroupInfo] = groupInfo
+        .filter(groupInfo => groupInfo.id == id)
+        .headOption
+      mGroup match {
+        case Some(group) => {
+          thisActivity.setDisplayName(group.getAliasOrName())
+        }
+        case None => {
+          thisActivity.setDisplayName("")
+        }
+      }
+    })
   }
 
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
-    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
-      return
-    }
+    val mMessage = validateMessageBox()
 
-    //limit to 100 max length messages
-    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
-      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
-      return
+    if (mMessage.isDefined) {
+      val key = activeKey
+      messageBox.setText("")
+      MessageHelper.sendGroupMessage(this, key, mMessage.get, None)
     }
-
-    var msg: String = null
-    if (messageBox.getText != null) {
-      msg = messageBox.getText.toString
-    } else {
-      msg = ""
-    }
-
-    val db = new AntoxDB(this)
-    db.open(false)
-    for (message: Message <- db.getMessageList(activeKey, true)) {
-      println("message of type " + message.`type` + " with content " + message.message + " active key " + activeKey)
-    }
-
-    val key = activeKey
-    messageBox.setText("")
-    MessageHelper.sendGroupMessage(this, key, msg, None)
-    db.close()
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

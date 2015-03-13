@@ -240,10 +240,17 @@ class AntoxDB(ctx: Context) {
       "JOIN friends ON friends.tox_key = messages.tox_key " +
       "WHERE messages.has_been_read == 0 " +
       "AND (messages.type == " + Constants.MESSAGE_TYPE_FRIEND +
-      " OR messages.type == " + Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND +
-      " OR messages.type == " + Constants.MESSAGE_TYPE_GROUP_PEER + ")" +
+      " OR messages.type == " + Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND + ")" +
       "GROUP BY friends.tox_key"
+
+    //TODO: fix this when I understand sql
+    val groupQuery = "SELECT groups.tox_key, COUNT(messages._id) " + "FROM messages " +
+      "JOIN groups ON groups.tox_key = messages.tox_key " +
+      "WHERE messages.has_been_read == 0 " +
+      "AND (messages.type == " + Constants.MESSAGE_TYPE_GROUP_PEER + ")" +
+      "GROUP BY groups.tox_key"
     val cursor = mDb.rawQuery(selectQuery, null)
+    val groupCursor = mDb.rawQuery(groupQuery, null)
     if (cursor.moveToFirst()) {
       do {
         val key = cursor.getString(0)
@@ -251,6 +258,15 @@ class AntoxDB(ctx: Context) {
         map.put(key, count)
       } while (cursor.moveToNext())
     }
+
+    if (groupCursor.moveToFirst()) {
+      do {
+        val key = groupCursor.getString(0)
+        val count = groupCursor.getInt(1).intValue
+        map.put(key, count)
+      } while (groupCursor.moveToNext())
+    }
+
     cursor.close()
     this.close()
     map.toMap
@@ -590,7 +606,7 @@ class AntoxDB(ctx: Context) {
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +
-      "' AND (type == 2 OR type == 4)"
+      "' AND (type == 2 OR type == 4 OR type == " + Constants.MESSAGE_TYPE_GROUP_PEER + ")"
     mDb.execSQL(query)
     this.close()
     Log.d("", "marked incoming messages as read")

@@ -13,7 +13,7 @@ import im.tox.antox.R
 import im.tox.antox.activities.ChatActivity
 import im.tox.antox.adapters.RecentAdapter._
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, IconColor, PrettyTimestamp}
+import im.tox.antox.utils.{Constants, IconColor, TimestampUtils}
 
 object RecentAdapter {
 
@@ -64,7 +64,7 @@ class RecentAdapter(var context: Context, c: Cursor) extends ResourceCursorAdapt
 
     holder.friendStatus.setText(message)
     holder.unreadCount.setText(java.lang.Integer.toString(unreadCount))
-    holder.timestamp.setText(PrettyTimestamp.prettyTimestamp(time, isChat = false))
+    holder.timestamp.setText(TimestampUtils.prettyTimestamp(time, isChat = false))
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(online, UserStatus.getToxUserStatusFromString(status))))
     } else {
