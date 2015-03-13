@@ -1,12 +1,12 @@
 package im.tox.antox.fragments
 
 import android.app.{ActionBar, FragmentTransaction}
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.support.v4.app.{Fragment, FragmentManager, FragmentPagerAdapter}
 import android.support.v4.view.ViewPager
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.view.ViewGroup.LayoutParams
-import android.widget.{RelativeLayout, ImageView}
+import android.widget.{FrameLayout, RelativeLayout, ImageView}
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import com.balysv.materialripple.MaterialRippleLayout
@@ -20,10 +20,10 @@ class LeftPaneFragment extends Fragment {
     val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
-         //hack to center the image only for left pane
-         val params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-         params.addRule(RelativeLayout.CENTER_HORIZONTAL)
-         params.addRule(RelativeLayout.CENTER_VERTICAL)
+      //hack to center the image only for left pane
+      val params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+      params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+      params.addRule(RelativeLayout.CENTER_VERTICAL)
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
         val customTabLayout: FrameLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab_old, parent, false).asInstanceOf[FrameLayout]
         val imageView = customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView]
@@ -37,7 +37,7 @@ class LeftPaneFragment extends Fragment {
         imageView.setLayoutParams(params)
         return materialRippleLayout
       }
-      
+
       null
     }
 
