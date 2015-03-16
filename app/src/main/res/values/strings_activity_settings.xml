@@ -61,6 +61,7 @@
         <item>Српски</item>
         <item>Український</item>
         <item>Português</item>
+        <item>简体中文</item>
     </string-array>
     <string-array name="pref_language_list_values" translatable="false">
         <item>bg</item>
@@ -81,6 +82,7 @@
         <item>sr</item>
         <item>uk</item>
         <item>pt</item>
+        <item>cn</item>
     </string-array>
 
     <!-- Menu strings -->
