@@ -102,14 +102,24 @@ class MainActivity extends ActionBarActivity {
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
 
     // Set the right language
-    val language = preferences.getString("language", "-1")
-    if (language == "-1") {
+    val localeStr = preferences.getString("locale", "-1")
+    if (localeStr == "-1") {
       val editor = preferences.edit()
-      val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase
-      editor.putString("language", currentLanguage)
+      val currentLanguage = getResources.getConfiguration.locale.getLanguage.toLowerCase
+      val currentCountry = getResources.getConfiguration.locale.getCountry
+      editor.putString("locale", currentLanguage + "_" + currentCountry)
       editor.apply()
     } else {
-      val locale = new Locale(language)
+      var locale = getResources.getConfiguration.locale
+      val spliteLocation = localeStr.indexOf("_")
+
+      if (spliteLocation != -1) {
+        val languageStr = localeStr.substring(0, spliteLocation)
+        val countryStr = localeStr.substring(spliteLocation + 1)
+        locale = new Locale(languageStr, countryStr)
+      } else {
+        locale = new Locale(localeStr)
+      }
       Locale.setDefault(locale)
       val config = new Configuration()
       config.locale = locale

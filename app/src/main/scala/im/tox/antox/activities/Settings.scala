@@ -47,7 +47,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
       getActionBar != null) {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
-    bindPreferenceSummaryToValue(findPreference("language"))
+    bindPreferenceSummaryToValue(findPreference("locale"))
     val nospamPreference = findPreference("nospam")
     nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -98,7 +98,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
         antoxDB.close()
       }
     }
-    if (key == "language") {
+    if (key == "locale") {
       val intent = getBaseContext.getPackageManager.getLaunchIntentForPackage(getBaseContext.getPackageName)
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
       startActivity(intent)
