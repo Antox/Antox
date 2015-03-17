@@ -4,6 +4,7 @@ import java.sql.Timestamp
 
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, TimestampUtils}
+import im.tox.antox.wrapper.MessageType.MessageType
 
 //remove if not needed
 
@@ -18,13 +19,13 @@ class Message(
   val successfully_sent: Boolean,
   val timestamp: Timestamp,
   val size: Int,
-  val `type`: Int) {
+  val `type`: MessageType) {
 
   def logFormat(): Option[String] = {
     //TODO hack that will be fixed with groupchat db
     if (this.isFileTransfer) return None
 
-    val name = if (`type` == Constants.MESSAGE_TYPE_OWN) {
+    val name = if (`type` == MessageType.OWN) {
       ToxSingleton.tox.getName
     } else {
       ToxSingleton.getAntoxFriend(key).get.name
@@ -34,6 +35,6 @@ class Message(
   }
 
   def isFileTransfer: Boolean = {
-    `type` == Constants.MESSAGE_TYPE_FILE_TRANSFER || `type` == Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND
+    `type` == MessageType.FILE_TRANSFER || `type` == MessageType.FILE_TRANSFER_FRIEND
   }
 }

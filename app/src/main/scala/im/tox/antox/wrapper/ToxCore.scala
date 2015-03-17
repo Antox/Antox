@@ -7,6 +7,7 @@ import im.tox.antox.utils._
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
+import im.tox.tox4j.core.exceptions.ToxGroupSetSelfNameException
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
@@ -62,9 +63,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def setName(name: String): Unit = {
     tox.setName(name.getBytes)
-    for (groupNumber <- getGroupList) {
-      setGroupSelfName(groupNumber, name)
-    }
+    println("called set name")
   }
 
   def getName: String = new String(tox.getName, "UTF-8")
@@ -178,6 +177,10 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     groupNumber
   }
 
+  def reconnectGroup(groupNumber: Int): Int = {
+    tox.reconnectGroup(groupNumber)
+  }
+
   def deleteGroup(groupNumber: Int, partMessage: String): Unit = {
     tox.deleteGroup(groupNumber, partMessage.getBytes)
     groupList.removeGroup(groupNumber)
@@ -190,6 +193,24 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   def sendGroupAction(groupNumber: Int, message: String): Unit = tox.sendGroupAction(groupNumber, message.getBytes)
 
   def setGroupSelfName(groupNumber: Int, name: String): Unit = tox.setGroupSelfName(groupNumber, name.getBytes)
+
+  def setGroupSelfNameAll(name: String): Unit = {
+    for (groupNumber <- getGroupList) {
+      var successful = false
+      var attemptName = name
+      while (!successful && getGroupSelfName(groupNumber).length < Constants.MAX_NAME_LENGTH) {
+        successful = true
+        try {
+          setGroupSelfName(groupNumber, attemptName)
+        } catch {
+          case e: ToxGroupSetSelfNameException =>
+            successful = false
+            attemptName = name + "_"
+        }
+      }
+      println("group name " + getGroupSelfName(groupNumber))
+    }
+  }
 
   def getGroupPeerName(groupNumber: Int, peerNumber: Int):String = new String(tox.getGroupPeerName(groupNumber, peerNumber), "UTF-8")
 
@@ -215,7 +236,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     if (tox.getGroupNumberPeers(groupNumber) == 0) {
       Array.empty[Int]
     } else {
-      (0 to (tox.getGroupNumberPeers(groupNumber) - 1)).toArray
+      (0 until tox.getGroupNumberPeers(groupNumber)).toArray
     }
   }
 
@@ -225,7 +246,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     if (tox.getActiveGroupsCount == 0) {
       Array.empty[Int]
     } else {
-      (0 to (tox.getActiveGroupsCount - 1)).toArray
+      (0 until tox.getActiveGroupsCount - 1).toArray
     }
   }
 

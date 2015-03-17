@@ -21,6 +21,7 @@ import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import FileDialog.DirectorySelectedListener
 import im.tox.antox.utils._
+import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -77,7 +78,7 @@ class ContactsFragment extends Fragment {
     if (friendRequests.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
       for (r <- friendRequests) {
-        val request = new LeftPaneItem(Constants.TYPE_FRIEND_REQUEST, r.requestKey, r.requestMessage)
+        val request = new LeftPaneItem(ContactItemType.FRIEND_REQUEST, r.requestKey, r.requestMessage)
         leftPaneAdapter.addItem(request)
       }
     }
@@ -87,7 +88,7 @@ class ContactsFragment extends Fragment {
     if (groupInvites.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
       for (invite <- groupInvites) {
-        val request = new LeftPaneItem(Constants.TYPE_GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
+        val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
         leftPaneAdapter.addItem(request)
       }
     }
@@ -99,8 +100,8 @@ class ContactsFragment extends Fragment {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
         println("unread count is " + group.unreadCount)
-        val groupPane: LeftPaneItem = new LeftPaneItem(Constants.TYPE_GROUP, group.id, group.name, group.topic,
-          true /* group is always online FIXME */, UserStatus.getToxUserStatusFromString("online"), group.unreadCount, group.lastMessageTimestamp)
+        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.id, group.name, group.topic,
+          group.connected, ToxStatus.NONE, group.unreadCount, group.lastMessageTimestamp)
          leftPaneAdapter.addItem(groupPane)
       }
     }
@@ -136,11 +137,11 @@ class ContactsFragment extends Fragment {
         id: Long) {
         val item = parent.getAdapter.asInstanceOf[Adapter].getItem(position).asInstanceOf[LeftPaneItem]
         val `type` = item.viewType
-        if (`type` != Constants.TYPE_FRIEND_REQUEST && `type` != Constants.TYPE_GROUP_INVITE) {
+        if (`type` != ContactItemType.FRIEND_REQUEST && `type` != ContactItemType.GROUP_INVITE) {
           val key = item.key
           if (key != "") {
             ToxSingleton.changeActiveKey(key)
-            val intent = if (`type` == Constants.TYPE_FRIEND) {
+            val intent = if (`type` == ContactItemType.FRIEND) {
               new Intent(getActivity, classOf[ChatActivity])
             } else {
               new Intent(getActivity, classOf[GroupChatActivity])
@@ -179,12 +180,12 @@ class ContactsFragment extends Fragment {
   }
 
   def createLeftPanePopup(parentItem: LeftPaneItem): Unit =  {
-    val items = if (parentItem.viewType == Constants.TYPE_FRIEND) {
+    val items = if (parentItem.viewType == ContactItemType.FRIEND) {
       Array[CharSequence](getResources.getString(R.string.friend_action_profile),
         getResources.getString(R.string.friend_action_delete),
         getResources.getString(R.string.friend_action_export_chat),
         getResources.getString(R.string.friend_action_delete_chat))
-    } else if (parentItem.viewType == Constants.TYPE_GROUP) {
+    } else if (parentItem.viewType == ContactItemType.GROUP) {
       Array[CharSequence](getResources.getString(R.string.group_action_delete))
     } else {
       Array[CharSequence]("")
@@ -200,7 +201,7 @@ class ContactsFragment extends Fragment {
 
       def onClick(dialog: DialogInterface, index: Int) {
         val key = parentItem.key
-        if (parentItem.viewType == Constants.TYPE_FRIEND) {
+        if (parentItem.viewType == ContactItemType.FRIEND) {
           if (key != "") index match {
             case 0 =>
               val profile = new Intent(getActivity, classOf[FriendProfileActivity])
@@ -213,7 +214,7 @@ class ContactsFragment extends Fragment {
           }
         }
 
-        if (parentItem.viewType == Constants.TYPE_GROUP) {
+        if (parentItem.viewType == ContactItemType.GROUP) {
           if (key != "") index match {
             case 0 => {
               val db = new AntoxDB(getActivity)
@@ -240,7 +241,7 @@ class ContactsFragment extends Fragment {
 
     val alert = builder.create()
     if (parentItem != null) {
-      if (parentItem.viewType != Constants.TYPE_HEADER) {
+      if (parentItem.viewType != ContactItemType.HEADER) {
         alert.show()
       }
     }

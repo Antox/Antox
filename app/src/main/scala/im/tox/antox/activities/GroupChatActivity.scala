@@ -154,6 +154,12 @@ class GroupChatActivity extends GenericChatActivity {
     println("This button (Video Call) doesn't work yet.")
   }
 
+  def onClickInfo(v: View): Unit = {
+    val profile = new Intent(this, classOf[GroupProfileActivity])
+    profile.putExtra("key", activeKey)
+    startActivity(profile)
+  }
+
   override def onPause() = {
     super.onPause()
   }

@@ -13,6 +13,7 @@ import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
 import im.tox.antox.R
 import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
+import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
 
@@ -52,12 +53,12 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
 
   override def getItemViewType(position: Int): Int = {
     val `type` = getItem(position).viewType
-    `type`
+    `type`.id
   }
 
-  override def getViewTypeCount(): Int = Constants.TYPE_MAX_COUNT
+  override def getViewTypeCount: Int = ContactItemType.values.size
 
-  override def getCount(): Int = mData.size
+  override def getCount: Int = mData.size
 
   override def getItem(position: Int): LeftPaneItem = mData.get(position)
 
@@ -68,16 +69,16 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
   override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
     var holder: ViewHolder = null
     var newConvertView: View = convertView
-    val `type` = getItemViewType(position)
+    val `type` = ContactItemType(getItemViewType(position))
     if (newConvertView == null) {
       holder = new ViewHolder()
       `type` match {
-        case Constants.TYPE_FRIEND_REQUEST | Constants.TYPE_GROUP_INVITE =>
+        case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
           newConvertView = mInflater.inflate(R.layout.friendrequest_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.request_key).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.request_message).asInstanceOf[TextView]
 
-        case Constants.TYPE_FRIEND | Constants.TYPE_GROUP =>
+        case ContactItemType.FRIEND | ContactItemType.GROUP =>
           newConvertView = mInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
@@ -85,7 +86,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
 
-        case Constants.TYPE_HEADER =>
+        case ContactItemType.HEADER =>
           newConvertView = mInflater.inflate(R.layout.header_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.left_pane_header).asInstanceOf[TextView]
 
@@ -97,10 +98,10 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     }
     val item = getItem(position)
     holder.firstText.setText(item.first)
-    if (`type` != Constants.TYPE_HEADER) {
+    if (`type` != ContactItemType.HEADER) {
       if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
     }
-    if (`type` == Constants.TYPE_FRIEND || `type` == Constants.TYPE_GROUP) {
+    if (`type` == ContactItemType.FRIEND || `type` == ContactItemType.GROUP) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
         //limit unread counter to 99
@@ -125,9 +126,9 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
     val key = item.first
 
-    if (`type` == Constants.TYPE_FRIEND_REQUEST) {
+    if (`type` == ContactItemType.FRIEND_REQUEST) {
       createFriendRequestClickHandlers(key, acceptButton, rejectButton)
-    } else if (`type` == Constants.TYPE_GROUP_INVITE) {
+    } else if (`type` == ContactItemType.GROUP_INVITE) {
       createGroupInviteClickHandlers(key, acceptButton, rejectButton)
     }
     newConvertView

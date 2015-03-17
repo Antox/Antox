@@ -1,6 +1,9 @@
 package im.tox.antox.wrapper
 
 import java.sql.Timestamp
+
+import im.tox.antox.wrapper.MessageType.MessageType
+
 //remove if not needed
 
 class ChatMessages(
@@ -13,13 +16,13 @@ class ChatMessages(
   val received: Boolean,
   val sent: Boolean,
   val size: Int,
-  val `type`: Int) {
+  val `type`: MessageType) {
 
   def isMine: Boolean = {
-    if (`type` == 1 || `type` == 3) true else false
+    `type` == MessageType.OWN || `type` == MessageType.FILE_TRANSFER || `type` == MessageType.GROUP_OWN
   }
 
-  def getType: Int = `type`
+  def getType: MessageType = `type`
 
   override def toString: String = message
 }

@@ -197,7 +197,9 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     val db = new UserDB(this)
     if (key == "nickname") {
       try {
-        ToxSingleton.tox.setName(sharedPreferences.getString(key, ""))
+        val name = sharedPreferences.getString(key, "")
+        ToxSingleton.tox.setName(name)
+        ToxSingleton.tox.setGroupSelfNameAll(name)
       } catch {
         case e: ToxException => e.printStackTrace()
       }

@@ -17,7 +17,7 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
-import im.tox.antox.wrapper.ChatMessages
+import im.tox.antox.wrapper.{MessageType, ChatMessages}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
@@ -95,9 +95,9 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
       cursor.moveToNext()
     }
 
-    var nextMessage: ChatMessages = null
+    var nextMsg: ChatMessages = null
     if (cursor.moveToNext()) {
-      nextMessage = chatMessageFromCursor(cursor)
+      nextMsg = chatMessageFromCursor(cursor)
       cursor.moveToPrevious()
     }
 
@@ -134,7 +134,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.receivedTriangle.setVisibility(View.GONE)
     holder.bubble.setAlpha(1.0f)
     msg.`type` match {
-      case Constants.MESSAGE_TYPE_OWN | Constants.MESSAGE_TYPE_GROUP_OWN =>
+      case MessageType.OWN | MessageType.GROUP_OWN =>
         holder.message.setText(msg.message)
         ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
@@ -142,7 +142,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           holder.bubble.setAlpha(0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_GROUP_PEER =>
+      case MessageType.GROUP_PEER =>
         holder.message.setText(msg.message)
         holder.title.setText(msg.sender_name)
         groupMessage(holder, genNameColor(msg.sender_name))
@@ -154,13 +154,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           holder.bubble.setAlpha(0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_FRIEND =>
+      case MessageType.FRIEND =>
         holder.message.setText(msg.message)
         contactMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
 
-      case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
-        if (msg.`type` == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
+      case MessageType.FILE_TRANSFER | MessageType.FILE_TRANSFER_FRIEND =>
+        if (msg.`type` == MessageType.FILE_TRANSFER) {
           ownMessage(holder)
           val split = msg.message.split("/")
           holder.message.setText(split(split.length - 1))
@@ -269,26 +269,21 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           }
         }
 
-      case Constants.MESSAGE_TYPE_ACTION =>
+      case MessageType.ACTION =>
         actionMessage(holder)
         holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
 
     }
 
-    if (msg.`type` == Constants.MESSAGE_TYPE_GROUP_PEER) {
-      val showTimestampInterval: Int = 61 * 1000 //in milliseconds
-      //TODO: Only show a timestamp if the next message is more than a second after this one
-      if (nextMessage == null ||
-        msg.sender_name != nextMessage.sender_name) {
-
-        holder.time.setText(TimestampUtils.prettyTimestamp(msg.time, isChat = true))
-        holder.time.setVisibility(View.VISIBLE)
-      } else {
-        holder.time.setVisibility(View.GONE)
-      }
-    } else {
+    val showTimestampInterval: Int = 120 * 1000 //in milliseconds
+    //TODO: Only show a timestamp if the next message is more than a second after this one
+    if (nextMsg == null ||
+      (nextMsg == null && lastMsg == null) ||
+      msg.sender_name != nextMsg.sender_name) {
       holder.time.setText(TimestampUtils.prettyTimestamp(msg.time, isChat = true))
       holder.time.setVisibility(View.VISIBLE)
+    } else {
+      holder.time.setVisibility(View.GONE)
     }
 
     if (!animatedIds.contains(msg.id)) {
@@ -298,7 +293,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.row.setOnLongClickListener(new View.OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
-        if (msg.`type` == Constants.MESSAGE_TYPE_OWN || msg.`type` == Constants.MESSAGE_TYPE_FRIEND) {
+        if (msg.`type` == MessageType.OWN || msg.`type` == MessageType.FRIEND) {
           val builder = new AlertDialog.Builder(context)
           val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
           builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
@@ -346,7 +341,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     })
   }
 
-  override def getViewTypeCount: Int = 4
+  override def getViewTypeCount: Int = MessageType.values.size
 
   override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
@@ -363,7 +358,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     val size = cursor.getInt(9)
     val messageType = cursor.getInt(10)
 
-    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, messageType)
+    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType))
   }
 
   private def shouldGreentext(message: String): Boolean = {

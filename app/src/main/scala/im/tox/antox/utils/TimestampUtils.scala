@@ -49,4 +49,9 @@ object TimestampUtils {
       }
     }
   }
+
+  //returns a new empty timestamp
+  def emptyTimestamp(): Timestamp = {
+    new Timestamp(0, 0, 0, 0, 0, 0, 0)
+  }
 }

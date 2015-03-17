@@ -1,0 +1,90 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white_absolute"
+    android:padding="20dp"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:baselineAligned="false"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white_absolute">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/group_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_action_add_group"
+                app:border_width="2dp"
+                app:border_color="@color/material_blue_grey_800"/>
+
+            <LinearLayout
+                android:duplicateParentState="true"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/group_avatar"
+                android:layout_alignTop="@+id/group_avatar">
+
+                <TextView
+                    android:id="@+id/group_name"
+                    android:duplicateParentState="true"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="The Test Chamber is a good place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="22sp" />
+
+                <EditText
+                    android:id="@+id/group_status_message"
+                    android:duplicateParentState="true"
+                    android:text="sometimes the future just won't wait for you and so"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/grey_dark"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/group_profile_peer_list_head"
+            android:layout_marginTop="20dp"
+            android:id="@+id/friendAlias"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/contacts_list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/white_absolute"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@drawable/list_divider"
+                android:dividerHeight="0dp"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="true" />
+        </LinearLayout>
+</ScrollView>

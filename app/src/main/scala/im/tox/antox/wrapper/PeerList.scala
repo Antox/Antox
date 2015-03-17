@@ -30,4 +30,8 @@ class PeerList {
   def removeGroupPeer(peerNumber: Int) {
     peers.remove(peerNumber)
   }
+
+  def clear(): Unit = {
+    peers.clear()
+  }
 }

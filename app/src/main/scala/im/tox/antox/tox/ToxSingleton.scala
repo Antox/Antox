@@ -313,9 +313,12 @@ object ToxSingleton {
 
   def updateGroupList(ctx: Context) {
     try {
-      Reactive.groupList.onNext(groupList.all().toArray(new Array[Group](groupList.all().size)))
+      val antoxDB = new AntoxDB(ctx)
+      val groupList = antoxDB.getGroupList
+      antoxDB.close()
+      Reactive.groupList.onNext(groupList)
     } catch {
-      case e: Exception => Reactive.friendList.onError(e)
+      case e: Exception => e.printStackTrace()
     }
   }
 
@@ -375,9 +378,9 @@ object ToxSingleton {
     val networkInfo = connMgr.getActiveNetworkInfo
     if (networkInfo != null && networkInfo.isConnected) {
       Log.d(TAG, "updateDhtNodes: connected")
-      Observable[JSONObject](subscriber => {
+      /* Observable[JSONObject](subscriber => {
         Log.d(TAG, "updateDhtNodes: in observable")
-        object JsonReader {
+         object JsonReader {
 
           private def readAll(rd: Reader): String = {
             val sb = new StringBuilder()
@@ -447,11 +450,12 @@ object ToxSingleton {
               Log.d(TAG, "Successfully bootstrapped")
               }, error => {
                 Log.e(TAG, "Failed bootstrapping " + error)
-              })
+              }) */
+        tox.bootstrap("192.254.75.104", 33445, "6058FF1DA1E013AD4F829CBE8E5DDFD30A4DE55901B0997832E3E8A64E19026C")
     }
   }
 
-  def populateAntoxLists(): Unit = {
+  def populateAntoxLists(db: AntoxDB): Unit = {
     for (i <- tox.getFriendList) {
       //this doesn't set the name, status message, status
       //or online status of the friend because they are now set during callbacks
@@ -461,7 +465,9 @@ object ToxSingleton {
 
     for (i <- tox.getGroupList) {
       println("groupnum " + i)
-      groupList.addGroupIfNotExists(new Group(tox.getGroupChatId(i), i, "test", "", "topic", new PeerList()))
+      val groupId = tox.getGroupChatId(i)
+      val details = db.getGroupDetails(groupId)
+      groupList.addGroupIfNotExists(new Group(groupId, i, details._1, details._2, details._3, new PeerList()))
     }
   }
 
@@ -500,29 +506,28 @@ object ToxSingleton {
 
       toxAv = new ToxAvImpl(tox.getTox)
 
-      val db = new AntoxDB(ctx)
+      val db = new AntoxDB(ctx).open(writeable = true)
       db.setAllOffline()
 
       val friends = db.getFriendList
-      val groups = db.getGroupKeyList
-      db.close()
+      val groups = db.getGroupList
 
       for (friendNumber <- tox.getFriendList) {
         val friendKey = tox.getFriendKey(friendNumber)
         if (!db.doesFriendExist(friendKey)) {
-          db.addFriend(tox.getFriendKey(friendNumber), "", "", "")
+          db.addFriend(friendKey, "", "", "")
         }
       }
 
       for (groupNumber <- tox.getGroupList) {
-        val groupKey = tox.getGroupChatId(groupNumber)
-        if (!db.doesGroupExist(groupKey)) {
-          db.addGroup(groupKey, tox.getGroupName(groupNumber), tox.getGroupTopic(groupNumber))
+        val groupId = tox.getGroupChatId(groupNumber)
+        if (!db.doesGroupExist(groupId)) {
+          db.addGroup(groupId, "", "")
         }
       }
 
       if (friends.size > 0 || groups.size > 0) {
-        populateAntoxLists()
+        populateAntoxLists(db)
 
         for (friend <- friends) {
           try {
@@ -539,6 +544,7 @@ object ToxSingleton {
         }
       }
 
+      updateGroupList(ctx)
       registerCallbacks(ctx)
 
       try {
@@ -550,9 +556,11 @@ object ToxSingleton {
         tox.setStatus(newStatus)
       } catch {
         case e: ToxException =>
+      } finally {
+        db.close()
       }
       updateDhtNodes(ctx)
-  }
+    }
 
   def registerCallbacks(ctx: Context): Unit = {
     tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
@@ -573,17 +581,11 @@ object ToxSingleton {
     tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
     tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
     tox.callbackGroupNickChange(new AntoxOnGroupNickChangeCallback(ctx))
-
     tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
-
-    tox.callbackGroupJoinRejected(new GroupJoinRejectedCallback {
-      override def groupJoinRejected(p1: Int, reason: ToxGroupJoinRejected): Unit = {
-        println("group join rejected for reason " + reason)
-      }
-    })
-
+    tox.callbackGroupSelfJoin(new AntoxOnGroupSelfJoinCallback(ctx))
+    tox.callbackGroupJoinRejected(new AntoxOnGroupJoinRejectedCallback(ctx))
+    tox.callbackGroupSelfTimeout(new AntoxOnGroupSelfTimeoutCallback(ctx))
     tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx))
-
     tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
   }
   def save(): Unit = {

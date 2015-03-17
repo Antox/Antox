@@ -28,7 +28,7 @@ android {
     buildToolsVersion '21.1.1'
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 21
     }
 
@@ -61,13 +61,14 @@ dependencies {
     compile files('libs/protobuf-java-2.6.1.jar')
     compile files('libs/tox4j_2.11.jar')
     compile 'org.scala-lang:scala-library:2.11.4'
-    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.android.support:support-v4:21.0.2'
     compile 'org.scaloid:scaloid_2.11:3.5-10'
-    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.netflix.rxjava:rxjava-core:0.20.6'
     compile 'com.netflix.rxjava:rxjava-android:0.20.6'
     compile 'com.netflix.rxjava:rxjava-scala:0.20.6'
     compile 'com.shamanland:fab:0.0.5'
+    compile 'de.hdodenhof:circleimageview:1.2.2'
     compile 'com.jpardogo.materialtabstrip:library:1.0.3'
     compile 'com.balysv:material-ripple:0.9.3-SNAPSHOT@aar'
 }

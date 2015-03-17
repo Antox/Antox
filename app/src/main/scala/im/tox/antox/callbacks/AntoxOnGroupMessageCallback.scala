@@ -11,6 +11,7 @@ import im.tox.antox.callbacks.AntoxOnMessageCallback._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{MessageHelper, ToxSingleton}
 import im.tox.antox.utils.{Hex, Constants}
+import im.tox.antox.wrapper.MessageType
 import im.tox.tox4j.core.callbacks.{GroupMessageCallback, FriendMessageCallback}
 
 class AntoxOnGroupMessageCallback(private var ctx: Context) extends GroupMessageCallback {
@@ -18,6 +19,6 @@ class AntoxOnGroupMessageCallback(private var ctx: Context) extends GroupMessage
   override def groupMessage(groupNumber: Int, peerNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
     println("new group message callback for id " + ToxSingleton.getGroupList.getGroup(groupNumber).id)
     MessageHelper.handleGroupMessage(ctx, groupNumber, peerNumber, ToxSingleton.getGroupList.getGroup(groupNumber).id,
-                                      new String(message, "UTF-8"), Constants.MESSAGE_TYPE_GROUP_PEER)
+                                      new String(message, "UTF-8"), MessageType.GROUP_PEER)
   }
 }

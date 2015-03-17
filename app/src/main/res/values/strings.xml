@@ -6,6 +6,7 @@
     <!-- Activity titles -->
     <string name="title_activity_add">Add Contact</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
+    <string name="title_activity_group_profile">Group Info</string>
     <string name="title_activity_profile_settings">Profile options</string>
 
     <!-- Navigation / Action Bar -->
@@ -85,6 +86,9 @@
     <string name="friend_profile_updated">The profile has been updated</string>
     <string name="friend_profile_copied">Tox ID Copied</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="group_profile_peer_list_head">Participants</string>
+
     <!-- Friend request fragment -->
     <string name="friend_profile_title">%1$s\'s Profile</string>
     <string name="friendrequest_accept">Accept</string>
@@ -127,6 +131,11 @@
     <!-- Block Friend Dialog -->
     <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them.\n\nAre you sure you wish to continue?</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">Create a new Group Chat</string>
+    <string name="create_group_dialog_create_group">Create Group</string>
+    <string name="create_group_dialog_cancel">Cancel</string>
 
     <!-- Group Chat Delete -->
     <string name="group_default_part_message">Goodbye</string>
@@ -188,5 +197,6 @@
     <string name="end_call">End Call</string>
     <string name="mute_call">Mute</string>
     <string name="mute_mic">Mute Mic</string>
+    <string name="profile_info_description">Get User Info</string>
 
 </resources>

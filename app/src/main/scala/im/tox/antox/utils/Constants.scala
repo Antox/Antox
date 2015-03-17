@@ -4,18 +4,6 @@ package im.tox.antox.utils
 
 object Constants {
 
-  val TYPE_HEADER = 0
-
-  val TYPE_FRIEND_REQUEST = 1
-
-  val TYPE_FRIEND = 2
-
-  val TYPE_MAX_COUNT = 3
-
-  val TYPE_GROUP_INVITE = 4
-
-  val TYPE_GROUP = 5
-
   val START_TOX = "im.tox.antox.START_TOX"
 
   val STOP_TOX = "im.tox.antox.STOP_TOX"
@@ -74,6 +62,8 @@ object Constants {
 
   val COLUMN_NAME_ISONLINE = "isonline"
 
+  val COLUMN_NAME_ISCONNECTED = "isconnected"
+
   val COLUMN_NAME_ALIAS = "alias"
 
   val COLUMN_NAME_IGNORED = "ignored"
@@ -90,23 +80,9 @@ object Constants {
 
   val FILE_RESULT = 3
 
-  val MESSAGE_TYPE_OWN = 1
-
-  val MESSAGE_TYPE_FRIEND = 2
-
-  val MESSAGE_TYPE_FILE_TRANSFER = 3
-
-  val MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4
-
-  val MESSAGE_TYPE_ACTION = 5
-
-  val MESSAGE_TYPE_GROUP_OWN = 6
-
-  val MESSAGE_TYPE_GROUP_PEER = 7
-
-  val MESSAGE_TYPE_ACTION_PEER = 8
-
   var epoch: Long = _
 
   val UNREAD_COUNT_LIMIT = 99
+
+  val MAX_NAME_LENGTH = 128
 }

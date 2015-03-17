@@ -2,6 +2,7 @@ package im.tox.antox.wrapper
 
 import java.sql.Timestamp
 
+import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 
 class Group(val id: String,
@@ -11,6 +12,8 @@ class Group(val id: String,
             var topic: String,
             val peers: PeerList) {
 
+  var connected = false
+
   def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
     var peerName = tox.getGroupPeerName(groupNumber, peerNumber)
     if (peerName == null) peerName = ""
@@ -19,6 +22,10 @@ class Group(val id: String,
 
   def getPeerCount: Int = {
     peers.all().size()
+  }
+
+  def clearPeerList(): Unit = {
+    peers.clear()
   }
 
   def leave(partMessage: String): Unit = {

@@ -3,6 +3,7 @@ package im.tox.antox.tox
 import java.sql.Timestamp
 
 import im.tox.antox.data.State
+import im.tox.antox.utils.TimestampUtils
 import im.tox.antox.wrapper.Friend
 import im.tox.antox.wrapper._
 import rx.lang.scala.subjects.BehaviorSubject
@@ -12,8 +13,8 @@ object Reactive {
   val chatActiveSub = chatActive.subscribe(x => State.chatActive(x))
   val activeKey = BehaviorSubject[Option[String]](None)
   val activeKeySub = activeKey.subscribe(x => State.activeKey(x))
-  val friendList = BehaviorSubject[Array[Friend]](new Array[Friend](0))
-  val groupList = BehaviorSubject[Array[Group]](new Array[Group](0))
+  val friendList = BehaviorSubject[Array[FriendInfo]](new Array[FriendInfo](0))
+  val groupList = BehaviorSubject[Array[GroupInfo]](new Array[GroupInfo](0))
   val friendRequests = BehaviorSubject[Array[FriendRequest]](new Array[FriendRequest](0))
   val groupInvites = BehaviorSubject[Array[GroupInvite]](new Array[GroupInvite](0))
   val lastMessages = BehaviorSubject[Map[String, (String, Timestamp)]](Map.empty[String, (String, Timestamp)])
@@ -55,10 +56,16 @@ object Reactive {
           (lastMessageTup, uc) match {
             case (Some((lastMessage, lastMessageTimestamp)), _) => {
               println("unread count infolist" + unreadCount)
-              new GroupInfo(g, lastMessage, lastMessageTimestamp, unreadCount.getOrElse(0).asInstanceOf[Int])
+              g.lastMessage = lastMessage
+              g.lastMessageTimestamp = lastMessageTimestamp
+              g.unreadCount = unreadCount.getOrElse(0).asInstanceOf[Int]
+              g
             }
             case _ => {
-              new GroupInfo(g, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0)
+              g.lastMessage = ""
+              g.lastMessageTimestamp = TimestampUtils.emptyTimestamp()
+              g.unreadCount = 0
+              g
             }
           }
         })

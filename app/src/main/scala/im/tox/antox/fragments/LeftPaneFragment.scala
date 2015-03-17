@@ -20,6 +20,7 @@ class LeftPaneFragment extends Fragment {
     val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
+      println("position " + position)
       //hack to center the image only for left pane
       val params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
       params.addRule(RelativeLayout.CENTER_HORIZONTAL)

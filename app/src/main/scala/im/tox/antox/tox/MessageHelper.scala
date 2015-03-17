@@ -12,6 +12,9 @@ import im.tox.antox.activities.MainActivity
 import im.tox.antox.utils.Constants
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.wrapper.MessageType
+import im.tox.antox.wrapper.MessageType
+import im.tox.antox.wrapper.MessageType.MessageType
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 import collection.JavaConverters._
@@ -21,10 +24,10 @@ object MessageHelper {
   val TAG = "im.tox.antox.tox.MessageHandler"
   val MAX_MESSAGE_LENGTH = 1367
 
-  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, rawMessage: String, messageType: Int): Unit = {
+  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, rawMessage: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
     val friendName = db.getFriendNameOrAlias(friendKey)
-    val message = if (messageType == Constants.MESSAGE_TYPE_ACTION) {
+    val message = if (messageType == MessageType.ACTION) {
       formatAction(rawMessage, friendName)
     } else {
       rawMessage
@@ -64,7 +67,7 @@ object MessageHelper {
     }
   }
 
-  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: Int) = {
+  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: MessageType) = {
     println("handling group message")
     val db = new AntoxDB(ctx)
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
@@ -110,11 +113,11 @@ object MessageHelper {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
                   case None => db.addMessage(id, key, senderName,
                     splitMsg, has_been_received =
-                    false, has_been_read = false, successfully_sent = true, 1)
+                    false, has_been_read = false, successfully_sent = true, MessageType.OWN)
                 }
               }
               case None => db.addMessage(-1, key, senderName, splitMsg, has_been_received = false,
-                has_been_read = false, successfully_sent = false, 1)
+                has_been_read = false, successfully_sent = false, MessageType.OWN)
             }
           }
           db.close()
@@ -141,7 +144,7 @@ object MessageHelper {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
         case None => db.addMessage(0, key, senderName,
           splitMsg, has_been_received =
-            true, has_been_read = true, successfully_sent = true, Constants.MESSAGE_TYPE_GROUP_OWN)
+            true, has_been_read = true, successfully_sent = true, MessageType.GROUP_OWN)
       }
     }
     db.close()

@@ -89,7 +89,7 @@ class AddGroupFragment extends Fragment with InputableID {
           db.addGroup(groupId, IDUtils.trimForUI(groupId), topic = "")
         } else {
           db.close()
-          toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
+          toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
           toast.show()
           -2
         }

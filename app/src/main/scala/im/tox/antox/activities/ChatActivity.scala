@@ -248,6 +248,10 @@ class ChatActivity extends GenericChatActivity {
     println("This button (Video Call) doesn't work yet.")
   }
 
+  def onClickInfo(v: View): Unit = {
+    println("info clicked: not yet implemented")
+  }
+
   override def onPause() = {
     super.onPause()
   }
