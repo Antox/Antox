@@ -80,7 +80,11 @@ object MessageHelper {
     db.close()
     ToxSingleton.updateMessages(ctx)
 
-    if (!chatActive) {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+    val notificationsEnabled = preferences.getBoolean("notifications_enable_notifications", true) &&
+                               preferences.getBoolean("notifications_new_message", true)
+
+    if (!chatActive && notificationsEnabled) {
       val groupName = ToxSingleton.getGroup(groupNumber).name
       val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(groupName)
