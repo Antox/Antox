@@ -79,6 +79,25 @@ object MessageHelper {
       has_been_read = chatActive, successfully_sent = true, messageType)
     db.close()
     ToxSingleton.updateMessages(ctx)
+
+    if (!chatActive) {
+      val groupName = ToxSingleton.getGroup(groupNumber).name
+      val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
+        .setContentTitle(groupName)
+        .setContentText(message)
+        .setDefaults(Notification.DEFAULT_ALL)
+      val resultIntent = new Intent(ctx, classOf[MainActivity])
+      resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
+      resultIntent.putExtra("key", groupId)
+      resultIntent.putExtra("name", groupName)
+      val stackBuilder = TaskStackBuilder.create(ctx)
+      stackBuilder.addParentStack(classOf[MainActivity])
+      stackBuilder.addNextIntent(resultIntent)
+      val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+      mBuilder.setContentIntent(resultPendingIntent)
+      ToxSingleton.mNotificationManager.notify(groupNumber, mBuilder.build())
+    }
   }
 
   def formatAction(action: String, friendName: String): String = {

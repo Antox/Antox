@@ -63,6 +63,14 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def setName(name: String): Unit = {
     tox.setName(name.getBytes)
+    for (groupNumber <- getGroupList) {
+      try {
+        //FIXME setGroupSelfName(groupNumber, name)
+      } catch {
+        case e: ToxException =>
+          println("could not set name in group " + groupNumber)
+      }
+    }
     println("called set name")
   }
 
@@ -246,7 +254,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     if (tox.getActiveGroupsCount == 0) {
       Array.empty[Int]
     } else {
-      (0 until tox.getActiveGroupsCount - 1).toArray
+      (0 until tox.getActiveGroupsCount).toArray
     }
   }
 

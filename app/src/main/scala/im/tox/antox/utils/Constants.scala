@@ -1,7 +1,5 @@
 package im.tox.antox.utils
 
-//remove if not needed
-
 object Constants {
 
   val START_TOX = "im.tox.antox.START_TOX"

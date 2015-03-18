@@ -659,7 +659,7 @@ class AntoxDB(ctx: Context) {
         val name = cursor.getString(1)
         val topic = cursor.getString(2)
         val alias = cursor.getString(3)
-        val isConnected = cursor.getInt(4) *> 0
+        val isConnected = cursor.getInt(4) != 0
         val ignored = cursor.getInt(5) > 0
         val isBlocked = cursor.getInt(6) > 0
         groupList += new GroupInfo(key, isConnected, name, topic, alias)
@@ -702,6 +702,8 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_ISONLINE, "0")
     mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null)
+    values.clear()
+    values.put(Constants.COLUMN_NAME_ISCONNECTED, "0")
     mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_ISCONNECTED + "='1'", null)
     this.close()
   }

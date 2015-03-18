@@ -20,15 +20,15 @@ class AntoxOnGroupPeerlistUpdateCallback(private var ctx: Context) extends Group
     }
     group.name = ToxSingleton.tox.getGroupName(groupNumber)
     println("set name to " + group.name)
-    ToxSingleton.getGroup(groupNumber).connected = true
-
     group.topic = ToxSingleton.tox.getGroupTopic(groupNumber)
-    ToxSingleton.updateGroupList(ctx)
+    group.connected = true
+
 
     val db = new AntoxDB(ctx)
     db.updateGroupName(group.id, group.name)
-    db.updateGroupConnected(ToxSingleton.getGroup(groupNumber).id, true)
+    db.updateGroupConnected(group.id, connected = true)
     db.updateGroupTopic(group.id, group.topic)
     db.close()
+    ToxSingleton.updateGroupList(ctx)
   }
 }

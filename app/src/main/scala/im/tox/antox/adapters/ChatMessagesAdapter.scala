@@ -87,21 +87,24 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     mInflater.inflate(this.layoutResourceId, parent, false)
   }
 
+  val lastMsg = new ChatMessages()
+  val msg = new ChatMessages()
+  val nextMsg = new ChatMessages()
+  val holder = new ChatMessagesHolder()
+
   override def bindView(view: View, context: Context, cursor: Cursor) {
-    val msg = chatMessageFromCursor(cursor)
-    var lastMsg: ChatMessages = null
+    chatMessageFromCursor(cursor, msg)
+
     if (cursor.moveToPrevious()) {
-      lastMsg = chatMessageFromCursor(cursor)
+      chatMessageFromCursor(cursor, lastMsg)
       cursor.moveToNext()
     }
 
-    var nextMsg: ChatMessages = null
     if (cursor.moveToNext()) {
-      nextMsg = chatMessageFromCursor(cursor)
+      chatMessageFromCursor(cursor, nextMsg)
       cursor.moveToPrevious()
     }
 
-    val holder = new ChatMessagesHolder()
     holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
     holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
     holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
@@ -345,20 +348,19 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
   override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
-  private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
-    val id = cursor.getInt(0)
-    val time = Timestamp.valueOf(cursor.getString(1))
-    val message_id = cursor.getInt(2)
-    val key = cursor.getString(3)
-    val sender_name = cursor.getString(4)
-    val message = cursor.getString(5)
-    val received = cursor.getInt(6) > 0
+  private def chatMessageFromCursor(cursor: Cursor, msg: ChatMessages): Unit = {
+    msg.id = cursor.getInt(0)
+    msg.time = Timestamp.valueOf(cursor.getString(1))
+    msg.message_id = cursor.getInt(2)
+    msg.key = cursor.getString(3)
+    msg.sender_name = cursor.getString(4)
+    msg.message = cursor.getString(5)
+    msg.received = cursor.getInt(6) > 0
     val read = cursor.getInt(7) > 0
-    val sent = cursor.getInt(8) > 0
-    val size = cursor.getInt(9)
-    val messageType = cursor.getInt(10)
+    msg.sent = cursor.getInt(8) > 0
+    msg.size = cursor.getInt(9)
+    msg.`type` = MessageType(cursor.getInt(10))
 
-    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType))
   }
 
   private def shouldGreentext(message: String): Boolean = {
