@@ -136,6 +136,7 @@
     <string name="create_group_dialog_message">Create a new Group Chat</string>
     <string name="create_group_dialog_create_group">Create Group</string>
     <string name="create_group_dialog_cancel">Cancel</string>
+    <string name="create_group_dialog_name_header">Group Name</string>
 
     <!-- Group Chat Delete -->
     <string name="group_default_part_message">Goodbye</string>

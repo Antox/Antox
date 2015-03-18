@@ -19,8 +19,10 @@ import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
 import im.tox.antox.R
 import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.fragments.CreateGroupDialog
+import im.tox.antox.fragments.CreateGroupDialog.CreateGroupListener
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.{BitmapManager, Constants, DrawerArrayAdapter, DrawerItem}
+import im.tox.antox.utils._
 
 class MainActivity extends ActionBarActivity {
 
@@ -44,8 +46,20 @@ class MainActivity extends ActionBarActivity {
       val intent = new Intent(this, classOf[Settings])
       startActivity(intent)
     } else if (position == 2) {
-      Toast.makeText(this, "Coming soon...", Toast.LENGTH_LONG)
-        .show()
+      val dialog = new CreateGroupDialog(this)
+      dialog.addCreateGroupListener(new CreateGroupListener {
+        override def groupCreationConfimed(name: String): Unit = {
+          val groupNumber = ToxSingleton.tox.newGroup(name)
+          val groupId = ToxSingleton.tox.getGroupChatId(groupNumber)
+          val db = new AntoxDB(getApplicationContext)
+
+          db.addGroup(groupId, name, "")
+          db.close()
+          ToxSingleton.updateGroupList(getApplicationContext)
+        }
+      })
+      dialog.showDialog()
+
     } else if (position == 3) {
       val intent = new Intent(this, classOf[About])
       startActivity(intent)

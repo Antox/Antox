@@ -37,9 +37,9 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
 
   private var currentPath: File = _
 
-  private var fileListenerList: ListenerList[FileSelectedListener] = new ListenerList[FileDialog.FileSelectedListener]()
+  private val fileListenerList: ListenerList[FileSelectedListener] = new ListenerList[FileDialog.FileSelectedListener]()
 
-  private var dirListenerList: ListenerList[DirectorySelectedListener] = new ListenerList[FileDialog.DirectorySelectedListener]()
+  private val dirListenerList: ListenerList[DirectorySelectedListener] = new ListenerList[FileDialog.DirectorySelectedListener]()
 
   private var fileEndsWith: String = _
 
