@@ -55,8 +55,6 @@ abstract class AbstractContactsFragment extends Fragment {
     super.onResume()
     contactChangeSub = Reactive.contactListElements.observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
-
-    getActivity.findViewById(R.id.center_text).setVisibility(View.GONE)
   }
 
   override def onPause() {
@@ -132,6 +130,9 @@ abstract class AbstractContactsFragment extends Fragment {
     } else {
       rootView.findViewById(R.id.contact_search_view).setVisibility(View.GONE)
     }
+
+    rootView.findViewById(R.id.center_text).setVisibility(View.GONE)
+
     rootView
   }
 

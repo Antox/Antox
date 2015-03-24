@@ -1,5 +1,7 @@
 package im.tox.antox.fragments
 
+import android.os.Bundle
+import android.view.{View, ViewGroup, LayoutInflater}
 import im.tox.antox.R
 import im.tox.antox.adapters.LeftPaneAdapter
 import im.tox.antox.utils.LeftPaneItem
@@ -18,9 +20,17 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
     }
   }
 
+  override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
+    val rootView = super.onCreateView(inflater, container, savedInstanceState)
+    rootView.findViewById(R.id.center_text).setVisibility(View.VISIBLE)
+
+    rootView
+  }
+
   def updateContactsLists(leftPaneAdapter: LeftPaneAdapter, contactList: Array[ContactInfo]): Unit = {
     val sortedContactList = contactList.sortWith(compareLastMessageTimestamp).sortWith(compareNames)
     if (sortedContactList.length > 0) {
+      getActivity.findViewById(R.id.center_text).setVisibility(View.GONE)
       for (contact <- sortedContactList) {
         val itemType = if (contact.isInstanceOf[GroupInfo]) {
           ContactItemType.GROUP
@@ -33,6 +43,8 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
           contact.lastMessageTimestamp)
         leftPaneAdapter.addItem(contactPaneItem)
       }
+    } else {
+      getActivity.findViewById(R.id.center_text).setVisibility(View.VISIBLE)
     }
   }
 

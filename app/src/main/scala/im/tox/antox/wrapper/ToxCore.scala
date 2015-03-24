@@ -229,43 +229,47 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     }
   }
 
-  def getGroupSelfName(groupNumber: Int): String = new String(tox.getGroupSelfName(groupNumber), "UTF-8")
+  def getGroupSelfName(groupNumber: Int): String = "" //new String(tox.getGroupSelfName(groupNumber), "UTF-8")
 
-  def setGroupTopic(groupNumber: Int, topic: Array[Byte]): Unit = tox.setGroupTopic(groupNumber, topic)
+  def setGroupTopic(groupNumber: Int, topic: Array[Byte]): Unit = {}//tox.setGroupTopic(groupNumber, topic)
 
-  def getGroupTopic(groupNumber: Int): String = new String(tox.getGroupTopic(groupNumber), "UTF-8")
+  def getGroupTopic(groupNumber: Int): String = "" //new String(tox.getGroupTopic(groupNumber), "UTF-8")
 
-  def getGroupName(groupNumber: Int): String = new String(tox.getGroupName(groupNumber), "UTF-8")
+  def getGroupName(groupNumber: Int): String = "" //new String(tox.getGroupName(groupNumber), "UTF-8")
 
-  def setGroupSelfStatus(groupNumber: Int, status: ToxGroupStatus): Unit = tox.setGroupSelfStatus(groupNumber, status)
+  //def setGroupSelfStatus(groupNumber: Int, status: ToxGroupStatus): Unit = tox.setGroupSelfStatus(groupNumber, status)
 
-  def getGroupPeerStatus(groupNumber: Int, peerNumber: Int): ToxGroupStatus = tox.getGroupPeerStatus(groupNumber, peerNumber)
+  //def getGroupPeerStatus(groupNumber: Int, peerNumber: Int): ToxGroupStatus = tox.getGroupPeerStatus(groupNumber, peerNumber)
 
-  def getGroupPeerRole(groupNumber: Int, peerNumber: Int): ToxGroupRole = tox.getGroupPeerRole(groupNumber, peerNumber)
+  //def getGroupPeerRole(groupNumber: Int, peerNumber: Int): ToxGroupRole = tox.getGroupPeerRole(groupNumber, peerNumber)
 
-  def getGroupChatId(groupNumber: Int): String = Hex.bytesToHexString(tox.getGroupChatId(groupNumber))
+  def getGroupChatId(groupNumber: Int): String = "" //Hex.bytesToHexString(tox.getGroupChatId(groupNumber))
 
-  def getGroupNumberPeers(groupNumber: Int): Int = tox.getGroupNumberPeers(groupNumber)
+  def getGroupNumberPeers(groupNumber: Int): Int = 0 //tox.getGroupNumberPeers(groupNumber)
 
   def getGroupPeerlist(groupNumber: Int): Array[Int] = {
-    if (tox.getGroupNumberPeers(groupNumber) == 0) {
+    /*if (tox.getGroupNumberPeers(groupNumber) == 0) {
       Array.empty[Int]
     } else {
       (0 until tox.getGroupNumberPeers(groupNumber)).toArray
-    }
+    } */
+
+    Array.empty[Int]
   }
 
-  def getActiveGroupCount: Int = tox.getActiveGroupsCount
+  def getActiveGroupCount: Int = 0 // tox.getActiveGroupsCount
 
   def getGroupList: Array[Int] = {
-    if (tox.getActiveGroupsCount == 0) {
+    /* if (tox.getActiveGroupsCount == 0) {
       Array.empty[Int]
     } else {
       (0 until tox.getActiveGroupsCount).toArray
-    }
+    } */
+
+    Array.empty[Int]
   }
 
-  def callbackGroupInvite(callback: GroupInviteCallback): Unit = tox.callbackGroupInvite(callback)
+  /* def callbackGroupInvite(callback: GroupInviteCallback): Unit = tox.callbackGroupInvite(callback)
 
   def callbackGroupMessage(callback: GroupMessageCallback): Unit = tox.callbackGroupMessage(callback)
 
@@ -285,6 +289,6 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callbackGroupPeerlistUpdate(callback: GroupPeerlistUpdateCallback): Unit = tox.callbackGroupPeerlistUpdate(callback)
 
-  def callbackGroupSelfTimeout(callback: GroupSelfTimeoutCallback): Unit = tox.callbackGroupSelfTimeout(callback)
+  def callbackGroupSelfTimeout(callback: GroupSelfTimeoutCallback): Unit = tox.callbackGroupSelfTimeout(callback) */
 
 }
