@@ -92,7 +92,7 @@ class GroupChatActivity extends GenericChatActivity {
         .headOption
       mGroup match {
         case Some(group) => {
-          thisActivity.setDisplayName(group.getAliasOrName())
+          thisActivity.setDisplayName(group.getAliasOrName)
         }
         case None => {
           thisActivity.setDisplayName("")

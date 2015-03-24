@@ -82,11 +82,11 @@ class AntoxFriendList {
     }
   }
 
-  def updateFromFriend(friend: Friend): Unit = {
+  def updateFromFriend(friend: FriendInfo): Unit = {
     val antoxFriend = getByKey(friend.key).get
     antoxFriend.setName(friend.name)
     antoxFriend.setStatusMessage(friend.status)
-    antoxFriend.setOnline(friend.isOnline)
+    antoxFriend.setOnline(friend.online)
   }
 
   def removeFriend(friendnumber: Int) {

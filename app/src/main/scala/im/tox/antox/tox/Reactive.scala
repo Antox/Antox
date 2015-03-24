@@ -31,13 +31,13 @@ object Reactive {
           val unreadCount: Option[Integer] = uc.get(f.key)
           (lastMessageTup, unreadCount) match {
             case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
-              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
             }
             case (Some((lastMessage, lastMessageTimestamp)), None) => {
-              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, 0, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, 0, f.alias)
             }
             case _ => {
-              new FriendInfo(f.isOnline, f.name, f.status, f.statusMessage, f.key, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
             }
           }
         })

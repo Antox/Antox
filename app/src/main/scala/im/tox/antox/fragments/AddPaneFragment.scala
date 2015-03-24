@@ -21,7 +21,7 @@ class AddPaneFragment extends Fragment {
 
   class AddPagerAdapter(fm: FragmentManager) extends BetterFragmentPagerAdapter(fm) with CustomTabProvider {
 
-    val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
+    val ICONS: Array[Int] = Array(R.drawable.ic_action_contacts_tab, R.drawable.ic_action_add_group)
     val LABELS: Array[String] = Array(getResources.getString(R.string.addpane_friend_label),
                                       getResources.getString(R.string.addpane_group_label))
 

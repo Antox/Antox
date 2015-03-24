@@ -3,6 +3,7 @@ package im.tox.antox.wrapper
 import java.sql.Timestamp
 
 import im.tox.antox.utils.TimestampUtils
+import im.tox.tox4j.core.enums.ToxStatus
 
 //remove if not needed
 
@@ -12,10 +13,12 @@ class FriendInfo(
   userStatus: String,
   statusMessage: String,
   friendKey: String,
-  val lastMessage: String,
-  val lastMessageTimestamp: Timestamp,
-  val unreadCount: Int,
-  alias: String) extends Friend(isOnline, friendName, userStatus, statusMessage, friendKey, alias) {
+  lastMessage: String,
+  lastMessageTimestamp: Timestamp,
+  unreadCount: Int,
+  alias: String) extends ContactInfo(friendKey, friendName, isOnline,
+                                     userStatus, statusMessage, lastMessage,
+                                     lastMessageTimestamp, unreadCount, alias) {
 
   def this (
     isOnline: Boolean,
@@ -27,10 +30,7 @@ class FriendInfo(
     this(isOnline, friendName, userStatus, statusMessage, friendKey, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 
-  /**
-  Returns 'alias' if it has been set, otherwise returns 'name'.
-   */
-  def getAliasOrName(): String = {
-    if (alias != "") alias else name
+  def getFriendStatusAsToxUserStatus: ToxStatus = {
+    UserStatus.getToxUserStatusFromString(status)
   }
 }

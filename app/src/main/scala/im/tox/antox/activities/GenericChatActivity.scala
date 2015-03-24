@@ -107,7 +107,6 @@ abstract class GenericChatActivity extends ActionBarActivity {
     Reactive.chatActive.onNext(true)
     val antoxDB = new AntoxDB(getApplicationContext)
     antoxDB.markIncomingMessagesRead(activeKey)
-    ToxSingleton.clearUselessNotifications(activeKey)
     ToxSingleton.updateMessages(getApplicationContext)
     messagesSub = Reactive.updatedMessages.subscribe(x => {
       Log.d(TAG, "Messages updated")

@@ -168,6 +168,7 @@ class ChatActivity extends GenericChatActivity {
   override def onResume() = {
     super.onResume()
     val thisActivity = this
+    ToxSingleton.clearUselessNotifications(activeKey)
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
@@ -178,14 +179,14 @@ class ChatActivity extends GenericChatActivity {
         .headOption
       mFriend match {
         case Some(friend) => {
-          thisActivity.setDisplayName(friend.getAliasOrName())
+          thisActivity.setDisplayName(friend.getAliasOrName)
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             thisActivity.statusIconView.setBackground(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
+              .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
           } else {
             thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
+              .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
           }
         }
         case None => {

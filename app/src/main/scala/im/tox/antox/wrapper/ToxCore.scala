@@ -220,7 +220,14 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     }
   }
 
-  def getGroupPeerName(groupNumber: Int, peerNumber: Int):String = new String(tox.getGroupPeerName(groupNumber, peerNumber), "UTF-8")
+  def getGroupPeerName(groupNumber: Int, peerNumber: Int):String = {
+    val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
+    if (peerNameBytes == null) {
+      ""
+    } else {
+      new String(peerNameBytes, "UTF-8")
+    }
+  }
 
   def getGroupSelfName(groupNumber: Int): String = new String(tox.getGroupSelfName(groupNumber), "UTF-8")
 

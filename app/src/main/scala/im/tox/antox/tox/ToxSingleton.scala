@@ -562,6 +562,7 @@ object ToxSingleton {
       updateDhtNodes(ctx)
     }
 
+
   def registerCallbacks(ctx: Context): Unit = {
     tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
     tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
@@ -577,9 +578,9 @@ object ToxSingleton {
     tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
     tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
     tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
-    tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
     tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
     tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
+    tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
     tox.callbackGroupNickChange(new AntoxOnGroupNickChangeCallback(ctx))
     tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
     tox.callbackGroupSelfJoin(new AntoxOnGroupSelfJoinCallback(ctx))

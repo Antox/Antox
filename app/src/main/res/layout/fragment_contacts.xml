@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/contact_search_view"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="@color/white_absolute">
@@ -80,4 +81,18 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/center_text"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_absolute"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large"
+            android:text="@string/main_recent_no"/>
+    </LinearLayout>
 </LinearLayout>

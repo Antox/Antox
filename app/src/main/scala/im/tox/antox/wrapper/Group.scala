@@ -5,6 +5,8 @@ import java.sql.Timestamp
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 
+import scala.collection.JavaConversions._
+
 class Group(val id: String,
             val groupNumber: Int,
             private var _name: String,
@@ -18,6 +20,16 @@ class Group(val id: String,
     var peerName = tox.getGroupPeerName(groupNumber, peerNumber)
     if (peerName == null) peerName = ""
     this.peers.addGroupPeer(new GroupPeer(peerName, ignored = false))
+    printPeerList()
+  }
+
+  def printPeerList(): Unit = {
+    println("peer list: ")
+    var number = 0
+    for (peer <- peers.all()) {
+      println("peer " + number + " with name " + peer.name)
+      number += 1
+    }
   }
 
   def getPeerCount: Int = {
