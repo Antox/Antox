@@ -133,7 +133,7 @@ object MessageHelper {
               }
             }
 
-            val senderName = db.getFriendNameOrAlias(key)
+            val senderName = ToxSingleton.tox.getName
             mId match {
               case Some(id) => {
                 mDbId match {
@@ -166,7 +166,7 @@ object MessageHelper {
         }
       }
 
-      val senderName = db.getGroupNameOrAlias(key)
+      val senderName = ToxSingleton.tox.getName
       mDbId match {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
         case None => db.addMessage(0, key, senderName,

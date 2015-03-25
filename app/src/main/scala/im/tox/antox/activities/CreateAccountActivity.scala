@@ -96,7 +96,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxData = new ToxData
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(true)
+    toxOptions.setUdpEnabled(Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
@@ -109,7 +109,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxData = new ToxData
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(true)
+    toxOptions.setUdpEnabled(Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
     val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)

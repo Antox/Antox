@@ -10,13 +10,12 @@ import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
-import im.tox.tox4j.core.callbacks.{GroupInviteCallback, FriendRequestCallback}
 
 object AntoxOnGroupInviteCallback {
 
 }
 
-class AntoxOnGroupInviteCallback(private var ctx: Context) extends GroupInviteCallback {
+class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInviteCallback */ {
 
   def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)

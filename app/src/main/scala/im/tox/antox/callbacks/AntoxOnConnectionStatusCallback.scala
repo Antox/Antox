@@ -18,8 +18,9 @@ object AntoxOnConnectionStatusCallback {
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback {
 
   override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection): Unit = {
-    val online = if(connectionStatus == ToxConnection.NONE) false else true
+    val online = !(connectionStatus == ToxConnection.NONE)
 
+    println("connection status " + connectionStatus)
     val db = new AntoxDB(ctx)
     val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
     db.updateUserOnline(friendKey, online)

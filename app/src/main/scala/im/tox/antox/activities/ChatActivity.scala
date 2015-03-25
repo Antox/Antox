@@ -50,6 +50,7 @@ class ChatActivity extends GenericChatActivity {
       }
     })
 
+    this.findViewById(R.id.info).setVisibility(View.GONE)
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
     chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
     chatListView.setStackFromBottom(true)
@@ -148,6 +149,7 @@ class ChatActivity extends GenericChatActivity {
               }
             }
             case 2 => {
+              println("sent file send request")
               val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
               val fileDialog = new FileDialog(thisActivity, mPath, false)
               fileDialog.addFileListener(new FileDialog.FileSelectedListener() {

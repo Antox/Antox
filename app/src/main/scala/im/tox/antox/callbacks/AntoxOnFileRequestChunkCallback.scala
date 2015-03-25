@@ -33,7 +33,7 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
             val data = t.readData(reset, length)
             data match {
               case Some(d) =>
-                ToxSingleton.tox.fileSendChunk(friend.getFriendnumber, fileNumber, d)
+                ToxSingleton.tox.fileSendChunk(friend.getFriendnumber, fileNumber, position, d)
                 if (!reset) t.addToProgress(t.progress + length)
               case None =>
             }

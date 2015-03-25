@@ -94,14 +94,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/margin_medium">
-        <!-- <ImageView
+        <ImageView
             android:id="@+id/attachmentButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/margin_medium"
             android:src="@drawable/ic_action_attachment_2"/>
-         -->
+
         <EditText
             android:id="@+id/yourMessage"
             android:layout_width="0dp"

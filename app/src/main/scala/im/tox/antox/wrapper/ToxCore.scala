@@ -7,7 +7,6 @@ import im.tox.antox.utils._
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
-import im.tox.tox4j.core.exceptions.ToxGroupSetSelfNameException
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
@@ -115,9 +114,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def setTyping(friendNumber: Int, typing: Boolean): Unit = tox.setTyping(friendNumber, typing)
 
-  def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, message.getBytes)
+  def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, ToxMessageType.NORMAL, 0, message.getBytes)
 
-  def sendAction(friendNumber: Int, action: String): Int = tox.sendAction(friendNumber, action.getBytes)
+  def sendAction(friendNumber: Int, action: String): Int = tox.sendMessage(friendNumber, ToxMessageType.ACTION, 0, action.getBytes)
 
   def callbackFriendName(callback: FriendNameCallback): Unit = tox.callbackFriendName(callback)
 
@@ -135,15 +134,13 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callbackFriendMessage(callback: FriendMessageCallback): Unit = tox.callbackFriendMessage(callback)
 
-  def callbackFriendAction(callback: FriendActionCallback): Unit = tox.callbackFriendAction(callback)
-
   def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(friendNumber, fileNumber, control)
 
   def callbackFileControl(callback: FileControlCallback): Unit = tox.callbackFileControl(callback)
 
-  def fileSend(friendNumber: Int, fileNumber: ToxFileKind, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, fileNumber, fileSize, filename.getBytes)
+  def fileSend(friendNumber: Int, kind: Int, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, kind, fileSize, null, filename.getBytes)
 
-  def fileSendChunk(friendNumber: Int, fileNumber: Int, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, data)
+  def fileSendChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, position, data)
 
   def callbackFileRequestChunk(callback: FileRequestChunkCallback): Unit = tox.callbackFileRequestChunk(callback)
 
@@ -161,46 +158,50 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callback(handler: ToxEventListener): Unit = tox.callback(handler)
 
-  def callbackGroupJoinRejected(callback: GroupJoinRejectedCallback): Unit = tox.callbackGroupJoinRejected(callback)
+  //def callbackGroupJoinRejected(callback: GroupJoinRejectedCallback): Unit = tox.callbackGroupJoinRejected(callback)
 
   def acceptGroupInvite(inviteData: Array[Byte]): Int = {
-    val groupNumber = tox.acceptGroupInvite(inviteData)
-    println("group invited with " + groupNumber + " and id ")
-    groupList.addGroup(this, groupNumber)
-    groupNumber
+    //val groupNumber = tox.acceptGroupInvite(inviteData)
+    //println("group invited with " + groupNumber + " and id ")
+    //groupList.addGroup(this, groupNumber)
+    //groupNumber
+    0
   }
 
   def newGroup(groupName: String): Int = {
-    val groupNumber = tox.newGroup(groupName.getBytes)
-    println("group created with " + groupNumber + " and id " + Hex.bytesToHexString(tox.getGroupChatId(groupNumber)))
-    groupList.addGroup(this, groupNumber)
-    groupList.getGroup(groupNumber).name = groupName
-    groupNumber
+    //val groupNumber = tox.newGroup(groupName.getBytes)
+    //println("group created with " + groupNumber + " and id " + Hex.bytesToHexString(tox.getGroupChatId(groupNumber)))
+    //groupList.addGroup(this, groupNumber)
+    //groupList.getGroup(groupNumber).name = groupName
+    //groupNumber
+    0
   }
 
   def joinGroup(groupId: String): Int = {
-    val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupId))
-    println("group number is " + groupNumber)
-    groupList.addGroup(this, groupNumber)
-    groupNumber
+    //val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupId))
+    //println("group number is " + groupNumber)
+    //groupList.addGroup(this, groupNumber)
+    //groupNumber
+    0
   }
 
   def reconnectGroup(groupNumber: Int): Int = {
-    tox.reconnectGroup(groupNumber)
+    //tox.reconnectGroup(groupNumber)
+    0
   }
 
   def deleteGroup(groupNumber: Int, partMessage: String): Unit = {
-    tox.deleteGroup(groupNumber, partMessage.getBytes)
+    //tox.deleteGroup(groupNumber, partMessage.getBytes)
     groupList.removeGroup(groupNumber)
   }
 
-  def sendGroupMessage(groupNumber: Int, message: String): Unit = tox.sendGroupMessage(groupNumber, message.getBytes)
+  def sendGroupMessage(groupNumber: Int, message: String): Unit = {} //tox.sendGroupMessage(groupNumber, message.getBytes)
 
-  def sendGroupPrivateMessage(groupNumber: Int, peerNumber: Int, message: String): Unit = tox.sendGroupPrivateMessage(groupNumber, peerNumber, message.getBytes)
+  def sendGroupPrivateMessage(groupNumber: Int, peerNumber: Int, message: String): Unit = {} //tox.sendGroupPrivateMessage(groupNumber, peerNumber, message.getBytes)
 
-  def sendGroupAction(groupNumber: Int, message: String): Unit = tox.sendGroupAction(groupNumber, message.getBytes)
+  def sendGroupAction(groupNumber: Int, message: String): Unit = {} //tox.sendGroupAction(groupNumber, message.getBytes)
 
-  def setGroupSelfName(groupNumber: Int, name: String): Unit = tox.setGroupSelfName(groupNumber, name.getBytes)
+  def setGroupSelfName(groupNumber: Int, name: String): Unit = {} //tox.setGroupSelfName(groupNumber, name.getBytes)
 
   def setGroupSelfNameAll(name: String): Unit = {
     for (groupNumber <- getGroupList) {
@@ -211,7 +212,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
         try {
           setGroupSelfName(groupNumber, attemptName)
         } catch {
-          case e: ToxGroupSetSelfNameException =>
+          case e: ToxException =>
             successful = false
             attemptName = name + "_"
         }
@@ -221,12 +222,12 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   }
 
   def getGroupPeerName(groupNumber: Int, peerNumber: Int):String = {
-    val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
-    if (peerNameBytes == null) {
+    //val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
+    //if (peerNameBytes == null) {
       ""
-    } else {
-      new String(peerNameBytes, "UTF-8")
-    }
+    //} else {
+    //  new String(Array.empty[Byte], "UTF-8")
+    //}
   }
 
   def getGroupSelfName(groupNumber: Int): String = "" //new String(tox.getGroupSelfName(groupNumber), "UTF-8")

@@ -92,14 +92,14 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     var lastMsg: ChatMessages = null
     if (cursor.moveToPrevious()) {
       lastMsg = chatMessageFromCursor(cursor)
-      cursor.moveToNext()
     }
+    cursor.moveToNext()
 
     var nextMsg: ChatMessages = null
     if (cursor.moveToNext()) {
       nextMsg = chatMessageFromCursor(cursor)
-      cursor.moveToPrevious()
     }
+    cursor.moveToPrevious()
 
     val holder = new ChatMessagesHolder()
     holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
@@ -202,7 +202,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
           } else {
             if (msg.message_id != -1) {
               if (msg.isMine) {
-                holder.progressText.setText("Sent filesending request")
+                holder.progressText.setText("Sent request")
               } else {
                 holder.progressText.setText("")
                 holder.buttons.setVisibility(View.VISIBLE)
@@ -276,7 +276,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     }
 
     val showTimestampInterval: Int = 120 * 1000 //in milliseconds
-    //TODO: Only show a timestamp if the next message is more than a second after this one
+    //TODO: Only show a timestamp if the next message is more than a minute after this one
     if (nextMsg == null ||
       (nextMsg == null && lastMsg == null) ||
       msg.sender_name != nextMsg.sender_name) {

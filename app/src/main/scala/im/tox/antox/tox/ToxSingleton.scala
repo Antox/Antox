@@ -18,8 +18,7 @@ import im.tox.antox.transfer.{FileTransfer, FileStatus}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.callbacks.{GroupInviteCallback, GroupMessageCallback, GroupJoinRejectedCallback}
-import im.tox.tox4j.core.enums.{ToxGroupJoinRejected, ToxStatus, ToxFileControl, ToxFileKind}
+import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 import org.json.JSONObject
@@ -378,7 +377,7 @@ object ToxSingleton {
     val networkInfo = connMgr.getActiveNetworkInfo
     if (networkInfo != null && networkInfo.isConnected) {
       Log.d(TAG, "updateDhtNodes: connected")
-      /* Observable[JSONObject](subscriber => {
+      Observable[JSONObject](subscriber => {
         Log.d(TAG, "updateDhtNodes: in observable")
          object JsonReader {
 
@@ -441,8 +440,7 @@ object ToxSingleton {
               Log.d(TAG, "Trying to bootstrap")
               try {
                 for (i <- 0 until nodes.size) {
-                  tox.bootstrap("192.254.75.104", 33445, "6058FF1DA1E013AD4F829CBE8E5DDFD30A4DE55901B0997832E3E8A64E19026C")
-                  //tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+                  tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
                 }
               } catch {
                 case e: Exception =>
@@ -450,8 +448,7 @@ object ToxSingleton {
               Log.d(TAG, "Successfully bootstrapped")
               }, error => {
                 Log.e(TAG, "Failed bootstrapping " + error)
-              }) */
-        tox.bootstrap("192.254.75.104", 33445, "6058FF1DA1E013AD4F829CBE8E5DDFD30A4DE55901B0997832E3E8A64E19026C")
+              })
     }
   }
 
@@ -480,7 +477,7 @@ object ToxSingleton {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val options = new ToxOptions()
-    options.setUdpEnabled(true)
+    options.setUdpEnabled(udpEnabled)
     options.setIpv6Enabled(Options.ipv6Enabled)
 
     if (!dataFile.doesFileExist()) {
@@ -504,7 +501,7 @@ object ToxSingleton {
         }
       }
 
-      toxAv = new ToxAvImpl(tox.getTox)
+      //toxAv = new ToxAvImpl(tox.getTox)
 
       val db = new AntoxDB(ctx).open(writeable = true)
       db.setAllOffline()
@@ -566,7 +563,6 @@ object ToxSingleton {
   def registerCallbacks(ctx: Context): Unit = {
     tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
     tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
-    tox.callbackFriendAction(new AntoxOnActionCallback(ctx))
     tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
     tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
     tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
@@ -577,7 +573,7 @@ object ToxSingleton {
     tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
     tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
     tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
-    tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
+    /* tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
     tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
     tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
     tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
@@ -586,7 +582,7 @@ object ToxSingleton {
     tox.callbackGroupSelfJoin(new AntoxOnGroupSelfJoinCallback(ctx))
     tox.callbackGroupJoinRejected(new AntoxOnGroupJoinRejectedCallback(ctx))
     tox.callbackGroupSelfTimeout(new AntoxOnGroupSelfTimeoutCallback(ctx))
-    tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx))
+    tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx)) */
     tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
   }
   def save(): Unit = {

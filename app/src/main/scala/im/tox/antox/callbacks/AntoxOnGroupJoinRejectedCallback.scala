@@ -7,12 +7,11 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.wrapper.{PeerList, GroupPeer}
 import im.tox.tox4j.core.callbacks._
 import im.tox.antox.utils.Constants
-import im.tox.tox4j.core.enums.ToxGroupJoinRejected
 
-class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) extends GroupJoinRejectedCallback {
+class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends GroupJoinRejectedCallback */ {
   private var reconnecting = false
 
-  override def groupJoinRejected(groupNumber: Int, reason: ToxGroupJoinRejected): Unit = {
+  /* override def groupJoinRejected(groupNumber: Int, reason: ToxGroupJoinRejected): Unit = {
     if (reason == ToxGroupJoinRejected.NICK_TAKEN) {
       if (ToxSingleton.tox.getGroupSelfName(groupNumber).length < Constants.MAX_NAME_LENGTH) {
         //FIXME
@@ -33,5 +32,5 @@ class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) extends GroupJo
     } else {
       println("Tox Group Join Rejected: " + reason)
     }
-  }
+  } */
 }

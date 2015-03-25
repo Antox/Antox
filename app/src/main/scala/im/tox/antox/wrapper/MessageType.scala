@@ -1,5 +1,7 @@
 package im.tox.antox.wrapper
 
+import im.tox.tox4j.core.enums.ToxMessageType
+
 //Don't change this order (it will break the DB)
 object MessageType extends Enumeration {
   type MessageType = Value
@@ -12,4 +14,14 @@ object MessageType extends Enumeration {
   val GROUP_OWN = Value(6)
   val GROUP_PEER = Value(7)
   val GROUP_ACTION = Value(8)
+
+  def fromToxMessageType(messageType: ToxMessageType): MessageType = {
+    if (messageType == ToxMessageType.ACTION) {
+      ACTION
+    } else if (messageType == ToxMessageType.NORMAL) {
+      FRIEND
+    } else {
+      NONE
+    }
+  }
 }

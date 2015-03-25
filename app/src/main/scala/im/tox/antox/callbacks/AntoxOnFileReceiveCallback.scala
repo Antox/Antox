@@ -11,7 +11,7 @@ object AntoxOnFileReceiveCallback {
 }
 
 class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
-  override def fileReceive(friendNumber: Int, fileNumber: Int, kind: ToxFileKind, fileSize: Long, filename: Array[Byte]): Unit = {
+  override def fileReceive(friendNumber: Int, fileNumber: Int, kind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
     if (kind == ToxFileKind.DATA) {
       ToxSingleton.fileSendRequest(ToxSingleton.getAntoxFriend(friendNumber).get.getKey,
         fileNumber, new String(filename), fileSize, ctx)
