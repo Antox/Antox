@@ -4,6 +4,7 @@ import java.sql.Timestamp
 
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, TimestampUtils}
+import im.tox.antox.wrapper.FileKind.FileKind
 import im.tox.antox.wrapper.MessageType.MessageType
 
 //remove if not needed
@@ -19,7 +20,8 @@ class Message(
   val successfully_sent: Boolean,
   val timestamp: Timestamp,
   val size: Int,
-  val `type`: MessageType) {
+  val `type`: MessageType,
+  val fileKind: FileKind) {
 
   def logFormat(): Option[String] = {
     //TODO hack that will be fixed with groupchat db

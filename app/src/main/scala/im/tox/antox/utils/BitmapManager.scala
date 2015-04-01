@@ -6,7 +6,6 @@ import android.graphics.{Bitmap, BitmapFactory}
 import android.util.{Log, LruCache}
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
-//remove if not needed
 
 object BitmapManager {
 
@@ -82,10 +81,8 @@ object BitmapManager {
     val imageKey = String.valueOf(id)
     var bitmap = getBitmapFromMemCache(imageKey)
     if (bitmap != null) {
-      Log.d("BitmapManager", "Found image in cache")
       imageView.setImageBitmap(bitmap)
     } else {
-      Log.d("BitmapManager", "Image not in cache")
       var fis: FileInputStream = null
       try {
         fis = new FileInputStream(file)

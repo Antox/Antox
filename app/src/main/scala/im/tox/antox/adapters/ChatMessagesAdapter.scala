@@ -17,7 +17,7 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
-import im.tox.antox.wrapper.{MessageType, ChatMessages}
+import im.tox.antox.wrapper.{FileKind, MessageType, ChatMessages}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
@@ -75,13 +75,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
-  private var density: Int = context.getResources.getDisplayMetrics.density.toInt
+  private val density: Int = context.getResources.getDisplayMetrics.density.toInt
 
-  private var anim: Animation = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom)
+  private val anim: Animation = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom)
 
-  private var mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
+  private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
 
-  private var animatedIds: util.HashSet[Integer] = ids
+  private val animatedIds: util.HashSet[Integer] = ids
 
   override def newView(context: Context, cursor: Cursor, parent: ViewGroup): View = {
     mInflater.inflate(this.layoutResourceId, parent, false)
@@ -138,7 +138,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
         holder.message.setText(msg.message)
         ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
-        if (!(msg.received)) {
+        if (!msg.received) {
           holder.bubble.setAlpha(0.5f)
         }
 
@@ -150,7 +150,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
         if (lastMsg == null || msg.sender_name != lastMsg.sender_name) {
           holder.title.setVisibility(View.VISIBLE)
         }
-        if (!(msg.received)) {
+        if (!msg.received) {
           holder.bubble.setAlpha(0.5f)
         }
 
@@ -241,7 +241,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
               //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
               //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase.endsWith(extension)) {
-                Log.d("ChatMessagesAdapter", "true")
                 if (BitmapManager.checkValidImage(file)) {
                   BitmapManager.loadBitmap(file, file.getPath.hashCode, holder.imageMessage)
                   holder.imageMessage.setVisibility(View.VISIBLE)
@@ -357,8 +356,8 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     val sent = cursor.getInt(8) > 0
     val size = cursor.getInt(9)
     val messageType = cursor.getInt(10)
-
-    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType))
+    val fileKind = cursor.getInt(11)
+    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType), FileKind(fileKind))
   }
 
   private def shouldGreentext(message: String): Boolean = {

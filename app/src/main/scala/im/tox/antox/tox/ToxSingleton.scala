@@ -16,6 +16,7 @@ import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.transfer.{FileTransfer, FileStatus}
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.FileKind.FileKind
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
@@ -97,7 +98,7 @@ object ToxSingleton {
     ToxSingleton.save()
   }
 
-  def sendFileSendRequest(path: String, key: String, context: Context) {
+  def sendFileSendRequest(path: String, key: String, fileKind: FileKind, context: Context) {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
@@ -114,7 +115,7 @@ object ToxSingleton {
         .flatMap(friendNumber => {
           try {
             Log.d(TAG, "Creating tox file sender")
-            val fn = tox.fileSend(friendNumber, ToxFileKind.DATA, file.length(), fileName)
+            val fn = tox.fileSend(friendNumber, fileKind.id, file.length(), fileName)
             fn match {
               case -1 => None
               case x => Some(x)
@@ -128,8 +129,8 @@ object ToxSingleton {
           }).foreach(fileNumber => {
             val antoxDB = new AntoxDB(context)
             Log.d(TAG, "adding File Transfer")
-            val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, sending = true)
-            State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id))
+            val id = antoxDB.addFileTransfer(key, path, fileNumber, fileKind.id, file.length.toInt, sending = true)
+            State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
             antoxDB.close()
           })
     }
@@ -138,9 +139,12 @@ object ToxSingleton {
   def fileSendRequest(key: String,
     fileNumber: Int,
     fileName: String,
+    fileKind: FileKind,
     fileSize: Long,
+    replaceExisting: Boolean,
     context: Context) {
       Log.d(TAG, "fileSendRequest")
+    println("file name is " + fileName)
       var fileN = fileName
       val fileSplit = fileName.split("\\.")
       var filePre = ""
@@ -151,12 +155,19 @@ object ToxSingleton {
           filePre = filePre.concat(".")
         }
       }
-      val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-        Constants.DOWNLOAD_DIRECTORY)
+      val dirfile = if (fileKind == FileKind.AVATAR) {
+        context.getDir(Constants.AVATAR_DIRECTORY, Context.MODE_PRIVATE)
+      } else {
+        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY)
+      }
+
       if (!dirfile.mkdirs()) {
         Log.e("acceptFile", "Directory not created")
       }
+
       var file = new File(dirfile.getPath, fileN)
+      if (replaceExisting) file.delete()
+
       if (file.exists()) {
         var i = 1
         do {
@@ -167,9 +178,10 @@ object ToxSingleton {
           i += 1
         } while (file.exists())
       }
+
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, sending = false)
-      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
+      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileKind.id, fileSize.toInt, sending = false)
+      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
       antoxDB.close()
       updateMessages(context)
   }
@@ -201,7 +213,7 @@ object ToxSingleton {
           val transfer = State.transfers.get(id)
           transfer match {
             case Some(t) =>
-              if (accept) {t.status = FileStatus.INPROGRESS} else {t.status = FileStatus.CANCELLED}
+              if (accept) t.status = FileStatus.INPROGRESS else t.status = FileStatus.CANCELLED
             case None => 
           }
         } catch {
@@ -249,6 +261,8 @@ object ToxSingleton {
         val mFriend = antoxFriendList.getByKey(t.key)
         State.db.fileFinished(key, fileNumber)
         Reactive.updatedMessages.onNext(true)
+        updateFriendsList(context)
+        updateGroupList(context)
       }
       case None => Log.d(TAG, "fileFinished: No transfer found")
     }

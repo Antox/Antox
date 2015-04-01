@@ -16,7 +16,7 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.{UserStatus, FriendInfo}
+import im.tox.antox.wrapper.{FileKind, UserStatus, FriendInfo}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -154,7 +154,7 @@ class ChatActivity extends GenericChatActivity {
               val fileDialog = new FileDialog(thisActivity, mPath, false)
               fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                 def fileSelected(file: File) {
-                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
+                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
                 }
               })
               fileDialog.showDialog()
@@ -224,7 +224,7 @@ class ChatActivity extends GenericChatActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, this)
+              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -233,7 +233,7 @@ class ChatActivity extends GenericChatActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, this)
+          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
           photoPath = null
         }
       }

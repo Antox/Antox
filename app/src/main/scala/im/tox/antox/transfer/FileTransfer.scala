@@ -3,6 +3,8 @@ package im.tox.antox.transfer
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
 import im.tox.antox.transfer.FileStatus.FileStatus
+import im.tox.antox.wrapper.FileKind.FileKind
+import im.tox.tox4j.core.enums.ToxFileKind
 
 class FileTransfer(val key: String, 
   val file: File,
@@ -11,7 +13,8 @@ class FileTransfer(val key: String,
   val initialProgress: Long, 
   val sending: Boolean, 
   val initialStatus: FileStatus, 
-  val id: Long) {
+  val id: Long,
+  val fileKind: FileKind) {
 
     private var progressHistory: Array[(Long, Long)] = Array[(Long, Long)]((System.currentTimeMillis, initialProgress))
 
@@ -99,7 +102,7 @@ class FileTransfer(val key: String,
             s.reset()
           }
           s.mark(chunkSize*2)
-          var data = new Array[Byte](chunkSize)
+          val data = new Array[Byte](chunkSize)
           s.read(data, 0, chunkSize)
           Some(data)
         case None =>

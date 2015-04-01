@@ -2,6 +2,7 @@ package im.tox.antox.wrapper
 
 import java.sql.Timestamp
 
+import im.tox.antox.wrapper.FileKind.FileKind
 import im.tox.antox.wrapper.MessageType.MessageType
 
 //remove if not needed
@@ -16,7 +17,8 @@ class ChatMessages(
   val received: Boolean,
   val sent: Boolean,
   val size: Int,
-  val `type`: MessageType) {
+  val `type`: MessageType,
+  val fileKind: FileKind) {
 
   def isMine: Boolean = {
     `type` == MessageType.OWN || `type` == MessageType.FILE_TRANSFER || `type` == MessageType.GROUP_OWN

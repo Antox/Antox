@@ -142,6 +142,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def fileSendChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, position, data)
 
+  def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = tox.fileGetFileId(friendNumber, fileNumber)
+
   def callbackFileRequestChunk(callback: FileRequestChunkCallback): Unit = tox.callbackFileRequestChunk(callback)
 
   def callbackFileReceive(callback: FileReceiveCallback): Unit = tox.callbackFileReceive(callback)

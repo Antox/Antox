@@ -14,6 +14,8 @@ object Constants {
 
   val DOWNLOAD_DIRECTORY = "Tox Received Files"
 
+  val AVATAR_DIRECTORY = "avatars"
+
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
   val DATABASE_VERSION = 5
@@ -58,6 +60,8 @@ object Constants {
 
   val COLUMN_NAME_SUCCESSFULLY_SENT = "successfully_sent"
 
+  val COLUMN_NAME_FILE_KIND = "file_kind"
+
   val COLUMN_NAME_ISONLINE = "isonline"
 
   val COLUMN_NAME_ISCONNECTED = "isconnected"
@@ -83,4 +87,6 @@ object Constants {
   val UNREAD_COUNT_LIMIT = 99
 
   val MAX_NAME_LENGTH = 128
+
+  val MAX_AVATAR_SIZE = 1000 * 1000 //in bytes
 }

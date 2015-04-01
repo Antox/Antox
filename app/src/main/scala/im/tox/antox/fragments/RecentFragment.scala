@@ -28,7 +28,7 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
   }
 
   def updateContactsLists(leftPaneAdapter: LeftPaneAdapter, contactList: Array[ContactInfo]): Unit = {
-    val sortedContactList = contactList.sortWith(compareLastMessageTimestamp).sortWith(compareNames)
+    val sortedContactList = contactList.filter(c => c.lastMessage != "").sortWith(compareLastMessageTimestamp).sortWith(compareNames)
     if (sortedContactList.length > 0) {
       getActivity.findViewById(R.id.center_text).setVisibility(View.GONE)
       for (contact <- sortedContactList) {

@@ -53,6 +53,7 @@ object AntoxDB {
       "successfully_sent boolean, " +
       "size integer, " +
       "type int, " +
+      "file_kind int, " + //-1 if not a file transfer
       "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))"
 
     var CREATE_TABLE_FRIEND_REQUESTS: String = "CREATE TABLE IF NOT EXISTS friend_requests" + " ( _id integer primary key, " +
@@ -159,6 +160,7 @@ class AntoxDB(ctx: Context) {
   def addFileTransfer(key: String,
     path: String,
     fileNumber: Int,
+    fileKind: Int,
     size: Int,
     sending: Boolean): Long = {
     this.open(writeable = true)
@@ -174,6 +176,7 @@ class AntoxDB(ctx: Context) {
     } else {
       values.put("type", MessageType.FILE_TRANSFER_FRIEND.id: java.lang.Integer)
     }
+    values.put(Constants.COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
     values.put("size", size: java.lang.Integer)
     val id = mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
     this.close()
@@ -229,6 +232,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read)
     values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
     values.put("type", `type`.id: java.lang.Integer)
+    values.put(Constants.COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
     mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
     println("added message of type " + `type`)
     this.close()
@@ -241,7 +245,9 @@ class AntoxDB(ctx: Context) {
       "JOIN friends ON friends.tox_key = messages.tox_key " +
       "WHERE messages.has_been_read == 0 " +
       "AND (messages.type == " + MessageType.FRIEND.id +
-      " OR messages.type == " + MessageType.FILE_TRANSFER_FRIEND.id + ")" +
+      " OR messages.type == " + MessageType.FILE_TRANSFER_FRIEND.id + ") " +
+      "AND (messages.file_kind == " + FileKind.INVALID.id +
+      " OR messages.file_kind == " + FileKind.DATA.id + ") " +
       "GROUP BY friends.tox_key"
 
     //TODO: fix this when I understand sql
@@ -394,9 +400,10 @@ class AntoxDB(ctx: Context) {
         val sent = cursor.getInt(8) > 0
         val size = cursor.getInt(9)
         val `type` = cursor.getInt(10)
+        val fileKind = cursor.getInt(11)
         messageList.add(new Message(id, message_id, k, sender_name, m, received, read, sent,
           time, size,
-          MessageType(`type`)))
+          MessageType(`type`), FileKind(fileKind)))
         println("type is " + `type`)
       } while (cursor.moveToNext())
     }
@@ -466,30 +473,6 @@ class AntoxDB(ctx: Context) {
     cursor
   }
 
-  def getRecentCursor: Cursor = {
-    this.open(writeable = false)
-    val selectQuery = "SELECT f.tox_key, f.username, f.alias, f.isonline, f.status, m1.timestamp," +
-      " " +
-      "m1.message, COUNT(m2.tox_key) as unreadCount, m1._id " +
-      "FROM " +
-      Constants.TABLE_FRIENDS +
-      " f " +
-      "INNER JOIN " +
-      Constants.TABLE_CHAT_LOGS +
-      " m1 ON (f.tox_key = m1.tox_key) " +
-      "LEFT OUTER JOIN (SELECT tox_key FROM " +
-      Constants.TABLE_CHAT_LOGS +
-      " WHERE ((type = 2 OR type = 4) AND has_been_read = 0)) " +
-      "m2 ON (f.tox_key = m2.tox_key) " +
-      "WHERE m1._id = (SELECT MAX(_id) FROM " +
-      Constants.TABLE_CHAT_LOGS +
-      " WHERE (tox_key = f.tox_key AND (type = 1 OR type = 2))) " +
-      "GROUP BY f.tox_key " +
-      "ORDER BY m1._id DESC"
-    val cursor = mDb.rawQuery(selectQuery, null)
-    cursor
-  }
-
   def getFriendRequestsList: util.ArrayList[FriendRequest] = {
     this.open(writeable = false)
     val friendRequests = new util.ArrayList[FriendRequest]()
@@ -549,8 +532,9 @@ class AntoxDB(ctx: Context) {
         val sent = cursor.getInt(8) > 0
         val size = cursor.getInt(9)
         val `type` = cursor.getInt(10)
+        val fileKind = cursor.getInt(11)
         messageList.add(new Message(id, m_id, k, sender_name, m, received, read, sent, time, size,
-          MessageType(`type`)))
+          MessageType(`type`), FileKind(fileKind)))
       } while (cursor.moveToNext())
     }
     cursor.close()

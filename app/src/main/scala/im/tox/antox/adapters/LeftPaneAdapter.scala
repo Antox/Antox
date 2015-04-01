@@ -1,15 +1,19 @@
 package im.tox.antox.adapters
 
+import java.io.File
+import java.net.URI
 import java.util.ArrayList
 
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.text.Html
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
+import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.R
 import im.tox.antox.adapters.LeftPaneAdapter._
 import im.tox.antox.data.AntoxDB
@@ -28,6 +32,8 @@ object LeftPaneAdapter {
     var secondText: TextView = _
 
     var icon: TextView = _
+
+    var avatar: CircleImageView = _
 
     var countText: TextView = _
 
@@ -83,6 +89,7 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
+          holder.avatar = newConvertView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
 
@@ -111,6 +118,18 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         holder.countText.setVisibility(View.GONE)
       }
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, false))
+
+      val avatarFile =
+        new File(context.getDir(Constants.AVATAR_DIRECTORY, Context.MODE_PRIVATE).getPath + "/" + item.key)
+
+      println("avatar dir containss: " )
+      for (name <- context.getDir(Constants.AVATAR_DIRECTORY, Context.MODE_PRIVATE).list()) {
+        println(name + " key: " + item.key)
+      }
+
+      if (avatarFile.exists()) {
+        holder.avatar.setImageURI(Uri.fromFile(avatarFile))
+      }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
         holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))

@@ -16,7 +16,7 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.{GroupInfo, Message, UserStatus, FriendInfo}
+import im.tox.antox.wrapper._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
@@ -127,7 +127,7 @@ class GroupChatActivity extends GenericChatActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, this)
+              ToxSingleton.sendFileSendRequest(filePath, activeKey, FileKind.DATA, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -136,7 +136,7 @@ class GroupChatActivity extends GenericChatActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, this)
+          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
           photoPath = null
         }
       }
