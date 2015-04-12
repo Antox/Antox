@@ -31,13 +31,13 @@ object Reactive {
           val unreadCount: Option[Integer] = uc.get(f.key)
           (lastMessageTup, unreadCount) match {
             case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
-              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, f.avatar, lastMessage, lastMessageTimestamp, unreadCount, f.alias)
             }
             case (Some((lastMessage, lastMessageTimestamp)), None) => {
-              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, lastMessage, lastMessageTimestamp, 0, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, f.avatar, lastMessage, lastMessageTimestamp, 0, f.alias)
             }
             case _ => {
-              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
+              new FriendInfo(f.online, f.name, f.status, f.statusMessage, f.key, f.avatar, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0, f.alias)
             }
           }
         })
@@ -55,7 +55,6 @@ object Reactive {
           val unreadCount: Option[Integer] = uc.get(g.id)
           (lastMessageTup, uc) match {
             case (Some((lastMessage, lastMessageTimestamp)), _) => {
-              println("unread count infolist" + unreadCount)
               g.lastMessage = lastMessage
               g.lastMessageTimestamp = lastMessageTimestamp
               g.unreadCount = unreadCount.getOrElse(0).asInstanceOf[Int]

@@ -35,36 +35,38 @@ object MessageHelper {
 
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendKey)) {
-      val chatActive = (State.chatActive && State.activeKey.contains(friendKey))
+      val chatActive = State.chatActive && State.activeKey.contains(friendKey)
       db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
         has_been_read = chatActive, successfully_sent = true, messageType)
-    }
-    db.close()
-    ToxSingleton.updateMessages(ctx)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-    if (preferences.getBoolean("notifications_enable_notifications", true) &&
-      preferences.getBoolean("notifications_new_message", true)) {
-      if (!(State.chatActive && State.activeKey.contains(friendKey))) {
-        val mName = ToxSingleton.getAntoxFriend(friendKey).map(_.getName)
-        mName.foreach(name => {
-          val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
-            .setContentTitle(name)
-            .setContentText(message)
-            .setDefaults(Notification.DEFAULT_ALL)
-          val resultIntent = new Intent(ctx, classOf[MainActivity])
-          resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-          resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-          resultIntent.putExtra("key", friendKey)
-          resultIntent.putExtra("name", name)
-          val stackBuilder = TaskStackBuilder.create(ctx)
-          stackBuilder.addParentStack(classOf[MainActivity])
-          stackBuilder.addNextIntent(resultIntent)
-          val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-          mBuilder.setContentIntent(resultPendingIntent)
-          ToxSingleton.mNotificationManager.notify(friendNumber, mBuilder.build())
-        })
+
+      ToxSingleton.updateMessages(ctx)
+      val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+      if (preferences.getBoolean("notifications_enable_notifications", true) &&
+        preferences.getBoolean("notifications_new_message", true)) {
+        if (!chatActive) {
+          val mName = ToxSingleton.getAntoxFriend(friendKey).map(_.getName)
+          mName.foreach(name => {
+            val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
+              .setContentTitle(name)
+              .setContentText(message)
+              .setDefaults(Notification.DEFAULT_ALL)
+            val resultIntent = new Intent(ctx, classOf[MainActivity])
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
+            resultIntent.putExtra("key", friendKey)
+            resultIntent.putExtra("name", name)
+            val stackBuilder = TaskStackBuilder.create(ctx)
+            stackBuilder.addParentStack(classOf[MainActivity])
+            stackBuilder.addNextIntent(resultIntent)
+            val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            mBuilder.setContentIntent(resultPendingIntent)
+            ToxSingleton.mNotificationManager.notify(friendNumber, mBuilder.build())
+          })
+        }
       }
     }
+
+    db.close()
   }
 
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: MessageType) = {
@@ -125,7 +127,6 @@ object MessageHelper {
           val db = new AntoxDB(ctx).open(writeable = true)
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
-              println("sent message of length " + splitMsg.length)
               Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, splitMsg))
             } catch {
               case e: Exception => {
@@ -158,7 +159,6 @@ object MessageHelper {
     val db = new AntoxDB(ctx).open(writeable = true)
     for (splitMsg <- splitMessage(msg)) {
       try {
-        println("sent message of length " + splitMsg.length)
         ToxSingleton.tox.sendGroupMessage(group.groupNumber, splitMsg)
       } catch {
         case e: Exception => {

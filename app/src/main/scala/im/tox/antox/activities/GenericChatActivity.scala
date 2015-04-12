@@ -1,6 +1,7 @@
 package im.tox.antox.activities
 
 import java.io.{File, IOException}
+import java.util
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
@@ -20,6 +21,7 @@ import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxSingleton, Reactive}
 import im.tox.antox.utils.{Constants, IconColor}
+import im.tox.antox.wrapper.{FileKind, Message}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -60,7 +62,7 @@ abstract class GenericChatActivity extends ActionBarActivity {
     val thisActivity = this
     Log.d(TAG, "key = " + key)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
+    adapter = new ChatMessagesAdapter(this, getMessageList, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -123,16 +125,20 @@ abstract class GenericChatActivity extends ActionBarActivity {
   }
 
   def updateChat() = {
-    val observable: Observable[Cursor] = Observable((observer) => {
-      val cursor: Cursor = getCursor
+    val observable: Observable[util.ArrayList[Message]] = Observable((observer) => {
+      val cursor: util.ArrayList[Message] = getMessageList
       observer.onNext(cursor)
       observer.onCompleted()
     })
     observable
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
-      .subscribe((cursor: Cursor) => {
-      adapter.changeCursor(cursor)
+      .subscribe((messageList: util.ArrayList[Message]) => {
+      //FIXME make this more efficient
+      adapter.setNotifyOnChange(false)
+      adapter.clear()
+      adapter.addAll(messageList)
+      adapter.notifyDataSetChanged()
       Log.d(TAG, "changing chat list cursor")
     })
     Log.d("ChatFragment", "new key: " + activeKey)
@@ -168,13 +174,13 @@ abstract class GenericChatActivity extends ActionBarActivity {
     Some(msg)
   }
 
-  def getCursor: Cursor = {
+  def getMessageList: util.ArrayList[Message] = {
     if (antoxDB == null) {
       antoxDB = new AntoxDB(this)
     }
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val cursor: Cursor = antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true))
-    return cursor
+    val messageList: util.ArrayList[Message] = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true))
+    messageList
   }
 
   override def onPause() = {

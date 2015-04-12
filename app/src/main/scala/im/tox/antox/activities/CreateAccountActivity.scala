@@ -97,7 +97,7 @@ class CreateAccountActivity extends ActionBarActivity {
     val toxOptions = new ToxOptions()
     toxOptions.setIpv6Enabled(Options.ipv6Enabled)
     toxOptions.setUdpEnabled(Options.udpEnabled)
-    val tox = new ToxCoreImpl(toxOptions)
+    val tox = new ToxCoreImpl(toxOptions, null)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)

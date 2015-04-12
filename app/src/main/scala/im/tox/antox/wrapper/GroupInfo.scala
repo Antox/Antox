@@ -14,7 +14,7 @@ class GroupInfo(
   lastMessage: String,
   lastMessageTimestamp: Timestamp,
   unreadCount: Int,
-  alias: String) extends ContactInfo(id, name, connected, if (connected) "online" else "offline",
+  alias: String) extends ContactInfo(id, name, None, connected, if (connected) "online" else "offline",
                                      topic, lastMessage, lastMessageTimestamp, unreadCount, alias) {
 
   def this(group: Group, lastMessage: String, lastMessageTimestamp: Timestamp, unreadCount: Int) {

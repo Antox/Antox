@@ -12,12 +12,13 @@ import android.graphics.{Typeface, Color}
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.widget.ResourceCursorAdapter
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.{ClipboardManager, Html}
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
-import im.tox.antox.wrapper.{FileKind, MessageType, ChatMessages}
+import im.tox.antox.wrapper.{Message, FileKind, MessageType, ChatMessages}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
@@ -70,8 +71,8 @@ object ChatMessagesAdapter {
   }
 }
 
-class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Integer])
-  extends ResourceCursorAdapter(context, R.layout.chat_message_row, c, 0) {
+class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message], ids: util.HashSet[Integer])
+  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
@@ -83,43 +84,55 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
 
   private val animatedIds: util.HashSet[Integer] = ids
 
-  override def newView(context: Context, cursor: Cursor, parent: ViewGroup): View = {
-    mInflater.inflate(this.layoutResourceId, parent, false)
-  }
+  override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
+    var view: View = null
+    var holder: ChatMessagesHolder = null
 
-  override def bindView(view: View, context: Context, cursor: Cursor) {
-    val msg = chatMessageFromCursor(cursor)
-    var lastMsg: ChatMessages = null
-    if (cursor.moveToPrevious()) {
-      lastMsg = chatMessageFromCursor(cursor)
+    val msg = getItem(position)
+
+    //FIXME
+    var lastMsg: Message = null
+    var nextMsg: Message = null
+
+    if (convertView == null) {
+      view = mInflater.inflate(this.layoutResourceId, parent, false)
+
+      holder = new ChatMessagesHolder()
+      holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
+      holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
+      holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
+      holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
+      holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
+      holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
+      holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
+      holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
+      holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
+      holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
+      holder.padding = view.findViewById(R.id.file_transfer_padding)
+      holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
+      holder.accept = view.findViewById(R.id.file_accept_button)
+      holder.reject = view.findViewById(R.id.file_reject_button)
+      holder.sentTriangle = view.findViewById(R.id.sent_triangle)
+      holder.receivedTriangle = view.findViewById(R.id.received_triangle)
+      holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
+      holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
+
+      view.setTag(holder)
+    } else {
+      view = convertView
+      holder = view.getTag.asInstanceOf[ChatMessagesHolder]
+    }
+
+    /* if (cursor.moveToPrevious()) {
+      lastMsg = getItem(position - 1)
     }
     cursor.moveToNext()
 
-    var nextMsg: ChatMessages = null
     if (cursor.moveToNext()) {
       nextMsg = chatMessageFromCursor(cursor)
     }
-    cursor.moveToPrevious()
+    cursor.moveToPrevious() */
 
-    val holder = new ChatMessagesHolder()
-    holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
-    holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
-    holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
-    holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
-    holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
-    holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
-    holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
-    holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
-    holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
-    holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
-    holder.padding = view.findViewById(R.id.file_transfer_padding)
-    holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
-    holder.accept = view.findViewById(R.id.file_accept_button)
-    holder.reject = view.findViewById(R.id.file_reject_button)
-    holder.sentTriangle = view.findViewById(R.id.sent_triangle)
-    holder.receivedTriangle = view.findViewById(R.id.received_triangle)
-    holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
-    holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
     holder.message.setTextSize(16)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
@@ -279,7 +292,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     if (nextMsg == null ||
       (nextMsg == null && lastMsg == null) ||
       msg.sender_name != nextMsg.sender_name) {
-      holder.time.setText(TimestampUtils.prettyTimestamp(msg.time, isChat = true))
+      holder.time.setText(TimestampUtils.prettyTimestamp(msg.timestamp, isChat = true))
       holder.time.setVisibility(View.VISIBLE)
     } else {
       holder.time.setVisibility(View.GONE)
@@ -338,11 +351,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
         true
       }
     })
+
+    view
   }
 
   override def getViewTypeCount: Int = MessageType.values.size
 
-  override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
+  //override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
 
   private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
     val id = cursor.getInt(0)
@@ -357,7 +372,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     val size = cursor.getInt(9)
     val messageType = cursor.getInt(10)
     val fileKind = cursor.getInt(11)
-    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType), FileKind(fileKind))
+    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType), FileKind.fromToxFileKind(fileKind))
   }
 
   private def shouldGreentext(message: String): Boolean = {

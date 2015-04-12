@@ -3,8 +3,7 @@ package im.tox.antox.transfer
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
 import im.tox.antox.transfer.FileStatus.FileStatus
-import im.tox.antox.wrapper.FileKind.FileKind
-import im.tox.tox4j.core.enums.ToxFileKind
+import im.tox.antox.wrapper.FileKind
 
 class FileTransfer(val key: String, 
   val file: File,
@@ -101,7 +100,7 @@ class FileTransfer(val key: String,
           if (reset) {
             s.reset()
           }
-          s.mark(chunkSize*2)
+          s.mark(chunkSize)
           val data = new Array[Byte](chunkSize)
           s.read(data, 0, chunkSize)
           Some(data)

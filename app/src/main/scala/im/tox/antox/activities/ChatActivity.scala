@@ -1,6 +1,7 @@
 package im.tox.antox.activities
 
 import java.io.{File, IOException}
+import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
@@ -15,6 +16,7 @@ import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
+import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.wrapper.{FileKind, UserStatus, FriendInfo}
 import im.tox.antox.R
@@ -38,34 +40,9 @@ class ChatActivity extends GenericChatActivity {
     val key = extras.getString("key")
     activeKey = key
     val thisActivity = this
-    Log.d(TAG, "key = " + key)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
-    displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
-    statusIconView = this.findViewById(R.id.icon)
-    avatarActionView = this.findViewById(R.id.avatarActionView)
-    avatarActionView.setOnClickListener(new View.OnClickListener() {
-      override def onClick(v: View) {
-        thisActivity.finish()
-      }
-    })
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-    chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
-    chatListView.setStackFromBottom(true)
-    chatListView.setAdapter(adapter)
-    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-      override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
-        scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-      }
-
-      override def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-
-      }
-
-    })
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
@@ -131,12 +108,12 @@ class ChatActivity extends GenericChatActivity {
 
           override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
             case 0 => {
-              var intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+              val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
               startActivityForResult(intent, Constants.IMAGE_RESULT)
             }
             case 1 => {
               val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-              val image_name = "Antoxpic" + new Date().toString
+              val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date())
               val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
               try {
                 val file = File.createTempFile(image_name, ".jpg", storageDir)
@@ -149,7 +126,6 @@ class ChatActivity extends GenericChatActivity {
               }
             }
             case 2 => {
-              println("sent file send request")
               val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
               val fileDialog = new FileDialog(thisActivity, mPath, false)
               fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
@@ -182,6 +158,14 @@ class ChatActivity extends GenericChatActivity {
       mFriend match {
         case Some(friend) => {
           thisActivity.setDisplayName(friend.getAliasOrName)
+
+          val avatar = friend.avatar
+          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          if (avatar.isDefined && avatar.get.exists()) {
+            avatarView.setImageURI(Uri.fromFile(avatar.get))
+          } else {
+            avatarView.setImageResource(R.color.grey_light)
+          }
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             thisActivity.statusIconView.setBackground(thisActivity.getResources
@@ -238,22 +222,16 @@ class ChatActivity extends GenericChatActivity {
         }
       }
     } else {
-      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
+      Log.d(TAG, "onActivityResult result code not okay, user cancelled")
     }
   }
 
 
-  def onClickVoiceCallFriend(v: View){
-    println("This button (Audio Call) doesn't work yet.")
-  }
+  def onClickVoiceCallFriend(v: View){}
 
-  def onClickVideoCallFriend(v: View): Unit = {
-    println("This button (Video Call) doesn't work yet.")
-  }
+  def onClickVideoCallFriend(v: View): Unit = {}
 
-  def onClickInfo(v: View): Unit = {
-    println("info clicked: not yet implemented")
-  }
+  def onClickInfo(v: View): Unit = {}
 
   override def onPause() = {
     super.onPause()

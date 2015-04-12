@@ -2,27 +2,43 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
+import im.tox.antox.data.AntoxDB
 import im.tox.antox.utils.Constants
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.wrapper.FileKind
+import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.callbacks.FileReceiveCallback
-import im.tox.tox4j.core.enums.ToxFileKind
+import im.tox.tox4j.core.enums.{ToxFileControl, ToxFileKind}
 
 object AntoxOnFileReceiveCallback {
   private val TAG = "OnFileReceiveCallback"
 }
 
 class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
-  override def fileReceive(friendNumber: Int, fileNumber: Int, kind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
-    if (kind == ToxFileKind.AVATAR && fileSize > Constants.MAX_AVATAR_SIZE) return
+  override def fileReceive(friendNumber: Int, fileNumber: Int, toxFileKind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
+    val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
+    val key = ToxSingleton.getAntoxFriend(friendNumber).get.key
 
-    val replaceExisting = kind == ToxFileKind.AVATAR
-    val name = if (kind == ToxFileKind.AVATAR) ToxSingleton.getAntoxFriend(friendNumber).get.key else new String(filename)
-    val key = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
+    if (kind == FileKind.AVATAR) {
+      if (fileSize > Constants.MAX_AVATAR_SIZE){
+        return
+      } else if (fileSize == 0) {
+        ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
+        ToxSingleton.getAntoxFriend(friendNumber).get.deleteAvatar()
+        val db = new AntoxDB(ctx)
+        db.updateFriendAvatar(key, "")
+        db.close()
+        ToxSingleton.updateContactsList(ctx)
+        ToxSingleton.updateMessages(ctx)
+        return
+      }
+    }
+
+    val name = if (kind == FileKind.AVATAR) key else new String(filename)
 
     ToxSingleton.fileSendRequest(key,
-      fileNumber, name, FileKind(kind), fileSize, replaceExisting, ctx)
+      fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind == ToxFileKind.AVATAR) ToxSingleton.acceptFile(key, fileNumber, ctx)
+    if (kind.autoAccept) ToxSingleton.acceptFile(key, fileNumber, ctx)
   }
 }

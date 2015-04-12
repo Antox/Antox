@@ -38,32 +38,7 @@ class GroupChatActivity extends GenericChatActivity {
     val key = extras.getString("key")
     activeKey = key
     val thisActivity = this
-    Log.d(TAG, "key = " + key)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
-    displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
-    statusIconView = this.findViewById(R.id.icon)
-    avatarActionView = this.findViewById(R.id.avatarActionView)
-    avatarActionView.setOnClickListener(new View.OnClickListener() {
-      override def onClick(v: View) {
-        thisActivity.finish()
-      }
-    })
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-    chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
-    chatListView.setStackFromBottom(true)
-    chatListView.setAdapter(adapter)
-    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-      override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
-        scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-      }
-
-      override def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-
-      }
-
-    })
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
@@ -111,40 +86,6 @@ class GroupChatActivity extends GenericChatActivity {
       MessageHelper.sendGroupMessage(this, key, mMessage.get, None)
     }
   }
-
-  override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    super.onActivityResult(requestCode, resultCode, data)
-    if (resultCode == Activity.RESULT_OK) {
-      if (requestCode == Constants.IMAGE_RESULT) {
-        val uri = data.getData
-        val filePathColumn = Array(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME)
-        val loader = new CursorLoader(this, uri, filePathColumn, null, null, null)
-        val cursor = loader.loadInBackground()
-        if (cursor != null) {
-          if (cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(filePathColumn(0))
-            val filePath = cursor.getString(columnIndex)
-            val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
-            val fileName = cursor.getString(fileNameIndex)
-            try {
-              ToxSingleton.sendFileSendRequest(filePath, activeKey, FileKind.DATA, this)
-            } catch {
-              case e: Exception => e.printStackTrace()
-            }
-          }
-        }
-      }
-      if (requestCode == Constants.PHOTO_RESULT) {
-        if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
-          photoPath = null
-        }
-      }
-    } else {
-      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
-    }
-  }
-
 
   def onClickVoiceCallFriend(v: View){
     println("This button (Audio Call) doesn't work yet.")

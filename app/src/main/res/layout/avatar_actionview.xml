@@ -16,11 +16,11 @@
         android:layout_toRightOf="@+id/backButton"
         android:layout_width="40dp"
         android:layout_height="40dp">
-        <TextView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/circle_grey_light"
+            android:src="@color/grey_light"
             />
         <TextView
             android:id="@+id/icon"

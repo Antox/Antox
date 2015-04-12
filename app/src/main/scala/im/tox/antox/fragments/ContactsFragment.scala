@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.{View, ViewGroup, LayoutInflater}
 import com.shamanland.fab.{ShowHideOnScroll, FloatingActionButton}
 import im.tox.antox.R
-import im.tox.antox.adapters.LeftPaneAdapter
+import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.wrapper.{GroupInfo, GroupInvite, FriendRequest, FriendInfo}
 import im.tox.tox4j.core.enums.ToxStatus
@@ -15,7 +15,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     Array[GroupInvite], Array[GroupInfo])) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
-        leftPaneAdapter = new LeftPaneAdapter(getActivity)
+        leftPaneAdapter = new ContactListAdapter(getActivity)
         updateFriendsList(leftPaneAdapter, friendsList)
         updateFriendRequests(leftPaneAdapter, friendRequests)
         updateGroupInvites(leftPaneAdapter, groupInvites)
@@ -31,7 +31,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     rootView
   }
 
-  def updateFriendsList(leftPaneAdapter: LeftPaneAdapter, friendsList: Array[FriendInfo]): Unit = {
+  def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Array[FriendInfo]): Unit = {
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
     if (sortedFriendsList.length > 0) {
       var onlineAdded = false
@@ -45,7 +45,8 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
           leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
           onlineAdded = true
         }
-        val friend = new LeftPaneItem(f.key, f.name, f.statusMessage,
+        println("unread count is " + f.unreadCount)
+        val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.unreadCount,
           f.lastMessageTimestamp)
         leftPaneAdapter.addItem(friend)
@@ -53,7 +54,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateFriendRequests(leftPaneAdapter: LeftPaneAdapter, friendRequests: Array[FriendRequest]): Unit = {
+  def updateFriendRequests(leftPaneAdapter: ContactListAdapter, friendRequests: Array[FriendRequest]): Unit = {
     if (friendRequests.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
       for (r <- friendRequests) {
@@ -63,7 +64,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateGroupInvites(leftPaneAdapter: LeftPaneAdapter, groupInvites: Array[GroupInvite]): Unit = {
+  def updateGroupInvites(leftPaneAdapter: ContactListAdapter, groupInvites: Array[GroupInvite]): Unit = {
     if (groupInvites.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
       for (invite <- groupInvites) {
@@ -73,13 +74,13 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateGroupList(leftPaneAdapter: LeftPaneAdapter, groups: Array[GroupInfo]): Unit = {
+  def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Array[GroupInfo]): Unit = {
     println("update group list " + groups.length)
     if (groups.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
         println("unread count is " + group.unreadCount)
-        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.id, group.name, group.topic,
+        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.id, group.avatar, group.name, group.topic,
           group.connected, ToxStatus.NONE, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
       }

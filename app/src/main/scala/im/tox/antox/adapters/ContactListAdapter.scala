@@ -15,7 +15,7 @@ import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.R
-import im.tox.antox.adapters.LeftPaneAdapter._
+import im.tox.antox.adapters.ContactListAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.tox.ToxSingleton
@@ -23,7 +23,7 @@ import im.tox.antox.utils._
 
 import scala.collection.JavaConversions._
 
-object LeftPaneAdapter {
+object ContactListAdapter {
 
   private class ViewHolder {
 
@@ -41,7 +41,7 @@ object LeftPaneAdapter {
   }
 }
 
-class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Filterable {
+class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
   private var mDataOriginal: ArrayList[LeftPaneItem] = new ArrayList[LeftPaneItem]()
 
@@ -117,18 +117,12 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
       } else {
         holder.countText.setVisibility(View.GONE)
       }
-      holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, false))
+      holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
-      val avatarFile =
-        new File(context.getDir(Constants.AVATAR_DIRECTORY, Context.MODE_PRIVATE).getPath + "/" + item.key)
-
-      println("avatar dir containss: " )
-      for (name <- context.getDir(Constants.AVATAR_DIRECTORY, Context.MODE_PRIVATE).list()) {
-        println(name + " key: " + item.key)
-      }
-
-      if (avatarFile.exists()) {
-        holder.avatar.setImageURI(Uri.fromFile(avatarFile))
+      if (item.image.isDefined && item.image.get.exists()) {
+        holder.avatar.setImageURI(Uri.fromFile(item.image.get))
+      } else {
+        holder.avatar.setImageResource(R.color.grey_light)
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -190,7 +184,6 @@ class LeftPaneAdapter(private var context: Context) extends BaseAdapter with Fil
         val db = new AntoxDB(context)
         try {
           val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
-          println("data length " + inviteData.length)
           ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {

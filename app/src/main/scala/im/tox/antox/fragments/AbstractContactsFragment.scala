@@ -16,7 +16,7 @@ import im.tox.antox.transfer.FileDialog
 import im.tox.antox.wrapper._
 import im.tox.antox.R
 import im.tox.antox.activities.{GroupChatActivity, ChatActivity, FriendProfileActivity}
-import im.tox.antox.adapters.LeftPaneAdapter
+import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import FileDialog.DirectorySelectedListener
@@ -36,7 +36,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
   protected var contactsListView: ListView = _
 
-  protected var leftPaneAdapter: LeftPaneAdapter = _
+  protected var leftPaneAdapter: ContactListAdapter = _
 
   protected var contactChangeSub: Subscription = _
 
@@ -92,7 +92,6 @@ abstract class AbstractContactsFragment extends Fragment {
 
     if (showFab) {
       val fab = rootView.findViewById(R.id.fab).asInstanceOf[FloatingActionButton]
-      println("showing that fab")
       fab.setSize(FloatingActionButton.SIZE_NORMAL)
       fab.setColor(getResources.getColor(R.color.fab_normal))
       fab.initBackground()
@@ -177,7 +176,6 @@ abstract class AbstractContactsFragment extends Fragment {
               val db = new AntoxDB(getActivity)
               db.deleteChat(key)
               db.deleteGroup(key)
-              println("deleting group with key " + key)
               db.close()
               val group = ToxSingleton.getGroupList.getGroup(key)
               try {
@@ -248,7 +246,6 @@ abstract class AbstractContactsFragment extends Fragment {
     fileDialog.addDirectoryListener(new DirectorySelectedListener {
       override def directorySelected(directory: File): Unit = {
         try {
-          println("exporting chat log")
           val db = new AntoxDB(getActivity)
           val messageList: util.ArrayList[Message] = db.getMessageList(key, actionMessages = true)
           val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + IDUtils.trimForUI(key) + "-log.txt"

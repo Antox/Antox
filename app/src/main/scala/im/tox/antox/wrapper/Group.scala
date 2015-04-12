@@ -24,10 +24,8 @@ class Group(val id: String,
   }
 
   def printPeerList(): Unit = {
-    println("peer list: ")
     var number = 0
     for (peer <- peers.all()) {
-      println("peer " + number + " with name " + peer.name)
       number += 1
     }
   }

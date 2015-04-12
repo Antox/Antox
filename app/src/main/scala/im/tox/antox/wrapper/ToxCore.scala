@@ -12,7 +12,7 @@ import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions, data: Array[Byte]) {
 
-  val tox: ToxCoreImpl = if (data != null) new ToxCoreImpl(options, data) else new ToxCoreImpl(options)
+  val tox: ToxCoreImpl = new ToxCoreImpl(options, data)
 
   def this(antoxFriendList: AntoxFriendList, groupList: GroupList, data: Array[Byte]) {
     this(antoxFriendList: AntoxFriendList, groupList: GroupList, new ToxOptions, data)
@@ -70,7 +70,6 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
           println("could not set name in group " + groupNumber)
       }
     }
-    println("called set name")
   }
 
   def getName: String = new String(tox.getName, "UTF-8")
@@ -88,7 +87,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setKey(ToxSingleton.keyFromAddress(address))
-    return friendNumber
+    friendNumber
   }
 
   def addFriendNoRequest(key: String): Int = {
@@ -96,7 +95,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setKey(key)
-    return friendNumber
+    friendNumber
   }
 
   def deleteFriend(friendNumber: Int): Unit = {
@@ -223,7 +222,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     }
   }
 
-  def getGroupPeerName(groupNumber: Int, peerNumber: Int):String = {
+  def getGroupPeerName(groupNumber: Int, peerNumber: Int): String = {
     //val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
     //if (peerNameBytes == null) {
       ""

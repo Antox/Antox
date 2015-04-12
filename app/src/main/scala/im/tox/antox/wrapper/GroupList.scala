@@ -76,14 +76,6 @@ class GroupList {
   }
 
   def removeGroup(groupNumber: Int) {
-    println("before remove")
-    for (group <- groups) {
-      println("group " + group.name)
-    }
     groups.remove(groups.find(group => group.groupNumber == groupNumber).get)
-    println("after remove")
-    for (group <- groups) {
-      println("group " + group.name)
-    }
   }
 }

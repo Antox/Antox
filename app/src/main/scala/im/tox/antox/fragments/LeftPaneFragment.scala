@@ -20,11 +20,12 @@ class LeftPaneFragment extends Fragment {
     val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
-      println("position " + position)
       //hack to center the image only for left pane
       val params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
       params.addRule(RelativeLayout.CENTER_HORIZONTAL)
       params.addRule(RelativeLayout.CENTER_VERTICAL)
+
+      //disable the material ripple layout on pre-honeycomb devices
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
         val customTabLayout: FrameLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab_old, parent, false).asInstanceOf[FrameLayout]
         val imageView = customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView]

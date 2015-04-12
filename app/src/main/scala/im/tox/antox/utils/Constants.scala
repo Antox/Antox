@@ -18,7 +18,7 @@ object Constants {
 
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 5
+  val DATABASE_VERSION = 6
 
   val TABLE_FRIENDS = "friends"
 
@@ -71,6 +71,8 @@ object Constants {
   val COLUMN_NAME_IGNORED = "ignored"
 
   val COLUMN_NAME_ISBLOCKED = "isblocked"
+
+  val COLUMN_NAME_AVATAR = "avatar"
 
   val ADD_FRIEND_REQUEST_CODE = 0
 

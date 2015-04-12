@@ -13,6 +13,7 @@ import android.util.Log
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxStatus
@@ -32,7 +33,8 @@ object AntoxDB {
       "note text, " +
       "alias text, " +
       "isonline boolean, " +
-      "isblocked boolean);"
+      "isblocked boolean, " +
+      "avatar text);"
 
     var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
       "name text, " +
@@ -140,6 +142,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_ISONLINE, false)
     values.put(Constants.COLUMN_NAME_ALIAS, alias)
     values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
+    values.put(Constants.COLUMN_NAME_AVATAR, key)
     mDb.insert(Constants.TABLE_FRIENDS, null, values)
     this.close()
   }
@@ -234,7 +237,6 @@ class AntoxDB(ctx: Context) {
     values.put("type", `type`.id: java.lang.Integer)
     values.put(Constants.COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
     mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
-    println("added message of type " + `type`)
     this.close()
   }
 
@@ -246,8 +248,8 @@ class AntoxDB(ctx: Context) {
       "WHERE messages.has_been_read == 0 " +
       "AND (messages.type == " + MessageType.FRIEND.id +
       " OR messages.type == " + MessageType.FILE_TRANSFER_FRIEND.id + ") " +
-      "AND (messages.file_kind == " + FileKind.INVALID.id +
-      " OR messages.file_kind == " + FileKind.DATA.id + ") " +
+      "AND (messages.file_kind == " + FileKind.INVALID.kindId +
+      " OR messages.file_kind == " + FileKind.DATA.kindId + ") " +
       "GROUP BY friends.tox_key"
 
     //TODO: fix this when I understand sql
@@ -400,11 +402,12 @@ class AntoxDB(ctx: Context) {
         val sent = cursor.getInt(8) > 0
         val size = cursor.getInt(9)
         val `type` = cursor.getInt(10)
-        val fileKind = cursor.getInt(11)
-        messageList.add(new Message(id, message_id, k, sender_name, m, received, read, sent,
+        val fileKind = FileKind.fromToxFileKind(cursor.getInt(11))
+        if (fileKind == FileKind.INVALID || fileKind.visible) {
+          messageList.add(new Message(id, message_id, k, sender_name, m, received, read, sent,
           time, size,
-          MessageType(`type`), FileKind(fileKind)))
-        println("type is " + `type`)
+          MessageType(`type`), fileKind))
+        }
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -441,7 +444,9 @@ class AntoxDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       do {
         val id = cursor.getInt(0)
-        idSet.add(id)
+        val fileKind = FileKind.fromToxFileKind(cursor.getInt(11))
+
+        if (fileKind == FileKind.INVALID || fileKind.visible) idSet.add(id)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -534,7 +539,7 @@ class AntoxDB(ctx: Context) {
         val `type` = cursor.getInt(10)
         val fileKind = cursor.getInt(11)
         messageList.add(new Message(id, m_id, k, sender_name, m, received, read, sent, time, size,
-          MessageType(`type`), FileKind(fileKind)))
+          MessageType(`type`), FileKind.fromToxFileKind(fileKind)))
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -622,9 +627,11 @@ class AntoxDB(ctx: Context) {
         var alias = cursor.getString(4)
         val isOnline = cursor.getInt(5) != 0
         val isBlocked = cursor.getInt(6) > 0
+        val avatar = cursor.getString(7)
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = IDUtils.trimForUI(key)
-        if (!isBlocked) (friendList += (new FriendInfo(isOnline, name, status, note, key, alias)))
+        val file = AVATAR.getAvatarFile(avatar, ctx)
+        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, alias)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -788,6 +795,14 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_ISCONNECTED, connected)
     mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    this.close()
+  }
+
+  def updateFriendAvatar(key: String, avatar: String) {
+    this.open(writeable = false)
+    val values = new ContentValues()
+    values.put(Constants.COLUMN_NAME_AVATAR, avatar)
+    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 

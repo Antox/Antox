@@ -2,7 +2,6 @@ package im.tox.antox.wrapper
 
 import java.sql.Timestamp
 
-import im.tox.antox.wrapper.FileKind.FileKind
 import im.tox.antox.wrapper.MessageType.MessageType
 
 //remove if not needed

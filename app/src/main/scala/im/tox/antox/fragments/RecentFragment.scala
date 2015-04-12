@@ -3,7 +3,7 @@ package im.tox.antox.fragments
 import android.os.Bundle
 import android.view.{View, ViewGroup, LayoutInflater}
 import im.tox.antox.R
-import im.tox.antox.adapters.LeftPaneAdapter
+import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.wrapper._
 
@@ -13,7 +13,7 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
     Array[GroupInvite], Array[GroupInfo])) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
-        leftPaneAdapter = new LeftPaneAdapter(getActivity)
+        leftPaneAdapter = new ContactListAdapter(getActivity)
         updateContactsLists(leftPaneAdapter, friendsList ++ groupList)
 
         contactsListView.setAdapter(leftPaneAdapter)
@@ -27,8 +27,8 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
     rootView
   }
 
-  def updateContactsLists(leftPaneAdapter: LeftPaneAdapter, contactList: Array[ContactInfo]): Unit = {
-    val sortedContactList = contactList.filter(c => c.lastMessage != "").sortWith(compareLastMessageTimestamp).sortWith(compareNames)
+  def updateContactsLists(leftPaneAdapter: ContactListAdapter, contactList: Array[ContactInfo]): Unit = {
+    val sortedContactList = contactList.filter(c => c.lastMessage != "").sortWith(compareNames).sortWith(compareLastMessageTimestamp)
     if (sortedContactList.length > 0) {
       getActivity.findViewById(R.id.center_text).setVisibility(View.GONE)
       for (contact <- sortedContactList) {
@@ -38,7 +38,7 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
           ContactItemType.FRIEND
         }
 
-        val contactPaneItem = new LeftPaneItem(itemType, contact.key, contact.name, contact.statusMessage,
+        val contactPaneItem = new LeftPaneItem(itemType, contact.key, contact.avatar, contact.name, contact.lastMessage,
           contact.online, UserStatus.getToxUserStatusFromString(contact.status), contact.unreadCount,
           contact.lastMessageTimestamp)
         leftPaneAdapter.addItem(contactPaneItem)

@@ -1,5 +1,6 @@
 package im.tox.antox.wrapper
 
+import java.io.File
 import java.util
 
 import im.tox.tox4j.core.enums.ToxStatus
@@ -16,6 +17,9 @@ class AntoxFriend(friendnumber: Int) {
 
   @BeanProperty
   var key: String = _
+
+  @BeanProperty
+  var avatar: Option[File] = None
 
   @BeanProperty
   var status: ToxStatus = ToxStatus.NONE
@@ -35,6 +39,13 @@ class AntoxFriend(friendnumber: Int) {
   var previousNames: util.ArrayList[String] = _
 
   def getFriendnumber: Int = this.friendNumber
+
+  def deleteAvatar(): Unit = {
+    if (avatar.isDefined) {
+      avatar.get.delete()
+      setAvatar(None)
+    }
+  }
 
   def setTyping(isTyping: Boolean) {
     this.isTyping = isTyping

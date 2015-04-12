@@ -76,10 +76,10 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
     val exportProfile = findPreference("export")
-    val literallythis = this
+    val thisActivity = this
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val fileDialog = new FileDialog(literallythis, Environment.getExternalStorageDirectory, true)
+        val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
         fileDialog.addDirectoryListener(new DirectorySelectedListener {
           override def directorySelected(directory: File): Unit = {
             onExportDataFileSelected(directory)
