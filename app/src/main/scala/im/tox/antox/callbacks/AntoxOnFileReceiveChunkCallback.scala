@@ -18,11 +18,10 @@ class AntoxOnFileReceiveChunkCallback(private var ctx: Context) extends FileRece
   override def fileReceiveChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = {
     val key = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
     val size = State.transfers.get(key, fileNumber).get.size
-    println("file data received at pos " + position + " out of " + size + " with data length " + data.length)
     
     if (position == size) {
       ToxSingleton.fileFinished(key, fileNumber, ctx)
-      Reactive.updatedMessages.onNext(true)
+      ToxSingleton.updateMessages(ctx)
     } else {
       ToxSingleton.receiveFileData(key, fileNumber, data, ctx)
     }

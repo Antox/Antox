@@ -37,7 +37,6 @@ class GroupChatActivity extends GenericChatActivity {
     val extras: Bundle = getIntent.getExtras
     val key = extras.getString("key")
     activeKey = key
-    val thisActivity = this
 
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
@@ -79,12 +78,12 @@ class GroupChatActivity extends GenericChatActivity {
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
     val mMessage = validateMessageBox()
+    val key = activeKey
 
-    if (mMessage.isDefined) {
-      val key = activeKey
+    mMessage.foreach(message => {
       messageBox.setText("")
-      MessageHelper.sendGroupMessage(this, key, mMessage.get, None)
-    }
+      MessageHelper.sendGroupMessage(this, key, message, None)
+    })
   }
 
   def onClickVoiceCallFriend(v: View){

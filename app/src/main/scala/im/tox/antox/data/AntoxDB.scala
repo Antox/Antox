@@ -392,6 +392,7 @@ class AntoxDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       do {
         val id = cursor.getInt(0)
+        println("message id is " + id)
         val time = Timestamp.valueOf(cursor.getString(1))
         val message_id = cursor.getInt(2)
         val k = cursor.getString(3)

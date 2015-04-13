@@ -41,10 +41,8 @@ class AntoxFriend(friendnumber: Int) {
   def getFriendnumber: Int = this.friendNumber
 
   def deleteAvatar(): Unit = {
-    if (avatar.isDefined) {
-      avatar.get.delete()
-      setAvatar(None)
-    }
+    avatar.map(_.delete())
+    setAvatar(None)
   }
 
   def setTyping(isTyping: Boolean) {

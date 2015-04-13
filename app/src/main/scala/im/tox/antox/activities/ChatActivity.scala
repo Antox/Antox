@@ -185,12 +185,12 @@ class ChatActivity extends GenericChatActivity {
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
     val mMessage = validateMessageBox()
+    val key = activeKey
 
-    if (mMessage.isDefined) {
-      val key = activeKey
+    mMessage.foreach(message => {
       messageBox.setText("")
-      MessageHelper.sendMessage(this, key, mMessage.get, None)
-    }
+      MessageHelper.sendMessage(this, key, message, None)
+    })
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

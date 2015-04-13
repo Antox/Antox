@@ -18,6 +18,8 @@ import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
 import android.widget._
+import im.tox.antox.transfer.FileUtils
+import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.{Message, FileKind, MessageType, ChatMessages}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
@@ -254,7 +256,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
               //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase.endsWith(extension)) {
-                if (BitmapManager.checkValidImage(file)) {
                   BitmapManager.loadBitmap(file, file.getPath.hashCode, holder.imageMessage)
                   holder.imageMessage.setVisibility(View.VISIBLE)
                   holder.imageMessageFrame.setVisibility(View.VISIBLE)
@@ -276,7 +277,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                   }
                 }
                 //break
-              }
             }
           }
         }

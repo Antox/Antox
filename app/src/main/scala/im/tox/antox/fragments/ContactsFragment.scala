@@ -45,7 +45,6 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
           leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
           onlineAdded = true
         }
-        println("unread count is " + f.unreadCount)
         val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.unreadCount,
           f.lastMessageTimestamp)
@@ -79,7 +78,6 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     if (groups.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
-        println("unread count is " + group.unreadCount)
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.id, group.avatar, group.name, group.topic,
           group.connected, ToxStatus.NONE, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
