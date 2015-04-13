@@ -188,7 +188,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
         holder.title.setVisibility(View.VISIBLE)
         holder.title.setText(R.string.chat_file_transfer)
         if (msg.received) {
-          holder.progressText.setText("Finished")
+          holder.progressText.setText(context.getResources.getString(R.string.file_finished))
           holder.progressText.setVisibility(View.VISIBLE)
         } else {
           if (msg.sent) {
@@ -204,20 +204,20 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               if (bytesPerSecond != 0) {
                 val secondsToComplete = msg.size / bytesPerSecond
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " +
-                  secondsToComplete +
-                  " seconds left")
+                  context.getResources.getString(R.string.file_time_remaining, secondsToComplete.toString))
               } else {
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s")
               }
               holder.progressText.setVisibility(View.VISIBLE)
             } else {
-              holder.progressText.setText("Failed")
+              //FIXME this should be "Failed" - fix the DB bug
+              holder.progressText.setText(context.getResources.getString(R.string.file_finished))
               holder.progressText.setVisibility(View.VISIBLE)
             }
           } else {
             if (msg.message_id != -1) {
               if (msg.isMine) {
-                holder.progressText.setText("Sent request")
+                holder.progressText.setText(context.getResources.getString(R.string.file_request_sent))
               } else {
                 holder.progressText.setText("")
                 holder.buttons.setVisibility(View.VISIBLE)
@@ -235,7 +235,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                 })
               }
             } else {
-              holder.progressText.setText("Rejected")
+              holder.progressText.setText(context.getResources.getString(R.string.file_rejected))
             }
             holder.progressText.setVisibility(View.VISIBLE)
           }

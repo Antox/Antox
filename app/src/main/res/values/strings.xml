@@ -42,11 +42,13 @@
     <string name="main_not_connected">No internet connection has been detected. Without an internet connection, you will have
         limited functionality unless you are using Antox for LAN only</string>
     <string name="search_all_contacts">Search all contacts</string>
+    <string name='main_group_coming_soon'>"Coming soon…"</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
     <string name="chat_message_too_long">This message is too long and cannot be sent</string>
+    <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
@@ -166,6 +168,14 @@
     <string name="connection_offline">gone offline</string>
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="action_settings">Settings</string>
+
+    <!-- File transfer -->
+    <string name="file_finished">Finished</string>
+    <string name="file_failed">Failed</string>
+    <string name="file_in_progress">In Progress</string>
+    <string name="file_request_sent">Sent Request</string>
+    <string name="file_rejected">Rejected</string>
+    <string name="file_time_remaining">%s seconds left</string>
 
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>

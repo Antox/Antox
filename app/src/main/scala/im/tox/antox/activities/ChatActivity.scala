@@ -106,36 +106,44 @@ class ChatActivity extends GenericChatActivity {
         items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
-          override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
-            case 0 => {
-              val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-              startActivityForResult(intent, Constants.IMAGE_RESULT)
-            }
-            case 1 => {
-              val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-              val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date())
-              val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-              try {
-                val file = File.createTempFile(image_name, ".jpg", storageDir)
-                val imageUri = Uri.fromFile(file)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                photoPath = file.getAbsolutePath
-                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-              } catch {
-                case e: IOException => e.printStackTrace()
-              }
-            }
-            case 2 => {
-              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath, false)
-              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                def fileSelected(file: File) {
-                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
-                }
-              })
-              fileDialog.showDialog()
+          override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
+            if (!ToxSingleton.getAntoxFriend(activeKey).get.isOnline) {
+              Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+              return
             }
 
+            i match {
+              case 0 => {
+                val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, Constants.IMAGE_RESULT)
+              }
+              case 1 => {
+                val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
+                println("image name " + image_name)
+                val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                try {
+                  val file = File.createTempFile(image_name, ".jpg", storageDir)
+                  val imageUri = Uri.fromFile(file)
+                  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                  photoPath = file.getAbsolutePath
+                  startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+                } catch {
+                  case e: IOException => e.printStackTrace()
+                }
+              }
+              case 2 => {
+                val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+                val fileDialog = new FileDialog(thisActivity, mPath, false)
+                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                  def fileSelected(file: File) {
+                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
+                  }
+                })
+                fileDialog.showDialog()
+              }
+
+            }
           }
         })
         builder.create().show()

@@ -99,6 +99,7 @@ object ToxSingleton {
 
   def sendFileSendRequest(path: String, key: String, fileKind: FileKind, context: Context) {
     val file = new File(path)
+    println("file path " + path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
     val splitFileName = fileName.span(_ != '.')
@@ -307,7 +308,7 @@ object ToxSingleton {
       val mFriend = getAntoxFriend(key)
       mFriend.foreach(friend => {
         try {
-          mNotificationManager.cancel(friend.getFriendnumber)
+          if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendnumber)
         } catch {
           case e: Exception => e.printStackTrace()
         }
