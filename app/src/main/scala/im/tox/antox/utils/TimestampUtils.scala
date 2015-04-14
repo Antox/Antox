@@ -8,28 +8,35 @@ import android.text.format.Time
 
 object TimestampUtils {
 
+  val EMPTY_TIMESTAMP = new Timestamp(0, 0, 0, 0, 0, 0, 0)
+
+  val time = new Time("UTC")
+
+  val startOfDay = new Time(Time.getCurrentTimezone)
+  val startOfYear = new Time(Time.getCurrentTimezone)
+
+  val startOfTime = new Time(Time.getCurrentTimezone)
+  startOfTime.set(0)
+
   def prettyTimestamp(t: Timestamp, isChat: Boolean): String = {
-    val time = new Time("UTC")
     val cal = Calendar.getInstance
     cal.setTime(t)
     time.set(cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.DAY_OF_MONTH),
       cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
     time.switchTimezone(Time.getCurrentTimezone)
-    val startOfDay = new Time(Time.getCurrentTimezone)
     startOfDay.setToNow()
     startOfDay.hour = 0
     startOfDay.minute = 0
     startOfDay.second = 0
-    val startOfYear = new Time(Time.getCurrentTimezone)
+
     startOfYear.setToNow()
     startOfYear.hour = 0
     startOfYear.minute = 0
     startOfYear.second = 0
     startOfYear.monthDay = 0
     startOfYear.month = 0
-    val startOfTime = new Time(Time.getCurrentTimezone)
-    startOfTime.set(0)
-    if (t == new Timestamp(0, 0, 0, 0, 0, 0, 0)) {
+
+    if (t == emptyTimestamp()) {
       ""
     } else if (isChat) {
       if (time.after(startOfDay)) {
@@ -50,8 +57,13 @@ object TimestampUtils {
     }
   }
 
-  //returns a new empty timestamp
+  /**
+   * Returns an empty (all fields in constructor set to 0) timstamp.
+   * DO NOT MODIFY THE TIMESTAMP
+   *
+   * @return an empty timestamp
+   */
   def emptyTimestamp(): Timestamp = {
-    new Timestamp(0, 0, 0, 0, 0, 0, 0)
+    EMPTY_TIMESTAMP
   }
 }

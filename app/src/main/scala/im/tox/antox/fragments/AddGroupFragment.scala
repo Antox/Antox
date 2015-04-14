@@ -51,7 +51,10 @@ class AddGroupFragment extends Fragment with InputableID {
 
     rootView.findViewById(R.id.add_group_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {
-        addGroup(view)
+        //TODO: Uncomment this for the future
+        //addGroup(view)
+        Toast.makeText(getActivity, getActivity.getResources.getString(R.string.main_group_coming_soon), Toast.LENGTH_LONG)
+          .show()
       }
     })
     rootView

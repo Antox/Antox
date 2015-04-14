@@ -13,7 +13,7 @@ object BitmapManager {
   private var mMemoryCache: LruCache[String, Bitmap] = _
   private val bitmapValidMap = new util.HashMap[String, Boolean]()
 
-  private def getBitmapFromMemCache(key: String): Option[Bitmap] = Option(mMemoryCache.get(key))
+  private def getBitmapFromMemCache(key: String): Option[Bitmap] = if (mMemoryCache != null) Option(mMemoryCache.get(key)) else None
 
   private def isBitmapValid(key: String): Option[Boolean] = Option(bitmapValidMap.get(key))
 

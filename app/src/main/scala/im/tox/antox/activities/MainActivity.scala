@@ -46,7 +46,8 @@ class MainActivity extends ActionBarActivity {
       val intent = new Intent(this, classOf[Settings])
       startActivity(intent)
     } else if (position == 2) {
-      val dialog = new CreateGroupDialog(this)
+      //TODO: uncomment for the future
+      /* val dialog = new CreateGroupDialog(this)
       dialog.addCreateGroupListener(new CreateGroupListener {
         override def groupCreationConfimed(name: String): Unit = {
           val groupNumber = ToxSingleton.tox.newGroup(name)
@@ -59,6 +60,9 @@ class MainActivity extends ActionBarActivity {
         }
       })
       dialog.showDialog()
+      */
+      Toast.makeText(this, getResources.getString(R.string.main_group_coming_soon), Toast.LENGTH_LONG)
+        .show()
 
     } else if (position == 3) {
       val intent = new Intent(this, classOf[About])
