@@ -5,7 +5,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.TextView
 import im.tox.antox.R
 import im.tox.antox.adapters.ContactListAdapter
-import im.tox.antox.utils.LeftPaneItem
+import im.tox.antox.utils.{UIUtils, LeftPaneItem}
 import im.tox.antox.wrapper._
 
 class RecentFragment extends AbstractContactsFragment(showSearch = false, showFab = false) {

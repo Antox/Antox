@@ -247,7 +247,7 @@ abstract class AbstractContactsFragment extends Fragment {
         try {
           val db = new AntoxDB(getActivity)
           val messageList: util.ArrayList[Message] = db.getMessageList(key, actionMessages = true)
-          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + IDUtils.trimForUI(key) + "-log.txt"
+          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimIDForDisplay(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
           for (message: Message <- messageList) {

@@ -186,7 +186,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        db.addGroup(groupId, IDUtils.trimForUI(groupId), "")
+        db.addGroup(groupId, UIUtils.trimIDForDisplay(groupId), "")
         db.deleteGroupInvite(groupId)
         db.close()
         ToxSingleton.updateGroupList(context)

@@ -3,7 +3,7 @@ package im.tox.antox.wrapper
 import java.util
 import java.util.Locale
 
-import im.tox.antox.utils.IDUtils
+import im.tox.antox.utils.UIUtils
 
 //remove if not needed
 import scala.collection.JavaConversions._
@@ -63,7 +63,7 @@ class GroupList {
 
   def addGroup(tox: ToxCore, groupNumber: Int): Unit = {
     addGroup(new Group(tox.getGroupChatId(groupNumber),
-      groupNumber, IDUtils.trimForUI(tox.getGroupChatId(groupNumber)),
+      groupNumber, UIUtils.trimIDForDisplay(tox.getGroupChatId(groupNumber)),
       "", "", new PeerList()))
   }
 

@@ -128,7 +128,7 @@ class AntoxDB(ctx: Context) {
     val parsedUsername = if (username.contains("@")) {
       username.substring(0, username.indexOf("@"))
     } else if (username.length == 0) {
-      IDUtils.trimForUI(key)
+      UIUtils.trimIDForDisplay(key)
     } else {
       username
     }
@@ -627,7 +627,7 @@ class AntoxDB(ctx: Context) {
         val isBlocked = cursor.getInt(6) > 0
         val avatar = cursor.getString(7)
         if (alias == null) alias = ""
-        if (alias != "") name = alias else if (name == "") name = IDUtils.trimForUI(key)
+        if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
         val file = AVATAR.getAvatarFile(avatar, ctx)
         if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, alias)
       } while (cursor.moveToNext())
@@ -819,7 +819,7 @@ class AntoxDB(ctx: Context) {
         val note = cursor.getString(3)
         val alias = cursor.getString(4)
         if (name == null) name = ""
-        if (name == "") name = IDUtils.trimForUI(key)
+        if (name == "") name = UIUtils.trimIDForDisplay(key)
         details = Array(name, alias, note)
       } while (cursor.moveToNext())
     }
@@ -850,7 +850,7 @@ class AntoxDB(ctx: Context) {
         topic = cursor.getString(2)
         alias = cursor.getString(3)
         if (name == null) name = ""
-        if (name == "") name = IDUtils.trimForUI(key)
+        if (name == "") name = UIUtils.trimIDForDisplay(key)
       } while (cursor.moveToNext())
     }
     cursor.close()

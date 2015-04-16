@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBarActivity
 import android.widget.{EditText, TextView}
 import im.tox.antox.R
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.IDUtils
+import im.tox.antox.utils.UIUtils
 
 class GroupProfileActivity extends ActionBarActivity {
 
@@ -26,7 +26,7 @@ class GroupProfileActivity extends ActionBarActivity {
       findViewById(R.id.group_name).asInstanceOf[TextView].setText(if (group.name != null) {
         group.name
       } else {
-        IDUtils.trimForUI(group.id)
+        UIUtils.trimIDForDisplay(group.id)
       })
 
     findViewById(R.id.group_status_message).asInstanceOf[EditText].setText(group.topic)

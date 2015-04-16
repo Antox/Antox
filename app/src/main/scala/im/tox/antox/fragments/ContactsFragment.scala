@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import im.tox.antox.R
 import im.tox.antox.adapters.ContactListAdapter
-import im.tox.antox.utils.LeftPaneItem
+import im.tox.antox.utils.{UIUtils, LeftPaneItem}
 import im.tox.antox.wrapper.{FriendInfo, FriendRequest, GroupInfo, GroupInvite}
 import im.tox.tox4j.core.enums.ToxStatus
 

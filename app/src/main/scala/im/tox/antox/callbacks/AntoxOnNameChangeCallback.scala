@@ -3,6 +3,7 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.UIUtils
 import im.tox.tox4j.core.callbacks.FriendNameCallback
 
 //remove if not needed
@@ -13,15 +14,15 @@ object AntoxOnNameChangeCallback {
 }
 
 class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback {
-  override def friendName(friendNumber: Int, name: Array[Byte]): Unit = {
-    val nameString = new String(name, "UTF-8")
+  override def friendName(friendNumber: Int, nameBytes: Array[Byte]): Unit = {
+    val name = UIUtils.removeNewlines(new String(nameBytes, "UTF-8"))
     ToxSingleton.getAntoxFriend(friendNumber) match {
-      case Some(friend) => friend.setName(nameString)
+      case Some(friend) => friend.setName(name)
       case None => throw new Exception("Friend not found.")
     }
 
     val db = new AntoxDB(ctx)
-    db.updateFriendName(ToxSingleton.getAntoxFriend(friendNumber).get.getKey(), nameString)
+    db.updateFriendName(ToxSingleton.getAntoxFriend(friendNumber).get.getKey(), name)
     db.close()
     ToxSingleton.updateFriendsList(ctx)
   }
