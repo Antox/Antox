@@ -1,26 +1,14 @@
 package im.tox.antox.activities
 
-import android.app.Activity
 import android.content.{Context, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle}
-import android.preference.PreferenceManager
 import android.support.v4.app.NavUtils
-import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.ActionBarActivity
-import android.util.Log
-import android.view.{Menu, MenuItem, View, WindowManager}
-import android.widget.{EditText, Toast}
+import android.view.{Menu, MenuItem, WindowManager}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.fragments.{InputableID, AddPaneFragment, AddFriendFragment}
 import im.tox.antox.R
-import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, Hex}
-import im.tox.tox4j.exceptions.ToxException
-import org.xbill.DNS.{Lookup, TXTRecord, Type}
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import im.tox.antox.fragments.{AddPaneFragment, InputableID}
 //remove if not needed
 
 class AddActivity extends ActionBarActivity {

@@ -3,9 +3,7 @@ package im.tox.antox.wrapper
 import java.io.File
 import java.sql.Timestamp
 
-import android.content.Context
-import im.tox.antox.utils.{FileUtil, Constants, TimestampUtils}
-import im.tox.antox.wrapper.FileKind.AVATAR
+import im.tox.antox.utils.TimestampUtils
 import im.tox.tox4j.core.enums.ToxStatus
 
 //remove if not needed

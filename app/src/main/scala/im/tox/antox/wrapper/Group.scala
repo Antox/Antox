@@ -1,8 +1,5 @@
 package im.tox.antox.wrapper
 
-import java.sql.Timestamp
-
-import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 
 import scala.collection.JavaConversions._

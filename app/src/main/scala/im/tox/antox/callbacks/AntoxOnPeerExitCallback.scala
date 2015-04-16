@@ -2,7 +2,6 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.wrapper.GroupPeer
 
 class AntoxOnPeerExitCallback(private var ctx: Context) /* extends GroupPeerExitCallback */ {
   def groupPeerExit(groupNumber: Int, peerNumber: Int, partMessage: Array[Byte]): Unit = {

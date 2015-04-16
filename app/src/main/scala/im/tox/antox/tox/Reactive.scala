@@ -4,7 +4,6 @@ import java.sql.Timestamp
 
 import im.tox.antox.data.State
 import im.tox.antox.utils.TimestampUtils
-import im.tox.antox.wrapper.Friend
 import im.tox.antox.wrapper._
 import rx.lang.scala.subjects.BehaviorSubject
 

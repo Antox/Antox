@@ -1,13 +1,10 @@
 
 package im.tox.antox.activities
 
-import android.content.Intent
 import android.os.{Build, Bundle}
 import android.support.v7.app.ActionBarActivity
-import android.view.View
-import android.widget.{Toast, EditText, TextView}
+import android.widget.{EditText, TextView}
 import im.tox.antox.R
-import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.IDUtils
 

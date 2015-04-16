@@ -1,10 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.R
-import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.wrapper.{PeerList, GroupPeer}
 
 class AntoxOnGroupPeerlistUpdateCallback(private var ctx: Context) /* extends GroupPeerlistUpdateCallback */ {
   //override

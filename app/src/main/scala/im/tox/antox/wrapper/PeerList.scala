@@ -1,10 +1,8 @@
 package im.tox.antox.wrapper
 
 import java.util
-import java.util.Collections
 
 //remove if not needed
-import scala.collection.JavaConversions._
 
 class PeerList {
 

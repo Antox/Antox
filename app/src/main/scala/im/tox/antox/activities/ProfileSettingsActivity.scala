@@ -2,24 +2,24 @@ package im.tox.antox.activities
 
 import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
 
-import android.app.{Activity, AlertDialog}
+import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
-import android.preference.Preference.{OnPreferenceClickListener, OnPreferenceChangeListener}
+import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
-import android.widget.{Toast, ImageButton}
+import android.widget.{ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
-import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.UserStatus
 import im.tox.antox.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import FileDialog.DirectorySelectedListener
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
+import im.tox.antox.wrapper.UserStatus
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {

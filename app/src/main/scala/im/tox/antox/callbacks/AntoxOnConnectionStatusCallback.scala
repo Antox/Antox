@@ -1,11 +1,9 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
-import im.tox.antox.utils.Constants
-import im.tox.tox4j.core.callbacks.{FriendConnectionStatusCallback, ConnectionStatusCallback}
+import im.tox.tox4j.core.callbacks.FriendConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
 
 //remove if not needed

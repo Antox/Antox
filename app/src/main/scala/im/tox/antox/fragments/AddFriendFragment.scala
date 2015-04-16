@@ -2,25 +2,20 @@ package im.tox.antox.fragments
 
 import android.app.Activity
 import android.content.{Context, Intent}
-import android.net.Uri
-import android.os.{Build, Bundle}
+import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v4.app.{Fragment, NavUtils}
+import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.ActionBarActivity
 import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
-import im.tox.QR.IntentIntegrator
-import im.tox.antox.toxdns.ToxDNS
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{Constants, Hex}
+import im.tox.antox.toxdns.ToxDNS
+import im.tox.antox.utils.Constants
 import im.tox.tox4j.exceptions.ToxException
-import org.xbill.DNS.{Lookup, TXTRecord, Type}
-import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 //remove if not needed
 

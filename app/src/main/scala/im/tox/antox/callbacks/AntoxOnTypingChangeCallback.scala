@@ -2,7 +2,6 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import im.tox.antox.tox.{Reactive, ToxSingleton}
-import im.tox.antox.utils.Hex
 import im.tox.tox4j.core.callbacks.FriendTypingCallback
 
 object AntoxOnTypingChangeCallback {

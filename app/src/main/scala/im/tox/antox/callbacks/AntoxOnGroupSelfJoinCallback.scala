@@ -4,7 +4,6 @@ import android.content.Context
 import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.wrapper.{PeerList, GroupPeer}
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override

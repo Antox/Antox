@@ -1,9 +1,9 @@
 package im.tox.antox.wrapper
 
 import java.util
-import java.util.{Collections, Locale}
+import java.util.Locale
 
-import im.tox.antox.utils.{IDUtils, Hex}
+import im.tox.antox.utils.IDUtils
 
 //remove if not needed
 import scala.collection.JavaConversions._

@@ -1,16 +1,7 @@
 package im.tox.antox.callbacks
 
-import android.app.{Notification, PendingIntent}
-import android.content.{Context, Intent}
-import android.preference.PreferenceManager
-import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
-import android.util.Log
-import im.tox.antox.R
-import im.tox.antox.activities.MainActivity
-import im.tox.antox.callbacks.AntoxOnMessageCallback._
-import im.tox.antox.data.{AntoxDB, State}
+import android.content.Context
 import im.tox.antox.tox.{MessageHelper, ToxSingleton}
-import im.tox.antox.utils.{Hex, Constants}
 import im.tox.antox.wrapper.MessageType
 import im.tox.tox4j.core.callbacks.FriendMessageCallback
 import im.tox.tox4j.core.enums.ToxMessageType

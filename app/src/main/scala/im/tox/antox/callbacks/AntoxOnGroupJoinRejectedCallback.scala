@@ -1,12 +1,6 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import android.preference.PreferenceManager
-import im.tox.antox.R
-import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.wrapper.{PeerList, GroupPeer}
-import im.tox.tox4j.core.callbacks._
-import im.tox.antox.utils.Constants
 
 class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends GroupJoinRejectedCallback */ {
   private var reconnecting = false

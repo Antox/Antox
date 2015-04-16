@@ -1,23 +1,20 @@
 package im.tox.antox.tox
 
-import java.nio.{ByteBuffer, ByteOrder}
 import java.util
 
-import android.app.{PendingIntent, Notification}
-import android.content.{Intent, Context}
+import android.app.{Notification, PendingIntent}
+import android.content.{Context, Intent}
 import android.preference.PreferenceManager
-import android.support.v4.app.{TaskStackBuilder, NotificationCompat}
+import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
+import android.util.Log
 import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
-import im.tox.antox.utils.Constants
-import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.wrapper.MessageType
+import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.MessageType
 import im.tox.antox.wrapper.MessageType.MessageType
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.IOScheduler
-import collection.JavaConverters._
+
+import scala.collection.JavaConverters._
 
 object MessageHelper {
 

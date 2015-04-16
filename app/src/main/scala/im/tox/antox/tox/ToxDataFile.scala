@@ -3,11 +3,9 @@ package im.tox.antox.tox
 import java.io._
 
 import android.content.Context
-import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.transfer.FileUtils
-import im.tox.antox.utils.Constants
 
 class ToxDataFile(ctx: Context, fileName: String) {
 

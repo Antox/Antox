@@ -1,13 +1,11 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.State
 import android.util.Log
-import im.tox.antox.callbacks.AntoxOnFileReceiveChunkCallback._
-import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.data.State
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileStatus
-import im.tox.antox.wrapper.AntoxFriend
-import im.tox.tox4j.core.callbacks.{FileRequestChunkCallback, FileReceiveChunkCallback}
+import im.tox.tox4j.core.callbacks.FileRequestChunkCallback
 
 object AntoxOnFileRequestChunkCallback {
 

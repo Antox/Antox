@@ -5,30 +5,22 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
-import android.content.{CursorLoader, DialogInterface, Intent, SharedPreferences}
-import android.database.Cursor
+import android.content.{CursorLoader, DialogInterface, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
-import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
-import android.view.{Menu, MenuInflater, View}
+import android.view.View
 import android.widget._
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper.{FileKind, UserStatus, FriendInfo}
 import im.tox.antox.R
-import im.tox.antox.adapters.ChatMessagesAdapter
-import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
+import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{Constants, IconColor}
+import im.tox.antox.wrapper.{FileKind, FriendInfo, UserStatus}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
-import rx.lang.scala.{Observable, Subscription}
-
-import scala.concurrent.duration._
 
 class ChatActivity extends GenericChatActivity {
 

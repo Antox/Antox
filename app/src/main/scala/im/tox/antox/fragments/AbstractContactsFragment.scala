@@ -1,30 +1,29 @@
 package im.tox.antox.fragments
 
-import java.io.{FileOutputStream, PrintWriter, File}
+import java.io.{File, FileOutputStream, PrintWriter}
 import java.text.Collator
 import java.util
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
-import android.os.{Environment, Bundle}
+import android.os.{Bundle, Environment}
 import android.support.v4.app.Fragment
 import android.text.{Editable, TextWatcher}
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
-import im.tox.antox.transfer.FileDialog
-import im.tox.antox.wrapper._
 import im.tox.antox.R
-import im.tox.antox.activities.{GroupChatActivity, ChatActivity, FriendProfileActivity}
+import im.tox.antox.activities.{ChatActivity, FriendProfileActivity, GroupChatActivity}
 import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
-import FileDialog.DirectorySelectedListener
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import im.tox.antox.utils._
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.antox.wrapper._
 import im.tox.tox4j.exceptions.ToxException
-import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.{Observable, Subscription}
 
 import scala.collection.JavaConversions._
 
@@ -114,7 +113,7 @@ abstract class AbstractContactsFragment extends Fragment {
     })
     val search = rootView.findViewById(R.id.searchBar).asInstanceOf[EditText]
     if (showSearch) {
-      search.addTextChangedListener(new TextWatcher() {
+      search.addTextChangedListener(new TextWatcher {
 
         override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
         }

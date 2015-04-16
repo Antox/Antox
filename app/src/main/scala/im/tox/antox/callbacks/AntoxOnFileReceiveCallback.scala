@@ -1,14 +1,12 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import android.util.Log
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.utils.Constants
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.FileKind
-import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.callbacks.FileReceiveCallback
-import im.tox.tox4j.core.enums.{ToxFileControl, ToxFileKind}
+import im.tox.tox4j.core.enums.ToxFileControl
 
 object AntoxOnFileReceiveCallback {
   private val TAG = "OnFileReceiveCallback"

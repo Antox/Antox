@@ -5,9 +5,7 @@ import java.io.File
 import android.content.Context
 import android.os.Environment
 import im.tox.antox.utils.StorageType.StorageType
-import im.tox.antox.utils.{FileUtil, StorageType, Constants}
-import im.tox.antox.utils.StorageType.StorageType
-import im.tox.tox4j.core.enums.{ToxFileKind, ToxMessageType}
+import im.tox.antox.utils.{Constants, FileUtil, StorageType}
 
 //Don't change this order (it will break the DB)
 /* object FileKind extends Enumeration {

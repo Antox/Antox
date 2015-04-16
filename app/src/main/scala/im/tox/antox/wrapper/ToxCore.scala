@@ -1,14 +1,12 @@
 package im.tox.antox.wrapper
 
-import android.util.Log
-import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions, data: Array[Byte]) {
 

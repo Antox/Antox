@@ -1,12 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.wrapper.AntoxFriend
-import im.tox.antox.wrapper.GroupPeer
-
-import scala.None
 
 class AntoxOnPeerJoinCallback(private var ctx: Context) /* extends GroupPeerJoinCallback */ {
   def groupPeerJoin(groupNumber: Int, peerNumber: Int): Unit = {

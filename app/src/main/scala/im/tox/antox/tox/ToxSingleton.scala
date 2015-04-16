@@ -4,7 +4,6 @@ import java.io.{BufferedReader, File, InputStreamReader, Reader}
 import java.net.URL
 import java.nio.charset.Charset
 import java.util
-import java.util.{ArrayList, HashMap}
 
 import android.app.NotificationManager
 import android.content.Context
@@ -14,13 +13,13 @@ import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.transfer.{FileTransfer, FileStatus}
+import im.tox.antox.transfer.{FileStatus, FileTransfer}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
+import im.tox.tox4j.ToxAvImpl
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
+import im.tox.tox4j.core.enums.{ToxFileControl, ToxStatus}
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}

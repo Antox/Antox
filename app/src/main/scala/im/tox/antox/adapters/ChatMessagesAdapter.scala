@@ -3,29 +3,24 @@ package im.tox.antox.adapters
 import java.io.File
 import java.sql.Timestamp
 import java.util
-import java.util.{Random, HashSet}
+import java.util.Random
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
 import android.database.Cursor
-import android.graphics.{Typeface, Color}
+import android.graphics.{Color, Typeface}
 import android.net.Uri
 import android.os.Environment
-import android.support.v4.widget.ResourceCursorAdapter
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.{ClipboardManager, Html}
-import android.util.Log
-import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
+import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
-import im.tox.antox.transfer.FileUtils
-import im.tox.antox.wrapper.FileKind.AVATAR
-import im.tox.antox.wrapper.{Message, FileKind, MessageType, ChatMessages}
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
+import im.tox.antox.wrapper.{ChatMessages, FileKind, Message, MessageType}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 

@@ -11,7 +11,7 @@ import im.tox.antox.R
 import im.tox.antox.activities.Settings._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.{Hex, Options}
+import im.tox.antox.utils.Options
 import im.tox.tox4j.exceptions.ToxException
 
 object Settings {

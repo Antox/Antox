@@ -1,14 +1,11 @@
 package im.tox.antox.adapters
 
-import java.io.File
-import java.net.URI
 import java.util.ArrayList
 
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.text.Html
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults

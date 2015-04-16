@@ -3,8 +3,6 @@ package im.tox.antox.wrapper
 import java.io.File
 import java.sql.Timestamp
 
-import android.content.Context
-
 class ContactInfo(
   val key: String,
   var name: String,

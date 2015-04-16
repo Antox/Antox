@@ -2,7 +2,6 @@
 package im.tox.antox.data
 
 import java.util
-import java.util.ArrayList
 
 import android.content.{ContentValues, Context}
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}

@@ -3,8 +3,6 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.Constants
-import im.tox.tox4j.core.callbacks._
 
 class AntoxOnGroupSelfTimeoutCallback(private var ctx: Context) /* extends GroupSelfTimeoutCallback */ {
   //override

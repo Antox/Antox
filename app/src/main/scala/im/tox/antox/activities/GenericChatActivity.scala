@@ -1,28 +1,19 @@
 package im.tox.antox.activities
 
-import java.io.{File, IOException}
 import java.util
-import java.util.Date
 
-import android.app.{Activity, AlertDialog}
-import android.content.{CursorLoader, DialogInterface, Intent, SharedPreferences}
-import android.database.Cursor
-import android.net.Uri
-import android.os.{Build, Bundle, Environment}
+import android.content.SharedPreferences
+import android.os.Bundle
 import android.preference.PreferenceManager
-import android.provider.MediaStore
 import android.support.v7.app.{ActionBar, ActionBarActivity}
-import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{ToxSingleton, Reactive}
-import im.tox.antox.utils.{Constants, IconColor}
-import im.tox.antox.wrapper.{FileKind, Message}
-import im.tox.tox4j.exceptions.ToxException
+import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.wrapper.Message
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 

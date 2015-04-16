@@ -1,7 +1,7 @@
 package im.tox.antox.activities
 
 import java.util
-import java.util.{ArrayList, Locale}
+import java.util.Locale
 
 import android.app.{Activity, AlertDialog, NotificationManager}
 import android.content.res.Configuration
@@ -19,8 +19,6 @@ import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
 import im.tox.antox.R
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.fragments.CreateGroupDialog
-import im.tox.antox.fragments.CreateGroupDialog.CreateGroupListener
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils._
 

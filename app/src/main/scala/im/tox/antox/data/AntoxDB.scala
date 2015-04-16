@@ -3,7 +3,7 @@ package im.tox.antox.data
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util
-import java.util.{ArrayList, Date, HashSet, TimeZone}
+import java.util.{Date, TimeZone}
 
 import android.content.{ContentValues, Context}
 import android.database.Cursor
@@ -11,13 +11,11 @@ import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.data.AntoxDB._
-import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxStatus
-import im.tox.tox4j.exceptions.ToxException
 
 import scala.collection.mutable.ArrayBuffer
 //remove if not needed
