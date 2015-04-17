@@ -10,7 +10,7 @@ import android.content.{Context, DialogInterface, Intent}
 import android.database.Cursor
 import android.graphics.{Color, Typeface}
 import android.net.Uri
-import android.os.Environment
+import android.os.{Build, Environment}
 import android.text.{ClipboardManager, Html}
 import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
@@ -142,14 +142,14 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     holder.buttons.setVisibility(View.GONE)
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
-    holder.bubble.setAlpha(1.0f)
+    setAlpha(holder.bubble, 1f)
     msg.`type` match {
       case MessageType.OWN | MessageType.GROUP_OWN =>
         holder.message.setText(msg.message)
         ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
         if (!msg.received) {
-          holder.bubble.setAlpha(0.5f)
+          setAlpha(holder.bubble, 0.5f)
         }
 
       case MessageType.GROUP_PEER =>
@@ -161,7 +161,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
           holder.title.setVisibility(View.VISIBLE)
         }
         if (!msg.received) {
-          holder.bubble.setAlpha(0.5f)
+          setAlpha(holder.bubble, 0.5f)
         }
 
       case MessageType.FRIEND =>
@@ -353,6 +353,16 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
   override def getViewTypeCount: Int = MessageType.values.size
 
   //override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
+
+  //utility method to set view's alpha on honeycomb+ devices,
+  //does nothing on pre-honeycomb devices because setAlpha is unsupported
+  private def setAlpha(view: View, value: Float): Unit = {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+      //do nothing
+    } else {
+      view.setAlpha(value)
+    }
+  }
 
   private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
     val id = cursor.getInt(0)
