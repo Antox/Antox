@@ -10,6 +10,7 @@ class ContactInfo(
   var online: Boolean,
   var status: String,
   var statusMessage: String,
+  var receivedAvatar: Boolean,
   var lastMessage: String,
   var lastMessageTimestamp: Timestamp,
   var unreadCount: Int,

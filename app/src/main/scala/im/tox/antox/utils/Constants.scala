@@ -74,6 +74,8 @@ object Constants {
 
   val COLUMN_NAME_AVATAR = "avatar"
 
+  val COLUMN_NAME_RECEIVED_AVATAR = "received_avatar"
+
   val ADD_FRIEND_REQUEST_CODE = 0
 
   val WELCOME_ACTIVITY_REQUEST_CODE = 3
@@ -90,5 +92,6 @@ object Constants {
 
   val MAX_NAME_LENGTH = 128
 
-  val MAX_AVATAR_SIZE = 1000 * 1000 //in bytes
+  val MAX_AVATAR_SIZE = 64 * 1024 //in bytes
+
 }

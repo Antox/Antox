@@ -32,7 +32,8 @@ object AntoxDB {
       "alias text, " +
       "isonline boolean, " +
       "isblocked boolean, " +
-      "avatar text);"
+      "avatar text, " +
+      "receieved_avatar boolean);"
 
     var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
       "name text, " +
@@ -626,10 +627,11 @@ class AntoxDB(ctx: Context) {
         val isOnline = cursor.getInt(5) != 0
         val isBlocked = cursor.getInt(6) > 0
         val avatar = cursor.getString(7)
+        val receievedAvatar = cursor.getInt(8) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
         val file = AVATAR.getAvatarFile(avatar, ctx)
-        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, alias)
+        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, receievedAvatar, alias)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -703,21 +705,10 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def deleteFriend(key: String): Unit = {
-    deleteWithKey(key, Constants.TABLE_FRIENDS)
-  }
-
-  def deleteFriendRequest(key: String): Unit = {
-    deleteWithKey(key, Constants.TABLE_FRIEND_REQUESTS)
-  }
-
-  def deleteGroup(key: String): Unit = {
-    deleteWithKey(key, Constants.TABLE_GROUPS)
-  }
-
-  def deleteGroupInvite(key: String): Unit = {
-    deleteWithKey(key, Constants.TABLE_GROUP_INVITES)
-  }
+  def deleteFriend(key: String): Unit = deleteWithKey(key, Constants.TABLE_FRIENDS)
+  def deleteFriendRequest(key: String): Unit = deleteWithKey(key, Constants.TABLE_FRIEND_REQUESTS)
+  def deleteGroup(key: String): Unit = deleteWithKey(key, Constants.TABLE_GROUPS)
+  def deleteGroupInvite(key: String): Unit = deleteWithKey(key, Constants.TABLE_GROUP_INVITES)
 
   def getFriendRequestMessage(key: String): String = {
     this.open(writeable = false)
@@ -739,67 +730,64 @@ class AntoxDB(ctx: Context) {
     deleteWithKey(key, Constants.TABLE_CHAT_LOGS)
   }
 
-  def updateFriendName(key: String, newName: String) {
+  def updateColumnWithKey(table: String, key: String, columnName: String, value: String): Unit = {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_USERNAME, newName)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    values.put(columnName, value)
+    mDb.update(table, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
-  def updateGroupName(key: String, newName: String) {
+  def updateColumnWithKey(table: String, key: String, columnName: String, value: Boolean): Unit = {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_NAME, newName)
-    mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    values.put(columnName, value)
+    mDb.update(table, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
-  def updateStatusMessage(key: String, newMessage: String) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_NOTE, newMessage)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateFriendName(key: String, newName: String) =
+    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_USERNAME, newName)
 
-  def updateGroupTopic(key: String, newTopic: String) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_TOPIC, newTopic)
-    mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateGroupName(key: String, newName: String) =
+    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_NAME, newName)
 
-  def updateUserStatus(key: String, status: ToxStatus) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    val tmp = UserStatus.getStringFromToxUserStatus(status)
-    values.put(Constants.COLUMN_NAME_STATUS, tmp)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateStatusMessage(key: String, newMessage: String) =
+    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_NOTE, newMessage)
 
-  def updateUserOnline(key: String, online: Boolean) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_ISONLINE, online)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateGroupTopic(key: String, newTopic: String) =
+    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_TOPIC, newTopic)
 
-  def updateGroupConnected(key: String, connected: Boolean) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_ISCONNECTED, connected)
-    mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateUserStatus(key: String, status: ToxStatus) =
+    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
+
+  def updateUserOnline(key: String, online: Boolean) =
+    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_ISONLINE, online)
+
+  def updateGroupConnected(key: String, connected: Boolean) =
+    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_ISCONNECTED, connected)
+
 
   def updateFriendAvatar(key: String, avatar: String) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_AVATAR, avatar)
+    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    this.close()
+  }
+
+  def setAllFriendReceivedAvatar(key: String) {
+    this.open(writeable = false)
+    val values = new ContentValues()
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, true)
+    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    this.close()
+  }
+
+  def updateFriendReceivedAvatar(key: String, receivedAvatar: Boolean) {
+    this.open(writeable = false)
+    val values = new ContentValues()
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
     mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
@@ -835,8 +823,8 @@ class AntoxDB(ctx: Context) {
 
   def getGroupDetails(key: String): (String, String, String) = {
     var name: String = null
-    var topic: String = null
     var alias: String = null
+    var topic: String = null
     this.open(writeable = false)
     val selectQuery = "SELECT * FROM " + Constants.TABLE_GROUPS + " WHERE " +
       Constants.COLUMN_NAME_KEY +
@@ -847,8 +835,8 @@ class AntoxDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       do {
         name = cursor.getString(1)
-        topic = cursor.getString(2)
         alias = cursor.getString(3)
+        topic = cursor.getString(2)
         if (name == null) name = ""
         if (name == "") name = UIUtils.trimIDForDisplay(key)
       } while (cursor.moveToNext())

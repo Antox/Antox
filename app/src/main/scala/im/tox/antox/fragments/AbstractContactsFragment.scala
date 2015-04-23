@@ -297,6 +297,4 @@ abstract class AbstractContactsFragment extends Fragment {
   def compareOnline(a: FriendInfo, b: FriendInfo): Boolean = {
     if (a.online && !b.online) true else false
   }
-
-  //def compareLastMessageTimestamp
 }

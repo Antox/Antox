@@ -93,17 +93,17 @@ class ChatActivity extends GenericChatActivity {
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(v: View) {
+        if (!ToxSingleton.getAntoxFriend(activeKey).get.isOnline) {
+          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+          return
+        }
+        
         val builder = new AlertDialog.Builder(thisActivity)
         var items: Array[CharSequence] = null
         items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
           override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
-            if (!ToxSingleton.getAntoxFriend(activeKey).get.isOnline) {
-              Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-              return
-            }
-
             i match {
               case 0 => {
                 val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -145,41 +145,45 @@ class ChatActivity extends GenericChatActivity {
 
   override def onResume() = {
     super.onResume()
-    val thisActivity = this
     ToxSingleton.clearUselessNotifications(activeKey)
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-      val key = activeKey
-      val mFriend: Option[FriendInfo] = fi
-        .filter(f => f.key == key)
-        .headOption
-      mFriend match {
-        case Some(friend) => {
-          thisActivity.setDisplayName(friend.getAliasOrName)
+        updateDisplayedState(fi)
+    })
+  }
 
-          val avatar = friend.avatar
-          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-          if (avatar.isDefined && avatar.get.exists()) {
-            avatarView.setImageURI(Uri.fromFile(avatar.get))
-          } else {
-            avatarView.setImageResource(R.color.grey_light)
-          }
+  private def updateDisplayedState(fi: Array[FriendInfo]): Unit = {
+    val thisActivity = this
+    val key = activeKey
+    val mFriend: Option[FriendInfo] = fi
+      .filter(f => f.key == key)
+      .headOption
+    mFriend match {
+      case Some(friend) => {
+        thisActivity.setDisplayName(friend.getAliasOrName)
 
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            thisActivity.statusIconView.setBackground(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
-          } else {
-            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
-          }
+        val avatar = friend.avatar
+        val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+        if (avatar.isDefined && avatar.get.exists()) {
+          avatarView.setImageURI(Uri.fromFile(avatar.get))
+        } else {
+          avatarView.setImageResource(R.color.grey_light)
         }
-        case None => {
-          thisActivity.setDisplayName("")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          thisActivity.statusIconView.setBackground(thisActivity.getResources
+            .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
+        } else {
+          thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+            .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
-    })
+      case None => {
+        thisActivity.setDisplayName("")
+      }
+    }
   }
 
   private def sendMessage() {
