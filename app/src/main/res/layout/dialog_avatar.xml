@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Image
+        android:id="@+id/avatar_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/avatar_takephoto"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/attachment_takephoto"/>
+
+    <Button
+        android:id="@+id/avatar_pickfile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/attachment_file"/>
+
+</LinearLayout>

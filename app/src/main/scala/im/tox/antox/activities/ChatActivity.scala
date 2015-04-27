@@ -1,91 +1,40 @@
 package im.tox.antox.activities
 
 import java.io.{File, IOException}
+import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
-import android.content.{CursorLoader, DialogInterface, Intent, SharedPreferences}
-import android.database.Cursor
+import android.content.{CursorLoader, DialogInterface, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
-import android.preference.PreferenceManager
 import android.provider.MediaStore
-import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.text.{Editable, TextWatcher}
 import android.util.Log
-import android.view.{Menu, MenuInflater, View}
-import android.widget.{AbsListView, EditText, ListView, TextView}
+import android.view.View
+import android.widget._
+import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.R
-import im.tox.antox.adapters.ChatMessagesAdapter
-import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{Methods, Reactive, ToxSingleton}
-import im.tox.antox.utils.{Constants, FileDialog, FriendInfo, IconColor, UserStatus}
+import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.utils.{Constants, IconColor}
+import im.tox.antox.wrapper.{FileKind, FriendInfo, UserStatus}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
-import rx.lang.scala.{Observable, Subscription}
 
-import scala.concurrent.duration._
+class ChatActivity extends GenericChatActivity {
 
-class ChatActivity extends ActionBarActivity {
-  val TAG: String = "im.tox.antox.activities.ChatActivity"
-  //var ARG_CONTACT_NUMBER: String = "contact_number"
-  var adapter: ChatMessagesAdapter = null
-  var messageBox: EditText = null
-  var isTypingBox: TextView = null
-  var statusTextBox: TextView = null
-  var chatListView: ListView = null
-  var displayNameView: TextView = null
-  var statusIconView: View = null
-  var avatarActionView: View = null
-  var messagesSub: Subscription = null
-  var progressSub: Subscription = null
-  //var activeKeySub: Subscription
-  var titleSub: Subscription = null
-  //var typingSub: Subscription
-  //var chatMessages: ArrayList<ChatMessages>
-  var activeKey: String = null
-  var scrolling: Boolean = false
-  var antoxDB: AntoxDB = null
   var photoPath: String = null
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
-    overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
-    setContentView(R.layout.activity_chat)
-    val actionBar = getSupportActionBar
-    val avatarView = getLayoutInflater.inflate(R.layout.avatar_actionview, null)
-    actionBar.setCustomView(avatarView)
-    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
     val extras: Bundle = getIntent.getExtras
     val key = extras.getString("key")
     activeKey = key
     val thisActivity = this
-    Log.d(TAG, "key = " + key)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    adapter = new ChatMessagesAdapter(this, getCursor, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
-    displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
-    statusIconView = this.findViewById(R.id.icon)
-    avatarActionView = this.findViewById(R.id.avatarActionView)
-    avatarActionView.setOnClickListener(new View.OnClickListener() {
-      override def onClick(v: View) {
-        thisActivity.finish()
-      }
-    })
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-    chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
-    chatListView.setStackFromBottom(true)
-    chatListView.setAdapter(adapter)
-    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-      override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
-        scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-      }
+    this.findViewById(R.id.info).setVisibility(View.GONE)
 
-      override def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-
-      }
-
-    })
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
@@ -144,41 +93,49 @@ class ChatActivity extends ActionBarActivity {
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(v: View) {
+        if (!ToxSingleton.getAntoxFriend(activeKey).get.isOnline) {
+          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+          return
+        }
+        
         val builder = new AlertDialog.Builder(thisActivity)
         var items: Array[CharSequence] = null
         items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
         builder.setItems(items, new DialogInterface.OnClickListener() {
 
-          override def onClick(dialogInterface: DialogInterface, i: Int) = i match {
-            case 0 => {
-              var intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-              startActivityForResult(intent, Constants.IMAGE_RESULT)
-            }
-            case 1 => {
-              val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-              val image_name = "Antoxpic" + new Date().toString
-              val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-              try {
-                val file = File.createTempFile(image_name, ".jpg", storageDir)
-                val imageUri = Uri.fromFile(file)
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                photoPath = file.getAbsolutePath
-                startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-              } catch {
-                case e: IOException => e.printStackTrace()
+          override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
+            i match {
+              case 0 => {
+                val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, Constants.IMAGE_RESULT)
               }
-            }
-            case 2 => {
-              val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-              val fileDialog = new FileDialog(thisActivity, mPath)
-              fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                def fileSelected(file: File) {
-                  ToxSingleton.sendFileSendRequest(file.getPath, activeKey, thisActivity)
+              case 1 => {
+                val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
+                println("image name " + image_name)
+                val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                try {
+                  val file = File.createTempFile(image_name, ".jpg", storageDir)
+                  val imageUri = Uri.fromFile(file)
+                  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                  photoPath = file.getAbsolutePath
+                  startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+                } catch {
+                  case e: IOException => e.printStackTrace()
                 }
-              })
-              fileDialog.showDialog()
-            }
+              }
+              case 2 => {
+                val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+                val fileDialog = new FileDialog(thisActivity, mPath, false)
+                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+                  def fileSelected(file: File) {
+                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
+                  }
+                })
+                fileDialog.showDialog()
+              }
 
+            }
           }
         })
         builder.create().show()
@@ -186,107 +143,58 @@ class ChatActivity extends ActionBarActivity {
     })
   }
 
-  override def onCreateOptionsMenu(menu: Menu): Boolean = {
-    // Inflate the menu items for use in the action bar
-    val inflater: MenuInflater = getMenuInflater
-    inflater.inflate(R.menu.chat_activity, menu)
-    super.onCreateOptionsMenu(menu)
-  }
-
-  def setDisplayName(name: String) = {
-    this.displayNameView.setText(name)
-  }
-
   override def onResume() = {
     super.onResume()
-    val thisActivity = this
-    Reactive.activeKey.onNext(Some(activeKey))
-    Reactive.chatActive.onNext(true)
-    val antoxDB = new AntoxDB(getApplicationContext)
-    antoxDB.markIncomingMessagesRead(activeKey)
     ToxSingleton.clearUselessNotifications(activeKey)
-    ToxSingleton.updateMessages(getApplicationContext)
-    messagesSub = Reactive.updatedMessages.subscribe(x => {
-      Log.d(TAG, "Messages updated")
-      updateChat()
-      antoxDB.close()
-    })
-    progressSub = Observable.interval(500 milliseconds)
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(x => {
-      if (!scrolling) {
-        updateProgress()
-      }
-    })
     titleSub = Reactive.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-      val key = activeKey
-      val mFriend: Option[FriendInfo] = fi
-        .filter(f => f.key == key)
-        .headOption
-      mFriend match {
-        case Some(friend) => {
-          if (friend.alias != "") {
-            thisActivity.setDisplayName(friend.alias)
-          } else {
-            thisActivity.setDisplayName(friend.name)
-          }
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            thisActivity.statusIconView.setBackground(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-          } else {
-            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
-              .getDrawable(IconColor.iconDrawable(friend.isOnline, UserStatus.getToxUserStatusFromString(friend.status))))
-          }
+        updateDisplayedState(fi)
+    })
+  }
+
+  private def updateDisplayedState(fi: Array[FriendInfo]): Unit = {
+    val thisActivity = this
+    val key = activeKey
+    val mFriend: Option[FriendInfo] = fi
+      .filter(f => f.key == key)
+      .headOption
+    mFriend match {
+      case Some(friend) => {
+        thisActivity.setDisplayName(friend.getAliasOrName)
+
+        val avatar = friend.avatar
+        val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+        if (avatar.isDefined && avatar.get.exists()) {
+          avatarView.setImageURI(Uri.fromFile(avatar.get))
+        } else {
+          avatarView.setImageResource(R.color.grey_light)
         }
-        case None => {
-          thisActivity.setDisplayName("")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          thisActivity.statusIconView.setBackground(thisActivity.getResources
+            .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
+        } else {
+          thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+            .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
-    })
+      case None => {
+        thisActivity.setDisplayName("")
+      }
+    }
   }
 
   private def sendMessage() {
     Log.d(TAG, "sendMessage")
-    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
-      return
-    }
-    var msg: String = null
-    if (messageBox.getText != null) {
-      msg = messageBox.getText.toString
-    } else {
-      msg = ""
-    }
+    val mMessage = validateMessageBox()
     val key = activeKey
-    messageBox.setText("")
-    Methods.sendMessage(this, key, msg, None)
-  }
 
-  def updateChat() = {
-    val observable: Observable[Cursor] = Observable((observer) => {
-      val cursor: Cursor = getCursor
-      observer.onNext(cursor)
-      observer.onCompleted()
+    mMessage.foreach(message => {
+      messageBox.setText("")
+      MessageHelper.sendMessage(this, key, message, None)
     })
-    observable
-      .subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe((cursor: Cursor) => {
-      adapter.changeCursor(cursor)
-      Log.d(TAG, "changing chat list cursor")
-    })
-    Log.d("ChatFragment", "new key: " + activeKey)
-  }
-
-  private def updateProgress() {
-    val start = chatListView.getFirstVisiblePosition
-    val end = chatListView.getLastVisiblePosition
-    for (i <- start to end) {
-      val view = chatListView.getChildAt(i - start)
-      chatListView.getAdapter.getView(i, view, chatListView)
-    }
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -304,7 +212,7 @@ class ChatActivity extends ActionBarActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, this)
+              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -313,39 +221,23 @@ class ChatActivity extends ActionBarActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, this)
+          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
           photoPath = null
         }
       }
     } else {
-      Log.d(TAG, "onActivityResult resut code not okay, user cancelled")
+      Log.d(TAG, "onActivityResult result code not okay, user cancelled")
     }
   }
 
 
-  def onClickVoiceCallFriend(v: View){
-    println("This button (Audio Call) doesn't work yet.")
-  }
+  def onClickVoiceCallFriend(v: View){}
 
-  def onClickVideoCallFriend(v: View): Unit = {
-    println("This button (Video Call) doesn't work yet.")
-  }
+  def onClickVideoCallFriend(v: View): Unit = {}
 
-  def getCursor: Cursor = {
-    if (antoxDB == null) {
-      antoxDB = new AntoxDB(this)
-    }
-    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val cursor: Cursor = antoxDB.getMessageCursor(activeKey, preferences.getBoolean("action_messages", true))
-    return cursor
-  }
+  def onClickInfo(v: View): Unit = {}
 
   override def onPause() = {
     super.onPause()
-    Reactive.chatActive.onNext(false)
-    if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
-    messagesSub.unsubscribe()
-    titleSub.unsubscribe()
-    progressSub.unsubscribe()
   }
 }

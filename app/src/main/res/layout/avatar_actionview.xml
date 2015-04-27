@@ -16,11 +16,11 @@
         android:layout_toRightOf="@+id/backButton"
         android:layout_width="40dp"
         android:layout_height="40dp">
-        <TextView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/circle_grey_light"
+            android:src="@color/grey_light"
             />
         <TextView
             android:id="@+id/icon"
@@ -29,6 +29,23 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:background="@drawable/circle_online"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/info"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_centerVertical="true"
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/profile_info_description"
+            android:onClick="onClickInfo"
+            android:src="@drawable/ic_info"/>
     </RelativeLayout>
 
     <!-- <RelativeLayout

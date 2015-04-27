@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="im.tox.antox"
     android:versionCode="46"
-    android:versionName="0.15" >
+    android:versionName="0.22" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="19"
         tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple" />
 
@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -50,7 +52,6 @@
             android:theme="@style/Theme.AppCompat.Translucent" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,9 +60,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
         </activity>
+        <activity android:name=".activities.GroupChatActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.activities.MainActivity" />
+        </activity>
         <activity
-            android:name=".activities.AddFriendActivity"
-            android:label="@string/title_activity_add_friend" >
+            android:name=".activities.AddActivity"
+            android:label="@string/title_activity_add" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
@@ -91,6 +97,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.GroupProfileActivity"
+            android:label="@string/title_activity_group_profile"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="im.tox.antox.activities.GroupChatActivity" />
         </activity>
 
         <receiver

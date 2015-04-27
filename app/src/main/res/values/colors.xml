@@ -32,4 +32,5 @@
 
     <color name="tab_selected">@color/white</color>
     <color name="tab_highlight">#aaaaaaaa</color>
+
 </resources>

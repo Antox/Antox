@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Přidat přítele</string>
+  <string name="title_activity_add">Přidat přítele</string>
   <string name="title_activity_friend_profile">Profil přítele</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Přidat přítele</string>
+  <string name="add_contact">Přidat přítele</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Je třeba vyplnit jméno profilu</string>
   <string name="login_login">Login</string>

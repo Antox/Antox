@@ -23,8 +23,8 @@ class ToxDoService extends Service() {
     val start = new Runnable() {
 
       override def run() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext)
         while (keepRunning) {
-          val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext)
           val connManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
           val wifiOnly = preferences.getBoolean("wifi_only", true)
           val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)

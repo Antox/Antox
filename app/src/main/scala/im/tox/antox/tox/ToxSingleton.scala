@@ -14,12 +14,13 @@ import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.transfer.{FileStatus, FileTransfer}
 import im.tox.antox.utils._
-import im.tox.antox.wrapper.{ToxAv, ToxCore}
+import im.tox.antox.wrapper._
+import im.tox.tox4j.ToxAvImpl
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.enums.{ToxStatus, ToxFileControl, ToxFileKind}
+import im.tox.tox4j.core.enums.{ToxFileControl, ToxStatus}
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -36,6 +37,8 @@ object ToxSingleton {
 
   private var antoxFriendList: AntoxFriendList = _
 
+  private var groupList: GroupList = _
+
   var mNotificationManager: NotificationManager = _
 
   var dataFile: ToxDataFile = _
@@ -51,6 +54,9 @@ object ToxSingleton {
   var chatActive: Boolean = _
 
   var dhtNodes: Array[DhtNode] = Array()
+
+
+  def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
   def getAntoxFriend(key: String): Option[AntoxFriend] = {
     try {
@@ -74,18 +80,26 @@ object ToxSingleton {
     }
   }
 
-  def getAntoxFriendList: AntoxFriendList = antoxFriendList
+  def getGroupList: GroupList = groupList
+
+  def getGroup(groupNumber: Int): Group = getGroupList.getGroup(groupNumber)
+
+  def getGroup(groupId: String): Group = getGroupList.getGroup(groupId)
+
+  def getGroupPeer(groupNumber: Int, peerNumber: Int): GroupPeer = getGroupList.getPeer(groupNumber, peerNumber)
 
   def keyFromAddress(address: String): String = {
     address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
   }
 
-  def exportDataFile(): Unit = {
-    dataFile.exportFile()
+  def exportDataFile(dest: File): Unit = {
+    dataFile.exportFile(dest)
+    ToxSingleton.save()
   }
 
-  def sendFileSendRequest(path: String, key: String, context: Context) {
+  def sendFileSendRequest(path: String, key: String, fileKind: FileKind, context: Context) {
     val file = new File(path)
+    println("file path " + path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
     val splitFileName = fileName.span(_ != '.')
@@ -101,7 +115,7 @@ object ToxSingleton {
         .flatMap(friendNumber => {
           try {
             Log.d(TAG, "Creating tox file sender")
-            val fn = tox.fileSend(friendNumber, ToxFileKind.DATA, file.length(), fileName)
+            val fn = tox.fileSend(friendNumber, fileKind.kindId, file.length(), fileName)
             fn match {
               case -1 => None
               case x => Some(x)
@@ -115,17 +129,22 @@ object ToxSingleton {
           }).foreach(fileNumber => {
             val antoxDB = new AntoxDB(context)
             Log.d(TAG, "adding File Transfer")
-            val id = antoxDB.addFileTransfer(key, path, fileNumber, file.length.toInt, sending = true)
-            State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id))
+            val id = antoxDB.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
+            State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
             antoxDB.close()
           })
     }
+
+    updateContactsList(context)
+    updateMessages(context)
   }
 
   def fileSendRequest(key: String,
     fileNumber: Int,
     fileName: String,
+    fileKind: FileKind,
     fileSize: Long,
+    replaceExisting: Boolean,
     context: Context) {
       Log.d(TAG, "fileSendRequest")
       var fileN = fileName
@@ -138,12 +157,15 @@ object ToxSingleton {
           filePre = filePre.concat(".")
         }
       }
-      val dirfile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-        Constants.DOWNLOAD_DIRECTORY)
+      val dirfile = FileUtil.getDirectory(fileKind.storageDir, fileKind.storageType, context)
+
       if (!dirfile.mkdirs()) {
         Log.e("acceptFile", "Directory not created")
       }
+
       var file = new File(dirfile.getPath, fileN)
+      if (replaceExisting) file.delete()
+
       if (file.exists()) {
         var i = 1
         do {
@@ -154,9 +176,10 @@ object ToxSingleton {
           i += 1
         } while (file.exists())
       }
+
       val antoxDB = new AntoxDB(context)
-      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileSize.toInt, sending = false)
-      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id))
+      val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
+      State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
       antoxDB.close()
       updateMessages(context)
   }
@@ -188,7 +211,7 @@ object ToxSingleton {
           val transfer = State.transfers.get(id)
           transfer match {
             case Some(t) =>
-              if (accept) {t.status = FileStatus.INPROGRESS} else {t.status = FileStatus.CANCELLED}
+              if (accept) t.status = FileStatus.INPROGRESS else t.status = FileStatus.CANCELLED
             case None => 
           }
         } catch {
@@ -213,7 +236,7 @@ object ToxSingleton {
       if (Environment.MEDIA_MOUNTED == state) {
         mTransfer match {
           case Some(t) =>
-            val finished = t.writeData(data)
+            t.writeData(data)
           case None =>
         }
       }
@@ -235,7 +258,15 @@ object ToxSingleton {
         t.status = FileStatus.FINISHED
         val mFriend = antoxFriendList.getByKey(t.key)
         State.db.fileFinished(key, fileNumber)
+        if (t.fileKind == FileKind.AVATAR) {
+          mFriend.get.setAvatar(Some(t.file))
+          val db = new AntoxDB(context)
+          db.updateFriendAvatar(key, t.file.getName)
+          db.close()
+        }
         Reactive.updatedMessages.onNext(true)
+        updateFriendsList(context)
+        updateGroupList(context)
       }
       case None => Log.d(TAG, "fileFinished: No transfer found")
     }
@@ -261,7 +292,6 @@ object ToxSingleton {
   def fileTransferStarted(key: String, fileNumber: Integer, ctx: Context) {
     Log.d(TAG, "fileTransferStarted")
     State.db.fileTransferStarted(key, fileNumber)
-    val mTransfer = State.transfers.get(key, fileNumber)
   }
 
   def pauseFile(id: Long, ctx: Context) {
@@ -271,6 +301,24 @@ object ToxSingleton {
       case Some(t) => t.status = FileStatus.PAUSED
       case None =>
     }
+  }
+
+  def clearUselessNotifications(key: String) {
+    if (key != null && key != "") {
+      val mFriend = getAntoxFriend(key)
+      mFriend.foreach(friend => {
+        try {
+          if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendnumber)
+        } catch {
+          case e: Exception => e.printStackTrace()
+        }
+      })
+    }
+  }
+
+  def updateContactsList(ctx: Context): Unit = {
+    updateFriendsList(ctx)
+    updateGroupList(ctx)
   }
 
   def updateFriendsList(ctx: Context) {
@@ -284,16 +332,14 @@ object ToxSingleton {
     }
   }
 
-  def clearUselessNotifications(key: String) {
-    if (key != null && key != "") {
-      val mFriend = antoxFriendList.getByKey(key)
-      mFriend.foreach(friend => {
-        try {
-          mNotificationManager.cancel(friend.getFriendnumber)
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
-      })
+  def updateGroupList(ctx: Context) {
+    try {
+      val antoxDB = new AntoxDB(ctx)
+      val groupList = antoxDB.getGroupList
+      antoxDB.close()
+      Reactive.groupList.onNext(groupList)
+    } catch {
+      case e: Exception => e.printStackTrace()
     }
   }
 
@@ -305,6 +351,17 @@ object ToxSingleton {
       Reactive.friendRequests.onNext(friendRequest.toArray(new Array[FriendRequest](friendRequest.size)))
     } catch {
       case e: Exception => Reactive.friendRequests.onError(e)
+    }
+  }
+
+  def updateGroupInvites(ctx: Context) {
+    try {
+      val antoxDB = new AntoxDB(ctx)
+      val groupInvites = antoxDB.getGroupInvitesList
+      antoxDB.close()
+      Reactive.groupInvites.onNext(groupInvites.toArray(new Array[GroupInvite](groupInvites.size)))
+    } catch {
+      case e: Exception => Reactive.groupInvites.onError(e)
     }
   }
 
@@ -344,7 +401,7 @@ object ToxSingleton {
       Log.d(TAG, "updateDhtNodes: connected")
       Observable[JSONObject](subscriber => {
         Log.d(TAG, "updateDhtNodes: in observable")
-        object JsonReader {
+         object JsonReader {
 
           private def readAll(rd: Reader): String = {
             val sb = new StringBuilder()
@@ -417,18 +474,25 @@ object ToxSingleton {
     }
   }
 
-  def populateAntoxFriendList(): Unit = {
-    for (i <-  tox.getFriendList) {
+  def populateAntoxLists(db: AntoxDB): Unit = {
+    for (i <- tox.getFriendList) {
       //this doesn't set the name, status message, status
       //or online status of the friend because they are now set during callbacks
       antoxFriendList.addFriendIfNotExists(i)
       antoxFriendList.getByFriendNumber(i).get.setKey(tox.getFriendKey(i))
+    }
+
+    for (i <- tox.getGroupList) {
+      val groupId = tox.getGroupChatId(i)
+      val details = db.getGroupDetails(groupId)
+      groupList.addGroupIfNotExists(new Group(groupId, i, details._1, details._2, details._3, new PeerList()))
     }
   }
 
   def initTox(ctx: Context) {
     State.db = new AntoxDB(ctx).open(writeable = true)
     antoxFriendList = new AntoxFriendList()
+    groupList = new GroupList()
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
     dataFile = new ToxDataFile(ctx)
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -439,7 +503,7 @@ object ToxSingleton {
 
     if (!dataFile.doesFileExist()) {
       try {
-        tox = new ToxCore(antoxFriendList, options)
+        tox = new ToxCore(antoxFriendList, groupList, options)
         dataFile.saveFile(tox.save())
         val editor = preferences.edit()
         editor.putString("tox_id", tox.getAddress)
@@ -447,9 +511,9 @@ object ToxSingleton {
       } catch {
         case e: ToxException => e.printStackTrace()
       }
-    } else {
+      } else {
         try {
-          tox = new ToxCore(antoxFriendList, options, dataFile.loadFile())
+          tox = new ToxCore(antoxFriendList, groupList, options, dataFile.loadFile())
           val editor = preferences.edit()
           editor.putString("tox_id", tox.getAddress)
           editor.commit()
@@ -460,48 +524,46 @@ object ToxSingleton {
 
       toxAv = new ToxAvImpl(tox.getTox)
 
-      val db = new AntoxDB(ctx)
+      val db = new AntoxDB(ctx).open(writeable = true)
       db.setAllOffline()
 
       val friends = db.getFriendList
-      db.close()
+      val groups = db.getGroupList
 
       for (friendNumber <- tox.getFriendList) {
         val friendKey = tox.getFriendKey(friendNumber)
         if (!db.doesFriendExist(friendKey)) {
-          db.addFriend(tox.getFriendKey(friendNumber), "", "", "")
+          db.addFriend(friendKey, "", "", "")
         }
       }
 
-      if (friends.size > 0) {
+      for (groupNumber <- tox.getGroupList) {
+        val groupId = tox.getGroupChatId(groupNumber)
+        if (!db.doesGroupExist(groupId)) {
+          db.addGroup(groupId, "", "")
+        }
+      }
+
+      if (friends.size > 0 || groups.size > 0) {
+        populateAntoxLists(db)
+
         for (friend <- friends) {
           try {
-            tox.addFriendNoRequest(friend.key)
+            antoxFriendList.updateFromFriend(friend)
           } catch {
-            case e: Exception => e.printStackTrace()
+            case e: Exception =>
+              try {
+              tox.addFriendNoRequest(friend.key)
+              } catch {
+                case e: Exception =>
+                  Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
+              }
           }
         }
-
-        populateAntoxFriendList()
-
-        for (friend <- friends) {
-          antoxFriendList.updateFromFriend(friend)
-        }
       }
-      tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
-      tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
-      tox.callbackFriendAction(new AntoxOnActionCallback(ctx))
-      tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
-      tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
-      tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
-      tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
-      tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
-      tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
-      tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
-      tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
-      tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
-      tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
 
+      updateGroupList(ctx)
+      registerCallbacks(ctx)
 
       try {
         tox.setName(preferences.getString("nickname", ""))
@@ -512,8 +574,40 @@ object ToxSingleton {
         tox.setStatus(newStatus)
       } catch {
         case e: ToxException =>
+      } finally {
+        db.close()
       }
       updateDhtNodes(ctx)
+    }
+
+
+  def registerCallbacks(ctx: Context): Unit = {
+    tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
+    tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
+    tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
+    tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
+    tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
+    tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
+    tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
+    tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
+    tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
+    tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
+    tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
+    tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+    /* tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
+    tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
+    tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
+    tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
+    tox.callbackGroupNickChange(new AntoxOnGroupNickChangeCallback(ctx))
+    tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
+    tox.callbackGroupSelfJoin(new AntoxOnGroupSelfJoinCallback(ctx))
+    tox.callbackGroupJoinRejected(new AntoxOnGroupJoinRejectedCallback(ctx))
+    tox.callbackGroupSelfTimeout(new AntoxOnGroupSelfTimeoutCallback(ctx))
+    tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx)) */
+    tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
+  }
+  def save(): Unit = {
+    dataFile.saveFile(tox.save())
   }
 }
 

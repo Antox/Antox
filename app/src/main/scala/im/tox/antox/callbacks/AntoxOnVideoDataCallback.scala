@@ -2,7 +2,6 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import im.tox.antox.utils.AntoxFriend
 
 class AntoxOnVideoDataCallback(private var ctx: Context) {
 

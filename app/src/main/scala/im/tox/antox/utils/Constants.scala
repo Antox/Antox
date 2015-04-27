@@ -1,16 +1,6 @@
 package im.tox.antox.utils
 
-//remove if not needed
-
 object Constants {
-
-  val TYPE_HEADER = 0
-
-  val TYPE_FRIEND_REQUEST = 1
-
-  val TYPE_CONTACT = 2
-
-  val TYPE_MAX_COUNT = 3
 
   val START_TOX = "im.tox.antox.START_TOX"
 
@@ -24,19 +14,35 @@ object Constants {
 
   val DOWNLOAD_DIRECTORY = "Tox Received Files"
 
+  val AVATAR_DIRECTORY = "avatars"
+
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 3
+  val DATABASE_VERSION = 6
 
   val TABLE_FRIENDS = "friends"
 
+  val TABLE_GROUPS = "groups"
+
   val TABLE_CHAT_LOGS = "messages"
 
-  val TABLE_FRIEND_REQUEST = "friend_requests"
+  val TABLE_FRIEND_REQUESTS = "friend_requests"
+
+  val TABLE_GROUP_INVITES = "group_invites"
 
   val COLUMN_NAME_KEY = "tox_key"
 
+  val COLUMN_NAME_GROUP_INVITER = "group_inviter"
+
+  val COLUMN_NAME_GROUP_DATA = "group_data"
+
+  val COLUMN_NAME_SENDER_NAME = "sender_name"
+
   val COLUMN_NAME_MESSAGE = "message"
+
+  val COLUMN_NAME_NAME = "name"
+
+  val COLUMN_NAME_TOPIC = "topic"
 
   val COLUMN_NAME_USERNAME = "username"
 
@@ -54,11 +60,21 @@ object Constants {
 
   val COLUMN_NAME_SUCCESSFULLY_SENT = "successfully_sent"
 
+  val COLUMN_NAME_FILE_KIND = "file_kind"
+
   val COLUMN_NAME_ISONLINE = "isonline"
+
+  val COLUMN_NAME_ISCONNECTED = "isconnected"
 
   val COLUMN_NAME_ALIAS = "alias"
 
+  val COLUMN_NAME_IGNORED = "ignored"
+
   val COLUMN_NAME_ISBLOCKED = "isblocked"
+
+  val COLUMN_NAME_AVATAR = "avatar"
+
+  val COLUMN_NAME_RECEIVED_AVATAR = "received_avatar"
 
   val ADD_FRIEND_REQUEST_CODE = 0
 
@@ -70,17 +86,12 @@ object Constants {
 
   val FILE_RESULT = 3
 
-  val MESSAGE_TYPE_OWN = 1
-
-  val MESSAGE_TYPE_FRIEND = 2
-
-  val MESSAGE_TYPE_FILE_TRANSFER = 3
-
-  val MESSAGE_TYPE_FILE_TRANSFER_FRIEND = 4
-
-  val MESSAGE_TYPE_ACTION = 5
-
   var epoch: Long = _
 
   val UNREAD_COUNT_LIMIT = 99
+
+  val MAX_NAME_LENGTH = 128
+
+  val MAX_AVATAR_SIZE = 64 * 1024 //in bytes
+
 }

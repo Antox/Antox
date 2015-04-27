@@ -1,12 +1,11 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.State
 import android.util.Log
-import im.tox.antox.callbacks.AntoxOnFileReceiveChunkCallback._
-import im.tox.antox.tox.{Reactive, ToxSingleton}
-import im.tox.antox.utils.{FileStatus, AntoxFriend}
-import im.tox.tox4j.core.callbacks.{FileRequestChunkCallback, FileReceiveChunkCallback}
+import im.tox.antox.data.State
+import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.transfer.FileStatus
+import im.tox.tox4j.core.callbacks.FileRequestChunkCallback
 
 object AntoxOnFileRequestChunkCallback {
 
@@ -23,16 +22,16 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
       case Some(t) =>
         t.status = FileStatus.INPROGRESS
         mFriend.foreach(friend => {
-          println("progress " + t.progress + " assumed progress " + position)
           if (length <= 0) {
             State.db.clearFileNumber(friend.getKey, fileNumber)
-            ToxSingleton.fileFinished(friend.getKey, t.fileNumber, ctx) //make this on lenght 0 or whatever TODO
+            ToxSingleton.fileFinished(friend.getKey, t.fileNumber, ctx)
+            println("finished transfer")
           } else {
             val reset = if (position < t.progress) true else false
             val data = t.readData(reset, length)
             data match {
               case Some(d) =>
-                ToxSingleton.tox.fileSendChunk(friend.getFriendnumber, fileNumber, d)
+                ToxSingleton.tox.fileSendChunk(friend.getFriendnumber, fileNumber, t.progress, d)
                 if (!reset) t.addToProgress(t.progress + length)
               case None =>
             }

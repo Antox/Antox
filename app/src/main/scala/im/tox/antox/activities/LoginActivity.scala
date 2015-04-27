@@ -1,4 +1,3 @@
-
 package im.tox.antox.activities
 
 import android.app.Activity
@@ -12,7 +11,6 @@ import android.widget._
 import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.ToxDoService
-//remove if not needed
 
 class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedListener {
 
@@ -80,10 +78,11 @@ class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedLis
         val editor = preferences.edit()
         editor.putBoolean("loggedin", true)
         editor.putString("active_account", account)
-        editor.putString("nickname", details(0))
-        editor.putString("password", details(1))
-        editor.putString("status", details(2))
-        editor.putString("status_message", details(3))
+        editor.putString("nickname", details.nickname)
+        editor.putString("password", details.password)
+        editor.putString("status", details.status)
+        editor.putString("status_message", details.statusMessage)
+        editor.putString("avatar", details.avatarName)
         editor.apply()
         val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
         getApplicationContext.startService(startTox)

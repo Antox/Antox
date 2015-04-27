@@ -4,12 +4,13 @@
     <string name="app_name" translatable="false">Antox</string>
 
     <!-- Activity titles -->
-    <string name="title_activity_add_friend">Add Friend</string>
+    <string name="title_activity_add">Add Contact</string>
     <string name="title_activity_friend_profile">Friend Profile</string>
+    <string name="title_activity_group_profile">Group Info</string>
     <string name="title_activity_profile_settings">Profile options</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">Add Friend</string>
+    <string name="add_contact">Add Contact</string>
 
     <!-- Login Activity -->
     <string name="login_must_fill_in">You must fill in a profile name</string>
@@ -41,12 +42,19 @@
     <string name="main_not_connected">No internet connection has been detected. Without an internet connection, you will have
         limited functionality unless you are using Antox for LAN only</string>
     <string name="search_all_contacts">Search all contacts</string>
+    <string name='main_group_coming_soon'>"Coming soon…"</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
+    <string name="chat_message_too_long">This message is too long and cannot be sent</string>
+    <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
 
-    <!-- Add Friend Activity -->
+    <!-- Add Pane Fragment -->
+    <string name="addpane_friend_label">Friend</string>
+    <string name="addpane_group_label">Group</string>
+
+    <!-- Add Friend Fragment -->
     <string name="addfriend_friend_key">Your friend\'s Tox ID</string>
     <string name="addfriend_friend_message">Send a message with your request</string>
     <string name="addfriend_button">Add Friend</string>
@@ -63,6 +71,15 @@
     <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
     <string name="addfriend_default_message">Hey! Please accept my friend request</string>
 
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">The group\'s ID</string>
+    <string name="addgroup_button">Join Group</string>
+    <string name="addgroup_group_added">Group Joined</string>
+    <string name="addgroup_group_exists">Group already exists</string>
+    <string name="invalid_group_ID">Invalid Group ID</string>
+    <string name="addgroup_alias_hint">Set an alias for this group</string>
+    <string name="addgroup_optional_title">Optional Extras</string>
+
     <!-- Friend Profile Activity -->
     <string name="friend_profile_nick">Nickname</string>
     <string name="friend_profile_key">Tox ID</string>
@@ -71,19 +88,33 @@
     <string name="friend_profile_updated">The profile has been updated</string>
     <string name="friend_profile_copied">Tox ID Copied</string>
 
+    <!-- Friend Profile Activity -->
+    <string name="group_profile_peer_list_head">Participants</string>
+
     <!-- Friend request fragment -->
     <string name="friend_profile_title">%1$s\'s Profile</string>
     <string name="friendrequest_accept">Accept</string>
     <string name="friendrequest_reject">Reject</string>
     <string name="friend_request">New Friend Request</string>
 
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">Accept</string>
+    <string name="groupinvite_reject">Reject</string>
+    <string name="group_invite">New Group Invite</string>
+    <string name="invited_by">You were invited by </string>
+
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Profile</string>
     <string name="friend_action_delete">Remove Friend</string>
+    <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
+    <string name="group_default_peer_name">Anonymous</string>
+    <string name="group_action_delete">Leave Group</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
+    <string name="contacts_delimiter_invites">Group Invites</string>
+    <string name="contacts_delimiter_groups">Groups</string>
     <string name="contacts_delimiter_friends">Friends</string>
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
@@ -92,12 +123,25 @@
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
 
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Chat log successfully exported to %s</string>
+    <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
+
     <!-- Delete Chat Logs Dialog -->
     <string name="friend_action_delete_chat_confirmation">Are you sure you want to delete the chat logs?</string>
 
     <!-- Block Friend Dialog -->
     <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them.\n\nAre you sure you wish to continue?</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">Create a new Group Chat</string>
+    <string name="create_group_dialog_create_group">Create Group</string>
+    <string name="create_group_dialog_cancel">Cancel</string>
+    <string name="create_group_dialog_name_header">Group Name</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">Goodbye</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
@@ -125,6 +169,14 @@
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="action_settings">Settings</string>
 
+    <!-- File transfer -->
+    <string name="file_finished">Finished</string>
+    <string name="file_failed">Failed</string>
+    <string name="file_in_progress">In Progress</string>
+    <string name="file_request_sent">Sent Request</string>
+    <string name="file_rejected">Rejected</string>
+    <string name="file_time_remaining">%s seconds left</string>
+
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>
     <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>
@@ -143,18 +195,19 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
     <string name="license1">Distributed under the GNU GPL v3.</string>
-    <string name="license2">Source code is available at\nhttps://github.com/Astonex/Antox</string>
+    <string name="license2">Source code is available at\nhttps://github.com/subliun/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>
     <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
     <string name="about_antox_2">What Is Currently Working:</string>
-    <string name="about_antox_3">-Basic messaging - this does not include group chats</string>
-    <string name="about_antox_4">-File transfers</string>
-    <string name="about_antox_5">Current development:</string>
-    <string name="about_antox_6">-Currently implementing A/V in Antox</string>
+    <string name="about_antox_3">-Basic messaging (this does not include group chats)</string>
+    <string name="about_antox_4">-Notifications</string>
+    <string name="about_antox_5">Not Working:</string>
+    <string name="about_antox_6">-Audio/Video &amp; File Transfers</string>
     <string name="title_activity_call">CallActivity</string>
     <string name="end_call">End Call</string>
     <string name="mute_call">Mute</string>
     <string name="mute_mic">Mute Mic</string>
+    <string name="profile_info_description">Get User Info</string>
 
 </resources>

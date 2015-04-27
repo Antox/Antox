@@ -3,10 +3,9 @@ package im.tox.antox.tox
 import java.io._
 
 import android.content.Context
-import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
-import im.tox.antox.utils.{Constants, FileUtils}
+import im.tox.antox.transfer.FileUtils
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
@@ -27,14 +26,12 @@ class ToxDataFile(ctx: Context, fileName: String) {
     myFile.exists()
   }
 
-  def exportFile(): Unit = {
-    var saveFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-      Constants.PROFILE_EXPORT_DIRECTORY)
-    if (!saveFile.exists()) {
-      saveFile.mkdirs()
+  def exportFile(dest: File): Unit = {
+    if (!dest.exists()) {
+      throw new IllegalArgumentException("dest must exist")
     }
-    saveFile = new File(saveFile.getAbsolutePath + "/" + fileName + ".tox")
-    FileUtils.copy(ctx.getFileStreamPath(fileName), saveFile)
+
+    FileUtils.copy(ctx.getFileStreamPath(fileName), new File(dest + "/" + fileName + ".tox"))
   }
 
   def deleteFile() {

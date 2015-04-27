@@ -5,7 +5,7 @@ import android.util.Log
 import im.tox.antox.callbacks.AntoxOnFileControlCallback._
 import im.tox.antox.data.State
 import im.tox.antox.tox.{Reactive, ToxSingleton}
-import im.tox.antox.utils.{AntoxFriend, FileStatus}
+import im.tox.antox.transfer.FileStatus
 import im.tox.tox4j.core.callbacks.FileControlCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 

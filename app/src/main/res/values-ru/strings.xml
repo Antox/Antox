@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Добавить друга</string>
+  <string name="title_activity_add">Добавить друга</string>
   <string name="title_activity_friend_profile">Профиль друга</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Добавить друга</string>
+  <string name="add_contact">Добавить друга</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Вы должны указать имя профиля</string>
   <string name="login_login">Вход</string>
@@ -42,7 +42,7 @@
   <string name="addfriend_own_key">Невозможно добавлять самого себя</string>
   <string name="addfriend_friend_pin_title">Введите pin друга</string>
   <string name="addfriend_friend_pin_text">Введите pin друга</string>
-  <string name="addfriend_default_message">Привет! Прими, пожалуйста, мой запрос на добавление друзья</string>
+  <string name="addfriend_default_message">Привет! Прими, пожалуйста, мой запрос на добавлени в друзья</string>
   <!--Friend Profile Activity-->
   <string name="friend_profile_nick">Ник</string>
   <string name="friend_profile_key">Tox ID</string>
@@ -71,7 +71,7 @@
   <!--Delete Chat Logs Dialog-->
   <string name="friend_action_delete_chat_confirmation">Вы уверены, что хотите удалить историю чата?</string>
   <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Блокировка пользователя, удалит его, из вашего списка друзей и вы больше не будет получать от него запросов на добавление в друзья.
+  <string name="friend_action_block_friend_confirmation">Блокировка пользователя удалит его, из вашего списка друзей и вы больше не будет получать от него запросов на добавление в друзья.
 Вы уверены, что хотите продолжить?</string>
   <!--Chat Fragment-->
   <string name="attachment_photo">Прикрепить фото</string>

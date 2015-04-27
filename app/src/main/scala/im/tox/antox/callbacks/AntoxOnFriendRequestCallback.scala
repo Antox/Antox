@@ -12,8 +12,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
 
-//remove if not needed
-
 object AntoxOnFriendRequestCallback {
 
   private val TAG = "im.tox.antox.TAG"

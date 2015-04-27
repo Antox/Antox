@@ -2,20 +2,22 @@
 package im.tox.antox.data
 
 import java.util
-import java.util.ArrayList
 
 import android.content.{ContentValues, Context}
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
+import im.tox.antox.wrapper.{FileKind, UserInfo}
+
 //remove if not needed
 
 class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 
-  private var CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " +
+  private val CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " +
     "username text," +
     "password text," +
     "nickname text," +
     "status text," +
-    "status_message text);"
+    "status_message text," +
+    "avatar text);"
 
   override def onCreate(db: SQLiteDatabase) {
     db.execSQL(CREATE_TABLE_USERS)
@@ -32,6 +34,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
     values.put("nickname", username)
     values.put("status", "online")
     values.put("status_message", "Hey! I'm using Antox")
+    values.put("avatar", "")
     db.insert("users", null, values)
     db.close()
   }
@@ -47,21 +50,22 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
     count > 0
   }
 
-  def getUserDetails(username: String): Array[String] = {
-    val details = Array.ofDim[String](4)
+  def getUserDetails(username: String): UserInfo = {
     val db = this.getReadableDatabase
     val query = "SELECT * FROM users WHERE username='" + username + "'"
     val cursor = db.rawQuery(query, null)
+    var userInfo: UserInfo = null
     if (cursor.moveToFirst()) {
-      //WHY WOULD ANY SANE MAN DO THIS
-      details(0) = cursor.getString(3) //nickname
-      details(1) = cursor.getString(2) //password
-      details(2) = cursor.getString(4) //status
-      details(3) = cursor.getString(5) //status message
+      userInfo = new UserInfo(username,
+        cursor.getString(2),
+        cursor.getString(3),
+        cursor.getString(4),
+        cursor.getString(5),
+        cursor.getString(6))
     }
     cursor.close()
     db.close()
-    details
+    userInfo
   }
 
   def updateUserDetail(username: String, detail: String, newDetail: String) {

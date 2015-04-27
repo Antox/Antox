@@ -1,7 +1,7 @@
 package im.tox.antox.activities
 
 import java.util
-import java.util.{ArrayList, Locale}
+import java.util.Locale
 
 import android.app.{Activity, AlertDialog, NotificationManager}
 import android.content.res.Configuration
@@ -20,7 +20,7 @@ import android.widget.{AdapterView, ListView, Toast}
 import im.tox.antox.R
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.{BitmapManager, Constants, DrawerArrayAdapter, DrawerItem}
+import im.tox.antox.utils._
 
 class MainActivity extends ActionBarActivity {
 
@@ -44,8 +44,24 @@ class MainActivity extends ActionBarActivity {
       val intent = new Intent(this, classOf[Settings])
       startActivity(intent)
     } else if (position == 2) {
-      Toast.makeText(this, "Coming soon...", Toast.LENGTH_LONG)
+      //TODO: uncomment for the future
+      /* val dialog = new CreateGroupDialog(this)
+      dialog.addCreateGroupListener(new CreateGroupListener {
+        override def groupCreationConfimed(name: String): Unit = {
+          val groupNumber = ToxSingleton.tox.newGroup(name)
+          val groupId = ToxSingleton.tox.getGroupChatId(groupNumber)
+          val db = new AntoxDB(getApplicationContext)
+
+          db.addGroup(groupId, name, "")
+          db.close()
+          ToxSingleton.updateGroupList(getApplicationContext)
+        }
+      })
+      dialog.showDialog()
+      */
+      Toast.makeText(this, getResources.getString(R.string.main_group_coming_soon), Toast.LENGTH_LONG)
         .show()
+
     } else if (position == 3) {
       val intent = new Intent(this, classOf[About])
       startActivity(intent)
@@ -188,10 +204,12 @@ class MainActivity extends ActionBarActivity {
     ToxSingleton.updateFriendRequests(getApplicationContext)
     ToxSingleton.updateFriendsList(getApplicationContext)
     ToxSingleton.updateMessages(getApplicationContext)
+    ToxSingleton.updateGroupInvites(getApplicationContext)
+    ToxSingleton.updateGroupList(getApplicationContext)
   }
 
-  def onClickAddFriend(v: View) {
-    val intent = new Intent(this, classOf[AddFriendActivity])
+  def onClickAdd(v: View) {
+    val intent = new Intent(this, classOf[AddActivity])
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
   }
 
@@ -199,6 +217,7 @@ class MainActivity extends ActionBarActivity {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
       ToxSingleton.updateFriendsList(this)
+      ToxSingleton.updateGroupList(this)
     }
   }
 

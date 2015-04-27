@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Добави Приятел</string>
+  <string name="title_activity_add">Добави Приятел</string>
   <string name="title_activity_friend_profile">Профил на Приятеля</string>
   <string name="title_activity_profile_settings">Настройки на профила</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Добави Приятел</string>
+  <string name="add_contact">Добави Приятел</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Трябва да въвдеш име на профила</string>
   <string name="login_login">Вписване</string>

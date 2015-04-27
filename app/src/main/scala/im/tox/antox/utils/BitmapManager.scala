@@ -1,21 +1,27 @@
 package im.tox.antox.utils
 
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
+import java.util
 
 import android.graphics.{Bitmap, BitmapFactory}
 import android.util.{Log, LruCache}
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
-//remove if not needed
 
 object BitmapManager {
 
   private var mMemoryCache: LruCache[String, Bitmap] = _
+  private val bitmapValidMap = new util.HashMap[String, Boolean]()
 
-  private def getBitmapFromMemCache(key: String): Bitmap = mMemoryCache.get(key)
+  private def getBitmapFromMemCache(key: String): Option[Bitmap] = if (mMemoryCache != null) Option(mMemoryCache.get(key)) else None
 
-  private def addBitmapToMemoryCache(key: String, bitmap: Bitmap) {
-    if (getBitmapFromMemCache(key) == null) mMemoryCache.put(key, bitmap)
+  private def isBitmapValid(key: String): Option[Boolean] = Option(bitmapValidMap.get(key))
+
+  private def addBitmapToMemoryCache(key: String, valid: Boolean, bitmap: Bitmap) {
+    if (getBitmapFromMemCache(key).isEmpty) {
+      mMemoryCache.put(key, bitmap)
+      bitmapValidMap.put(key, valid)
+    }
   }
 
   private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int = {
@@ -32,22 +38,12 @@ object BitmapManager {
     inSampleSize
   }
 
-  def checkValidImage(file: File): Boolean = {
-    var fis: FileInputStream = null
-    try {
-      fis = new FileInputStream(file)
-      val byteArr = decodeBytes(fis)
-      val options = new BitmapFactory.Options()
-      options.inJustDecodeBounds = true
-      BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
-      if (options.outWidth > 0 && options.outHeight > 0) true else false
-    } catch {
-      case e: FileNotFoundException => {
-        Log.d("BitMapManager", "File not found when trying to be used for FileInputStream in checkValidImage")
-        e.printStackTrace()
-        false
-      }
-    }
+  private def checkValidImage(byteArr: Array[Byte]): Boolean = {
+    val options = new BitmapFactory.Options()
+    options.inJustDecodeBounds = true
+    BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+
+    options.outWidth > 0 && options.outHeight > 0
   }
 
   private def decodeBytes(inputStream: InputStream): Array[Byte] = {
@@ -80,33 +76,35 @@ object BitmapManager {
 
   def loadBitmap(file: File, id: Int, imageView: ImageView) {
     val imageKey = String.valueOf(id)
-    var bitmap = getBitmapFromMemCache(imageKey)
-    if (bitmap != null) {
-      Log.d("BitmapManager", "Found image in cache")
-      imageView.setImageBitmap(bitmap)
-    } else {
-      Log.d("BitmapManager", "Image not in cache")
-      var fis: FileInputStream = null
-      try {
-        fis = new FileInputStream(file)
-        val byteArr = decodeBytes(fis)
-        val options = new BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
-        options.inSampleSize = calculateInSampleSize(options, 100, 100)
-        options.inPurgeable = true
-        options.inInputShareable = true
-        options.inJustDecodeBounds = false
-        options.inPreferredConfig = Bitmap.Config.RGB_565
-        bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
-        imageView.setImageBitmap(bitmap)
-        addBitmapToMemoryCache(imageKey, bitmap)
-      } catch {
-        case e: FileNotFoundException => {
-          Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
-          e.printStackTrace()
+    getBitmapFromMemCache(imageKey) match {
+      case Some(bitmap) =>
+        if (isBitmapValid(imageKey).get) {
+          imageView.setImageBitmap(bitmap)
         }
-      }
+      case None =>
+        var fis: FileInputStream = null
+        try {
+          fis = new FileInputStream(file)
+          val byteArr = decodeBytes(fis)
+          val options = new BitmapFactory.Options()
+          options.inJustDecodeBounds = true
+          var bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+          options.inSampleSize = calculateInSampleSize(options, 100, 100)
+          options.inPurgeable = true
+          options.inInputShareable = true
+          options.inJustDecodeBounds = false
+          options.inPreferredConfig = Bitmap.Config.RGB_565
+          bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+          addBitmapToMemoryCache(imageKey, checkValidImage(byteArr), bitmap)
+          if (isBitmapValid(imageKey).get) {
+            imageView.setImageBitmap(bitmap)
+          }
+        } catch {
+          case e: FileNotFoundException => {
+            Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
+            e.printStackTrace()
+          }
+        }
     }
   }
 }

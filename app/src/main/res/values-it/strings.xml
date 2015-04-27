@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">Aggiungi Contatto</string>
+  <string name="title_activity_add">Aggiungi Contatto</string>
   <string name="title_activity_friend_profile">Profilo</string>
   <string name="title_activity_profile_settings">Opzioni profilo</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">Aggiungi Contatto</string>
+  <string name="add_contact">Aggiungi Contatto</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Devi inserire un nome profilo</string>
   <string name="login_login">Login</string>
@@ -17,10 +17,12 @@
   <string name="create_text">Messaggistica sicura per tutti.</string>
   <string name="create_register">Registrazione</string>
   <string name="create_register_incog">Crea profilo nascosto</string>
+  <string name="create_import_profile">Importa Profilo</string>
   <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
   <string name="create_bad_profile_name">Il nome profilo non può contenere \" \", \"/\", \"\\" o essere vuoto</string>
   <string name="create_profile_exists">Questo nome profilo esiste già</string>
+  <string name="import_profile_invalid_file">Il file selezionato non è un profilo Tox valido </string>
   <string name="create_account_exists">Questo nome è già stato scelto</string>
   <string name="create_account_internal_error">Antox: errore interno. Riavvia l\'applicazione e riprova</string>
   <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
@@ -35,6 +37,7 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <!--Chat Activity-->
   <string name="chat_enter_message">Scrivi un messaggio</string>
   <string name="chat_file_transfer">Invia un file</string>
+  <string name="chat_message_too_long">Questo messaggio è troppo lungo e non può essere inviato</string>
   <!--Add Friend Activity-->
   <string name="addfriend_friend_key">Tox ID del contatto</string>
   <string name="addfriend_friend_message">Messaggio da inviare insieme alla richiesta d\'amicizia</string>
@@ -66,6 +69,7 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Profilo</string>
   <string name="friend_action_delete">Rimuovi contatto</string>
+  <string name="friend_action_export_chat">Esporta cronologia chat</string>
   <string name="friend_action_delete_chat">Elimina chat</string>
   <string name="friend_action_block">Blocca</string>
   <string name="contacts_actions_on">Azioni per</string>
@@ -78,6 +82,9 @@ tu non stia usando Antox solo in una rete LAN)</string>
   <string name="friend_action_delete_friend_confirmation">Sei sicuro di voler rimuovere questo contatto?</string>
   <!--Delete Chat Logs Dialog-->
   <string name="friend_action_delete_chat_confirmation">Sei sicuro di voler eliminare la chat?</string>
+  <!-- Export Chat Logs Toast -->
+  <string name="friend_action_chat_log_exported">Cronologia chat esportata con successo in %s</string>
+  <string name="friend_action_chat_log_export_failed">Esportazione cronologia chat fallita. </string>
   <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
 richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
@@ -121,15 +128,15 @@ richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
   <string name="drawer_close">Chuidi navigation drawer</string>
   <string name="open_source_license">Licenza</string>
   <string name="license1">Distribuito sotto licenza GNU GPL v3</string>
-  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Astonex/Antox</string>
+  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/subliun/Antox</string>
   <string name="ver">Versione</string>
   <string name="about">Informazioni</string>
   <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>
   <string name="about_antox_2">Cosa Funziona:</string>
-  <string name="about_antox_3">-Chat base - questo non include le chat di gruppo</string>
-  <string name="about_antox_4">-Trasferimento file</string>
-  <string name="about_antox_5">In Sviluppo:</string>
-  <string name="about_antox_6">-Audio/Video</string>
+  <string name="about_antox_3">-Chat base (questo non include le chat di gruppo)</string>
+  <string name="about_antox_4">-Notifiche</string>
+  <string name="about_antox_5">Cosa Non Funziona:</string>
+  <string name="about_antox_6">-Audio/Video\n-Trasferimento files</string>
   <string name="title_activity_call">CallActivity</string>
   <string name="end_call">Termina Chiamata</string>
   <string name="mute_call">Disattiva Audio</string>

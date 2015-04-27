@@ -3,26 +3,27 @@ package im.tox.antox.adapters
 import java.io.File
 import java.sql.Timestamp
 import java.util
-import java.util.HashSet
+import java.util.Random
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
 import android.database.Cursor
+import android.graphics.{Color, Typeface}
 import android.net.Uri
-import android.os.Environment
-import android.support.v4.widget.ResourceCursorAdapter
+import android.os.{Build, Environment}
 import android.text.{ClipboardManager, Html}
-import android.util.Log
-import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.view.animation.{Animation, AnimationUtils}
+import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
 import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{BitmapManager, ChatMessages, Constants, PrettyTimestamp}
+import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
+import im.tox.antox.wrapper.{ChatMessages, FileKind, Message, MessageType}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
+
 
 object ChatMessagesAdapter {
 
@@ -67,54 +68,68 @@ object ChatMessagesAdapter {
   }
 }
 
-class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Integer])
-  extends ResourceCursorAdapter(context, R.layout.chat_message_row, c, 0) {
+class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message], ids: util.HashSet[Integer])
+  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
-  private var density: Int = context.getResources.getDisplayMetrics.density.toInt
+  private val density: Int = context.getResources.getDisplayMetrics.density.toInt
 
-  private var anim: Animation = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom)
+  private val anim: Animation = AnimationUtils.loadAnimation(this.context, R.anim.abc_slide_in_bottom)
 
-  private var mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
+  private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
 
-  private var animatedIds: util.HashSet[Integer] = ids
+  private val animatedIds: util.HashSet[Integer] = ids
 
-  override def newView(context: Context, cursor: Cursor, parent: ViewGroup): View = {
-    mInflater.inflate(this.layoutResourceId, parent, false)
-  }
+  override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
+    var view: View = null
+    var holder: ChatMessagesHolder = null
 
-  override def bindView(view: View, context: Context, cursor: Cursor) {
-    val id = cursor.getInt(0)
-    val time = Timestamp.valueOf(cursor.getString(1))
-    val message_id = cursor.getInt(2)
-    val k = cursor.getString(3)
-    val m = cursor.getString(4)
-    val received = cursor.getInt(5) > 0
-    val read = cursor.getInt(6) > 0
-    val sent = cursor.getInt(7) > 0
-    val size = cursor.getInt(8)
-    val messageType = cursor.getInt(9)
-    val msg = new ChatMessages(id, message_id, m, time, received, sent, size, messageType)
-    val holder = new ChatMessagesHolder()
-    holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
-    holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
-    holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
-    holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
-    holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
-    holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
-    holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
-    holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
-    holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
-    holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
-    holder.padding = view.findViewById(R.id.file_transfer_padding)
-    holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
-    holder.accept = view.findViewById(R.id.file_accept_button)
-    holder.reject = view.findViewById(R.id.file_reject_button)
-    holder.sentTriangle = view.findViewById(R.id.sent_triangle)
-    holder.receivedTriangle = view.findViewById(R.id.received_triangle)
-    holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
-    holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
+    val msg = getItem(position)
+
+    //FIXME
+    var lastMsg: Message = null
+    var nextMsg: Message = null
+
+    if (convertView == null) {
+      view = mInflater.inflate(this.layoutResourceId, parent, false)
+
+      holder = new ChatMessagesHolder()
+      holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
+      holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
+      holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
+      holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
+      holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
+      holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
+      holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
+      holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
+      holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
+      holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
+      holder.padding = view.findViewById(R.id.file_transfer_padding)
+      holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
+      holder.accept = view.findViewById(R.id.file_accept_button)
+      holder.reject = view.findViewById(R.id.file_reject_button)
+      holder.sentTriangle = view.findViewById(R.id.sent_triangle)
+      holder.receivedTriangle = view.findViewById(R.id.received_triangle)
+      holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
+      holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
+
+      view.setTag(holder)
+    } else {
+      view = convertView
+      holder = view.getTag.asInstanceOf[ChatMessagesHolder]
+    }
+
+    /* if (cursor.moveToPrevious()) {
+      lastMsg = getItem(position - 1)
+    }
+    cursor.moveToNext()
+
+    if (cursor.moveToNext()) {
+      nextMsg = chatMessageFromCursor(cursor)
+    }
+    cursor.moveToPrevious() */
+
     holder.message.setTextSize(16)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
@@ -127,36 +142,48 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.buttons.setVisibility(View.GONE)
     holder.sentTriangle.setVisibility(View.GONE)
     holder.receivedTriangle.setVisibility(View.GONE)
-    holder.bubble.setAlpha(1.0f)
-    messageType match {
-      case Constants.MESSAGE_TYPE_OWN =>
+    setAlpha(holder.bubble, 1f)
+    msg.`type` match {
+      case MessageType.OWN | MessageType.GROUP_OWN =>
         holder.message.setText(msg.message)
         ownMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
-        if (!(msg.received)) {
-          holder.bubble.setAlpha(0.5f)
+        if (!msg.received) {
+          setAlpha(holder.bubble, 0.5f)
         }
 
-      case Constants.MESSAGE_TYPE_FRIEND =>
+      case MessageType.GROUP_PEER =>
         holder.message.setText(msg.message)
-        friendMessage(holder)
+        holder.title.setText(msg.sender_name)
+        groupMessage(holder, genNameColor(msg.sender_name))
+        holder.message.setVisibility(View.VISIBLE)
+        if (lastMsg == null || msg.sender_name != lastMsg.sender_name) {
+          holder.title.setVisibility(View.VISIBLE)
+        }
+        if (!msg.received) {
+          setAlpha(holder.bubble, 0.5f)
+        }
+
+      case MessageType.FRIEND =>
+        holder.message.setText(msg.message)
+        contactMessage(holder)
         holder.message.setVisibility(View.VISIBLE)
 
-      case Constants.MESSAGE_TYPE_FILE_TRANSFER | Constants.MESSAGE_TYPE_FILE_TRANSFER_FRIEND =>
-        if (messageType == Constants.MESSAGE_TYPE_FILE_TRANSFER) {
+      case MessageType.FILE_TRANSFER | MessageType.FILE_TRANSFER_FRIEND =>
+        if (msg.`type` == MessageType.FILE_TRANSFER) {
           ownMessage(holder)
           val split = msg.message.split("/")
           holder.message.setText(split(split.length - 1))
           holder.message.setVisibility(View.VISIBLE)
         } else {
-          friendMessage(holder)
+          contactMessage(holder)
           holder.message.setText(msg.message)
           holder.message.setVisibility(View.VISIBLE)
         }
         holder.title.setVisibility(View.VISIBLE)
         holder.title.setText(R.string.chat_file_transfer)
         if (msg.received) {
-          holder.progressText.setText("Finished")
+          holder.progressText.setText(context.getResources.getString(R.string.file_finished))
           holder.progressText.setVisibility(View.VISIBLE)
         } else {
           if (msg.sent) {
@@ -172,38 +199,38 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
               if (bytesPerSecond != 0) {
                 val secondsToComplete = msg.size / bytesPerSecond
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " +
-                  secondsToComplete +
-                  " seconds left")
+                  context.getResources.getString(R.string.file_time_remaining, secondsToComplete.toString))
               } else {
                 holder.progressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s")
               }
               holder.progressText.setVisibility(View.VISIBLE)
             } else {
-              holder.progressText.setText("Failed")
+              //FIXME this should be "Failed" - fix the DB bug
+              holder.progressText.setText(context.getResources.getString(R.string.file_finished))
               holder.progressText.setVisibility(View.VISIBLE)
             }
           } else {
             if (msg.message_id != -1) {
               if (msg.isMine) {
-                holder.progressText.setText("Sent filesending request")
+                holder.progressText.setText(context.getResources.getString(R.string.file_request_sent))
               } else {
                 holder.progressText.setText("")
                 holder.buttons.setVisibility(View.VISIBLE)
                 holder.accept.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.acceptFile(k, message_id, context)
+                    ToxSingleton.acceptFile(msg.key, msg.message_id, context)
                   }
                 })
                 holder.reject.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.rejectFile(k, message_id, context)
+                    ToxSingleton.rejectFile(msg.key, msg.message_id, context)
                   }
                 })
               }
             } else {
-              holder.progressText.setText("Rejected")
+              holder.progressText.setText(context.getResources.getString(R.string.file_rejected))
             }
             holder.progressText.setVisibility(View.VISIBLE)
           }
@@ -224,8 +251,6 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
               //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
               //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase.endsWith(extension)) {
-                Log.d("ChatMessagesAdapter", "true")
-                if (BitmapManager.checkValidImage(file)) {
                   BitmapManager.loadBitmap(file, file.getPath.hashCode, holder.imageMessage)
                   holder.imageMessage.setVisibility(View.VISIBLE)
                   holder.imageMessageFrame.setVisibility(View.VISIBLE)
@@ -247,26 +272,35 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
                   }
                 }
                 //break
-              }
             }
           }
         }
 
-      case Constants.MESSAGE_TYPE_ACTION =>
+      case MessageType.ACTION =>
         actionMessage(holder)
         holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
 
     }
-    holder.time.setText(PrettyTimestamp.prettyTimestamp(msg.time, isChat = true))
-    holder.time.setVisibility(View.VISIBLE)
-    if (!animatedIds.contains(id)) {
+
+    val showTimestampInterval: Int = 120 * 1000 //in milliseconds
+    //TODO: Only show a timestamp if the next message is more than a minute after this one
+    if (nextMsg == null ||
+      (nextMsg == null && lastMsg == null) ||
+      msg.sender_name != nextMsg.sender_name) {
+      holder.time.setText(TimestampUtils.prettyTimestamp(msg.timestamp, isChat = true))
+      holder.time.setVisibility(View.VISIBLE)
+    } else {
+      holder.time.setVisibility(View.GONE)
+    }
+
+    if (!animatedIds.contains(msg.id)) {
       holder.row.startAnimation(anim)
-      animatedIds.add(id)
+      animatedIds.add(msg.id)
     }
     holder.row.setOnLongClickListener(new View.OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
-        if (messageType == Constants.MESSAGE_TYPE_OWN || messageType == Constants.MESSAGE_TYPE_FRIEND) {
+        if (msg.`type` == MessageType.OWN || msg.`type` == MessageType.FRIEND) {
           val builder = new AlertDialog.Builder(context)
           val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
           builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
@@ -274,12 +308,12 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
-                clipboard.setText(m)
+                clipboard.setText(msg.message)
 
               case 1 =>
                 Observable[Boolean](subscriber => {
                   val antoxDB = new AntoxDB(context.getApplicationContext)
-                  antoxDB.deleteMessage(id)
+                  antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
@@ -298,7 +332,7 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
               case 0 =>
                 Observable[Boolean](subscriber => {
                   val antoxDB = new AntoxDB(context.getApplicationContext)
-                  antoxDB.deleteMessage(id)
+                  antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
@@ -312,14 +346,48 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
         true
       }
     })
+
+    view
   }
 
-  override def getViewTypeCount: Int = 4
+  override def getViewTypeCount: Int = MessageType.values.size
 
-  override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
+  //override def newDropDownView(context: Context, cursor: Cursor, parent: ViewGroup): View = super.newDropDownView(context, cursor, parent)
+
+  //utility method to set view's alpha on honeycomb+ devices,
+  //does nothing on pre-honeycomb devices because setAlpha is unsupported
+  private def setAlpha(view: View, value: Float): Unit = {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+      //do nothing
+    } else {
+      view.setAlpha(value)
+    }
+  }
+
+  private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
+    val id = cursor.getInt(0)
+    val time = Timestamp.valueOf(cursor.getString(1))
+    val message_id = cursor.getInt(2)
+    val key = cursor.getString(3)
+    val sender_name = cursor.getString(4)
+    val message = cursor.getString(5)
+    val received = cursor.getInt(6) > 0
+    val read = cursor.getInt(7) > 0
+    val sent = cursor.getInt(8) > 0
+    val size = cursor.getInt(9)
+    val messageType = cursor.getInt(10)
+    val fileKind = cursor.getInt(11)
+    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType), FileKind.fromToxFileKind(fileKind))
+  }
 
   private def shouldGreentext(message: String): Boolean = {
     message.startsWith(">")
+  }
+
+  private def genNameColor(name: String): Int = {
+    val goldenRatio = 0.618033988749895
+    val hue: Double = (new Random(name.hashCode).nextFloat() + goldenRatio) % 1
+    Color.HSVToColor(Array(hue.asInstanceOf[Float] * 360, 0.5f, 0.7f))
   }
 
   private def ownMessage(holder: ChatMessagesHolder) {
@@ -338,7 +406,13 @@ class ChatMessagesAdapter(var context: Context, c: Cursor, ids: util.HashSet[Int
     holder.background.setPadding(8 * density, 8 * density, 8 * density, 8 * density)
   }
 
-  private def friendMessage(holder: ChatMessagesHolder) {
+  private def groupMessage(holder: ChatMessagesHolder, nameColor: Int) {
+    contactMessage(holder)
+    holder.title.setTextColor(nameColor)
+    holder.title.setTypeface(holder.title.getTypeface, Typeface.BOLD)
+  }
+
+  private def contactMessage(holder: ChatMessagesHolder) {
     if (shouldGreentext(holder.message.getText.toString)) {
       holder.message.setTextColor(context.getResources.getColor(R.color.green))
     } else {

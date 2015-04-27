@@ -15,9 +15,8 @@ buildscript {
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots/"
-    }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "http://dl.bintray.com/drummer-aidan/maven" }
 }
 
 apply plugin: "com.android.application"
@@ -28,7 +27,7 @@ android {
     buildToolsVersion '21.1.1'
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 9
         targetSdkVersion 21
     }
 
@@ -67,7 +66,9 @@ dependencies {
     compile 'com.netflix.rxjava:rxjava-core:0.20.6'
     compile 'com.netflix.rxjava:rxjava-android:0.20.6'
     compile 'com.netflix.rxjava:rxjava-scala:0.20.6'
-    compile 'com.shamanland:fab:0.0.5'
+    compile 'com.shamanland:fab:0.0.8'
+    compile 'de.hdodenhof:circleimageview:1.2.2'
     compile 'com.jpardogo.materialtabstrip:library:1.0.3'
     compile 'com.balysv:material-ripple:0.9.3-SNAPSHOT@aar'
+    compile 'com.afollestad:material-dialogs:0.6.4.3'
 }

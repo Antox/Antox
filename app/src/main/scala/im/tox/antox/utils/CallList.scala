@@ -23,7 +23,7 @@ class CallList () {
     Log.d(TAG, "Removing call")
     val mCall = this.get(friendNumber)
     mCall match {
-      case Some(c) => 
+      case Some(c) =>
         c.end()
         c.playAudio.cleanUp()
         _calls = _calls - friendNumber

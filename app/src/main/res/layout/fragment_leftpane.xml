@@ -2,17 +2,18 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/left_pane_linear"
+    android:id="@+id/leftpane_linear"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/pager_tabs"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/brand_primary"
-        android:textColor="@color/white_absolute" 
+        android:textColor="@color/white_absolute"
         app:pstsShouldExpand="true"
         />
     <android.support.v4.widget.DrawerLayout
@@ -37,4 +38,3 @@
             android:dividerHeight="0dp" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
-

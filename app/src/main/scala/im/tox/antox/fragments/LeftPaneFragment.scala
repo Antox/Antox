@@ -1,11 +1,11 @@
 package im.tox.antox.fragments
 
-import android.app.{ActionBar, FragmentTransaction}
-import android.os.Bundle
+import android.os.{Build, Bundle}
 import android.support.v4.app.{Fragment, FragmentManager, FragmentPagerAdapter}
 import android.support.v4.view.ViewPager
+import android.view.ViewGroup.LayoutParams
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.ImageView
+import android.widget.{FrameLayout, ImageView, RelativeLayout}
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import com.balysv.materialripple.MaterialRippleLayout
@@ -16,13 +16,30 @@ class LeftPaneFragment extends Fragment {
 
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) with CustomTabProvider {
 
-    val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contacts_tab)
+    val ICONS: Array[Int] = Array(R.drawable.ic_action_recent_tab, R.drawable.ic_action_contact)
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
-         val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity)
-            .inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
-         materialRippleLayout.findViewById(R.id.image).asInstanceOf[ImageView].setImageResource(ICONS(position))
-         materialRippleLayout
+      //hack to center the image only for left pane
+      val params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+      params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+      params.addRule(RelativeLayout.CENTER_VERTICAL)
+
+      //disable the material ripple layout on pre-honeycomb devices
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+        val customTabLayout: FrameLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab_old, parent, false).asInstanceOf[FrameLayout]
+        val imageView = customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView]
+        imageView.setImageResource(ICONS(position))
+        imageView.setLayoutParams(params)
+        return customTabLayout
+      } else {
+        val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
+        val imageView = materialRippleLayout.findViewById(R.id.image)
+        imageView.asInstanceOf[ImageView].setImageResource(ICONS(position))
+        imageView.setLayoutParams(params)
+        return materialRippleLayout
+      }
+
+      null
     }
 
     override def getPageTitle(position: Int): CharSequence = {
@@ -44,22 +61,10 @@ class LeftPaneFragment extends Fragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val thisActivity = this.getActivity.asInstanceOf[MainActivity]
-    val actionBar = thisActivity.getActionBar
+    val actionBar = thisActivity.getSupportActionBar
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
     val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
-
-    val tabListener = new ActionBar.TabListener() {
-        def onTabSelected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
-          pager.setCurrentItem(tab.getPosition)
-        }
-
-        def onTabUnselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
-        }
-
-        def onTabReselected(tab: ActionBar.Tab, ft: FragmentTransaction) = {
-        }
-    }
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
     tabs.setViewPager(pager)

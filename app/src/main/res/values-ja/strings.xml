@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add_friend">フレンドの追加</string>
+  <string name="title_activity_add">フレンドの追加</string>
   <string name="title_activity_friend_profile">フレンドのプロファイル</string>
   <string name="title_activity_profile_settings">プロファイルのオプション</string>
   <!--Navigation / Action Bar-->
-  <string name="add_friend">フレンドを追加</string>
+  <string name="add_contact">フレンドを追加</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">プロファイル名を入力してください</string>
   <string name="login_login">ログイン</string>

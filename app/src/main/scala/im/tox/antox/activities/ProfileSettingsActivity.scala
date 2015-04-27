@@ -7,17 +7,21 @@ import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
-import android.preference.Preference.{OnPreferenceClickListener, OnPreferenceChangeListener}
+import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
-import android.widget.{Toast, ImageButton}
+import android.widget.{ImageButton, Toast}
+import com.afollestad.materialdialogs.{MaterialDialog, AlertDialogWrapper}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
-import im.tox.antox.utils.{Constants, UserStatus}
+import im.tox.antox.transfer.FileDialog
+import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
+import im.tox.antox.wrapper.FileKind.AVATAR
+import im.tox.antox.wrapper.UserStatus
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
@@ -62,6 +66,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       bindPreferenceSummaryToValue(passwordPreference)
     }
     bindPreferenceSummaryToValue(findPreference("status"))
+    bindPreferenceSummaryToValue(findPreference("avatar"))
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
     bindPreferenceSummaryToValue(findPreference("active_account"))
@@ -69,16 +74,31 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     toxIDPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
-        createDialog()
+        createToxIDDialog()
         true
       }
     })
+
+    val avatarPreference = findPreference("avatar")
+    avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        createAvatarDialog()
+        true
+      }
+    })
+
     val exportProfile = findPreference("export")
+    val thisActivity = this
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        ToxSingleton.exportDataFile()
-        Toast.makeText(getApplicationContext(), "Exported data file to Documents/" + Constants.PROFILE_EXPORT_DIRECTORY, Toast.LENGTH_LONG)
-          .show()
+        val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
+        fileDialog.addDirectoryListener(new DirectorySelectedListener {
+          override def directorySelected(directory: File): Unit = {
+            onExportDataFileSelected(directory)
+          }
+        })
+        fileDialog.showDialog()
         true
       }
     })
@@ -100,7 +120,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     })
   }
 
-  def createDialog() {
+  def createToxIDDialog() {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val inflater = ProfileSettingsActivity.this.getLayoutInflater
     val view = inflater.inflate(R.layout.dialog_tox_id, null)
@@ -126,6 +146,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         case e: IOException => e.printStackTrace()
       }
     }
+
     file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
     generateQR(pref.getString("tox_id", ""))
@@ -143,6 +164,41 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
     builder.create().show()
+  }
+
+  def createAvatarDialog(): Unit = {
+    val context: Context = ProfileSettingsActivity.this
+    val dialog = new MaterialDialog.Builder(context)
+      .customView(R.layout.dialog_avatar, false)
+      .build()
+
+    val avatarView = dialog.getCustomView.findViewById(R.id.avatar_image).asInstanceOf[ImageButton]
+    val photoButton = dialog.getCustomView.findViewById(R.id.avatar_takephoto)
+    val fileButton = dialog.getCustomView.findViewById(R.id.avatar_pickfile)
+    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
+
+    val avatar = AVATAR.getAvatarFile(pref.getString("avatar", ""), context)
+    if (avatar.isDefined && avatar.get.exists()) {
+      avatarView.setImageURI(Uri.fromFile(avatar.get))
+    } else {
+      avatarView.setImageResource(R.drawable.ic_action_contact)
+    }
+
+
+    dialog.show()
+  }
+
+  def onExportDataFileSelected(dest: File): Unit = {
+    try {
+      ToxSingleton.exportDataFile(dest)
+      Toast.makeText(getApplicationContext, "Exported data file to " + dest.getPath, Toast.LENGTH_LONG)
+        .show()
+    } catch {
+      case e: Exception => {
+        e.printStackTrace()
+        Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
+      }
+    }
   }
 
   private def generateQR(userKey: String) {
@@ -173,40 +229,47 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     getPreferenceScreen.getSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
   }
 
-  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, preferenceKey: String) {
     val db = new UserDB(this)
-    if (key == "nickname") {
-      try {
-        ToxSingleton.tox.setName(sharedPreferences.getString(key, ""))
-      } catch {
-        case e: ToxException => e.printStackTrace()
-      }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "nickname", sharedPreferences.getString(key,
-        ""))
-    }
-    if (key == "password") {
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "password", sharedPreferences.getString(key,
-        ""))
-    }
-    if (key == "status") {
-      val newStatusString = sharedPreferences.getString(key, "")
-      val newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
-      try {
-        ToxSingleton.tox.setStatus(newStatus)
-      } catch {
-        case e: ToxException => e.printStackTrace()
-      }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status", sharedPreferences.getString(key,
-        ""))
-    }
-    if (key == "status_message") {
-      try {
-        ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(key, ""))
-      } catch {
-        case e: ToxException => e.printStackTrace()
-      }
-      db.updateUserDetail(sharedPreferences.getString("active_account", ""), "status_message", sharedPreferences.getString(key,
-        ""))
+    val activeAccount = sharedPreferences.getString("active_account", "")
+    val keyString = sharedPreferences.getString(preferenceKey, "")
+
+    preferenceKey match {
+      case "nickname" =>
+        try {
+          val name = sharedPreferences.getString(keyString, "")
+          ToxSingleton.tox.setName(name)
+          ToxSingleton.tox.setGroupSelfNameAll(name)
+        } catch {
+          case e: ToxException => e.printStackTrace()
+        }
+        db.updateUserDetail(activeAccount, "nickname", keyString)
+
+      case "password" =>
+        db.updateUserDetail(activeAccount, "password", keyString)
+
+      case "status" =>
+        val newStatusString = sharedPreferences.getString(keyString, "")
+        val newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
+        try {
+          ToxSingleton.tox.setStatus(newStatus)
+        } catch {
+          case e: ToxException => e.printStackTrace()
+        }
+        db.updateUserDetail(activeAccount, "status", keyString)
+
+      case "status_message" =>
+        try {
+          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(keyString, ""))
+        } catch {
+          case e: ToxException => e.printStackTrace()
+        }
+        db.updateUserDetail(activeAccount, "status_message", keyString)
+
+      case "avatar" =>
+        db.updateUserDetail(activeAccount, "avatar", keyString)
+
+      case _ =>
     }
   }
 

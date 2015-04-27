@@ -1,7 +1,6 @@
 package im.tox.antox.utils
 
 import java.util
-import java.util.List
 
 import android.content.Context
 import android.view.{LayoutInflater, View, ViewGroup}
