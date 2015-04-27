@@ -66,7 +66,14 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       bindPreferenceSummaryToValue(passwordPreference)
     }
     bindPreferenceSummaryToValue(findPreference("status"))
-    bindPreferenceSummaryToValue(findPreference("avatar"))
+
+    if (false) {
+      //TODO: Finish avatars
+      bindPreferenceSummaryToValue(findPreference("avatar"))
+    } else {
+      getPreferenceScreen.removePreference(findPreference("avatar"))
+    }
+
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
     bindPreferenceSummaryToValue(findPreference("active_account"))
@@ -79,14 +86,14 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
 
-    val avatarPreference = findPreference("avatar")
+   /* val avatarPreference = findPreference("avatar")
     avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
         createAvatarDialog()
         true
       }
-    })
+    }) */
 
     val exportProfile = findPreference("export")
     val thisActivity = this
