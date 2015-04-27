@@ -72,7 +72,7 @@ object ToxDNS {
    */
   def registerAccount(accountName: String, toxData: ToxData): Either[RegError, String] = {
     try {
-      System.load("/data/data/im.tox.antox/lib/libkaliumjni.so")
+      System.load("libkaliumjni.so")
     } catch {
       case e: Exception => Log.d("CreateAccount", "System.load() on kalium failed")
     }
