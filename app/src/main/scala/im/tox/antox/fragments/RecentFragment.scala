@@ -3,7 +3,7 @@ package im.tox.antox.fragments
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.TextView
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.utils.{UIUtils, LeftPaneItem}
 import im.tox.antox.wrapper._

@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBarActivity
 import android.text.util.Linkify
 import android.view.MenuItem
 import android.widget.TextView
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 
 class About extends ActionBarActivity {
 

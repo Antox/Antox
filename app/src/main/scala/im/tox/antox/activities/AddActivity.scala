@@ -7,7 +7,7 @@ import android.support.v4.app.NavUtils
 import android.support.v7.app.ActionBarActivity
 import android.view.{Menu, MenuItem, WindowManager}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.fragments.{AddPaneFragment, InputableID}
 //remove if not needed
 

@@ -14,7 +14,7 @@ import android.widget.{ImageButton, Toast}
 import com.afollestad.materialdialogs.{MaterialDialog, AlertDialogWrapper}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}

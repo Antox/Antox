@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, UIUtils}

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget._
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.tox.{MessageHelper, Reactive}
 import im.tox.antox.wrapper._
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}

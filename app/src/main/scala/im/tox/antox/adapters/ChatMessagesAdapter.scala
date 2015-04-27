@@ -15,7 +15,7 @@ import android.text.{ClipboardManager, Html}
 import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton

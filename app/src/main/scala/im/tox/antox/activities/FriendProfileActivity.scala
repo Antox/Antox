@@ -6,7 +6,7 @@ import android.os.{Build, Bundle}
 import android.support.v7.app.ActionBarActivity
 import android.view.View
 import android.widget.{EditText, TextView, Toast}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 
 class FriendProfileActivity extends ActionBarActivity {

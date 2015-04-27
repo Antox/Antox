@@ -4,7 +4,7 @@ package im.tox.antox.activities
 import android.os.{Build, Bundle}
 import android.support.v7.app.ActionBarActivity
 import android.widget.{EditText, TextView}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
 

@@ -6,7 +6,7 @@ import android.content.Context
 import android.text.{Editable, TextWatcher}
 import android.widget.EditText
 import com.afollestad.materialdialogs.{DialogAction, MaterialDialog}
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.fragments.CreateGroupDialog.CreateGroupListener
 
 import scala.collection.JavaConversions._

@@ -11,7 +11,7 @@ import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ContactListAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.fragments.ContactItemType
