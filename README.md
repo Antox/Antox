@@ -1,4 +1,4 @@
-![Antox](http://vexx.us/Images/AntoxFull.png "Antox Tox Android Client")
+Antox
 =====
 
 Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. 
@@ -13,12 +13,6 @@ PLEASE NOTE this app is still alpha and will contain bugs and missing features (
 Antox can be installed for alpha testing from F-Droid or Google Play. 
 To install on F-Droid, add https://repo.tox.im/android then refresh and search for "Antox".
 To get Antox on Google Play, join the [Google+ Community](Fdroid: add https://repo.tox.im/android), and Antox will appear for you on the Google Play store (https://play.google.com/store/apps/details?id=im.tox.antoxnightly). 
-
-###Directly Installing Antox
-1. Download the latest APK <a href="https://repo.tox.im/android/antox.apk">here</a>
-2. Sideload the APK to your phone, or just download the file from step 1 directly to your phone
-3. Ensure that you allow applications from unknown sources to be installed (Tick the option "Unkown Source", found in Settings>Security)
-4. Install the APK by either using a file manager or ADB.
 
 ###Known To Work On
 For a list of which devices currently run Antox, visit our <a href="https://wiki.tox.im/Antox#Known_to_work_on">Tox Wiki page.</a> Antox should support Android 2.3+. Please open an issue if you find yourself unable to so it can be fixed.
