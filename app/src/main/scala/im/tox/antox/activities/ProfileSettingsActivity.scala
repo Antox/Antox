@@ -11,7 +11,6 @@ import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
-import com.afollestad.materialdialogs.{MaterialDialog, AlertDialogWrapper}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antoxnightly.R
@@ -175,7 +174,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
   def createAvatarDialog(): Unit = {
     val context: Context = ProfileSettingsActivity.this
-    val dialog = new MaterialDialog.Builder(context)
+    /* val dialog = new MaterialDialog.Builder(context)
       .customView(R.layout.dialog_avatar, false)
       .build()
 
@@ -192,7 +191,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     }
 
 
-    dialog.show()
+    dialog.show() */
   }
 
   def onExportDataFileSelected(dest: File): Unit = {
