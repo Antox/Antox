@@ -6,7 +6,6 @@ import android.content.Context
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{ArrayAdapter, ImageView, TextView}
 import im.tox.antoxnightly.R
-//remove if not needed
 
 class DrawerArrayAdapter(context: Context, resourceId: Int, items: util.List[DrawerItem])
   extends ArrayAdapter[DrawerItem](context, resourceId, items) {

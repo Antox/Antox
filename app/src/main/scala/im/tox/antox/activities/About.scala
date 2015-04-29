@@ -4,13 +4,13 @@ import java.util.regex.Pattern
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
 import android.view.MenuItem
 import android.widget.TextView
 import im.tox.antoxnightly.R
 
-class About extends ActionBarActivity {
+class About extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)

@@ -2,7 +2,6 @@ package im.tox.antox.wrapper
 
 import java.util
 
-//remove if not needed
 
 class PeerList {
 

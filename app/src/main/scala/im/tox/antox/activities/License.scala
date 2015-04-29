@@ -1,13 +1,12 @@
 package im.tox.antox.activities
 
 import android.os.Bundle
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.webkit.WebView
 import im.tox.antoxnightly.R
-//remove if not needed
 
-class License extends ActionBarActivity {
+class License extends AppCompatActivity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
     case android.R.id.home =>

@@ -5,7 +5,6 @@ import java.util.Locale
 
 import im.tox.antox.utils.UIUtils
 
-//remove if not needed
 import scala.collection.JavaConversions._
 
 class GroupList {

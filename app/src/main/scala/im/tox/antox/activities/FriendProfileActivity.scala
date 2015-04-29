@@ -3,13 +3,13 @@ package im.tox.antox.activities
 
 import android.content.Intent
 import android.os.{Build, Bundle}
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.{EditText, TextView, Toast}
-import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
+import im.tox.antoxnightly.R
 
-class FriendProfileActivity extends ActionBarActivity {
+class FriendProfileActivity extends AppCompatActivity {
 
   var friendName: String = null
 

@@ -13,14 +13,13 @@ import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
-import im.tox.antoxnightly.R
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
-import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.UserStatus
+import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {

@@ -4,7 +4,6 @@ import java.sql.Timestamp
 import java.util.Calendar
 
 import android.text.format.Time
-//remove if not needed
 
 object TimestampUtils {
 

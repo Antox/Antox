@@ -6,8 +6,6 @@ import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.tox4j.core.callbacks.FriendConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
 
-//remove if not needed
-
 object AntoxOnConnectionStatusCallback {
 
   private val TAG = "im.tox.antox.TAG"

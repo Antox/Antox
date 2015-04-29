@@ -2,13 +2,13 @@
 package im.tox.antox.activities
 
 import android.os.{Build, Bundle}
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.widget.{EditText, TextView}
-import im.tox.antoxnightly.R
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
+import im.tox.antoxnightly.R
 
-class GroupProfileActivity extends ActionBarActivity {
+class GroupProfileActivity extends AppCompatActivity {
 
   var groupName: String = null
 

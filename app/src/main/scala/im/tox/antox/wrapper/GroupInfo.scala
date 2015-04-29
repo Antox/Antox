@@ -4,8 +4,6 @@ import java.sql.Timestamp
 
 import im.tox.antox.utils.TimestampUtils
 
-//remove if not needed
-
 class GroupInfo(
   val id: String,
   val connected: Boolean,

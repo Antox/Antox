@@ -2,7 +2,6 @@ package im.tox.antox.wrapper
 
 import im.tox.tox4j.core.enums.ToxStatus
 
-//remove if not needed
 
 object UserStatus {
 

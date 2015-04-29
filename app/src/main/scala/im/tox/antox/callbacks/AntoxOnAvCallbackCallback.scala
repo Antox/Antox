@@ -2,8 +2,6 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 
-//remove if not needed
-
 class AntoxOnAvCallbackCallback(private var ctx: Context){
 
   //val toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500,

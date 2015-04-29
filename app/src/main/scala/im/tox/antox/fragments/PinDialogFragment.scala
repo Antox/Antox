@@ -5,9 +5,8 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.EditText
-import im.tox.antoxnightly.R
 import im.tox.antox.fragments.PinDialogFragment._
-//remove if not needed
+import im.tox.antoxnightly.R
 
 object PinDialogFragment {
 

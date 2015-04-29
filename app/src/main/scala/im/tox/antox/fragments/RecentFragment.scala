@@ -2,11 +2,10 @@ package im.tox.antox.fragments
 
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.TextView
-import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ContactListAdapter
-import im.tox.antox.utils.{UIUtils, LeftPaneItem}
+import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.wrapper._
+import im.tox.antoxnightly.R
 
 class RecentFragment extends AbstractContactsFragment(showSearch = false, showFab = false) {
 

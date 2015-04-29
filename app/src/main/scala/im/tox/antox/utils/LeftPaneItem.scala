@@ -7,8 +7,6 @@ import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.fragments.ContactItemType.ContactItemType
 import im.tox.tox4j.core.enums.ToxStatus
 
-//remove if not needed
-
 class LeftPaneItem(
   val viewType: ContactItemType,
   val key: String,

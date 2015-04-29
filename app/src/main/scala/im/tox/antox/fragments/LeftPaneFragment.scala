@@ -9,8 +9,8 @@ import android.widget.{FrameLayout, ImageView, RelativeLayout}
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import com.balysv.materialripple.MaterialRippleLayout
-import im.tox.antoxnightly.R
 import im.tox.antox.activities.MainActivity
+import im.tox.antoxnightly.R
 
 class LeftPaneFragment extends Fragment {
 

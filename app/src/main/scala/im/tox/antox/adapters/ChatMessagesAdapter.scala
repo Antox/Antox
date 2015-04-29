@@ -15,12 +15,12 @@ import android.text.{ClipboardManager, Html}
 import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
-import im.tox.antoxnightly.R
 import im.tox.antox.adapters.ChatMessagesAdapter._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
 import im.tox.antox.wrapper.{ChatMessages, FileKind, Message, MessageType}
+import im.tox.antoxnightly.R
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 

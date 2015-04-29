@@ -13,16 +13,16 @@ import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.{ActionBarActivity, ActionBarDrawerToggle}
+import android.support.v7.app.{ActionBarDrawerToggle, AppCompatActivity}
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import android.widget.{AdapterView, ListView, Toast}
-import im.tox.antoxnightly.R
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils._
+import im.tox.antoxnightly.R
 
-class MainActivity extends ActionBarActivity {
+class MainActivity extends AppCompatActivity {
 
   var request: View = _
 

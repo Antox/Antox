@@ -4,8 +4,6 @@ import java.sql.Timestamp
 
 import im.tox.antox.wrapper.MessageType.MessageType
 
-//remove if not needed
-
 class ChatMessages(
   val id: Int,
   val message_id: Int,

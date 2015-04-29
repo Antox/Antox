@@ -1,9 +1,9 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antoxnightly.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antoxnightly.R
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override
