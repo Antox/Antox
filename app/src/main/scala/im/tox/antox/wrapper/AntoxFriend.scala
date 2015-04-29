@@ -6,7 +6,6 @@ import java.util
 import im.tox.tox4j.core.enums.ToxStatus
 
 import scala.beans.{BeanProperty, BooleanBeanProperty}
-//remove if not needed
 
 class AntoxFriend(friendnumber: Int) {
 

@@ -5,14 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
 import android.widget._
-import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.ToxDoService
+import im.tox.antoxnightly.R
 
-class LoginActivity extends ActionBarActivity with AdapterView.OnItemSelectedListener {
+class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedListener {
 
   private var profileSelected: String = _
 

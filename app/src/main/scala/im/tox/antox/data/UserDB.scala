@@ -5,9 +5,7 @@ import java.util
 
 import android.content.{ContentValues, Context}
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
-import im.tox.antox.wrapper.{FileKind, UserInfo}
-
-//remove if not needed
+import im.tox.antox.wrapper.UserInfo
 
 class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
 

@@ -6,7 +6,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.TimestampUtils
 import im.tox.antox.wrapper.MessageType.MessageType
 
-//remove if not needed
 
 class Message(
   val id: Int,

@@ -1,9 +1,7 @@
 package im.tox.antox.utils
 
-import im.tox.antox.R
+import im.tox.antoxnightly.R
 import im.tox.tox4j.core.enums.ToxStatus
-
-//remove if not needed
 
 object IconColor {
 

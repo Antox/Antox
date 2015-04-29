@@ -7,12 +7,12 @@ import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
-import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.MessageType
 import im.tox.antox.wrapper.MessageType.MessageType
+import im.tox.antoxnightly.R
 
 import scala.collection.JavaConverters._
 

@@ -5,21 +5,21 @@ import java.util
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.v7.app.{ActionBar, ActionBarActivity}
+import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
-import im.tox.antox.R
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.wrapper.Message
+import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.concurrent.duration._
 
-abstract class GenericChatActivity extends ActionBarActivity {
+abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
   //var ARG_CONTACT_NUMBER: String = "contact_number"
   var adapter: ChatMessagesAdapter = null

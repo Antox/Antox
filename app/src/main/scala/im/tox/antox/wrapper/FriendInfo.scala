@@ -6,8 +6,6 @@ import java.sql.Timestamp
 import im.tox.antox.utils.TimestampUtils
 import im.tox.tox4j.core.enums.ToxStatus
 
-//remove if not needed
-
 class FriendInfo(
   isOnline: Boolean,
   friendName: String,

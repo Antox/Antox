@@ -4,14 +4,13 @@ import android.content.{Context, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle}
 import android.support.v4.app.NavUtils
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.view.{Menu, MenuItem, WindowManager}
 import im.tox.QR.IntentIntegrator
-import im.tox.antox.R
 import im.tox.antox.fragments.{AddPaneFragment, InputableID}
-//remove if not needed
+import im.tox.antoxnightly.R
 
-class AddActivity extends ActionBarActivity {
+class AddActivity extends AppCompatActivity {
 
   var context: Context = _
 

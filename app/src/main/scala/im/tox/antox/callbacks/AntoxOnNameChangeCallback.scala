@@ -6,8 +6,6 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
 import im.tox.tox4j.core.callbacks.FriendNameCallback
 
-//remove if not needed
-
 object AntoxOnNameChangeCallback {
 
   private val TAG = "im.tox.antox.TAG"

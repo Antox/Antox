@@ -7,22 +7,22 @@ import android.app.Activity
 import android.content.Intent
 import android.os.{Build, Bundle, Environment}
 import android.preference.PreferenceManager
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
-import im.tox.antox.R
 import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDataFile, ToxDoService}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxDNS, ToxData}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
 import im.tox.antox.utils._
+import im.tox.antoxnightly.R
 import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
 
-class CreateAccountActivity extends ActionBarActivity {
+class CreateAccountActivity extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)

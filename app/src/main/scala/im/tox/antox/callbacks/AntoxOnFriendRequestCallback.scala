@@ -5,11 +5,11 @@ import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import im.tox.antox.R
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
+import im.tox.antoxnightly.R
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
 
 object AntoxOnFriendRequestCallback {

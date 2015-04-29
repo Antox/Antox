@@ -11,7 +11,6 @@ import android.util.Log
 import im.tox.antox.transfer.FileDialog.{DirectorySelectedListener, FileSelectedListener}
 import im.tox.antox.transfer.ListenerList.FireHandler
 
-//remove if not needed
 import scala.collection.JavaConversions._
 
 object FileDialog {

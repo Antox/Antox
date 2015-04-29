@@ -10,14 +10,13 @@ import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
-import im.tox.antox.R
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.toxdns.ToxDNS
 import im.tox.antox.utils.Constants
+import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
-//remove if not needed
 
 class AddFriendFragment extends Fragment with InputableID {
 

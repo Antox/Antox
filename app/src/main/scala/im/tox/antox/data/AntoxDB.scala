@@ -18,7 +18,6 @@ import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxStatus
 
 import scala.collection.mutable.ArrayBuffer
-//remove if not needed
 
 object AntoxDB {
 

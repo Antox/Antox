@@ -12,7 +12,6 @@ import android.text.{Editable, TextWatcher}
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
-import im.tox.antox.R
 import im.tox.antox.activities.{ChatActivity, FriendProfileActivity, GroupChatActivity}
 import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.data.AntoxDB
@@ -21,6 +20,7 @@ import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
+import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
