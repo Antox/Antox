@@ -18,7 +18,7 @@ object BitmapManager {
   private def isBitmapValid(key: String): Option[Boolean] = Option(bitmapValidMap.get(key))
 
   private def addBitmapToMemoryCache(key: String, valid: Boolean, bitmap: Bitmap) {
-    if (getBitmapFromMemCache(key).isEmpty) {
+    if (getBitmapFromMemCache(key).isEmpty && mMemoryCache != null) {
       mMemoryCache.put(key, bitmap)
       bitmapValidMap.put(key, valid)
     }
