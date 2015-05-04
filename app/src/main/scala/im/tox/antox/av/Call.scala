@@ -1,25 +1,86 @@
 package im.tox.antox.av
 
+import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.utils.AudioCapture
 import im.tox.tox4j.av.enums.ToxCallState
 
-class Call(val friendNumber: Integer,
-           var state: Option[ToxCallState],
-           val audioBitRate: Int,
-           val videoBitRate: Int) {
+class Call(val friendNumber: Int) {
+
+  var active = false
+  var state: ToxCallState = ToxCallState.END
+
+  var _audioBitRate: Int = 0
+  var _videoBitRate: Int = 0
+
+  def sendingAudio = audioBitRate > 0
+  def sendingVideo = videoBitRate > 0
+
+  var receivingAudio = false
+  var receivingVideo = false
 
   val audioCapture: AudioCapture = new AudioCapture()
 
   val playAudio = new PlayAudio()
 
-  def start(): Unit = {
-    audioCapture.startCapture(audioBitRate)
+  def startCall(audioBitRate: Int, videoBitRate: Int): Unit = {
+    ToxSingleton.toxAv.call(friendNumber, audioBitRate, videoBitRate)
   }
 
-  def mute(): Unit = {
-    audioCapture.stopCapture()
+  def answerCall(audioBitRate: Int, videoBitRate: Int, receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
+    ToxSingleton.toxAv.answer(friendNumber, audioBitRate, videoBitRate)
+    callStarted(audioBitRate, videoBitRate)
+
+    this.receivingAudio = receivingAudio
+    this.receivingVideo = receivingVideo
   }
 
-  def end(): Unit = {
+  private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
+    this.audioBitRate = audioBitRate
+    this.videoBitRate = videoBitRate
+
+    active = true
+  }
+
+  def onAnswered(): Unit = {
+    if (!sendingAudio) audioCapture.startCapture(audioBitRate)
+  }
+
+  def onAudioFrame(pcm: Array[Short]): Unit = {
+    playAudio.playAudioFrame(pcm)
+  }
+
+  def muteMic(): Unit = {
+    audioBitRate = 0
     audioCapture.stopCapture()
+    ToxSingleton.toxAv.setAudioBitRate(friendNumber, audioBitRate, force = true)
+  }
+
+  def muteVideo(): Unit = {
+    videoBitRate = 0
+    ToxSingleton.toxAv.setVideoBitRate(friendNumber, videoBitRate, force = true)
+  }
+
+  def endCall(): Unit = {
+    audioCapture.stopCapture()
+    active = false
+  }
+
+  def cleanUp(): Unit = {
+    audioCapture.cleanUp()
+  }
+
+  //getters
+  def audioBitRate = _audioBitRate
+  def videoBitRate = _videoBitRate
+
+  //setters
+  def audioBitRate_= (newAudioBitRate: Int): Unit = {
+    _audioBitRate = newAudioBitRate
+    ToxSingleton.toxAv.setAudioBitRate(friendNumber, newAudioBitRate, force = true)
+  }
+
+  def videoBitRate_= (newVideoBitRate: Int): Unit = {
+    _videoBitRate = newVideoBitRate
+    ToxSingleton.toxAv.setVideoBitRate(friendNumber, newVideoBitRate, force = true)
   }
 }

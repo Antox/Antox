@@ -1,6 +1,5 @@
 package im.tox.antox.data
 
-import im.tox.antox.av.CallManager
 import im.tox.antox.transfer.FileTransferManager
 
 object State {
@@ -9,7 +8,6 @@ object State {
   private var _activeKey: Option[String] = None
 
   val transfers: FileTransferManager = new FileTransferManager()
-  val calls: CallManager = new CallManager()
 
   var db: AntoxDB = _
 

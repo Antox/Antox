@@ -2,16 +2,15 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import im.tox.antox.tox.{Methods, ToxSingleton}
-import im.tox.antox.utils.AntoxFriend
+import im.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.av.callbacks.{CallCallback, CallStateCallback}
 import im.tox.tox4j.av.enums.ToxCallState
 import im.tox.tox4j.exceptions.ToxException
 
 class AntoxOnCallCallback(private var ctx: Context) extends CallCallback {
 
-  override def call(friendNumber: Int): Unit = {
-    //start call activity
+  override def call(friendNumber: Int, audioEnabled: Boolean, videoEnabled: Boolean): Unit = {
+    ToxSingleton.getAntoxFriend(friendNumber).get.call.answerCall(0, 0, audioEnabled, videoEnabled)
   }
 
   //override def callState(friendNumber: Int, callState: ToxCallState): Unit = {

@@ -3,13 +3,14 @@ package im.tox.antox.wrapper
 import java.io.File
 import java.util
 
+import im.tox.antox.av.Call
 import im.tox.tox4j.core.enums.ToxStatus
 
 import scala.beans.{BeanProperty, BooleanBeanProperty}
 
-class AntoxFriend(friendnumber: Int) {
+class AntoxFriend(_friendnumber: Int) {
 
-  @transient private val friendNumber: Int = friendnumber
+  @transient private val friendNumber: Int = _friendnumber
 
   @BeanProperty
   var name: String = _
@@ -36,6 +37,8 @@ class AntoxFriend(friendnumber: Int) {
 
   @BeanProperty
   var previousNames: util.ArrayList[String] = _
+
+  val call = new Call(friendNumber)
 
   def getFriendnumber: Int = this.friendNumber
 

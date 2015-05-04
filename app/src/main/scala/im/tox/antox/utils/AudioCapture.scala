@@ -13,14 +13,15 @@ class AudioCapture {
   val TAG = "im.tox.antox.utils.CaptureAudio"
 
   var bufferSizeBytes: Int = _
-  var audioRecord: Option[AudioRecord] = None
+  var mAudioRecord: Option[AudioRecord] = None
 
   var capturing: Boolean = false
 
   def startCapture(bitrate: Int): Unit = {
     if (capturing) stopCapture() //if already capturing stop and reset the audio record with a (possibly new) bitrate
-    audioRecord = findAudioRecord(bitrate)
-    audioRecord match {
+
+    mAudioRecord = findAudioRecord(bitrate)
+    mAudioRecord match {
       case Some(audioRecord) => audioRecord.startRecording()
       case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
     }
@@ -29,19 +30,25 @@ class AudioCapture {
   }
 
   def getAudio(): Unit = {
-    if (!capturing) throw new IllegalStateException("Can't stop capturing when already capturing.")
+    //do something
   }
 
   def stopCapture(): Unit = {
-    if (!capturing) throw new IllegalStateException("Can't stop capturing when already capturing.")
-    audioRecord match {
+    mAudioRecord match {
       case Some(audioRecord) =>
         audioRecord.stop()
-        audioRecord.release()
       case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
     }
 
     capturing = false
+  }
+
+  def cleanUp(): Unit = {
+    stopCapture()
+    mAudioRecord match {
+      case Some(audioRecord) =>
+        audioRecord.release()
+    }
   }
 
   private def findAudioRecord(bitrate: Int): Option[AudioRecord] = {
@@ -58,16 +65,13 @@ class AudioCapture {
         if (recorder.getState == AudioRecord.STATE_INITIALIZED) {
           bufferSizeBytes = bufferSize
           return Some(recorder)
-        } else {
-          None
         }
-      } else {
-        None
       }
     } catch {
       case e: Exception =>
         e.printStackTrace()
-        None
     }
+
+    None
   }
 }

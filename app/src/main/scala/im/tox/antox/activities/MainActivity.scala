@@ -228,7 +228,6 @@ class MainActivity extends AppCompatActivity {
 
   override def onDestroy() {
     super.onDestroy()
-    State.calls.removeAll()
   }
 
   def showAlertDialog(context: Context, title: String, message: String) {

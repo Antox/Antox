@@ -522,7 +522,7 @@ object ToxSingleton {
         }
       }
 
-      toxAv = new ToxAvImpl(tox.getTox)
+      toxAv = new ToxAv(tox.getTox)
 
       val db = new AntoxDB(ctx).open(writeable = true)
       db.setAllOffline()
@@ -605,6 +605,10 @@ object ToxSingleton {
     tox.callbackGroupSelfTimeout(new AntoxOnGroupSelfTimeoutCallback(ctx))
     tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx)) */
     tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
+
+    toxAv.callbackCall(new AntoxOnCallCallback(ctx))
+    toxAv.callbackCallControl(new AntoxOnCallStateCallback(ctx))
+    toxAv.callbackReceiveAudioFrame(new AntoxOnReceiveAudioFrameCallback(ctx))
   }
   def save(): Unit = {
     dataFile.saveFile(tox.save())

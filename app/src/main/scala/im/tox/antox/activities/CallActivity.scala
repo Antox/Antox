@@ -9,8 +9,6 @@ import scala.beans.BeanProperty
 
 class CallActivity extends Activity {
 
-  val friendNumber = _
-
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_call)
