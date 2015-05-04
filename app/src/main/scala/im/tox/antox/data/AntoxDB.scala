@@ -109,17 +109,6 @@ class AntoxDB(ctx: Context) {
     mDbHelper.close()
   }
 
-  private def isColumnInTable(mDb: SQLiteDatabase, table: String, column: String): Boolean = {
-    try {
-      val cursor = mDb.rawQuery("SELECT * FROM " + table + " LIMIT 0", null)
-      val result = cursor.getColumnIndex(column) != -1
-      cursor.close()
-      result
-    } catch {
-      case e: Exception => false
-    }
-  }
-
   def addFriend(key: String,
     statusMessage: String,
     alias: String,

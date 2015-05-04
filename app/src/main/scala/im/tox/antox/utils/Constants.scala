@@ -20,6 +20,8 @@ object Constants {
 
   val DATABASE_VERSION = 7
 
+  val USER_DATABASE_VERSION = 2
+
   val TABLE_FRIENDS = "friends"
 
   val TABLE_GROUPS = "groups"

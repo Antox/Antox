@@ -5,9 +5,11 @@ import java.util
 
 import android.content.{ContentValues, Context}
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
+import android.util.Log
+import im.tox.antox.utils.{Constants, DatabaseUtil}
 import im.tox.antox.wrapper.UserInfo
 
-class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
+class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constants.USER_DATABASE_VERSION) {
 
   private val CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " +
     "username text," +
@@ -21,7 +23,15 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, 1) {
     db.execSQL(CREATE_TABLE_USERS)
   }
 
-  override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+  override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
+    Log.w("UserDB", "Upgrading UserDB from version " + oldVersion + " to " + newVersion)
+
+    (oldVersion, newVersion) match {
+      case (1, _) =>
+        if (!DatabaseUtil.isColumnInTable(db, "users", "avatar"))
+          db.execSQL("ALTER TABLE users ADD COLUMN avatar text")
+      case (_, _) =>
+    }
   }
 
   def addUser(username: String, password: String) {

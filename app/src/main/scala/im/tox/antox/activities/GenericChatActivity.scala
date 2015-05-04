@@ -18,6 +18,7 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.concurrent.duration._
+import scala.collection.JavaConversions._
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -128,7 +129,10 @@ abstract class GenericChatActivity extends AppCompatActivity {
       //FIXME make this more efficient
       adapter.setNotifyOnChange(false)
       adapter.clear()
-      adapter.addAll(messageList)
+      //add all is not available on api 10
+      for (message <- messageList) {
+        adapter.add(message)
+      }
       adapter.notifyDataSetChanged()
       Log.d(TAG, "changing chat list cursor")
     })
