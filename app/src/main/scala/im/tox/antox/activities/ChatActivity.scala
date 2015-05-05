@@ -93,9 +93,11 @@ class ChatActivity extends GenericChatActivity {
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(key).filterNot(_.isOnline).foreach({
-          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-          return
+        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+          if (!friend.isOnline) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
         })
         
         val builder = new AlertDialog.Builder(thisActivity)
