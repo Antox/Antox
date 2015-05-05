@@ -16,7 +16,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.{ActionBarDrawerToggle, AppCompatActivity}
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
-import android.widget.{AdapterView, ListView, Toast}
+import android.widget.{Button, AdapterView, ListView, Toast}
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils._
@@ -35,6 +35,10 @@ class MainActivity extends AppCompatActivity {
   private var mDrawerList: ListView = _
 
   private var mDrawerToggle: ActionBarDrawerToggle = _
+
+  private var mWifiWarningBar: Button = _
+
+  private var preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener = _
 
   private def selectItem(position: Int) {
     if (position == 0) {
@@ -137,6 +141,7 @@ class MainActivity extends AppCompatActivity {
     mToolbar = findViewById(R.drawable.ic_navigation_drawer).asInstanceOf[Toolbar]
     mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
     mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
+    mWifiWarningBar = findViewById(R.id.wifi_only_warning).asInstanceOf[Button]
     mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
     val list = new util.ArrayList[DrawerItem]()
     list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_profile))
@@ -181,6 +186,44 @@ class MainActivity extends AppCompatActivity {
     }
 
     ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+
+    val thisActivity = this
+
+    val checkWifiWarning = new Runnable {
+      override def run(): Unit = {
+        val wifiOnly = preferences.getBoolean("wifi_only", true)
+        val mWifi = thisActivity.getSystemService(Context.CONNECTIVITY_SERVICE)
+          .asInstanceOf[ConnectivityManager]
+          .getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+        if (wifiOnly && !mWifi.isConnected) {
+          showWifiWarning()
+        } else {
+          hideWifiWarning()
+        }
+      }
+    }
+
+    checkWifiWarning.run()
+
+    ConnectionManager.addConnectionTypeChangeListener(new ConnectionTypeChangeListener {
+      override def connectionTypeChange(connectionType: Int): Unit = {
+        checkWifiWarning.run()
+      }
+    })
+
+    preferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+      override def onSharedPreferenceChanged(prefs: SharedPreferences, key: String): Unit = {
+        key match {
+          case "wifi_only" =>
+            checkWifiWarning.run()
+          case _ =>
+        }
+      }
+    }
+
+    preferences.registerOnSharedPreferenceChangeListener(preferencesListener)
+
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
       new BitmapManager()
@@ -254,4 +297,16 @@ class MainActivity extends AppCompatActivity {
     }
   }
 
+  def onClickWifiOnlyWarning(view: View): Unit = {
+    val intent = new Intent(this, classOf[Settings])
+    startActivity(intent)
+  }
+
+  def showWifiWarning(): Unit = {
+    mWifiWarningBar.setVisibility(View.VISIBLE)
+  }
+
+  def hideWifiWarning(): Unit = {
+    mWifiWarningBar.setVisibility(View.GONE)
+  }
 }

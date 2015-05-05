@@ -101,7 +101,7 @@
         </activity>
 
         <receiver
-            android:name="im.tox.antox.utils.ConnectionChangeReceiver"
+            android:name="im.tox.antox.utils.ConnectionManager"
             android:label="NetworkConnection" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

@@ -28,7 +28,9 @@ class ToxDoService extends Service() {
           val connManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
           val wifiOnly = preferences.getBoolean("wifi_only", true)
           val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-          if (wifiOnly && !mWifi.isConnected) {
+          val connected = !(wifiOnly && !mWifi.isConnected)
+
+          if (!connected) {
             try {
               Thread.sleep(10000)
             } catch {

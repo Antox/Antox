@@ -88,7 +88,6 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
       this.startService(service)
     }
     if (key == "wifi_only") {
-      val preferences = PreferenceManager.getDefaultSharedPreferences(this)
       val connManager = this.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
       val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
       val wifiOnly = sharedPreferences.getBoolean("wifi_only", true)

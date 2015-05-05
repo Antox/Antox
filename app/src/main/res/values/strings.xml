@@ -41,6 +41,7 @@
     <string name="main_no_internet">No Internet Connection</string>
     <string name="main_not_connected">No internet connection has been detected. Without an internet connection, you will have
         limited functionality unless you are using Antox for LAN only</string>
+    <string name="main_mobile_disabled">Currently offline as Wi-Fi only mode is enabled. Touch to open settings. </string>
     <string name="search_all_contacts">Search all contacts</string>
     <string name='main_group_coming_soon'>"Coming soon…"</string>
 
