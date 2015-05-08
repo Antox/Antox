@@ -20,7 +20,7 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCa
       Log.d(TAG, "control type: " + control.name())
       val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, fileNumber)
       mTransfer match {
-        case Some(t) => {
+        case Some(t) =>
           (control, t.status) match {
             case (ToxFileControl.RESUME, FileStatus.REQUESTSENT) =>
               Log.d(TAG, "fileTransferStarted")
@@ -38,7 +38,6 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCa
               Log.d(TAG, "not matched: " + control + ", " + t.status)
 
           }
-        }
         case None => Log.d(TAG, "Transfer not found")
       }
       Reactive.updatedMessages.onNext(true)

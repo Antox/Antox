@@ -70,7 +70,7 @@ object FileKind extends Enum[FileKind] {
 
 
     def getAvatarFile(avatarName: String, context: Context): Option[File] = {
-      if (avatarName == null || avatarName.equals("") || context == null) None
+      if (avatarName == null || avatarName.equals("") || context == null) return None
 
       val file = new File(FileUtil.getDirectory(AVATAR.storageDir, AVATAR.storageType, context) + "/" + avatarName)
       if (file.exists() && !file.isDirectory) {

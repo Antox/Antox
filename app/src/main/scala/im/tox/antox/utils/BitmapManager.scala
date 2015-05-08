@@ -67,10 +67,9 @@ object BitmapManager {
       }
       byteArr
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         e.printStackTrace()
         null
-      }
     }
   }
 
@@ -100,10 +99,9 @@ object BitmapManager {
             imageView.setImageBitmap(bitmap)
           }
         } catch {
-          case e: FileNotFoundException => {
+          case e: FileNotFoundException =>
             Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
             e.printStackTrace()
-          }
         }
     }
   }

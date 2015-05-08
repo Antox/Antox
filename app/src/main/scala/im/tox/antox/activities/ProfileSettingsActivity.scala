@@ -11,6 +11,7 @@ import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
@@ -18,6 +19,7 @@ import im.tox.antox.data.{State, AntoxDB, UserDB}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
+import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.UserStatus
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
@@ -65,14 +67,6 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       bindPreferenceSummaryToValue(passwordPreference)
     }
     bindPreferenceSummaryToValue(findPreference("status"))
-
-    if (false) {
-      //TODO: Finish avatars
-      bindPreferenceSummaryToValue(findPreference("avatar"))
-    } else {
-      getPreferenceScreen.removePreference(findPreference("avatar"))
-    }
-
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
     bindPreferenceSummaryToValue(findPreference("active_account"))
@@ -85,14 +79,14 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
 
-   /* val avatarPreference = findPreference("avatar")
+   val avatarPreference = findPreference("avatar")
     avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
         createAvatarDialog()
         true
       }
-    }) */
+    })
 
     val exportProfile = findPreference("export")
     val thisActivity = this
@@ -166,7 +160,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
   def createAvatarDialog(): Unit = {
     val context: Context = ProfileSettingsActivity.this
-    /* val dialog = new MaterialDialog.Builder(context)
+    val dialog = new MaterialDialog.Builder(context)
       .customView(R.layout.dialog_avatar, false)
       .build()
 
@@ -183,7 +177,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     }
 
 
-    dialog.show() */
+    dialog.show()
   }
 
   def onExportDataFileSelected(dest: File): Unit = {

@@ -48,7 +48,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iteration(): Unit = tox.iteration()
 
-  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey())
+  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey)
 
   def getSecretKey: Array[Byte] = tox.getSecretKey
 

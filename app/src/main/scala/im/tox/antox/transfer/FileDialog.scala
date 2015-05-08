@@ -120,9 +120,9 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
         def accept(dir: File, filename: String): Boolean = {
           var sel = new File(dir, filename)
           if (!sel.canRead) return false
-          if (selectDirectoryOption) return sel.isDirectory else {
+          if (selectDirectoryOption) sel.isDirectory else {
             var endsWith = if (fileEndsWith != null) filename.toLowerCase.endsWith(fileEndsWith) else true
-            return endsWith || sel.isDirectory
+            endsWith || sel.isDirectory
           }
         }
       }

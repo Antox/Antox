@@ -120,34 +120,31 @@ object MessageHelper {
       val mFriend = ToxSingleton.getAntoxFriend(key)
       mFriend match {
         case None =>
-        case Some(friend) => {
+        case Some(friend) =>
           val db = new AntoxDB(ctx).open(writeable = true)
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
               Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, splitMsg))
             } catch {
-              case e: Exception => {
+              case e: Exception =>
                 None
-              }
             }
 
             val senderName = ToxSingleton.tox.getName
             mId match {
-              case Some(id) => {
+              case Some(id) =>
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
                   case None => db.addMessage(id, key, senderName,
                     splitMsg, has_been_received =
                     false, has_been_read = false, successfully_sent = true, MessageType.OWN)
                 }
-              }
               case None => db.addMessage(-1, key, senderName, splitMsg, has_been_received = false,
                 has_been_read = false, successfully_sent = false, MessageType.OWN)
             }
           }
           db.close()
           ToxSingleton.updateMessages(ctx)
-        }
       }
   }
 
@@ -158,9 +155,8 @@ object MessageHelper {
       try {
         ToxSingleton.tox.sendGroupMessage(group.groupNumber, splitMsg)
       } catch {
-        case e: Exception => {
+        case e: Exception =>
           None
-        }
       }
 
       val senderName = ToxSingleton.tox.getName

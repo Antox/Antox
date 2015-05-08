@@ -24,23 +24,19 @@ object Reactive {
     .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
     .combineLatestWith(unreadCounts)((tup, uc) => {
     tup match {
-      case (fl, lm) => {
+      case (fl, lm) =>
         fl.map(f => {
           val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
           val unreadCount: Option[Integer] = uc.get(f.key)
           (lastMessageTup, unreadCount) match {
-            case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) => {
+            case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
               new FriendInfo(f, lastMessage, lastMessageTimestamp, unreadCount)
-            }
-            case (Some((lastMessage, lastMessageTimestamp)), None) => {
+            case (Some((lastMessage, lastMessageTimestamp)), None) =>
               new FriendInfo(f, lastMessage, lastMessageTimestamp, 0)
-            }
-            case _ => {
+            case _ =>
               new FriendInfo(f, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0)
-            }
           }
         })
-      }
     }
   })
 
@@ -48,26 +44,23 @@ object Reactive {
     .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
     .combineLatestWith(unreadCounts)((tup, uc) => {
     tup match {
-      case (gl, lm) => {
+      case (gl, lm) =>
         gl.map(g => {
           val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.id)
           val unreadCount: Option[Integer] = uc.get(g.id)
           (lastMessageTup, uc) match {
-            case (Some((lastMessage, lastMessageTimestamp)), _) => {
+            case (Some((lastMessage, lastMessageTimestamp)), _) =>
               g.lastMessage = lastMessage
               g.lastMessageTimestamp = lastMessageTimestamp
               g.unreadCount = unreadCount.getOrElse(0).asInstanceOf[Int]
               g
-            }
-            case _ => {
+            case _ =>
               g.lastMessage = ""
               g.lastMessageTimestamp = TimestampUtils.emptyTimestamp()
               g.unreadCount = 0
               g
-            }
           }
         })
-      }
     }
   })
 

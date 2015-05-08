@@ -26,7 +26,7 @@ class AntoxFriendList {
 
   def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
     if (ignorecase) {
-      return getByNameIgnoreCase(name)
+      getByNameIgnoreCase(name)
     } else {
       friends.filter(friend => (friend.name == null && name == null) || (name != null && name == friend.name))
     }
@@ -41,7 +41,7 @@ class AntoxFriendList {
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
     }
-    friends.filter(friend => (friend.name != null && friend.name.contains(partialLowered)))
+    friends.filter(friend => friend.name != null && friend.name.contains(partialLowered))
   }
 
   def getOnlineFriends: util.List[AntoxFriend] = {
@@ -59,22 +59,20 @@ class AntoxFriendList {
   def addFriend(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
       case Some(f) => throw new Exception()
-      case None => {
+      case None =>
         val f = new AntoxFriend(friendnumber)
         this.friends.add(f)
         f
-      }
     }
   }
 
   def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
     friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
       case Some(f) => f
-      case None => {
+      case None =>
         val f = new AntoxFriend(friendnumber)
         this.friends.add(f)
         f
-      }
     }
   }
 

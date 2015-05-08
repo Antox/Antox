@@ -63,7 +63,7 @@ object CaptureAudio {
           bufferSize)
         if (recorder.getState == AudioRecord.STATE_INITIALIZED) {
           CaptureAudio.bufferSizeBytes = bufferSize
-          return Some(recorder)
+          Some(recorder)
         } else {
           None
         }

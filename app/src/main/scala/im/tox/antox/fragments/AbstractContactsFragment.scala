@@ -171,7 +171,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
         if (parentItem.viewType == ContactItemType.GROUP) {
           if (key != "") index match {
-            case 0 => {
+            case 0 =>
               val db = new AntoxDB(getActivity)
               db.deleteChat(key)
               db.deleteGroup(key)
@@ -186,7 +186,6 @@ abstract class AbstractContactsFragment extends Fragment {
               ToxSingleton.save()
               ToxSingleton.updateGroupList(getActivity)
               ToxSingleton.updateMessages(getActivity)
-            }
           }
         }
         dialog.cancel()
