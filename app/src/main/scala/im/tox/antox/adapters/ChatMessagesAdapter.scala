@@ -91,33 +91,33 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     var lastMsg: Message = null
     var nextMsg: Message = null
 
+    holder = new ChatMessagesHolder()
+    holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
+    holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
+    holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
+    holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
+    holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
+    holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
+    holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
+    holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
+    holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
+    holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
+    holder.padding = view.findViewById(R.id.file_transfer_padding)
+    holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
+    holder.accept = view.findViewById(R.id.file_accept_button)
+    holder.reject = view.findViewById(R.id.file_reject_button)
+    holder.sentTriangle = view.findViewById(R.id.sent_triangle)
+    holder.receivedTriangle = view.findViewById(R.id.received_triangle)
+    holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
+    holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
+
     if (convertView == null) {
       view = mInflater.inflate(this.layoutResourceId, parent, false)
-
-      holder = new ChatMessagesHolder()
-      holder.message = view.findViewById(R.id.message_text).asInstanceOf[TextView]
-      holder.layout = view.findViewById(R.id.message_text_layout).asInstanceOf[LinearLayout]
-      holder.row = view.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
-      holder.background = view.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
-      holder.time = view.findViewById(R.id.message_text_date).asInstanceOf[TextView]
-      holder.title = view.findViewById(R.id.message_title).asInstanceOf[TextView]
-      holder.progress = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
-      holder.imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
-      holder.imageMessageFrame = view.findViewById(R.id.message_sent_photo_frame).asInstanceOf[FrameLayout]
-      holder.progressText = view.findViewById(R.id.file_transfer_progress_text).asInstanceOf[TextView]
-      holder.padding = view.findViewById(R.id.file_transfer_padding)
-      holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
-      holder.accept = view.findViewById(R.id.file_accept_button)
-      holder.reject = view.findViewById(R.id.file_reject_button)
-      holder.sentTriangle = view.findViewById(R.id.sent_triangle)
-      holder.receivedTriangle = view.findViewById(R.id.received_triangle)
-      holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
-      holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
 
       view.setTag(holder)
     } else {
       view = convertView
-      holder = view.getTag.asInstanceOf[ChatMessagesHolder]
+      //holder = view.getTag.asInstanceOf[ChatMessagesHolder]
     }
 
     /* if (cursor.moveToPrevious()) {
@@ -297,7 +297,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       holder.row.startAnimation(anim)
       animatedIds.add(msg.id)
     }
-    holder.row.setOnLongClickListener(new View.OnLongClickListener() {
+    view.setOnLongClickListener(new View.OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
         if (msg.`type` == MessageType.OWN || msg.`type` == MessageType.FRIEND) {

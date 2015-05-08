@@ -79,6 +79,7 @@ class CreateAccountActivity extends AppCompatActivity {
     editor.putString("status", "1")
     editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
     editor.putString("tox_id", toxID)
+    editor.putBoolean("logging_enabled", true)
     editor.putBoolean("loggedin", true)
     editor.apply()
 

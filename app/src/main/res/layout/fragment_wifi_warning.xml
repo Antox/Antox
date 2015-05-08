@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/wifi_only_warning"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textAllCaps="false"
+        android:textSize="8pt"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:gravity="center"
+        android:text="@string/main_mobile_disabled"
+        android:background="@color/material_orange_700"/>
+</LinearLayout>

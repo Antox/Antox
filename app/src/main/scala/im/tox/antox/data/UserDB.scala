@@ -17,7 +17,8 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
     "nickname text," +
     "status text," +
     "status_message text," +
-    "avatar text);"
+    "avatar text," +
+    "logging_enabled integer);"
 
   override def onCreate(db: SQLiteDatabase) {
     db.execSQL(CREATE_TABLE_USERS)
@@ -26,11 +27,16 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
   override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
     Log.w("UserDB", "Upgrading UserDB from version " + oldVersion + " to " + newVersion)
 
-    (oldVersion, newVersion) match {
-      case (1, _) =>
-        if (!DatabaseUtil.isColumnInTable(db, "users", "avatar"))
-          db.execSQL("ALTER TABLE users ADD COLUMN avatar text")
-      case (_, _) =>
+    for (currVersion <- oldVersion to newVersion) {
+      currVersion match {
+        case 1 =>
+          if (!DatabaseUtil.isColumnInTable(db, "users", "avatar"))
+            db.execSQL("ALTER TABLE users ADD COLUMN avatar text")
+        case 2 =>
+          db.execSQL("ALTER TABLE users ADD COLUMN logging_enabled integer")
+          db.execSQL("UPDATE users SET logging_enabled = 1")
+        case _ =>
+      }
     }
   }
 
@@ -69,6 +75,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
         cursor.getString(3),
         cursor.getString(4),
         cursor.getString(5),
+        cursor.getInt(7) > 0,
         cursor.getString(6))
     }
     cursor.close()
@@ -79,6 +86,15 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
   def updateUserDetail(username: String, detail: String, newDetail: String) {
     val db = this.getReadableDatabase
     val query = "UPDATE users SET " + detail + "='" + newDetail + "' WHERE username='" +
+      username +
+      "'"
+    db.execSQL(query)
+    db.close()
+  }
+
+  def updateUserDetail(username: String, detail: String, newDetail: Boolean) {
+    val db = this.getReadableDatabase
+    val query = "UPDATE users SET " + detail + "=" + (if (newDetail) 1 else 0) + " WHERE username='" +
       username +
       "'"
     db.execSQL(query)

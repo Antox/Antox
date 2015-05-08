@@ -82,6 +82,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
         editor.putString("password", details.password)
         editor.putString("status", details.status)
         editor.putString("status_message", details.statusMessage)
+        editor.putBoolean("logging_enabled", details.loggingEnabled)
         editor.putString("avatar", details.avatarName)
         editor.apply()
         val startTox = new Intent(getApplicationContext, classOf[ToxDoService])

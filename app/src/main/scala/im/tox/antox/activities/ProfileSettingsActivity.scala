@@ -14,13 +14,14 @@ import android.widget.{ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
-import im.tox.antox.data.UserDB
+import im.tox.antox.data.{State, AntoxDB, UserDB}
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import im.tox.antox.wrapper.UserStatus
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
+import scala.collection.JavaConversions._
 
 object ProfileSettingsActivity {
 
@@ -111,15 +112,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val editor = preferences.edit()
-        editor.putBoolean("loggedin", false)
-        editor.apply()
-        val startTox = new Intent(ProfileSettingsActivity.this.getApplicationContext, classOf[ToxDoService])
-        ProfileSettingsActivity.this.getApplicationContext.stopService(startTox)
-        val login = new Intent(ProfileSettingsActivity.this.getApplicationContext, classOf[LoginActivity])
-        ProfileSettingsActivity.this.startActivity(login)
-        ProfileSettingsActivity.this.finish()
+        State.logout(ProfileSettingsActivity.this)
         true
       }
     })
@@ -234,45 +227,51 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     getPreferenceScreen.getSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
   }
 
-  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, preferenceKey: String) {
+  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
     val db = new UserDB(this)
     val activeAccount = sharedPreferences.getString("active_account", "")
-    val keyString = sharedPreferences.getString(preferenceKey, "")
 
-    preferenceKey match {
+    key match {
       case "nickname" =>
+        val name = sharedPreferences.getString(key, "")
         try {
-          val name = sharedPreferences.getString(keyString, "")
           ToxSingleton.tox.setName(name)
           ToxSingleton.tox.setGroupSelfNameAll(name)
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "nickname", keyString)
+        db.updateUserDetail(activeAccount, key, name)
 
       case "password" =>
-        db.updateUserDetail(activeAccount, "password", keyString)
+        val password = sharedPreferences.getString(key, "")
+        db.updateUserDetail(activeAccount, key, password)
 
       case "status" =>
-        val newStatusString = sharedPreferences.getString(keyString, "")
+        val newStatusString = sharedPreferences.getString(key, "")
         val newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "status", keyString)
+        db.updateUserDetail(activeAccount, key, newStatusString)
 
       case "status_message" =>
+        val statusMessage = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(keyString, ""))
+          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "status_message", keyString)
+        db.updateUserDetail(activeAccount, key, statusMessage)
+
+      case "logging_enabled" =>
+        val loggingEnabled = sharedPreferences.getBoolean(key, true)
+        db.updateUserDetail(activeAccount, key, loggingEnabled)
 
       case "avatar" =>
-        db.updateUserDetail(activeAccount, "avatar", keyString)
+        val avatar = sharedPreferences.getString(key, "")
+        db.updateUserDetail(activeAccount, key, avatar)
 
       case _ =>
     }

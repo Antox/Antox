@@ -5,6 +5,7 @@ class UserInfo(val username: String,
                val nickname: String,
                val status: String,
                val statusMessage: String,
+               val loggingEnabled: Boolean,
                val avatarName: String) {
 
 }

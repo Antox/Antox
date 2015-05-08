@@ -44,10 +44,6 @@ class AntoxFriendList {
     friends.filter(friend => (friend.name != null && friend.name.contains(partialLowered)))
   }
 
-  def getByStatus(status: ToxStatus): util.List[AntoxFriend] = {
-    friends.filter(friend => friend.isOnline && friend.getStatus == status)
-  }
-
   def getOnlineFriends: util.List[AntoxFriend] = {
     friends.filter(friend => friend.isOnline)
   }

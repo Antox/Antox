@@ -59,6 +59,11 @@
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="logging_enabled"
+        android:title="@string/pref_title_logging_enabled" />
+
     <Preference
         android:key="export"
         android:title="@string/pref_title_export" />
