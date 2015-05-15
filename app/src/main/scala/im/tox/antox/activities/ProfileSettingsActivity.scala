@@ -16,6 +16,7 @@ import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.{State, AntoxDB, UserDB}
+import im.tox.antox.fragments.AvatarDialog
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
@@ -51,6 +52,8 @@ object ProfileSettingsActivity {
 
 class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
 
+  private var avatarDialog: AvatarDialog = _
+
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.pref_profile)
@@ -81,9 +84,8 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
    val avatarPreference = findPreference("avatar")
     avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
       override def onPreferenceClick(preference: Preference): Boolean = {
-        createAvatarDialog()
+        avatarDialog.show()
         true
       }
     })
@@ -110,6 +112,8 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         true
       }
     })
+
+    if (avatarDialog == null) avatarDialog = new AvatarDialog(ProfileSettingsActivity.this)
   }
 
   def createToxIDDialog() {
@@ -156,28 +160,6 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
     builder.create().show()
-  }
-
-  def createAvatarDialog(): Unit = {
-    val context: Context = ProfileSettingsActivity.this
-    val dialog = new MaterialDialog.Builder(context)
-      .customView(R.layout.dialog_avatar, false)
-      .build()
-
-    val avatarView = dialog.getCustomView.findViewById(R.id.avatar_image).asInstanceOf[ImageButton]
-    val photoButton = dialog.getCustomView.findViewById(R.id.avatar_takephoto)
-    val fileButton = dialog.getCustomView.findViewById(R.id.avatar_pickfile)
-    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-
-    val avatar = AVATAR.getAvatarFile(pref.getString("avatar", ""), context)
-    if (avatar.isDefined && avatar.get.exists()) {
-      avatarView.setImageURI(Uri.fromFile(avatar.get))
-    } else {
-      avatarView.setImageResource(R.drawable.ic_action_contact)
-    }
-
-
-    dialog.show()
   }
 
   def onExportDataFileSelected(dest: File): Unit = {
@@ -269,6 +251,10 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
       case _ =>
     }
+  }
+
+  override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Unit = {
+    avatarDialog.onActivityResult(requestCode, resultCode, data)
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {

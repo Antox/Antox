@@ -15,6 +15,7 @@ import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.transfer.{FileStatus, FileTransfer}
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper._
 import im.tox.tox4j.ToxAvImpl
 import im.tox.tox4j.core.ToxOptions
@@ -156,13 +157,8 @@ object ToxSingleton {
           filePre = filePre.concat(".")
         }
       }
-      val dirfile = FileUtil.getDirectory(fileKind.storageDir, fileKind.storageType, context)
 
-      if (!dirfile.mkdirs()) {
-        Log.e("acceptFile", "Directory not created")
-      }
-
-      var file = new File(dirfile.getPath, fileN)
+      var file = new File(fileKind.getStorageDir(context).getPath, fileN)
       if (replaceExisting) file.delete()
 
       if (file.exists()) {
@@ -171,7 +167,7 @@ object ToxSingleton {
           fileN = filePre + "(" + java.lang.Integer.toString(i) + ")" +
           "." +
           fileExt
-          file = new File(dirfile.getPath, fileN)
+          file = new File(fileKind.getStorageDir(context).getPath, fileN)
           i += 1
         } while (file.exists())
       }

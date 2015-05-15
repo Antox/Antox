@@ -170,6 +170,12 @@
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Avatar Dialog -->
+    <string name="dialog_avatar_take_photo">Take Photo</string>
+    <string name="dialog_avatar_use_file">Use File</string>
+    <string name="avatar_too_large_error">Error: Avatar file too large.</string>
+    <string name="dialog_avatar_description">avatar</string>
+
     <!-- File transfer -->
     <string name="file_finished">Finished</string>
     <string name="file_failed">Failed</string>
