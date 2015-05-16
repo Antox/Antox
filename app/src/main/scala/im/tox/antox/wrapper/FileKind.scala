@@ -59,8 +59,9 @@ object FileKind extends Enum[FileKind] {
   case object AVATAR extends FileKind {
     val kindId = 1
     val visible = false
-    val rawStorageDirectory = Constants.AVATAR_DIRECTORY
-    val storageType = StorageType.INTERNAL
+    val rawStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+      + "/" + Constants.DOWNLOAD_DIRECTORY, Constants.AVATAR_DIRECTORY).getPath
+    val storageType = StorageType.EXTERNAL
     val autoAccept = true
     val replaceExisting = true
 

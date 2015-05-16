@@ -217,7 +217,7 @@ abstract class AbstractContactsFragment extends Fragment {
           val mFriend = ToxSingleton.getAntoxFriend(key)
           mFriend.foreach(friend => {
             try {
-              ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+              ToxSingleton.tox.deleteFriend(friend.getFriendNumber)
               ToxSingleton.save()
             } catch {
               case e: ToxException =>

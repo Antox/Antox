@@ -255,6 +255,8 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Unit = {
     avatarDialog.onActivityResult(requestCode, resultCode, data)
+    avatarDialog.close()
+    avatarDialog.show()
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {

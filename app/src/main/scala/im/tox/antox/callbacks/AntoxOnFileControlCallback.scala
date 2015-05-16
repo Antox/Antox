@@ -24,16 +24,16 @@ class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCa
           (control, t.status) match {
             case (ToxFileControl.RESUME, FileStatus.REQUESTSENT) =>
               Log.d(TAG, "fileTransferStarted")
-              ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+              State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)
             case (ToxFileControl.RESUME, FileStatus.PAUSED) =>
               Log.d(TAG, "fileTransferResumed")
-              ToxSingleton.fileTransferStarted(t.key, t.fileNumber, ctx)
+              State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)
             case (ToxFileControl.PAUSE, _) =>
               Log.d(TAG, "pauseFile")
-              ToxSingleton.pauseFile(t.id, ctx)
+              State.transfers.pauseFile(t.id, ctx)
             case (ToxFileControl.CANCEL, _) =>
               Log.d(TAG, "cancelFile")
-              ToxSingleton.cancelFile(t.key, t.fileNumber, ctx)
+              State.transfers.cancelFile(t.key, t.fileNumber, ctx)
             case _ =>
               Log.d(TAG, "not matched: " + control + ", " + t.status)
 

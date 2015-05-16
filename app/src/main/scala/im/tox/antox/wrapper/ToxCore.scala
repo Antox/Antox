@@ -103,7 +103,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getFriendByKey(key: String): Int = tox.getFriendByPublicKey(Hex.hexStringToBytes(key))
 
-  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getPublicKey(friendNumber))
+  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getFriendPublicKey(friendNumber))
 
   def friendExists(friendNumber: Int): Boolean = tox.friendExists(friendNumber)
 

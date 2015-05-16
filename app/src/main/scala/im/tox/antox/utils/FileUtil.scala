@@ -14,7 +14,7 @@ object FileUtil {
     if (storageType == StorageType.EXTERNAL) {
       new File(path)
     } else {
-      context.getDir(path, Context.MODE_PRIVATE)
+      new File(context.getFilesDir, path)
     }
   }
 }

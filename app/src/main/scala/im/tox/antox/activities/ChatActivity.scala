@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget._
 import de.hdodenhof.circleimageview.CircleImageView
+import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{Constants, IconColor}
@@ -46,7 +47,7 @@ class ChatActivity extends GenericChatActivity {
         mFriend.foreach(friend => {
           if (friend.isOnline) {
             try {
-              ToxSingleton.tox.setTyping(friend.getFriendnumber, isTyping)
+              ToxSingleton.tox.setTyping(friend.getFriendNumber, isTyping)
             } catch {
               case te: ToxException => {
               }
@@ -77,7 +78,7 @@ class ChatActivity extends GenericChatActivity {
         val mFriend = ToxSingleton.getAntoxFriend(key)
         mFriend.foreach(friend => {
           try {
-            ToxSingleton.tox.setTyping(friend.getFriendnumber, typing = false)
+            ToxSingleton.tox.setTyping(friend.getFriendNumber, typing = false)
           } catch {
             case te: ToxException => {
             }
@@ -113,6 +114,10 @@ class ChatActivity extends GenericChatActivity {
               }
               case 1 => {
                 val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                if (cameraIntent.resolveActivity(getPackageManager) == null) {
+                  Toast.makeText(thisActivity, getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)
+                  return
+                }
                 val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
                 println("image name " + image_name)
                 val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -131,7 +136,7 @@ class ChatActivity extends GenericChatActivity {
                 val fileDialog = new FileDialog(thisActivity, mPath, false)
                 fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                   def fileSelected(file: File) {
-                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
+                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
                   }
                 })
                 fileDialog.showDialog()
@@ -214,7 +219,7 @@ class ChatActivity extends GenericChatActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
+              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -223,7 +228,7 @@ class ChatActivity extends GenericChatActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
+          State.transfers.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
           photoPath = null
         }
       }

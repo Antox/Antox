@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.FileKind
@@ -34,9 +34,9 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
 
     val name = if (kind == FileKind.AVATAR) key else new String(filename)
 
-    ToxSingleton.fileSendRequest(key,
+    State.transfers.fileSendRequest(key,
       fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind.autoAccept) ToxSingleton.acceptFile(key, fileNumber, ctx)
+    if (kind.autoAccept) State.transfers.acceptFile(key, fileNumber, ctx)
   }
 }

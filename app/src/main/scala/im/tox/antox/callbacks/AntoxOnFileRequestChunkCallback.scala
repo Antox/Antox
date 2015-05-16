@@ -24,14 +24,13 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
         mFriend.foreach(friend => {
           if (length <= 0) {
             State.db.clearFileNumber(friend.getKey, fileNumber)
-            ToxSingleton.fileFinished(friend.getKey, t.fileNumber, ctx)
-            println("finished transfer")
+            State.transfers.fileFinished(friend.getKey, t.fileNumber, ctx)
           } else {
-            val reset = if (position < t.progress) true else false
+            val reset = position < t.progress
             val data = t.readData(reset, length)
             data match {
               case Some(d) =>
-                ToxSingleton.tox.fileSendChunk(friend.getFriendnumber, fileNumber, t.progress, d)
+                ToxSingleton.tox.fileSendChunk(friend.getFriendNumber, fileNumber, t.progress, d)
                 if (!reset) t.addToProgress(t.progress + length)
               case None =>
             }

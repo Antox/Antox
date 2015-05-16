@@ -32,7 +32,7 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean, " +
       "avatar text, " +
-      "receieved_avatar boolean);"
+      "received_avatar boolean);"
 
     var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
       "name text, " +
@@ -130,6 +130,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_ALIAS, alias)
     values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
     values.put(Constants.COLUMN_NAME_AVATAR, key)
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, false)
     mDb.insert(Constants.TABLE_FRIENDS, null, values)
     this.close()
   }
@@ -764,11 +765,11 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def setAllFriendReceivedAvatar(key: String) {
+  def setAllFriendReceivedAvatar(receivedAvatar: Boolean) {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, true)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
+    mDb.update(Constants.TABLE_FRIENDS, values, null, null)
     this.close()
   }
 

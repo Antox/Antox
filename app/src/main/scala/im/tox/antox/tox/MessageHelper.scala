@@ -124,7 +124,7 @@ object MessageHelper {
           val db = new AntoxDB(ctx).open(writeable = true)
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
-              Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, splitMsg))
+              Some(ToxSingleton.tox.sendMessage(friend.getFriendNumber, splitMsg))
             } catch {
               case e: Exception =>
                 None

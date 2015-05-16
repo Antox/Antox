@@ -14,6 +14,8 @@ import org.json.{JSONException, JSONObject}
 import org.xbill.DNS.{Lookup, TXTRecord, Type}
 import rx.lang.scala.Observable
 
+import scala.util.Try
+
 object ToxDNS {
 
  /**
@@ -61,7 +63,7 @@ object ToxDNS {
     val INTERNAL = Value("-26")
     val UNKNOWN = Value("")
 
-    def valueOf(name: String) = values.find(_.toString == name)
+    def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
   }
 
   /**
@@ -116,10 +118,10 @@ object ToxDNS {
       case e: InterruptedException =>
     }
 
-    if (RegError.withName(jsonPost.getErrorCode) == RegError.SUCCESS) {
+    if (Try(RegError.withName(jsonPost.getErrorCode)).getOrElse(RegError.UNKNOWN) == RegError.SUCCESS) {
       Right(jsonPost.getPassword)
     } else {
-      Left(RegError.valueOf(jsonPost.getErrorCode).getOrElse(RegError.UNKNOWN))
+      Left(RegError.valueOf(jsonPost.getErrorCode))
     }
   }
 

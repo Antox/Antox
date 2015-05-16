@@ -17,7 +17,7 @@ class AntoxFriendList {
   }
 
   def getByFriendNumber(friendNumber: Int): Option[AntoxFriend] = {
-    friends.find(friend => friend.getFriendnumber == friendNumber)
+    friends.find(friend => friend.getFriendNumber == friendNumber)
   }
 
   def getByKey(key: String): Option[AntoxFriend] = {
@@ -57,7 +57,7 @@ class AntoxFriendList {
   }
 
   def addFriend(friendnumber: Int): AntoxFriend = {
-    friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
+    friends.filter(friend => friend.getFriendNumber == friendnumber).headOption match {
       case Some(f) => throw new Exception()
       case None =>
         val f = new AntoxFriend(friendnumber)
@@ -67,7 +67,7 @@ class AntoxFriendList {
   }
 
   def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
-    friends.filter(friend => friend.getFriendnumber == friendnumber).headOption match {
+    friends.filter(friend => friend.getFriendNumber == friendnumber).headOption match {
       case Some(f) => f
       case None =>
         val f = new AntoxFriend(friendnumber)
@@ -84,6 +84,6 @@ class AntoxFriendList {
   }
 
   def removeFriend(friendnumber: Int) {
-    friends.remove(friends.find(friend => friend.getFriendnumber == friendnumber).get)
+    friends.remove(friends.find(friend => friend.getFriendNumber == friendnumber).get)
   }
 }

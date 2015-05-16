@@ -37,7 +37,7 @@ class AntoxFriend(friendnumber: Int) {
   @BeanProperty
   var previousNames: util.ArrayList[String] = _
 
-  def getFriendnumber: Int = this.friendNumber
+  def getFriendNumber: Int = this.friendNumber
 
   def deleteAvatar(): Unit = {
     avatar.map(_.delete())

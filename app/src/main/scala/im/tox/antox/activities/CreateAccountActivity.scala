@@ -95,9 +95,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
   def createToxData(accountName: String): ToxData = {
     val toxData = new ToxData
-    val toxOptions = new ToxOptions()
-    toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(Options.udpEnabled)
+    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions, null)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
@@ -108,9 +106,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
   def loadToxData(fileName: String): ToxData = {
     val toxData = new ToxData
-    val toxOptions = new ToxOptions()
-    toxOptions.setIpv6Enabled(Options.ipv6Enabled)
-    toxOptions.setUdpEnabled(Options.udpEnabled)
+    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
     val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
@@ -121,57 +117,65 @@ class CreateAccountActivity extends AppCompatActivity {
   //db is expected to be open and is closed at the end of the method
   def createAccount(accountName: String, db: UserDB, createDataFile: Boolean, shouldRegister: Boolean): Unit = {
     try {
-    if (!validAccountName(accountName)) {
-      showBadAccountNameError()
-    } else if (db.doesUserExist(accountName)) {
-      val context = getApplicationContext
-      val text = getString(R.string.create_profile_exists)
-      val duration = Toast.LENGTH_LONG
-      val toast = Toast.makeText(context, text, duration)
-      toast.show()
-    } else {
-      db.addUser(accountName, "")
-      var toxData = new ToxData
-
-      if (createDataFile) {
-        // Create tox data save file
-        try {
-          toxData = createToxData(accountName)
-        } catch {
-          case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
-        }
+      if (!validAccountName(accountName)) {
+        showBadAccountNameError()
+      } else if (db.doesUserExist(accountName)) {
+        val context = getApplicationContext
+        val text = getString(R.string.create_profile_exists)
+        val duration = Toast.LENGTH_LONG
+        val toast = Toast.makeText(context, text, duration)
+        toast.show()
       } else {
-        toxData = loadToxData(accountName)
-      }
+        var toxData = new ToxData
 
-      if (shouldRegister) {
-        // Register on toxme.se
-        val registerResult = ToxDNS.registerAccount(accountName, toxData)
+        if (createDataFile) {
+          // Create tox data save file
+          try {
+            toxData = createToxData(accountName)
+          } catch {
+            case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
+          }
+        } else {
+          toxData = loadToxData(accountName)
+        }
 
-        val toastMessage = registerResult match {
-          case Left(error) =>
-            error match {
-              case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
-              case RegError.INTERNAL => getString(R.string.create_account_internal_error)
-              case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
-              case _ => getString(R.string.create_account_unknown_error)
+        var successful = false
+        var accountPassword: Option[String] = None
+        if (shouldRegister) {
+          // Register on toxme.se
+          val registerResult = ToxDNS.registerAccount(accountName, toxData)
+
+          val toastMessage = registerResult match {
+            case Left(error) =>
+              error match {
+                case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
+                case RegError.INTERNAL => getString(R.string.create_account_internal_error)
+                case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+                case _ => getString(R.string.create_account_unknown_error)
+              }
+            case Right(password) =>
+              successful = true
+              accountPassword = Some(password)
+              null
+          }
+
+          if (successful) {
+            db.addUser(accountName, "")
+            db.updateUserDetail(accountName, "password", accountPassword.get)
+
+            saveAccountAndStartMain(accountName, accountPassword.get, toxData.ID)
+          } else {
+            if (toastMessage != null) {
+              val context = getApplicationContext
+              val duration = Toast.LENGTH_SHORT
+              Toast.makeText(context, toastMessage, duration).show()
             }
-          case Right(password) =>
-            db.updateUserDetail(accountName, "password", password)
-            saveAccountAndStartMain(accountName, password, toxData.ID)
-            null
-        }
+          }
 
-        if (toastMessage != null) {
-          val context = getApplicationContext
-          val duration = Toast.LENGTH_SHORT
-          Toast.makeText(context, toastMessage, duration).show()
+        } else {
+          saveAccountAndStartMain(accountName, "", toxData.ID)
         }
-
-      } else {
-        saveAccountAndStartMain(accountName, "", toxData.ID)
       }
-    }
     } finally {
       db.close()
     }

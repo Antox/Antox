@@ -17,10 +17,10 @@ class AntoxOnFileReceiveChunkCallback(private var ctx: Context) extends FileRece
     val size = State.transfers.get(key, fileNumber).get.size
     
     if (position == size) {
-      ToxSingleton.fileFinished(key, fileNumber, ctx)
+      State.transfers.fileFinished(key, fileNumber, ctx)
       ToxSingleton.updateMessages(ctx)
     } else {
-      ToxSingleton.receiveFileData(key, fileNumber, data, ctx)
+      State.transfers.receiveFileData(key, fileNumber, data, ctx)
     }
   }
 }
