@@ -46,6 +46,7 @@ class AvatarDialog(activity: Activity) {
         if (cursor != null) {
           if (cursor.moveToFirst()) {
             val tempFile = new File(cursor.getString(cursor.getColumnIndexOrThrow(filePathColumn(0))))
+            if (!tempFile.exists()) return
 
             FileUtils.copy(tempFile, avatarFile)
             tempFile.delete()
