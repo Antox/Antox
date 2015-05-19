@@ -6,13 +6,15 @@ import android.content.{Context, SharedPreferences}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
-import android.text.{Editable, TextWatcher}
+import android.text.InputFilter.LengthFilter
+import android.text.{InputFilter, Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.Message
 import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -39,7 +41,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var scrolling: Boolean = false
   var antoxDB: AntoxDB = null
 
-  val MESSAGE_LENGTH_LIMIT = 1367 * 100
+  val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -91,6 +93,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
 
     messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
+    messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
     messageBox.addTextChangedListener(new TextWatcher() {
       override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
         val isTyping = after > 0
@@ -172,12 +175,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
   def validateMessageBox(): Option[String] = {
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
-      return None
-    }
-
-    //limit to 100 max length messages
-    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
-      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
       return None
     }
 

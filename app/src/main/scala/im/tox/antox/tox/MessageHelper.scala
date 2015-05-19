@@ -19,7 +19,6 @@ import scala.collection.JavaConverters._
 object MessageHelper {
 
   val TAG = "im.tox.antox.tox.MessageHandler"
-  val MAX_MESSAGE_LENGTH = 1367
 
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, message: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
@@ -163,13 +162,13 @@ object MessageHelper {
     var currSplitPos = 0
     val result: util.ArrayList[String] = new util.ArrayList[String]()
 
-    while (msg.length - currSplitPos > MAX_MESSAGE_LENGTH) {
-      val str = msg.substring(currSplitPos, currSplitPos + MAX_MESSAGE_LENGTH)
+    while (msg.length - currSplitPos > Constants.MAX_MESSAGE_LENGTH) {
+      val str = msg.substring(currSplitPos, currSplitPos + Constants.MAX_MESSAGE_LENGTH)
       val spacePos = str.lastIndexOf(' ')
 
       if (spacePos <= 0) {
         result.add(str)
-        currSplitPos += MAX_MESSAGE_LENGTH
+        currSplitPos += Constants.MAX_MESSAGE_LENGTH
       } else {
         result.add(str.substring(0, spacePos))
         currSplitPos += spacePos + 1
