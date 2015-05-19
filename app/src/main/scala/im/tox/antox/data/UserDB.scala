@@ -86,7 +86,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
 
   def updateUserDetail(username: String, detail: String, newDetail: String) {
     val db = this.getReadableDatabase
-    val query = "UPDATE users SET " + detail + "='" + DatabaseUtils.sqlEscapeString(newDetail) + "' WHERE username='" +
+    val query = "UPDATE users SET " + detail + "=" + DatabaseUtils.sqlEscapeString(newDetail) + " WHERE username='" +
       username +
       "'"
     db.execSQL(query)
