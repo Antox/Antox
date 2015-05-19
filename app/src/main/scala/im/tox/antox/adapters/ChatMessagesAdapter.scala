@@ -117,7 +117,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       view.setTag(holder)
     } else {
       view = convertView
-      //holder = view.getTag.asInstanceOf[ChatMessagesHolder]
+      holder = view.getTag.asInstanceOf[ChatMessagesHolder]
     }
 
     /* if (cursor.moveToPrevious()) {

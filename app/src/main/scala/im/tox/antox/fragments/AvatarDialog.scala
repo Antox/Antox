@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewGroup.LayoutParams
 import android.widget.{Toast, Button, ImageView}
 import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
@@ -27,53 +28,48 @@ import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antoxnightly.R
 
-//not a DialogFragment because they don't work with PreferenceActivity
+//not a DialogFragment (i. because they don't work with PreferenceActivity
 class AvatarDialog(activity: Activity) {
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
-  var fileName: Option[String] = None
-
   def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     if (resultCode == Activity.RESULT_OK) {
-      fileName match {
-        case Some(name) =>
-          val avatarFile = new File(AVATAR.getStorageDir(activity), name)
+      val name = preferences.getString("tox_id", "")
+      val avatarFile = new File(AVATAR.getStorageDir(activity), name)
 
-          if (requestCode == Constants.IMAGE_RESULT) {
-            val uri = data.getData
-            val filePathColumn = Array(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME)
-            val loader = new CursorLoader(activity, uri, filePathColumn, null, null, null)
-            val cursor = loader.loadInBackground()
-            if (cursor != null) {
-              if (cursor.moveToFirst()) {
-                val tempFile = new File(cursor.getString(cursor.getColumnIndexOrThrow(filePathColumn(0))))
+      if (requestCode == Constants.IMAGE_RESULT) {
+        val uri = data.getData
+        val filePathColumn = Array(MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME)
+        val loader = new CursorLoader(activity, uri, filePathColumn, null, null, null)
+        val cursor = loader.loadInBackground()
+        if (cursor != null) {
+          if (cursor.moveToFirst()) {
+            val tempFile = new File(cursor.getString(cursor.getColumnIndexOrThrow(filePathColumn(0))))
 
-                FileUtils.copy(tempFile, avatarFile)
-                tempFile.delete()
-              }
-            }
+            FileUtils.copy(tempFile, avatarFile)
+            tempFile.delete()
           }
-
-          println("path " + avatarFile.getPath)
-          resizeAvatar(avatarFile) match {
-            case Some(bitmap) =>
-              FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 100, avatarFile)
-              preferences.edit().putString("avatar", name).commit()
-            case None =>
-              avatarFile.delete()
-              Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)
-          }
-          val db = new AntoxDB(activity)
-          db.setAllFriendReceivedAvatar(false)
-          db.close()
-          State.transfers.updateSelfAvatar(activity)
-        case None =>
+        }
       }
+
+      resizeAvatar(avatarFile) match {
+        case Some(bitmap) =>
+          FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 0, avatarFile)
+          preferences.edit().putString("avatar", name).commit()
+        case None =>
+          avatarFile.delete()
+          Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)
+      }
+      val db = new AntoxDB(activity)
+      db.setAllFriendReceivedAvatar(false)
+      db.close()
+      State.transfers.updateSelfAvatar(activity)
+
     }
   }
 
-  def resizeAvatar(avatar: File): Option[Bitmap] ={
+  def resizeAvatar(avatar: File): Option[Bitmap] = {
     val rawBitmap = BitmapFactory.decodeFile(avatar.getPath)
     val cropDimension =
       if (rawBitmap.getWidth >= rawBitmap.getHeight) {
@@ -123,9 +119,9 @@ class AvatarDialog(activity: Activity) {
       override def onClick(v: View): Unit = {
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         if (cameraIntent.resolveActivity(activity.getPackageManager) != null) {
-          fileName = Some(preferences.getString("tox_id", ""))
+          val fileName = preferences.getString("tox_id", "")
           try {
-            val file = new File(AVATAR.getStorageDir(activity), fileName.get)
+            val file = new File(AVATAR.getStorageDir(activity), fileName)
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
             activity.startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
           } catch {
@@ -140,12 +136,12 @@ class AvatarDialog(activity: Activity) {
     fileButton.setOnClickListener(new OnClickListener {
       override def onClick(v: View): Unit = {
         val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        fileName = Some(preferences.getString("tox_id", ""))
         activity.startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
 
     refreshAvatar(view.findViewById(R.id.avatar_image).asInstanceOf[ImageView])
+    if (mDialog.get.isShowing) close()
     mDialog.get.show()
   }
 

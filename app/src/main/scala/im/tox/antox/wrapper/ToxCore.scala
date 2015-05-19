@@ -1,6 +1,9 @@
 package im.tox.antox.wrapper
 
+import java.io.File
+
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.transfer.FileUtils
 import im.tox.antox.utils._
 import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
@@ -131,11 +134,20 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callbackFriendMessage(callback: FriendMessageCallback): Unit = tox.callbackFriendMessage(callback)
 
+  def hash(bytes: Array[Byte]): Array[Byte] = tox.hash(bytes)
+
+  def hash(file: File): Option[String] = {
+    FileUtils.readToBytes(file).map(tox.hash).map(_.toString)
+  }
+
   def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(friendNumber, fileNumber, control)
 
   def callbackFileControl(callback: FileControlCallback): Unit = tox.callbackFileControl(callback)
 
-  def fileSend(friendNumber: Int, kind: Int, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, kind, fileSize, null, filename.getBytes)
+  def fileSend(friendNumber: Int, kind: Int, fileSize: Long, fileId: String, filename: String): Int = {
+    val fileIdBytes = Option(fileId).map(_.getBytes).orNull
+    tox.fileSend(friendNumber, kind, fileSize, fileIdBytes, filename.getBytes)
+  }
 
   def fileSendChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, position, data)
 

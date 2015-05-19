@@ -136,7 +136,7 @@ class ChatActivity extends GenericChatActivity {
                 val fileDialog = new FileDialog(thisActivity, mPath, false)
                 fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                   def fileSelected(file: File) {
-                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
+                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
                   }
                 })
                 fileDialog.showDialog()
@@ -183,7 +183,7 @@ class ChatActivity extends GenericChatActivity {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         } else {
-          thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
@@ -219,7 +219,7 @@ class ChatActivity extends GenericChatActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
+              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, null, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -228,7 +228,7 @@ class ChatActivity extends GenericChatActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          State.transfers.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
+          State.transfers.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, null, this)
           photoPath = null
         }
       }

@@ -4,6 +4,7 @@ package im.tox.antox.data
 import java.util
 
 import android.content.{ContentValues, Context}
+import android.database.DatabaseUtils
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.util.Log
 import im.tox.antox.utils.{Constants, DatabaseUtil}
@@ -85,7 +86,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
 
   def updateUserDetail(username: String, detail: String, newDetail: String) {
     val db = this.getReadableDatabase
-    val query = "UPDATE users SET " + detail + "='" + newDetail + "' WHERE username='" +
+    val query = "UPDATE users SET " + detail + "='" + DatabaseUtils.sqlEscapeString(newDetail) + "' WHERE username='" +
       username +
       "'"
     db.execSQL(query)

@@ -60,7 +60,7 @@ class FileTransferManager {
   }
 
 
-  def sendFileSendRequest(path: String, key: String, fileKind: FileKind, context: Context) {
+  def sendFileSendRequest(path: String, key: String, fileKind: FileKind, fileId: String = null, context: Context) {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
@@ -76,7 +76,7 @@ class FileTransferManager {
         .flatMap(friendNumber => {
         try {
           Log.d(TAG, "Creating tox file sender")
-          val fileNumber = ToxSingleton.tox.fileSend(friendNumber, fileKind.kindId, file.length(), fileName)
+          val fileNumber = ToxSingleton.tox.fileSend(friendNumber, fileKind.kindId, file.length(), fileId, fileName)
           fileNumber match {
             case -1 => None
             case x => Some(x)
@@ -102,7 +102,7 @@ class FileTransferManager {
 
   def sendFileDeleteRequest(key: String, fileKind: FileKind, context: Context): Unit = {
     ToxSingleton.getAntoxFriend(key).foreach(f => {
-      ToxSingleton.tox.fileSend(f.getFriendNumber, AVATAR.kindId, 0, null)
+      ToxSingleton.tox.fileSend(f.getFriendNumber, AVATAR.kindId, 0, null, "")
       if (fileKind == FileKind.AVATAR) {
         onSelfAvatarSendFinished(key, context)
       }
@@ -272,11 +272,12 @@ class FileTransferManager {
 
   def updateSelfAvatar(context: Context): Unit = {
     val db = new AntoxDB(context)
-    db.getFriendList.find(!_.receievedAvatar) match {
+    db.getFriendList.filter(_.online).find(!_.receievedAvatar) match {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
-            sendFileSendRequest(file.getPath, friend.key, AVATAR, context)
+            println(file.length())
+            sendFileSendRequest(file.getPath, friend.key, AVATAR, fileId = ToxSingleton.tox.hash(file).orNull, context = context)
           case None =>
             sendFileDeleteRequest(friend.key, AVATAR, context)
         }

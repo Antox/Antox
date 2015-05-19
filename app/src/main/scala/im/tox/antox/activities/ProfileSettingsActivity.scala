@@ -113,7 +113,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
 
-    if (avatarDialog == null) avatarDialog = new AvatarDialog(ProfileSettingsActivity.this)
+    avatarDialog = new AvatarDialog(ProfileSettingsActivity.this)
   }
 
   def createToxIDDialog() {
