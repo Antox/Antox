@@ -9,22 +9,22 @@ import scala.collection.JavaConversions._
 
 class AntoxFriendList {
 
-  private var friends: util.List[AntoxFriend] = Collections.synchronizedList(new util.ArrayList[AntoxFriend]())
+  private var friends: util.List[Friend] = Collections.synchronizedList(new util.ArrayList[Friend]())
 
-  def this(friends: util.ArrayList[AntoxFriend]) {
+  def this(friends: util.ArrayList[Friend]) {
     this()
     this.friends = friends
   }
 
-  def getByFriendNumber(friendNumber: Int): Option[AntoxFriend] = {
+  def getByFriendNumber(friendNumber: Int): Option[Friend] = {
     friends.find(friend => friend.getFriendNumber == friendNumber)
   }
 
-  def getByKey(key: String): Option[AntoxFriend] = {
+  def getByKey(key: String): Option[Friend] = {
     friends.find(friend => friend.getKey == key)
   }
 
-  def getByName(name: String, ignorecase: Boolean): util.List[AntoxFriend] = {
+  def getByName(name: String, ignorecase: Boolean): util.List[Friend] = {
     if (ignorecase) {
       getByNameIgnoreCase(name)
     } else {
@@ -32,11 +32,11 @@ class AntoxFriendList {
     }
   }
 
-  private def getByNameIgnoreCase(name: String): util.List[AntoxFriend] = {
+  private def getByNameIgnoreCase(name: String): util.List[Friend] = {
     friends.filter(friend => (friend.name == null && name == null) || (name != null && name.equalsIgnoreCase(friend.name)))
   }
 
-  def searchFriend(partial: String): util.List[AntoxFriend] = {
+  def searchFriend(partial: String): util.List[Friend] = {
     val partialLowered = partial.toLowerCase(Locale.getDefault)
     if (partial == null) {
       throw new IllegalArgumentException("Cannot search for null")
@@ -44,33 +44,33 @@ class AntoxFriendList {
     friends.filter(friend => friend.name != null && friend.name.contains(partialLowered))
   }
 
-  def getOnlineFriends: util.List[AntoxFriend] = {
+  def getOnlineFriends: util.List[Friend] = {
     friends.filter(friend => friend.isOnline)
   }
 
-  def getOfflineFriends: util.List[AntoxFriend] = {
+  def getOfflineFriends: util.List[Friend] = {
     friends.filter(friend => !friend.isOnline)
   }
 
-  def all(): util.List[AntoxFriend] = {
-    new util.ArrayList[AntoxFriend](this.friends)
+  def all(): util.List[Friend] = {
+    new util.ArrayList[Friend](this.friends)
   }
 
-  def addFriend(friendnumber: Int): AntoxFriend = {
+  def addFriend(friendnumber: Int): Friend = {
     friends.filter(friend => friend.getFriendNumber == friendnumber).headOption match {
       case Some(f) => throw new Exception()
       case None =>
-        val f = new AntoxFriend(friendnumber)
+        val f = new Friend(friendnumber)
         this.friends.add(f)
         f
     }
   }
 
-  def addFriendIfNotExists(friendnumber: Int): AntoxFriend = {
+  def addFriendIfNotExists(friendnumber: Int): Friend = {
     friends.filter(friend => friend.getFriendNumber == friendnumber).headOption match {
       case Some(f) => f
       case None =>
-        val f = new AntoxFriend(friendnumber)
+        val f = new Friend(friendnumber)
         this.friends.add(f)
         f
     }

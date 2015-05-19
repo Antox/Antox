@@ -2,10 +2,11 @@ package im.tox.antox.activities
 
 import java.util
 
-import android.content.SharedPreferences
+import android.content.{Context, SharedPreferences}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.text.{Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
@@ -81,7 +82,28 @@ abstract class GenericChatActivity extends AppCompatActivity {
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
+    val b = this.findViewById(R.id.sendMessageButton)
+    b.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        onSendMessage()
+        setTyping(typing = false, activeKey)
+      }
+    })
+
     messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
+    messageBox.addTextChangedListener(new TextWatcher() {
+      override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+        val isTyping = after > 0
+        setTyping(isTyping, activeKey)
+      }
+
+      override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+      }
+
+      override def afterTextChanged(editable: Editable) {
+      }
+    })
+
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -169,6 +191,24 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Some(msg)
   }
 
+  private def onSendMessage() {
+    Log.d(TAG, "sendMessage")
+    val mMessage = validateMessageBox()
+
+    mMessage.foreach(rawMessage => {
+      messageBox.setText("")
+      val meMessagePrefix = "/me "
+      val isAction = rawMessage.startsWith(meMessagePrefix)
+      val message =
+        if (isAction) {
+          rawMessage.replaceFirst(meMessagePrefix, "")
+        } else {
+          rawMessage
+        }
+      sendMessage(message, isAction, activeKey, this)
+    })
+  }
+
   def getMessageList: util.ArrayList[Message] = {
     if (antoxDB == null) {
       antoxDB = new AntoxDB(this)
@@ -185,4 +225,9 @@ abstract class GenericChatActivity extends AppCompatActivity {
     messagesSub.unsubscribe()
     progressSub.unsubscribe()
   }
+
+  //Abstract Methods
+  def sendMessage(message: String, isAction: Boolean, activeKey: String,  context: Context): Unit
+
+  def setTyping(typing: Boolean, activeKey: String): Unit
 }

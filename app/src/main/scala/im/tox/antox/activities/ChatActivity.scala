@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
-import android.content.{CursorLoader, DialogInterface, Intent}
+import android.content.{Context, CursorLoader, DialogInterface, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore
@@ -35,59 +35,6 @@ class ChatActivity extends GenericChatActivity {
     val thisActivity = this
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
-
-    isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
-    statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
-
-    messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
-    messageBox.addTextChangedListener(new TextWatcher() {
-      override def beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-        val isTyping = (i3 > 0)
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          if (friend.isOnline) {
-            try {
-              ToxSingleton.tox.setTyping(friend.getFriendNumber, isTyping)
-            } catch {
-              case te: ToxException => {
-              }
-              case e: Exception => {
-              }
-            }
-          }
-        })
-      }
-
-      override def onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-      }
-
-      override def afterTextChanged(editable: Editable) {
-      }
-    })
-
-    messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      override def onFocusChange(v: View, hasFocus: Boolean) {
-        //chatListView.setSelection(adapter.getCount() - 1)
-      }
-    })
-
-    val b = this.findViewById(R.id.sendMessageButton)
-    b.setOnClickListener(new View.OnClickListener() {
-      override def onClick(v: View) {
-        sendMessage()
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          try {
-            ToxSingleton.tox.setTyping(friend.getFriendNumber, typing = false)
-          } catch {
-            case te: ToxException => {
-            }
-            case e: Exception => {
-            }
-          }
-        })
-      }
-    })
 
     val attachmentButton = this.findViewById(R.id.attachmentButton)
 
@@ -193,17 +140,6 @@ class ChatActivity extends GenericChatActivity {
     }
   }
 
-  private def sendMessage() {
-    Log.d(TAG, "sendMessage")
-    val mMessage = validateMessageBox()
-    val key = activeKey
-
-    mMessage.foreach(message => {
-      messageBox.setText("")
-      MessageHelper.sendMessage(this, key, message, None)
-    })
-  }
-
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
     if (resultCode == Activity.RESULT_OK) {
@@ -246,5 +182,23 @@ class ChatActivity extends GenericChatActivity {
 
   override def onPause() = {
     super.onPause()
+  }
+
+  override def sendMessage(message: String, isAction: Boolean, activeKey: String, context: Context): Unit = {
+    MessageHelper.sendMessage(this, activeKey, message, isAction, None)
+  }
+
+  override def setTyping(typing: Boolean, activeKey: String): Unit = {
+    val mFriend = ToxSingleton.getAntoxFriend(activeKey)
+    mFriend.foreach(friend => {
+      try {
+        ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
+      } catch {
+        case te: ToxException => {
+        }
+        case e: Exception => {
+        }
+      }
+    })
   }
 }

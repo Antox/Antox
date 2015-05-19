@@ -58,7 +58,7 @@ object ToxSingleton {
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
-  def getAntoxFriend(key: String): Option[AntoxFriend] = {
+  def getAntoxFriend(key: String): Option[Friend] = {
     try {
       antoxFriendList.getByKey(key)
     } catch {
@@ -69,7 +69,7 @@ object ToxSingleton {
     }
   }
 
-  def getAntoxFriend(friendNumber: Int): Option[AntoxFriend] = {
+  def getAntoxFriend(friendNumber: Int): Option[Friend] = {
     try {
       antoxFriendList.getByFriendNumber(friendNumber)
     } catch {

@@ -278,7 +278,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
       case MessageType.ACTION =>
         actionMessage(holder)
-        holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
+        holder.message.setText(Html.fromHtml("<b>" + msg.sender_name + "</b> ") + msg.message)
 
     }
 
