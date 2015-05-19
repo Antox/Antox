@@ -9,6 +9,7 @@ import android.view.View.OnClickListener
 import android.view.{View, ViewGroup, LayoutInflater}
 import android.widget.Button
 import im.tox.antox.activities.Settings
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{ConnectionTypeChangeListener, ConnectionManager}
 import im.tox.antoxnightly.R
 
@@ -57,12 +58,7 @@ class WifiWarningFragment extends Fragment {
   }
 
   def updateWifiWarning(): Unit = {
-    val wifiOnly = preferences.getBoolean("wifi_only", true)
-    val mWifi = getActivity.getSystemService(Context.CONNECTIVITY_SERVICE)
-      .asInstanceOf[ConnectivityManager]
-      .getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-
-    if (wifiOnly && !mWifi.isConnected) {
+    if (!ToxSingleton.isToxConnected(preferences, getActivity)) {
       showWifiWarning()
     } else {
       hideWifiWarning()

@@ -88,10 +88,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
       this.startService(service)
     }
     if (key == "wifi_only") {
-      val connManager = this.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-      val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-      val wifiOnly = sharedPreferences.getBoolean("wifi_only", true)
-      if (wifiOnly && !mWifi.isConnected) {
+      if (!ToxSingleton.isToxConnected(sharedPreferences, this)) {
         val antoxDB = new AntoxDB(this)
         antoxDB.setAllOffline()
         antoxDB.close()

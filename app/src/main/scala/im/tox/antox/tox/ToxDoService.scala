@@ -20,17 +20,14 @@ class ToxDoService extends Service() {
       Log.d("ToxDoService", "Initting ToxSingleton")
     }
     keepRunning = true
+    val thisService = this
     val start = new Runnable() {
 
       override def run() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext)
         while (keepRunning) {
-          val connManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-          val wifiOnly = preferences.getBoolean("wifi_only", true)
-          val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-          val connected = !(wifiOnly && !mWifi.isConnected)
 
-          if (!connected) {
+          if (!ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
               Thread.sleep(10000)
             } catch {

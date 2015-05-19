@@ -6,7 +6,7 @@ import java.nio.charset.Charset
 import java.util
 
 import android.app.NotificationManager
-import android.content.Context
+import android.content.{SharedPreferences, Context}
 import android.net.ConnectivityManager
 import android.os.Environment
 import android.preference.PreferenceManager
@@ -274,6 +274,14 @@ object ToxSingleton {
                 Log.e(TAG, "Failed bootstrapping " + error)
               })
     }
+  }
+
+  def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {
+    val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
+    val wifiOnly = preferences.getBoolean("wifi_only", true)
+    val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+
+    !(wifiOnly && !mWifi.isConnected)
   }
 
   def populateAntoxLists(db: AntoxDB): Unit = {
