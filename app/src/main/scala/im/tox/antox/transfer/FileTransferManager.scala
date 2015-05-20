@@ -218,11 +218,12 @@ class FileTransferManager {
         if (t.fileKind == FileKind.AVATAR) {
           if (t.sending) {
             onSelfAvatarSendFinished(key, context)
+          } else {
+            mFriend.get.setAvatar(Some(t.file))
+            val db = new AntoxDB(context)
+            db.updateFriendAvatar(key, t.file.getName)
+            db.close()
           }
-          mFriend.get.setAvatar(Some(t.file))
-          val db = new AntoxDB(context)
-          db.updateFriendAvatar(key, t.file.getName)
-          db.close()
         }
         Reactive.updatedMessages.onNext(true)
         ToxSingleton.updateFriendsList(context)

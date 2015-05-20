@@ -43,6 +43,7 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
       val storedFileId = ToxSingleton.tox.hash(AVATAR.getAvatarFile(name, ctx).orNull).orNull
       if (fileId.equals(storedFileId)) {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
+        return
       }
     }
 
