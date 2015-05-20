@@ -27,7 +27,7 @@
     <string name="pref_default_status_message">Hey! I\'m using Antox</string>
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - You should not see this</string>
-    <string name="pref_title_logging_enabled">Keep Logs on Logout</string>
+    <string name="pref_title_logging_enabled">Keep Chat History on Logout</string>
     <string name="pref_title_avatar">Avatar</string>
     <string name="pref_title_account_name">Profile Name</string>
     <string name="pref_title_export">Export Profile</string>
