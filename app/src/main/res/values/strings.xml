@@ -89,7 +89,7 @@
     <string name="friend_profile_updated">The profile has been updated</string>
     <string name="friend_profile_copied">Tox ID Copied</string>
 
-    <!-- Friend Profile Activity -->
+    <!-- Group Profile Activity -->
     <string name="group_profile_peer_list_head">Participants</string>
 
     <!-- Friend request fragment -->
