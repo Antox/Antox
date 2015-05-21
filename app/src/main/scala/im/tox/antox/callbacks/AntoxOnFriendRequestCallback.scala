@@ -25,7 +25,7 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendReque
 
   override def friendRequest(key: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
-    if (!db.isFriendBlocked(Hex.bytesToHexString(key))){
+    if (!db.isContactBlocked(Hex.bytesToHexString(key))){
       db.addFriendRequest(Hex.bytesToHexString(key), new String(message, "UTF-8"))
     }
     db.close()

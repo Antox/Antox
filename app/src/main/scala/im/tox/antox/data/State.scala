@@ -37,7 +37,7 @@ object State {
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
     if (!preferences.getBoolean("logging_enabled", true)) {
       val db = new AntoxDB(activity)
-      ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChat(f.key))
+      ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
     }
 
     val editor = preferences.edit()

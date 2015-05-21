@@ -10,7 +10,7 @@ class AntoxOnGroupTopicChangeCallback(private var ctx: Context) /* extends Group
     group.topic = new String(topic, "UTF-8")
 
     val db = new AntoxDB(ctx)
-    db.updateGroupTopic(group.id, group.topic)
+    db.updateContactStatusMessage(group.id, group.topic)
     db.close()
     ToxSingleton.updateGroupList(ctx)
   }

@@ -76,7 +76,7 @@ class AddGroupFragment extends Fragment with InputableID {
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = new AntoxDB(getActivity.getApplicationContext)
-        if (!db.doesGroupExist(groupId)) {
+        if (!db.doesContactExist(groupId)) {
           try {
             ToxSingleton.tox.joinGroup(groupId)
             println("joined group : " + groupId)

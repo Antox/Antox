@@ -19,7 +19,7 @@ class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatu
     ToxSingleton.getAntoxFriend(friendNumber).get.setStatusMessage(statusMessage)
 
     val db = new AntoxDB(ctx)
-    db.updateStatusMessage(ToxSingleton.tox.getFriendKey(friendNumber), statusMessage)
+    db.updateContactStatusMessage(ToxSingleton.tox.getFriendKey(friendNumber), statusMessage)
     db.close()
     ToxSingleton.updateFriendsList(ctx)
   }

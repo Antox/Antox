@@ -22,10 +22,10 @@ object MessageHelper {
 
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, message: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
-    val friendName = db.getFriendNameOrAlias(friendKey)
+    val friendName = db.getContactNameOrAlias(friendKey)
 
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
-    if (!db.isFriendBlocked(friendKey)) {
+    if (!db.isContactBlocked(friendKey)) {
       val chatActive = State.chatActive && State.activeKey.contains(friendKey)
       db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
         has_been_read = chatActive, successfully_sent = true, messageType)

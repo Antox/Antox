@@ -12,6 +12,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.ContactType.ContactType
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antox.wrapper._
@@ -24,7 +25,7 @@ object AntoxDB {
   private class DatabaseHelper(context: Context, activeDatabase: String) extends SQLiteOpenHelper(context,
     activeDatabase, null, Constants.DATABASE_VERSION) {
 
-    var CREATE_TABLE_FRIENDS: String = "CREATE TABLE IF NOT EXISTS friends" + " (tox_key text primary key, " +
+    var CREATE_TABLE_CONTACTS: String = "CREATE TABLE IF NOT EXISTS contacts" + " (tox_key text primary key, " +
       "username text, " +
       "status text, " +
       "note text, " +
@@ -32,15 +33,9 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean, " +
       "avatar text, " +
-      "received_avatar boolean);"
-
-    var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
-      "name text, " +
-      "topic text, " +
-      "alias text, " +
-      "isconnected boolean, " +
+      "received_avatar boolean," +
       "ignored boolean, " +
-      "isblocked boolean);"
+      "contact_type int);"
 
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
@@ -54,7 +49,7 @@ object AntoxDB {
       "size integer, " +
       "type int, " +
       "file_kind int, " + //-1 if not a file transfer
-      "FOREIGN KEY(tox_key) REFERENCES friends(tox_key))"
+      "FOREIGN KEY(tox_key) REFERENCES contacts(tox_key))"
 
     var CREATE_TABLE_FRIEND_REQUESTS: String = "CREATE TABLE IF NOT EXISTS friend_requests" + " ( _id integer primary key, " +
       "tox_key text, " +
@@ -66,23 +61,21 @@ object AntoxDB {
       "group_data BLOB)"
 
     def onCreate(mDb: SQLiteDatabase) {
-      mDb.execSQL(CREATE_TABLE_FRIENDS)
-      mDb.execSQL(CREATE_TABLE_GROUP)
+      mDb.execSQL(CREATE_TABLE_CONTACTS)
       mDb.execSQL(CREATE_TABLE_FRIEND_REQUESTS)
       mDb.execSQL(CREATE_TABLE_GROUP_INVITES)
       mDb.execSQL(CREATE_TABLE_MESSAGES)
     }
 
     override def onUpgrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_GROUPS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CONTACTS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
       onCreate(mDb)
     }
 
     override def onDowngrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIENDS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CONTACTS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
       mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
     }
@@ -99,8 +92,7 @@ class AntoxDB(ctx: Context) {
 
   private val activeDatabase: String = preferences.getString("active_account", "")
 
-  //TODO: should be private? ask astonex.
-  def open(writeable: Boolean): AntoxDB = {
+  private def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
     mDb = if (writeable) mDbHelper.getWritableDatabase else mDbHelper.getReadableDatabase
     this
@@ -110,10 +102,12 @@ class AntoxDB(ctx: Context) {
     mDbHelper.close()
   }
 
-  def addFriend(key: String,
+
+  def addContact(key: String,
     statusMessage: String,
     alias: String,
-    username: String) {
+    username: String,
+    contactType: ContactType) {
     this.open(writeable = true)
     val parsedUsername = if (username.contains("@")) {
       username.substring(0, username.indexOf("@"))
@@ -122,6 +116,7 @@ class AntoxDB(ctx: Context) {
     } else {
       username
     }
+
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key)
     values.put(Constants.COLUMN_NAME_STATUS, "0")
@@ -132,21 +127,18 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
     values.put(Constants.COLUMN_NAME_AVATAR, key)
     values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, false)
-    mDb.insert(Constants.TABLE_FRIENDS, null, values)
+    values.put(Constants.COLUMN_NAME_IGNORED, false)
+    values.put(Constants.COLUMN_NAME_CONTACT_TYPE, contactType.id: java.lang.Integer)
+    mDb.insert(Constants.TABLE_CONTACTS, null, values)
     this.close()
   }
 
+  def addFriend(key: String, name: String, statusMessage: String, alias: String): Unit = {
+    addContact(key, statusMessage, alias, name, ContactType.FRIEND)
+  }
+
   def addGroup(key: String, name: String, topic: String): Unit = {
-    this.open(writeable = true)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_KEY, key)
-    values.put(Constants.COLUMN_NAME_NAME, name)
-    values.put(Constants.COLUMN_NAME_TOPIC, topic)
-    values.put(Constants.COLUMN_NAME_ALIAS, "")
-    values.put(Constants.COLUMN_NAME_IGNORED, false)
-    values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
-    mDb.insert(Constants.TABLE_GROUPS, null, values)
-    this.close()
+    addContact(key, topic, "", name, ContactType.GROUP)
   }
 
   def addFileTransfer(key: String,
@@ -232,23 +224,19 @@ class AntoxDB(ctx: Context) {
   def getUnreadCounts: Map[String, Integer] = {
     this.open(writeable = false)
     val map = scala.collection.mutable.Map.empty[String, Integer]
-    val selectQuery = "SELECT friends.tox_key, COUNT(messages._id) " + "FROM messages " +
-      "JOIN friends ON friends.tox_key = messages.tox_key " +
+    val selectQuery = "SELECT contacts.tox_key, COUNT(messages._id) " + "FROM messages " +
+      "JOIN contacts ON contacts.tox_key = messages.tox_key " +
       "WHERE messages.has_been_read == 0 " +
       "AND (messages.type == " + MessageType.FRIEND.id +
+      " OR messages.type == " + MessageType.ACTION.id +
+      " OR messages.type == " + MessageType.GROUP_PEER.id +
+      " OR messages.type == " + MessageType.GROUP_ACTION.id +
       " OR messages.type == " + MessageType.FILE_TRANSFER_FRIEND.id + ") " +
       "AND (messages.file_kind == " + FileKind.INVALID.kindId +
       " OR messages.file_kind == " + FileKind.DATA.kindId + ") " +
-      "GROUP BY friends.tox_key"
+      "GROUP BY contacts.tox_key"
 
-    //TODO: fix this when I understand sql
-    val groupQuery = "SELECT groups.tox_key, COUNT(messages._id) " + "FROM messages " +
-      "JOIN groups ON groups.tox_key = messages.tox_key " +
-      "WHERE messages.has_been_read == 0 " +
-      "AND (messages.type == " + MessageType.GROUP_PEER.id + ")" +
-      "GROUP BY groups.tox_key"
     val cursor = mDb.rawQuery(selectQuery, null)
-    val groupCursor = mDb.rawQuery(groupQuery, null)
     if (cursor.moveToFirst()) {
       do {
         val key = cursor.getString(0)
@@ -257,16 +245,7 @@ class AntoxDB(ctx: Context) {
       } while (cursor.moveToNext())
     }
 
-    if (groupCursor.moveToFirst()) {
-      do {
-        val key = groupCursor.getString(0)
-        val count = groupCursor.getInt(1).intValue
-        map.put(key, count)
-      } while (groupCursor.moveToNext())
-    }
-
     cursor.close()
-    groupCursor.close()
     this.close()
     map.toMap
   }
@@ -609,7 +588,8 @@ class AntoxDB(ctx: Context) {
   def getFriendList: Array[FriendInfo] = {
     this.open(writeable = false)
     val friendList = new ArrayBuffer[FriendInfo]()
-    val selectQuery = "SELECT  * FROM " + Constants.TABLE_FRIENDS
+    val selectQuery = "SELECT  * FROM " + Constants.TABLE_CONTACTS +
+      " WHERE " + Constants.COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.FRIEND.id
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
       do {
@@ -632,22 +612,28 @@ class AntoxDB(ctx: Context) {
     this.close()
     friendList.toArray
   }
-  
+
   def getGroupList: Array[GroupInfo] = {
     this.open(writeable = false)
     val groupList = new ArrayBuffer[GroupInfo]()
-    val selectQuery = "SELECT  * FROM " + Constants.TABLE_GROUPS
+    val selectQuery = "SELECT  * FROM " + Constants.TABLE_CONTACTS +
+      " WHERE " + Constants.COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.GROUP.id
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
       do {
+        var name = cursor.getString(1)
         val key = cursor.getString(0)
-        val name = cursor.getString(1)
-        val topic = cursor.getString(2)
-        val alias = cursor.getString(3)
-        val isConnected = cursor.getInt(4) != 0
-        val ignored = cursor.getInt(5) > 0
+        val status = cursor.getString(2)
+        val topic = cursor.getString(3)
+        var alias = cursor.getString(4)
+        val connected = cursor.getInt(5) != 0
         val isBlocked = cursor.getInt(6) > 0
-        groupList += new GroupInfo(key, isConnected, name, topic, alias)
+        val avatar = cursor.getString(7)
+        val receievedAvatar = cursor.getInt(8) > 0
+        if (alias == null) alias = ""
+        if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
+        val file = AVATAR.getAvatarFile(avatar, ctx)
+        if (!isBlocked) groupList += new GroupInfo(key, connected, name, topic, alias)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -655,9 +641,9 @@ class AntoxDB(ctx: Context) {
     groupList.toArray
   }
 
-  private def doesExist(key: String, tableName: String): Boolean = {
+  def doesContactExist(key: String): Boolean = {
     this.open(writeable = false)
-    val mCount = mDb.rawQuery("SELECT count(*) FROM " + tableName + " WHERE " +
+    val mCount = mDb.rawQuery("SELECT count(*) FROM " + Constants.TABLE_CONTACTS + " WHERE " +
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +
@@ -674,22 +660,12 @@ class AntoxDB(ctx: Context) {
     false
   }
 
-  def doesFriendExist(key: String): Boolean = {
-    doesExist(key, Constants.TABLE_FRIENDS)
-  }
-
-  def doesGroupExist(key: String): Boolean = {
-    doesExist(key, Constants.TABLE_GROUPS)
-  }
-
   def setAllOffline() {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_ISONLINE, "0")
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null)
+    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null)
     values.clear()
-    values.put(Constants.COLUMN_NAME_ISCONNECTED, "0")
-    mDb.update(Constants.TABLE_GROUPS, values, Constants.COLUMN_NAME_ISCONNECTED + "='1'", null)
     this.close()
   }
 
@@ -699,10 +675,10 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def deleteFriend(key: String): Unit = deleteWithKey(key, Constants.TABLE_FRIENDS)
+  def deleteContact(key: String): Unit = deleteWithKey(key, Constants.TABLE_CONTACTS)
   def deleteFriendRequest(key: String): Unit = deleteWithKey(key, Constants.TABLE_FRIEND_REQUESTS)
-  def deleteGroup(key: String): Unit = deleteWithKey(key, Constants.TABLE_GROUPS)
   def deleteGroupInvite(key: String): Unit = deleteWithKey(key, Constants.TABLE_GROUP_INVITES)
+  def deleteChatLogs(key: String): Unit = deleteWithKey(key, Constants.TABLE_CHAT_LOGS)
 
   def getFriendRequestMessage(key: String): String = {
     this.open(writeable = false)
@@ -720,9 +696,6 @@ class AntoxDB(ctx: Context) {
     message
   }
 
-  def deleteChat(key: String) {
-    deleteWithKey(key, Constants.TABLE_CHAT_LOGS)
-  }
 
   def updateColumnWithKey(table: String, key: String, columnName: String, value: String): Unit = {
     this.open(writeable = false)
@@ -740,33 +713,23 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def updateFriendName(key: String, newName: String) =
-    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_USERNAME, newName)
+  def updateContactName(key: String, newName: String) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_USERNAME, newName)
 
-  def updateGroupName(key: String, newName: String) =
-    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_NAME, newName)
+  def updateContactStatusMessage(key: String, newMessage: String) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_NOTE, newMessage)
 
-  def updateStatusMessage(key: String, newMessage: String) =
-    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_NOTE, newMessage)
+  def updateContactStatus(key: String, status: ToxStatus) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
 
-  def updateGroupTopic(key: String, newTopic: String) =
-    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_TOPIC, newTopic)
-
-  def updateUserStatus(key: String, status: ToxStatus) =
-    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
-
-  def updateUserOnline(key: String, online: Boolean) =
-    updateColumnWithKey(Constants.TABLE_FRIENDS, key, Constants.COLUMN_NAME_ISONLINE, online)
-
-  def updateGroupConnected(key: String, connected: Boolean) =
-    updateColumnWithKey(Constants.TABLE_GROUPS, key, Constants.COLUMN_NAME_ISCONNECTED, connected)
-
+  def updateContactOnline(key: String, online: Boolean) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_ISONLINE, online)
 
   def updateFriendAvatar(key: String, avatar: String) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_AVATAR, avatar)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
@@ -774,7 +737,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
-    mDb.update(Constants.TABLE_FRIENDS, values, null, null)
+    mDb.update(Constants.TABLE_CONTACTS, values, null, null)
     this.close()
   }
 
@@ -782,14 +745,14 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
     this.close()
   }
 
-  def getFriendDetails(key: String): Array[String] = {
+  def getContactDetails(key: String): Array[String] = {
     var details = Array[String](null, null, null)
     this.open(writeable = false)
-    val selectQuery = "SELECT * FROM " + Constants.TABLE_FRIENDS + " WHERE " +
+    val selectQuery = "SELECT * FROM " + Constants.TABLE_CONTACTS + " WHERE " +
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +
@@ -810,65 +773,35 @@ class AntoxDB(ctx: Context) {
     details
   }
 
-  def getFriendNameOrAlias(key: String): String = {
-    val friendDetails = getFriendDetails(key)
-    if (friendDetails(1) == "") friendDetails(0) else friendDetails(1)
+  def getContactNameOrAlias(key: String): String = {
+    val contactDetails = getContactDetails(key)
+    if (contactDetails(1) == "") contactDetails(0) else contactDetails(1)
   }
 
-  def getGroupDetails(key: String): (String, String, String) = {
-    var name: String = null
-    var alias: String = null
-    var topic: String = null
-    this.open(writeable = false)
-    val selectQuery = "SELECT * FROM " + Constants.TABLE_GROUPS + " WHERE " +
-      Constants.COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "'"
-    val cursor = mDb.rawQuery(selectQuery, null)
-    if (cursor.moveToFirst()) {
-      do {
-        name = cursor.getString(1)
-        alias = cursor.getString(3)
-        topic = cursor.getString(2)
-        if (name == null) name = ""
-        if (name == "") name = UIUtils.trimIDForDisplay(key)
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    this.close()
-    (name, alias, topic)
-  }
-
-  def getGroupNameOrAlias(key: String): String = {
-    val groupDetails = getGroupDetails(key)
-    if (groupDetails._2 == "") groupDetails._1 else groupDetails._2
-  }
-
-  def getFriendStatusMessage(key: String): String = {
+  def getContactStatusMessage(key: String): String = {
     this.open(writeable = true)
 
     val query =
       "SELECT " + Constants.COLUMN_NAME_NOTE +
-      " FROM " + Constants.TABLE_FRIENDS +
+      " FROM " + Constants.TABLE_CONTACTS +
       " WHERE " + Constants.COLUMN_NAME_KEY +
       " = '" + key + "'"
 
-    var friendNote = ""
+    var statusMessage = ""
     val cursor = mDb.rawQuery(query, null)
     if (cursor.moveToFirst()) {
-      friendNote = cursor.getString(0)
+      statusMessage = cursor.getString(0)
     }
     cursor.close()
 
     this.close()
 
-    friendNote
+    statusMessage
   }
 
   def updateAlias(alias: String, key: String) {
     this.open(writeable = true)
-    val query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ALIAS +
+    val query = "UPDATE " + Constants.TABLE_CONTACTS + " SET " + Constants.COLUMN_NAME_ALIAS +
       "='" +
       alias +
       "' WHERE " +
@@ -880,10 +813,10 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def isFriendBlocked(key: String): Boolean = {
+  def isContactBlocked(key: String): Boolean = {
     var isBlocked = false
     this.open(writeable = false)
-    val selectQuery = "SELECT isBlocked FROM " + Constants.TABLE_FRIENDS + " WHERE " +
+    val selectQuery = "SELECT isBlocked FROM " + Constants.TABLE_CONTACTS + " WHERE " +
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +

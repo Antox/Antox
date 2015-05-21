@@ -53,7 +53,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
     val db = new AntoxDB(ctx)
     val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
-    db.updateUserOnline(friendKey, online)
+    db.updateContactOnline(friendKey, online)
     ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
 
     if (online) {

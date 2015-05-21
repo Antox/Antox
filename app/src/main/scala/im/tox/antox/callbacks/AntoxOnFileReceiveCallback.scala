@@ -26,7 +26,7 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
       }
 
     if (kind == FileKind.AVATAR) {
-      if (fileSize > Constants.MAX_AVATAR_SIZE) {
+      if (fileSize > Constants.MAX_AVATAR_SIZE){
         return
       } else if (fileSize == 0) {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)

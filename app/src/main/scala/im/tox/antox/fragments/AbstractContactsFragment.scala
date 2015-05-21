@@ -175,8 +175,8 @@ abstract class AbstractContactsFragment extends Fragment {
           if (key != "") index match {
             case 0 =>
               val db = new AntoxDB(getActivity)
-              db.deleteChat(key)
-              db.deleteGroup(key)
+              db.deleteChatLogs(key)
+              db.deleteContact(key)
               db.close()
               val group = ToxSingleton.getGroupList.getGroup(key)
               try {
@@ -211,8 +211,8 @@ abstract class AbstractContactsFragment extends Fragment {
       def onClick(dialog: DialogInterface, id: Int) {
         Observable[Boolean](subscriber => {
           val db = new AntoxDB(getActivity)
-          if (deleteLogsCheckboxView.isChecked) db.deleteChat(key)
-          db.deleteFriend(key)
+          if (deleteLogsCheckboxView.isChecked) db.deleteChatLogs(key)
+          db.deleteContact(key)
           db.close()
           val mFriend = ToxSingleton.getAntoxFriend(key)
           mFriend.foreach(friend => {
@@ -276,7 +276,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
         def onClick(dialog: DialogInterface, id: Int) {
           val db = new AntoxDB(getActivity)
-          db.deleteChat(key)
+          db.deleteChatLogs(key)
           db.close()
           ToxSingleton.updateMessages(getActivity)
         }

@@ -149,7 +149,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       override def onClick(view: View) {
         Log.d("OnClick", "Accepting Friend: " + clientId)
         val db = new AntoxDB(context)
-        db.addFriend(clientId, "Friend Accepted", "", "")
+        db.addFriend(clientId, "", "Friend Accepted", "")
         db.deleteFriendRequest(clientId)
         db.close()
         try {

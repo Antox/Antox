@@ -18,13 +18,11 @@ object Constants {
 
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 10
+  val DATABASE_VERSION = 11
 
   val USER_DATABASE_VERSION = 4
 
-  val TABLE_FRIENDS = "friends"
-
-  val TABLE_GROUPS = "groups"
+  val TABLE_CONTACTS = "contacts"
 
   val TABLE_CHAT_LOGS = "messages"
 
@@ -43,8 +41,6 @@ object Constants {
   val COLUMN_NAME_MESSAGE = "message"
 
   val COLUMN_NAME_NAME = "name"
-
-  val COLUMN_NAME_TOPIC = "topic"
 
   val COLUMN_NAME_USERNAME = "username"
 
@@ -66,8 +62,6 @@ object Constants {
 
   val COLUMN_NAME_ISONLINE = "isonline"
 
-  val COLUMN_NAME_ISCONNECTED = "isconnected"
-
   val COLUMN_NAME_ALIAS = "alias"
 
   val COLUMN_NAME_IGNORED = "ignored"
@@ -75,6 +69,8 @@ object Constants {
   val COLUMN_NAME_ISBLOCKED = "isblocked"
 
   val COLUMN_NAME_AVATAR = "avatar"
+
+  val COLUMN_NAME_CONTACT_TYPE = "contact_type"
 
   val COLUMN_NAME_RECEIVED_AVATAR = "received_avatar"
 

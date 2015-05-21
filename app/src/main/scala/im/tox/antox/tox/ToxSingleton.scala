@@ -294,13 +294,13 @@ object ToxSingleton {
 
     for (i <- tox.getGroupList) {
       val groupId = tox.getGroupChatId(i)
-      val details = db.getGroupDetails(groupId)
-      groupList.addGroupIfNotExists(new Group(groupId, i, details._1, details._2, details._3, new PeerList()))
+      val details = db.getContactDetails(groupId)
+      groupList.addGroupIfNotExists(new Group(groupId, i, details(1), details(2), details(3), new PeerList()))
     }
   }
 
   def initTox(ctx: Context) {
-    State.db = new AntoxDB(ctx).open(writeable = true)
+    State.db = new AntoxDB(ctx)
     antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
@@ -332,7 +332,7 @@ object ToxSingleton {
 
       //toxAv = new ToxAvImpl(tox.getTox)
 
-      val db = new AntoxDB(ctx).open(writeable = true)
+      val db = new AntoxDB(ctx)
       db.setAllOffline()
 
       val friends = db.getFriendList
@@ -340,14 +340,14 @@ object ToxSingleton {
 
       for (friendNumber <- tox.getFriendList) {
         val friendKey = tox.getFriendKey(friendNumber)
-        if (!db.doesFriendExist(friendKey)) {
+        if (!db.doesContactExist(friendKey)) {
           db.addFriend(friendKey, "", "", "")
         }
       }
 
       for (groupNumber <- tox.getGroupList) {
         val groupId = tox.getGroupChatId(groupNumber)
-        if (!db.doesGroupExist(groupId)) {
+        if (!db.doesContactExist(groupId)) {
           db.addGroup(groupId, "", "")
         }
       }

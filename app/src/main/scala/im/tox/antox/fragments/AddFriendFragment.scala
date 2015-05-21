@@ -101,7 +101,7 @@ class AddFriendFragment extends Fragment with InputableID {
         if (message == "") message = getString(R.string.addfriend_default_message)
 
         val db = new AntoxDB(getActivity.getApplicationContext)
-        if (!db.doesFriendExist(key)) {
+        if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.addFriend(address, message)
             ToxSingleton.save()
@@ -109,7 +109,7 @@ class AddFriendFragment extends Fragment with InputableID {
             case e: ToxException[_]  => e.printStackTrace()
           }
           Log.d("AddFriendActivity", "Adding friend to database")
-          db.addFriend(key, "Friend Request Sent", alias, originalUsername)
+          db.addFriend(key, originalUsername, "Friend Request Sent", alias)
         } else {
           db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)

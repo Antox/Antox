@@ -29,7 +29,7 @@ class FriendProfileActivity extends AppCompatActivity {
 
     friendKey = getIntent.getStringExtra("key")
     val db = new AntoxDB(this)
-    val friendNote = db.getFriendStatusMessage(friendKey)
+    val friendNote = db.getContactStatusMessage(friendKey)
 
     setTitle(getResources.getString(R.string.friend_profile_title, getIntent.getStringExtra("name")))
 
