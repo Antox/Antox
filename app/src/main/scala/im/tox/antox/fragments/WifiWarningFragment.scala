@@ -58,6 +58,8 @@ class WifiWarningFragment extends Fragment {
   }
 
   def updateWifiWarning(): Unit = {
+    if(getActivity == null) return
+
     if (!ToxSingleton.isToxConnected(preferences, getActivity)) {
       showWifiWarning()
     } else {

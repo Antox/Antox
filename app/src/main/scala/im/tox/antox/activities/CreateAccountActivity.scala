@@ -139,14 +139,15 @@ class CreateAccountActivity extends AppCompatActivity {
           toxData = loadToxData(accountName)
         }
 
-        var successful = false
-        var accountPassword: Option[String] = None
+        var successful = true
+        var accountPassword: String = ""
         if (shouldRegister) {
           // Register on toxme.se
           val registerResult = ToxDNS.registerAccount(accountName, toxData)
 
           val toastMessage = registerResult match {
             case Left(error) =>
+              successful = false
               error match {
                 case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
                 case RegError.INTERNAL => getString(R.string.create_account_internal_error)
@@ -155,25 +156,22 @@ class CreateAccountActivity extends AppCompatActivity {
               }
             case Right(password) =>
               successful = true
-              accountPassword = Some(password)
+              accountPassword = password
               null
           }
 
-          if (successful) {
-            db.addUser(accountName, "")
-            db.updateUserDetail(accountName, "password", accountPassword.get)
-
-            saveAccountAndStartMain(accountName, accountPassword.get, toxData.ID)
-          } else {
-            if (toastMessage != null) {
-              val context = getApplicationContext
-              val duration = Toast.LENGTH_SHORT
-              Toast.makeText(context, toastMessage, duration).show()
-            }
+          if (toastMessage != null) {
+            val context = getApplicationContext
+            val duration = Toast.LENGTH_SHORT
+            Toast.makeText(context, toastMessage, duration).show()
           }
+        }
 
-        } else {
-          saveAccountAndStartMain(accountName, "", toxData.ID)
+        if (successful) {
+          db.addUser(accountName, "")
+          db.updateUserDetail(accountName, "password", accountPassword)
+
+          saveAccountAndStartMain(accountName, accountPassword, toxData.ID)
         }
       }
     } finally {

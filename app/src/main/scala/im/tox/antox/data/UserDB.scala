@@ -19,7 +19,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
     "status text," +
     "status_message text," +
     "avatar text," +
-    "logging_enabled integer);"
+    "logging_enabled boolean);"
 
   override def onCreate(db: SQLiteDatabase) {
     db.execSQL(CREATE_TABLE_USERS)
@@ -50,6 +50,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
     values.put("status", "online")
     values.put("status_message", "Hey! I'm using Antox")
     values.put("avatar", "")
+    values.put("logging_enabled", true)
     db.insert("users", null, values)
     db.close()
   }
@@ -122,6 +123,7 @@ class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constan
         profiles.add(cursor.getString(0))
       } while (cursor.moveToNext())
     }
+    cursor.close()
     profiles
   }
 }
