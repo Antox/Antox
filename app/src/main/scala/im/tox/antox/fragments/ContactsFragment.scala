@@ -73,7 +73,6 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
   }
 
   def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Array[GroupInfo]): Unit = {
-    println("update group list " + groups.length)
     if (groups.length > 0) {
       leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {

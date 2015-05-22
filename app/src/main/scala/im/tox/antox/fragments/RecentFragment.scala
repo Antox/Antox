@@ -45,7 +45,6 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
       }
     } else {
       getView.findViewById(R.id.center_text).setVisibility(View.VISIBLE)
-      println("centertext visible ")
     }
   }
 
