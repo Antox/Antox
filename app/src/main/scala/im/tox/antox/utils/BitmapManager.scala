@@ -15,7 +15,7 @@ object BitmapManager {
 
   private def getBitmapFromMemCache(key: String): Option[Bitmap] = if (mMemoryCache != null) Option(mMemoryCache.get(key)) else None
 
-  private def isBitmapValid(key: String): Option[Boolean] = Option(bitmapValidMap.get(key))
+  private def isBitmapValid(key: String): Boolean = Option(bitmapValidMap.get(key)).getOrElse(false)
 
   private def addBitmapToMemoryCache(key: String, valid: Boolean, bitmap: Bitmap) {
     if (getBitmapFromMemCache(key).isEmpty && mMemoryCache != null) {
@@ -77,7 +77,7 @@ object BitmapManager {
     val imageKey = String.valueOf(id)
     getBitmapFromMemCache(imageKey) match {
       case Some(bitmap) =>
-        if (isBitmapValid(imageKey).get) {
+        if (isBitmapValid(imageKey)) {
           imageView.setImageBitmap(bitmap)
         }
       case None =>
@@ -95,7 +95,7 @@ object BitmapManager {
           options.inPreferredConfig = Bitmap.Config.RGB_565
           bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
           addBitmapToMemoryCache(imageKey, checkValidImage(byteArr), bitmap)
-          if (isBitmapValid(imageKey).get) {
+          if (isBitmapValid(imageKey)) {
             imageView.setImageBitmap(bitmap)
           }
         } catch {

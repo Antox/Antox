@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
-import android.content.{Context, CursorLoader, DialogInterface, Intent}
+import android.content.{Context, DialogInterface, Intent}
+import android.support.v4.content.CursorLoader
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore

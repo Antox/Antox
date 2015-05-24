@@ -99,6 +99,7 @@ class AntoxDB(ctx: Context) {
 
   private val activeDatabase: String = preferences.getString("active_account", "")
 
+  //TODO: should be private? ask astonex.
   def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
     mDb = if (writeable) mDbHelper.getWritableDatabase else mDbHelper.getReadableDatabase

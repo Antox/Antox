@@ -18,7 +18,7 @@ import scala.collection.JavaConverters._
 
 object MessageHelper {
 
-  val TAG = "im.tox.antox.tox.MessageHandler"
+  val TAG = "im.tox.antox.tox.MessageHelper"
 
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, message: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
@@ -101,7 +101,7 @@ object MessageHelper {
       mFriend match {
         case None =>
         case Some(friend) =>
-          val db = new AntoxDB(ctx).open(writeable = true)
+          val db = new AntoxDB(ctx)
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
               Some(
@@ -132,7 +132,7 @@ object MessageHelper {
 
   def sendGroupMessage(ctx: Context, key: String, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
     val group = ToxSingleton.getGroup(key)
-    val db = new AntoxDB(ctx).open(writeable = true)
+    val db = new AntoxDB(ctx)
     val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN
     for (splitMsg <- splitMessage(msg)) {
       try {
@@ -182,7 +182,7 @@ object MessageHelper {
   }
 
   def sendUnsentMessages(ctx: Context) {
-    val db = new AntoxDB(ctx).open(writeable = false)
+    val db = new AntoxDB(ctx)
     val unsentMessageList = db.getUnsentMessageList
     db.close()
     for (unsentMessage <- unsentMessageList) {

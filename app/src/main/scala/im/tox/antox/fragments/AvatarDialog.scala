@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Dialog, Activity}
-import android.content.{Context, CursorLoader, Intent}
+import android.content.{Context, Intent}
 import android.graphics.{BitmapFactory, Bitmap}
 import android.media.ThumbnailUtils
 import android.net.Uri
@@ -13,7 +13,7 @@ import android.os.{Bundle, Environment}
 import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.FileProvider
+import android.support.v4.content.{CursorLoader, FileProvider}
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
