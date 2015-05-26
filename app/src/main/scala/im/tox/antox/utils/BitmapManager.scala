@@ -7,6 +7,7 @@ import android.graphics.{Bitmap, BitmapFactory}
 import android.util.{Log, LruCache}
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
+import im.tox.antox.wrapper.BitmapUtils.RichBitmap
 
 object BitmapManager {
 
@@ -115,6 +116,7 @@ class BitmapManager {
 
   mMemoryCache = new LruCache[String, Bitmap](cacheSize) {
 
-    protected override def sizeOf(key: String, bitmap: Bitmap): Int = bitmap.getByteCount / 1024
+    protected override def sizeOf(key: String, bitmap: Bitmap): Int =
+      bitmap.getSizeInBytes.asInstanceOf[Int] / 1024
   }
 }

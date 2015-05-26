@@ -24,6 +24,7 @@ import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileUtils
 import im.tox.antox.utils.Constants
+import im.tox.antox.wrapper.BitmapUtils.RichBitmap
 import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antoxnightly.R
@@ -84,12 +85,12 @@ class AvatarDialog(activity: Activity) {
     val MIN_DIMENSIONS = 16
 
     var currSize = MAX_DIMENSIONS
-    while (currSize >= MIN_DIMENSIONS && bitmap.getByteCount > Constants.MAX_AVATAR_SIZE) {
+    while (currSize >= MIN_DIMENSIONS && bitmap.getSizeInBytes > Constants.MAX_AVATAR_SIZE) {
       bitmap = Bitmap.createScaledBitmap(bitmap, currSize, currSize, false)
       currSize /= 2
     }
 
-    if (bitmap.getByteCount > Constants.MAX_AVATAR_SIZE) {
+    if (bitmap.getSizeInBytes > Constants.MAX_AVATAR_SIZE) {
       None
     } else {
       Some(bitmap)
