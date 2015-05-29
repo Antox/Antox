@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.{State, AntoxDB}
+import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.FileKind
@@ -26,7 +26,7 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
       }
 
     if (kind == FileKind.AVATAR) {
-      if (fileSize > Constants.MAX_AVATAR_SIZE){
+      if (fileSize > Constants.MAX_AVATAR_SIZE) {
         return
       } else if (fileSize == 0) {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
@@ -40,10 +40,14 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
       }
 
       val fileId = ToxSingleton.tox.fileGetFileId(friendNumber, fileNumber).toString
-      val storedFileId = ToxSingleton.tox.hash(AVATAR.getAvatarFile(name, ctx).orNull).orNull
-      if (fileId.equals(storedFileId)) {
-        ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
-        return
+      val avatarFile = AVATAR.getAvatarFile(name, ctx).orNull
+
+      if (avatarFile != null) {
+        val storedFileId = ToxSingleton.tox.hash(avatarFile).orNull
+        if (fileId.equals(storedFileId)) {
+          ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
+          return
+        }
       }
     }
 
