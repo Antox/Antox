@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import im.tox.antoxnightly.R
 
-class About extends AppCompatActivity {
+class AboutActivity extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)

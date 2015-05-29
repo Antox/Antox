@@ -11,20 +11,17 @@ import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
-import im.tox.antox.data.{State, AntoxDB, UserDB}
+import im.tox.antox.data.UserDB
 import im.tox.antox.fragments.AvatarDialog
-import im.tox.antox.tox.{ToxDoService, ToxSingleton}
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
-import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.UserStatus
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
-import scala.collection.JavaConversions._
 
 object ProfileSettingsActivity {
 
@@ -32,13 +29,16 @@ object ProfileSettingsActivity {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-      if (preference.isInstanceOf[ListPreference]) {
-        val listPreference = preference.asInstanceOf[ListPreference]
-        val index = listPreference.findIndexOfValue(stringValue)
-        preference.setSummary(if (index >= 0) listPreference.getEntries()(index) else null)
-      } else {
-        preference.setSummary(stringValue)
+
+      preference match {
+        case lp:ListPreference =>
+          val index = lp.findIndexOfValue(stringValue)
+          preference.setSummary(if (index >= 0) lp.getEntries()(index) else null)
+
+        case _ =>
+          preference.setSummary(stringValue)
       }
+
       true
     }
   }
@@ -64,7 +64,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     bindPreferenceSummaryToValue(findPreference("nickname"))
     val passwordPreference = findPreference("password")
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
-        .getString(passwordPreference.getKey, "").isEmpty) {
+      .getString(passwordPreference.getKey, "").isEmpty) {
       getPreferenceScreen.removePreference(passwordPreference)
     } else {
       bindPreferenceSummaryToValue(passwordPreference)
@@ -82,7 +82,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
 
-   val avatarPreference = findPreference("avatar")
+    val avatarPreference = findPreference("avatar")
     avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       override def onPreferenceClick(preference: Preference): Boolean = {
         avatarDialog.show()
@@ -101,14 +101,6 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
           }
         })
         fileDialog.showDialog()
-        true
-      }
-    })
-    val logoutPreference = findPreference("logout")
-    logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-      override def onPreferenceClick(preference: Preference): Boolean = {
-        State.logout(ProfileSettingsActivity.this)
         true
       }
     })
@@ -168,10 +160,9 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       Toast.makeText(getApplicationContext, "Exported data file to " + dest.getPath, Toast.LENGTH_LONG)
         .show()
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         e.printStackTrace()
         Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
-      }
     }
   }
 

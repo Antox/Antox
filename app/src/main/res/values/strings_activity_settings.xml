@@ -10,7 +10,7 @@
 
     <string name="pref_title_password">Toxme Password</string>
     <string name="pref_default_password">No Set Password</string>
-    
+
     <string name="pref_title_status">Status</string>
     <string-array name="pref_status_list_titles">
         <item>Online</item>
@@ -69,7 +69,7 @@
         <item>bg</item>
         <item>ca</item>
         <item>cs</item>
-        <item>en</item>
+        <item>gb</item>
         <item>de</item>
         <item>es</item>
         <item>fr</item>

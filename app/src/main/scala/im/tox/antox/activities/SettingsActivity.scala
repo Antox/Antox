@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.MenuItem
+import android.widget.Toast
 import im.tox.antox.activities.Settings._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
@@ -20,13 +21,16 @@ object Settings {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-      if (preference.isInstanceOf[ListPreference]) {
-        val listPreference = preference.asInstanceOf[ListPreference]
-        val index = listPreference.findIndexOfValue(stringValue)
-        preference.setSummary(if (index >= 0) listPreference.getEntries()(index) else null)
-      } else {
-        preference.setSummary(stringValue)
+
+      preference match {
+        case lp:ListPreference =>
+          val index = lp.findIndexOfValue(stringValue)
+          preference.setSummary(if (index >= 0) lp.getEntries()(index) else null)
+
+        case _ =>
+          preference.setSummary(stringValue)
       }
+
       true
     }
   }
@@ -43,16 +47,19 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.settings_main)
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
       getActionBar != null) {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
+
     bindPreferenceSummaryToValue(findPreference("language"))
+
     val nospamPreference = findPreference("nospam")
     nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
       override def onPreferenceClick(preference: Preference): Boolean = {
         val toxSingleton = ToxSingleton.getInstance()
+
         try {
           val random = new Random()
           val nospam = random.nextInt(1234567890)
@@ -61,9 +68,18 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
           val editor = preferences.edit()
           editor.putString("tox_id", toxSingleton.tox.getAddress)
           editor.apply()
+
+          // Display toast to inform user of successful change
+          Toast.makeText(
+            getApplicationContext,
+            getApplicationContext.getResources.getString(R.string.nospam_updated),
+            Toast.LENGTH_SHORT
+          ).show()
+
         } catch {
           case e: ToxException => e.printStackTrace()
         }
+
         true
       }
     })

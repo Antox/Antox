@@ -157,6 +157,7 @@
     <string name="titles_settings">Settings</string>
 
     <!-- Misc -->
+    <string name="nospam_updated">Your nospam has been updated</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>
@@ -208,10 +209,12 @@
     <string name="about">About</string>
     <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
     <string name="about_antox_2">What Is Currently Working:</string>
-    <string name="about_antox_3">-Basic messaging (this does not include group chats)</string>
-    <string name="about_antox_4">-Notifications</string>
-    <string name="about_antox_5">Not Working:</string>
-    <string name="about_antox_6">-Audio/Video &amp; File Transfers</string>
+    <string name="about_antox_3">- One to one messaging</string>
+    <string name="about_antox_4">- Notifications</string>
+    <string name="about_antox_5">- File transfers</string>
+    <string name="about_antox_6">Not Working:</string>
+    <string name="about_antox_7">- Audio/Video</string>
+    <string name="about_antox_8">- Groups</string>
     <string name="title_activity_call">CallActivity</string>
     <string name="end_call">End Call</string>
     <string name="mute_call">Mute</string>
