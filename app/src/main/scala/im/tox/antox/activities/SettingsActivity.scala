@@ -1,32 +1,31 @@
 package im.tox.antox.activities
 
-import java.util.Random
-
-import android.content.{Context, Intent, SharedPreferences}
-import android.net.ConnectivityManager
+import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.MenuItem
-import im.tox.antox.activities.Settings._
+import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
-import im.tox.tox4j.exceptions.ToxException
 
-object Settings {
+object SettingsActivity {
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-      if (preference.isInstanceOf[ListPreference]) {
-        val listPreference = preference.asInstanceOf[ListPreference]
-        val index = listPreference.findIndexOfValue(stringValue)
-        preference.setSummary(if (index >= 0) listPreference.getEntries()(index) else null)
-      } else {
-        preference.setSummary(stringValue)
+
+      preference match {
+        case lp: ListPreference =>
+          val index = lp.findIndexOfValue(stringValue)
+          preference.setSummary(if (index >= 0) lp.getEntries()(index) else null)
+
+        case _ =>
+          preference.setSummary(stringValue)
       }
+
       true
     }
   }
@@ -38,35 +37,18 @@ object Settings {
   }
 }
 
-class Settings extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.settings_main)
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
       getActionBar != null) {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
-    bindPreferenceSummaryToValue(findPreference("language"))
-    val nospamPreference = findPreference("nospam")
-    nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
-      override def onPreferenceClick(preference: Preference): Boolean = {
-        val toxSingleton = ToxSingleton.getInstance()
-        try {
-          val random = new Random()
-          val nospam = random.nextInt(1234567890)
-          toxSingleton.tox.setNospam(nospam)
-          val preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this)
-          val editor = preferences.edit()
-          editor.putString("tox_id", toxSingleton.tox.getAddress)
-          editor.apply()
-        } catch {
-          case e: ToxException => e.printStackTrace()
-        }
-        true
-      }
-    })
+    bindPreferenceSummaryToValue(findPreference("language"))
   }
 
   override def onResume() {

@@ -1,6 +1,7 @@
 package im.tox.antox.activities
 
 import java.io.File
+import java.util.Locale
 import java.util.regex.Pattern
 
 import android.app.Activity
@@ -76,7 +77,7 @@ class CreateAccountActivity extends AppCompatActivity {
     editor.putString("active_account", accountName)
     editor.putString("nickname", accountName)
     editor.putString("password", password)
-    editor.putString("status", "1")
+    editor.putString("status", "online")
     editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
     editor.putString("tox_id", toxID)
     editor.putBoolean("logging_enabled", true)
@@ -219,9 +220,9 @@ class CreateAccountActivity extends AppCompatActivity {
             accountFieldName
           }
 
-          val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
-          FileUtils.copy(file, toxDataFile)
-          createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+        val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
+        FileUtils.copy(file, toxDataFile)
+        createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
 
       case None => throw new Exception("Could not load data file.")
     }

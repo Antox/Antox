@@ -1,16 +1,15 @@
 package im.tox.antox.fragments
 
-import android.content.{Context, SharedPreferences, Intent}
-import android.net.ConnectivityManager
+import android.content.{Intent, SharedPreferences}
 import android.os.Bundle
-import android.preference.{Preference, PreferenceManager}
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.view.View.OnClickListener
-import android.view.{View, ViewGroup, LayoutInflater}
+import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.Button
-import im.tox.antox.activities.Settings
+import im.tox.antox.activities.SettingsActivity
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.utils.{ConnectionTypeChangeListener, ConnectionManager}
+import im.tox.antox.utils.{ConnectionManager, ConnectionTypeChangeListener}
 import im.tox.antoxnightly.R
 
 class WifiWarningFragment extends Fragment {
@@ -68,7 +67,7 @@ class WifiWarningFragment extends Fragment {
   }
 
   def onClickWifiOnlyWarning(view: View): Unit = {
-    val intent = new Intent(getActivity, classOf[Settings])
+    val intent = new Intent(getActivity, classOf[SettingsActivity])
     startActivity(intent)
   }
 

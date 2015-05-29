@@ -11,13 +11,13 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pref_title_nickname" />
-    
+
     <Preference
         android:defaultValue="@string/pref_default_password"
         android:key="password"
         android:singleLine="true"
         android:title="@string/pref_title_password"/>
-    
+
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
@@ -59,6 +59,10 @@
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
 
+    <Preference
+        android:key="nospam"
+        android:title="@string/pref_nospam" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="logging_enabled"
@@ -67,9 +71,5 @@
     <Preference
         android:key="export"
         android:title="@string/pref_title_export" />
-
-    <Preference
-        android:key="logout"
-        android:title="@string/pref_title_logout" />
 
 </PreferenceScreen>

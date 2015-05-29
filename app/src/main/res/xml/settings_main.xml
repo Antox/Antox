@@ -49,9 +49,5 @@
             android:defaultValue="false"
             android:key="enable_udp"
             android:title="@string/pref_udp" />
-
-        <Preference
-            android:key="nospam"
-            android:title="@string/pref_nospam" />
     </PreferenceCategory>
 </PreferenceScreen>
