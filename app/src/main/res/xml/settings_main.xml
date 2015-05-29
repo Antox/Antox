@@ -49,5 +49,10 @@
             android:defaultValue="false"
             android:key="enable_udp"
             android:title="@string/pref_udp" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autostart"
+            android:title="@string/pref_autostart" />
     </PreferenceCategory>
 </PreferenceScreen>
