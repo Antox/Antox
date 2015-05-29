@@ -22,7 +22,7 @@
   <string name="pref_default_status_message">Hey! Sto usando Antox!</string>
   <string name="pref_title_tox_id">Tox ID</string>
   <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
-  <string name="pref_title_logging_enabled">Mantieni i log dopo il logout</string>
+  <string name="pref_title_logging_enabled">Mantieni i log delle chat dopo il logout</string>
   <string name="pref_title_avatar">Avatar</string>
   <string name="pref_title_account_name">Nome Profilo</string>
   <string name="pref_title_export">Esporta Profilo</string>
