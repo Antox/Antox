@@ -2,20 +2,19 @@ package im.tox.antox.activities
 
 import java.util.Random
 
-import android.content.{Context, Intent, SharedPreferences}
-import android.net.ConnectivityManager
+import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.MenuItem
 import android.widget.Toast
-import im.tox.antox.activities.Settings._
+import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 
-object Settings {
+object SettingsActivity {
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
@@ -42,7 +41,7 @@ object Settings {
   }
 }
 
-class Settings extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -64,7 +63,7 @@ class Settings extends PreferenceActivity with SharedPreferences.OnSharedPrefere
           val random = new Random()
           val nospam = random.nextInt(1234567890)
           toxSingleton.tox.setNospam(nospam)
-          val preferences = PreferenceManager.getDefaultSharedPreferences(Settings.this)
+          val preferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
           val editor = preferences.edit()
           editor.putString("tox_id", toxSingleton.tox.getAddress)
           editor.apply()
