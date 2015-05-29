@@ -35,8 +35,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def save(): Array[Byte] = tox.save()
 
-  def bootstrap(p1: String, p2: Int, p3: String): Unit = {
-    tox.bootstrap(p1, p2, Hex.hexStringToBytes(p3))
+  def bootstrap(address: String, port: Int, publicKey: String): Unit = {
+    tox.bootstrap(address, port, Hex.hexStringToBytes(publicKey))
+    tox.addTcpRelay(address, port, Hex.hexStringToBytes(publicKey))
   }
 
   def callbackConnectionStatus(p1: ConnectionStatusCallback): Unit = tox.callbackConnectionStatus(p1)
