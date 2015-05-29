@@ -1,6 +1,7 @@
 package im.tox.antox.activities
 
 import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
+import java.util.Random
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
@@ -101,6 +102,35 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
           }
         })
         fileDialog.showDialog()
+        true
+      }
+    })
+
+    val nospamPreference = findPreference("nospam")
+    nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        val toxSingleton = ToxSingleton.getInstance()
+
+        try {
+          val random = new Random()
+          val nospam = random.nextInt(1234567890)
+          toxSingleton.tox.setNospam(nospam)
+          val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+          val editor = preferences.edit()
+          editor.putString("tox_id", toxSingleton.tox.getAddress)
+          editor.apply()
+
+          // Display toast to inform user of successful change
+          Toast.makeText(
+            getApplicationContext,
+            getApplicationContext.getResources.getString(R.string.nospam_updated),
+            Toast.LENGTH_SHORT
+          ).show()
+
+        } catch {
+          case e: ToxException => e.printStackTrace()
+        }
+
         true
       }
     })

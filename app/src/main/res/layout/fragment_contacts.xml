@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:onClick="onClickAdd"
                 app:floatingActionButtonColor="@color/fab_colors_list"
                 android:layout_marginBottom="@dimen/margin_medium" />

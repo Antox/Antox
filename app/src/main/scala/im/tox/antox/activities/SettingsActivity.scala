@@ -1,18 +1,14 @@
 package im.tox.antox.activities
 
-import java.util.Random
-
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
 import android.view.MenuItem
-import android.widget.Toast
 import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
-import im.tox.tox4j.exceptions.ToxException
 
 object SettingsActivity {
 
@@ -53,35 +49,6 @@ class SettingsActivity extends PreferenceActivity with SharedPreferences.OnShare
     }
 
     bindPreferenceSummaryToValue(findPreference("language"))
-
-    val nospamPreference = findPreference("nospam")
-    nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-      override def onPreferenceClick(preference: Preference): Boolean = {
-        val toxSingleton = ToxSingleton.getInstance()
-
-        try {
-          val random = new Random()
-          val nospam = random.nextInt(1234567890)
-          toxSingleton.tox.setNospam(nospam)
-          val preferences = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this)
-          val editor = preferences.edit()
-          editor.putString("tox_id", toxSingleton.tox.getAddress)
-          editor.apply()
-
-          // Display toast to inform user of successful change
-          Toast.makeText(
-            getApplicationContext,
-            getApplicationContext.getResources.getString(R.string.nospam_updated),
-            Toast.LENGTH_SHORT
-          ).show()
-
-        } catch {
-          case e: ToxException => e.printStackTrace()
-        }
-
-        true
-      }
-    })
   }
 
   override def onResume() {
