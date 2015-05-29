@@ -32,7 +32,7 @@ object ProfileSettingsActivity {
       val stringValue = value.toString
 
       preference match {
-        case lp:ListPreference =>
+        case lp: ListPreference =>
           val index = lp.findIndexOfValue(stringValue)
           preference.setSummary(if (index >= 0) lp.getEntries()(index) else null)
 
