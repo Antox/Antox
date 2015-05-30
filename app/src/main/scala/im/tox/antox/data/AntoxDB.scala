@@ -849,7 +849,8 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = true)
 
     val query =
-      "SELECT note FROM " + Constants.TABLE_FRIENDS +
+      "SELECT " + Constants.COLUMN_NAME_NOTE +
+      " FROM " + Constants.TABLE_FRIENDS +
       " WHERE " + Constants.COLUMN_NAME_KEY +
       " = '" + key + "'"
 
