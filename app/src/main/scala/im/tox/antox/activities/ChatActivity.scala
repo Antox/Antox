@@ -66,7 +66,7 @@ class ChatActivity extends GenericChatActivity {
                   Toast.makeText(thisActivity, getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)
                   return
                 }
-                val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
+                val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
                 println("image name " + image_name)
                 val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 try {
