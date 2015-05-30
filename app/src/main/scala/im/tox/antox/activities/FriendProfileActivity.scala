@@ -34,8 +34,8 @@ class FriendProfileActivity extends AppCompatActivity {
 
     if (friendAlias == "")
       setTitle(getResources.getString(R.string.friend_profile_title, friendName))
-    else setTitle(getResources.getString(R.string.friend_profile_title,
-      friendAlias))
+    else
+      setTitle(getResources.getString(R.string.friend_profile_title, friendAlias))
 
     val editFriendAlias = findViewById(R.id.friendAliasText).asInstanceOf[EditText]
     editFriendAlias.setText(friendAlias)
