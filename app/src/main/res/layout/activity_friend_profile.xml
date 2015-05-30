@@ -6,6 +6,13 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@color/grey_light"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -24,15 +31,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/friend_profile_nick"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:id="@+id/friendAlias"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:id="@+id/friendAliasText" />
 
     <Button

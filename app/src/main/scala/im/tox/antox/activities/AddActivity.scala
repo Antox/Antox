@@ -73,7 +73,6 @@ class AddActivity extends AppCompatActivity {
     item.getItemId match {
       case android.R.id.home =>
         NavUtils.navigateUpFromSameTask(this)
-        true
 
       case R.id.scanFriend => scanIntent()
     }

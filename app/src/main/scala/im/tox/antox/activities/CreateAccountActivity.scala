@@ -1,7 +1,6 @@
 package im.tox.antox.activities
 
 import java.io.File
-import java.util.Locale
 import java.util.regex.Pattern
 
 import android.app.Activity
@@ -82,6 +81,7 @@ class CreateAccountActivity extends AppCompatActivity {
     editor.putString("tox_id", toxID)
     editor.putBoolean("logging_enabled", true)
     editor.putBoolean("loggedin", true)
+    editor.putBoolean("autostart", true)
     editor.apply()
 
     // Start the activity
