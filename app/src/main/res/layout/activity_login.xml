@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/test_bg"
     android:gravity="top"
     android:fillViewport="true"
     android:layout_height="match_parent">

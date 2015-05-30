@@ -2,11 +2,18 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/leftpane_linear"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/white"
     android:orientation="vertical">
+
+    <fragment android:name="im.tox.antox.fragments.WifiWarningFragment"
+        android:id="@+id/wifi_warning_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        tools:layout="@layout/fragment_wifi_warning" />
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/pager_tabs"

@@ -2,22 +2,26 @@ package im.tox.antox.activities
 
 import java.util
 
-import android.content.SharedPreferences
+import android.content.{Context, SharedPreferences}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.text.InputFilter.LengthFilter
+import android.text.{InputFilter, Editable, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.Message
 import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.concurrent.duration._
+import scala.collection.JavaConversions._
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -37,7 +41,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var scrolling: Boolean = false
   var antoxDB: AntoxDB = null
 
-  val MESSAGE_LENGTH_LIMIT = 1367 * 100
+  val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -80,7 +84,29 @@ abstract class GenericChatActivity extends AppCompatActivity {
     isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
     statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
+    val b = this.findViewById(R.id.sendMessageButton)
+    b.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        onSendMessage()
+        setTyping(typing = false, activeKey)
+      }
+    })
+
     messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
+    messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
+    messageBox.addTextChangedListener(new TextWatcher() {
+      override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+        val isTyping = after > 0
+        setTyping(isTyping, activeKey)
+      }
+
+      override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+      }
+
+      override def afterTextChanged(editable: Editable) {
+      }
+    })
+
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -128,7 +154,10 @@ abstract class GenericChatActivity extends AppCompatActivity {
       //FIXME make this more efficient
       adapter.setNotifyOnChange(false)
       adapter.clear()
-      adapter.addAll(messageList)
+      //add all is not available on api 10
+      for (message <- messageList) {
+        adapter.add(message)
+      }
       adapter.notifyDataSetChanged()
       Log.d(TAG, "changing chat list cursor")
     })
@@ -149,12 +178,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
       return None
     }
 
-    //limit to 100 max length messages
-    if (messageBox.getText.length() > MESSAGE_LENGTH_LIMIT) {
-      Toast.makeText(this, getResources.getString(R.string.chat_message_too_long), Toast.LENGTH_LONG)
-      return None
-    }
-
     var msg: String = null
     if (messageBox.getText != null) {
       msg = messageBox.getText.toString
@@ -163,6 +186,24 @@ abstract class GenericChatActivity extends AppCompatActivity {
     }
 
     Some(msg)
+  }
+
+  private def onSendMessage() {
+    Log.d(TAG, "sendMessage")
+    val mMessage = validateMessageBox()
+
+    mMessage.foreach(rawMessage => {
+      messageBox.setText("")
+      val meMessagePrefix = "/me "
+      val isAction = rawMessage.startsWith(meMessagePrefix)
+      val message =
+        if (isAction) {
+          rawMessage.replaceFirst(meMessagePrefix, "")
+        } else {
+          rawMessage
+        }
+      sendMessage(message, isAction, activeKey, this)
+    })
   }
 
   def getMessageList: util.ArrayList[Message] = {
@@ -181,4 +222,9 @@ abstract class GenericChatActivity extends AppCompatActivity {
     messagesSub.unsubscribe()
     progressSub.unsubscribe()
   }
+
+  //Abstract Methods
+  def sendMessage(message: String, isAction: Boolean, activeKey: String,  context: Context): Unit
+
+  def setTyping(typing: Boolean, activeKey: String): Unit
 }

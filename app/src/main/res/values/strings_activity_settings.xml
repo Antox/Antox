@@ -10,7 +10,7 @@
 
     <string name="pref_title_password">Toxme Password</string>
     <string name="pref_default_password">No Set Password</string>
-    
+
     <string name="pref_title_status">Status</string>
     <string-array name="pref_status_list_titles">
         <item>Online</item>
@@ -27,6 +27,7 @@
     <string name="pref_default_status_message">Hey! I\'m using Antox</string>
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - You should not see this</string>
+    <string name="pref_title_logging_enabled">Keep Chat History on Logout</string>
     <string name="pref_title_avatar">Avatar</string>
     <string name="pref_title_account_name">Profile Name</string>
     <string name="pref_title_export">Export Profile</string>
@@ -93,4 +94,5 @@
     <string name="pref_udp">Enable UDP</string>
     <string name="pref_advanced">Advanced</string>
     <string name="pref_nospam">Generate New Nospam</string>
+    <string name="pref_autostart">Start Antox On Boot</string>
 </resources>

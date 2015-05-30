@@ -1,6 +1,7 @@
 package im.tox.antox.activities
 
 import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
+import java.util.Random
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
@@ -15,7 +16,8 @@ import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
 import im.tox.antox.data.UserDB
-import im.tox.antox.tox.{ToxDoService, ToxSingleton}
+import im.tox.antox.fragments.AvatarDialog
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import im.tox.antox.wrapper.UserStatus
@@ -28,13 +30,16 @@ object ProfileSettingsActivity {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-      if (preference.isInstanceOf[ListPreference]) {
-        val listPreference = preference.asInstanceOf[ListPreference]
-        val index = listPreference.findIndexOfValue(stringValue)
-        preference.setSummary(if (index >= 0) listPreference.getEntries()(index) else null)
-      } else {
-        preference.setSummary(stringValue)
+
+      preference match {
+        case lp: ListPreference =>
+          val index = lp.findIndexOfValue(stringValue)
+          preference.setSummary(if (index >= 0) lp.getEntries()(index) else null)
+
+        case _ =>
+          preference.setSummary(stringValue)
       }
+
       true
     }
   }
@@ -48,6 +53,8 @@ object ProfileSettingsActivity {
 
 class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
 
+  private var avatarDialog: AvatarDialog = _
+
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.pref_profile)
@@ -58,20 +65,12 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     bindPreferenceSummaryToValue(findPreference("nickname"))
     val passwordPreference = findPreference("password")
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
-        .getString(passwordPreference.getKey, "").isEmpty) {
+      .getString(passwordPreference.getKey, "").isEmpty) {
       getPreferenceScreen.removePreference(passwordPreference)
     } else {
       bindPreferenceSummaryToValue(passwordPreference)
     }
     bindPreferenceSummaryToValue(findPreference("status"))
-
-    if (false) {
-      //TODO: Finish avatars
-      bindPreferenceSummaryToValue(findPreference("avatar"))
-    } else {
-      getPreferenceScreen.removePreference(findPreference("avatar"))
-    }
-
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
     bindPreferenceSummaryToValue(findPreference("active_account"))
@@ -84,14 +83,13 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
       }
     })
 
-   /* val avatarPreference = findPreference("avatar")
+    val avatarPreference = findPreference("avatar")
     avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
       override def onPreferenceClick(preference: Preference): Boolean = {
-        createAvatarDialog()
+        avatarDialog.show()
         true
       }
-    }) */
+    })
 
     val exportProfile = findPreference("export")
     val thisActivity = this
@@ -107,22 +105,37 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         true
       }
     })
-    val logoutPreference = findPreference("logout")
-    logoutPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
+    val nospamPreference = findPreference("nospam")
+    nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val editor = preferences.edit()
-        editor.putBoolean("loggedin", false)
-        editor.apply()
-        val startTox = new Intent(ProfileSettingsActivity.this.getApplicationContext, classOf[ToxDoService])
-        ProfileSettingsActivity.this.getApplicationContext.stopService(startTox)
-        val login = new Intent(ProfileSettingsActivity.this.getApplicationContext, classOf[LoginActivity])
-        ProfileSettingsActivity.this.startActivity(login)
-        ProfileSettingsActivity.this.finish()
+        val toxSingleton = ToxSingleton.getInstance()
+
+        try {
+          val random = new Random()
+          val nospam = random.nextInt(1234567890)
+          toxSingleton.tox.setNospam(nospam)
+          val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+          val editor = preferences.edit()
+          editor.putString("tox_id", toxSingleton.tox.getAddress)
+          editor.apply()
+
+          // Display toast to inform user of successful change
+          Toast.makeText(
+            getApplicationContext,
+            getApplicationContext.getResources.getString(R.string.nospam_updated),
+            Toast.LENGTH_SHORT
+          ).show()
+
+        } catch {
+          case e: ToxException => e.printStackTrace()
+        }
+
         true
       }
     })
+
+    avatarDialog = new AvatarDialog(ProfileSettingsActivity.this)
   }
 
   def createToxIDDialog() {
@@ -171,38 +184,15 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     builder.create().show()
   }
 
-  def createAvatarDialog(): Unit = {
-    val context: Context = ProfileSettingsActivity.this
-    /* val dialog = new MaterialDialog.Builder(context)
-      .customView(R.layout.dialog_avatar, false)
-      .build()
-
-    val avatarView = dialog.getCustomView.findViewById(R.id.avatar_image).asInstanceOf[ImageButton]
-    val photoButton = dialog.getCustomView.findViewById(R.id.avatar_takephoto)
-    val fileButton = dialog.getCustomView.findViewById(R.id.avatar_pickfile)
-    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-
-    val avatar = AVATAR.getAvatarFile(pref.getString("avatar", ""), context)
-    if (avatar.isDefined && avatar.get.exists()) {
-      avatarView.setImageURI(Uri.fromFile(avatar.get))
-    } else {
-      avatarView.setImageResource(R.drawable.ic_action_contact)
-    }
-
-
-    dialog.show() */
-  }
-
   def onExportDataFileSelected(dest: File): Unit = {
     try {
       ToxSingleton.exportDataFile(dest)
       Toast.makeText(getApplicationContext, "Exported data file to " + dest.getPath, Toast.LENGTH_LONG)
         .show()
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         e.printStackTrace()
         Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
-      }
     }
   }
 
@@ -234,48 +224,62 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
     getPreferenceScreen.getSharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
   }
 
-  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, preferenceKey: String) {
+  def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
     val db = new UserDB(this)
     val activeAccount = sharedPreferences.getString("active_account", "")
-    val keyString = sharedPreferences.getString(preferenceKey, "")
 
-    preferenceKey match {
+    key match {
       case "nickname" =>
+        val name = sharedPreferences.getString(key, "")
         try {
-          val name = sharedPreferences.getString(keyString, "")
+          println("Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
-          ToxSingleton.tox.setGroupSelfNameAll(name)
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "nickname", keyString)
+        db.updateUserDetail(activeAccount, key, name)
 
       case "password" =>
-        db.updateUserDetail(activeAccount, "password", keyString)
+        val password = sharedPreferences.getString(key, "")
+        db.updateUserDetail(activeAccount, key, password)
 
       case "status" =>
-        val newStatusString = sharedPreferences.getString(keyString, "")
+        val newStatusString = sharedPreferences.getString(key, "")
         val newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "status", keyString)
+        db.updateUserDetail(activeAccount, key, newStatusString)
 
       case "status_message" =>
+        val statusMessage = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(keyString, ""))
+          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
           case e: ToxException => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, "status_message", keyString)
+        db.updateUserDetail(activeAccount, key, statusMessage)
+
+      case "logging_enabled" =>
+        val loggingEnabled = sharedPreferences.getBoolean(key, true)
+        db.updateUserDetail(activeAccount, key, loggingEnabled)
 
       case "avatar" =>
-        db.updateUserDetail(activeAccount, "avatar", keyString)
+        val avatar = sharedPreferences.getString(key, "")
+        db.updateUserDetail(activeAccount, key, avatar)
 
       case _ =>
     }
+
+    db.close()
+  }
+
+  override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Unit = {
+    avatarDialog.onActivityResult(requestCode, resultCode, data)
+    avatarDialog.close()
+    avatarDialog.show()
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {

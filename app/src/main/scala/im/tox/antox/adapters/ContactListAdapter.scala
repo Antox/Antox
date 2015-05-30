@@ -1,5 +1,6 @@
 package im.tox.antox.adapters
 
+import java.util
 import java.util.ArrayList
 
 import android.app.Activity
@@ -40,11 +41,11 @@ object ContactListAdapter {
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
-  private var mDataOriginal: ArrayList[LeftPaneItem] = new ArrayList[LeftPaneItem]()
+  private val mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private var mData: ArrayList[LeftPaneItem] = new ArrayList[LeftPaneItem]()
+  private var mData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private var mInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
+  private val mInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
 
   var mFilter: Filter = _
 
@@ -210,20 +211,20 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       mFilter = new Filter() {
 
         protected override def performFiltering(constraint: CharSequence): FilterResults = {
-          var filterResults = new FilterResults()
+          val filterResults = new FilterResults()
           if (mDataOriginal != null) {
             if (constraint == "" || constraint == null) {
               filterResults.values = mDataOriginal
               filterResults.count = mDataOriginal.size
             } else {
               mData = mDataOriginal
-              var tempList1 = new ArrayList[LeftPaneItem]()
-              var tempList2 = new ArrayList[LeftPaneItem]()
+              val tempList1 = new util.ArrayList[LeftPaneItem]()
+              var tempList2 = new util.ArrayList[LeftPaneItem]()
               var length = mData.size
               var i = 0
               while (i < length) {
                 var item = mData.get(i)
-                if (item.first.toUpperCase().startsWith(constraint.toString.toUpperCase())) tempList1.add(item) else if (item.first.toLowerCase().contains(constraint.toString.toLowerCase())) tempList2.add(item)
+                if (item.first.toUpperCase.startsWith(constraint.toString.toUpperCase)) tempList1.add(item) else if (item.first.toLowerCase.contains(constraint.toString.toLowerCase)) tempList2.add(item)
                 i += 1
               }
               tempList1.addAll(tempList2)
@@ -231,11 +232,11 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
               filterResults.count = tempList1.size
             }
           }
-          return filterResults
+          filterResults
         }
 
         protected override def publishResults(contraint: CharSequence, results: FilterResults) {
-          mData = results.values.asInstanceOf[ArrayList[LeftPaneItem]]
+          mData = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
           if (results.count > 0) {
             notifyDataSetChanged()
           } else {

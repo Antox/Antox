@@ -32,7 +32,7 @@ object AntoxDB {
       "isonline boolean, " +
       "isblocked boolean, " +
       "avatar text, " +
-      "receieved_avatar boolean);"
+      "received_avatar boolean);"
 
     var CREATE_TABLE_GROUP: String = "CREATE TABLE IF NOT EXISTS groups" + " (tox_key text primary key," +
       "name text, " +
@@ -99,6 +99,7 @@ class AntoxDB(ctx: Context) {
 
   private val activeDatabase: String = preferences.getString("active_account", "")
 
+  //TODO: should be private? ask astonex.
   def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
     mDb = if (writeable) mDbHelper.getWritableDatabase else mDbHelper.getReadableDatabase
@@ -107,17 +108,6 @@ class AntoxDB(ctx: Context) {
 
   def close() {
     mDbHelper.close()
-  }
-
-  private def isColumnInTable(mDb: SQLiteDatabase, table: String, column: String): Boolean = {
-    try {
-      val cursor = mDb.rawQuery("SELECT * FROM " + table + " LIMIT 0", null)
-      val result = cursor.getColumnIndex(column) != -1
-      cursor.close()
-      result
-    } catch {
-      case e: Exception => false
-    }
   }
 
   def addFriend(key: String,
@@ -141,6 +131,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_ALIAS, alias)
     values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
     values.put(Constants.COLUMN_NAME_AVATAR, key)
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, false)
     mDb.insert(Constants.TABLE_FRIENDS, null, values)
     this.close()
   }
@@ -348,8 +339,12 @@ class AntoxDB(ctx: Context) {
     val map = scala.collection.mutable.Map.empty[String, (String, Timestamp)]
     val selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
       "SELECT MAX(_id) " +
-      "FROM messages WHERE (type == " + MessageType.OWN.id +" OR type == 2 OR type == " +
-      MessageType.GROUP_OWN.id + " OR type == " + MessageType.GROUP_PEER.id + ") " +
+      "FROM messages WHERE (type == " + MessageType.OWN.id +
+      " OR type == " + MessageType.FRIEND.id +
+      " OR type == " + MessageType.ACTION.id +
+      " OR type == " + MessageType.GROUP_OWN.id +
+      " OR type == " + MessageType.GROUP_ACTION.id +
+      " OR type == " + MessageType.GROUP_PEER.id + ") " +
       "GROUP BY tox_key)"
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
@@ -775,11 +770,11 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def setAllFriendReceivedAvatar(key: String) {
+  def setAllFriendReceivedAvatar(receivedAvatar: Boolean) {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, true)
-    mDb.update(Constants.TABLE_FRIENDS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
+    mDb.update(Constants.TABLE_FRIENDS, values, null, null)
     this.close()
   }
 

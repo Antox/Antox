@@ -53,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_large"
+            android:textColor="@color/grey_darker"
             android:text="@string/main_recent_no"/>
     </LinearLayout>
 
@@ -81,18 +82,18 @@
                 android:dividerHeight="0dp"
                 android:footerDividersEnabled="false"
                 android:headerDividersEnabled="true" />
-        </FrameLayout>
 
-        <com.shamanland.fab.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:onClick="onClickAdd"
-            app:floatingActionButtonColor="@color/fab_colors_list"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_medium" />
+            <com.shamanland.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:onClick="onClickAdd"
+                app:floatingActionButtonColor="@color/fab_colors_list"
+                android:layout_marginBottom="16dp" />
+        </FrameLayout>
 
     </RelativeLayout>
 </LinearLayout>

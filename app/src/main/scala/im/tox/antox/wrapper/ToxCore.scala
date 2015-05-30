@@ -1,6 +1,9 @@
 package im.tox.antox.wrapper
 
+import java.io.File
+
 import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.transfer.FileUtils
 import im.tox.antox.utils._
 import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
@@ -32,8 +35,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def save(): Array[Byte] = tox.save()
 
-  def bootstrap(p1: String, p2: Int, p3: String): Unit = {
-    tox.bootstrap(p1, p2, Hex.hexStringToBytes(p3))
+  def bootstrap(address: String, port: Int, publicKey: String): Unit = {
+    tox.bootstrap(address, port, Hex.hexStringToBytes(publicKey))
+    tox.addTcpRelay(address, port, Hex.hexStringToBytes(publicKey))
   }
 
   def callbackConnectionStatus(p1: ConnectionStatusCallback): Unit = tox.callbackConnectionStatus(p1)
@@ -48,7 +52,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iteration(): Unit = tox.iteration()
 
-  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey())
+  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey)
 
   def getSecretKey: Array[Byte] = tox.getSecretKey
 
@@ -103,7 +107,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getFriendByKey(key: String): Int = tox.getFriendByPublicKey(Hex.hexStringToBytes(key))
 
-  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getPublicKey(friendNumber))
+  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getFriendPublicKey(friendNumber))
 
   def friendExists(friendNumber: Int): Boolean = tox.friendExists(friendNumber)
 
@@ -131,15 +135,24 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callbackFriendMessage(callback: FriendMessageCallback): Unit = tox.callbackFriendMessage(callback)
 
+  def hash(bytes: Array[Byte]): Array[Byte] = tox.hash(bytes)
+
+  def hash(file: File): Option[String] = {
+    FileUtils.readToBytes(file).map(tox.hash).map(_.toString)
+  }
+
   def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(friendNumber, fileNumber, control)
 
   def callbackFileControl(callback: FileControlCallback): Unit = tox.callbackFileControl(callback)
 
-  def fileSend(friendNumber: Int, kind: Int, fileSize: Long, filename: String): Int = tox.fileSend(friendNumber, kind, fileSize, null, filename.getBytes)
+  def fileSend(friendNumber: Int, kind: Int, fileSize: Long, fileId: String, filename: String): Int = {
+    val fileIdBytes = Option(fileId).map(_.getBytes).orNull
+    tox.fileSend(friendNumber, kind, fileSize, fileIdBytes, filename.getBytes)
+  }
 
   def fileSendChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, position, data)
 
-  def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = tox.fileGetFileId(friendNumber, fileNumber)
+  def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = new Array[Byte](0) //tox.fileGetFileId(friendNumber, fileNumber)
 
   def callbackFileRequestChunk(callback: FileRequestChunkCallback): Unit = tox.callbackFileRequestChunk(callback)
 

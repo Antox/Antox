@@ -1,24 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <Image
+    <ImageView
         android:id="@+id/avatar_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="4dp"
+        android:contentDescription="@string/dialog_avatar_description" />
 
     <Button
         android:id="@+id/avatar_takephoto"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/attachment_takephoto"/>
+        android:text="@string/dialog_avatar_take_photo"/>
 
     <Button
         android:id="@+id/avatar_pickfile"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/attachment_file"/>
+        android:text="@string/dialog_avatar_use_file"/>
 
 </LinearLayout>

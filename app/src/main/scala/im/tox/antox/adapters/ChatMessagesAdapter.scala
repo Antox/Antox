@@ -16,7 +16,7 @@ import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter._
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
 import im.tox.antox.wrapper.{ChatMessages, FileKind, Message, MessageType}
@@ -190,8 +190,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
             if (msg.message_id != -1) {
               holder.progress.setVisibility(View.VISIBLE)
               holder.progress.setMax(msg.size)
-              holder.progress.setProgress(ToxSingleton.getProgress(msg.id).toInt)
-              val mProgress = ToxSingleton.getProgressSinceXAgo(msg.id, 500)
+              holder.progress.setProgress(State.transfers.getProgress(msg.id).toInt)
+              val mProgress = State.transfers.getProgressSinceXAgo(msg.id, 500)
               val bytesPerSecond = mProgress match {
                 case Some(p) => ((p._1 * 1000) / p._2).toInt
                 case None => 0
@@ -219,13 +219,13 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                 holder.accept.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.acceptFile(msg.key, msg.message_id, context)
+                    State.transfers.acceptFile(msg.key, msg.message_id, context)
                   }
                 })
                 holder.reject.setOnClickListener(new View.OnClickListener() {
 
                   override def onClick(view: View) {
-                    ToxSingleton.rejectFile(msg.key, msg.message_id, context)
+                    State.transfers.rejectFile(msg.key, msg.message_id, context)
                   }
                 })
               }
@@ -278,7 +278,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
       case MessageType.ACTION =>
         actionMessage(holder)
-        holder.message.setText(Html.fromHtml("<b>" + msg.message.replaceFirst(" ", "</b> "))) //make first word (username) bold
+        holder.message.setText(Html.fromHtml("<b>" + msg.sender_name + "</b> ") + msg.message)
 
     }
 
@@ -297,7 +297,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       holder.row.startAnimation(anim)
       animatedIds.add(msg.id)
     }
-    holder.row.setOnLongClickListener(new View.OnLongClickListener() {
+    view.setOnLongClickListener(new View.OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
         if (msg.`type` == MessageType.OWN || msg.`type` == MessageType.FRIEND) {

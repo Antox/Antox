@@ -7,6 +7,7 @@ import android.graphics.{Bitmap, BitmapFactory}
 import android.util.{Log, LruCache}
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
+import im.tox.antox.wrapper.BitmapUtils.RichBitmap
 
 object BitmapManager {
 
@@ -15,10 +16,10 @@ object BitmapManager {
 
   private def getBitmapFromMemCache(key: String): Option[Bitmap] = if (mMemoryCache != null) Option(mMemoryCache.get(key)) else None
 
-  private def isBitmapValid(key: String): Option[Boolean] = Option(bitmapValidMap.get(key))
+  private def isBitmapValid(key: String): Boolean = Option(bitmapValidMap.get(key)).getOrElse(false)
 
   private def addBitmapToMemoryCache(key: String, valid: Boolean, bitmap: Bitmap) {
-    if (getBitmapFromMemCache(key).isEmpty) {
+    if (getBitmapFromMemCache(key).isEmpty && mMemoryCache != null) {
       mMemoryCache.put(key, bitmap)
       bitmapValidMap.put(key, valid)
     }
@@ -67,10 +68,9 @@ object BitmapManager {
       }
       byteArr
     } catch {
-      case e: Exception => {
+      case e: Exception =>
         e.printStackTrace()
         null
-      }
     }
   }
 
@@ -78,7 +78,7 @@ object BitmapManager {
     val imageKey = String.valueOf(id)
     getBitmapFromMemCache(imageKey) match {
       case Some(bitmap) =>
-        if (isBitmapValid(imageKey).get) {
+        if (isBitmapValid(imageKey)) {
           imageView.setImageBitmap(bitmap)
         }
       case None =>
@@ -96,14 +96,13 @@ object BitmapManager {
           options.inPreferredConfig = Bitmap.Config.RGB_565
           bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
           addBitmapToMemoryCache(imageKey, checkValidImage(byteArr), bitmap)
-          if (isBitmapValid(imageKey).get) {
+          if (isBitmapValid(imageKey)) {
             imageView.setImageBitmap(bitmap)
           }
         } catch {
-          case e: FileNotFoundException => {
+          case e: FileNotFoundException =>
             Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
             e.printStackTrace()
-          }
         }
     }
   }
@@ -117,6 +116,7 @@ class BitmapManager {
 
   mMemoryCache = new LruCache[String, Bitmap](cacheSize) {
 
-    protected override def sizeOf(key: String, bitmap: Bitmap): Int = bitmap.getByteCount / 1024
+    protected override def sizeOf(key: String, bitmap: Bitmap): Int =
+      bitmap.getSizeInBytes.asInstanceOf[Int] / 1024
   }
 }

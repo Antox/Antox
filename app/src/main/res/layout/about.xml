@@ -109,13 +109,23 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/about_antox_5"
+                android:id="@+id/textView13"
+                android:layout_below="@+id/textView6"
+                android:layout_alignLeft="@+id/textView6"
+                android:layout_alignStart="@+id/textView6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/about_antox_6"
                 android:id="@+id/textView7"
                 android:layout_marginTop="10dp"
                 android:textSize="@dimen/text_small"
                 android:textStyle="bold"
-                android:layout_below="@+id/textView6"
+                android:layout_below="@+id/textView13"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:paddingLeft="@dimen/margin_small" />
@@ -124,9 +134,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/about_antox_6"
+                android:text="@string/about_antox_7"
                 android:id="@+id/textView8"
                 android:layout_below="@+id/textView7"
+                android:layout_alignLeft="@+id/textView6"
+                android:layout_alignStart="@+id/textView6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/about_antox_8"
+                android:id="@+id/textView12"
+                android:layout_below="@+id/textView8"
                 android:layout_alignLeft="@+id/textView6"
                 android:layout_alignStart="@+id/textView6" />
 

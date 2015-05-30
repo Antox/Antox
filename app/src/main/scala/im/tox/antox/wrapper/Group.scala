@@ -9,9 +9,20 @@ class Group(val id: String,
             private var _name: String,
             var alias: String,
             var topic: String,
-            val peers: PeerList) {
+            val peers: PeerList) extends Contact {
 
   var connected = false
+
+
+  override def sendAction(action: String): Int = {
+    ToxSingleton.tox.sendGroupAction(groupNumber, action)
+    0 //groupchats don't support receipts yet
+  }
+
+  override def sendMessage(message: String): Int = {
+    ToxSingleton.tox.sendGroupMessage(groupNumber, message)
+    0 //groupchats don't support receipts yet
+  }
 
   def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
     var peerName = tox.getGroupPeerName(groupNumber, peerNumber)

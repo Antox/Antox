@@ -18,17 +18,11 @@ import scala.collection.JavaConverters._
 
 object MessageHelper {
 
-  val TAG = "im.tox.antox.tox.MessageHandler"
-  val MAX_MESSAGE_LENGTH = 1367
+  val TAG = "im.tox.antox.tox.MessageHelper"
 
-  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, rawMessage: String, messageType: MessageType): Unit = {
+  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, message: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
     val friendName = db.getFriendNameOrAlias(friendKey)
-    val message = if (messageType == MessageType.ACTION) {
-      formatAction(rawMessage, friendName)
-    } else {
-      rawMessage
-    }
 
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isFriendBlocked(friendKey)) {
@@ -67,15 +61,9 @@ object MessageHelper {
   }
 
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: MessageType) = {
-    println("handling group message")
     val db = new AntoxDB(ctx)
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
-    if (message.equals("showpeers")) {
-      ToxSingleton.getGroup(groupNumber).printPeerList()
-    }
-
-    println("group id: " + groupId + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     val chatActive = State.chatActive && State.activeKey.contains(groupId)
 
     db.addMessage(-1, groupId, peerName, message, has_been_received = true,
@@ -107,60 +95,55 @@ object MessageHelper {
     }
   }
 
-  def formatAction(action: String, friendName: String): String = {
-    var formattedAction = ""
-    if (!action.startsWith(friendName)) {
-      formattedAction = friendName + " " + action
-    }
-
-    formattedAction
-  }
-
-  def sendMessage(ctx: Context, key: String, msg: String, mDbId: Option[Integer]) = {
+  def sendMessage(ctx: Context, key: String, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
       val mFriend = ToxSingleton.getAntoxFriend(key)
+      val messageType = if (isAction) MessageType.ACTION else MessageType.OWN
       mFriend match {
         case None =>
-        case Some(friend) => {
-          val db = new AntoxDB(ctx).open(writeable = true)
+        case Some(friend) =>
+          val db = new AntoxDB(ctx)
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
-              Some(ToxSingleton.tox.sendMessage(friend.getFriendnumber, splitMsg))
+              Some(
+                if (isAction) friend.sendAction(splitMsg) else friend.sendMessage(splitMsg)
+                )
             } catch {
-              case e: Exception => {
+              case e: Exception =>
                 None
-              }
             }
 
             val senderName = ToxSingleton.tox.getName
             mId match {
-              case Some(id) => {
+              case Some(id) =>
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
                   case None => db.addMessage(id, key, senderName,
                     splitMsg, has_been_received =
-                    false, has_been_read = false, successfully_sent = true, MessageType.OWN)
+                    false, has_been_read = false, successfully_sent = true, messageType)
                 }
-              }
               case None => db.addMessage(-1, key, senderName, splitMsg, has_been_received = false,
-                has_been_read = false, successfully_sent = false, MessageType.OWN)
+                has_been_read = false, successfully_sent = false, messageType)
             }
           }
           db.close()
           ToxSingleton.updateMessages(ctx)
-        }
       }
   }
 
-  def sendGroupMessage(ctx: Context, key: String, msg: String, mDbId: Option[Integer]) = {
+  def sendGroupMessage(ctx: Context, key: String, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
     val group = ToxSingleton.getGroup(key)
-    val db = new AntoxDB(ctx).open(writeable = true)
+    val db = new AntoxDB(ctx)
+    val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN
     for (splitMsg <- splitMessage(msg)) {
       try {
-        ToxSingleton.tox.sendGroupMessage(group.groupNumber, splitMsg)
-      } catch {
-        case e: Exception => {
-          None
+        if (isAction) {
+          group.sendAction(splitMsg)
+        } else {
+          group.sendMessage(splitMsg)
         }
+      } catch {
+        case e: Exception =>
+          None
       }
 
       val senderName = ToxSingleton.tox.getName
@@ -168,7 +151,7 @@ object MessageHelper {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
         case None => db.addMessage(0, key, senderName,
           splitMsg, has_been_received =
-            true, has_been_read = true, successfully_sent = true, MessageType.GROUP_OWN)
+            true, has_been_read = true, successfully_sent = true, messageType)
       }
     }
     db.close()
@@ -179,13 +162,13 @@ object MessageHelper {
     var currSplitPos = 0
     val result: util.ArrayList[String] = new util.ArrayList[String]()
 
-    while (msg.length - currSplitPos > MAX_MESSAGE_LENGTH) {
-      val str = msg.substring(currSplitPos, currSplitPos + MAX_MESSAGE_LENGTH)
+    while (msg.length - currSplitPos > Constants.MAX_MESSAGE_LENGTH) {
+      val str = msg.substring(currSplitPos, currSplitPos + Constants.MAX_MESSAGE_LENGTH)
       val spacePos = str.lastIndexOf(' ')
 
       if (spacePos <= 0) {
         result.add(str)
-        currSplitPos += MAX_MESSAGE_LENGTH
+        currSplitPos += Constants.MAX_MESSAGE_LENGTH
       } else {
         result.add(str.substring(0, spacePos))
         currSplitPos += spacePos + 1
@@ -199,14 +182,15 @@ object MessageHelper {
   }
 
   def sendUnsentMessages(ctx: Context) {
-    val db = new AntoxDB(ctx).open(writeable = false)
+    val db = new AntoxDB(ctx)
     val unsentMessageList = db.getUnsentMessageList
     db.close()
     for (unsentMessage <- unsentMessageList) {
       val mFriend = ToxSingleton.getAntoxFriend(unsentMessage.key)
       mFriend.foreach(friend => {
         if (friend.isOnline && ToxSingleton.tox != null) {
-          sendMessage(ctx, unsentMessage.key, unsentMessage.message, Some(unsentMessage.id))
+          sendMessage(ctx, unsentMessage.key, unsentMessage.message,
+            unsentMessage.`type` == MessageType.ACTION, Some(unsentMessage.id))
         }
       })
     }

@@ -18,7 +18,9 @@ object Constants {
 
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 7
+  val DATABASE_VERSION = 10
+
+  val USER_DATABASE_VERSION = 4
 
   val TABLE_FRIENDS = "friends"
 
@@ -76,6 +78,8 @@ object Constants {
 
   val COLUMN_NAME_RECEIVED_AVATAR = "received_avatar"
 
+  val COLUMN_NAME_ACTIVE_MESSAGE = "active_message"
+
   val ADD_FRIEND_REQUEST_CODE = 0
 
   val WELCOME_ACTIVITY_REQUEST_CODE = 3
@@ -91,6 +95,8 @@ object Constants {
   val UNREAD_COUNT_LIMIT = 99
 
   val MAX_NAME_LENGTH = 128
+
+  val MAX_MESSAGE_LENGTH = 1367 //in bytes
 
   val MAX_AVATAR_SIZE = 64 * 1024 //in bytes
 

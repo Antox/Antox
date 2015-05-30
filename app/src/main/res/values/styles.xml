@@ -12,6 +12,9 @@
         -->
     </style>
 
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    </style>
+
     <!-- Application theme. -->
     <style name="AppTheme" parent="CustomActionBarTheme">
     </style>

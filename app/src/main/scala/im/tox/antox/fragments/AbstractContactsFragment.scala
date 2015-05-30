@@ -161,6 +161,7 @@ abstract class AbstractContactsFragment extends Fragment {
             case 0 =>
               val profile = new Intent(getActivity, classOf[FriendProfileActivity])
               profile.putExtra("key", key)
+              profile.putExtra("avatar", parentItem.image)
               startActivity(profile)
 
             case 1 => showDeleteFriendDialog(getActivity, key)
@@ -171,7 +172,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
         if (parentItem.viewType == ContactItemType.GROUP) {
           if (key != "") index match {
-            case 0 => {
+            case 0 =>
               val db = new AntoxDB(getActivity)
               db.deleteChat(key)
               db.deleteGroup(key)
@@ -186,7 +187,6 @@ abstract class AbstractContactsFragment extends Fragment {
               ToxSingleton.save()
               ToxSingleton.updateGroupList(getActivity)
               ToxSingleton.updateMessages(getActivity)
-            }
           }
         }
         dialog.cancel()
@@ -218,7 +218,7 @@ abstract class AbstractContactsFragment extends Fragment {
           val mFriend = ToxSingleton.getAntoxFriend(key)
           mFriend.foreach(friend => {
             try {
-              ToxSingleton.tox.deleteFriend(friend.getFriendnumber)
+              ToxSingleton.tox.deleteFriend(friend.getFriendNumber)
               ToxSingleton.save()
             } catch {
               case e: ToxException =>

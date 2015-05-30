@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 import android.app.{Activity, AlertDialog}
-import android.content.{CursorLoader, DialogInterface, Intent}
+import android.content.{Context, DialogInterface, Intent}
+import android.support.v4.content.CursorLoader
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore
@@ -14,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.widget._
 import de.hdodenhof.circleimageview.CircleImageView
+import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{Constants, IconColor}
@@ -35,68 +37,17 @@ class ChatActivity extends GenericChatActivity {
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
-    isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
-    statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
-
-    messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
-    messageBox.addTextChangedListener(new TextWatcher() {
-      override def beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-        val isTyping = (i3 > 0)
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          if (friend.isOnline) {
-            try {
-              ToxSingleton.tox.setTyping(friend.getFriendnumber, isTyping)
-            } catch {
-              case te: ToxException => {
-              }
-              case e: Exception => {
-              }
-            }
-          }
-        })
-      }
-
-      override def onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-      }
-
-      override def afterTextChanged(editable: Editable) {
-      }
-    })
-
-    messageBox.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      override def onFocusChange(v: View, hasFocus: Boolean) {
-        //chatListView.setSelection(adapter.getCount() - 1)
-      }
-    })
-
-    val b = this.findViewById(R.id.sendMessageButton)
-    b.setOnClickListener(new View.OnClickListener() {
-      override def onClick(v: View) {
-        sendMessage()
-        val mFriend = ToxSingleton.getAntoxFriend(key)
-        mFriend.foreach(friend => {
-          try {
-            ToxSingleton.tox.setTyping(friend.getFriendnumber, typing = false)
-          } catch {
-            case te: ToxException => {
-            }
-            case e: Exception => {
-            }
-          }
-        })
-      }
-    })
-
     val attachmentButton = this.findViewById(R.id.attachmentButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(v: View) {
-        if (!ToxSingleton.getAntoxFriend(activeKey).get.isOnline) {
-          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-          return
-        }
+        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+          if (!friend.isOnline) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
+        })
         
         val builder = new AlertDialog.Builder(thisActivity)
         var items: Array[CharSequence] = null
@@ -111,6 +62,10 @@ class ChatActivity extends GenericChatActivity {
               }
               case 1 => {
                 val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                if (cameraIntent.resolveActivity(getPackageManager) == null) {
+                  Toast.makeText(thisActivity, getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)
+                  return
+                }
                 val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
                 println("image name " + image_name)
                 val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
@@ -129,7 +84,7 @@ class ChatActivity extends GenericChatActivity {
                 val fileDialog = new FileDialog(thisActivity, mPath, false)
                 fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
                   def fileSelected(file: File) {
-                    ToxSingleton.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, thisActivity)
+                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
                   }
                 })
                 fileDialog.showDialog()
@@ -176,7 +131,7 @@ class ChatActivity extends GenericChatActivity {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         } else {
-          thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
@@ -184,17 +139,6 @@ class ChatActivity extends GenericChatActivity {
         thisActivity.setDisplayName("")
       }
     }
-  }
-
-  private def sendMessage() {
-    Log.d(TAG, "sendMessage")
-    val mMessage = validateMessageBox()
-    val key = activeKey
-
-    mMessage.foreach(message => {
-      messageBox.setText("")
-      MessageHelper.sendMessage(this, key, message, None)
-    })
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -212,7 +156,7 @@ class ChatActivity extends GenericChatActivity {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              ToxSingleton.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, this)
+              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, null, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -221,7 +165,7 @@ class ChatActivity extends GenericChatActivity {
       }
       if (requestCode == Constants.PHOTO_RESULT) {
         if (photoPath != null) {
-          ToxSingleton.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, this)
+          State.transfers.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, null, this)
           photoPath = null
         }
       }
@@ -239,5 +183,23 @@ class ChatActivity extends GenericChatActivity {
 
   override def onPause() = {
     super.onPause()
+  }
+
+  override def sendMessage(message: String, isAction: Boolean, activeKey: String, context: Context): Unit = {
+    MessageHelper.sendMessage(this, activeKey, message, isAction, None)
+  }
+
+  override def setTyping(typing: Boolean, activeKey: String): Unit = {
+    val mFriend = ToxSingleton.getAntoxFriend(activeKey)
+    mFriend.foreach(friend => {
+      try {
+        ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
+      } catch {
+        case te: ToxException => {
+        }
+        case e: Exception => {
+        }
+      }
+    })
   }
 }

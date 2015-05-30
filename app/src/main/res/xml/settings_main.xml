@@ -50,8 +50,9 @@
             android:key="enable_udp"
             android:title="@string/pref_udp" />
 
-        <Preference
-            android:key="nospam"
-            android:title="@string/pref_nospam" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autostart"
+            android:title="@string/pref_autostart" />
     </PreferenceCategory>
 </PreferenceScreen>
