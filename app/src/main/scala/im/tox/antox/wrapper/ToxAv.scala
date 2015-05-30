@@ -1,10 +1,8 @@
 package im.tox.antox.wrapper
 
-import im.tox.antox.data.State
 import im.tox.tox4j.av.callbacks._
 import im.tox.tox4j.av.enums.ToxCallControl
 import im.tox.tox4j.{ToxAvImpl, ToxCoreImpl}
-import rx.lang.scala.schedulers.IOScheduler
 
 class ToxAv(core: ToxCoreImpl) {
 

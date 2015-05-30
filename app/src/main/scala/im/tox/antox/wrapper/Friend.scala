@@ -3,6 +3,7 @@ package im.tox.antox.wrapper
 import java.io.File
 import java.util
 
+import im.tox.antox.av.Call
 import im.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.core.enums.ToxStatus
 
@@ -35,6 +36,8 @@ class Friend(friendNumber: Int) extends Contact {
 
   @BeanProperty
   var previousNames: util.ArrayList[String] = _
+
+  val call = new Call(friendNumber)
 
   def getFriendNumber: Int = this.friendNumber
 

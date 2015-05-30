@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.{Intent, Context}
 import android.preference.PreferenceManager
 import im.tox.antox.activities.LoginActivity
-import im.tox.antox.av.CallManager
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
 import im.tox.antox.transfer.FileTransferManager
 
