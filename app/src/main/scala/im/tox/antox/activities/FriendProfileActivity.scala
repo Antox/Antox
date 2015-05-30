@@ -15,8 +15,6 @@ import im.tox.antoxnightly.R
 
 class FriendProfileActivity extends AppCompatActivity {
 
-  var friendName: String = null
-
   var friendKey: String = null
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -25,20 +23,13 @@ class FriendProfileActivity extends AppCompatActivity {
     setContentView(R.layout.activity_friend_profile)
 
     friendKey = getIntent.getStringExtra("key")
-
     val db = new AntoxDB(this)
-    val friendDetails = db.getFriendDetails(friendKey)
-    friendName = friendDetails(0)
-    val friendAlias = friendDetails(1)
-    val friendNote = friendDetails(2)
+    val friendNote = db.getFriendStatusMessage(friendKey)
 
-    if (friendAlias == "")
-      setTitle(getResources.getString(R.string.friend_profile_title, friendName))
-    else
-      setTitle(getResources.getString(R.string.friend_profile_title, friendAlias))
+    setTitle(getResources.getString(R.string.friend_profile_title, getIntent.getStringExtra("name")))
 
     val editFriendAlias = findViewById(R.id.friendAliasText).asInstanceOf[EditText]
-    editFriendAlias.setText(friendAlias)
+    editFriendAlias.setText(getIntent.getStringExtra("name"))
 
     val editFriendNote = findViewById(R.id.friendNoteText).asInstanceOf[TextView]
     editFriendNote.setText("\"" + friendNote + "\"")
