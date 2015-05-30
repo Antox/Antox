@@ -11,8 +11,8 @@ class LeftPaneItem(
   val viewType: ContactItemType,
   val key: String,
   val image: Option[File],
-  val first: String,
-  val second: String,
+  val first: String, // name
+  val second: String, // status message, or last message depending on which tab
   val isOnline: Boolean,
   val status: ToxStatus,
   val count: Int,

@@ -27,16 +27,14 @@ class FriendProfileActivity extends AppCompatActivity {
     friendKey = getIntent.getStringExtra("key")
 
     val db = new AntoxDB(this)
-
     val friendDetails = db.getFriendDetails(friendKey)
-
     friendName = friendDetails(0)
-
     val friendAlias = friendDetails(1)
-
     val friendNote = friendDetails(2)
 
-    if (friendAlias == "") setTitle(getResources.getString(R.string.friend_profile_title, friendName)) else setTitle(getResources.getString(R.string.friend_profile_title,
+    if (friendAlias == "")
+      setTitle(getResources.getString(R.string.friend_profile_title, friendName))
+    else setTitle(getResources.getString(R.string.friend_profile_title,
       friendAlias))
 
     val editFriendAlias = findViewById(R.id.friendAliasText).asInstanceOf[EditText]
@@ -46,8 +44,10 @@ class FriendProfileActivity extends AppCompatActivity {
     editFriendNote.setText("\"" + friendNote + "\"")
 
     val avatar = getIntent.getSerializableExtra("avatar").asInstanceOf[Option[File]]
-    val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-    avatarHolder.setImageURI(Uri.fromFile(avatar.get))
+    if (avatar != null) { // avatar may be null if one hasn't been set yet
+      val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+      avatarHolder.setImageURI(Uri.fromFile(avatar.get))
+    }
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       getSupportActionBar.setIcon(R.drawable.ic_actionbar)
