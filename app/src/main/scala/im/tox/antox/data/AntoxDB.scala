@@ -845,6 +845,27 @@ class AntoxDB(ctx: Context) {
     if (groupDetails._2 == "") groupDetails._1 else groupDetails._2
   }
 
+  def getFriendStatusMessage(key: String): String = {
+    this.open(writeable = true)
+
+    val query =
+      "SELECT " + Constants.COLUMN_NAME_NOTE +
+      " FROM " + Constants.TABLE_FRIENDS +
+      " WHERE " + Constants.COLUMN_NAME_KEY +
+      " = '" + key + "'"
+
+    var friendNote = ""
+    val cursor = mDb.rawQuery(query, null)
+    if (cursor.moveToFirst()) {
+      friendNote = cursor.getString(0)
+    }
+    cursor.close()
+
+    this.close()
+
+    friendNote
+  }
+
   def updateAlias(alias: String, key: String) {
     this.open(writeable = true)
     val query = "UPDATE " + Constants.TABLE_FRIENDS + " SET " + Constants.COLUMN_NAME_ALIAS +

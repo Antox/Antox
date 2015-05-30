@@ -162,6 +162,7 @@ abstract class AbstractContactsFragment extends Fragment {
               val profile = new Intent(getActivity, classOf[FriendProfileActivity])
               profile.putExtra("key", key)
               profile.putExtra("avatar", parentItem.image)
+              profile.putExtra("name", parentItem.first)
               startActivity(profile)
 
             case 1 => showDeleteFriendDialog(getActivity, key)
