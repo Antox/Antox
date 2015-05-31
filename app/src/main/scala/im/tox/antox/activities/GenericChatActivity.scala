@@ -39,7 +39,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var titleSub: Subscription = null
   var activeKey: String = null
   var scrolling: Boolean = false
-  var antoxDB: AntoxDB = null
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50
 
@@ -57,6 +56,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val thisActivity = this
     Log.d(TAG, "key = " + key)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    val antoxDB = new AntoxDB(this)
     adapter = new ChatMessagesAdapter(this, getMessageList, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -207,9 +207,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   }
 
   def getMessageList: util.ArrayList[Message] = {
-    if (antoxDB == null) {
-      antoxDB = new AntoxDB(this)
-    }
+    val antoxDB = new AntoxDB(this)
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
     val messageList: util.ArrayList[Message] = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true))
     messageList

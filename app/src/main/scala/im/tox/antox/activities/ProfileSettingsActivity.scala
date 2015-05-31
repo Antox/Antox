@@ -3,13 +3,14 @@ package im.tox.antox.activities
 import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
 import java.util.Random
 
-import android.app.AlertDialog
+import android.content.DialogInterface.OnClickListener
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
+import android.support.v7.app.AlertDialog
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
@@ -110,25 +111,37 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       override def onPreferenceClick(preference: Preference): Boolean = {
         val toxSingleton = ToxSingleton.getInstance()
 
-        try {
-          val random = new Random()
-          val nospam = random.nextInt(1234567890)
-          toxSingleton.tox.setNospam(nospam)
-          val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-          val editor = preferences.edit()
-          editor.putString("tox_id", toxSingleton.tox.getAddress)
-          editor.apply()
+        val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+        builder.setMessage(R.string.reset_tox_id_dialog_message)
+          .setTitle(R.string.reset_tox_id_dialog_title)
 
-          // Display toast to inform user of successful change
-          Toast.makeText(
-            getApplicationContext,
-            getApplicationContext.getResources.getString(R.string.nospam_updated),
-            Toast.LENGTH_SHORT
-          ).show()
+        builder.setPositiveButton(getString(R.string.reset_tox_id_dialog_confirm), new OnClickListener {
+          override def onClick(dialog: DialogInterface, which: Int): Unit = {
+            try {
+              val random = new Random()
+              val nospam = random.nextInt(1234567890)
+              toxSingleton.tox.setNospam(nospam)
+              val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+              val editor = preferences.edit()
+              editor.putString("tox_id", toxSingleton.tox.getAddress)
+              editor.apply()
 
-        } catch {
-          case e: ToxException[_] => e.printStackTrace()
-        }
+              // Display toast to inform user of successful change
+              Toast.makeText(
+                getApplicationContext,
+                getApplicationContext.getResources.getString(R.string.tox_id_reset),
+                Toast.LENGTH_SHORT
+              ).show()
+
+            } catch {
+              case e: ToxException[_] => e.printStackTrace()
+            }
+          }
+        })
+
+        builder.setNegativeButton(getString(R.string.button_cancel), null)
+
+        builder.show()
 
         true
       }
