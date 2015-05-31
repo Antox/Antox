@@ -2,10 +2,8 @@ package im.tox.antox.activities
 
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
-import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
-import android.support.v7.app.{ActionBar, AppCompatDelegate}
-import android.support.v7.widget.Toolbar
-import android.view.{ViewGroup, View, MenuInflater, MenuItem}
+import android.preference.{ListPreference, Preference, PreferenceManager}
+import android.view.MenuItem
 import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{ToxDoService, ToxSingleton}
@@ -45,6 +43,9 @@ class SettingsActivity extends BetterPreferenceActivity {
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+
     addPreferencesFromResource(R.xml.settings_main)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
