@@ -195,7 +195,7 @@ class ChatActivity extends GenericChatActivity {
       try {
         ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
       } catch {
-        case te: ToxException => {
+        case te: ToxException[_] => {
         }
         case e: Exception => {
         }

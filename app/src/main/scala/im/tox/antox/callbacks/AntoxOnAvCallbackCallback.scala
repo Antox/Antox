@@ -33,7 +33,7 @@ class AntoxOnAvCallbackCallback(private var ctx: Context){
       case ToxAvCallbackID.ON_PEER_TIMEOUT => Log.d("OnAvCallbackCallback", "Callback type: ON_PEER_TIMEOUT")
       case ToxAvCallbackID.ON_MEDIA_CHANGE => Log.d("OnAvCallbackCallback", "Callback type: ON_MEDIA_CHANGE")
     } catch {
-      case e: ToxException => e.printStackTrace
+      case e: ToxException[_] => e.printStackTrace
     } */
   //}
 }

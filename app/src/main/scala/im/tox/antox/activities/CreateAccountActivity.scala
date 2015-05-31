@@ -18,9 +18,9 @@ import im.tox.antox.toxdns.{ToxDNS, ToxData}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
 import im.tox.antox.utils._
 import im.tox.antoxnightly.R
-import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
+import im.tox.tox4j.impl.ToxCoreJni
 
 class CreateAccountActivity extends AppCompatActivity {
 
@@ -97,7 +97,7 @@ class CreateAccountActivity extends AppCompatActivity {
   def createToxData(accountName: String): ToxData = {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
-    val tox = new ToxCoreImpl(toxOptions, null)
+    val tox = new ToxCoreJni(toxOptions, null)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
@@ -109,7 +109,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
-    val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
+    val tox = new ToxCoreJni(toxOptions, toxDataFile.loadFile())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
@@ -134,7 +134,7 @@ class CreateAccountActivity extends AppCompatActivity {
           try {
             toxData = createToxData(accountName)
           } catch {
-            case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
+            case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
           }
         } else {
           toxData = loadToxData(accountName)
