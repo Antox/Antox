@@ -4,13 +4,12 @@ import java.io.{File, IOException}
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import android.app.{Activity, AlertDialog}
-import android.content.{Context, DialogInterface, Intent}
-import android.support.v4.content.CursorLoader
+import android.app.Activity
+import android.content.{Context, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore
-import android.text.{Editable, TextWatcher}
+import android.support.v4.content.CursorLoader
 import android.util.Log
 import android.view.View
 import android.widget._
@@ -37,10 +36,12 @@ class ChatActivity extends GenericChatActivity {
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
+    /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
     val attachmentButton = this.findViewById(R.id.attachmentButton)
+    val cameraButton = this.findViewById(R.id.cameraButton)
+    val imageButton = this.findViewById(R.id.imageButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
-
       override def onClick(v: View) {
         ToxSingleton.getAntoxFriend(key).foreach(friend => {
           if (!friend.isOnline) {
@@ -48,52 +49,56 @@ class ChatActivity extends GenericChatActivity {
             return
           }
         })
-        
-        val builder = new AlertDialog.Builder(thisActivity)
-        var items: Array[CharSequence] = null
-        items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
-        builder.setItems(items, new DialogInterface.OnClickListener() {
 
-          override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
-            i match {
-              case 0 => {
-                val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, Constants.IMAGE_RESULT)
-              }
-              case 1 => {
-                val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                if (cameraIntent.resolveActivity(getPackageManager) == null) {
-                  Toast.makeText(thisActivity, getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)
-                  return
-                }
-                val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
-                println("image name " + image_name)
-                val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                try {
-                  val file = File.createTempFile(image_name, ".jpg", storageDir)
-                  val imageUri = Uri.fromFile(file)
-                  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                  photoPath = file.getAbsolutePath
-                  startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-                } catch {
-                  case e: IOException => e.printStackTrace()
-                }
-              }
-              case 2 => {
-                val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-                val fileDialog = new FileDialog(thisActivity, mPath, false)
-                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                  def fileSelected(file: File) {
-                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
-                  }
-                })
-                fileDialog.showDialog()
-              }
-
-            }
+        val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+        val fileDialog = new FileDialog(thisActivity, mPath, false)
+        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+          def fileSelected(file: File) {
+            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
           }
         })
-        builder.create().show()
+        fileDialog.showDialog()
+
+      }
+    })
+
+    cameraButton.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+          if (!friend.isOnline) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
+        })
+
+        val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
+        println("image name " + image_name)
+        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        try {
+          val file = File.createTempFile(image_name, ".jpg", storageDir)
+          val imageUri = Uri.fromFile(file)
+          cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+          photoPath = file.getAbsolutePath
+          startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+        } catch {
+          case e: IOException => e.printStackTrace()
+        }
+
+      }
+    })
+
+    imageButton.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+          if (!friend.isOnline) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
+        })
+
+        val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
   }
@@ -113,8 +118,7 @@ class ChatActivity extends GenericChatActivity {
     val thisActivity = this
     val key = activeKey
     val mFriend: Option[FriendInfo] = fi
-      .filter(f => f.key == key)
-      .headOption
+      .find(f => f.key == key)
     mFriend match {
       case Some(friend) => {
         thisActivity.setDisplayName(friend.getAliasOrName)
@@ -173,7 +177,6 @@ class ChatActivity extends GenericChatActivity {
       Log.d(TAG, "onActivityResult result code not okay, user cancelled")
     }
   }
-
 
   def onClickVoiceCallFriend(v: View){}
 
