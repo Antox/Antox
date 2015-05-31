@@ -106,7 +106,7 @@ class AddFriendFragment extends Fragment with InputableID {
             ToxSingleton.tox.addFriend(address, message)
             ToxSingleton.save()
           } catch {
-            case e: ToxException => e.printStackTrace()
+            case e: ToxException[_]  => e.printStackTrace()
           }
           Log.d("AddFriendActivity", "Adding friend to database")
           db.addFriend(key, "Friend Request Sent", alias, originalUsername)

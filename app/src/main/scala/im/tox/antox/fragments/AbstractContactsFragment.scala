@@ -182,7 +182,7 @@ abstract class AbstractContactsFragment extends Fragment {
               try {
                 group.leave(getResources.getString(R.string.group_default_part_message))
               } catch {
-                case e: ToxException =>
+                case e: ToxException[_] =>
               }
 
               ToxSingleton.save()
@@ -222,7 +222,7 @@ abstract class AbstractContactsFragment extends Fragment {
               ToxSingleton.tox.deleteFriend(friend.getFriendNumber)
               ToxSingleton.save()
             } catch {
-              case e: ToxException =>
+              case e: ToxException[_] =>
             }
           })
           subscriber.onCompleted()

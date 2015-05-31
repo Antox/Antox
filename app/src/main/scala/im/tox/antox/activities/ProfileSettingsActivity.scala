@@ -51,17 +51,16 @@ object ProfileSettingsActivity {
   }
 }
 
-class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
+class ProfileSettingsActivity extends BetterPreferenceActivity {
 
   private var avatarDialog: AvatarDialog = _
 
   override def onCreate(savedInstanceState: Bundle) {
+    getDelegate.installViewFactory()
+    getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.pref_profile)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
-      getActionBar != null) {
-      getActionBar.setDisplayHomeAsUpEnabled(true)
-    }
+
     bindPreferenceSummaryToValue(findPreference("nickname"))
     val passwordPreference = findPreference("password")
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
@@ -128,7 +127,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
           ).show()
 
         } catch {
-          case e: ToxException => e.printStackTrace()
+          case e: ToxException[_] => e.printStackTrace()
         }
 
         true
@@ -235,7 +234,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
           println("Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
-          case e: ToxException => e.printStackTrace()
+          case e: ToxException[_] => e.printStackTrace()
         }
         db.updateUserDetail(activeAccount, key, name)
 
@@ -249,7 +248,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
-          case e: ToxException => e.printStackTrace()
+          case e: ToxException[_] => e.printStackTrace()
         }
         db.updateUserDetail(activeAccount, key, newStatusString)
 
@@ -258,7 +257,7 @@ class ProfileSettingsActivity extends PreferenceActivity with SharedPreferences.
         try {
           ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
-          case e: ToxException => e.printStackTrace()
+          case e: ToxException[_] => e.printStackTrace()
         }
         db.updateUserDetail(activeAccount, key, statusMessage)
 

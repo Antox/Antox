@@ -11,5 +11,8 @@
         <item name="background">@color/action_bar_background</item>
         <item name="backgroundStacked">@color/action_bar_background</item>
         <item name="backgroundSplit">@color/action_bar_background</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 </resources>
