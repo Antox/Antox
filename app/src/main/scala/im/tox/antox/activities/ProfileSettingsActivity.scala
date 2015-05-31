@@ -7,9 +7,9 @@ import android.content.DialogInterface.OnClickListener
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
-import android.os.{Build, Bundle, Environment}
+import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
-import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
+import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v7.app.AlertDialog
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
@@ -60,6 +60,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+
     addPreferencesFromResource(R.xml.pref_profile)
 
     bindPreferenceSummaryToValue(findPreference("nickname"))
