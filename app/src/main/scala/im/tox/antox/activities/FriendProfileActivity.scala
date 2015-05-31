@@ -35,10 +35,10 @@ class FriendProfileActivity extends AppCompatActivity {
     editFriendNote.setText("\"" + friendNote + "\"")
 
     val avatar = getIntent.getSerializableExtra("avatar").asInstanceOf[Option[File]]
-    if (avatar != null) { // avatar may be null if one hasn't been set yet
+    avatar.foreach(avatar => {
       val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-      avatarHolder.setImageURI(Uri.fromFile(avatar.get))
-    }
+      avatarHolder.setImageURI(Uri.fromFile(avatar))
+    })
 
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       getSupportActionBar.setIcon(R.drawable.ic_actionbar)
