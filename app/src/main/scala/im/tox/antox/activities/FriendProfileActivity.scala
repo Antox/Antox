@@ -16,6 +16,7 @@ import im.tox.antoxnightly.R
 class FriendProfileActivity extends AppCompatActivity {
 
   var friendKey: String = null
+  var nickChanged: Boolean = false
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -37,9 +38,8 @@ class FriendProfileActivity extends AppCompatActivity {
 
     editFriendAlias.addTextChangedListener(new TextWatcher() {
       override def afterTextChanged(s: Editable) {
-        /* Update friend alias after text has been changed */
-        val db = new AntoxDB(getApplicationContext)
-        db.updateAlias(editFriendAlias.getText.toString, friendKey)
+        /* Set nick changed to true in order to save change in onPause() */
+        nickChanged = true
 
         /* Update title to reflect new nick */
         setTitle(getResources.getString(R.string.friend_profile_title, editFriendAlias.getText.toString))
@@ -70,5 +70,19 @@ class FriendProfileActivity extends AppCompatActivity {
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
     FriendProfileActivity.this.startActivity(intent)
     finish()
+  }
+
+  /**
+   * Override onPause() in order to save any nickname changes
+   */
+  override def onPause() {
+    super.onPause()
+
+    /* Update friend alias after text has been changed */
+    if (nickChanged) {
+      val editFriendAlias = findViewById(R.id.friendAlias).asInstanceOf[EditText]
+      val db = new AntoxDB(getApplicationContext)
+      db.updateAlias(editFriendAlias.getText.toString, friendKey)
+    }
   }
 }
