@@ -135,6 +135,14 @@
     <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them.\n\nAre you sure you wish to continue?</string>
 
+    <!-- Reset ToxID Dialog -->
+    <string name="reset_tox_id_dialog_message">Resetting your Tox ID changes your ID permanently. You will
+        keep your current contacts list, but other people won\'t be able to add you using your old ID. </string>
+    <string name="reset_tox_id_dialog_title">Confirm Tox ID Reset</string>
+    <string name="reset_tox_id_dialog_confirm">Reset ID</string>
+    <string name="reset_tox_id_dialog_cancel">Cancel</string>
+    <string name="tox_id_reset">Your Tox ID has been reset</string>
+
     <!-- Create Group Dialog -->
     <string name="create_group_dialog_message">Create a new Group Chat</string>
     <string name="create_group_dialog_create_group">Create Group</string>
@@ -157,7 +165,6 @@
     <string name="titles_settings">Settings</string>
 
     <!-- Misc -->
-    <string name="nospam_updated">Your nospam has been updated</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>

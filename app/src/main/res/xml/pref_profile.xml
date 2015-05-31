@@ -59,14 +59,14 @@
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
 
-    <Preference
-        android:key="nospam"
-        android:title="@string/pref_nospam" />
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="logging_enabled"
         android:title="@string/pref_title_logging_enabled" />
+
+    <Preference
+        android:key="nospam"
+        android:title="@string/pref_nospam" />
 
     <Preference
         android:key="export"
