@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.text.InputFilter.LengthFilter
-import android.text.{InputFilter, Editable, TextWatcher}
+import android.text.{Editable, InputFilter, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
@@ -20,8 +20,8 @@ import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
-import scala.concurrent.duration._
 import scala.collection.JavaConversions._
+import scala.concurrent.duration._
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -81,8 +81,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
       }
 
     })
-    isTypingBox = this.findViewById(R.id.isTyping).asInstanceOf[TextView]
-    statusTextBox = this.findViewById(R.id.chatActiveStatus).asInstanceOf[TextView]
 
     val b = this.findViewById(R.id.sendMessageButton)
     b.setOnClickListener(new View.OnClickListener() {

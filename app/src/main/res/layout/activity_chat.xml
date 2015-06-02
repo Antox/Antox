@@ -25,14 +25,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/attachmentButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="@dimen/margin_medium"
-            android:src="@drawable/ic_action_attachment_2"/>
-
 
         <EditText
             android:id="@+id/yourMessage"
@@ -62,4 +54,41 @@
             android:src="@drawable/ic_send" />
         </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:background="@color/white_absolute"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:contentDescription="@string/attachment_file"
+            android:id="@+id/attachmentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_attach_file_black_24dp"
+            android:layout_weight="0.33"/>
+
+        <ImageView
+            android:contentDescription="@string/attachment_takephoto"
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            android:layout_weight="0.33"/>
+
+        <ImageView
+            android:contentDescription="@string/attachment_photo"
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_image_black_24dp"
+            android:layout_weight="0.33"/>
+
+    </LinearLayout>
 </LinearLayout>
