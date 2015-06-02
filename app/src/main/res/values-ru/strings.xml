@@ -101,5 +101,12 @@
   <string name="qr_default_message">Это приложение требует Сканер штрих-кодов. Хотите установить его?</string>
   <string name="qr_button_yes">Да</string>
   <string name="qr_button_no">Нет</string>
-  <!--nav bar-->
+  <!-- nav bar -->
+  <string name="n_settings">НАСТРОЙКИ</string>
+  <string name="n_profile_options">ПРОФИЛЬ</string>
+  <string name="n_create_group">СОЗДАТЬ БЕСЕДУ</string>
+  <string name="n_add_person">ДОБАВИТЬ ДРУГА</string>
+  <string name="n_about">О ПРОДУКТЕ</string>
+  <string name="n_open_source">ЛИЦЕНЗИЯ OPEN SOURCE</string>
+  <string name="n_logout">ВЫЙТИ</string>
 </resources>
