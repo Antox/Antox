@@ -1,6 +1,8 @@
 Antox
 =====
 
+<img src="http://a.pomf.se/qazaun.png" width="230px" height="400px"/><img src="http://a.pomf.se/ojwmhk.png" width="230px" height="400px"/><img src="http://a.pomf.se/sbxwvx.png" width="230px" height="400px"/>
+
 Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
 
 ###Current development
@@ -13,6 +15,11 @@ Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia su
 To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
 
 To install on F-Droid, add https://repo.tox.im/android and search for "Antox".
+
+###What Is Currently Working
+- One to one messaging
+- File transfers
+- Avatars
 
 ###Translating Antox
 You can localize the application via github pull request or by requesting a new language or join an existing translation team on [Transifex](https://www.transifex.com/projects/p/antox/).
@@ -42,14 +49,6 @@ You can localize the application via github pull request or by requesting a new 
 - These dependencies are updated from time to time, so you might need to check back if the binary link changed
 - Connect your phone with USB in developer mode and run `./gradlew installDebug` from the root Antox directory. It will install Antox on to your phone, and you can now run it.
 - Run `adb logcat` to display the logs of your USB connected phone, to read error messages and crash logs etc.
-
-###What Is Currently Working
-- One to one messaging
-- File transfers
-- Avatars
-
-###Screenshots Of Progress
-<img src="http://a.pomf.se/qazaun.png" width="230px" height="400px"/><img src="http://a.pomf.se/ojwmhk.png" width="230px" height="400px"/><img src="http://a.pomf.se/sbxwvx.png" width="230px" height="400px"/>
 
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
