@@ -133,6 +133,14 @@
   <string name="friend_action_block_friend_confirmation">Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
 	  richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
 
+  <!-- Reset ToxID Dialog -->
+  <string name="reset_tox_id_dialog_message">Resettando il tuo Tox ID, questo verrà modificato permanentemente. La tua lista contatti
+	  non verrà modificata, ma le altre persone non saranno in grado di aggiungerti usando il tuo vecchio Tox ID.</string>
+  <string name="reset_tox_id_dialog_title">Conferma Reset Tox ID</string>
+  <string name="reset_tox_id_dialog_confirm">Resetta Tox ID</string>
+  <string name="reset_tox_id_dialog_cancel">Annulla</string>
+  <string name="tox_id_reset">Il tuo Tox ID è stato resettato</string>
+
   <!-- Create Group Dialog -->
   <string name="create_group_dialog_message">Crea una nuova chat di gruppo</string>
   <string name="create_group_dialog_create_group">Crea Gruppo</string>
@@ -206,10 +214,12 @@
   <string name="about">Informazioni</string>
   <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>
   <string name="about_antox_2">Cosa Funziona:</string>
-  <string name="about_antox_3">-Chat base (questo non include le chat di gruppo)</string>
-  <string name="about_antox_4">-Notifiche</string>
-  <string name="about_antox_5">Cosa Non Funziona:</string>
-  <string name="about_antox_6">-Audio/Video\n-Trasferimento files</string>
+  <string name="about_antox_3">- Chat base</string>
+  <string name="about_antox_4">- Notifiche</string>
+  <string name="about_antox_5">- Trasferimento files</string>
+  <string name="about_antox_6">Cosa Non Funziona:</string>
+  <string name="about_antox_7">- Audio/Video</string>
+  <string name="about_antox_7">- Chat di gruppo</string>
   <string name="title_activity_call">CallActivity</string>
   <string name="end_call">Termina Chiamata</string>
   <string name="mute_call">Disattiva Audio</string>
