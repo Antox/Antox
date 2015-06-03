@@ -1,13 +1,11 @@
 package im.tox.antox.adapters
 
 import java.io.File
-import java.sql.Timestamp
 import java.util
 import java.util.Random
 
 import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
-import android.database.Cursor
 import android.graphics.{Color, Typeface}
 import android.net.Uri
 import android.os.{Build, Environment}
@@ -16,10 +14,10 @@ import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter._
-import im.tox.antox.data.{State, AntoxDB}
+import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{BitmapManager, Constants, TimestampUtils}
-import im.tox.antox.wrapper.{ChatMessages, FileKind, Message, MessageType}
+import im.tox.antox.wrapper.{Message, MessageType}
 import im.tox.antoxnightly.R
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
@@ -34,10 +32,6 @@ object ChatMessagesAdapter {
     var layout: LinearLayout = _
 
     var background: LinearLayout = _
-
-    var sentTriangle: View = _
-
-    var receivedTriangle: View = _
 
     var message: TextView = _
 
@@ -64,7 +58,6 @@ object ChatMessagesAdapter {
     var bubble: LinearLayout = _
 
     var wrapper: LinearLayout = _
-
   }
 }
 
@@ -88,8 +81,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     val msg = getItem(position)
 
     //FIXME
-    var lastMsg: Message = null
-    var nextMsg: Message = null
+    val lastMsg: Message = null
+    val nextMsg: Message = null
 
     if (convertView == null) {
       view = mInflater.inflate(this.layoutResourceId, parent, false)
@@ -109,8 +102,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       holder.buttons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
       holder.accept = view.findViewById(R.id.file_accept_button)
       holder.reject = view.findViewById(R.id.file_reject_button)
-      holder.sentTriangle = view.findViewById(R.id.sent_triangle)
-      holder.receivedTriangle = view.findViewById(R.id.received_triangle)
       holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
       holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
 
@@ -140,8 +131,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     holder.progressText.setVisibility(View.GONE)
     holder.padding.setVisibility(View.GONE)
     holder.buttons.setVisibility(View.GONE)
-    holder.sentTriangle.setVisibility(View.GONE)
-    holder.receivedTriangle.setVisibility(View.GONE)
     setAlpha(holder.bubble, 1f)
     msg.`type` match {
       case MessageType.OWN | MessageType.GROUP_OWN =>
@@ -255,7 +244,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                   holder.imageMessage.setVisibility(View.VISIBLE)
                   holder.imageMessageFrame.setVisibility(View.VISIBLE)
                   holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-
                     def onClick(v: View) {
                       val i = new Intent()
                       i.setAction(android.content.Intent.ACTION_VIEW)
@@ -263,13 +251,9 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                       ChatMessagesAdapter.this.context.startActivity(i)
                     }
                   })
-                  if (msg.received) {
-                    holder.message.setVisibility(View.GONE)
-                    holder.title.setVisibility(View.GONE)
-                    holder.progressText.setVisibility(View.GONE)
-                  } else {
-                    holder.padding.setVisibility(View.VISIBLE)
-                  }
+                  holder.message.setVisibility(View.GONE)
+                  holder.title.setVisibility(View.GONE)
+                  holder.progressText.setVisibility(View.GONE)
                 }
                 //break
             }
@@ -282,7 +266,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
     }
 
-    val showTimestampInterval: Int = 120 * 1000 //in milliseconds
     //TODO: Only show a timestamp if the next message is more than a minute after this one
     if (nextMsg == null ||
       (nextMsg == null && lastMsg == null) ||
@@ -364,22 +347,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     }
   }
 
-  private def chatMessageFromCursor(cursor: Cursor): ChatMessages = {
-    val id = cursor.getInt(0)
-    val time = Timestamp.valueOf(cursor.getString(1))
-    val message_id = cursor.getInt(2)
-    val key = cursor.getString(3)
-    val sender_name = cursor.getString(4)
-    val message = cursor.getString(5)
-    val received = cursor.getInt(6) > 0
-    val read = cursor.getInt(7) > 0
-    val sent = cursor.getInt(8) > 0
-    val size = cursor.getInt(9)
-    val messageType = cursor.getInt(10)
-    val fileKind = cursor.getInt(11)
-    new ChatMessages(id, message_id, key, sender_name, message, time, received, sent, size, MessageType(messageType), FileKind.fromToxFileKind(fileKind))
-  }
-
   private def shouldGreentext(message: String): Boolean = {
     message.startsWith(">")
   }
@@ -392,7 +359,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
   private def ownMessage(holder: ChatMessagesHolder) {
     holder.time.setGravity(Gravity.RIGHT)
-    holder.sentTriangle.setVisibility(View.VISIBLE)
     holder.layout.setGravity(Gravity.RIGHT)
     if (shouldGreentext(holder.message.getText.toString)) {
       holder.message.setTextColor(context.getResources.getColor(R.color.green_light))
@@ -418,7 +384,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     } else {
       holder.message.setTextColor(context.getResources.getColor(R.color.black))
     }
-    holder.receivedTriangle.setVisibility(View.VISIBLE)
     holder.time.setGravity(Gravity.LEFT)
     holder.layout.setGravity(Gravity.LEFT)
     holder.row.setGravity(Gravity.LEFT)

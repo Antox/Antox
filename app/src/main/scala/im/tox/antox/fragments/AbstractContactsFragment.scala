@@ -196,9 +196,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
     val alert = builder.create()
     if (parentItem != null) {
-      if (parentItem.viewType != ContactItemType.HEADER) {
-        alert.show()
-      }
+      alert.show()
     }
   }
 

@@ -28,8 +28,6 @@ class LeftPaneItem(
     count: Int,
     timestamp: Timestamp) = this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, count, timestamp)
 
-  def this(header: String) = this(ContactItemType.HEADER, "", None, header, null, false, null, 0, null)
-
   def this(viewType: ContactItemType, key: String, message: String) = this(viewType, key, None, key, message, false, null, 0, null)
 
 }
