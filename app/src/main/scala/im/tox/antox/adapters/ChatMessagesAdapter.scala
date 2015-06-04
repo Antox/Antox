@@ -58,6 +58,10 @@ object ChatMessagesAdapter {
     var bubble: LinearLayout = _
 
     var wrapper: LinearLayout = _
+
+    var sentTriangle: View = _
+
+    var receivedTriangle: View = _
   }
 }
 
@@ -104,6 +108,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       holder.reject = view.findViewById(R.id.file_reject_button)
       holder.bubble = view.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
       holder.wrapper = view.findViewById(R.id.message_background_wrapper).asInstanceOf[LinearLayout]
+      holder.sentTriangle = view.findViewById(R.id.sent_triangle)
+      holder.receivedTriangle = view.findViewById(R.id.received_triangle)
 
       view.setTag(holder)
     } else {
@@ -131,6 +137,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     holder.progressText.setVisibility(View.GONE)
     holder.padding.setVisibility(View.GONE)
     holder.buttons.setVisibility(View.GONE)
+    holder.sentTriangle.setVisibility(View.GONE)
+    holder.receivedTriangle.setVisibility(View.GONE)
     setAlpha(holder.bubble, 1f)
     msg.`type` match {
       case MessageType.OWN | MessageType.GROUP_OWN =>
@@ -360,6 +368,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
   private def ownMessage(holder: ChatMessagesHolder) {
     holder.time.setGravity(Gravity.RIGHT)
     holder.layout.setGravity(Gravity.RIGHT)
+    holder.sentTriangle.setVisibility(View.VISIBLE)
     if (shouldGreentext(holder.message.getText.toString)) {
       holder.message.setTextColor(context.getResources.getColor(R.color.green_light))
     } else {
@@ -384,6 +393,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     } else {
       holder.message.setTextColor(context.getResources.getColor(R.color.black))
     }
+    holder.receivedTriangle.setVisibility(View.VISIBLE)
     holder.time.setGravity(Gravity.LEFT)
     holder.layout.setGravity(Gravity.LEFT)
     holder.row.setGravity(Gravity.LEFT)

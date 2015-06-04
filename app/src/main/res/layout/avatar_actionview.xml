@@ -8,6 +8,7 @@
         android:layout_marginRight="@dimen/margin_small"
         android:layout_centerVertical="true"
         android:layout_width="40dp"
+        android:layout_marginLeft="5dp"
         android:layout_height="40dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
