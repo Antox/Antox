@@ -89,7 +89,7 @@ object BitmapManager {
           val options = new BitmapFactory.Options()
           options.inJustDecodeBounds = true
           var bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
-          options.inSampleSize = calculateInSampleSize(options, 100, 100)
+          options.inSampleSize = calculateInSampleSize(options, 200, 200)
           options.inPurgeable = true
           options.inInputShareable = true
           options.inJustDecodeBounds = false
