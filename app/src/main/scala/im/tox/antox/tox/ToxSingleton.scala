@@ -6,19 +6,16 @@ import java.nio.charset.Charset
 import java.util
 
 import android.app.NotificationManager
-import android.content.{SharedPreferences, Context}
+import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
-import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.transfer.{FileStatus, FileTransfer}
 import im.tox.antox.utils._
-import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.enums.{ToxFileControl, ToxStatus}
+import im.tox.tox4j.core.enums.ToxStatus
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.ToxAvJni
 import org.json.JSONObject
@@ -55,6 +52,7 @@ object ToxSingleton {
 
   var dhtNodes: Array[DhtNode] = Array()
 
+  var isFileTransferring: Boolean = false
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 

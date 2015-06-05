@@ -1,22 +1,16 @@
 package im.tox.antox.transfer
 
 import java.io.File
-import java.util
-import java.util.concurrent.ArrayBlockingQueue
 
 import android.content.Context
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
-import im.tox.antox.data.{State, AntoxDB}
-import im.tox.antox.tox.{ToxSingleton, Reactive}
-import im.tox.antox.utils.Constants
+import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.enums.ToxFileControl
-
-import scala.None
-import scala.collection.JavaConverters._
 
 class FileTransferManager {
   private val TAG = "FileTransferManager"
@@ -177,6 +171,11 @@ class FileTransferManager {
       })
       Reactive.updatedMessages.onNext(true)
     }
+
+    if (accept)
+      ToxSingleton.isFileTransferring = true
+    else
+      ToxSingleton.isFileTransferring = false
   }
 
   def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = true)
@@ -187,7 +186,6 @@ class FileTransferManager {
                       fileNumber: Int,
                       data: Array[Byte],
                       context: Context) {
-    Log.d(TAG, "receiveFileData")
     val mTransfer = State.transfers.get(key, fileNumber)
     val state = Environment.getExternalStorageState
     if (Environment.MEDIA_MOUNTED == state) {
@@ -231,6 +229,7 @@ class FileTransferManager {
       }
       case None => Log.d(TAG, "fileFinished: No transfer found")
     }
+    ToxSingleton.isFileTransferring = false
   }
 
   def cancelFile(key: String, fileNumber: Int, context: Context) {
@@ -240,6 +239,7 @@ class FileTransferManager {
     db.clearFileNumber(key, fileNumber)
     db.close()
     Reactive.updatedMessages.onNext(true)
+    ToxSingleton.isFileTransferring = false
   }
 
   def getProgress(id: Long): Long = {
@@ -253,6 +253,7 @@ class FileTransferManager {
   def fileTransferStarted(key: String, fileNumber: Integer, ctx: Context) {
     Log.d(TAG, "fileTransferStarted")
     State.db.fileTransferStarted(key, fileNumber)
+    ToxSingleton.isFileTransferring = true
   }
 
   def pauseFile(id: Long, ctx: Context) {
@@ -262,6 +263,7 @@ class FileTransferManager {
       case Some(t) => t.status = FileStatus.PAUSED
       case None =>
     }
+    ToxSingleton.isFileTransferring = false
   }
 
   def onSelfAvatarSendFinished(sentToKey: String, context: Context): Unit = {

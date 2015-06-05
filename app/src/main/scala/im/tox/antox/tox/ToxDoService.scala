@@ -2,8 +2,7 @@
 package im.tox.antox.tox
 
 import android.app.Service
-import android.content.{Context, Intent}
-import android.net.ConnectivityManager
+import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
@@ -35,7 +34,11 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              Thread.sleep(50)
+              if (ToxSingleton.isFileTransferring)
+                Thread.sleep(50)
+              else
+                Thread.sleep(1000)
+
               ToxSingleton.tox.iteration()
             } catch {
               case e: Exception =>
