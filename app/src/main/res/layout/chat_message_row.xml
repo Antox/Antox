@@ -23,9 +23,9 @@
             <View
                 android:id="@+id/received_triangle"
                 android:background="@drawable/conversation_item_received_triangle_shape"
-                android:layout_marginTop="0dp"
-                android:layout_width="13dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="6dp"
+                android:layout_width="12dp"
+                android:layout_height="15dp"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -144,9 +144,9 @@
             <View
                 android:id="@+id/sent_triangle"
                 android:background="@drawable/conversation_item_sent_triangle_shape"
-                android:layout_marginTop="8dp"
-                android:layout_width="15dp"
-                android:layout_height="30dp"
+                android:layout_marginTop="6dp"
+                android:layout_width="12dp"
+                android:layout_height="15dp"
                 android:visibility="gone"
                 />
 
