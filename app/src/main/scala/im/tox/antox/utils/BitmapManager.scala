@@ -88,8 +88,6 @@ object BitmapManager {
           options.inJustDecodeBounds = true
           var bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
           options.inSampleSize = calculateInSampleSize(options, 200)
-          options.inPurgeable = true
-          options.inInputShareable = true
           options.inJustDecodeBounds = false
           options.inPreferredConfig = Bitmap.Config.RGB_565
           bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
