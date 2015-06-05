@@ -11,14 +11,15 @@
         android:layout_width="300dp"
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="5dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:id="@+id/message_bubble"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <View
                 android:id="@+id/received_triangle"
                 android:background="@drawable/conversation_item_received_triangle_shape"
@@ -32,113 +33,114 @@
                 android:layout_width="288dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/message_text_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/conversation_item_sent_shape">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/message_text_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/conversation_item_sent_shape">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/message_title"
-                    android:text="Title"
-                    android:textSize="@dimen/text_smallish"
-                    android:textColor="@color/grey_dark"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:linksClickable="true"
-                    android:autoLink="web|phone|email"
-                    android:id="@+id/message_text"
-                    android:text="Afd"
-                    android:textSize="@dimen/text_smallish"
-                    android:textColor="@android:color/black" />
-                <ProgressBar
-                    android:id="@+id/file_transfer_progress"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:max="100"
-                    android:progress="50"
-                    android:layout_width="200dp"
-                    android:layout_height="20dp" />
-                <TextView
-                    android:id="@+id/file_transfer_progress_text"
-                    android:text="Finished"
-                    android:textSize="@dimen/text_smallish"
-                    android:textColor="@color/grey_dark"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
-                <View
-                    android:id="@+id/file_transfer_padding"
-                    android:visibility="gone"
-                    android:layout_height="10dp"
-                    android:layout_width="match_parent"
-                    />
-                <FrameLayout
-                    android:id="@+id/message_sent_photo_frame"
-                    android:visibility="gone"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:id="@+id/message_sent_photo"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:scaleType="fitXY"
+                        android:id="@+id/message_title"
+                        android:text="Title"
+                        android:textSize="@dimen/text_smallish"
+                        android:textColor="@color/grey_dark"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:linksClickable="true"
+                        android:autoLink="web|phone|email"
+                        android:id="@+id/message_text"
+                        android:text="Afd"
+                        android:textSize="@dimen/text_smallish"
+                        android:textColor="@android:color/black" />
+                    <ProgressBar
+                        android:id="@+id/file_transfer_progress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        android:progress="50"
+                        android:layout_width="200dp"
+                        android:layout_height="20dp" />
+                    <TextView
+                        android:id="@+id/file_transfer_progress_text"
+                        android:text="Finished"
+                        android:textSize="@dimen/text_smallish"
+                        android:textColor="@color/grey_dark"
                         android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp" />
+                    <View
+                        android:id="@+id/file_transfer_padding"
+                        android:visibility="gone"
+                        android:layout_height="10dp"
+                        android:layout_width="match_parent"
                         />
-                </FrameLayout>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:id="@+id/file_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:contentDescription="Send Button"
-                        android:id="@+id/file_reject_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/margin_medium"
-                        android:layout_weight="2"
-                        android:src="@drawable/ic_action_cancel" />
-                    <View android:layout_height="fill_parent"
-                        android:layout_width="2px"
-                        android:background="#90909090"/>
-                    <ImageView
-                        android:contentDescription="Send Button"
-                        android:id="@+id/file_accept_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/margin_medium"
+                    <FrameLayout
+                        android:id="@+id/message_sent_photo_frame"
+                        android:visibility="gone"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/message_sent_photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitXY"
+                            android:visibility="gone"
+                            />
+                    </FrameLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:id="@+id/file_buttons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:contentDescription="Send Button"
+                            android:id="@+id/file_reject_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/margin_medium"
+                            android:layout_weight="2"
+                            android:src="@drawable/ic_action_cancel" />
+                        <View android:layout_height="fill_parent"
+                            android:layout_width="2px"
+                            android:background="#90909090"/>
+                        <ImageView
+                            android:contentDescription="Send Button"
+                            android:id="@+id/file_accept_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/margin_medium"
 
-                        android:src="@drawable/ic_action_tick"
-                        android:adjustViewBounds="false"
-                        android:layout_weight="2" />
+                            android:src="@drawable/ic_action_tick"
+                            android:adjustViewBounds="false"
+                            android:layout_weight="2" />
 
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/message_audio_player"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    >
-                    <ImageView
-                        android:id="@+id/message_play_button"
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/message_audio_player"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_action_play"
-                        />
-                    <SeekBar
-                        android:id="@+id/message_audio_bar"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
+                        android:visibility="gone"
+                        >
+                        <ImageView
+                            android:id="@+id/message_play_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_action_play"
+                            />
+                        <SeekBar
+                            android:id="@+id/message_audio_bar"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+
             <View
                 android:id="@+id/sent_triangle"
                 android:background="@drawable/conversation_item_sent_triangle_shape"
@@ -147,19 +149,18 @@
                 android:layout_height="15dp"
                 android:visibility="gone"
                 />
+
         </LinearLayout>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="13dp"
             android:layout_marginRight="12dp"
             android:id="@+id/message_text_date"
             android:textColor="@color/grey_dark"
-            android:text="Asdsd"
             android:textSize="@dimen/text_tiny" />
 
     </LinearLayout>
 </LinearLayout>
-
