@@ -46,11 +46,10 @@ class AvatarDialog(activity: Activity) {
         val cursor = loader.loadInBackground()
         if (cursor != null) {
           if (cursor.moveToFirst()) {
-            val tempFile = new File(cursor.getString(cursor.getColumnIndexOrThrow(filePathColumn(0))))
-            if (!tempFile.exists()) return
+            val imageFile = new File(cursor.getString(cursor.getColumnIndexOrThrow(filePathColumn(0))))
+            if (!imageFile.exists()) return
 
-            FileUtils.copy(tempFile, avatarFile)
-            tempFile.delete()
+            FileUtils.copy(imageFile, avatarFile)
           }
         }
       }
