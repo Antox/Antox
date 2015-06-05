@@ -34,6 +34,8 @@ class ChatActivity extends GenericChatActivity {
     activeKey = key
     val thisActivity = this
 
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */

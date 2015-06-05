@@ -25,14 +25,12 @@ object BitmapManager {
     }
   }
 
-  private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int = {
-    val height = options.outHeight
+  private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
     val width = options.outWidth
     var inSampleSize = 1
-    if (height > reqHeight || width > reqWidth) {
-      val halfHeight = height / 2
+    if (width > reqWidth) {
       val halfWidth = width / 2
-      while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
+      while ((halfWidth / inSampleSize) > reqWidth) {
         inSampleSize *= 2
       }
     }
@@ -89,9 +87,7 @@ object BitmapManager {
           val options = new BitmapFactory.Options()
           options.inJustDecodeBounds = true
           var bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
-          options.inSampleSize = calculateInSampleSize(options, 100, 100)
-          options.inPurgeable = true
-          options.inInputShareable = true
+          options.inSampleSize = calculateInSampleSize(options, 200)
           options.inJustDecodeBounds = false
           options.inPreferredConfig = Bitmap.Config.RGB_565
           bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)

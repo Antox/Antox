@@ -2,19 +2,13 @@
     android:id="@+id/avatarActionView"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:background="@android:color/transparent"
-        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"/>
+
     <RelativeLayout
         android:id="@+id/avatarContainer"
         android:layout_marginRight="@dimen/margin_small"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/backButton"
         android:layout_width="40dp"
+        android:layout_marginLeft="5dp"
         android:layout_height="40dp">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
