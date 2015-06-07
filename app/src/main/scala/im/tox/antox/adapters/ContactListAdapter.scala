@@ -4,7 +4,6 @@ import java.util
 
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
@@ -117,7 +116,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
       if (item.image.isDefined && item.image.get.exists()) {
-        holder.avatar.setImageURI(Uri.fromFile(item.image.get))
+        BitmapManager.loadBitmap(item.image.get, item.image.get.getPath.hashCode, holder.avatar)
       } else {
         holder.avatar.setImageResource(R.color.grey_light)
       }
