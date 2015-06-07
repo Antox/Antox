@@ -58,11 +58,9 @@ class FriendProfileActivity extends AppCompatActivity {
 
     val avatar = getIntent.getSerializableExtra("avatar").asInstanceOf[Option[File]]
     val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-
-    if (avatar.isDefined && avatar.get.exists())
-      BitmapManager.loadBitmap(avatar.get, avatar.get.getPath.hashCode, avatarHolder)
-    else
-      avatarHolder.setImageResource(R.drawable.circle_grey_light)
+    avatar.foreach(avatar => {
+      BitmapManager.loadBitmap(avatar, avatar.getPath.hashCode, avatarHolder)
+    })
   }
 
   override def onBackPressed() {
