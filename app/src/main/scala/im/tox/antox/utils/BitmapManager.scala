@@ -99,6 +99,9 @@ object BitmapManager {
           case e: FileNotFoundException =>
             Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
             e.printStackTrace()
+        } finally {
+          if (fis != null)
+            fis.close()
         }
     }
   }

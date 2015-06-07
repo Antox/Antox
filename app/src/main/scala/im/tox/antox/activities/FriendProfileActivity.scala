@@ -4,13 +4,13 @@ package im.tox.antox.activities
 import java.io.File
 
 import android.content.Intent
-import android.net.Uri
 import android.os.{Build, Bundle}
 import android.support.v7.app.AppCompatActivity
 import android.text.{Editable, TextWatcher}
 import android.widget.{EditText, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.data.AntoxDB
+import im.tox.antox.utils.BitmapManager
 import im.tox.antoxnightly.R
 
 class FriendProfileActivity extends AppCompatActivity {
@@ -59,7 +59,7 @@ class FriendProfileActivity extends AppCompatActivity {
     val avatar = getIntent.getSerializableExtra("avatar").asInstanceOf[Option[File]]
     avatar.foreach(avatar => {
       val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-      avatarHolder.setImageURI(Uri.fromFile(avatar))
+      BitmapManager.loadBitmap(avatar, avatar.getPath.hashCode, avatarHolder)
     })
   }
 

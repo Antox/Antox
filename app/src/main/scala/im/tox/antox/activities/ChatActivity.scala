@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.utils.{Constants, IconColor}
+import im.tox.antox.utils.{BitmapManager, Constants, IconColor}
 import im.tox.antox.wrapper.{FileKind, FriendInfo, UserStatus}
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
@@ -126,12 +126,10 @@ class ChatActivity extends GenericChatActivity {
         thisActivity.setDisplayName(friend.getAliasOrName)
 
         val avatar = friend.avatar
-        val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-        if (avatar.isDefined && avatar.get.exists()) {
-          avatarView.setImageURI(Uri.fromFile(avatar.get))
-        } else {
-          avatarView.setImageResource(R.color.grey_light)
-        }
+        avatar.foreach(avatar => {
+          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          BitmapManager.loadBitmap(avatar, avatar.getPath.hashCode, avatarView)
+        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
