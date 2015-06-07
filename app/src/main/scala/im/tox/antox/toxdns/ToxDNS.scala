@@ -122,7 +122,7 @@ object ToxDNS {
         Left(RegError.valueOf(jsonPost.getErrorCode))
       }
     } catch {
-      case e: UnsatisfiedLinkError => Left(RegError.valueOf("KALIUM"))
+      case e: UnsatisfiedLinkError => Left(RegError.KALIUM_LINK_ERROR)
     }
   }
 
