@@ -34,6 +34,7 @@
     <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
+    <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
