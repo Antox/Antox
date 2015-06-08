@@ -21,7 +21,7 @@
   <string name="create_name_hint">Nome Profilo</string>
   <string name="create_text">Messaggistica sicura per tutti.</string>
   <string name="create_register">Registrazione</string>
-  <string name="create_register_incog">Crea profilo nascosto</string>
+  <string name="create_register_incog">Crea profilo</string>
   <string name="create_import_profile">Importa Profilo</string>
   <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
@@ -32,6 +32,7 @@
   <string name="create_account_internal_error">Antox: errore interno. Riavvia l\'applicazione e riprova</string>
   <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
   <string name="create_account_unknown_error">Errore sconosciuto durante la registrazione, riprova più tardi</string>
+  <string name="create_account_kalium_link_error">Errore caricamento libreria. Impossibile registrare accounts su toxme.se</string>
 
   <!-- Main Activity -->
   <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
