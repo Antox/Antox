@@ -153,6 +153,7 @@ class CreateAccountActivity extends AppCompatActivity {
                 case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
                 case RegError.INTERNAL => getString(R.string.create_account_internal_error)
                 case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+                case RegError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
                 case _ => getString(R.string.create_account_unknown_error)
               }
             case Right(password) =>
@@ -163,7 +164,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
           if (toastMessage != null) {
             val context = getApplicationContext
-            val duration = Toast.LENGTH_SHORT
+            val duration = Toast.LENGTH_LONG
             Toast.makeText(context, toastMessage, duration).show()
           }
         }

@@ -50,12 +50,11 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     }
   }
 
-  def onItemSelected(parent: AdapterView[_],
-    view: View,
-    pos: Int,
-    id: Long) {
+  def onItemSelected(parent: AdapterView[_], view: View, pos: Int, id: Long) {
     profileSelected = parent.getItemAtPosition(pos).toString
-    parent.getChildAt(0).asInstanceOf[TextView].setTextColor(Color.BLACK)
+
+    if (parent.getChildAt(0) != null) // getChildAt(pos) returns a view, or null if non-existant
+      parent.getChildAt(0).asInstanceOf[TextView].setTextColor(Color.BLACK)
   }
 
   def onNothingSelected(parent: AdapterView[_]) {

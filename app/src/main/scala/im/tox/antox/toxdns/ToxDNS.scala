@@ -62,6 +62,7 @@ object ToxDNS {
     val NAME_TAKEN = Value("-25")
     val INTERNAL = Value("-26")
     val UNKNOWN = Value("")
+    val KALIUM_LINK_ERROR = Value("KALIUM")
 
     def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
   }
@@ -75,53 +76,53 @@ object ToxDNS {
   def registerAccount(accountName: String, toxData: ToxData): Either[RegError, String] = {
     try {
       System.load("libkaliumjni.so")
+
+      val allow = 0
+      val jsonPost = new JSONPost
+      val toxmeThread = new Thread(jsonPost)
+
+      try {
+        val unencryptedPayload = new JSONObject
+        unencryptedPayload.put("tox_id", toxData.ID)
+        unencryptedPayload.put("name", accountName)
+        unencryptedPayload.put("privacy", allow)
+        unencryptedPayload.put("bio", "")
+        val epoch = System.currentTimeMillis() / 1000
+        unencryptedPayload.put("timestamp", epoch)
+        val hexEncoder = new org.abstractj.kalium.encoders.Hex
+        val rawEncoder = new Raw
+        val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
+        val serverPublicKey = hexEncoder.decode(toxmePK)
+        val ourSecretKey = Array.ofDim[Byte](32)
+        System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
+        val box = new Box(serverPublicKey, ourSecretKey)
+        val random = new org.abstractj.kalium.crypto.Random()
+        var nonce = random.randomBytes(24)
+        var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
+        payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
+        nonce = Base64.encode(nonce, Base64.NO_WRAP)
+        val payload = rawEncoder.encode(payloadBytes)
+        val nonceString = rawEncoder.encode(nonce)
+        val json = new JSONObject
+        json.put("action", 1)
+        json.put("public_key", toxData.ID.substring(0, 64))
+        json.put("encrypted", payload)
+        json.put("nonce", nonceString)
+        jsonPost.setJSON(json.toString)
+        toxmeThread.start()
+        toxmeThread.join()
+      } catch {
+        case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
+        case e: InterruptedException =>
+      }
+
+      if (Try(RegError.withName(jsonPost.getErrorCode)).getOrElse(RegError.UNKNOWN) == RegError.SUCCESS) {
+        Right(jsonPost.getPassword)
+      } else {
+        Left(RegError.valueOf(jsonPost.getErrorCode))
+      }
     } catch {
-      case e: Exception => Log.d("CreateAccount", "System.load() on kalium failed")
-    }
-
-    val allow = 0
-    val jsonPost = new JSONPost
-    val toxmeThread = new Thread(jsonPost)
-
-    try {
-      val unencryptedPayload = new JSONObject
-      unencryptedPayload.put("tox_id", toxData.ID)
-      unencryptedPayload.put("name", accountName)
-      unencryptedPayload.put("privacy", allow)
-      unencryptedPayload.put("bio", "")
-      val epoch = System.currentTimeMillis() / 1000
-      unencryptedPayload.put("timestamp", epoch)
-      val hexEncoder = new org.abstractj.kalium.encoders.Hex
-      val rawEncoder = new Raw
-      val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
-      val serverPublicKey = hexEncoder.decode(toxmePK)
-      val ourSecretKey = Array.ofDim[Byte](32)
-      System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
-      val box = new Box(serverPublicKey, ourSecretKey)
-      val random = new org.abstractj.kalium.crypto.Random()
-      var nonce = random.randomBytes(24)
-      var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
-      payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
-      nonce = Base64.encode(nonce, Base64.NO_WRAP)
-      val payload = rawEncoder.encode(payloadBytes)
-      val nonceString = rawEncoder.encode(nonce)
-      val json = new JSONObject
-      json.put("action", 1)
-      json.put("public_key", toxData.ID.substring(0, 64))
-      json.put("encrypted", payload)
-      json.put("nonce", nonceString)
-      jsonPost.setJSON(json.toString)
-      toxmeThread.start()
-      toxmeThread.join()
-    } catch {
-      case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
-      case e: InterruptedException =>
-    }
-
-    if (Try(RegError.withName(jsonPost.getErrorCode)).getOrElse(RegError.UNKNOWN) == RegError.SUCCESS) {
-      Right(jsonPost.getPassword)
-    } else {
-      Left(RegError.valueOf(jsonPost.getErrorCode))
+      case e: UnsatisfiedLinkError => Left(RegError.KALIUM_LINK_ERROR)
     }
   }
 
