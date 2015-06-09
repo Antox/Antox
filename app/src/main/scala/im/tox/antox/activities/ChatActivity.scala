@@ -74,7 +74,7 @@ class ChatActivity extends GenericChatActivity {
         })
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
+        val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
         println("image name " + image_name)
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
@@ -128,7 +128,7 @@ class ChatActivity extends GenericChatActivity {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-          BitmapManager.loadBitmap(avatar, avatar.getPath.hashCode, avatarView)
+          BitmapManager.load(avatar, avatarView, isAvatar = true)
         })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -139,9 +139,8 @@ class ChatActivity extends GenericChatActivity {
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
-      case None => {
+      case None =>
         thisActivity.setDisplayName("")
-      }
     }
   }
 

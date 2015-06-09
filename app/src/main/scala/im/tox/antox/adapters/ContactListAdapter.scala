@@ -116,7 +116,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
       if (item.image.isDefined && item.image.get.exists()) {
-        BitmapManager.loadBitmap(item.image.get, item.image.get.getPath.hashCode, holder.avatar)
+        BitmapManager.load(item.image.get, holder.avatar, isAvatar = true)
       } else {
         holder.avatar.setImageResource(R.color.grey_light)
       }
@@ -140,6 +140,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     } else if (`type` == ContactItemType.GROUP_INVITE) {
       createGroupInviteClickHandlers(key, acceptButton, rejectButton)
     }
+
     newConvertView
   }
 

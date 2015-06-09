@@ -61,7 +61,7 @@ dependencies {
     compile files('libs/tox4j_2.11.jar')
     compile 'org.scala-lang:scala-library:2.11.4'
     compile 'com.android.support:support-v4:22.1.1'
-    compile 'org.scaloid:scaloid_2.11:3.5-10'
+    compile 'org.scaloid:scaloid_2.11:3.6.1-10'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.netflix.rxjava:rxjava-core:0.20.6'
     compile 'com.netflix.rxjava:rxjava-android:0.20.6'
