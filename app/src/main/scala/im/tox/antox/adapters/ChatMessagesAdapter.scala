@@ -4,7 +4,7 @@ import java.io.File
 import java.util
 import java.util.Random
 
-import android.app.{Activity, AlertDialog}
+import android.app.AlertDialog
 import android.content.{Context, DialogInterface, Intent}
 import android.graphics.{Color, Typeface}
 import android.net.Uri
@@ -254,7 +254,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                 else
                   holder.imageMessage.setImageResource(R.drawable.received)
 
-                BitmapManager.load(context.asInstanceOf[Activity], file, holder.imageMessage, isAvatar = false)
+                BitmapManager.load(file, holder.imageMessage, isAvatar = false)
                 holder.imageMessage.setVisibility(View.VISIBLE)
                 holder.imageMessageFrame.setVisibility(View.VISIBLE)
                 holder.imageMessage.setOnClickListener(new View.OnClickListener() {

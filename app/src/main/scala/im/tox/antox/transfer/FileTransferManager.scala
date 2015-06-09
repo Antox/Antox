@@ -215,7 +215,7 @@ class FileTransferManager {
             onSelfAvatarSendFinished(key, context)
           } else {
             // Set current avatar as invalid in avatar cache in order to get it updated to new avatar
-            BitmapManager.setAvatarInvalid(t.file.getPath + t.file.getName)
+            BitmapManager.setAvatarInvalid(t.file)
 
             mFriend.get.setAvatar(Some(t.file))
             val db = new AntoxDB(context)

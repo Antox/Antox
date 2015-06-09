@@ -3,16 +3,17 @@ package im.tox.antox.utils
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
 import java.util.concurrent.{LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 
-import android.app.Activity
 import android.graphics.BitmapFactory.Options
 import android.graphics.{Bitmap, BitmapFactory}
 import android.util.{Log, LruCache}
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
 import im.tox.antox.wrapper.BitmapUtils.RichBitmap
+import org.scaloid.common._
 
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
+import scala.ref.WeakReference
 
 object BitmapManager {
   // Use a LRU Cache for storing inlined bitmap images in chats
@@ -60,7 +61,8 @@ object BitmapManager {
     mAvatarValid.put(key, true)
   }
 
-  def setAvatarInvalid(key: String) {
+  def setAvatarInvalid(file: File) {
+    val key = file.getPath + file.getName
     mAvatarValid.put(key, false)
   }
 
@@ -163,29 +165,28 @@ object BitmapManager {
   }
 
   // Execution context needed for Futures
+  // For why this is needed, see http://blog.scaloid.org/2013/11/using-scalaconcurrentfuture-in-android.html
   implicit val exec = ExecutionContext.fromExecutor(
     new ThreadPoolExecutor(100, 100, 1000, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
   )
 
-  def load(activity: Activity, file: File, imageView: ImageView, isAvatar: Boolean) {
-    val imageKey = String.valueOf(file.getPath + file.getName)
+  def load(file: File, imageView: ImageView, isAvatar: Boolean) {
+    val imageKey = file.getPath + file.getName
+    // Weak reference to let imageView be GC'd instead of being kept around for Future
+    val imageViewReference = new WeakReference[ImageView](imageView)
 
     getFromCache(isAvatar, imageKey) match {
       case Some(bitmap) =>
         imageView.setImageBitmap(bitmap)
 
       case None =>
-        val f = Future {
-          decodeBitmap(file, imageKey, isAvatar)
-        }
+        Future {
+          val bitmap = decodeBitmap(file, imageKey, isAvatar)
 
-        f.onSuccess {
-          case bitmap =>
-              activity.runOnUiThread(new Runnable {
-                override def run() {
-                  imageView.setImageBitmap(bitmap)
-                }
-              })
+          if (bitmap != null && imageViewReference != null) {
+            val imageView = imageViewReference.asInstanceOf[ImageView]
+            runOnUiThread(imageView.setImageBitmap(bitmap))
+          }
         }
     }
   }
