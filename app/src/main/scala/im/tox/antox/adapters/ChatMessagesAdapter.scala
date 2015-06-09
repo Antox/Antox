@@ -4,7 +4,7 @@ import java.io.File
 import java.util
 import java.util.Random
 
-import android.app.AlertDialog
+import android.app.{Activity, AlertDialog}
 import android.content.{Context, DialogInterface, Intent}
 import android.graphics.{Color, Typeface}
 import android.net.Uri
@@ -248,22 +248,28 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               //Log.d("ChatMessagesAdapter", file.getName.toLowerCase())
               //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase.endsWith(extension)) {
-                  BitmapManager.loadBitmap(file, file.getPath.hashCode, holder.imageMessage)
-                  holder.imageMessage.setVisibility(View.VISIBLE)
-                  holder.imageMessageFrame.setVisibility(View.VISIBLE)
-                  holder.imageMessage.setOnClickListener(new View.OnClickListener() {
-                    def onClick(v: View) {
-                      val i = new Intent()
-                      i.setAction(android.content.Intent.ACTION_VIEW)
-                      i.setDataAndType(Uri.fromFile(file), "image/*")
-                      ChatMessagesAdapter.this.context.startActivity(i)
-                    }
-                  })
-                  holder.message.setVisibility(View.GONE)
-                  holder.title.setVisibility(View.GONE)
-                  holder.progressText.setVisibility(View.GONE)
-                }
-                //break
+                // Set a placeholder in the image in case bitmap needs to be loaded from disk
+                if (msg.isMine)
+                  holder.imageMessage.setImageResource(R.drawable.sent)
+                else
+                  holder.imageMessage.setImageResource(R.drawable.received)
+
+                BitmapManager.load(context.asInstanceOf[Activity], file, holder.imageMessage, isAvatar = false)
+                holder.imageMessage.setVisibility(View.VISIBLE)
+                holder.imageMessageFrame.setVisibility(View.VISIBLE)
+                holder.imageMessage.setOnClickListener(new View.OnClickListener() {
+                  def onClick(v: View) {
+                    val i = new Intent()
+                    i.setAction(android.content.Intent.ACTION_VIEW)
+                    i.setDataAndType(Uri.fromFile(file), "image/*")
+                    ChatMessagesAdapter.this.context.startActivity(i)
+                  }
+                })
+                holder.message.setVisibility(View.GONE)
+                holder.title.setVisibility(View.GONE)
+                holder.progressText.setVisibility(View.GONE)
+              }
+              //break
             }
           }
         }
