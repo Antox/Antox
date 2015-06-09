@@ -2,8 +2,7 @@
 package im.tox.antox.tox
 
 import android.app.Service
-import android.content.{Context, Intent}
-import android.net.ConnectivityManager
+import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
@@ -13,6 +12,9 @@ class ToxDoService extends Service() {
   private var serviceThread: Thread = _
 
   private var keepRunning: Boolean = true
+
+  private val fastIteartion = 50
+  private val slowIteration = 1000
 
   override def onCreate() {
     if (!ToxSingleton.isInited) {
@@ -35,7 +37,13 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              Thread.sleep(50)
+              if (ToxSingleton.isTransferring)
+                Thread.sleep(fastIteartion)
+              else
+                Thread.sleep(slowIteration)
+
+              Log.d("ToxDoService", "Trasnferrring: " + ToxSingleton.isTransferring)
+
               ToxSingleton.tox.iteration()
             } catch {
               case e: Exception =>

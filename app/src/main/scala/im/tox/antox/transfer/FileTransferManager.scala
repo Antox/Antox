@@ -19,6 +19,8 @@ class FileTransferManager {
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
   private var _keyAndFileNumberToId: Map[(String, Integer), Long] = Map[(String, Integer), Long]()
 
+  def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.INPROGRESS)
+
   def add(t: FileTransfer) = {
     _transfers = _transfers + (t.id -> t)
     _keyAndFileNumberToId = _keyAndFileNumberToId + ((t.key, t.fileNumber) -> t.id)
@@ -182,7 +184,6 @@ class FileTransferManager {
                       fileNumber: Int,
                       data: Array[Byte],
                       context: Context) {
-    Log.d(TAG, "receiveFileData")
     val mTransfer = State.transfers.get(key, fileNumber)
     val state = Environment.getExternalStorageState
     if (Environment.MEDIA_MOUNTED == state) {
