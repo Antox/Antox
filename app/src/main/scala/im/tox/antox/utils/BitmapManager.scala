@@ -13,7 +13,6 @@ import org.scaloid.common._
 
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
-import scala.ref.WeakReference
 
 object BitmapManager {
   // Use a LRU Cache for storing inlined bitmap images in chats
@@ -171,24 +170,21 @@ object BitmapManager {
   )
 
   def load(file: File, imageView: ImageView, isAvatar: Boolean) {
-    val imageKey = file.getPath + file.getName
-    // Weak reference to let imageView be GC'd instead of being kept around for Future
-    val imageViewReference = new WeakReference[ImageView](imageView)
+      val imageKey = file.getPath + file.getName
 
-    getFromCache(isAvatar, imageKey) match {
-      case Some(bitmap) =>
-        imageView.setImageBitmap(bitmap)
+      getFromCache(isAvatar, imageKey) match {
+        case Some(bitmap) =>
+          imageView.setImageBitmap(bitmap)
 
-      case None =>
-        Future {
-          val bitmap = decodeBitmap(file, imageKey, isAvatar)
+        case None =>
+          Future {
+            val bitmap = decodeBitmap(file, imageKey, isAvatar)
 
-          if (bitmap != null && imageViewReference != null) {
-            val imageView = imageViewReference.asInstanceOf[ImageView]
-            runOnUiThread(imageView.setImageBitmap(bitmap))
+            if (bitmap != null) {
+              runOnUiThread(imageView.setImageBitmap(bitmap))
+            }
           }
-        }
-    }
+      }
   }
 }
 
