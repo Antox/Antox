@@ -2,7 +2,7 @@ package im.tox.antox.utils
 
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.preference.PreferenceManager
-import im.tox.antox.tox.ToxDoService
+import im.tox.antox.tox.ToxService
 
 /**
  * This Broadcast Receiver will pick up the phone booting up and will proceed to start the tox service
@@ -13,6 +13,6 @@ class BootReceiver extends BroadcastReceiver {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     if (preferences.getBoolean("autostart", true))
-      context.startService(new Intent(context, classOf[ToxDoService]))
+      context.startService(new Intent(context, classOf[ToxService]))
   }
 }

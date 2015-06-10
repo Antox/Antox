@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
 import android.widget._
 import im.tox.antox.data.UserDB
-import im.tox.antox.tox.ToxDoService
+import im.tox.antox.tox.ToxService
 import im.tox.antoxnightly.R
 
 class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedListener {
@@ -33,7 +33,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       finish()
     } else if (preferences.getBoolean("loggedin", false)) {
       db.close()
-      val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
+      val startTox = new Intent(getApplicationContext, classOf[ToxService])
       getApplicationContext.startService(startTox)
       val main = new Intent(getApplicationContext, classOf[MainActivity])
       startActivity(main)
@@ -84,7 +84,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
         editor.putBoolean("logging_enabled", details.loggingEnabled)
         editor.putString("avatar", details.avatarName)
         editor.apply()
-        val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
+        val startTox = new Intent(getApplicationContext, classOf[ToxService])
         getApplicationContext.startService(startTox)
         val main = new Intent(getApplicationContext, classOf[MainActivity])
         startActivity(main)

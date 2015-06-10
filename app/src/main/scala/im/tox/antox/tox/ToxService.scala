@@ -7,20 +7,18 @@ import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
 
-class ToxDoService extends Service() {
+class ToxService extends Service() {
 
   private var serviceThread: Thread = _
 
   private var keepRunning: Boolean = true
 
-  private val fastIteartion = 50
-  private val slowIteration = 1000
-
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
-      Log.d("ToxDoService", "Initting ToxSingleton")
+      Log.d("ToxService", "Initting ToxSingleton")
     }
+
     keepRunning = true
     val thisService = this
     val start = new Runnable() {
@@ -37,13 +35,7 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              if (ToxSingleton.isTransferring)
-                Thread.sleep(fastIteartion)
-              else
-                Thread.sleep(slowIteration)
-
-              Log.d("ToxDoService", "Trasnferrring: " + ToxSingleton.isTransferring)
-
+              Thread.sleep(ToxSingleton.interval)
               ToxSingleton.tox.iteration()
             } catch {
               case e: Exception =>
@@ -66,6 +58,6 @@ class ToxDoService extends Service() {
     serviceThread.interrupt()
     ToxSingleton.save()
     ToxSingleton.isInited = false
-    Log.d("ToxDoService", "onDestroy() called")
+    Log.d("ToxService", "onDestroy() called")
   }
 }
