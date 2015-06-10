@@ -19,6 +19,7 @@ import im.tox.antox.transfer.{FileDialog, FileUtils}
 import im.tox.antox.utils._
 import im.tox.antoxnightly.R
 import im.tox.tox4j.core.ToxOptions
+import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.ToxCoreJni
 
@@ -105,14 +106,34 @@ class CreateAccountActivity extends AppCompatActivity {
     toxData
   }
 
-  def loadToxData(fileName: String): ToxData = {
+  def loadToxData(fileName: String): Option[ToxData] = {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
-    val tox = new ToxCoreJni(toxOptions, toxDataFile.loadFile())
-    toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
-    toxData.fileBytes = toxDataFile.loadFile()
-    toxData
+
+    try {
+      val tox = new ToxCoreJni(toxOptions, toxDataFile.loadFile())
+      toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+      toxData.fileBytes = toxDataFile.loadFile()
+
+      Option(toxData)
+    } catch {
+      case error: ToxNewException =>
+        if (error.code == ToxNewException.Code.LOAD_ENCRYPTED)
+          Toast.makeText(
+            getBaseContext,
+            getString(R.string.create_account_encrypted_profile_error),
+            Toast.LENGTH_SHORT
+          ).show()
+        else
+          Toast.makeText(
+            getBaseContext,
+            getString(R.string.create_account_load_profile_unknown),
+            Toast.LENGTH_SHORT
+          ).show()
+
+        None
+    }
   }
 
   //db is expected to be open and is closed at the end of the method
@@ -137,7 +158,16 @@ class CreateAccountActivity extends AppCompatActivity {
             case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
           }
         } else {
-          toxData = loadToxData(accountName)
+          val result = loadToxData(accountName)
+
+          result match {
+            case Some(data) =>
+              toxData = data
+
+              // If None is returned then failed to load data so exit the createAccount function
+            case None =>
+              return
+          }
         }
 
         var successful = true
@@ -221,9 +251,13 @@ class CreateAccountActivity extends AppCompatActivity {
             accountFieldName
           }
 
-        val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
-        FileUtils.copy(file, toxDataFile)
-        createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+        if (validAccountName(accountName)) {
+          val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
+          FileUtils.copy(file, toxDataFile)
+          createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+        } else {
+          showBadAccountNameError()
+        }
 
       case None => throw new Exception("Could not load data file.")
     }
