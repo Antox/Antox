@@ -22,7 +22,7 @@ class FileTransferManager extends Intervals {
   def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.INPROGRESS)
 
   override def interval: Int = {
-    if (_transfers.exists(_._2.status == FileStatus.INPROGRESS))
+    if (isTransferring)
       IntervalLevels.WORKING.id
     else
       IntervalLevels.AWAKE.id
