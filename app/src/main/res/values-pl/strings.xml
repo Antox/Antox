@@ -14,9 +14,9 @@
 
     <!--Login Activity-->
     <string name="login_must_fill_in">Musisz uzupełnić nazwę użytkownika</string>
-    <string name="login_login">Login</string>
+    <string name="login_login">Zaloguj</string>
     <string name="login_account_hint">Nazwa profilu</string>
-    <string name="login_create_account_text">Utwórz profil Toxa</string>
+    <string name="login_create_account_text">Utwórz profil Tox</string>
     <string name="login_bad_login">Nazwa profilu nie została rozpoznana</string>
 
     <!--Create Account Activity-->
@@ -27,14 +27,14 @@
     <string name="create_import_profile">Zaimportuj profil</string>
     <string name="create_skip">Pozwól każdemu na dodanie do listy z twoją nazwą profilu</string>
     <string name="create_must_fill_in">Musisz uzupełnić wszystkie pola</string>
-    <string name="create_bad_profile_name">Nazwa profilu nie może być pusta lub zawierać spacje lub ukośniki</string>
+    <string name="create_bad_profile_name">Nazwa profilu nie może być pusta lub zawierać spacji lub ukośników</string>
     <string name="create_profile_exists">Profil z tą nazwą już istnieje</string>
     <string name="import_profile_invalid_file">Wybrany plik nie jeset poprawnym profilem Tox </string>
     <string name="create_account_exists">Ta nazwa jest już zajęta</string>
     <string name="create_account_internal_error">Wewnętrzny błąd Antoxa. Proszę zrestartować i spróbować ponownie</string>
     <string name="create_account_reached_registration_limit">Możesz utworzyć tylko 13 profili na godzinę. Osiągnięto ten limit.</string>
     <string name="create_account_unknown_error">Nieznany błąd rejestracji, proszę spróbować ponownie później</string>
-    <string name="create_account_kalium_link_error">Nie udało się załadować wymaganej biblioteki. Nie da się utworzyć nie-incognito konta</string>
+    <string name="create_account_kalium_link_error">Nie udało się załadować jednej z wymaganych bibliotek. Nie da się utworzyć nie-incognito konta</string>
 
     <!--Main Activity-->
     <string name="main_no_active_chat">Brak aktywnego czatu. Uruchom jakiś wybierając znajomego z panelu po lewej.</string>
@@ -49,7 +49,7 @@
     <string name="chat_enter_message">Wyślij wiadomość</string>
     <string name="chat_file_transfer">Przesyłanie plików</string>
     <string name="chat_message_too_long">Ta wiadomość jest zbyt długa i nie może zostać wysłana</string>
-    <string name="chat_ft_failed_friend_offline">Wysyłanie nieudane - nie można wysłać pliku do offline znajomego</string>
+    <string name="chat_ft_failed_friend_offline">Wysyłanie nieudane - nie można wysłać pliku do znajomego będącego offline</string>
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Znajoma/y</string>
@@ -79,7 +79,7 @@
     <string name="addgroup_group_exists">Grupa już istnieje</string>
     <string name="invalid_group_ID">Nieprawidłowy ID grupy</string>
     <string name="addgroup_alias_hint">Ustaw alias dla tej grupy</string>
-    <string name="addgroup_optional_title">Opcje ekstra</string>
+    <string name="addgroup_optional_title">Dodatkowe opcje</string>
 
     <!--Friend Profile Activity-->
     <string name="friend_profile_nick">Nick</string>
@@ -87,13 +87,13 @@
     <string name="friend_profile_note">Opis</string>
     <string name="friend_profile_button">Aktualizuj</string>
     <string name="friend_profile_updated">Profil został zaktualizowany</string>
-    <string name="friend_profile_copied">ID skopiowane</string>
+    <string name="friend_profile_copied">ID skopiowany</string>
 
     <!-- Group Profile Activity -->
     <string name="group_profile_peer_list_head">Członkowie</string>
 
     <!--Friend request fragment-->
-    <string name="friend_profile_title">Profil użytkownika %1$s\'</string>
+    <string name="friend_profile_title">Profil użytkownika %1$s</string>
     <string name="friendrequest_accept">Zaakceptuj</string>
     <string name="friendrequest_reject">Odrzuć</string>
     <string name="friend_request">Nowa prośba o dodanie do kontaktów</string>
@@ -137,7 +137,7 @@
 
     <!-- Reset ToxID Dialog -->
     <string name="reset_tox_id_dialog_message">Reset twojego Tox ID zmieni twój ID permamentnie. Obecna lista
-        znajomych zostanie zachowana, lecz inni nie będą mogli dodać cię używając twój stary Tox ID. </string>
+        znajomych zostanie zachowana, lecz inni nie będą mogli dodać cię używając twojego starego Tox ID. </string>
     <string name="reset_tox_id_dialog_title">Potwierdź reset Tox ID</string>
     <string name="reset_tox_id_dialog_confirm">Zresetuj ID</string>
     <string name="reset_tox_id_dialog_cancel">Anuluj</string>
@@ -181,8 +181,8 @@
     <!-- Avatar Dialog -->
     <string name="dialog_avatar_take_photo">Zrób zdjęcie</string>
     <string name="dialog_avatar_use_file">Użyj plik</string>
-    <string name="avatar_too_large_error">Błąd: plik awataru jest zbyt duży.</string>
-    <string name="no_camera_intent_error">Błąd: nie znaleziono prawidłowej aplikacji kamery.</string>
+    <string name="avatar_too_large_error">Błąd: wybrany awatar jest zbyt duży.</string>
+    <string name="no_camera_intent_error">Błąd: nie znaleziono aplikacji do obsługi kamery.</string>
     <string name="dialog_avatar_description">awatar</string>
 
     <!-- File transfer -->
@@ -204,7 +204,7 @@
     <string name="n_profile_options">PROFIL</string>
     <string name="n_create_group">UTWÓRZ GRUPĘ</string>
     <string name="n_add_person">DODAJ OSOBĘ</string>
-    <string name="n_about">O</string>
+    <string name="n_about">INFORMACJE</string>
     <string name="n_open_source">LICENCJA OPEN SOURCE</string>
     <string name="n_logout">WYLOGUJ SIĘ</string>
     <string name="drawer_open">Otwórz pasek nawigacyjny</string>
@@ -213,7 +213,7 @@
     <string name="license1">Rozpowszechniany pod GNU GPL v3.</string>
     <string name="license2">Kod źródłowy jest dostępny na\nhttps://github.com/subliun/Antox</string>
     <string name="ver">Wersja</string>
-    <string name="about">O</string>
+    <string name="about">Informacje</string>
     <string name="about_antox_1">Wraz ze wzrostem państwowych programów monitorujących, Tox stanowi łatwy w użyciu program, który pozwala łączyć się z rodziną i znajomymi bez obawy o podsłuch.</string>
     <string name="about_antox_2">Co obecnie działa:</string>
     <string name="about_antox_3">- Jeden na jeden wiadomości</string>
