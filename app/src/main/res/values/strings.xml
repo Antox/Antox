@@ -35,6 +35,8 @@
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
+    <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
+    <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
