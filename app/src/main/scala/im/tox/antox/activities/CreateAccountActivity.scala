@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
 import im.tox.antox.data.UserDB
-import im.tox.antox.tox.{ToxDataFile, ToxDoService}
+import im.tox.antox.tox.{ToxDataFile, ToxService}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxDNS, ToxData}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
@@ -85,7 +85,7 @@ class CreateAccountActivity extends AppCompatActivity {
     editor.apply()
 
     // Start the activity
-    val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
+    val startTox = new Intent(getApplicationContext, classOf[ToxService])
     getApplicationContext.startService(startTox)
     val main = new Intent(getApplicationContext, classOf[MainActivity])
     startActivity(main)

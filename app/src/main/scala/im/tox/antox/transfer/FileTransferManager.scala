@@ -7,17 +7,26 @@ import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
-import im.tox.antox.tox.{Reactive, ToxSingleton}
+import im.tox.antox.tox.{IntervalLevels, Intervals, Reactive, ToxSingleton}
 import im.tox.antox.utils.BitmapManager
 import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.enums.ToxFileControl
 
-class FileTransferManager {
+class FileTransferManager extends Intervals {
   private val TAG = "FileTransferManager"
 
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
   private var _keyAndFileNumberToId: Map[(String, Integer), Long] = Map[(String, Integer), Long]()
+
+  def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.INPROGRESS)
+
+  override def interval: Int = {
+    if (isTransferring)
+      IntervalLevels.WORKING.id
+    else
+      IntervalLevels.AWAKE.id
+  }
 
   def add(t: FileTransfer) = {
     _transfers = _transfers + (t.id -> t)
@@ -182,7 +191,6 @@ class FileTransferManager {
                       fileNumber: Int,
                       data: Array[Byte],
                       context: Context) {
-    Log.d(TAG, "receiveFileData")
     val mTransfer = State.transfers.get(key, fileNumber)
     val state = Environment.getExternalStorageState
     if (Environment.MEDIA_MOUNTED == state) {

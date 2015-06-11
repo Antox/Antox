@@ -6,7 +6,7 @@ import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.view.MenuItem
 import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{ToxDoService, ToxSingleton}
+import im.tox.antox.tox.{ToxService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
 
@@ -70,7 +70,7 @@ class SettingsActivity extends BetterPreferenceActivity {
     if (key == "enable_udp") {
       val toxSingleton = ToxSingleton.getInstance()
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
-      val service = new Intent(this, classOf[ToxDoService])
+      val service = new Intent(this, classOf[ToxService])
       this.stopService(service)
       this.startService(service)
     }

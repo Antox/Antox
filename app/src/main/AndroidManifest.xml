@@ -37,7 +37,7 @@
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/CustomActionBarTheme" >
         <service
-            android:name="im.tox.antox.tox.ToxDoService"
+            android:name="im.tox.antox.tox.ToxService"
             android:exported="false"
             android:label="Antox" />
 
