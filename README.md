@@ -1,7 +1,7 @@
 Antox
 =====
 
-<img src="http://a.pomf.se/qazaun.png" width="230px" height="400px"/><img src="http://a.pomf.se/ojwmhk.png" width="230px" height="400px"/><img src="http://a.pomf.se/sbxwvx.png" width="230px" height="400px"/>
+<img src="http://i.imgur.com/PvY7zCQ.jpg" width="230px" height="400px"/><img src="http://i.imgur.com/X0a9RBy.png" width="230px" height="400px"/><img src="http://i.imgur.com/jApGiZQ.png" width="230px" height="400px"/>
 
 Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
 
