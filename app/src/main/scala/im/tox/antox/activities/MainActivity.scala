@@ -36,7 +36,160 @@ class MainActivity extends AppCompatActivity {
 
   private var mDrawerToggle: ActionBarDrawerToggle = _
 
+  protected override def onCreate(savedInstanceState: Bundle) {
+    super.onCreate(savedInstanceState)
 
+    setContentView(R.layout.activity_main)
+
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+    getSupportActionBar.setHomeButtonEnabled(true)
+
+    // The app will control the voice call audio level
+    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
+
+    // Set the right language
+    setLanguage()
+
+    // Set up the navigation drawer
+    mToolbar = findViewById(R.drawable.ic_navigation_drawer).asInstanceOf[Toolbar]
+    mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
+    mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
+    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
+    val list = new util.ArrayList[DrawerItem]()
+    list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_person_add_white_24dp))
+    list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_settings_white_24dp))
+    list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_group_add_white_24dp))
+    list.add(new DrawerItem(getString(R.string.n_about), R.drawable.ic_info_outline_white_24dp))
+    list.add(new DrawerItem(getString(R.string.n_logout), R.drawable.ic_arrow_back_white_24dp))
+    val drawerListAdapter = new DrawerArrayAdapter(this, R.layout.rowlayout_drawer, list)
+    mDrawerList.setAdapter(drawerListAdapter)
+    mDrawerList.setOnItemClickListener(new DrawerItemClickListener())
+
+    mDrawerToggle = new ActionBarDrawerToggle(
+      this, mDrawerLayout, mToolbar,
+      R.string.drawer_open, R.string.drawer_close) {
+
+      override def onDrawerClosed(view: View) {
+        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
+      }
+
+      override def onDrawerOpened(drawerView: View) {
+        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
+      }
+    }
+    mDrawerLayout.setDrawerListener(mDrawerToggle)
+    mDrawerToggle.syncState()
+
+    // Fix for Android 4.1.x
+    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
+      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+    }
+
+    // Check to see if Internet is potentially available and show a warning if it isn't
+    if (!isNetworkConnected)
+      showAlertDialog(MainActivity.this, getString(R.string.main_no_internet), getString(R.string.main_not_connected))
+
+    // Give ToxSingleton an instance of notification manager for use in displaying notifications from callbacks
+    ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+
+    // Initialise the bitmap manager for storing bitmaps in a cache
+    new BitmapManager()
+
+    val db = new AntoxDB(getApplicationContext)
+    db.clearFileNumbers()
+    db.close()
+
+    // Removes the drop shadow from the actionbar as it overlaps the tabs
+    getSupportActionBar.setElevation(0)
+
+    ToxSingleton.updateLastMessageMap(this)
+    ToxSingleton.updateUnreadCountMap(this)
+    updateLeftPane()
+  }
+
+  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    val id = item.getItemId
+    if (id == android.R.id.home) {
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+        return true
+      }
+    }
+    super.onOptionsItemSelected(item)
+  }
+
+  protected override def onPostCreate(savedInstanceState: Bundle) {
+    super.onPostCreate(savedInstanceState)
+    mDrawerToggle.syncState()
+  }
+
+  override def onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    mDrawerToggle.onConfigurationChanged(newConfig)
+  }
+
+  def updateLeftPane() {
+    ToxSingleton.updateFriendRequests(getApplicationContext)
+    ToxSingleton.updateFriendsList(getApplicationContext)
+    ToxSingleton.updateMessages(getApplicationContext)
+    ToxSingleton.updateGroupInvites(getApplicationContext)
+    ToxSingleton.updateGroupList(getApplicationContext)
+  }
+
+  def onClickAdd(v: View) {
+    val intent = new Intent(this, classOf[AddActivity])
+    startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
+  }
+
+  protected override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+      ToxSingleton.updateFriendsList(this)
+      ToxSingleton.updateGroupList(this)
+    }
+  }
+
+  override def onPause() {
+    super.onPause()
+    ToxSingleton.chatActive = false
+  }
+
+  override def onDestroy() {
+    super.onDestroy()
+    State.calls.removeAll()
+  }
+
+  /**
+   * Displays a generic dialog using the strings passed in.
+   * Should maybe be refactored into separate class and used for other dialogs?
+   */
+  def showAlertDialog(context: Context, title: String, message: String) {
+    val alertDialog = new AlertDialog.Builder(context).create()
+    alertDialog.setTitle(title)
+    alertDialog.setMessage(message)
+    alertDialog.setIcon(R.drawable.ic_launcher)
+    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+
+      def onClick(dialog: DialogInterface, which: Int) {
+      }
+    })
+    alertDialog.show()
+  }
+
+  private class DrawerItemClickListener extends AdapterView.OnItemClickListener {
+
+    override def onItemClick(parent: AdapterView[_],
+                             view: View,
+                             position: Int,
+                             id: Long) {
+      selectItem(position)
+    }
+  }
+
+  /**
+   * This method is called by the DrawerItemClickListener above and starts a new activity
+   * based on the item selected
+   */
   private def selectItem(position: Int) {
     if (position == 0) {
       val intent = new Intent(this, classOf[ProfileSettingsActivity])
@@ -73,36 +226,29 @@ class MainActivity extends AppCompatActivity {
     mDrawerLayout.closeDrawer(mDrawerList)
   }
 
-  override def onOptionsItemSelected(item: MenuItem): Boolean = {
-    val id = item.getItemId
-    if (id == android.R.id.home) {
-      if (mDrawerToggle.onOptionsItemSelected(item)) {
+  /**
+   * Checks to see if Wifi or Mobile have a network connection
+   */
+  private def isNetworkConnected: Boolean = {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
+    val networkInfo = connectivityManager.getAllNetworkInfo
+
+    for (info <- networkInfo) {
+      if ("WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected)
         return true
-      }
+
+      else if ("MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected)
+        return true
     }
-    super.onOptionsItemSelected(item)
+
+    false
   }
 
-  protected override def onPostCreate(savedInstanceState: Bundle) {
-    super.onPostCreate(savedInstanceState)
-    mDrawerToggle.syncState()
-  }
-
-  override def onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    mDrawerToggle.onConfigurationChanged(newConfig)
-  }
-
-  protected override def onCreate(savedInstanceState: Bundle) {
-    super.onCreate(savedInstanceState)
-
+  private def setLanguage() {
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-    // The app will control the voice call audio level
-    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
-
-    // Set the right language
     val language = preferences.getString("language", "-1")
+
     if (language == "-1") {
       val editor = preferences.edit()
       val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase
@@ -114,126 +260,6 @@ class MainActivity extends AppCompatActivity {
       val config = new Configuration()
       config.locale = locale
       getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
-    }
-
-    setContentView(R.layout.activity_main)
-
-    mToolbar = findViewById(R.drawable.ic_navigation_drawer).asInstanceOf[Toolbar]
-    mDrawerLayout = findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
-    mDrawerList = findViewById(R.id.left_drawer).asInstanceOf[ListView]
-    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START)
-    val list = new util.ArrayList[DrawerItem]()
-    list.add(new DrawerItem(getString(R.string.n_profile_options), R.drawable.ic_person_add_white_24dp))
-    list.add(new DrawerItem(getString(R.string.n_settings), R.drawable.ic_settings_white_24dp))
-    list.add(new DrawerItem(getString(R.string.n_create_group), R.drawable.ic_group_add_white_24dp))
-    list.add(new DrawerItem(getString(R.string.n_about), R.drawable.ic_info_outline_white_24dp))
-    list.add(new DrawerItem(getString(R.string.n_logout), R.drawable.ic_arrow_back_white_24dp))
-    val drawerListAdapter = new DrawerArrayAdapter(this, R.layout.rowlayout_drawer, list)
-    mDrawerList.setAdapter(drawerListAdapter)
-    mDrawerList.setOnItemClickListener(new DrawerItemClickListener())
-    if (getSupportActionBar != null) {
-      getSupportActionBar.setDisplayHomeAsUpEnabled(true)
-      getSupportActionBar.setHomeButtonEnabled(true)
-    }
-    mDrawerToggle = new ActionBarDrawerToggle(
-      this, mDrawerLayout, mToolbar,
-      R.string.drawer_open, R.string.drawer_close) {
-
-      override def onDrawerClosed(view: View) {
-        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
-      }
-
-      override def onDrawerOpened(drawerView: View) {
-        ActivityCompat.invalidateOptionsMenu(MainActivity.this)
-      }
-    }
-    mDrawerLayout.setDrawerListener(mDrawerToggle)
-    mDrawerToggle.syncState()
-
-    // Fix for Android 4.1.x
-    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-    }
-
-    // Check to see if Internet is available and show a warning if it isn't
-    val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val networkInfo = connMgr.getActiveNetworkInfo
-    if (networkInfo != null && !networkInfo.isConnected) {
-      showAlertDialog(MainActivity.this, getString(R.string.main_no_internet), getString(R.string.main_not_connected))
-    }
-
-    ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-      new BitmapManager()
-
-    Constants.epoch = System.currentTimeMillis() / 1000
-
-    ToxSingleton.updateFriendsList(this)
-    ToxSingleton.updateLastMessageMap(this)
-    ToxSingleton.updateUnreadCountMap(this)
-
-    val db = new AntoxDB(getApplicationContext)
-    db.clearFileNumbers()
-    db.close()
-
-    getSupportActionBar.setElevation(0)
-
-    updateLeftPane()
-  }
-
-  def updateLeftPane() {
-    ToxSingleton.updateFriendRequests(getApplicationContext)
-    ToxSingleton.updateFriendsList(getApplicationContext)
-    ToxSingleton.updateMessages(getApplicationContext)
-    ToxSingleton.updateGroupInvites(getApplicationContext)
-    ToxSingleton.updateGroupList(getApplicationContext)
-  }
-
-  def onClickAdd(v: View) {
-    val intent = new Intent(this, classOf[AddActivity])
-    startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
-  }
-
-  protected override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-      ToxSingleton.updateFriendsList(this)
-      ToxSingleton.updateGroupList(this)
-    }
-  }
-
-  override def onPause() {
-    super.onPause()
-    ToxSingleton.chatActive = false
-  }
-
-  override def onDestroy() {
-    super.onDestroy()
-    State.calls.removeAll()
-  }
-
-  def showAlertDialog(context: Context, title: String, message: String) {
-    val alertDialog = new AlertDialog.Builder(context).create()
-    alertDialog.setTitle(title)
-    alertDialog.setMessage(message)
-    alertDialog.setIcon(R.drawable.ic_launcher)
-    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-
-      def onClick(dialog: DialogInterface, which: Int) {
-      }
-    })
-    alertDialog.show()
-  }
-
-  private class DrawerItemClickListener extends AdapterView.OnItemClickListener {
-
-    override def onItemClick(parent: AdapterView[_],
-                             view: View,
-                             position: Int,
-                             id: Long) {
-      selectItem(position)
     }
   }
 }
