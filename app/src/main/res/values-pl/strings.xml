@@ -1,132 +1,231 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Dodaj znajomego</string>
-  <string name="title_activity_friend_profile">Profil znajomego</string>
-  <string name="title_activity_profile_settings">Opcje profilu</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Dodaj kontakt</string>
 
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Musisz uzupełnić nazwę użytkownika</string>
-  <string name="login_login">Login</string>
-  <string name="login_account_hint">Nazwa profilu</string>
-  <string name="login_create_account_text">Utwórz profil Toxa</string>
-  <string name="login_bad_login">Nazwa profilu nie została rozpoznana</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Nazwa profilu</string>
-  <string name="create_text">Twój slogan</string>
-  <string name="create_register">Zarejestruj</string>
-  <string name="create_register_incog">Zarejestruj w trybie prywatnym</string>
-  <string name="create_skip">Pozwól każdemu na dodanie do listy z twoją nazwą profilu</string>
-  <string name="create_must_fill_in">Musisz uzupełnić wszystkie pola</string>
-  <string name="create_bad_profile_name">Nazwa profilu nie może być pusta lub zawierać spacje lub ukośniki</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Chat nieaktywny. Uruchom jakiś wybierając znajomego z panelu po lewej.</string>
-  <string name="main_recent_no">Brak niedawnych rozmów</string>
-  <string name="main_no_internet">Brak połączenia z Internetem</string>
-  <string name="main_not_connected">Nie wykryto połączenia z Internetem. Bez połączenia z Internetem funkcjonalność Antoxa jest ograniczona do sieci lokalnej</string>
-  <string name="search_all_contacts">Przeszukaj wszystkie kontakty</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Wyślij wiadomość</string>
-  <string name="chat_file_transfer">Przesyłanie plików</string>
-  <!--Add Friend Activity-->
-  <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
-  <string name="addfriend_friend_message">Dołącz wiadomość</string>
-  <string name="addfriend_button">Dodaj kontakt</string>
-  <string name="addfriend_friend_added">Dodano kontakt</string>
-  <string name="addfriend_friend_exists">Kontakt już istnieje</string>
-  <string name="scanqr_button">Skanuj kod QR</string>
-  <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
-  <string name="addfriend_nick_hint">Ustaw nick dla kontaktu</string>
-  <string name="addfriend_optional_title">Dodatkowe</string>
-  <string name="dialog_pin">Wprowadź Pin kontaktu</string>
-  <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
-  <string name="addfriend_own_key">Nie możesz dodać samego siebie</string>
-  <string name="addfriend_friend_pin_title">Wpisz Pin kontaktu</string>
-  <string name="addfriend_friend_pin_text">Wpisz Pin kontaktu</string>
-  <string name="addfriend_default_message">Hej! Proszę, zaakceptuj moją prośbę o dodanie Cię do kontaktów</string>
+    <string name="app_name" translatable="false">Antox</string>
 
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Nick</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Opis</string>
-  <string name="friend_profile_button">Aktualizuj</string>
-  <string name="friend_profile_updated">Profil został zaktualizowany</string>
-  <string name="friend_profile_copied">ID skopiowane</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">Profil użytkownika %1$s\'</string>
-  <string name="friendrequest_accept">Zaakceptuj</string>
-  <string name="friendrequest_reject">Odrzuć</string>
-  <string name="friend_request">Nowa prośba o dodanie do kontaktów</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Dodaj znajomego</string>
+    <string name="title_activity_friend_profile">Profil znajomego</string>
+    <string name="title_activity_group_profile">Informacje o grupie</string>
+    <string name="title_activity_profile_settings">Opcje profilu</string>
 
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Profil</string>
-  <string name="friend_action_delete">Usuń kontakt</string>
-  <string name="friend_action_delete_chat">Usuń historię czatu</string>
-  <string name="friend_action_block">Zablokuj</string>
-  <string name="contacts_actions_on"></string>
-  <string name="contacts_delimiter_requests">Zaproszenia</string>
-  <string name="contacts_delimiter_friends">Kontakty</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Dodaj kontakt</string>
 
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Czy na pewno chcesz usunąć ten kontakt?</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Musisz uzupełnić nazwę użytkownika</string>
+    <string name="login_login">Zaloguj</string>
+    <string name="login_account_hint">Nazwa profilu</string>
+    <string name="login_create_account_text">Utwórz profil Tox</string>
+    <string name="login_bad_login">Nazwa profilu nie została rozpoznana</string>
 
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Jesteś pewien, że chcesz usunąć rozmowy?</string>
-  <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Zablokowanie tego kontaktu usunie go z listy i
-      uniemożliwi dodawanie cię do
-      jego kontaktów.\n\nCzy na pewno chcesz kontynuować?</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Nazwa profilu</string>
+    <string name="create_text">Twój slogan</string>
+    <string name="create_register">Zarejestruj</string>
+    <string name="create_register_incog">Zarejestruj w trybie prywatnym</string>
+    <string name="create_import_profile">Zaimportuj profil</string>
+    <string name="create_skip">Pozwól każdemu na dodanie do listy z twoją nazwą profilu</string>
+    <string name="create_must_fill_in">Musisz uzupełnić wszystkie pola</string>
+    <string name="create_bad_profile_name">Nazwa profilu nie może być pusta lub zawierać spacji lub ukośników</string>
+    <string name="create_profile_exists">Profil z tą nazwą już istnieje</string>
+    <string name="import_profile_invalid_file">Wybrany plik nie jeset poprawnym profilem Tox </string>
+    <string name="create_account_exists">Ta nazwa jest już zajęta</string>
+    <string name="create_account_internal_error">Wewnętrzny błąd Antoxa. Proszę zrestartować i spróbować ponownie</string>
+    <string name="create_account_reached_registration_limit">Możesz utworzyć tylko 13 profili na godzinę. Osiągnięto ten limit.</string>
+    <string name="create_account_unknown_error">Nieznany błąd rejestracji, proszę spróbować ponownie później</string>
+    <string name="create_account_kalium_link_error">Nie udało się załadować jednej z wymaganych bibliotek. Nie da się utworzyć nie-incognito konta</string>
 
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Dołącz zdjęcie</string>
-  <string name="attachment_file">Załącz plik</string>
-  <string name="attachment_takephoto">Zrób zdjęcie</string>
-  <string name="message_copy">Skopiuj wiadomość</string>
-  <string name="message_delete">Usuń wiadomość</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Ostatnie</string>
-  <string name="titles_contacts">Kontakty</string>
-  <string name="titles_settings">Ustawienia</string>
-  <!--Misc-->
-  <string name="button_confirm">Potwierdź</string>
-  <string name="button_cancel">Anuluj</string>
-  <string name="button_yes">Tak</string>
-  <string name="button_no">Nie</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Kopiuj Tox ID do schowka</string>
-  <string name="share_with">Podziel się z</string>
-  <string name="connection_has">jest</string>
-  <string name="connection_online">online</string>
-  <string name="connection_offline">offline</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Ustawienia</string>
-  <!--QR-->
-  <string name="qr_default_title">Zainstalować skaner kodów QR?</string>
-  <string name="qr_default_message">Ta aplikacja wymaga skanera kodów QR. Czy chciałbyś go zainstalować?</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Brak aktywnego czatu. Uruchom jakiś wybierając znajomego z panelu po lewej.</string>
+    <string name="main_recent_no">Brak niedawnych rozmów</string>
+    <string name="main_no_internet">Brak połączenia z Internetem</string>
+    <string name="main_not_connected">Nie wykryto połączenia z Internetem. Bez połączenia z Internetem funkcjonalność Antoxa jest ograniczona do sieci lokalnej</string>
+    <string name="main_mobile_disabled">Obecnie offline, ze względu na tryb Wi-Fi-only. Dotknij by otworzyć ustawienia. </string>
+    <string name="search_all_contacts">Przeszukaj wszystkie kontakty</string>
+    <string name='main_group_coming_soon'>"Wkrótce…"</string>
 
-  <string name="qr_button_yes">Tak</string>
-  <string name="qr_button_no">Nie</string>
-  <!--nav bar-->
-  <string name="n_settings">USTAWIENIA</string>
-  <string name="n_profile_options">PROFIL</string>
-  <string name="n_create_group">UTWÓRZ GRUPĘ</string>
-  <string name="n_add_person">DODAJ OSOBĘ</string>
-  <string name="n_about">O</string>
-  <string name="n_open_source">LICENCJA OPEN SOURCE</string>
-  <string name="n_logout">WYLOGUJ SIĘ</string>
-  <string name="drawer_open">Otwórz pasek nawigacyjny</string>
-  <string name="drawer_close">Zamknij pasek nawigacyjny</string>
-  <string name="open_source_license">Licencja open source</string>
-  <string name="license1">Rozpowszechniany jako GNU GPL v3.</string>
-  <string name="license2">Kod źródłowy jest dostępny na\nhttps://github.com/Astonex/Antox</string>
-  <string name="ver">Wersja</string>
-  <string name="about">O</string>
-  <string name="about_antox_1">Wraz ze wzrostem państwowych programów monitorujących, Tox stanowi łatwy w użyciu program, który pozwala łączyć się z rodziną i znajomymi bez obawy o podsłuch.</string>
-  <string name="about_antox_2">Co obecnie działa:</string>
-  <string name="about_antox_3">-Wiadomości - bez czatu grupowego</string>
-  <string name="about_antox_4">-Transfer plików</string>
-  <string name="about_antox_5">Bieżący postęp:</string>
-  <string name="about_antox_6">-Obecnie wdrażana jest usługa A/V</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Wyślij wiadomość</string>
+    <string name="chat_file_transfer">Przesyłanie plików</string>
+    <string name="chat_message_too_long">Ta wiadomość jest zbyt długa i nie może zostać wysłana</string>
+    <string name="chat_ft_failed_friend_offline">Wysyłanie nieudane - nie można wysłać pliku do znajomego będącego offline</string>
+
+    <!-- Add Pane Fragment -->
+    <string name="addpane_friend_label">Znajoma/y</string>
+    <string name="addpane_group_label">Grupa</string>
+
+    <!--Add Friend Activity-->
+    <string name="addfriend_friend_key">Tox ID Twojego znajomego</string>
+    <string name="addfriend_friend_message">Dołącz wiadomość</string>
+    <string name="addfriend_button">Dodaj kontakt</string>
+    <string name="addfriend_friend_added">Dodano kontakt</string>
+    <string name="addfriend_friend_exists">Kontakt już istnieje</string>
+    <string name="scanqr_button">Skanuj kod QR</string>
+    <string name="invalid_friend_ID">Nieprawidłowy Tox ID</string>
+    <string name="addfriend_nick_hint">Ustaw nick dla kontaktu</string>
+    <string name="addfriend_optional_title">Dodatkowe</string>
+    <string name="dialog_pin">Wprowadź Pin kontaktu</string>
+    <string name="addfriend_invalid_pin">Nieprawidłowy Pin</string>
+    <string name="addfriend_own_key">Nie możesz dodać samego siebie</string>
+    <string name="addfriend_friend_pin_title">Wpisz Pin kontaktu</string>
+    <string name="addfriend_friend_pin_text">Wpisz Pin kontaktu</string>
+    <string name="addfriend_default_message">Hej! Proszę, zaakceptuj moją prośbę o dodanie Cię do kontaktów</string>
+
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">ID grupy</string>
+    <string name="addgroup_button">Dołącz do grupy</string>
+    <string name="addgroup_group_added">Dołączono do grupy</string>
+    <string name="addgroup_group_exists">Grupa już istnieje</string>
+    <string name="invalid_group_ID">Nieprawidłowy ID grupy</string>
+    <string name="addgroup_alias_hint">Ustaw alias dla tej grupy</string>
+    <string name="addgroup_optional_title">Dodatkowe opcje</string>
+
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Nick</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Opis</string>
+    <string name="friend_profile_button">Aktualizuj</string>
+    <string name="friend_profile_updated">Profil został zaktualizowany</string>
+    <string name="friend_profile_copied">ID skopiowany</string>
+
+    <!-- Group Profile Activity -->
+    <string name="group_profile_peer_list_head">Członkowie</string>
+
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">Profil użytkownika %1$s</string>
+    <string name="friendrequest_accept">Zaakceptuj</string>
+    <string name="friendrequest_reject">Odrzuć</string>
+    <string name="friend_request">Nowa prośba o dodanie do kontaktów</string>
+
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">Zaakceptuj</string>
+    <string name="groupinvite_reject">Odrzuć</string>
+    <string name="group_invite">Nowe zaproszenie do grupy</string>
+    <string name="invited_by">Zaproszono przez </string>
+
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_delete">Usuń kontakt</string>
+    <string name="friend_action_export_chat">Eksportuj historię czatu</string>
+    <string name="friend_action_delete_chat">Usuń historię czatu</string>
+    <string name="friend_action_block">Zablokuj</string>
+    <string name="group_default_peer_name">Anonimowa/y</string>
+    <string name="group_action_delete">Opuść grupę</string>
+    <string name="contacts_actions_on">Akcja na</string>
+    <string name="contacts_delimiter_requests">Zaproszenia</string>
+    <string name="contacts_delimiter_invites">Zaproszenia do grup</string>
+    <string name="contacts_delimiter_groups">Grupy</string>
+    <string name="contacts_delimiter_friends">Znajomi</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Wyślij ponownie zapytania do znajomych</string>
+
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Czy na pewno chcesz usunąć ten kontakt?</string>
+
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Pomyślnie wyeksportowano historię rozmów do %s</string>
+    <string name="friend_action_chat_log_export_failed">Nie udało się wyeksportować historii rozmów. </string>
+
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Jesteś pewien, że chcesz usunąć historię rozmów?</string>
+
+    <!--Block Friend Dialog-->
+    <string name="friend_action_block_friend_confirmation">Zablokowanie tego kontaktu usunie go z listy i uniemożliwi dodawanie cię do
+            jego kontaktów.\n\nCzy na pewno chcesz kontynuować?</string>
+
+    <!-- Reset ToxID Dialog -->
+    <string name="reset_tox_id_dialog_message">Reset twojego Tox ID zmieni twój ID permamentnie. Obecna lista
+        znajomych zostanie zachowana, lecz inni nie będą mogli dodać cię używając twojego starego Tox ID. </string>
+    <string name="reset_tox_id_dialog_title">Potwierdź reset Tox ID</string>
+    <string name="reset_tox_id_dialog_confirm">Zresetuj ID</string>
+    <string name="reset_tox_id_dialog_cancel">Anuluj</string>
+    <string name="tox_id_reset">Twój Tox ID został zresetowany</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">Utwórz nowy czat grupowy</string>
+    <string name="create_group_dialog_create_group">Utwórz grupę</string>
+    <string name="create_group_dialog_cancel">Anuluj</string>
+    <string name="create_group_dialog_name_header">Nazwa grupy</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">Do widzenia</string>
+
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Dołącz zdjęcie</string>
+    <string name="attachment_file">Załącz plik</string>
+    <string name="attachment_takephoto">Zrób zdjęcie</string>
+    <string name="message_copy">Skopiuj wiadomość</string>
+    <string name="message_delete">Usuń wiadomość</string>
+
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Ostatnie</string>
+    <string name="titles_contacts">Kontakty</string>
+    <string name="titles_settings">Ustawienia</string>
+
+    <!--Misc-->
+    <string name="button_confirm">Potwierdź</string>
+    <string name="button_cancel">Anuluj</string>
+    <string name="button_yes">Tak</string>
+    <string name="button_no">Nie</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Kopiuj Tox ID do schowka</string>
+    <string name="share_with">Podziel się z</string>
+    <string name="connection_has">jest</string>
+    <string name="connection_online">online</string>
+    <string name="connection_offline">offline</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="action_settings">Ustawienia</string>
+
+    <!-- Avatar Dialog -->
+    <string name="dialog_avatar_take_photo">Zrób zdjęcie</string>
+    <string name="dialog_avatar_use_file">Użyj plik</string>
+    <string name="avatar_too_large_error">Błąd: wybrany awatar jest zbyt duży.</string>
+    <string name="no_camera_intent_error">Błąd: nie znaleziono aplikacji do obsługi kamery.</string>
+    <string name="dialog_avatar_description">awatar</string>
+
+    <!-- File transfer -->
+    <string name="file_finished">Zakończony</string>
+    <string name="file_failed">Nieudany</string>
+    <string name="file_in_progress">W trakcie</string>
+    <string name="file_request_sent">Wyślij zapytanie</string>
+    <string name="file_rejected">Odrzucony</string>
+    <string name="file_time_remaining">pozostało %s sekund</string>
+
+    <!--QR-->
+    <string name="qr_default_title">Zainstalować skaner kodów QR?</string>
+    <string name="qr_default_message">Ta aplikacja wymaga skanera kodów QR. Czy chciałbyś go zainstalować?</string>
+    <string name="qr_button_yes">Tak</string>
+    <string name="qr_button_no">Nie</string>
+
+    <!--nav bar-->
+    <string name="n_settings">USTAWIENIA</string>
+    <string name="n_profile_options">PROFIL</string>
+    <string name="n_create_group">UTWÓRZ GRUPĘ</string>
+    <string name="n_add_person">DODAJ OSOBĘ</string>
+    <string name="n_about">INFORMACJE</string>
+    <string name="n_open_source">LICENCJA OPEN SOURCE</string>
+    <string name="n_logout">WYLOGUJ SIĘ</string>
+    <string name="drawer_open">Otwórz pasek nawigacyjny</string>
+    <string name="drawer_close">Zamknij pasek nawigacyjny</string>
+    <string name="open_source_license">Licencja open source</string>
+    <string name="license1">Rozpowszechniany pod GNU GPL v3.</string>
+    <string name="license2">Kod źródłowy jest dostępny na\nhttps://github.com/subliun/Antox</string>
+    <string name="ver">Wersja</string>
+    <string name="about">Informacje</string>
+    <string name="about_antox_1">Wraz ze wzrostem państwowych programów monitorujących, Tox stanowi łatwy w użyciu program, który pozwala łączyć się z rodziną i znajomymi bez obawy o podsłuch.</string>
+    <string name="about_antox_2">Co obecnie działa:</string>
+    <string name="about_antox_3">- Jeden na jeden wiadomości</string>
+    <string name="about_antox_4">- Powiadomienia</string>
+    <string name="about_antox_5">- Transfer plików</string>
+    <string name="about_antox_6">Nie działa:</string>
+    <string name="about_antox_7">- Audio/Wideo</string>
+    <string name="about_antox_8">- Grupy</string>
+    <string name="title_activity_call">CallActivity</string>
+    <string name="end_call">Zakończ rozmowę</string>
+    <string name="mute_call">Wycisz</string>
+    <string name="mute_mic">Wycisz mikrofon</string>
+    <string name="profile_info_description">Info o użytkowniku</string>
+
 </resources>
