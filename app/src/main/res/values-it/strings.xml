@@ -33,6 +33,8 @@
   <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
   <string name="create_account_unknown_error">Errore sconosciuto durante la registrazione, riprova più tardi</string>
   <string name="create_account_kalium_link_error">Errore caricamento libreria. Impossibile registrare accounts su toxme.se</string>
+  <string name="create_account_encrypted_profile_error">Attualmente Antox non supporta i profili criptati</string>
+  <string name="create_account_load_profile_unknown">Errore sconosciuto durante il caricamento del profilo</string>
 
   <!-- Main Activity -->
   <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
