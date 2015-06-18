@@ -64,6 +64,7 @@ class GroupList {
     addGroup(new Group(tox.getGroupKey(groupNumber),
       groupNumber, UIUtils.trimId(tox.getGroupKey(groupNumber)),
       "", "", new PeerList()))
+
   }
 
   def addGroupIfNotExists(group: Group): Unit = {

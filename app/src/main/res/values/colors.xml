@@ -15,9 +15,11 @@
     <color name="material_orange_700">#f57c00</color>
     <color name="red">#FF3333</color>
     <color name="material_red_a700">#d50000</color>
-    <color name="purple_dark">#6c5170</color>
+    <color name="purple_dark">#5e35b1</color>
+    <color name="purple_darker">#512da8</color>
 
     <color name="brand_primary">@color/purple_dark</color>
+    <color name="brand_primary_dark">@color/purple_darker</color>
     <color name="brand_secondary">@color/green</color>
     <color name="brand_secondary_dark">@color/green_dark</color>
 

@@ -1,25 +1,76 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/black</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:background">@color/white</item>
     </style>
 
+    <!-- the theme applied to the application or activity -->
+    <style name="AntoxTheme"
+        parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabs</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="AntoxTheme.ActionBar"
+        parent="@style/Theme.AppCompat.NoActionBar">
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="actionBarTabStyle">@style/ActionBarTabs</item>
+
+        <!-- Panel attributes -->
+        <item name="listChoiceBackgroundIndicator">@drawable/abc_list_selector_holo_dark</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/action_bar_background</item>
+        <item name="backgroundStacked">@color/action_bar_background</item>
+        <item name="backgroundSplit">@color/action_bar_background</item>
+    </style>
+
+    <!-- ActionBar styles -->
+    <style name="ActionBar"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:titleTextStyle">@style/ActionBarTitleText</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/ActionBarTitleText</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/action_bar_background</item>
+        <item name="backgroundStacked">@color/action_bar_background</item>
+        <item name="backgroundSplit">@color/action_bar_background</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="ActionBarTitleText"
+        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+        <!-- The textColor property is backward compatible with the Support Library -->
+    </style>
+
+    <style name="ActionBarTabs">
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/tab_background</item>
+        <item name="background">@drawable/tab_background</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
     <!-- Application theme. -->
-    <style name="AppTheme" parent="CustomActionBarTheme">
+    <style name="AppTheme" parent="AntoxTheme">
     </style>
 
     <style name="AppTheme.Fab" parent="FloatingActionButton">

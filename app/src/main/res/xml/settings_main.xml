@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory android:title="@string/pref_header_notifications">
         <!-- A 'parent' preference, which enables/disables child preferences (below)
          when checked/unchecked. -->

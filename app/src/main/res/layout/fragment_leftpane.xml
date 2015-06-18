@@ -9,6 +9,14 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/brand_primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AntoxTheme.ActionBar"/>
+
     <fragment android:name="im.tox.antox.fragments.WifiWarningFragment"
         android:id="@+id/wifi_warning_bar"
         android:layout_width="match_parent"
@@ -23,25 +31,11 @@
         android:textColor="@color/white_absolute"
         app:pstsShouldExpand="true"
         />
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawer_layout"
+
+    <android.support.v4.view.ViewPager
+        android:background="@color/white_absolute"
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v4.view.ViewPager
-            android:background="@color/white_absolute"
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v4.view.ViewPager>
-        <ListView
-            android:id="@+id/left_drawer"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="#111"
-            android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp" />
-    </android.support.v4.widget.DrawerLayout>
+    </android.support.v4.view.ViewPager>
 </LinearLayout>

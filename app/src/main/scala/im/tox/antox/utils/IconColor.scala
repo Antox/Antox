@@ -5,7 +5,7 @@ import im.tox.tox4j.core.enums.ToxUserStatus
 
 object IconColor {
 
-  def iconDrawable(isOnline: java.lang.Boolean, status: ToxUserStatus): Int = {
+  def iconDrawable(isOnline: Boolean, status: ToxUserStatus): Int = {
     val color = if (!isOnline) {
       R.drawable.circle_offline
     } else if (status == ToxUserStatus.NONE) {

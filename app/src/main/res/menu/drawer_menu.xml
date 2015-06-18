@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile_options"
+            android:icon="@drawable/ic_person_add_white_24dp"
+            android:title="@string/n_profile_options" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
+            android:title="@string/n_settings" />
+        <item
+            android:id="@+id/nav_create_group"
+            android:icon="@drawable/ic_group_add_white_24dp"
+            android:title="@string/n_create_group" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_outline_white_24dp"
+            android:title="@string/n_about" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_arrow_back_white_24dp"
+            android:title="@string/n_logout" />
+
+    </group>
+</menu>

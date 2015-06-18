@@ -15,6 +15,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   val tox: ToxCoreImpl = new ToxCoreImpl(options)
 
+  var selfConnectionStatus: ToxConnection = ToxConnection.NONE
+
   def this(antoxFriendList: AntoxFriendList, groupList: GroupList) {
     this(antoxFriendList, groupList, new ToxOptions)
   }
@@ -29,8 +31,6 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     tox.bootstrap(address, port, publicKey.bytes)
     tox.addTcpRelay(address, port, publicKey.bytes)
   }
-
-  def callbackConnectionStatus(callback: FriendConnectionStatusCallback): Unit = tox.callbackFriendConnectionStatus(callback)
 
   def getUdpPort: Int = tox.getUdpPort
 
@@ -67,6 +67,13 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   }
 
   def getName: String = new String(tox.getName, "UTF-8")
+
+  def getSelfConnectionStatus: ToxConnection = selfConnectionStatus
+
+  //should only ever be called from AntoxOnConnectionStatusCallback
+  def setSelfConnectionStatus(selfConnectionStatus: ToxConnection): Unit = {
+    this.selfConnectionStatus = selfConnectionStatus
+  }
 
   def setStatusMessage(message: String): Unit = tox.setStatusMessage(message.getBytes)
 
@@ -110,6 +117,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, ToxMessageType.NORMAL, 0, message.getBytes)
 
   def sendAction(friendNumber: Int, action: String): Int = tox.sendMessage(friendNumber, ToxMessageType.ACTION, 0, action.getBytes)
+
+  def callbackSelfConnectionStatus(callback: SelfConnectionStatusCallback): Unit = tox.callbackSelfConnectionStatus(callback)
 
   def callbackFriendName(callback: FriendNameCallback): Unit = tox.callbackFriendName(callback)
 

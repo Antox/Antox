@@ -157,7 +157,6 @@
     <string name="create_register">注册</string>
     <string name="friendrequest_reject">拒绝</string>
     <string name="search_all_contacts">搜索所有联系人</string>
-    <string name="app_name" translatable="false">Antox</string>
     <string name="pref_advanced">高级设置</string>
     <string name="pref_default_nickname">Antox用户</string>
     <string name="pref_default_password">未设置密码</string>
