@@ -68,6 +68,8 @@ object Constants {
 
   val COLUMN_NAME_ISBLOCKED = "isblocked"
 
+  val COLUMN_NAME_FAVORITE = "favorite"
+
   val COLUMN_NAME_AVATAR = "avatar"
 
   val COLUMN_NAME_CONTACT_TYPE = "contact_type"

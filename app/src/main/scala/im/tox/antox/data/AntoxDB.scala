@@ -35,6 +35,7 @@ object AntoxDB {
       "avatar text, " +
       "received_avatar boolean," +
       "ignored boolean, " +
+      "favorite boolean, " +
       "contact_type int);"
 
     var CREATE_TABLE_MESSAGES: String = "CREATE TABLE IF NOT EXISTS messages" + " ( _id integer primary key , " +
@@ -128,6 +129,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_AVATAR, key)
     values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, false)
     values.put(Constants.COLUMN_NAME_IGNORED, false)
+    values.put(Constants.COLUMN_NAME_FAVORITE, false)
     values.put(Constants.COLUMN_NAME_CONTACT_TYPE, contactType.id: java.lang.Integer)
     mDb.insert(Constants.TABLE_CONTACTS, null, values)
     this.close()
@@ -602,10 +604,12 @@ class AntoxDB(ctx: Context) {
         val isBlocked = cursor.getInt(6) > 0
         val avatar = cursor.getString(7)
         val receievedAvatar = cursor.getInt(8) > 0
+        val ignored = cursor.getInt(9) > 0
+        val favorite = cursor.getInt(10) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
         val file = AVATAR.getAvatarFile(avatar, ctx)
-        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, receievedAvatar, alias)
+        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, receievedAvatar, favorite, alias)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -630,10 +634,12 @@ class AntoxDB(ctx: Context) {
         val isBlocked = cursor.getInt(6) > 0
         val avatar = cursor.getString(7)
         val receievedAvatar = cursor.getInt(8) > 0
+        val ignored = cursor.getInt(9) > 0
+        val favorite = cursor.getInt(10) > 0
         if (alias == null) alias = ""
         if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
         val file = AVATAR.getAvatarFile(avatar, ctx)
-        if (!isBlocked) groupList += new GroupInfo(key, connected, name, topic, alias)
+        if (!isBlocked) groupList += new GroupInfo(key, connected, name, topic, favorite, alias)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -725,13 +731,8 @@ class AntoxDB(ctx: Context) {
   def updateContactOnline(key: String, online: Boolean) =
     updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_ISONLINE, online)
 
-  def updateFriendAvatar(key: String, avatar: String) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_AVATAR, avatar)
-    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateFriendAvatar(key: String, avatar: String) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_AVATAR, avatar)
 
   def setAllFriendReceivedAvatar(receivedAvatar: Boolean) {
     this.open(writeable = false)
@@ -741,13 +742,11 @@ class AntoxDB(ctx: Context) {
     this.close()
   }
 
-  def updateFriendReceivedAvatar(key: String, receivedAvatar: Boolean) {
-    this.open(writeable = false)
-    val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
-    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
-    this.close()
-  }
+  def updateContactReceivedAvatar(key: String, receivedAvatar: Boolean) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
+
+  def updateContactFavorite(key: String, favorite: Boolean) =
+    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_FAVORITE, favorite)
 
   def getContactDetails(key: String): Array[String] = {
     var details = Array[String](null, null, null)

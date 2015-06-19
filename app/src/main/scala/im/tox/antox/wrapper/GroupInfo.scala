@@ -4,22 +4,22 @@ import java.sql.Timestamp
 
 import im.tox.antox.utils.TimestampUtils
 
-class GroupInfo(
-  val id: String,
-  val connected: Boolean,
-  name: String,
-  val topic: String,
-  lastMessage: String,
-  lastMessageTimestamp: Timestamp,
-  unreadCount: Int,
-  alias: String) extends ContactInfo(id, name, None, connected, if (connected) "online" else "offline",
-                                     topic, true, lastMessage, lastMessageTimestamp, unreadCount, alias) {
+case class GroupInfo(key: String,
+                     online: Boolean,
+                     name: String,
+                     topic: String,
+                     favorite: Boolean,
+                     lastMessage: String,
+                     lastMessageTimestamp: Timestamp,
+                     unreadCount: Int,
+                     alias: String) extends ContactInfo {
 
-  def this(group: Group, lastMessage: String, lastMessageTimestamp: Timestamp, unreadCount: Int) {
-    this(group.id, group.connected, group.name, group.topic, lastMessage, lastMessageTimestamp, unreadCount, group.alias)
-  }
+  def statusMessage = topic
+  val status = if (online) "online" else "offline"
+  val receivedAvatar = true
+  val avatar = None
 
-  def this(id: String, isConnected: Boolean, name: String, topic: String, alias: String)  {
-    this(id, isConnected, name, topic, "", TimestampUtils.emptyTimestamp(), 0, alias)
+  def this(id: String, online: Boolean, name: String, topic: String, favorite: Boolean, alias: String)  {
+    this(id, online, name, topic, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 }

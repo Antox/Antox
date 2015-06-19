@@ -30,11 +30,11 @@ object Reactive {
           val unreadCount: Option[Integer] = uc.get(f.key)
           (lastMessageTup, unreadCount) match {
             case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
-              new FriendInfo(f, lastMessage, lastMessageTimestamp, unreadCount)
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = unreadCount)
             case (Some((lastMessage, lastMessageTimestamp)), None) =>
-              new FriendInfo(f, lastMessage, lastMessageTimestamp, 0)
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
             case _ =>
-              new FriendInfo(f, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0)
+              f.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
           }
         })
     }
@@ -46,19 +46,13 @@ object Reactive {
     tup match {
       case (gl, lm) =>
         gl.map(g => {
-          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.id)
-          val unreadCount: Option[Integer] = uc.get(g.id)
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.key)
+          val unreadCount: Option[Integer] = uc.get(g.key)
           (lastMessageTup, uc) match {
             case (Some((lastMessage, lastMessageTimestamp)), _) =>
-              g.lastMessage = lastMessage
-              g.lastMessageTimestamp = lastMessageTimestamp
-              g.unreadCount = unreadCount.getOrElse(0).asInstanceOf[Int]
-              g
+              g.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
             case _ =>
-              g.lastMessage = ""
-              g.lastMessageTimestamp = TimestampUtils.emptyTimestamp()
-              g.unreadCount = 0
-              g
+              g.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
           }
         })
     }

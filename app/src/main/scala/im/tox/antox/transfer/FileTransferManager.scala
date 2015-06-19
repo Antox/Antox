@@ -272,14 +272,14 @@ class FileTransferManager extends Intervals {
 
   def onSelfAvatarSendFinished(sentToKey: String, context: Context): Unit = {
     val db = new AntoxDB(context)
-    db.updateFriendReceivedAvatar(sentToKey, receivedAvatar = true)
+    db.updateContactReceivedAvatar(sentToKey, receivedAvatar = true)
     updateSelfAvatar(context)
     db.close()
   }
 
   def updateSelfAvatar(context: Context): Unit = {
     val db = new AntoxDB(context)
-    db.getFriendList.filter(_.online).find(!_.receievedAvatar) match {
+    db.getFriendList.filter(_.online).find(!_.receivedAvatar) match {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>

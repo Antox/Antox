@@ -3,18 +3,19 @@ package im.tox.antox.wrapper
 import java.io.File
 import java.sql.Timestamp
 
-class ContactInfo(
-  val key: String,
-  var name: String,
-  val avatar: Option[File],
-  var online: Boolean,
-  var status: String,
-  var statusMessage: String,
-  var receivedAvatar: Boolean,
-  var lastMessage: String,
-  var lastMessageTimestamp: Timestamp,
-  var unreadCount: Int,
-  var alias: String) {
+trait ContactInfo {
+  def key: String
+  def name: String
+  def avatar: Option[File]
+  def online: Boolean
+  def status: String
+  def statusMessage: String
+  def receivedAvatar: Boolean
+  def favorite: Boolean
+  def lastMessage: String
+  def lastMessageTimestamp: Timestamp
+  def unreadCount: Int
+  def alias: String
 
   /**
   Returns 'alias' if it has been set, otherwise returns 'name'.

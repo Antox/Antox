@@ -29,7 +29,7 @@ class GroupChatActivity extends GenericChatActivity {
       .subscribe(groupInfo => {
       val id = activeKey
       val mGroup: Option[GroupInfo] = groupInfo
-        .filter(groupInfo => groupInfo.id == id)
+        .filter(groupInfo => groupInfo.key == id)
         .headOption
       mGroup match {
         case Some(group) => {
