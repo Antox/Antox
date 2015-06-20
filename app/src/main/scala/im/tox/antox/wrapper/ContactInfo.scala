@@ -11,6 +11,8 @@ trait ContactInfo {
   def status: String
   def statusMessage: String
   def receivedAvatar: Boolean
+  def blocked: Boolean
+  def ignored: Boolean
   def favorite: Boolean
   def lastMessage: String
   def lastMessageTimestamp: Timestamp

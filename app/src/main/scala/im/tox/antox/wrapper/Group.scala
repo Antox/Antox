@@ -4,7 +4,7 @@ import im.tox.antox.tox.ToxSingleton
 
 import scala.collection.JavaConversions._
 
-class Group(val id: String,
+class Group(val key: String,
             val groupNumber: Int,
             private var _name: String,
             var alias: String,

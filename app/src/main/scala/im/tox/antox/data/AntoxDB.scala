@@ -477,10 +477,10 @@ class AntoxDB(ctx: Context) {
     val cursor = mDb.query(Constants.TABLE_GROUP_INVITES, projection, null, null, null, null, null)
     if (cursor.moveToFirst()) {
       do {
-        val groupId = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY))
+        val groupKey = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY))
         val inviter = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_INVITER))
         val data = cursor.getBlob(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_DATA))
-        groupInvites.add(new GroupInvite(groupId, inviter, data))
+        groupInvites.add(new GroupInvite(groupKey, inviter, data))
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -595,21 +595,8 @@ class AntoxDB(ctx: Context) {
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
       do {
-        var name = cursor.getString(1)
-        val key = cursor.getString(0)
-        val status = cursor.getString(2)
-        val note = cursor.getString(3)
-        var alias = cursor.getString(4)
-        val isOnline = cursor.getInt(5) != 0
-        val isBlocked = cursor.getInt(6) > 0
-        val avatar = cursor.getString(7)
-        val receievedAvatar = cursor.getInt(8) > 0
-        val ignored = cursor.getInt(9) > 0
-        val favorite = cursor.getInt(10) > 0
-        if (alias == null) alias = ""
-        if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
-        val file = AVATAR.getAvatarFile(avatar, ctx)
-        if (!isBlocked) friendList += new FriendInfo(isOnline, name, status, note, key, file, receievedAvatar, favorite, alias)
+        val friendInfo = getFriendInfoFromCursor(cursor)
+        if (!friendInfo.blocked) friendList += friendInfo
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -625,23 +612,11 @@ class AntoxDB(ctx: Context) {
     val cursor = mDb.rawQuery(selectQuery, null)
     if (cursor.moveToFirst()) {
       do {
-        var name = cursor.getString(1)
-        val key = cursor.getString(0)
-        val status = cursor.getString(2)
-        val topic = cursor.getString(3)
-        var alias = cursor.getString(4)
-        val connected = cursor.getInt(5) != 0
-        val isBlocked = cursor.getInt(6) > 0
-        val avatar = cursor.getString(7)
-        val receievedAvatar = cursor.getInt(8) > 0
-        val ignored = cursor.getInt(9) > 0
-        val favorite = cursor.getInt(10) > 0
-        if (alias == null) alias = ""
-        if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
-        val file = AVATAR.getAvatarFile(avatar, ctx)
-        if (!isBlocked) groupList += new GroupInfo(key, connected, name, topic, favorite, alias)
+        val groupInfo = getGroupInfoFromCursor(cursor)
+        if (!groupInfo.blocked) groupList += groupInfo
       } while (cursor.moveToNext())
     }
+
     cursor.close()
     this.close()
     groupList.toArray
@@ -778,24 +753,113 @@ class AntoxDB(ctx: Context) {
   }
 
   def getContactStatusMessage(key: String): String = {
+    getContactInfo(key).statusMessage
+  }
+
+
+  def getContactInfo(key: String): ContactInfo = {
     this.open(writeable = true)
 
     val query =
-      "SELECT " + Constants.COLUMN_NAME_NOTE +
-      " FROM " + Constants.TABLE_CONTACTS +
-      " WHERE " + Constants.COLUMN_NAME_KEY +
-      " = '" + key + "'"
+      "SELECT * " +
+        " FROM " + Constants.TABLE_CONTACTS +
+        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " = '" + key + "'"
 
-    var statusMessage = ""
     val cursor = mDb.rawQuery(query, null)
+    var contactInfo: ContactInfo = null
     if (cursor.moveToFirst()) {
-      statusMessage = cursor.getString(0)
+      contactInfo = ContactType(cursor.getInt(11)) match {
+        case ContactType.FRIEND | ContactType.NONE =>
+          getFriendInfo(key)
+        case ContactType.GROUP =>
+          getGroupInfo(key)
+      }
     }
     cursor.close()
-
     this.close()
 
-    statusMessage
+    contactInfo
+  }
+
+  def getFriendInfo(key: String): FriendInfo = {
+    this.open(writeable = true)
+
+    val query =
+      "SELECT * " +
+        " FROM " + Constants.TABLE_CONTACTS +
+        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " = '" + key + "'"
+
+    val cursor = mDb.rawQuery(query, null)
+    var friendInfo: FriendInfo = null
+    if (cursor.moveToFirst()) {
+      friendInfo = getFriendInfoFromCursor(cursor)
+    }
+    cursor.close()
+    this.close()
+
+    friendInfo
+  }
+
+  def getGroupInfo(key: String): GroupInfo = {
+    this.open(writeable = true)
+
+    val query =
+      "SELECT * " +
+        " FROM " + Constants.TABLE_CONTACTS +
+        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " = '" + key + "'"
+
+    val cursor = mDb.rawQuery(query, null)
+    var groupInfo: GroupInfo = null
+    if (cursor.moveToFirst()) {
+       groupInfo = getGroupInfoFromCursor(cursor)
+    }
+    cursor.close()
+    this.close()
+
+    groupInfo
+  }
+
+  private def getFriendInfoFromCursor(cursor: Cursor): FriendInfo = {
+    var name = cursor.getString(1)
+    val key = cursor.getString(0)
+    val status = cursor.getString(2)
+    val note = cursor.getString(3)
+    var alias = cursor.getString(4)
+    val online = cursor.getInt(5) != 0
+    val blocked = cursor.getInt(6) > 0
+    val avatar = cursor.getString(7)
+    val receievedAvatar = cursor.getInt(8) > 0
+    val ignored = cursor.getInt(9) > 0
+    val favorite = cursor.getInt(10) > 0
+
+    if (alias == null) alias = ""
+    if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
+    val file = AVATAR.getAvatarFile(avatar, ctx)
+
+    new FriendInfo(online, name, status, note, key, file, receievedAvatar, blocked, ignored, favorite, alias)
+  }
+
+  private def getGroupInfoFromCursor(cursor: Cursor): GroupInfo = {
+    var name = cursor.getString(1)
+    val key = cursor.getString(0)
+    val status = cursor.getString(2)
+    val topic = cursor.getString(3)
+    var alias = cursor.getString(4)
+    val connected = cursor.getInt(5) != 0
+    val blocked = cursor.getInt(6) > 0
+    val avatar = cursor.getString(7)
+    val receivedAvatar = cursor.getInt(8) > 0
+    val ignored = cursor.getInt(9) > 0
+    val favorite = cursor.getInt(10) > 0
+
+    if (alias == null) alias = ""
+    if (alias != "") name = alias else if (name == "") name = UIUtils.trimIDForDisplay(key)
+    val file = AVATAR.getAvatarFile(avatar, ctx)
+
+    new GroupInfo(key, connected, name, topic, blocked, ignored, favorite, alias)
   }
 
   def updateAlias(alias: String, key: String) {

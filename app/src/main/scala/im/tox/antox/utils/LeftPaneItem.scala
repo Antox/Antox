@@ -15,6 +15,7 @@ class LeftPaneItem(
   val second: String, // status message, or last message depending on which tab
   val isOnline: Boolean,
   val status: ToxStatus,
+  val favorite: Boolean,
   val count: Int,
   val timestamp: Timestamp) {
 
@@ -25,9 +26,12 @@ class LeftPaneItem(
     second: String,
     isOnline: Boolean,
     status: ToxStatus,
+    favorite: Boolean,
     count: Int,
-    timestamp: Timestamp) = this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, count, timestamp)
+    timestamp: Timestamp) =
+    this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, favorite, count, timestamp)
 
-  def this(viewType: ContactItemType, key: String, message: String) = this(viewType, key, None, key, message, false, null, 0, null)
+  def this(viewType: ContactItemType, key: String, message: String) =
+    this(viewType, key, None, key, message, false, null, false, 0, null)
 
 }

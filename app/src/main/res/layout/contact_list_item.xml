@@ -13,8 +13,9 @@
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
         android:layout_height="50dp">
+
         <RelativeLayout
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="50dp">
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatar"
@@ -22,13 +23,25 @@
                 android:layout_height="50dp"
                 android:src="@color/grey_light"
                 />
+
+            <ImageView
+                android:id="@+id/star"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_star_deep_purple_900_24dp"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true" />
+
             <TextView
                 android:id="@+id/icon"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_alignParentRight="true"
+                android:background="@color/green"
                 android:layout_alignParentBottom="true"
-                android:background="@color/green"/>
+                android:layout_alignRight="@+id/avatar"
+                android:layout_alignEnd="@+id/avatar" />
+
         </RelativeLayout>
         <LinearLayout
             android:duplicateParentState="true"

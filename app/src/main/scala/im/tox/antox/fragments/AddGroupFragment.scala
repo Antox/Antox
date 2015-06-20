@@ -17,7 +17,7 @@ import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {
 
-  var _groupID: String = ""
+  var _groupKey: String = ""
 
   var _originalUsername: String = ""
 
@@ -29,7 +29,7 @@ class AddGroupFragment extends Fragment with InputableID {
 
   var toast: Toast = _
 
-  var groupID: EditText = _
+  var groupKey: EditText = _
 
   var groupAlias: EditText = _
 
@@ -42,7 +42,7 @@ class AddGroupFragment extends Fragment with InputableID {
     context = getActivity.getApplicationContext
 
     text = getString(R.string.addgroup_group_added)
-    groupID = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
+    groupKey = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
     groupAlias = rootView.findViewById(R.id.addgroup_groupAlias).asInstanceOf[EditText]
 
     rootView.findViewById(R.id.add_group_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
@@ -71,21 +71,21 @@ class AddGroupFragment extends Fragment with InputableID {
     }
   }
 
-  private def checkAndSend(groupId: String, originalUsername: String): Int = {
-      if (validateGroupKey(groupId)) {
+  private def checkAndSend(groupKey: String, originalUsername: String): Int = {
+      if (validateGroupKey(groupKey)) {
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = new AntoxDB(getActivity.getApplicationContext)
-        if (!db.doesContactExist(groupId)) {
+        if (!db.doesContactExist(groupKey)) {
           try {
-            ToxSingleton.tox.joinGroup(groupId)
-            println("joined group : " + groupId)
+            ToxSingleton.tox.joinGroup(groupKey)
+            println("joined group : " + groupKey)
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()
           }
-          Log.d("AddGroupID", "Adding group to database")
-          db.addGroup(groupId, UIUtils.trimIDForDisplay(groupId), topic = "")
+          Log.d("AddGroupKey", "Adding group to database")
+          db.addGroup(groupKey, UIUtils.trimIDForDisplay(groupKey), topic = "")
         } else {
           db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
@@ -104,9 +104,9 @@ class AddGroupFragment extends Fragment with InputableID {
   }
 
   def addGroup(view: View) {
-    if (groupID.length == 64) {
+    if (groupKey.length == 64) {
       // Attempt to use ID as a Group ID
-      val result = checkAndSend(groupID.getText.toString, _originalUsername)
+      val result = checkAndSend(groupKey.getText.toString, _originalUsername)
       if (result == 0) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)

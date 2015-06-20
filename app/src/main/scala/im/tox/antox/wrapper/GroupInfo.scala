@@ -8,6 +8,8 @@ case class GroupInfo(key: String,
                      online: Boolean,
                      name: String,
                      topic: String,
+                     blocked: Boolean,
+                     ignored: Boolean,
                      favorite: Boolean,
                      lastMessage: String,
                      lastMessageTimestamp: Timestamp,
@@ -19,7 +21,9 @@ case class GroupInfo(key: String,
   val receivedAvatar = true
   val avatar = None
 
-  def this(id: String, online: Boolean, name: String, topic: String, favorite: Boolean, alias: String)  {
-    this(id, online, name, topic, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
+  def this(id: String, online: Boolean, name: String, topic: String,
+           blocked: Boolean, ignored: Boolean, favorite: Boolean, alias: String)  {
+    this(id, online, name, topic, blocked, ignored, favorite,
+      "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 }

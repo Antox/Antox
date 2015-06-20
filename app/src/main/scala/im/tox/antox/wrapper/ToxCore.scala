@@ -189,8 +189,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     0
   }
 
-  def joinGroup(groupId: String): Int = {
-    //val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupId))
+  def joinGroup(groupKey: String): Int = {
+    //val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupKey))
     //println("group number is " + groupNumber)
     //groupList.addGroup(this, groupNumber)
     //groupNumber
@@ -256,7 +256,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   //def getGroupPeerRole(groupNumber: Int, peerNumber: Int): ToxGroupRole = tox.getGroupPeerRole(groupNumber, peerNumber)
 
-  def getGroupChatId(groupNumber: Int): String = "" //Hex.bytesToHexString(tox.getGroupChatId(groupNumber))
+  def getGroupKey(groupNumber: Int): String = "" //Hex.bytesToHexString(tox.getGroupChatId(groupNumber))
 
   def getGroupNumberPeers(groupNumber: Int): Int = 0 //tox.getGroupNumberPeers(groupNumber)
 

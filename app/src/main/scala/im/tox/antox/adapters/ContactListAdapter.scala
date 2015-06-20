@@ -4,6 +4,8 @@ import java.util
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
@@ -28,6 +30,8 @@ object ContactListAdapter {
     var secondText: TextView = _
 
     var icon: TextView = _
+
+    var favorite: ImageView = _
 
     var avatar: CircleImageView = _
 
@@ -91,6 +95,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
+          holder.favorite = newConvertView.findViewById(R.id.star).asInstanceOf[ImageView]
           holder.avatar = newConvertView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
@@ -125,6 +130,18 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
       } else {
         holder.icon.setBackgroundDrawable(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+      }
+
+      if (item.favorite) {
+        val drawable = context.getResources.getDrawable(R.drawable.ic_star_deep_purple_900_24dp)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          holder.favorite.setBackground(drawable)
+        } else {
+          holder.favorite.setBackgroundDrawable(drawable)
+        }
+        holder.favorite.setVisibility(View.VISIBLE)
+      } else {
+        holder.favorite.setVisibility(View.GONE)
       }
     }
     if (holder.timeText != null) {
@@ -174,20 +191,20 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
   }
 
-  def createGroupInviteClickHandlers(groupId: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createGroupInviteClickHandlers(groupKey: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupId)
+        Log.d("OnClick", "Joining Group: " + groupKey)
         val db = new AntoxDB(context)
         try {
-          val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
+          val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupKey == groupKey).head.data
           ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        db.addGroup(groupId, UIUtils.trimIDForDisplay(groupId), "")
-        db.deleteGroupInvite(groupId)
+        db.addGroup(groupKey, UIUtils.trimIDForDisplay(groupKey), "")
+        db.deleteGroupInvite(groupKey)
         db.close()
         ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)
@@ -195,9 +212,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupId)
+        Log.d("OnClick", "Joining Group: " + groupKey)
         val antoxDB = new AntoxDB(context)
-        antoxDB.deleteGroupInvite(groupId)
+        antoxDB.deleteGroupInvite(groupKey)
         antoxDB.close()
         ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)

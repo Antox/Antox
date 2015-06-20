@@ -14,6 +14,8 @@ case class FriendInfo(
   key: String,
   avatar: Option[File],
   receivedAvatar: Boolean,
+  blocked: Boolean,
+  ignored: Boolean,
   favorite: Boolean,
   lastMessage: String,
   lastMessageTimestamp: Timestamp,
@@ -28,9 +30,11 @@ case class FriendInfo(
     friendKey: String,
     avatar: Option[File],
     receivedAvatar: Boolean,
+    blocked: Boolean,
+    ignored: Boolean,
     favorite: Boolean,
     alias: String) {
-    this(isOnline, friendName, userStatus, statusMessage, friendKey, avatar, receivedAvatar, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
+    this(isOnline, friendName, userStatus, statusMessage, friendKey, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 
   def getFriendStatusAsToxUserStatus: ToxStatus = {

@@ -21,7 +21,7 @@ class GroupList {
   }
 
   def getGroup(id: String): Group = {
-    groups.find(group => group.id == id).get
+    groups.find(group => group.key == id).get
   }
 
   def getPeer(groupNumber: Int, peerNumber: Int): GroupPeer = {
@@ -61,8 +61,8 @@ class GroupList {
   }
 
   def addGroup(tox: ToxCore, groupNumber: Int): Unit = {
-    addGroup(new Group(tox.getGroupChatId(groupNumber),
-      groupNumber, UIUtils.trimIDForDisplay(tox.getGroupChatId(groupNumber)),
+    addGroup(new Group(tox.getGroupKey(groupNumber),
+      groupNumber, UIUtils.trimIDForDisplay(tox.getGroupKey(groupNumber)),
       "", "", new PeerList()))
   }
 

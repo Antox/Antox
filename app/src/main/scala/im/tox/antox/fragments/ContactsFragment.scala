@@ -31,11 +31,11 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
   }
 
   def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Array[FriendInfo]): Unit = {
-    val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
+    val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.length > 0) {
       for (f <- sortedFriendsList) {
         val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
-          f.online, f.getFriendStatusAsToxUserStatus, f.unreadCount,
+          f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
           f.lastMessageTimestamp)
         leftPaneAdapter.addItem(friend)
       }
@@ -46,7 +46,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     if (friendRequests.length > 0) {
       for (r <- friendRequests) {
         val request = new LeftPaneItem(ContactItemType.FRIEND_REQUEST, r.requestKey, r.requestMessage)
-        leftPaneAdapter.insert(0, request) // insert friend requests at top of  contact list
+        leftPaneAdapter.insert(0, request) // insert friend requests at top of contact list
       }
     }
   }
@@ -54,17 +54,18 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
   def updateGroupInvites(leftPaneAdapter: ContactListAdapter, groupInvites: Array[GroupInvite]): Unit = {
     if (groupInvites.length > 0) {
       for (invite <- groupInvites) {
-        val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
+        val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupKey, getResources.getString(R.string.invited_by) + " " + invite.inviter)
         leftPaneAdapter.addItem(request)
       }
     }
   }
 
   def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Array[GroupInfo]): Unit = {
+    val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
     if (groups.length > 0) {
       for (group <- groups) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.name, group.topic,
-          group.online, ToxStatus.NONE, group.unreadCount, group.lastMessageTimestamp)
+          group.online, ToxStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
       }
     }

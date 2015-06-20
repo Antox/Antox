@@ -84,7 +84,7 @@ object ToxSingleton {
 
   def getGroup(groupNumber: Int): Group = getGroupList.getGroup(groupNumber)
 
-  def getGroup(groupId: String): Group = getGroupList.getGroup(groupId)
+  def getGroup(groupKey: String): Group = getGroupList.getGroup(groupKey)
 
   def getGroupPeer(groupNumber: Int, peerNumber: Int): GroupPeer = getGroupList.getPeer(groupNumber, peerNumber)
 
@@ -285,17 +285,17 @@ object ToxSingleton {
   }
 
   def populateAntoxLists(db: AntoxDB): Unit = {
-    for (i <- tox.getFriendList) {
+    for (friendNumber <- tox.getFriendList) {
       //this doesn't set the name, status message, status
       //or online status of the friend because they are now set during callbacks
-      antoxFriendList.addFriendIfNotExists(i)
-      antoxFriendList.getByFriendNumber(i).get.setKey(tox.getFriendKey(i))
+      antoxFriendList.addFriendIfNotExists(friendNumber)
+      antoxFriendList.getByFriendNumber(friendNumber).get.setKey(tox.getFriendKey(friendNumber))
     }
 
-    for (i <- tox.getGroupList) {
-      val groupId = tox.getGroupChatId(i)
-      val details = db.getContactDetails(groupId)
-      groupList.addGroupIfNotExists(new Group(groupId, i, details(1), details(2), details(3), new PeerList()))
+    for (groupNumber <- tox.getGroupList) {
+      val groupKey = tox.getGroupKey(groupNumber)
+      val groupInfo = db.getGroupInfo(groupKey)
+      groupList.addGroupIfNotExists(new Group(groupKey, groupNumber, groupInfo.name, groupInfo.alias, groupInfo.topic, new PeerList()))
     }
   }
 
@@ -346,9 +346,9 @@ object ToxSingleton {
       }
 
       for (groupNumber <- tox.getGroupList) {
-        val groupId = tox.getGroupChatId(groupNumber)
-        if (!db.doesContactExist(groupId)) {
-          db.addGroup(groupId, "", "")
+        val groupKey = tox.getGroupKey(groupNumber)
+        if (!db.doesContactExist(groupKey)) {
+          db.addGroup(groupKey, "", "")
         }
       }
 

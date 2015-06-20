@@ -294,6 +294,10 @@ abstract class AbstractContactsFragment extends Fragment {
   }
 
   def compareOnline(a: FriendInfo, b: FriendInfo): Boolean = {
-    if (a.online && !b.online) true else false
+    a.online && !b.online
+  }
+
+  def compareFavorite(a: ContactInfo, b: ContactInfo): Boolean = {
+    a.favorite && !b.favorite
   }
 }

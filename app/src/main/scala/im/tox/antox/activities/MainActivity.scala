@@ -203,10 +203,10 @@ class MainActivity extends AppCompatActivity {
       dialog.addCreateGroupListener(new CreateGroupListener {
         override def groupCreationConfimed(name: String): Unit = {
           val groupNumber = ToxSingleton.tox.newGroup(name)
-          val groupId = ToxSingleton.tox.getGroupChatId(groupNumber)
+          val groupKey = ToxSingleton.tox.getGroupKey(groupNumber)
           val db = new AntoxDB(getApplicationContext)
 
-          db.addGroup(groupId, name, "")
+          db.addGroup(groupKey, name, "")
           db.close()
           ToxSingleton.updateGroupList(getApplicationContext)
         }

@@ -60,13 +60,13 @@ object MessageHelper {
     db.close()
   }
 
-  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: MessageType) = {
+  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: String, message: String, messageType: MessageType) = {
     val db = new AntoxDB(ctx)
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
-    val chatActive = State.chatActive && State.activeKey.contains(groupId)
+    val chatActive = State.chatActive && State.activeKey.contains(groupKey)
 
-    db.addMessage(-1, groupId, peerName, message, has_been_received = true,
+    db.addMessage(-1, groupKey, peerName, message, has_been_received = true,
       has_been_read = chatActive, successfully_sent = true, messageType)
     db.close()
     ToxSingleton.updateMessages(ctx)
@@ -84,7 +84,7 @@ object MessageHelper {
       val resultIntent = new Intent(ctx, classOf[MainActivity])
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-      resultIntent.putExtra("key", groupId)
+      resultIntent.putExtra("key", groupKey)
       resultIntent.putExtra("name", groupName)
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])
