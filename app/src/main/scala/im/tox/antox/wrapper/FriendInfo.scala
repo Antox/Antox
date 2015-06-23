@@ -6,40 +6,35 @@ import java.sql.Timestamp
 import im.tox.antox.utils.TimestampUtils
 import im.tox.tox4j.core.enums.ToxStatus
 
-class FriendInfo(
-  isOnline: Boolean,
-  friendName: String,
-  userStatus: String,
+case class FriendInfo(
+  online: Boolean,
+  name: String,
+  status: String,
   statusMessage: String,
-  val friendKey: String,
-  override val avatar: Option[File],
-  val receievedAvatar: Boolean,
+  key: ToxKey,
+  avatar: Option[File],
+  receivedAvatar: Boolean,
+  blocked: Boolean,
+  ignored: Boolean,
+  favorite: Boolean,
   lastMessage: String,
   lastMessageTimestamp: Timestamp,
   unreadCount: Int,
-  alias: String) extends ContactInfo(friendKey, friendName, avatar, isOnline,
-                                     userStatus, statusMessage, receievedAvatar, lastMessage,
-                                     lastMessageTimestamp, unreadCount, alias) {
+  alias: String) extends ContactInfo {
 
   def this (
-    isOnline: Boolean,
-    friendName: String,
-    userStatus: String,
+    online: Boolean,
+    name: String,
+    status: String,
     statusMessage: String,
-    friendKey: String,
+    key: ToxKey,
     avatar: Option[File],
     receivedAvatar: Boolean,
+    blocked: Boolean,
+    ignored: Boolean,
+    favorite: Boolean,
     alias: String) {
-    this(isOnline, friendName, userStatus, statusMessage, friendKey, avatar, receivedAvatar, "", TimestampUtils.emptyTimestamp(), 0, alias)
-  }
-
-  def this(
-            info: FriendInfo,
-            lastMessage: String,
-            lastMessageTimestamp: Timestamp,
-            unreadCount: Int) {
-    this(info.online, info.name, info.status, info.statusMessage, info.friendKey, info.avatar,
-      info.receievedAvatar, lastMessage, lastMessageTimestamp, unreadCount, info.alias)
+    this(online, name, status, statusMessage, key, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 
   def getFriendStatusAsToxUserStatus: ToxStatus = {

@@ -2,18 +2,18 @@ package im.tox.antox.wrapper
 
 import java.io.File
 
-import im.tox.antox.tox.ToxSingleton
+import im.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import im.tox.antox.transfer.FileUtils
 import im.tox.antox.utils._
-import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
 import im.tox.tox4j.exceptions.ToxException
+import im.tox.tox4j.impl.ToxCoreJni
 
-class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions, data: Array[Byte]) {
+class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions, data: Array[Byte]) extends Intervals {
 
-  val tox: ToxCoreImpl = new ToxCoreImpl(options, data)
+  val tox: ToxCoreJni = new ToxCoreJni(options, data)
 
   def this(antoxFriendList: AntoxFriendList, groupList: GroupList, data: Array[Byte]) {
     this(antoxFriendList: AntoxFriendList, groupList: GroupList, new ToxOptions, data)
@@ -31,13 +31,11 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def close(): Unit = tox.close()
 
-  override def finalize(): Unit = tox.finalize()
-
   def save(): Array[Byte] = tox.save()
 
-  def bootstrap(address: String, port: Int, publicKey: String): Unit = {
-    tox.bootstrap(address, port, Hex.hexStringToBytes(publicKey))
-    tox.addTcpRelay(address, port, Hex.hexStringToBytes(publicKey))
+  def bootstrap(address: String, port: Int, publicKey: ToxKey): Unit = {
+    tox.bootstrap(address, port, publicKey.bytes)
+    tox.addTcpRelay(address, port, publicKey.bytes)
   }
 
   def callbackConnectionStatus(p1: ConnectionStatusCallback): Unit = tox.callbackConnectionStatus(p1)
@@ -52,7 +50,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iteration(): Unit = tox.iteration()
 
-  def getSelfKey: String = Hex.bytesToHexString(tox.getPublicKey)
+  override def interval: Int = IntervalLevels.AWAKE.id
+
+  def getSelfKey: ToxKey = new ToxKey(tox.getPublicKey)
 
   def getSecretKey: Array[Byte] = tox.getSecretKey
 
@@ -60,7 +60,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getNospam: Int = tox.getNospam
 
-  def getAddress: String = Hex.bytesToHexString(tox.getAddress)
+  def getAddress: ToxAddress = new ToxAddress(tox.getAddress)
 
   def setName(name: String): Unit = {
     tox.setName(name.getBytes)
@@ -68,7 +68,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
       try {
         //FIXME setGroupSelfName(groupNumber, name)
       } catch {
-        case e: ToxException =>
+        case e: ToxException[_]  =>
           println("could not set name in group " + groupNumber)
       }
     }
@@ -84,16 +84,16 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getStatus: ToxStatus = tox.getStatus
 
-  def addFriend(address: String, message: String): Int = {
-    val friendNumber = tox.addFriend(Hex.hexStringToBytes(address), message.getBytes)
+  def addFriend(address: ToxAddress, message: String): Int = {
+    val friendNumber = tox.addFriend(address.bytes, message.getBytes)
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setKey(ToxSingleton.keyFromAddress(address))
+    antoxFriend.setKey(address.key)
     friendNumber
   }
 
-  def addFriendNoRequest(key: String): Int = {
-    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(key))
+  def addFriendNoRequest(key: ToxKey): Int = {
+    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(key.toString))
     antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setKey(key)
@@ -105,9 +105,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     tox.deleteFriend(friendNumber)
   }
 
-  def getFriendByKey(key: String): Int = tox.getFriendByPublicKey(Hex.hexStringToBytes(key))
+  def getFriendByKey(key: ToxKey): Int = tox.getFriendByPublicKey(key.bytes)
 
-  def getFriendKey(friendNumber: Int): String = Hex.bytesToHexString(tox.getFriendPublicKey(friendNumber))
+  def getFriendKey(friendNumber: Int): ToxKey = new ToxKey(tox.getFriendPublicKey(friendNumber))
 
   def friendExists(friendNumber: Int): Boolean = tox.friendExists(friendNumber)
 
@@ -152,7 +152,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def fileSendChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = tox.fileSendChunk(friendNumber, fileNumber, position, data)
 
-  def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = new Array[Byte](0) //tox.fileGetFileId(friendNumber, fileNumber)
+  def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = Array[Byte](0) //tox.fileGetFileId(friendNumber, fileNumber)
 
   def callbackFileRequestChunk(callback: FileRequestChunkCallback): Unit = tox.callbackFileRequestChunk(callback)
 
@@ -189,8 +189,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     0
   }
 
-  def joinGroup(groupId: String): Int = {
-    //val groupNumber = tox.joinGroup(Hex.hexStringToBytes(groupId))
+  def joinGroup(groupKey: ToxKey): Int = {
+    //val groupNumber = tox.joinGroup(groupKey.bytes)
     //println("group number is " + groupNumber)
     //groupList.addGroup(this, groupNumber)
     //groupNumber
@@ -224,7 +224,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
         try {
           setGroupSelfName(groupNumber, attemptName)
         } catch {
-          case e: ToxException =>
+          case e: ToxException[_] =>
             successful = false
             attemptName = name + "_"
         }
@@ -256,7 +256,8 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   //def getGroupPeerRole(groupNumber: Int, peerNumber: Int): ToxGroupRole = tox.getGroupPeerRole(groupNumber, peerNumber)
 
-  def getGroupChatId(groupNumber: Int): String = "" //Hex.bytesToHexString(tox.getGroupChatId(groupNumber))
+  def getGroupKey(groupNumber: Int): ToxKey =
+    new ToxKey("") //(tox.getGroupChatId(groupNumber))
 
   def getGroupNumberPeers(groupNumber: Int): Int = 0 //tox.getGroupNumberPeers(groupNumber)
 

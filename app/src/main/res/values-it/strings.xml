@@ -21,7 +21,7 @@
   <string name="create_name_hint">Nome Profilo</string>
   <string name="create_text">Messaggistica sicura per tutti.</string>
   <string name="create_register">Registrazione</string>
-  <string name="create_register_incog">Crea profilo nascosto</string>
+  <string name="create_register_incog">Crea profilo</string>
   <string name="create_import_profile">Importa Profilo</string>
   <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
@@ -32,6 +32,9 @@
   <string name="create_account_internal_error">Antox: errore interno. Riavvia l\'applicazione e riprova</string>
   <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
   <string name="create_account_unknown_error">Errore sconosciuto durante la registrazione, riprova più tardi</string>
+  <string name="create_account_kalium_link_error">Errore caricamento libreria. Impossibile registrare accounts su toxme.se</string>
+  <string name="create_account_encrypted_profile_error">Attualmente Antox non supporta i profili criptati</string>
+  <string name="create_account_load_profile_unknown">Errore sconosciuto durante il caricamento del profilo</string>
 
   <!-- Main Activity -->
   <string name="main_no_active_chat">Nessuna chat attiva. Incominciane una scegliendo un contatto dal pannello sulla sinistra.</string>
@@ -133,6 +136,14 @@
   <string name="friend_action_block_friend_confirmation">Bloccando questo contatto, verrà rimosso dalla tua lista dei contatti e non riceverai più
 	  richieste d\'amicizia da lui.\n\nSei sicuro di voler continuare?</string>
 
+  <!-- Reset ToxID Dialog -->
+  <string name="reset_tox_id_dialog_message">Resettando il tuo Tox ID, questo verrà modificato permanentemente. La tua lista contatti
+	  non verrà modificata, ma le altre persone non saranno in grado di aggiungerti usando il tuo vecchio Tox ID.</string>
+  <string name="reset_tox_id_dialog_title">Conferma Reset Tox ID</string>
+  <string name="reset_tox_id_dialog_confirm">Resetta Tox ID</string>
+  <string name="reset_tox_id_dialog_cancel">Annulla</string>
+  <string name="tox_id_reset">Il tuo Tox ID è stato resettato</string>
+
   <!-- Create Group Dialog -->
   <string name="create_group_dialog_message">Crea una nuova chat di gruppo</string>
   <string name="create_group_dialog_create_group">Crea Gruppo</string>
@@ -206,10 +217,12 @@
   <string name="about">Informazioni</string>
   <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>
   <string name="about_antox_2">Cosa Funziona:</string>
-  <string name="about_antox_3">-Chat base (questo non include le chat di gruppo)</string>
-  <string name="about_antox_4">-Notifiche</string>
-  <string name="about_antox_5">Cosa Non Funziona:</string>
-  <string name="about_antox_6">-Audio/Video\n-Trasferimento files</string>
+  <string name="about_antox_3">- Chat base</string>
+  <string name="about_antox_4">- Notifiche</string>
+  <string name="about_antox_5">- Trasferimento files</string>
+  <string name="about_antox_6">Cosa Non Funziona:</string>
+  <string name="about_antox_7">- Audio/Video</string>
+  <string name="about_antox_8">- Chat di gruppo</string>
   <string name="title_activity_call">CallActivity</string>
   <string name="end_call">Termina Chiamata</string>
   <string name="mute_call">Disattiva Audio</string>

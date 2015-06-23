@@ -12,12 +12,13 @@ import android.widget.{Button, EditText, Toast}
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.{Constants, UIUtils}
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {
 
-  var _groupID: String = ""
+  var _groupKey: ToxKey = _
 
   var _originalUsername: String = ""
 
@@ -29,7 +30,7 @@ class AddGroupFragment extends Fragment with InputableID {
 
   var toast: Toast = _
 
-  var groupID: EditText = _
+  var groupKey: EditText = _
 
   var groupAlias: EditText = _
 
@@ -42,7 +43,7 @@ class AddGroupFragment extends Fragment with InputableID {
     context = getActivity.getApplicationContext
 
     text = getString(R.string.addgroup_group_added)
-    groupID = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
+    groupKey = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
     groupAlias = rootView.findViewById(R.id.addgroup_groupAlias).asInstanceOf[EditText]
 
     rootView.findViewById(R.id.add_group_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
@@ -64,28 +65,29 @@ class AddGroupFragment extends Fragment with InputableID {
     val addGroupKey = getView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
     val groupKey = (if (input.toLowerCase.contains("tox:")) input.substring(4) else input)
       .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
-    if (validateGroupKey(groupKey)) {
+    if (ToxKey.isKeyValid(groupKey)) {
       addGroupKey.setText(groupKey)
     } else {
       showToastInvalidID()
     }
   }
 
-  private def checkAndSend(groupId: String, originalUsername: String): Int = {
-      if (validateGroupKey(groupId)) {
+  private def checkAndSend(rawGroupKey: String, originalUsername: String): Int = {
+      if (ToxKey.isKeyValid(rawGroupKey)) {
+        val key = new ToxKey(rawGroupKey)
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = new AntoxDB(getActivity.getApplicationContext)
-        if (!db.doesGroupExist(groupId)) {
+        if (!db.doesContactExist(key)) {
           try {
-            ToxSingleton.tox.joinGroup(groupId)
-            println("joined group : " + groupId)
+            ToxSingleton.tox.joinGroup(key)
+            println("joined group : " + groupKey)
             ToxSingleton.save()
           } catch {
-            case e: ToxException => e.printStackTrace()
+            case e: ToxException[_] => e.printStackTrace()
           }
-          Log.d("AddGroupID", "Adding group to database")
-          db.addGroup(groupId, UIUtils.trimIDForDisplay(groupId), topic = "")
+          Log.d("AddGroupKey", "Adding group to database")
+          db.addGroup(key, UIUtils.trimId(key), topic = "")
         } else {
           db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
@@ -104,9 +106,9 @@ class AddGroupFragment extends Fragment with InputableID {
   }
 
   def addGroup(view: View) {
-    if (groupID.length == 64) {
+    if (groupKey.length == 64) {
       // Attempt to use ID as a Group ID
-      val result = checkAndSend(groupID.getText.toString, _originalUsername)
+      val result = checkAndSend(groupKey.getText.toString, _originalUsername)
       if (result == 0) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)
@@ -124,10 +126,5 @@ class AddGroupFragment extends Fragment with InputableID {
   def showToastInvalidID(): Unit = {
     toast = Toast.makeText(context, getResources.getString(R.string.invalid_group_ID), Toast.LENGTH_SHORT)
     toast.show()
-  }
-
-  //TODO move this to somewhere sane (ToxAddress class)
-  private def validateGroupKey(groupKey: String): Boolean = {
-    !(groupKey.length != 64 || groupKey.matches("[[:xdigit:]]"))
   }
 }

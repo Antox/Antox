@@ -6,27 +6,28 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.{EditText, TextView}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 
 class GroupProfileActivity extends AppCompatActivity {
 
   var groupName: String = null
 
-  var groupId: String = null
+  var groupKey: ToxKey = _
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_group_profile)
-    groupId = getIntent.getStringExtra("key")
+    groupKey = new ToxKey(getIntent.getStringExtra("key"))
 
-    val group = ToxSingleton.getGroup(groupId)
+    val group = ToxSingleton.getGroup(groupKey)
     setTitle(getResources.getString(R.string.title_activity_group_profile))
 
 
       findViewById(R.id.group_name).asInstanceOf[TextView].setText(if (group.name != null) {
         group.name
       } else {
-        UIUtils.trimIDForDisplay(group.id)
+        UIUtils.trimId(group.key)
       })
 
     findViewById(R.id.group_status_message).asInstanceOf[EditText].setText(group.topic)

@@ -4,6 +4,6 @@ class DhtNode(
   val owner: String,
   val ipv6: String,
   val ipv4: String,
-  val key: String,
+  val key: ToxKey,
   val port: Int) {
 }

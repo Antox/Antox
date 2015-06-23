@@ -2,11 +2,11 @@ package im.tox.antox.activities
 
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
-import android.preference.{ListPreference, Preference, PreferenceActivity, PreferenceManager}
+import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.view.MenuItem
 import im.tox.antox.activities.SettingsActivity._
 import im.tox.antox.data.AntoxDB
-import im.tox.antox.tox.{ToxDoService, ToxSingleton}
+import im.tox.antox.tox.{ToxService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
 
@@ -37,10 +37,15 @@ object SettingsActivity {
   }
 }
 
-class SettingsActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsActivity extends BetterPreferenceActivity {
 
   override def onCreate(savedInstanceState: Bundle) {
+    getDelegate.installViewFactory()
+    getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+
     addPreferencesFromResource(R.xml.settings_main)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
@@ -65,7 +70,7 @@ class SettingsActivity extends PreferenceActivity with SharedPreferences.OnShare
     if (key == "enable_udp") {
       val toxSingleton = ToxSingleton.getInstance()
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
-      val service = new Intent(this, classOf[ToxDoService])
+      val service = new Intent(this, classOf[ToxService])
       this.stopService(service)
       this.startService(service)
     }

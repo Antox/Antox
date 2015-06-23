@@ -34,6 +34,9 @@
     <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
+    <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
+    <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
+    <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
@@ -135,6 +138,14 @@
     <string name="friend_action_block_friend_confirmation">Blocking this user will remove them from your friends list and you will no longer see friend
         requests from them.\n\nAre you sure you wish to continue?</string>
 
+    <!-- Reset ToxID Dialog -->
+    <string name="reset_tox_id_dialog_message">Resetting your Tox ID changes your ID permanently. You will
+        keep your current contacts list, but other people won\'t be able to add you using your old ID. </string>
+    <string name="reset_tox_id_dialog_title">Confirm Tox ID Reset</string>
+    <string name="reset_tox_id_dialog_confirm">Reset ID</string>
+    <string name="reset_tox_id_dialog_cancel">Cancel</string>
+    <string name="tox_id_reset">Your Tox ID has been reset</string>
+
     <!-- Create Group Dialog -->
     <string name="create_group_dialog_message">Create a new Group Chat</string>
     <string name="create_group_dialog_create_group">Create Group</string>
@@ -157,7 +168,6 @@
     <string name="titles_settings">Settings</string>
 
     <!-- Misc -->
-    <string name="nospam_updated">Your nospam has been updated</string>
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_yes">Yes</string>

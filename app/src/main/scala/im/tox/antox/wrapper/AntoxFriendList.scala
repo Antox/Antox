@@ -20,7 +20,7 @@ class AntoxFriendList {
     friends.find(friend => friend.getFriendNumber == friendNumber)
   }
 
-  def getByKey(key: String): Option[Friend] = {
+  def getByKey(key: ToxKey): Option[Friend] = {
     friends.find(friend => friend.getKey == key)
   }
 

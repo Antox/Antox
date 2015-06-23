@@ -5,31 +5,34 @@ import java.sql.Timestamp
 
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.fragments.ContactItemType.ContactItemType
+import im.tox.antox.wrapper.ToxKey
 import im.tox.tox4j.core.enums.ToxStatus
 
 class LeftPaneItem(
   val viewType: ContactItemType,
-  val key: String,
+  val key: ToxKey,
   val image: Option[File],
-  val first: String,
-  val second: String,
+  val first: String, // name
+  val second: String, // status message, or last message depending on which tab
   val isOnline: Boolean,
   val status: ToxStatus,
+  val favorite: Boolean,
   val count: Int,
   val timestamp: Timestamp) {
 
   def this(
-    key: String,
+    key: ToxKey,
     image: Option[File],
     first: String,
     second: String,
     isOnline: Boolean,
     status: ToxStatus,
+    favorite: Boolean,
     count: Int,
-    timestamp: Timestamp) = this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, count, timestamp)
+    timestamp: Timestamp) =
+    this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, favorite, count, timestamp)
 
-  def this(header: String) = this(ContactItemType.HEADER, "", None, header, null, false, null, 0, null)
-
-  def this(viewType: ContactItemType, key: String, message: String) = this(viewType, key, None, key, message, false, null, 0, null)
+  def this(viewType: ContactItemType, key: ToxKey, message: String) =
+    this(viewType, key, None, key.toString, message, false, null, false, 0, null)
 
 }

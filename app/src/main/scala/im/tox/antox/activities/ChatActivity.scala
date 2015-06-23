@@ -4,13 +4,12 @@ import java.io.{File, IOException}
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import android.app.{Activity, AlertDialog}
-import android.content.{Context, DialogInterface, Intent}
-import android.support.v4.content.CursorLoader
+import android.app.Activity
+import android.content.{Context, Intent}
 import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore
-import android.text.{Editable, TextWatcher}
+import android.support.v4.content.CursorLoader
 import android.util.Log
 import android.view.View
 import android.widget._
@@ -18,8 +17,8 @@ import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
-import im.tox.antox.utils.{Constants, IconColor}
-import im.tox.antox.wrapper.{FileKind, FriendInfo, UserStatus}
+import im.tox.antox.utils.{BitmapManager, Constants, IconColor}
+import im.tox.antox.wrapper.{ToxKey, FileKind, FriendInfo, UserStatus}
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -31,69 +30,76 @@ class ChatActivity extends GenericChatActivity {
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     val extras: Bundle = getIntent.getExtras
-    val key = extras.getString("key")
-    activeKey = key
+    activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
+
+    getSupportActionBar.setDisplayHomeAsUpEnabled(true)
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
+    /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
     val attachmentButton = this.findViewById(R.id.attachmentButton)
+    val cameraButton = this.findViewById(R.id.cameraButton)
+    val imageButton = this.findViewById(R.id.imageButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
-
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
           if (!friend.isOnline) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
           }
         })
-        
-        val builder = new AlertDialog.Builder(thisActivity)
-        var items: Array[CharSequence] = null
-        items = Array(getResources.getString(R.string.attachment_photo), getResources.getString(R.string.attachment_takephoto), getResources.getString(R.string.attachment_file))
-        builder.setItems(items, new DialogInterface.OnClickListener() {
 
-          override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
-            i match {
-              case 0 => {
-                val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, Constants.IMAGE_RESULT)
-              }
-              case 1 => {
-                val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                if (cameraIntent.resolveActivity(getPackageManager) == null) {
-                  Toast.makeText(thisActivity, getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)
-                  return
-                }
-                val image_name = "Antoxpic " + new SimpleDateFormat("HH:mm:ss").format(new Date()) + " "
-                println("image name " + image_name)
-                val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                try {
-                  val file = File.createTempFile(image_name, ".jpg", storageDir)
-                  val imageUri = Uri.fromFile(file)
-                  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-                  photoPath = file.getAbsolutePath
-                  startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
-                } catch {
-                  case e: IOException => e.printStackTrace()
-                }
-              }
-              case 2 => {
-                val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-                val fileDialog = new FileDialog(thisActivity, mPath, false)
-                fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-                  def fileSelected(file: File) {
-                    State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
-                  }
-                })
-                fileDialog.showDialog()
-              }
-
-            }
+        val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
+        val fileDialog = new FileDialog(thisActivity, mPath, false)
+        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+          def fileSelected(file: File) {
+            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
           }
         })
-        builder.create().show()
+        fileDialog.showDialog()
+
+      }
+    })
+
+    cameraButton.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.online) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
+        })
+
+        val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+        val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
+        println("image name " + image_name)
+        val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        try {
+          val file = File.createTempFile(image_name, ".jpg", storageDir)
+          val imageUri = Uri.fromFile(file)
+          cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+          photoPath = file.getAbsolutePath
+          startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
+        } catch {
+          case e: IOException => e.printStackTrace()
+        }
+
+      }
+    })
+
+    imageButton.setOnClickListener(new View.OnClickListener() {
+      override def onClick(v: View) {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.isOnline) {
+            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+            return
+          }
+        })
+
+        val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
   }
@@ -113,19 +119,16 @@ class ChatActivity extends GenericChatActivity {
     val thisActivity = this
     val key = activeKey
     val mFriend: Option[FriendInfo] = fi
-      .filter(f => f.key == key)
-      .headOption
+      .find(f => f.key == key)
     mFriend match {
       case Some(friend) => {
         thisActivity.setDisplayName(friend.getAliasOrName)
 
         val avatar = friend.avatar
-        val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-        if (avatar.isDefined && avatar.get.exists()) {
-          avatarView.setImageURI(Uri.fromFile(avatar.get))
-        } else {
-          avatarView.setImageResource(R.color.grey_light)
-        }
+        avatar.foreach(avatar => {
+          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          BitmapManager.load(avatar, avatarView, isAvatar = true)
+        })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
@@ -135,9 +138,8 @@ class ChatActivity extends GenericChatActivity {
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
       }
-      case None => {
+      case None =>
         thisActivity.setDisplayName("")
-      }
     }
   }
 
@@ -174,7 +176,6 @@ class ChatActivity extends GenericChatActivity {
     }
   }
 
-
   def onClickVoiceCallFriend(v: View){}
 
   def onClickVideoCallFriend(v: View): Unit = {}
@@ -185,17 +186,17 @@ class ChatActivity extends GenericChatActivity {
     super.onPause()
   }
 
-  override def sendMessage(message: String, isAction: Boolean, activeKey: String, context: Context): Unit = {
+  override def sendMessage(message: String, isAction: Boolean, context: Context): Unit = {
     MessageHelper.sendMessage(this, activeKey, message, isAction, None)
   }
 
-  override def setTyping(typing: Boolean, activeKey: String): Unit = {
+  override def setTyping(typing: Boolean): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(activeKey)
     mFriend.foreach(friend => {
       try {
         ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
       } catch {
-        case te: ToxException => {
+        case te: ToxException[_] => {
         }
         case e: Exception => {
         }

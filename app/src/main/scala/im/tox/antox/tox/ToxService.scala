@@ -2,13 +2,12 @@
 package im.tox.antox.tox
 
 import android.app.Service
-import android.content.{Context, Intent}
-import android.net.ConnectivityManager
+import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
 
-class ToxDoService extends Service() {
+class ToxService extends Service() {
 
   private var serviceThread: Thread = _
 
@@ -17,8 +16,9 @@ class ToxDoService extends Service() {
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
-      Log.d("ToxDoService", "Initting ToxSingleton")
+      Log.d("ToxService", "Initting ToxSingleton")
     }
+
     keepRunning = true
     val thisService = this
     val start = new Runnable() {
@@ -35,8 +35,7 @@ class ToxDoService extends Service() {
             }
           } else {
             try {
-              val sleepTime = Math.min(ToxSingleton.tox.iterationInterval(), ToxSingleton.toxAv.iterationInterval())
-              Thread.sleep(sleepTime)
+              Thread.sleep(ToxSingleton.interval)
               ToxSingleton.tox.iteration()
               ToxSingleton.toxAv.iteration()
             } catch {
@@ -58,7 +57,8 @@ class ToxDoService extends Service() {
     super.onDestroy()
     keepRunning = false
     serviceThread.interrupt()
+    ToxSingleton.save()
     ToxSingleton.isInited = false
-    Log.d("ToxDoService", "onDestroy() called")
+    Log.d("ToxService", "onDestroy() called")
   }
 }

@@ -31,21 +31,11 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
   }
 
   def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Array[FriendInfo]): Unit = {
-    val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline)
+    val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.length > 0) {
-      var onlineAdded = false
-      var offlineAdded = false
       for (f <- sortedFriendsList) {
-        if (!offlineAdded && !f.online) {
-          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_offline)))
-          offlineAdded = true
-        }
-        if (!onlineAdded && f.online) {
-          leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_online)))
-          onlineAdded = true
-        }
         val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
-          f.online, f.getFriendStatusAsToxUserStatus, f.unreadCount,
+          f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
           f.lastMessageTimestamp)
         leftPaneAdapter.addItem(friend)
       }
@@ -54,30 +44,28 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
 
   def updateFriendRequests(leftPaneAdapter: ContactListAdapter, friendRequests: Array[FriendRequest]): Unit = {
     if (friendRequests.length > 0) {
-      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_requests)))
       for (r <- friendRequests) {
         val request = new LeftPaneItem(ContactItemType.FRIEND_REQUEST, r.requestKey, r.requestMessage)
-        leftPaneAdapter.addItem(request)
+        leftPaneAdapter.insert(0, request) // insert friend requests at top of contact list
       }
     }
   }
 
   def updateGroupInvites(leftPaneAdapter: ContactListAdapter, groupInvites: Array[GroupInvite]): Unit = {
     if (groupInvites.length > 0) {
-      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_invites)))
       for (invite <- groupInvites) {
-        val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupId, getResources.getString(R.string.invited_by) + " " + invite.inviter)
+        val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupKey, getResources.getString(R.string.invited_by) + " " + invite.inviter)
         leftPaneAdapter.addItem(request)
       }
     }
   }
 
   def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Array[GroupInfo]): Unit = {
+    val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
     if (groups.length > 0) {
-      leftPaneAdapter.addItem(new LeftPaneItem(getResources.getString(R.string.contacts_delimiter_groups)))
       for (group <- groups) {
-        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.id, group.avatar, group.name, group.topic,
-          group.connected, ToxStatus.NONE, group.unreadCount, group.lastMessageTimestamp)
+        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.name, group.topic,
+          group.online, ToxStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
       }
     }

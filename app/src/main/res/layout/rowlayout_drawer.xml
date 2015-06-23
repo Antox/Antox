@@ -6,20 +6,20 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:orientation="horizontal"
+    android:paddingTop="30dp"
+    android:paddingLeft="15dp"
     android:weightSum="1">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="48dp"
-        android:layout_height="47dp"
-        android:layout_weight="0.01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/ic_menu_settings" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:gravity="center_vertical|left"
+        android:layout_height="wrap_content"
         android:paddingLeft="5dp"
         android:text="SETTINGS"
         android:textAppearance="?android:attr/textAppearanceSmall"

@@ -10,7 +10,7 @@ import android.util.Log
 import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils.Constants
-import im.tox.antox.wrapper.MessageType
+import im.tox.antox.wrapper.{ToxKey, MessageType}
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antoxnightly.R
 
@@ -20,12 +20,12 @@ object MessageHelper {
 
   val TAG = "im.tox.antox.tox.MessageHelper"
 
-  def handleMessage(ctx: Context, friendNumber: Int, friendKey: String, message: String, messageType: MessageType): Unit = {
+  def handleMessage(ctx: Context, friendNumber: Int, friendKey: ToxKey, message: String, messageType: MessageType): Unit = {
     val db = new AntoxDB(ctx)
-    val friendName = db.getFriendNameOrAlias(friendKey)
+    val friendName = db.getContactNameOrAlias(friendKey)
 
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
-    if (!db.isFriendBlocked(friendKey)) {
+    if (!db.isContactBlocked(friendKey)) {
       val chatActive = State.chatActive && State.activeKey.contains(friendKey)
       db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
         has_been_read = chatActive, successfully_sent = true, messageType)
@@ -44,7 +44,7 @@ object MessageHelper {
             val resultIntent = new Intent(ctx, classOf[MainActivity])
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
             resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-            resultIntent.putExtra("key", friendKey)
+            resultIntent.putExtra("key", friendKey.toString)
             resultIntent.putExtra("name", name)
             val stackBuilder = TaskStackBuilder.create(ctx)
             stackBuilder.addParentStack(classOf[MainActivity])
@@ -60,13 +60,13 @@ object MessageHelper {
     db.close()
   }
 
-  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupId: String, message: String, messageType: MessageType) = {
+  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType) = {
     val db = new AntoxDB(ctx)
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
-    val chatActive = State.chatActive && State.activeKey.contains(groupId)
+    val chatActive = State.chatActive && State.activeKey.contains(groupKey)
 
-    db.addMessage(-1, groupId, peerName, message, has_been_received = true,
+    db.addMessage(-1, groupKey, peerName, message, has_been_received = true,
       has_been_read = chatActive, successfully_sent = true, messageType)
     db.close()
     ToxSingleton.updateMessages(ctx)
@@ -84,7 +84,7 @@ object MessageHelper {
       val resultIntent = new Intent(ctx, classOf[MainActivity])
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-      resultIntent.putExtra("key", groupId)
+      resultIntent.putExtra("key", groupKey.toString)
       resultIntent.putExtra("name", groupName)
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])
@@ -95,7 +95,7 @@ object MessageHelper {
     }
   }
 
-  def sendMessage(ctx: Context, key: String, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
+  def sendMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
       val mFriend = ToxSingleton.getAntoxFriend(key)
       val messageType = if (isAction) MessageType.ACTION else MessageType.OWN
       mFriend match {
@@ -130,7 +130,7 @@ object MessageHelper {
       }
   }
 
-  def sendGroupMessage(ctx: Context, key: String, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
+  def sendGroupMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
     val group = ToxSingleton.getGroup(key)
     val db = new AntoxDB(ctx)
     val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN

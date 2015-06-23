@@ -7,7 +7,7 @@ import im.tox.antox.wrapper.MessageType.MessageType
 class ChatMessages(
   val id: Int,
   val message_id: Int,
-  val key: String,
+  val key: ToxKey,
   val sender_name: String,
   val message: String,
   val time: Timestamp,

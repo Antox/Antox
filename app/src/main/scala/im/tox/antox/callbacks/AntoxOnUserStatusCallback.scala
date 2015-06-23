@@ -15,7 +15,7 @@ class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCa
 
   override def friendStatus (friendNumber: Int, status: ToxStatus): Unit = {
     val db = new AntoxDB(ctx)
-    db.updateUserStatus(ToxSingleton.tox.getFriendKey(friendNumber), status)
+    db.updateContactStatus(ToxSingleton.tox.getFriendKey(friendNumber), status)
     db.close()
     ToxSingleton.
     updateFriendsList(ctx)

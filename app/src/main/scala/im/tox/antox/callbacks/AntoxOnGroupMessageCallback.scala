@@ -8,8 +8,8 @@ class AntoxOnGroupMessageCallback(private var ctx: Context) /* extends GroupMess
 
   //override
   def groupMessage(groupNumber: Int, peerNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
-    println("new group message callback for id " + ToxSingleton.getGroupList.getGroup(groupNumber).id)
-    MessageHelper.handleGroupMessage(ctx, groupNumber, peerNumber, ToxSingleton.getGroupList.getGroup(groupNumber).id,
+    println("new group message callback for id " + ToxSingleton.getGroupList.getGroup(groupNumber).key)
+    MessageHelper.handleGroupMessage(ctx, groupNumber, peerNumber, ToxSingleton.getGroupList.getGroup(groupNumber).key,
                                       new String(message, "UTF-8"), MessageType.GROUP_PEER)
   }
 }

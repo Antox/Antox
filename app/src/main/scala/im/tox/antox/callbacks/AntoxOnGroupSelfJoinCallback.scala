@@ -27,9 +27,9 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
 
 
         val db = new AntoxDB(ctx)
-        db.updateGroupName(group.id, group.name)
-        db.updateGroupConnected(group.id, connected = true)
-        db.updateGroupTopic(group.id, group.topic)
+        db.updateContactName(group.key, group.name)
+        db.updateContactOnline(group.key, online = true)
+        db.updateContactStatusMessage(group.key, group.topic)
         db.close()
         ToxSingleton.updateGroupList(ctx)
       }

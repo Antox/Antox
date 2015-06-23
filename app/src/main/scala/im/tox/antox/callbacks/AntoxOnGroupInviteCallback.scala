@@ -9,6 +9,7 @@ import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 
 object AntoxOnGroupInviteCallback {
@@ -20,10 +21,11 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
   def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
-    if (db.isFriendBlocked(inviter.getKey)) return
+    if (db.isContactBlocked(inviter.getKey)) return
 
-    println("invite key is " + Hex.bytesToHexString(inviteData.slice(0, 32)))
-    db.addGroupInvite(Hex.bytesToHexString(inviteData.slice(0, 32)), inviter.getName, inviteData)
+    val key = new ToxKey(inviteData.slice(0, 32))
+    println("invite key is " + key)
+    db.addGroupInvite(key, inviter.getName, inviteData)
     db.close()
 
     ToxSingleton.updateGroupInvites(ctx)

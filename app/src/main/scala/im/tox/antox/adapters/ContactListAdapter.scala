@@ -1,11 +1,11 @@
 package im.tox.antox.adapters
 
 import java.util
-import java.util.ArrayList
 
 import android.app.Activity
 import android.content.Context
-import android.net.Uri
+import android.graphics.PorterDuff
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
@@ -17,6 +17,7 @@ import im.tox.antox.data.AntoxDB
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 
 import scala.collection.JavaConversions._
@@ -30,6 +31,8 @@ object ContactListAdapter {
     var secondText: TextView = _
 
     var icon: TextView = _
+
+    var favorite: ImageView = _
 
     var avatar: CircleImageView = _
 
@@ -55,6 +58,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     notifyDataSetChanged()
   }
 
+  def insert(index: Int, item: LeftPaneItem): Unit = {
+    mData.insert(index, item)
+    mDataOriginal.insert(index, item)
+    notifyDataSetChanged()
+  }
+
   override def getItemViewType(position: Int): Int = {
     val `type` = getItem(position).viewType
     `type`.id
@@ -66,7 +75,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
   override def getItem(position: Int): LeftPaneItem = mData.get(position)
 
-  def getKey(position: Int): String = getItem(position).key
+  def getKey(position: Int): ToxKey = getItem(position).key
 
   override def getItemId(position: Int): Long = position
 
@@ -87,15 +96,10 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
+          holder.favorite = newConvertView.findViewById(R.id.star).asInstanceOf[ImageView]
           holder.avatar = newConvertView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
-
-        case ContactItemType.HEADER =>
-          newConvertView = mInflater.inflate(R.layout.header_list_item, null)
-          holder.firstText = newConvertView.findViewById(R.id.left_pane_header).asInstanceOf[TextView]
-
-
       }
       newConvertView.setTag(holder)
     } else {
@@ -103,9 +107,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     }
     val item = getItem(position)
     holder.firstText.setText(item.first)
-    if (`type` != ContactItemType.HEADER) {
-      if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
-    }
+
+    if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
+
     if (`type` == ContactItemType.FRIEND || `type` == ContactItemType.GROUP) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
@@ -118,7 +122,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
       if (item.image.isDefined && item.image.get.exists()) {
-        holder.avatar.setImageURI(Uri.fromFile(item.image.get))
+        BitmapManager.load(item.image.get, holder.avatar, isAvatar = true)
       } else {
         holder.avatar.setImageResource(R.color.grey_light)
       }
@@ -128,6 +132,18 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       } else {
         holder.icon.setBackgroundDrawable(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
       }
+
+      if (item.favorite) {
+        val drawable = context.getResources.getDrawable(R.drawable.ic_star_deep_purple_900_24dp)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+          holder.favorite.setBackground(drawable)
+        } else {
+          holder.favorite.setBackgroundDrawable(drawable)
+        }
+        holder.favorite.setVisibility(View.VISIBLE)
+      } else {
+        holder.favorite.setVisibility(View.GONE)
+      }
     }
     if (holder.timeText != null) {
       holder.timeText.setTextColor(context.getResources.getColor(R.color.grey_dark))
@@ -135,26 +151,26 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
     val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
-    val key = item.first
 
     if (`type` == ContactItemType.FRIEND_REQUEST) {
-      createFriendRequestClickHandlers(key, acceptButton, rejectButton)
+      createFriendRequestClickHandlers(item.key, acceptButton, rejectButton)
     } else if (`type` == ContactItemType.GROUP_INVITE) {
-      createGroupInviteClickHandlers(key, acceptButton, rejectButton)
+      createGroupInviteClickHandlers(item.key, acceptButton, rejectButton)
     }
+
     newConvertView
   }
 
-  def createFriendRequestClickHandlers(clientId: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Accepting Friend: " + clientId)
+        Log.d("OnClick", "Accepting Friend: " + key)
         val db = new AntoxDB(context)
-        db.addFriend(clientId, "Friend Accepted", "", "")
-        db.deleteFriendRequest(clientId)
+        db.addFriend(key, "", "Friend Accepted", "")
+        db.deleteFriendRequest(key)
         db.close()
         try {
-          ToxSingleton.tox.addFriendNoRequest(clientId)
+          ToxSingleton.tox.addFriendNoRequest(key)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception =>
@@ -165,9 +181,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Rejecting Friend: " + clientId)
+        Log.d("OnClick", "Rejecting Friend: " + key)
         val antoxDB = new AntoxDB(context)
-        antoxDB.deleteFriendRequest(clientId)
+        antoxDB.deleteFriendRequest(key)
         antoxDB.close()
         ToxSingleton.updateFriendsList(context)
         ToxSingleton.updateFriendRequests(context)
@@ -175,20 +191,20 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
   }
 
-  def createGroupInviteClickHandlers(groupId: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupId)
+        Log.d("OnClick", "Joining Group: " + groupKey)
         val db = new AntoxDB(context)
         try {
-          val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupId == groupId).head.data
+          val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupKey == groupKey).head.data
           ToxSingleton.tox.acceptGroupInvite(inviteData)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        db.addGroup(groupId, UIUtils.trimIDForDisplay(groupId), "")
-        db.deleteGroupInvite(groupId)
+        db.addGroup(groupKey, UIUtils.trimId(groupKey), "")
+        db.deleteGroupInvite(groupKey)
         db.close()
         ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)
@@ -196,9 +212,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupId)
+        Log.d("OnClick", "Joining Group: " + groupKey)
         val antoxDB = new AntoxDB(context)
-        antoxDB.deleteGroupInvite(groupId)
+        antoxDB.deleteGroupInvite(groupKey)
         antoxDB.close()
         ToxSingleton.updateGroupList(context)
         ToxSingleton.updateGroupInvites(context)
@@ -219,11 +235,11 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
             } else {
               mData = mDataOriginal
               val tempList1 = new util.ArrayList[LeftPaneItem]()
-              var tempList2 = new util.ArrayList[LeftPaneItem]()
-              var length = mData.size
+              val tempList2 = new util.ArrayList[LeftPaneItem]()
+              val length = mData.size
               var i = 0
               while (i < length) {
-                var item = mData.get(i)
+                val item = mData.get(i)
                 if (item.first.toUpperCase.startsWith(constraint.toString.toUpperCase)) tempList1.add(item) else if (item.first.toLowerCase.contains(constraint.toString.toLowerCase)) tempList2.add(item)
                 i += 1
               }

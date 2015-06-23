@@ -12,15 +12,16 @@ import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
 import im.tox.antox.data.UserDB
-import im.tox.antox.tox.{ToxDataFile, ToxDoService}
+import im.tox.antox.tox.{ToxDataFile, ToxService}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxDNS, ToxData}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
 import im.tox.antox.utils._
 import im.tox.antoxnightly.R
-import im.tox.tox4j.ToxCoreImpl
 import im.tox.tox4j.core.ToxOptions
+import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.exceptions.ToxException
+import im.tox.tox4j.impl.ToxCoreJni
 
 class CreateAccountActivity extends AppCompatActivity {
 
@@ -85,7 +86,7 @@ class CreateAccountActivity extends AppCompatActivity {
     editor.apply()
 
     // Start the activity
-    val startTox = new Intent(getApplicationContext, classOf[ToxDoService])
+    val startTox = new Intent(getApplicationContext, classOf[ToxService])
     getApplicationContext.startService(startTox)
     val main = new Intent(getApplicationContext, classOf[MainActivity])
     startActivity(main)
@@ -97,7 +98,7 @@ class CreateAccountActivity extends AppCompatActivity {
   def createToxData(accountName: String): ToxData = {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
-    val tox = new ToxCoreImpl(toxOptions, null)
+    val tox = new ToxCoreJni(toxOptions, null)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.save())
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
@@ -105,14 +106,34 @@ class CreateAccountActivity extends AppCompatActivity {
     toxData
   }
 
-  def loadToxData(fileName: String): ToxData = {
+  def loadToxData(fileName: String): Option[ToxData] = {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
-    val tox = new ToxCoreImpl(toxOptions, toxDataFile.loadFile())
-    toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
-    toxData.fileBytes = toxDataFile.loadFile()
-    toxData
+
+    try {
+      val tox = new ToxCoreJni(toxOptions, toxDataFile.loadFile())
+      toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+      toxData.fileBytes = toxDataFile.loadFile()
+
+      Option(toxData)
+    } catch {
+      case error: ToxNewException =>
+        if (error.code == ToxNewException.Code.LOAD_ENCRYPTED)
+          Toast.makeText(
+            getBaseContext,
+            getString(R.string.create_account_encrypted_profile_error),
+            Toast.LENGTH_SHORT
+          ).show()
+        else
+          Toast.makeText(
+            getBaseContext,
+            getString(R.string.create_account_load_profile_unknown),
+            Toast.LENGTH_SHORT
+          ).show()
+
+        None
+    }
   }
 
   //db is expected to be open and is closed at the end of the method
@@ -134,10 +155,19 @@ class CreateAccountActivity extends AppCompatActivity {
           try {
             toxData = createToxData(accountName)
           } catch {
-            case e: ToxException => Log.d("CreateAccount", "Failed creating tox data save file")
+            case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
           }
         } else {
-          toxData = loadToxData(accountName)
+          val result = loadToxData(accountName)
+
+          result match {
+            case Some(data) =>
+              toxData = data
+
+            // If None is returned then failed to load data so exit the createAccount function
+            case None =>
+              return
+          }
         }
 
         var successful = true
@@ -153,6 +183,7 @@ class CreateAccountActivity extends AppCompatActivity {
                 case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
                 case RegError.INTERNAL => getString(R.string.create_account_internal_error)
                 case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+                case RegError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
                 case _ => getString(R.string.create_account_unknown_error)
               }
             case Right(password) =>
@@ -163,7 +194,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
           if (toastMessage != null) {
             val context = getApplicationContext
-            val duration = Toast.LENGTH_SHORT
+            val duration = Toast.LENGTH_LONG
             Toast.makeText(context, toastMessage, duration).show()
           }
         }
@@ -220,9 +251,13 @@ class CreateAccountActivity extends AppCompatActivity {
             accountFieldName
           }
 
-        val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
-        FileUtils.copy(file, toxDataFile)
-        createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+        if (validAccountName(accountName)) {
+          val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
+          FileUtils.copy(file, toxDataFile)
+          createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+        } else {
+          showBadAccountNameError()
+        }
 
       case None => throw new Exception("Could not load data file.")
     }

@@ -15,7 +15,7 @@ class Friend(friendNumber: Int) extends Contact {
   var name: String = _
 
   @BeanProperty
-  var key: String = _
+  var key: ToxKey = _
 
   @BeanProperty
   var avatar: Option[File] = None

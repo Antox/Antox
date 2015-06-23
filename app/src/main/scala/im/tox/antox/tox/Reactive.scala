@@ -10,14 +10,14 @@ import rx.lang.scala.subjects.BehaviorSubject
 object Reactive {
   val chatActive = BehaviorSubject[Boolean](false)
   val chatActiveSub = chatActive.subscribe(x => State.chatActive(x))
-  val activeKey = BehaviorSubject[Option[String]](None)
+  val activeKey = BehaviorSubject[Option[ToxKey]](None)
   val activeKeySub = activeKey.subscribe(x => State.activeKey(x))
   val friendList = BehaviorSubject[Array[FriendInfo]](new Array[FriendInfo](0))
   val groupList = BehaviorSubject[Array[GroupInfo]](new Array[GroupInfo](0))
   val friendRequests = BehaviorSubject[Array[FriendRequest]](new Array[FriendRequest](0))
   val groupInvites = BehaviorSubject[Array[GroupInvite]](new Array[GroupInvite](0))
-  val lastMessages = BehaviorSubject[Map[String, (String, Timestamp)]](Map.empty[String, (String, Timestamp)])
-  val unreadCounts = BehaviorSubject[Map[String, Integer]](Map.empty[String, Integer])
+  val lastMessages = BehaviorSubject[Map[ToxKey, (String, Timestamp)]](Map.empty[ToxKey, (String, Timestamp)])
+  val unreadCounts = BehaviorSubject[Map[ToxKey, Integer]](Map.empty[ToxKey, Integer])
   val typing = BehaviorSubject[Boolean](false)
   val updatedMessages = BehaviorSubject[Boolean](true)
   val friendInfoList = friendList
@@ -30,11 +30,11 @@ object Reactive {
           val unreadCount: Option[Integer] = uc.get(f.key)
           (lastMessageTup, unreadCount) match {
             case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
-              new FriendInfo(f, lastMessage, lastMessageTimestamp, unreadCount)
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = unreadCount)
             case (Some((lastMessage, lastMessageTimestamp)), None) =>
-              new FriendInfo(f, lastMessage, lastMessageTimestamp, 0)
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
             case _ =>
-              new FriendInfo(f, "", new Timestamp(0, 0, 0, 0, 0, 0, 0), 0)
+              f.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
           }
         })
     }
@@ -46,19 +46,13 @@ object Reactive {
     tup match {
       case (gl, lm) =>
         gl.map(g => {
-          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.id)
-          val unreadCount: Option[Integer] = uc.get(g.id)
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.key)
+          val unreadCount: Option[Integer] = uc.get(g.key)
           (lastMessageTup, uc) match {
             case (Some((lastMessage, lastMessageTimestamp)), _) =>
-              g.lastMessage = lastMessage
-              g.lastMessageTimestamp = lastMessageTimestamp
-              g.unreadCount = unreadCount.getOrElse(0).asInstanceOf[Int]
-              g
+              g.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
             case _ =>
-              g.lastMessage = ""
-              g.lastMessageTimestamp = TimestampUtils.emptyTimestamp()
-              g.unreadCount = 0
-              g
+              g.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
           }
         })
     }

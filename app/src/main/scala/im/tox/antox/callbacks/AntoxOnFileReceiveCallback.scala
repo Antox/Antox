@@ -20,13 +20,13 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
 
     val name =
       if (kind == FileKind.AVATAR) {
-        key
+        key.toString
       } else {
         new String(filename)
       }
 
     if (kind == FileKind.AVATAR) {
-      if (fileSize > Constants.MAX_AVATAR_SIZE) {
+      if (fileSize > Constants.MAX_AVATAR_SIZE){
         return
       } else if (fileSize == 0) {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)

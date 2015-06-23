@@ -10,7 +10,7 @@ import im.tox.antox.wrapper.MessageType.MessageType
 class Message(
   val id: Int,
   val message_id: Int,
-  val key: String,
+  val key: ToxKey,
   val sender_name: String,
   val message: String,
   val received: Boolean,
