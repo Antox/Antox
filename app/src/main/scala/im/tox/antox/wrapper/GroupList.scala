@@ -20,8 +20,8 @@ class GroupList {
     groups.find(group => group.groupNumber == groupNumber).get
   }
 
-  def getGroup(id: String): Group = {
-    groups.find(group => group.key == id).get
+  def getGroup(key: ToxKey): Group = {
+    groups.find(group => group.key == key).get
   }
 
   def getPeer(groupNumber: Int, peerNumber: Int): GroupPeer = {
@@ -30,7 +30,7 @@ class GroupList {
 
   def getByTitle(title: String, ignorecase: Boolean): util.List[Group] = {
     if (ignorecase) {
-      return getByTitleIgnoreCase(title)
+      getByTitleIgnoreCase(title)
     } else {
       groups.filter(group => (group.name == null && title == null) || (title != null && title == group.name))
     }
@@ -62,7 +62,7 @@ class GroupList {
 
   def addGroup(tox: ToxCore, groupNumber: Int): Unit = {
     addGroup(new Group(tox.getGroupKey(groupNumber),
-      groupNumber, UIUtils.trimIDForDisplay(tox.getGroupKey(groupNumber)),
+      groupNumber, UIUtils.trimId(tox.getGroupKey(groupNumber)),
       "", "", new PeerList()))
   }
 

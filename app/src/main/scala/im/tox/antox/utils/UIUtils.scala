@@ -1,10 +1,12 @@
 package im.tox.antox.utils
 
+import im.tox.antox.wrapper.ToxKey
+
 object UIUtils {
 
   //Trims an ID so that it can be displayed to the user
-  def trimIDForDisplay(id: String): String = {
-    id.substring(0, 7)
+  def trimId(id: ToxKey): String = {
+    id.toString.substring(0, 7)
   }
 
   def removeNewlines(str: String): String = {

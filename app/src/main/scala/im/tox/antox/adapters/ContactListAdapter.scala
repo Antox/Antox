@@ -17,6 +17,7 @@ import im.tox.antox.data.AntoxDB
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 
 import scala.collection.JavaConversions._
@@ -74,7 +75,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
   override def getItem(position: Int): LeftPaneItem = mData.get(position)
 
-  def getKey(position: Int): String = getItem(position).key
+  def getKey(position: Int): ToxKey = getItem(position).key
 
   override def getItemId(position: Int): Long = position
 
@@ -150,27 +151,26 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
     val acceptButton = newConvertView.findViewById(R.id.accept).asInstanceOf[ImageView]
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
-    val key = item.first
 
     if (`type` == ContactItemType.FRIEND_REQUEST) {
-      createFriendRequestClickHandlers(key, acceptButton, rejectButton)
+      createFriendRequestClickHandlers(item.key, acceptButton, rejectButton)
     } else if (`type` == ContactItemType.GROUP_INVITE) {
-      createGroupInviteClickHandlers(key, acceptButton, rejectButton)
+      createGroupInviteClickHandlers(item.key, acceptButton, rejectButton)
     }
 
     newConvertView
   }
 
-  def createFriendRequestClickHandlers(clientId: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Accepting Friend: " + clientId)
+        Log.d("OnClick", "Accepting Friend: " + key)
         val db = new AntoxDB(context)
-        db.addFriend(clientId, "", "Friend Accepted", "")
-        db.deleteFriendRequest(clientId)
+        db.addFriend(key, "", "Friend Accepted", "")
+        db.deleteFriendRequest(key)
         db.close()
         try {
-          ToxSingleton.tox.addFriendNoRequest(clientId)
+          ToxSingleton.tox.addFriendNoRequest(key)
           ToxSingleton.tox.save()
         } catch {
           case e: Exception =>
@@ -181,9 +181,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Rejecting Friend: " + clientId)
+        Log.d("OnClick", "Rejecting Friend: " + key)
         val antoxDB = new AntoxDB(context)
-        antoxDB.deleteFriendRequest(clientId)
+        antoxDB.deleteFriendRequest(key)
         antoxDB.close()
         ToxSingleton.updateFriendsList(context)
         ToxSingleton.updateFriendRequests(context)
@@ -191,7 +191,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
   }
 
-  def createGroupInviteClickHandlers(groupKey: String, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Joining Group: " + groupKey)
@@ -203,7 +203,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         } catch {
           case e: Exception => e.printStackTrace()
         }
-        db.addGroup(groupKey, UIUtils.trimIDForDisplay(groupKey), "")
+        db.addGroup(groupKey, UIUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
         db.close()
         ToxSingleton.updateGroupList(context)

@@ -48,7 +48,7 @@ class GroupChatActivity extends GenericChatActivity {
 
   def onClickInfo(v: View): Unit = {
     val profile = new Intent(this, classOf[GroupProfileActivity])
-    profile.putExtra("key", activeKey)
+    profile.putExtra("key", activeKey.toString)
     startActivity(profile)
   }
 
@@ -56,11 +56,11 @@ class GroupChatActivity extends GenericChatActivity {
     super.onPause()
   }
 
-  override def sendMessage(message: String, isAction: Boolean, activeKey: String, context: Context): Unit = {
+  override def sendMessage(message: String, isAction: Boolean, context: Context): Unit = {
     MessageHelper.sendGroupMessage(context, activeKey, message, isAction, None)
   }
 
-  override def setTyping(typing: Boolean, activeKey: String): Unit = {
+  override def setTyping(typing: Boolean): Unit = {
     //Not yet implemented in toxcore
   }
 }

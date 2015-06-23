@@ -4,7 +4,7 @@ import java.sql.Timestamp
 
 import im.tox.antox.utils.TimestampUtils
 
-case class GroupInfo(key: String,
+case class GroupInfo(key: ToxKey,
                      online: Boolean,
                      name: String,
                      topic: String,
@@ -21,9 +21,9 @@ case class GroupInfo(key: String,
   val receivedAvatar = true
   val avatar = None
 
-  def this(id: String, online: Boolean, name: String, topic: String,
+  def this(key: ToxKey, online: Boolean, name: String, topic: String,
            blocked: Boolean, ignored: Boolean, favorite: Boolean, alias: String)  {
-    this(id, online, name, topic, blocked, ignored, favorite,
+    this(key, online, name, topic, blocked, ignored, favorite,
       "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 }

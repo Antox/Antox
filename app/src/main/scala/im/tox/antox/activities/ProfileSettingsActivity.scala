@@ -126,7 +126,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
               toxSingleton.tox.setNospam(nospam)
               val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
               val editor = preferences.edit()
-              editor.putString("tox_id", toxSingleton.tox.getAddress)
+              editor.putString("tox_id", toxSingleton.tox.getAddress.toString)
               editor.apply()
 
               // Display toast to inform user of successful change

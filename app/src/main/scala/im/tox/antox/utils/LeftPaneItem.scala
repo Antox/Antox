@@ -5,11 +5,12 @@ import java.sql.Timestamp
 
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.fragments.ContactItemType.ContactItemType
+import im.tox.antox.wrapper.ToxKey
 import im.tox.tox4j.core.enums.ToxStatus
 
 class LeftPaneItem(
   val viewType: ContactItemType,
-  val key: String,
+  val key: ToxKey,
   val image: Option[File],
   val first: String, // name
   val second: String, // status message, or last message depending on which tab
@@ -20,7 +21,7 @@ class LeftPaneItem(
   val timestamp: Timestamp) {
 
   def this(
-    key: String,
+    key: ToxKey,
     image: Option[File],
     first: String,
     second: String,
@@ -31,7 +32,7 @@ class LeftPaneItem(
     timestamp: Timestamp) =
     this(ContactItemType.FRIEND, key, image, first, second, isOnline, status, favorite, count, timestamp)
 
-  def this(viewType: ContactItemType, key: String, message: String) =
-    this(viewType, key, None, key, message, false, null, false, 0, null)
+  def this(viewType: ContactItemType, key: ToxKey, message: String) =
+    this(viewType, key, None, key.toString, message, false, null, false, 0, null)
 
 }

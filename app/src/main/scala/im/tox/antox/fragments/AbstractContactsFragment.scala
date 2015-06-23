@@ -39,7 +39,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
   protected var contactChangeSub: Subscription = _
 
-  protected var activeKey: String = _
+  protected var activeKey: ToxKey = _
 
   def this (showSearch: Boolean, showFab: Boolean) {
     this()
@@ -75,16 +75,15 @@ abstract class AbstractContactsFragment extends Fragment {
         val `type` = item.viewType
         if (`type` != ContactItemType.FRIEND_REQUEST && `type` != ContactItemType.GROUP_INVITE) {
           val key = item.key
-          if (key != "") {
             ToxSingleton.changeActiveKey(key)
             val intent = if (`type` == ContactItemType.FRIEND) {
               new Intent(getActivity, classOf[ChatActivity])
             } else {
               new Intent(getActivity, classOf[GroupChatActivity])
             }
-            intent.putExtra("key", key)
+            intent.putExtra("key", key.toString)
             startActivity(intent)
-          }
+
         }
       }
     })
@@ -157,10 +156,10 @@ abstract class AbstractContactsFragment extends Fragment {
       def onClick(dialog: DialogInterface, index: Int) {
         val key = parentItem.key
         if (parentItem.viewType == ContactItemType.FRIEND) {
-          if (key != "") index match {
+          index match {
             case 0 =>
               val profile = new Intent(getActivity, classOf[FriendProfileActivity])
-              profile.putExtra("key", key)
+              profile.putExtra("key", key.toString)
               profile.putExtra("avatar", parentItem.image)
               profile.putExtra("name", parentItem.first)
               startActivity(profile)
@@ -172,7 +171,7 @@ abstract class AbstractContactsFragment extends Fragment {
         }
 
         if (parentItem.viewType == ContactItemType.GROUP) {
-          if (key != "") index match {
+          index match {
             case 0 =>
               val db = new AntoxDB(getActivity)
               db.deleteChatLogs(key)
@@ -200,7 +199,7 @@ abstract class AbstractContactsFragment extends Fragment {
     }
   }
 
-  def showDeleteFriendDialog(context: Context, fkey: String) {
+  def showDeleteFriendDialog(context: Context, fkey: ToxKey) {
     val key = fkey
     val delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend, null)
     val deleteLogsCheckboxView = delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox).asInstanceOf[CheckBox]
@@ -238,15 +237,15 @@ abstract class AbstractContactsFragment extends Fragment {
     builder.show()
   }
 
-  def exportChat(context: Context, fkey: String) {
+  def exportChat(context: Context, fkey: ToxKey) {
     val key = fkey
     val fileDialog = new FileDialog(this.getActivity, Environment.getExternalStorageDirectory, true)
     fileDialog.addDirectoryListener(new DirectorySelectedListener {
       override def directorySelected(directory: File): Unit = {
         try {
           val db = new AntoxDB(getActivity)
-          val messageList: util.ArrayList[Message] = db.getMessageList(key, actionMessages = true)
-          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimIDForDisplay(key) + "-log.txt"
+          val messageList: util.ArrayList[Message] = db.getMessageList(Some(key), actionMessages = true)
+          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimId(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
           for (message: Message <- messageList) {
@@ -267,7 +266,7 @@ abstract class AbstractContactsFragment extends Fragment {
     fileDialog.showDialog()
   }
 
-  def showDeleteChatDialog(context: Context, fkey: String) {
+  def showDeleteChatDialog(context: Context, fkey: ToxKey) {
     val key = fkey
     val builder = new AlertDialog.Builder(context)
     builder.setMessage(getResources.getString(R.string.friend_action_delete_chat_confirmation))

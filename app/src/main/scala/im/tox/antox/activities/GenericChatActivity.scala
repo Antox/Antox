@@ -15,7 +15,7 @@ import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.utils.Constants
-import im.tox.antox.wrapper.Message
+import im.tox.antox.wrapper.{ToxKey, Message}
 import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -37,7 +37,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var messagesSub: Subscription = null
   var progressSub: Subscription = null
   var titleSub: Subscription = null
-  var activeKey: String = null
+  var activeKey: ToxKey = null
   var scrolling: Boolean = false
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50
@@ -51,13 +51,12 @@ abstract class GenericChatActivity extends AppCompatActivity {
     actionBar.setCustomView(avatarView)
     actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
     val extras: Bundle = getIntent.getExtras
-    val key = extras.getString("key")
-    activeKey = key
+    activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
-    Log.d(TAG, "key = " + key)
+    Log.d(TAG, "key = " + activeKey)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val antoxDB = new AntoxDB(this)
-    adapter = new ChatMessagesAdapter(this, getMessageList, antoxDB.getMessageIds(key, preferences.getBoolean("action_messages", false)))
+    adapter = new ChatMessagesAdapter(this, getMessageList, antoxDB.getMessageIds(Some(activeKey), preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -86,7 +85,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     b.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         onSendMessage()
-        setTyping(typing = false, activeKey)
+        setTyping(typing = false)
       }
     })
 
@@ -95,7 +94,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     messageBox.addTextChangedListener(new TextWatcher() {
       override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
         val isTyping = after > 0
-        setTyping(isTyping, activeKey)
+        setTyping(isTyping)
       }
 
       override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
@@ -200,14 +199,14 @@ abstract class GenericChatActivity extends AppCompatActivity {
         } else {
           rawMessage
         }
-      sendMessage(message, isAction, activeKey, this)
+      sendMessage(message, isAction, this)
     })
   }
 
   def getMessageList: util.ArrayList[Message] = {
     val antoxDB = new AntoxDB(this)
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val messageList: util.ArrayList[Message] = antoxDB.getMessageList(activeKey, preferences.getBoolean("action_messages", true))
+    val messageList: util.ArrayList[Message] = antoxDB.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
     messageList
   }
 
@@ -220,7 +219,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   }
 
   //Abstract Methods
-  def sendMessage(message: String, isAction: Boolean, activeKey: String,  context: Context): Unit
+  def sendMessage(message: String, isAction: Boolean, context: Context): Unit
 
-  def setTyping(typing: Boolean, activeKey: String): Unit
+  def setTyping(typing: Boolean): Unit
 }

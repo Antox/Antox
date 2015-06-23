@@ -20,7 +20,7 @@ class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
 
     val name =
       if (kind == FileKind.AVATAR) {
-        key
+        key.toString
       } else {
         new String(filename)
       }

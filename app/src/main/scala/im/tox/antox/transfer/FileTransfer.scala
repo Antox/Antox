@@ -3,9 +3,9 @@ package im.tox.antox.transfer
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
 import im.tox.antox.transfer.FileStatus.FileStatus
-import im.tox.antox.wrapper.FileKind
+import im.tox.antox.wrapper.{ToxKey, FileKind}
 
-class FileTransfer(val key: String, 
+class FileTransfer(val key: ToxKey,
   val file: File,
   val fileNumber: Integer, 
   val size: Long, 

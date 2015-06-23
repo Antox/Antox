@@ -42,7 +42,7 @@ object ToxSingleton {
 
   var qrFile: File = _
 
-  var typingMap: util.HashMap[String, Boolean] = new util.HashMap[String, Boolean]()
+  var typingMap: util.HashMap[ToxKey, Boolean] = new util.HashMap[ToxKey, Boolean]()
 
   var isInited: Boolean = false
 
@@ -58,7 +58,7 @@ object ToxSingleton {
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
 
-  def getAntoxFriend(key: String): Option[Friend] = {
+  def getAntoxFriend(key: ToxKey): Option[Friend] = {
     try {
       antoxFriendList.getByKey(key)
     } catch {
@@ -84,15 +84,11 @@ object ToxSingleton {
 
   def getGroup(groupNumber: Int): Group = getGroupList.getGroup(groupNumber)
 
-  def getGroup(groupKey: String): Group = getGroupList.getGroup(groupKey)
+  def getGroup(groupKey: ToxKey): Group = getGroupList.getGroup(groupKey)
 
   def getGroupPeer(groupNumber: Int, peerNumber: Int): GroupPeer = getGroupList.getPeer(groupNumber, peerNumber)
 
-  def keyFromAddress(address: String): String = {
-    address.substring(0, 64) //Cut to the length of the public key portion of a tox address. TODO: make a class that represents the full tox address
-  }
-
-  def changeActiveKey(key: String) {
+  def changeActiveKey(key: ToxKey) {
     Reactive.activeKey.onNext(Some(key))
   }
 
@@ -105,17 +101,15 @@ object ToxSingleton {
     ToxSingleton.save()
   }
 
-  def clearUselessNotifications(key: String) {
-    if (key != null && key != "") {
-      val mFriend = getAntoxFriend(key)
-      mFriend.foreach(friend => {
-        try {
-          if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendNumber)
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
-      })
-    }
+  def clearUselessNotifications(key: ToxKey) {
+    val mFriend = getAntoxFriend(key)
+     mFriend.foreach(friend => {
+       try {
+         if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendNumber)
+       } catch {
+         case e: Exception => e.printStackTrace()
+       }
+     })
   }
 
   def updateContactsList(ctx: Context): Unit = {
@@ -253,7 +247,7 @@ object ToxSingleton {
                 jsonObject.getString("owner"),
                 jsonObject.getString("ipv6"),
                 jsonObject.getString("ipv4"),
-                jsonObject.getString("pubkey"),
+                new ToxKey(jsonObject.getString("pubkey")),
                 jsonObject.getInt("port"))
             }
             dhtNodes
@@ -263,7 +257,7 @@ object ToxSingleton {
               dhtNodes = nodes
               Log.d(TAG, "Trying to bootstrap")
               try {
-                for (i <- 0 until nodes.size) {
+                for (i <- nodes.indices) {
                   tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
                 }
               } catch {
@@ -286,8 +280,6 @@ object ToxSingleton {
 
   def populateAntoxLists(db: AntoxDB): Unit = {
     for (friendNumber <- tox.getFriendList) {
-      //this doesn't set the name, status message, status
-      //or online status of the friend because they are now set during callbacks
       antoxFriendList.addFriendIfNotExists(friendNumber)
       antoxFriendList.getByFriendNumber(friendNumber).get.setKey(tox.getFriendKey(friendNumber))
     }
@@ -314,7 +306,7 @@ object ToxSingleton {
         tox = new ToxCore(antoxFriendList, groupList, options)
         dataFile.saveFile(tox.save())
         val editor = preferences.edit()
-        editor.putString("tox_id", tox.getAddress)
+        editor.putString("tox_id", tox.getAddress.toString)
         editor.commit()
       } catch {
         case e: ToxException[_] => e.printStackTrace()
@@ -323,7 +315,7 @@ object ToxSingleton {
         try {
           tox = new ToxCore(antoxFriendList, groupList, options, dataFile.loadFile())
           val editor = preferences.edit()
-          editor.putString("tox_id", tox.getAddress)
+          editor.putString("tox_id", tox.getAddress.toString)
           editor.commit()
         } catch {
           case e: ToxException[_] => e.printStackTrace()
@@ -338,21 +330,9 @@ object ToxSingleton {
       val friends = db.getFriendList
       val groups = db.getGroupList
 
-      for (friendNumber <- tox.getFriendList) {
-        val friendKey = tox.getFriendKey(friendNumber)
-        if (!db.doesContactExist(friendKey)) {
-          db.addFriend(friendKey, "", "", "")
-        }
-      }
+      db.synchroniseWithTox(tox)
 
-      for (groupNumber <- tox.getGroupList) {
-        val groupKey = tox.getGroupKey(groupNumber)
-        if (!db.doesContactExist(groupKey)) {
-          db.addGroup(groupKey, "", "")
-        }
-      }
-
-      if (friends.size > 0 || groups.size > 0) {
+      if (friends.length > 0 || groups.length > 0) {
         populateAntoxLists(db)
 
         for (friend <- friends) {

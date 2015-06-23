@@ -9,7 +9,7 @@ import android.util.Log
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{IntervalLevels, Intervals, Reactive, ToxSingleton}
 import im.tox.antox.utils.BitmapManager
-import im.tox.antox.wrapper.FileKind
+import im.tox.antox.wrapper.{ToxKey, FileKind}
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.enums.ToxFileControl
 
@@ -17,7 +17,7 @@ class FileTransferManager extends Intervals {
   private val TAG = "FileTransferManager"
 
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
-  private var _keyAndFileNumberToId: Map[(String, Integer), Long] = Map[(String, Integer), Long]()
+  private var _keyAndFileNumberToId: Map[(ToxKey, Integer), Long] = Map[(ToxKey, Integer), Long]()
 
   def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.INPROGRESS)
 
@@ -43,7 +43,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def remove(key: String, fileNumber: Integer): Unit = {
+  def remove(key: ToxKey, fileNumber: Integer): Unit = {
     val mId = _keyAndFileNumberToId.get(key, fileNumber)
     mId match {
       case Some(id) => this.remove(id)
@@ -55,16 +55,16 @@ class FileTransferManager extends Intervals {
     _transfers.get(id)
   }
 
-  def get(address: String, fileNumber: Integer): Option[FileTransfer] = {
-    val mId = _keyAndFileNumberToId.get(address, fileNumber)
+  def get(toxKey: ToxKey, fileNumber: Integer): Option[FileTransfer] = {
+    val mId = _keyAndFileNumberToId.get(toxKey, fileNumber)
     mId match {
-      case Some(address) => this.get(address)
+      case Some(key) => this.get(key)
       case None => None
     }
   }
 
 
-  def sendFileSendRequest(path: String, key: String, fileKind: FileKind, fileId: String = null, context: Context) {
+  def sendFileSendRequest(path: String, key: ToxKey, fileKind: FileKind, fileId: String = null, context: Context) {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
@@ -104,7 +104,7 @@ class FileTransferManager extends Intervals {
     ToxSingleton.updateMessages(context)
   }
 
-  def sendFileDeleteRequest(key: String, fileKind: FileKind, context: Context): Unit = {
+  def sendFileDeleteRequest(key: ToxKey, fileKind: FileKind, context: Context): Unit = {
     ToxSingleton.getAntoxFriend(key).foreach(f => {
       ToxSingleton.tox.fileSend(f.getFriendNumber, AVATAR.kindId, 0, null, "")
       if (fileKind == FileKind.AVATAR) {
@@ -113,7 +113,7 @@ class FileTransferManager extends Intervals {
     })
   }
 
-  def fileSendRequest(key: String,
+  def fileSendRequest(key: ToxKey,
                       fileNumber: Int,
                       fileName: String,
                       fileKind: FileKind,
@@ -153,7 +153,7 @@ class FileTransferManager extends Intervals {
     ToxSingleton.updateMessages(context)
   }
 
-  private def fileAcceptOrReject(key: String, fileNumber: Integer, context: Context, accept: Boolean) {
+  private def fileAcceptOrReject(key: ToxKey, fileNumber: Integer, context: Context, accept: Boolean) {
     Log.d(TAG, "fileAcceptReject, accepting: " + accept)
     val id = State.db.getFileId(key, fileNumber)
     if (id != -1) {
@@ -183,11 +183,11 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def acceptFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = true)
+  def acceptFile(key: ToxKey, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = true)
 
-  def rejectFile(key: String, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = false)
+  def rejectFile(key: ToxKey, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = false)
 
-  def receiveFileData(key: String,
+  def receiveFileData(key: ToxKey,
                       fileNumber: Int,
                       data: Array[Byte],
                       context: Context) {
@@ -210,7 +210,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def fileFinished(key: String, fileNumber: Integer, context: Context) {
+  def fileFinished(key: ToxKey, fileNumber: Integer, context: Context) {
     Log.d(TAG, "fileFinished")
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
@@ -239,7 +239,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def cancelFile(key: String, fileNumber: Int, context: Context) {
+  def cancelFile(key: ToxKey, fileNumber: Int, context: Context) {
     Log.d(TAG, "cancelFile")
     val db = new AntoxDB(context)
     State.transfers.remove(key, fileNumber)
@@ -256,7 +256,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def fileTransferStarted(key: String, fileNumber: Integer, ctx: Context) {
+  def fileTransferStarted(key: ToxKey, fileNumber: Integer, ctx: Context) {
     Log.d(TAG, "fileTransferStarted")
     State.db.fileTransferStarted(key, fileNumber)
   }
@@ -270,9 +270,9 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def onSelfAvatarSendFinished(sentToKey: String, context: Context): Unit = {
+  def onSelfAvatarSendFinished(sentTo: ToxKey, context: Context): Unit = {
     val db = new AntoxDB(context)
-    db.updateContactReceivedAvatar(sentToKey, receivedAvatar = true)
+    db.updateContactReceivedAvatar(sentTo, receivedAvatar = true)
     updateSelfAvatar(context)
     db.close()
   }

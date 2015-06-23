@@ -18,7 +18,7 @@ object Constants {
 
   val PROFILE_EXPORT_DIRECTORY = "Tox Exported Profiles"
 
-  val DATABASE_VERSION = 12
+  val DATABASE_VERSION = 13
 
   val USER_DATABASE_VERSION = 4
 

@@ -11,7 +11,7 @@ case class FriendInfo(
   name: String,
   status: String,
   statusMessage: String,
-  key: String,
+  key: ToxKey,
   avatar: Option[File],
   receivedAvatar: Boolean,
   blocked: Boolean,
@@ -23,18 +23,18 @@ case class FriendInfo(
   alias: String) extends ContactInfo {
 
   def this (
-    isOnline: Boolean,
-    friendName: String,
-    userStatus: String,
+    online: Boolean,
+    name: String,
+    status: String,
     statusMessage: String,
-    friendKey: String,
+    key: ToxKey,
     avatar: Option[File],
     receivedAvatar: Boolean,
     blocked: Boolean,
     ignored: Boolean,
     favorite: Boolean,
     alias: String) {
-    this(isOnline, friendName, userStatus, statusMessage, friendKey, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
+    this(online, name, status, statusMessage, key, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 
   def getFriendStatusAsToxUserStatus: ToxStatus = {

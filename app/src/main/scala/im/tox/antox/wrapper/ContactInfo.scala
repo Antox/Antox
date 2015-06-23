@@ -4,7 +4,7 @@ import java.io.File
 import java.sql.Timestamp
 
 trait ContactInfo {
-  def key: String
+  def key: ToxKey
   def name: String
   def avatar: Option[File]
   def online: Boolean

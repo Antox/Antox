@@ -18,7 +18,7 @@ import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{BitmapManager, Constants, IconColor}
-import im.tox.antox.wrapper.{FileKind, FriendInfo, UserStatus}
+import im.tox.antox.wrapper.{ToxKey, FileKind, FriendInfo, UserStatus}
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -30,8 +30,7 @@ class ChatActivity extends GenericChatActivity {
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
     val extras: Bundle = getIntent.getExtras
-    val key = extras.getString("key")
-    activeKey = key
+    activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
@@ -45,7 +44,7 @@ class ChatActivity extends GenericChatActivity {
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
           if (!friend.isOnline) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
@@ -66,8 +65,8 @@ class ChatActivity extends GenericChatActivity {
 
     cameraButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(key).foreach(friend => {
-          if (!friend.isOnline) {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.online) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
           }
@@ -92,7 +91,7 @@ class ChatActivity extends GenericChatActivity {
 
     imageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(key).foreach(friend => {
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
           if (!friend.isOnline) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
@@ -187,11 +186,11 @@ class ChatActivity extends GenericChatActivity {
     super.onPause()
   }
 
-  override def sendMessage(message: String, isAction: Boolean, activeKey: String, context: Context): Unit = {
+  override def sendMessage(message: String, isAction: Boolean, context: Context): Unit = {
     MessageHelper.sendMessage(this, activeKey, message, isAction, None)
   }
 
-  override def setTyping(typing: Boolean, activeKey: String): Unit = {
+  override def setTyping(typing: Boolean): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(activeKey)
     mFriend.foreach(friend => {
       try {

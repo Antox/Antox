@@ -9,6 +9,7 @@ import im.tox.antox.activities.MainActivity
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
 
@@ -23,11 +24,13 @@ object AntoxOnFriendRequestCallback {
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
 
-  override def friendRequest(key: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
+  override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
     val db = new AntoxDB(this.ctx)
-    if (!db.isContactBlocked(Hex.bytesToHexString(key))){
-      db.addFriendRequest(Hex.bytesToHexString(key), new String(message, "UTF-8"))
+    val key = new ToxKey(keyBytes)
+    if (!db.isContactBlocked(key)){
+      db.addFriendRequest(key, new String(message, "UTF-8"))
     }
+
     db.close()
     ToxSingleton.updateFriendRequests(ctx)
     Log.d("FriendRequestCallback", "")

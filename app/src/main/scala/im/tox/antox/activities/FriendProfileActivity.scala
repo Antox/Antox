@@ -14,11 +14,12 @@ import com.shamanland.fab.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.utils.BitmapManager
+import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
 
 class FriendProfileActivity extends AppCompatActivity {
 
-  var friendKey: String = null
+  var friendKey: ToxKey = null
   var nickChanged: Boolean = false
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -30,7 +31,7 @@ class FriendProfileActivity extends AppCompatActivity {
       getSupportActionBar.setIcon(R.drawable.ic_actionbar)
     }
 
-    friendKey = getIntent.getStringExtra("key")
+    friendKey = new ToxKey(getIntent.getStringExtra("key"))
     val db = new AntoxDB(this)
     val friendNote = db.getContactStatusMessage(friendKey)
 

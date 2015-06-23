@@ -7,13 +7,14 @@ import im.tox.antox.activities.LoginActivity
 import im.tox.antox.av.CallManager
 import im.tox.antox.tox.{ToxService, ToxSingleton}
 import im.tox.antox.transfer.FileTransferManager
+import im.tox.antox.wrapper.ToxKey
 
 import scala.collection.JavaConversions._
 
 object State {
 
   private var _chatActive: Boolean = false
-  private var _activeKey: Option[String] = None
+  private var _activeKey: Option[ToxKey] = None
 
   val transfers: FileTransferManager = new FileTransferManager()
   val calls: CallManager = new CallManager()
@@ -28,7 +29,7 @@ object State {
 
   def activeKey = _activeKey
 
-  def activeKey(k: Option[String]) = {
+  def activeKey(k: Option[ToxKey]) = {
     require(k != null)
     _activeKey = k
   }
