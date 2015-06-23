@@ -4,7 +4,7 @@ import java.io.File
 import java.sql.Timestamp
 
 import im.tox.antox.utils.TimestampUtils
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 case class FriendInfo(
   online: Boolean,
@@ -37,7 +37,7 @@ case class FriendInfo(
     this(online, name, status, statusMessage, key, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
   }
 
-  def getFriendStatusAsToxUserStatus: ToxStatus = {
+  def getFriendStatusAsToxUserStatus: ToxUserStatus = {
     UserStatus.getToxUserStatusFromString(status)
   }
 }

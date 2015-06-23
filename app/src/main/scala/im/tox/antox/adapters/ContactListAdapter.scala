@@ -171,7 +171,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         db.close()
         try {
           ToxSingleton.tox.addFriendNoRequest(key)
-          ToxSingleton.tox.save()
+          ToxSingleton.save()
         } catch {
           case e: Exception =>
         }
@@ -199,7 +199,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         try {
           val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupKey == groupKey).head.data
           ToxSingleton.tox.acceptGroupInvite(inviteData)
-          ToxSingleton.tox.save()
+          ToxSingleton.save()
         } catch {
           case e: Exception => e.printStackTrace()
         }

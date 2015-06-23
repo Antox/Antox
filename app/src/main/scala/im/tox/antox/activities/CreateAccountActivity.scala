@@ -18,10 +18,11 @@ import im.tox.antox.toxdns.{ToxDNS, ToxData}
 import im.tox.antox.transfer.{FileDialog, FileUtils}
 import im.tox.antox.utils._
 import im.tox.antoxnightly.R
-import im.tox.tox4j.core.ToxOptions
 import im.tox.tox4j.core.exceptions.ToxNewException
+import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
+import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.impl.ToxCoreJni
+import im.tox.tox4j.impl.jni.ToxCoreImpl
 
 class CreateAccountActivity extends AppCompatActivity {
 
@@ -98,9 +99,9 @@ class CreateAccountActivity extends AppCompatActivity {
   def createToxData(accountName: String): ToxData = {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
-    val tox = new ToxCoreJni(toxOptions, null)
+    val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
-    toxDataFile.saveFile(tox.save())
+    toxDataFile.saveFile(tox.getSaveData)
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
@@ -108,11 +109,14 @@ class CreateAccountActivity extends AppCompatActivity {
 
   def loadToxData(fileName: String): Option[ToxData] = {
     val toxData = new ToxData
-    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val toxDataFile = new ToxDataFile(this, fileName)
+    val toxOptions = new ToxOptions(
+      Options.ipv6Enabled,
+      Options.udpEnabled,
+      saveData = ToxSave(toxDataFile.loadFile()))
 
     try {
-      val tox = new ToxCoreJni(toxOptions, toxDataFile.loadFile())
+      val tox = new ToxCoreImpl(toxOptions)
       toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
       toxData.fileBytes = toxDataFile.loadFile()
 

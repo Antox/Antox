@@ -14,10 +14,11 @@ import im.tox.antox.callbacks._
 import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
-import im.tox.tox4j.core.ToxOptions
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
+import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
+import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.impl.ToxAvJni
+import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -30,7 +31,7 @@ object ToxSingleton {
 
   var tox: ToxCore = _
 
-  var toxAv: ToxAvJni = _
+  var toxAv: ToxAvImpl = _
 
   private var antoxFriendList: AntoxFriendList = _
 
@@ -299,89 +300,81 @@ object ToxSingleton {
     dataFile = new ToxDataFile(ctx)
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val udpEnabled = preferences.getBoolean("enable_udp", false)
-    val options = new ToxOptions(udpEnabled, Options.ipv6Enabled)
+    val options = new ToxOptions(
+      udpEnabled,
+      Options.ipv6Enabled,
+      saveData = dataFile.loadAsSaveType())
 
-    if (!dataFile.doesFileExist()) {
-      try {
-        tox = new ToxCore(antoxFriendList, groupList, options)
-        dataFile.saveFile(tox.save())
-        val editor = preferences.edit()
-        editor.putString("tox_id", tox.getAddress.toString)
-        editor.commit()
-      } catch {
-        case e: ToxException[_] => e.printStackTrace()
-      }
-      } else {
-        try {
-          tox = new ToxCore(antoxFriendList, groupList, options, dataFile.loadFile())
-          val editor = preferences.edit()
-          editor.putString("tox_id", tox.getAddress.toString)
-          editor.commit()
-        } catch {
-          case e: ToxException[_] => e.printStackTrace()
-        }
-      }
-
-      //toxAv = new ToxAvImpl(tox.getTox)
-
-      val db = new AntoxDB(ctx)
-      db.setAllOffline()
-
-      val friends = db.getFriendList
-      val groups = db.getGroupList
-
-      db.synchroniseWithTox(tox)
-
-      if (friends.length > 0 || groups.length > 0) {
-        populateAntoxLists(db)
-
-        for (friend <- friends) {
-          try {
-            antoxFriendList.updateFromFriend(friend)
-          } catch {
-            case e: Exception =>
-              try {
-              tox.addFriendNoRequest(friend.key)
-              } catch {
-                case e: Exception =>
-                  Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
-              }
-          }
-        }
-      }
-
-      updateGroupList(ctx)
-      registerCallbacks(ctx)
-
-      try {
-        tox.setName(preferences.getString("nickname", ""))
-        tox.setStatusMessage(preferences.getString("status_message", ""))
-        var newStatus: ToxStatus = ToxStatus.NONE
-        val newStatusString = preferences.getString("status", "")
-        newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
-        tox.setStatus(newStatus)
-      } catch {
-        case e: ToxException[_] =>
-      } finally {
-        db.close()
-      }
-      updateDhtNodes(ctx)
+    try {
+      tox = new ToxCore(antoxFriendList, groupList, options)
+      if (!dataFile.doesFileExist()) dataFile.saveFile(tox.getSaveData)
+      val editor = preferences.edit()
+      editor.putString("tox_id", tox.getAddress.toString)
+      editor.commit()
+    } catch {
+      case e: ToxException[_] => e.printStackTrace()
     }
+
+    //toxAv = new ToxAvImpl(tox.getTox)
+
+    val db = new AntoxDB(ctx)
+    db.setAllOffline()
+
+    val friends = db.getFriendList
+    val groups = db.getGroupList
+
+    db.synchroniseWithTox(tox)
+
+    if (friends.length > 0 || groups.length > 0) {
+      populateAntoxLists(db)
+
+      for (friend <- friends) {
+        try {
+          antoxFriendList.updateFromFriend(friend)
+        } catch {
+          case e: Exception =>
+            try {
+              tox.addFriendNoRequest(friend.key)
+            } catch {
+              case e: Exception =>
+                Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
+            }
+        }
+      }
+    }
+
+    updateGroupList(ctx)
+    registerCallbacks(ctx)
+
+    try {
+      tox.setName(preferences.getString("nickname", ""))
+      tox.setStatusMessage(preferences.getString("status_message", ""))
+      var newStatus: ToxUserStatus = ToxUserStatus.NONE
+      val newStatusString = preferences.getString("status", "")
+      newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
+      tox.setStatus(newStatus)
+    } catch {
+      case e: ToxException[_] =>
+    } finally {
+      db.close()
+    }
+    updateDhtNodes(ctx)
+  }
 
 
   def registerCallbacks(ctx: Context): Unit = {
     tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
     tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
-    tox.callbackFriendConnected(new AntoxOnConnectionStatusCallback(ctx))
+    tox.callbackFriendConnectionStatus(new AntoxOnConnectionStatusCallback(ctx))
     tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
     tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
     tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
     tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
     tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
-    tox.callbackFileReceive(new AntoxOnFileReceiveCallback(ctx))
-    tox.callbackFileReceiveChunk(new AntoxOnFileReceiveChunkCallback(ctx))
-    tox.callbackFileRequestChunk(new AntoxOnFileRequestChunkCallback(ctx))
-    tox.callbackFileControl(new AntoxOnFileControlCallback(ctx))
+    tox.callbackFileReceive(new AntoxOnFileRecvCallback(ctx))
+    tox.callbackFileReceiveChunk(new AntoxOnFileRecvChunkCallback(ctx))
+    tox.callbackFileRequestChunk(new AntoxOnFileChunkRequestCallback(ctx))
+    tox.callbackFileControl(new AntoxOnFileRecvControlCallback(ctx))
     /* tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
     tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
     tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
@@ -394,8 +387,9 @@ object ToxSingleton {
     tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx)) */
     tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
   }
+
   def save(): Unit = {
-    dataFile.saveFile(tox.save())
+    dataFile.saveFile(tox.getSaveData)
   }
 }
 

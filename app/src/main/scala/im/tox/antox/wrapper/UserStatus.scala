@@ -1,21 +1,21 @@
 package im.tox.antox.wrapper
 
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 
 object UserStatus {
 
-  def getToxUserStatusFromString(status: String): ToxStatus = {
-    if (status == "online") return ToxStatus.NONE
-    if (status == "away") return ToxStatus.AWAY
-    if (status == "busy") return ToxStatus.BUSY
-    ToxStatus.NONE
+  def getToxUserStatusFromString(status: String): ToxUserStatus = {
+    if (status == "online") return ToxUserStatus.NONE
+    if (status == "away") return ToxUserStatus.AWAY
+    if (status == "busy") return ToxUserStatus.BUSY
+    ToxUserStatus.NONE
   }
 
-  def getStringFromToxUserStatus(status: ToxStatus): String = {
-    if (status == ToxStatus.NONE) return "online"
-    if (status == ToxStatus.AWAY) return "away"
-    if (status == ToxStatus.BUSY) return "busy"
+  def getStringFromToxUserStatus(status: ToxUserStatus): String = {
+    if (status == ToxUserStatus.NONE) return "online"
+    if (status == ToxUserStatus.AWAY) return "away"
+    if (status == ToxUserStatus.BUSY) return "busy"
     "invalid"
   }
 }

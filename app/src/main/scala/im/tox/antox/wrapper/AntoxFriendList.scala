@@ -3,7 +3,7 @@ package im.tox.antox.wrapper
 import java.util
 import java.util.{Collections, Locale}
 
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 import scala.collection.JavaConversions._
 

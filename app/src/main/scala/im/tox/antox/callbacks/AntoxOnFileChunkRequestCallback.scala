@@ -5,16 +5,11 @@ import android.util.Log
 import im.tox.antox.data.State
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileStatus
-import im.tox.tox4j.core.callbacks.FileRequestChunkCallback
+import im.tox.tox4j.core.callbacks.FileChunkRequestCallback
 
-object AntoxOnFileRequestChunkCallback {
+class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback {
 
-  private val TAG = "OnFileRequestChunkCallback"
-}
-
-class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequestChunkCallback {
-
-  override def fileRequestChunk(friendNumber: Int, fileNumber: Int, position: Long, length: Int): Unit = {
+  override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)
     val mTransfer = State.transfers.get(mFriend.get.getKey, fileNumber)
 
@@ -37,7 +32,7 @@ class AntoxOnFileRequestChunkCallback(private var ctx: Context) extends FileRequ
           }
 
         })
-      case None => Log.d("OnFileRequestChunkCallback", "Can't find file transfer")
+      case None => Log.d("AntoxOnFileChunkRequestCallback", "Can't find file transfer")
     }
   }
 }

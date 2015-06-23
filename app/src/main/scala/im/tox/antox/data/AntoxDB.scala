@@ -17,7 +17,7 @@ import im.tox.antox.wrapper.ContactType.ContactType
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antox.wrapper._
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -719,7 +719,7 @@ class AntoxDB(ctx: Context) {
   def updateContactStatusMessage(key: ToxKey, newMessage: String) =
     updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_NOTE, newMessage)
 
-  def updateContactStatus(key: ToxKey, status: ToxStatus) =
+  def updateContactStatus(key: ToxKey, status: ToxUserStatus) =
     updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
 
   def updateContactOnline(key: ToxKey, online: Boolean) =

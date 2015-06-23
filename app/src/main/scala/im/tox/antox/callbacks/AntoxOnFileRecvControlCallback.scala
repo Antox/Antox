@@ -2,21 +2,21 @@ package im.tox.antox.callbacks
 
 import android.content.Context
 import android.util.Log
-import im.tox.antox.callbacks.AntoxOnFileControlCallback._
+import im.tox.antox.callbacks.AntoxOnFileRecvControlCallback._
 import im.tox.antox.data.State
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileStatus
-import im.tox.tox4j.core.callbacks.FileControlCallback
+import im.tox.tox4j.core.callbacks.FileRecvControlCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
-object AntoxOnFileControlCallback {
+object AntoxOnFileRecvControlCallback {
 
   private val TAG = "OnFileControlCallback"
 }
 
-class AntoxOnFileControlCallback(private var ctx: Context) extends FileControlCallback {
+class AntoxOnFileRecvControlCallback(private var ctx: Context) extends FileRecvControlCallback {
   
-  override def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = {
+  override def fileRecvControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = {
       Log.d(TAG, "control type: " + control.name())
       val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, fileNumber)
       mTransfer match {

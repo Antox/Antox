@@ -6,15 +6,11 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
-import im.tox.tox4j.core.callbacks.FileReceiveCallback
+import im.tox.tox4j.core.callbacks.FileRecvCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
-object AntoxOnFileReceiveCallback {
-  private val TAG = "OnFileReceiveCallback"
-}
-
-class AntoxOnFileReceiveCallback(ctx: Context) extends FileReceiveCallback {
-  override def fileReceive(friendNumber: Int, fileNumber: Int, toxFileKind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
+class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback {
+  override def fileRecv(friendNumber: Int, fileNumber: Int, toxFileKind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
     val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
     val key = ToxSingleton.getAntoxFriend(friendNumber).get.key
 
