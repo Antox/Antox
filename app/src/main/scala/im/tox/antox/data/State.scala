@@ -41,6 +41,9 @@ object State {
       ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
     }
 
+    //workaround for contacts appearing offline when the DB is upgraded
+    db.synchroniseWithTox(ToxSingleton.tox)
+
     val editor = preferences.edit()
     editor.putBoolean("loggedin", false)
     editor.apply()
