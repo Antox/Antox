@@ -9,7 +9,7 @@ import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.impl.jni.ToxCoreImpl
+import im.tox.tox4j.impl.jni.{ToxCryptoImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions) extends Intervals {
 
@@ -127,10 +127,10 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def callbackFriendMessage(callback: FriendMessageCallback): Unit = tox.callbackFriendMessage(callback)
 
-  def hash(bytes: Array[Byte]): Array[Byte] = tox.hash(bytes)
+  def hash(bytes: Array[Byte]): Array[Byte] = ToxCryptoImpl.hash(bytes)
 
   def hash(file: File): Option[String] = {
-    FileUtils.readToBytes(file).map(tox.hash).map(_.toString)
+    FileUtils.readToBytes(file).map(ToxCryptoImpl.hash).map(_.toString)
   }
 
   def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(friendNumber, fileNumber, control)
