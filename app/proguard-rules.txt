@@ -7,12 +7,12 @@ public protected *;
 -dontobfuscate
 -dontoptimize
 -dontpreverify
+-dontwarn **
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**
 -dontnote scala.Enumeration
 -keep class im.tox.** { *; }
--keep class com.typesafe.** { *; }
 -keep public class scala.Option
 -keep public class scala.Function0
 -keep public class scala.Function1
@@ -55,8 +55,5 @@ public static ** valueOf(java.lang.String);
 public static final android.os.Parcelable$Creator *;
 }
 -keep public class im.tox.** {
-public protected *;
-}
--keep public class com.typesafe.** {
 public protected *;
 }
