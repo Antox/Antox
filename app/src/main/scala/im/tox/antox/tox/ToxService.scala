@@ -36,8 +36,8 @@ class ToxService extends Service() {
           } else {
             try {
               Thread.sleep(ToxSingleton.interval)
-              ToxSingleton.tox.iteration()
-              ToxSingleton.toxAv.iteration()
+              ToxSingleton.tox.iterate()
+              ToxSingleton.toxAv.iterate()
             } catch {
               case e: Exception =>
             }

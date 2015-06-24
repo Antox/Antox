@@ -6,6 +6,9 @@ import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.transfer.FileUtils
+import im.tox.tox4j.core.enums.ToxSaveDataType
+import im.tox.tox4j.core.options.SaveDataOptions
+import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
@@ -59,6 +62,14 @@ class ToxDataFile(ctx: Context, fileName: String) {
       }
     }
     data
+  }
+
+  def loadAsSaveType(): SaveDataOptions.Type = {
+    if (doesFileExist()) {
+      ToxSave(loadFile())
+    } else {
+      SaveDataOptions.None
+    }
   }
 
   def saveFile(dataToBeSaved: Array[Byte]) {

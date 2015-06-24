@@ -6,7 +6,7 @@ import im.tox.antox.adapters.ContactListAdapter
 import im.tox.antox.utils.LeftPaneItem
 import im.tox.antox.wrapper.{FriendInfo, FriendRequest, GroupInfo, GroupInvite}
 import im.tox.antoxnightly.R
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 class ContactsFragment extends AbstractContactsFragment(showSearch = true, showFab = true) {
 
@@ -65,7 +65,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     if (groups.length > 0) {
       for (group <- groups) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.name, group.topic,
-          group.online, ToxStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
+          group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
       }
     }

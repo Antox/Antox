@@ -3,16 +3,11 @@ package im.tox.antox.callbacks
 import android.content.Context
 import im.tox.antox.data.State
 import im.tox.antox.tox.ToxSingleton
-import im.tox.tox4j.core.callbacks.FileReceiveChunkCallback
+import im.tox.tox4j.core.callbacks.FileRecvChunkCallback
 
-object AntoxOnFileReceiveChunkCallback {
+class AntoxOnFileRecvChunkCallback(private var ctx: Context) extends FileRecvChunkCallback {
 
-  private val TAG = "OnFileReceiveChunkCallback"
-}
-
-class AntoxOnFileReceiveChunkCallback(private var ctx: Context) extends FileReceiveChunkCallback {
-
-  override def fileReceiveChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = {
+  override def fileRecvChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte]): Unit = {
     val key = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
     val size = State.transfers.get(key, fileNumber).get.size
     

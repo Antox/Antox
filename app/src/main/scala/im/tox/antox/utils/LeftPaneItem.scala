@@ -6,7 +6,7 @@ import java.sql.Timestamp
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.fragments.ContactItemType.ContactItemType
 import im.tox.antox.wrapper.ToxKey
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 class LeftPaneItem(
   val viewType: ContactItemType,
@@ -15,7 +15,7 @@ class LeftPaneItem(
   val first: String, // name
   val second: String, // status message, or last message depending on which tab
   val isOnline: Boolean,
-  val status: ToxStatus,
+  val status: ToxUserStatus,
   val favorite: Boolean,
   val count: Int,
   val timestamp: Timestamp) {
@@ -26,7 +26,7 @@ class LeftPaneItem(
     first: String,
     second: String,
     isOnline: Boolean,
-    status: ToxStatus,
+    status: ToxUserStatus,
     favorite: Boolean,
     count: Int,
     timestamp: Timestamp) =

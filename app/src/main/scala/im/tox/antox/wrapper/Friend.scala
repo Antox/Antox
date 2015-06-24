@@ -5,7 +5,7 @@ import java.util
 
 import im.tox.antox.av.Call
 import im.tox.antox.tox.ToxSingleton
-import im.tox.tox4j.core.enums.ToxStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
 
 import scala.beans.{BeanProperty, BooleanBeanProperty}
 
@@ -21,7 +21,7 @@ class Friend(friendNumber: Int) extends Contact {
   var avatar: Option[File] = None
 
   @BeanProperty
-  var status: ToxStatus = ToxStatus.NONE
+  var status: ToxUserStatus = ToxUserStatus.NONE
 
   @BeanProperty
   var statusMessage: String = _
