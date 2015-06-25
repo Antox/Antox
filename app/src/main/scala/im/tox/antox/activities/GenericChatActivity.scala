@@ -2,20 +2,20 @@ package im.tox.antox.activities
 
 import java.util
 
-import android.content.{Context, SharedPreferences}
+import android.content.{Context, Intent, SharedPreferences}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
 import android.util.Log
-import android.view.{Menu, MenuInflater, View}
+import android.view.{Menu, MenuInflater, MenuItem, View}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter
 import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.utils.Constants
-import im.tox.antox.wrapper.{ToxKey, Message}
+import im.tox.antox.wrapper.{Message, ToxKey}
 import im.tox.antoxnightly.R
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -111,6 +111,19 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val inflater: MenuInflater = getMenuInflater
     inflater.inflate(R.menu.chat_activity, menu)
     super.onCreateOptionsMenu(menu)
+  }
+
+  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    // Start call activity if menu button was selected
+    if (item.getItemId == R.id.callButton) {
+      val callActivity = new Intent(this, classOf[CallActivity])
+      // Add avatar and nickname as extras
+      callActivity.putExtra("key", activeKey)
+      callActivity.putExtra("name", displayNameView.getText)
+      startActivity(callActivity)
+    }
+
+    super.onOptionsItemSelected(item)
   }
 
   def setDisplayName(name: String) = {

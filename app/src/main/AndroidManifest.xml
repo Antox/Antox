@@ -99,7 +99,7 @@
                 android:value="im.tox.antox.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.CallActivity"
+            android:name="im.tox.antox.activities.CallActivity"
             android:label="@string/title_activity_friend_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
