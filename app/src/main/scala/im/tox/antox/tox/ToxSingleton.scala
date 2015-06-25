@@ -55,7 +55,7 @@ object ToxSingleton {
   var dhtNodes: Array[DhtNode] = Array()
 
   def interval: Int = {
-    Math.min(State.transfers.interval, tox.interval)
+    List(State.transfers.interval, tox.interval, toxAv.interval).min
   }
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList
@@ -389,8 +389,8 @@ object ToxSingleton {
     tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
 
     toxAv.callbackCall(new AntoxOnCallCallback(ctx))
-    toxAv.callbackCallControl(new AntoxOnCallStateCallback(ctx))
-    toxAv.callbackReceiveAudioFrame(new AntoxOnReceiveAudioFrameCallback(ctx))
+    toxAv.callbackCallState(new AntoxOnCallStateCallback(ctx))
+    toxAv.callbackReceiveAudioFrame(new AntoxOnAudioReceiveFrameCallback(ctx))
   }
 
   def save(): Unit = {

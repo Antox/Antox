@@ -591,7 +591,8 @@ class AntoxDB(ctx: Context) {
       Constants.COLUMN_NAME_KEY +
       "='" +
       key +
-      "' AND (type == 2 OR type == 4 OR type == " + MessageType.GROUP_PEER.id + ")"
+      "' AND (type == 2 OR type == 4 OR type == " +
+      MessageType.ACTION.id + " OR type == " + MessageType.GROUP_PEER.id + ")"
     mDb.execSQL(query)
     this.close()
     Log.d("", "marked incoming messages as read")

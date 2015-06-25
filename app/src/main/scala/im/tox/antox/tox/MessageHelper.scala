@@ -105,8 +105,7 @@ object MessageHelper {
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
               Some(
-                if (isAction) friend.sendAction(splitMsg) else friend.sendMessage(splitMsg)
-                )
+                if (isAction) friend.sendAction(splitMsg) else friend.sendMessage(splitMsg))
             } catch {
               case e: Exception =>
                 None

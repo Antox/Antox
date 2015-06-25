@@ -7,7 +7,7 @@ import im.tox.tox4j.av.enums.ToxCallState
 class Call(val friendNumber: Int) {
 
   var active = false
-  var state: ToxCallState = ToxCallState.END
+  var state: Set[ToxCallState] = Set(ToxCallState.FINISHED)
 
   var _audioBitRate: Int = 0
   var _videoBitRate: Int = 0
@@ -52,12 +52,10 @@ class Call(val friendNumber: Int) {
   def muteMic(): Unit = {
     audioBitRate = 0
     audioCapture.stopCapture()
-    ToxSingleton.toxAv.setAudioBitRate(friendNumber, audioBitRate, force = true)
   }
 
   def muteVideo(): Unit = {
     videoBitRate = 0
-    ToxSingleton.toxAv.setVideoBitRate(friendNumber, videoBitRate, force = true)
   }
 
   def endCall(): Unit = {
@@ -76,11 +74,11 @@ class Call(val friendNumber: Int) {
   //setters
   def audioBitRate_= (newAudioBitRate: Int): Unit = {
     _audioBitRate = newAudioBitRate
-    ToxSingleton.toxAv.setAudioBitRate(friendNumber, newAudioBitRate, force = true)
+    ToxSingleton.toxAv.audioBitRateSet(friendNumber, newAudioBitRate, force = true)
   }
 
   def videoBitRate_= (newVideoBitRate: Int): Unit = {
     _videoBitRate = newVideoBitRate
-    ToxSingleton.toxAv.setVideoBitRate(friendNumber, newVideoBitRate, force = true)
+    ToxSingleton.toxAv.videoBitRateSet(friendNumber, newVideoBitRate, force = true)
   }
 }

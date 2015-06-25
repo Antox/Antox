@@ -1,20 +1,24 @@
 package im.tox.antox.callbacks
 
+import java.util
+
 import android.content.Context
 import android.util.Log
-import im.tox.antox.tox.{ToxSingleton}
+import im.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.av.callbacks.CallStateCallback
 import im.tox.tox4j.av.enums.ToxCallState
-import im.tox.tox4j.exceptions.ToxException
+
+import scala.collection.JavaConversions._
 
 class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallback {
-  override def callState(friendNumber: Int, state: Int): Unit = {
-    Log.d("OnAvCallbackCallback", "Received a callback from: " + friendNumber)
-    val toxSingleton = ToxSingleton.getInstance
-    val call = ToxSingleton.getAntoxFriend(friendNumber).get.call
-    /* call.state = Some(state)
 
-    callState match {
+  override def callState(friendNumber: Int, collectionState: util.Collection[ToxCallState]): Unit = {
+    Log.d("OnAvCallbackCallback", "Received a callback from: " + friendNumber)
+    val call = ToxSingleton.getAntoxFriend(friendNumber).get.call
+    val state = collectionState.toSet
+    call.state = state
+
+    /* switch {
       case ToxCallState.SENDING_AV =>
       //do nothing
       case ToxCallState.SENDING_A =>
@@ -51,4 +55,5 @@ class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallba
             case e: ToxException => e.printStackTrace
           } */
   }
+
 }
