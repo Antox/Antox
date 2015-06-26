@@ -18,7 +18,7 @@ import im.tox.antox.data.State
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{BitmapManager, Constants, IconColor}
-import im.tox.antox.wrapper.{ToxKey, FileKind, FriendInfo, UserStatus}
+import im.tox.antox.wrapper.{FileKind, FriendInfo, ToxKey, UserStatus}
 import im.tox.antoxnightly.R
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -44,12 +44,8 @@ class ChatActivity extends GenericChatActivity {
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.isOnline) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        if (!isFriendOnline)
+          return
 
         val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
         val fileDialog = new FileDialog(thisActivity, mPath, false)
@@ -65,12 +61,8 @@ class ChatActivity extends GenericChatActivity {
 
     cameraButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.online) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        if (!isFriendOnline)
+          return
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
@@ -91,17 +83,27 @@ class ChatActivity extends GenericChatActivity {
 
     imageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.isOnline) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        if (!isFriendOnline)
+          return
 
         val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
+  }
+
+  /**
+   * Checks to see if the friend is currently online. Will display a toast to the user if the friend
+   * is offline
+   */
+   def isFriendOnline: Boolean = {
+     ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+       if (!friend.isOnline)
+         Toast.makeText(this, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+         return false
+     })
+
+     true
   }
 
   override def onResume() = {
@@ -175,10 +177,6 @@ class ChatActivity extends GenericChatActivity {
       Log.d(TAG, "onActivityResult result code not okay, user cancelled")
     }
   }
-
-  def onClickVoiceCallFriend(v: View){}
-
-  def onClickVideoCallFriend(v: View): Unit = {}
 
   def onClickInfo(v: View): Unit = {}
 
