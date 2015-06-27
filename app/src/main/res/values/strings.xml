@@ -53,6 +53,7 @@
     <string name="chat_file_transfer">File transfer</string>
     <string name="chat_message_too_long">This message is too long and cannot be sent</string>
     <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
+    <string name="call_friend">Call User</string>
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
