@@ -17,10 +17,11 @@ class AudioCapture {
 
   var capturing: Boolean = false
 
-  def startCapture(bitrate: Int): Unit = {
+  def startCapture(sampleRate: Int, channels: Int): Unit = {
     if (capturing) stopCapture() //if already capturing stop and reset the audio record with a (possibly new) bitrate
+    require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
 
-    mAudioRecord = findAudioRecord(bitrate)
+    mAudioRecord = findAudioRecord(sampleRate, channels)
     mAudioRecord match {
       case Some(audioRecord) => audioRecord.startRecording()
       case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
@@ -29,8 +30,10 @@ class AudioCapture {
     capturing = true
   }
 
-  def getAudio(): Unit = {
-    //do something
+  def readAudio(frames: Int): Array[Short] = {
+    val audio = Array.ofDim[Short](frames)
+    mAudioRecord.foreach(ar => ar.read(audio, 0, frames))
+    audio
   }
 
   def stopCapture(): Unit = {
@@ -51,16 +54,24 @@ class AudioCapture {
     }
   }
 
-  private def findAudioRecord(bitrate: Int): Option[AudioRecord] = {
+  private def findAudioRecord(sampleRate: Int, channels: Int): Option[AudioRecord] = {
     try {
       val audioFormat = AudioFormat.ENCODING_PCM_16BIT
-      val channelConfig = AudioFormat.CHANNEL_IN_MONO
-      Log.d("CaptureAudio", "Attempting rate " + bitrate + "Hz, bits: " + audioFormat +
+
+      //currently only support 2 channels
+      val channelConfig =
+        if(channels == 1) {
+          AudioFormat.CHANNEL_IN_MONO
+        } else {
+          AudioFormat.CHANNEL_IN_STEREO
+        }
+
+      Log.d("CaptureAudio", "Attempting rate " + sampleRate + "Hz, bits: " + audioFormat +
         ", channel: " +
         channelConfig)
-      val bufferSize = AudioRecord.getMinBufferSize(bitrate, channelConfig, audioFormat)
+      val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
       if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
-        val recorder = new AudioRecord(0, bitrate, channelConfig, audioFormat,
+        val recorder = new AudioRecord(0, sampleRate, channelConfig, audioFormat,
           bufferSize)
         if (recorder.getState == AudioRecord.STATE_INITIALIZED) {
           bufferSizeBytes = bufferSize

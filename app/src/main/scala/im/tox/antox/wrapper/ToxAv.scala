@@ -1,9 +1,10 @@
 package im.tox.antox.wrapper
 
-import im.tox.antox.tox.Intervals
+import im.tox.antox.tox.{ToxSingleton, Intervals}
 import im.tox.tox4j.av.callbacks._
 import im.tox.tox4j.av.enums.ToxCallControl
 import im.tox.tox4j.impl.jni.{ToxCoreImpl, ToxAvImpl}
+import scala.collection.JavaConversions._
 
 class ToxAv(core: ToxCoreImpl) extends Intervals {
 
@@ -13,7 +14,11 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(): Unit = toxAv.iterate()
 
-  override def interval: Int = toxAv.iterationInterval / 4
+  override def interval: Int =
+    //FIXME: get mannol to fix toxav
+    if (isCallActive) 0 else toxAv.iterationInterval
+
+  def isCallActive = ToxSingleton.getAntoxFriendList.all().exists(p => p.call.active)
 
   def answer(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.answer(friendNumber, audioBitRate, videoBitRate)

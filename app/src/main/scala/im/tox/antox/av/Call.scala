@@ -9,6 +9,12 @@ class Call(val friendNumber: Int) {
   var active = false
   var state: Set[ToxCallState] = Set(ToxCallState.FINISHED)
 
+  val sampleRate = 48000
+  val audioLength = 60 //in ms
+  val channels = 1
+
+  def frameSize = (sampleRate * audioLength) / 1000
+
   var _audioBitRate: Int = 0
   var _videoBitRate: Int = 0
 
@@ -34,15 +40,34 @@ class Call(val friendNumber: Int) {
     this.receivingVideo = receivingVideo
   }
 
+  def onAnswered(): Unit = {
+    callStarted(audioBitRate, videoBitRate)
+  }
+
   private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
     this.audioBitRate = audioBitRate
     this.videoBitRate = videoBitRate
 
-    active = true
-  }
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        audioCapture.startCapture(sampleRate)
 
-  def onAnswered(): Unit = {
-    if (!sendingAudio) audioCapture.startCapture(audioBitRate)
+        while (active) {
+          val start = System.nanoTime()
+          ToxSingleton.toxAv.audioSendFrame(friendNumber,
+            audioCapture.readAudio(frameSize),
+            frameSize, channels, sampleRate)
+
+          val timeTaken = System.nanoTime() - start
+          if (timeTaken < audioLength)
+            Thread.sleep((audioLength - (timeTaken / 10^6)) - 1)
+        }
+
+        audioCapture.stopCapture()
+      }
+    }).start()
+
+    active = true
   }
 
   def onAudioFrame(pcm: Array[Short]): Unit = {

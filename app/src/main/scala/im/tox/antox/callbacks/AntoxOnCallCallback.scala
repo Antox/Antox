@@ -10,7 +10,7 @@ import im.tox.tox4j.exceptions.ToxException
 class AntoxOnCallCallback(private var ctx: Context) extends CallCallback {
 
   override def call(friendNumber: Int, audioEnabled: Boolean, videoEnabled: Boolean): Unit = {
-    ToxSingleton.getAntoxFriend(friendNumber).get.call.answerCall(0, 0, audioEnabled, videoEnabled)
+    ToxSingleton.getAntoxFriend(friendNumber).get.call.answerCall(42, 0, audioEnabled, videoEnabled)
   }
 
   //override def callState(friendNumber: Int, callState: ToxCallState): Unit = {
