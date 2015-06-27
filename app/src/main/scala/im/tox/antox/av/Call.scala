@@ -74,11 +74,11 @@ class Call(val friendNumber: Int) {
   //setters
   def audioBitRate_= (newAudioBitRate: Int): Unit = {
     _audioBitRate = newAudioBitRate
-    ToxSingleton.toxAv.audioBitRateSet(friendNumber, newAudioBitRate, force = true)
+    //ToxSingleton.toxAv.audioBitRateSet(friendNumber, newAudioBitRate, force = true)
   }
 
   def videoBitRate_= (newVideoBitRate: Int): Unit = {
     _videoBitRate = newVideoBitRate
-    ToxSingleton.toxAv.videoBitRateSet(friendNumber, newVideoBitRate, force = true)
+    //ToxSingleton.toxAv.videoBitRateSet(friendNumber, newVideoBitRate, force = true)
   }
 }

@@ -13,7 +13,7 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(): Unit = toxAv.iterate()
 
-  override def interval: Int = toxAv.iterationInterval
+  override def interval: Int = toxAv.iterationInterval / 4
 
   def answer(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.answer(friendNumber, audioBitRate, videoBitRate)

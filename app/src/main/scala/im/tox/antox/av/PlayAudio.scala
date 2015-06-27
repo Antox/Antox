@@ -13,16 +13,17 @@ class PlayAudio {
       if (audioTrack == null || audioTrack.getState == AudioTrack.STATE_UNINITIALIZED){
         audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 48000, AudioFormat.CHANNEL_OUT_MONO,
           AudioFormat.ENCODING_PCM_16BIT, data.length * 2, AudioTrack.MODE_STREAM) //TODO: change this back to a phone call
+        audioTrack.play ()
+        println("recreateing audio whatever")
       }
-          audioTrack.play ()
           audioTrack.write (data, 0, data.length)
-          audioTrack.stop ()
     } catch {
       case e: Exception => Log.e("AudioPlayback", e.getMessage)
     }
   }
 
-  def cleanUp(): Unit ={
+  def cleanUp(): Unit = {
+    audioTrack.stop ()
     audioTrack.flush()
     audioTrack.release()
   }
