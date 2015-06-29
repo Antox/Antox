@@ -106,23 +106,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
   }
 
-  override def onCreateOptionsMenu(menu: Menu): Boolean = {
-    // Inflate the menu items for use in the action bar
-    val inflater: MenuInflater = getMenuInflater
-    inflater.inflate(R.menu.chat_activity, menu)
-    super.onCreateOptionsMenu(menu)
-  }
-
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
-    // Start call activity if menu button was selected
-    if (item.getItemId == R.id.callButton) {
-      val callActivity = new Intent(this, classOf[CallActivity])
-      // Add avatar and nickname as extras
-      callActivity.putExtra("key", activeKey)
-      callActivity.putExtra("name", displayNameView.getText)
-      startActivity(callActivity)
-    }
-
     super.onOptionsItemSelected(item)
   }
 

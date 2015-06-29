@@ -6,4 +6,8 @@
         antox:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_call"
         />
+    <item
+        android:id="@+id/laksdjf"
+        android:title="asdlfk"
+        android:icon="@layout/avatar_actionview"/>
 </menu>

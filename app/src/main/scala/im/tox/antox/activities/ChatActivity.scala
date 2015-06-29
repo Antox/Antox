@@ -37,15 +37,20 @@ class ChatActivity extends GenericChatActivity {
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
-    /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
+    /* Set up on click actions for attachment buttons.
+    TODO: Could possibly just add onClick to the XML? */
     val attachmentButton = this.findViewById(R.id.attachmentButton)
     val cameraButton = this.findViewById(R.id.cameraButton)
     val imageButton = this.findViewById(R.id.imageButton)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        if (!isFriendOnline)
-          return
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.isOnline) {
+            displayOfflineToast()
+            return
+          }
+        })
 
         val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
         val fileDialog = new FileDialog(thisActivity, mPath, false)
@@ -61,8 +66,12 @@ class ChatActivity extends GenericChatActivity {
 
     cameraButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        if (!isFriendOnline)
-          return
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.isOnline) {
+            displayOfflineToast()
+            return
+          }
+        })
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
@@ -83,8 +92,12 @@ class ChatActivity extends GenericChatActivity {
 
     imageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        if (!isFriendOnline)
-          return
+        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
+          if (!friend.isOnline) {
+            displayOfflineToast()
+            return
+          }
+        })
 
         val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, Constants.IMAGE_RESULT)
@@ -93,18 +106,12 @@ class ChatActivity extends GenericChatActivity {
   }
 
   /**
-   * Checks to see if the friend is currently online. Will display a toast to the user if the friend
-   * is offline
+   * Display a toast to the user indicating that a file
+   * transfer failed because the active friend is offline
    */
-   def isFriendOnline: Boolean = {
-     ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-       if (!friend.isOnline)
-         Toast.makeText(this, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-         return false
-     })
-
-     true
-  }
+   def displayOfflineToast(): Unit = {
+    Toast.makeText(this, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+   }
 
   override def onResume() = {
     super.onResume()
@@ -179,6 +186,18 @@ class ChatActivity extends GenericChatActivity {
   }
 
   def onClickInfo(v: View): Unit = {}
+
+  def onClickVoiceCall(v: View): Unit = {
+    val callActivity = new Intent(this, classOf[CallActivity])
+    // Add avatar and nickname as extras
+    callActivity.putExtra("key", activeKey.toString)
+    callActivity.putExtra("name", displayNameView.getText)
+    startActivity(callActivity)
+  }
+
+  def onClickVideoCall(v: View): Unit = {
+    //do nothing
+  }
 
   override def onPause() = {
     super.onPause()

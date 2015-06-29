@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/friend_profile_nick"
-        android:id="@+id/friendName"
+        android:id="@+id/friend_name"
         android:textSize="20sp"
         android:paddingTop="20dp"
         android:textStyle="bold"
@@ -32,15 +32,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:weightSum="2"
+        android:weightSum="3"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="46dp"
-        android:layout_above="@+id/endCallCircle"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/friend_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <ImageView
-            android:onClick="onClickMicOn"
             android:id="@+id/mic_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +47,6 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:onClick="onClickMicOff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -57,7 +55,6 @@
             android:id="@+id/mic_off" />
 
         <ImageView
-            android:onClick="onClickVolumeOn"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +62,6 @@
             android:id="@+id/volume_on" />
 
         <ImageView
-            android:onClick="onClickVolumeOff"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -73,47 +69,42 @@
             android:id="@+id/volume_off"
             android:visibility="gone" />
 
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_videocam_black_36dp"
+            android:id="@+id/video_on"
+            android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_videocam_off_black_36dp"
+            android:id="@+id/video_off"/>
     </LinearLayout>
 
 
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/endCallCircle"
+    <FrameLayout
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@color/red"
+        android:layout_marginBottom="8dp"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/avatar"
-        android:layout_toStartOf="@+id/avatar" />
+        android:layout_centerInParent="true">
 
-    <ImageView
-        android:id="@+id/endCallIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_call_end_white_36dp"
-        android:paddingBottom="17dp"
-        android:paddingRight="14dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/endCallCircle"
-        android:layout_alignEnd="@+id/endCallCircle" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/endCallCircle"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@color/red"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/startVideoCircle"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:src="@color/green"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/avatar"
-        android:layout_toEndOf="@+id/avatar" />
+        <ImageView
+            android:id="@+id/endCallIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_call_end_white_36dp"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/startVideoIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_videocam_white_36dp"
-        android:paddingBottom="17dp"
-        android:paddingRight="14dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/startVideoCircle"
-        android:layout_alignEnd="@+id/startVideoCircle" />
 </RelativeLayout>

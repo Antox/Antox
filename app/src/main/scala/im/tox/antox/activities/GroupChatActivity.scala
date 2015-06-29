@@ -17,6 +17,10 @@ class GroupChatActivity extends GenericChatActivity {
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
 
+    findViewById(R.id.info).setVisibility(View.GONE)
+    findViewById(R.id.call).setVisibility(View.GONE)
+    findViewById(R.id.video).setVisibility(View.GONE)
+
     statusIconView.setVisibility(View.GONE)
   }
 
