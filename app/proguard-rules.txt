@@ -3,6 +3,7 @@
 -keep class scala.collection.SeqLike {
 public protected *;
 }
+
 # This proguard config is originally from: https://github.com/comb/maven-android-scala-prototype
 -dontobfuscate
 -dontoptimize

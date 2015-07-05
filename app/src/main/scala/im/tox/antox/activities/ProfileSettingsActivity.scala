@@ -11,8 +11,9 @@ import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v7.app.AlertDialog
-import android.view.{MenuItem, View}
-import android.widget.{ImageButton, Toast}
+import android.support.v7.widget.Toolbar
+import android.view.{ViewGroup, MenuItem, View}
+import android.widget.{LinearLayout, ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._

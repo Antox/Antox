@@ -6,8 +6,7 @@
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
     android:orientation="horizontal"
-    android:paddingTop="30dp"
-    android:paddingLeft="15dp"
+    android:paddingTop="48dp"
     android:weightSum="1">
 
     <ImageView
@@ -21,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="5dp"
-        android:text="SETTINGS"
+        android:text="Settings"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white" />
 </LinearLayout>

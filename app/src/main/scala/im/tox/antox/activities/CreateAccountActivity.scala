@@ -34,6 +34,10 @@ class CreateAccountActivity extends AppCompatActivity {
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow.setStatusBarColor(getResources.getColor(R.color.material_blue_grey_950))
+    }
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {

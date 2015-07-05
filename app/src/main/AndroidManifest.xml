@@ -34,7 +34,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/ic_actionbar"
-        android:theme="@style/CustomActionBarTheme" >
+        android:theme="@style/AntoxTheme" >
         <service
             android:name="im.tox.antox.tox.ToxService"
             android:exported="false"
@@ -49,6 +49,7 @@
         <activity
             android:name="im.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
+            android:theme="@style/AntoxTheme.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity

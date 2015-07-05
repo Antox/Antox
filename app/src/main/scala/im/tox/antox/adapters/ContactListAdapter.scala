@@ -127,12 +127,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         holder.avatar.setImageResource(R.color.grey_light)
       }
 
+      val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        holder.icon.setBackground(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+        holder.icon.setBackground(drawable)
       } else {
-        holder.icon.setBackgroundDrawable(context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status)))
+        holder.icon.setBackgroundDrawable(drawable)
       }
-
       if (item.favorite) {
         val drawable = context.getResources.getDrawable(R.drawable.ic_star_deep_purple_900_24dp)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

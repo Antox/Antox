@@ -364,6 +364,7 @@ object ToxSingleton {
 
 
   def registerCallbacks(ctx: Context): Unit = {
+    tox.callbackSelfConnectionStatus(new AntoxOnSelfConnectionStatusCallback(ctx))
     tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
     tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
     tox.callbackFriendConnectionStatus(new AntoxOnConnectionStatusCallback(ctx))
