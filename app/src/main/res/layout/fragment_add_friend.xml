@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/addfriend_friendAlias"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:hint="@string/addfriend_nick_hint" />
 
@@ -49,8 +49,9 @@
             android:id="@+id/addfriend_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_marginTop="10dp"
+            android:inputType="textMultiLine"
+            android:maxLines="8"
+            android:layout_marginTop="@dimen/margin_large"
             android:gravity="center"
             android:hint="@string/addfriend_friend_message" />
 
