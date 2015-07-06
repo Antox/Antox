@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
@@ -16,6 +18,7 @@ import im.tox.antox.toxdns.ToxDNS
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.antoxnightly.R
+import im.tox.tox4j.core.ToxCoreConstants
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
@@ -53,6 +56,8 @@ class AddFriendFragment extends Fragment with InputableID {
     friendID = rootView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
     friendMessage = rootView.findViewById(R.id.addfriend_message).asInstanceOf[EditText]
     friendAlias = rootView.findViewById(R.id.addfriend_friendAlias).asInstanceOf[EditText]
+
+    friendMessage.setFilters(Array[InputFilter](new LengthFilter(ToxCoreConstants.MAX_FRIEND_REQUEST_LENGTH)))
 
     rootView.findViewById(R.id.add_friend_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {

@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/addgroup_groupAlias"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:hint="@string/addgroup_alias_hint" />
 
