@@ -52,8 +52,8 @@ class AntoxFriendList {
     friends.filter(friend => !friend.isOnline)
   }
 
-  def all(): util.List[Friend] = {
-    new util.ArrayList[Friend](this.friends)
+  def all: util.List[Friend] = {
+    this.friends
   }
 
   def addFriend(friendnumber: Int): Friend = {

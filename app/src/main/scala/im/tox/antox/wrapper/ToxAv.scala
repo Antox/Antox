@@ -14,11 +14,13 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(): Unit = toxAv.iterate()
 
-  override def interval: Int =
+  override def interval: Int = 0
     //FIXME: get mannol to fix toxav
-    if (isCallActive) 0 else toxAv.iterationInterval
+    //if (activeCall.isDefined) 0 else toxAv.iterationInterval
 
-  def isCallActive = ToxSingleton.getAntoxFriendList.all().exists(p => p.call.active)
+  def activeCall = ToxSingleton.getAntoxFriendList.all.find(p => p.call.active)
+
+  def onHoldCall = ToxSingleton.getAntoxFriendList.all.find(p => p.call.onHold)
 
   def answer(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.answer(friendNumber, audioBitRate, videoBitRate)

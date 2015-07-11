@@ -6,6 +6,11 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
+import im.tox.antox.activities.{ChatActivity, CallActivity}
+import im.tox.antox.callbacks.AntoxOnCallCallback
+import im.tox.antox.wrapper.Friend
+import rx.Observer
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class ToxService extends Service() {
 

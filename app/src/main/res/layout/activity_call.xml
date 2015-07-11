@@ -15,7 +15,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@color/grey_light"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="70dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:weightSum="3"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:layout_below="@+id/friend_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -85,26 +85,52 @@
             android:id="@+id/video_off"/>
     </LinearLayout>
 
-
-    <FrameLayout
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginBottom="8dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
         android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/endCallCircle"
+        android:layout_centerInParent="true"
+        android:baselineAligned="false">
+        <FrameLayout
+            android:id="@+id/endCallButton"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:src="@color/red"/>
+            android:layout_weight="1"
+            android:layout_marginBottom="8dp">
 
-        <ImageView
-            android:id="@+id/endCallIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_call_end_white_36dp"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/endCallCircle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/red"/>
+
+            <ImageView
+                android:id="@+id/endCallIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_call_end_white_36dp"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/answerCallButton"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="8dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/green"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_call_white_36dp"/>
+        </FrameLayout>
+    </LinearLayout>
 
 </RelativeLayout>

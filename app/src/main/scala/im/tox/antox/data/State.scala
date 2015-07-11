@@ -36,7 +36,7 @@ object State {
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
     if (!preferences.getBoolean("logging_enabled", true)) {
       val db = new AntoxDB(activity)
-      ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
+      ToxSingleton.getAntoxFriendList.all.foreach(f => db.deleteChatLogs(f.key))
     }
 
     //workaround for contacts appearing offline when the DB is upgraded

@@ -30,9 +30,9 @@ class AudioCapture {
     capturing = true
   }
 
-  def readAudio(frames: Int): Array[Short] = {
-    val audio = Array.ofDim[Short](frames)
-    mAudioRecord.foreach(ar => ar.read(audio, 0, frames))
+  def readAudio(frames: Int, channels: Int): Array[Short] = {
+    val audio = Array.ofDim[Short](frames * channels)
+    mAudioRecord.foreach(ar => ar.read(audio, 0, frames * channels))
     audio
   }
 
@@ -58,7 +58,7 @@ class AudioCapture {
     try {
       val audioFormat = AudioFormat.ENCODING_PCM_16BIT
 
-      //currently only support 2 channels
+      //currently only support up to 2 channels
       val channelConfig =
         if(channels == 1) {
           AudioFormat.CHANNEL_IN_MONO

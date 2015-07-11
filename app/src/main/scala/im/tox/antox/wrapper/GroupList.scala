@@ -48,8 +48,8 @@ class GroupList {
     groups.filter(group => group.name != null && group.name.contains(partialLowered))
   }
 
-  def all(): util.List[Group] = {
-    new util.ArrayList[Group](this.groups)
+  def all: util.List[Group] = {
+    this.groups
   }
 
   def addGroup(group: Group): Unit = {

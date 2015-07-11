@@ -3,58 +3,58 @@ package im.tox.antox.av
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AudioCapture
 import im.tox.tox4j.av.enums.{ToxCallControl, ToxCallState}
+import rx.lang.scala.subjects.BehaviorSubject
 
 class Call(val friendNumber: Int) {
 
-  var active = false
-  var state: Set[ToxCallState] = Set(ToxCallState.FINISHED)
+  private var friendState: Set[ToxCallState] = Set()
+  val friendStateSubject = BehaviorSubject[Set[ToxCallState]](friendState)
 
-  val sampleRate = 48000 //in Hz
-  val audioLength = 60 //in ms
-  val channels = 1
+  private var selfState = SelfCallState.DEFAULT
 
-  def frameSize = (sampleRate * audioLength) / 1000
+  private val sampleRate = 48000 //in Hz
+  private val audioLength = 20 //in ms
+  private val channels = 2
 
-  var initialAudioBitRate = 0
-  var initialVideoBitrate = 0
+  val ringing = BehaviorSubject[Boolean](false)
+  var incoming = false
 
-  var _audioBitRate: Int = 0
-  var _videoBitRate: Int = 0
-
-  def sendingAudio = audioBitRate > 0
-  def sendingVideo = videoBitRate > 0
-
-  def receivingAudio = state.contains(ToxCallState.SENDING_A)
-  def receivingVideo = state.contains(ToxCallState.SENDING_V)
+  def active = friendState.nonEmpty && !friendState.contains(ToxCallState.FINISHED)
+  def onHold = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture()
+  val audioPlayer = new AudioPlayer(sampleRate, channels)
 
-  val playAudio = new PlayAudio()
+  private def frameSize = (sampleRate * audioLength) / 1000
+
+  friendStateSubject.subscribe(_ => {
+    if (active) {
+      ringing.onNext(false)
+    }
+  })
 
   def startCall(audioBitRate: Int, videoBitRate: Int): Unit = {
     ToxSingleton.toxAv.call(friendNumber, audioBitRate, videoBitRate)
-
-    initialAudioBitRate = audioBitRate
-    initialVideoBitrate = videoBitRate
-
-    this.audioBitRate = audioBitRate
-    this.videoBitRate = videoBitRate
+    selfState = selfState.copy(audioBitRate = audioBitRate, videoBitRate = videoBitRate)
+    incoming = false
+    ringing.onNext(true)
   }
 
-  def answerCall(audioBitRate: Int, videoBitRate: Int, receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
-    ToxSingleton.toxAv.answer(friendNumber, audioBitRate, videoBitRate)
-
-    initialAudioBitRate = audioBitRate
-    initialVideoBitrate = videoBitRate
-
-    this.audioBitRate = audioBitRate
-    this.videoBitRate = videoBitRate
-
-    callStarted(audioBitRate, videoBitRate)
+  def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
+    ToxSingleton.toxAv.answer(friendNumber, selfState.audioBitRate, selfState.videoBitRate)
+    callStarted(selfState.audioBitRate, selfState.videoBitRate)
+    ringing.onNext(false)
   }
 
-  def onAnswered(): Unit = {
-    callStarted(audioBitRate, videoBitRate)
+  def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
+    incoming = true
+    ringing.onNext(true)
+    selfState = selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo)
+  }
+
+  def updateFriendState(state: Set[ToxCallState]): Unit = {
+    friendState = state
+    friendStateSubject.onNext(friendState)
   }
 
   private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
@@ -64,9 +64,9 @@ class Call(val friendNumber: Int) {
 
         while (active) {
           val start = System.nanoTime()
-          if (sendingAudio) {
+          if (selfState.sendingAudio) {
             ToxSingleton.toxAv.audioSendFrame(friendNumber,
-              audioCapture.readAudio(frameSize),
+              audioCapture.readAudio(frameSize, channels),
               frameSize, channels, sampleRate)
           }
 
@@ -79,69 +79,57 @@ class Call(val friendNumber: Int) {
       }
     }).start()
 
-    active = true
+    audioPlayer.start()
   }
 
   def onAudioFrame(pcm: Array[Short]): Unit = {
-    playAudio.playAudioFrame(pcm)
+    audioPlayer.bufferAudioFrame(pcm)
   }
 
   def muteSelfAudio(): Unit = {
-    audioBitRate = 0
+    selfState = selfState.copy(audioMuted = true)
+    ToxSingleton.toxAv.audioBitRateSet(friendNumber, 0, force = true)
     audioCapture.stopCapture()
   }
 
   def unmuteSelfAudio(): Unit = {
-    audioBitRate = initialAudioBitRate
+    selfState = selfState.copy(audioMuted = false)
     audioCapture.startCapture(sampleRate, channels)
   }
 
   def hideSelfVideo(): Unit = {
-    videoBitRate = 0
+    selfState = selfState.copy(videoHidden = true)
   }
 
   def showSelfVideo(): Unit = {
-    videoBitRate = initialVideoBitrate
+    selfState = selfState.copy(videoHidden = false)
+    //TODO
   }
 
-  def muteSpeaker(): Unit = {
+  def muteFriendAudio(): Unit = {
     ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.MUTE_AUDIO)
   }
 
-  def unmuteSpeaker(): Unit = {
+  def unmuteFriendAudio(): Unit = {
     ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.UNMUTE_AUDIO)
   }
 
-  def hideVideo(): Unit = {
+  def hideFriendVideo(): Unit = {
     ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.HIDE_VIDEO)
   }
 
-  def showVideo(): Unit = {
+  def showFriendVideo(): Unit = {
     ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.SHOW_VIDEO)
   }
 
   def end(): Unit = {
+    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.CANCEL)
     audioCapture.stopCapture()
     cleanUp()
-    active = false
   }
 
   private def cleanUp(): Unit = {
+    audioPlayer.cleanUp()
     audioCapture.cleanUp()
-  }
-
-  //getters
-  def audioBitRate = _audioBitRate
-  def videoBitRate = _videoBitRate
-
-  //setters
-  def audioBitRate_= (newAudioBitRate: Int): Unit = {
-    _audioBitRate = newAudioBitRate
-    //ToxSingleton.toxAv.audioBitRateSet(friendNumber, newAudioBitRate, force = true)
-  }
-
-  def videoBitRate_= (newVideoBitRate: Int): Unit = {
-    _videoBitRate = newVideoBitRate
-    //ToxSingleton.toxAv.videoBitRateSet(friendNumber, newVideoBitRate, force = true)
   }
 }

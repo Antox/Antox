@@ -16,7 +16,7 @@ class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallba
     Log.d("OnAvCallbackCallback", "Received a callback from: " + friendNumber)
     val call = ToxSingleton.getAntoxFriend(friendNumber).get.call
     val state = collectionState.toSet
-    call.state = state
+    call.updateFriendState(state)
 
     /* switch {
       case ToxCallState.SENDING_AV =>
