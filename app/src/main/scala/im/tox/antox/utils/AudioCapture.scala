@@ -2,30 +2,25 @@ package im.tox.antox.utils
 
 import android.media.{AudioFormat, AudioRecord}
 import android.util.Log
+import im.tox.antox.av.AudioDevice
 import im.tox.antox.exceptions.AvDeviceNotFoundException
 import im.tox.antox.tox.ToxSingleton
 import rx.lang.scala.Observable
 
 import scala.None
 
-class AudioCapture(var _sampleRate: Int, var _channels: Int) {
+class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sampleRate, _channels) {
 
   val TAG = "im.tox.antox.utils.CaptureAudio"
+
+  var active: Boolean = false
+  var dirty = true
 
   var bufferSizeBytes: Int = _
   var mAudioRecord: Option[AudioRecord] = None
 
-  var capturing: Boolean = false
-
-  // if the track is dirty it will be recreated on the next playback
-  private var dirty = true
-
   def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
-  }
-
-  def startCapture(sampleRate: Int, channels: Int): Unit = {
-    if (capturing) stopCapture() //if already capturing stop and reset the audio record with a (possibly new)
 
     mAudioRecord = findAudioRecord(sampleRate, channels)
     mAudioRecord match {
@@ -33,22 +28,40 @@ class AudioCapture(var _sampleRate: Int, var _channels: Int) {
       case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
     }
 
-    capturing = true
+    dirty = false
   }
 
-  def readAudio(frames: Int, channels: Int): Array[Short] = {
+  def start(): Unit = {
+    recreate()
+
+    active = true
+  }
+
+  def readAudio(frames: Int, readChannels: Int): Array[Short] = {
+    if (this.channels != readChannels) {
+      channels = readChannels
+    }
+
+    if (dirty) {
+      recreate()
+    }
+
     val audio = Array.ofDim[Short](frames * channels)
     mAudioRecord.foreach(ar => ar.read(audio, 0, frames * channels))
     audio
   }
 
-  def stopCapture(): Unit = {
-    mAudioRecord.foreach(_.stop())
-    capturing = false
+  def stop(): Unit = {
+    mAudioRecord.foreach(audioRecord => {
+      if (audioRecord.getState == AudioRecord.STATE_INITIALIZED) {
+        audioRecord.stop()
+      }
+    })
+    active = false
   }
 
   def cleanUp(): Unit = {
-    stopCapture()
+    stop()
     mAudioRecord.foreach(_.release())
   }
 
@@ -66,7 +79,7 @@ class AudioCapture(var _sampleRate: Int, var _channels: Int) {
 
       Log.d("CaptureAudio", "Attempting rate " + sampleRate + "Hz, bits: " + audioFormat +
         ", channel: " +
-        channelConfig)
+        channels)
       val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
       if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
         val recorder = new AudioRecord(0, sampleRate, channelConfig, audioFormat,
@@ -84,18 +97,5 @@ class AudioCapture(var _sampleRate: Int, var _channels: Int) {
     None
   }
 
-  //getters
-  def sampleRate = _sampleRate
-  def channels = _channels
 
-  //setters
-  def sampleRate_= (sampleRate: Int): Unit = {
-    _sampleRate = sampleRate
-    dirty = true
-  }
-
-  def channels_= (channels: Int): Unit = {
-    _channels = channels
-    dirty = true
-  }
 }

@@ -235,7 +235,7 @@ class CallActivity extends Activity {
     // its original size and center it in the call view
     val lp = new LinearLayout.LayoutParams(
       TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, callButtonSize, getResources.getDisplayMetrics).asInstanceOf[Int],
-      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, callButtonSize, getResources.getDisplayMetrics).asInstanceOf[Int], 1f)
+      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, callButtonSize, getResources.getDisplayMetrics).asInstanceOf[Int], 2f)
 
     findViewById(R.id.end_call_frame).setLayoutParams(lp)
   }

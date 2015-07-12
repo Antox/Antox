@@ -14,9 +14,7 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(): Unit = toxAv.iterate()
 
-  override def interval: Int = 0
-    //FIXME: get mannol to fix toxav
-    //if (activeCall.isDefined) 0 else toxAv.iterationInterval
+  override def interval: Int = if (activeCall.isDefined) toxAv.iterationInterval / 4 else 0
 
   def activeCall = ToxSingleton.getAntoxFriendList.all.find(p => p.call.active)
 

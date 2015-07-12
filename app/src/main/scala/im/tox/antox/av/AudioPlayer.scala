@@ -4,17 +4,15 @@ import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
 import org.apache.commons.collections4.queue.CircularFifoQueue
 
-class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8) {
+class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 8) extends AudioDevice(_sampleRate, _channels) {
 
-  private var running = false
+  var active = false
+  var dirty = true
 
   private var mAudioTrack: Option[AudioTrack] = None
-  private val audioBuffer = new CircularFifoQueue[Array[Short]](bufferSize)
+  private val audioBuffer = new CircularFifoQueue[(Array[Short], Int, Int)](bufferSize)
 
-  // if the track is dirty it will be recreated on the next playback
-  private var dirty = true
-
-  def recreateAudioTrack(): Unit = {
+  def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
 
     //currently only support 2 channels
@@ -33,17 +31,25 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
     println("recreating audio whatever")
   }
 
-  def bufferAudioFrame(data: Array[Short]): Unit ={
-    audioBuffer.add(data)
+  def bufferAudioFrame(data: Array[Short], channels: Int, sampleRate: Int): Unit = {
+    audioBuffer.add(data, channels, sampleRate)
   }
 
   //returns the duration in milliseconds of the playback
   def playAudioFrame(): Int = {
-    if (dirty) recreateAudioTrack()
+    if (audioBuffer.peek() != null) {
+      //update sample rate and channels if they've changed
+      val (data, newChannels, newSampleRate) = audioBuffer.poll()
+      if (channels != newChannels) {
+        channels = newChannels
+      }
 
-    val data = audioBuffer.poll()
+      if (sampleRate != newSampleRate) {
+        sampleRate = newSampleRate
+      }
 
-    if (data != null) {
+      if (dirty) recreate()
+
       try {
         // mAudioTrack shouldn't ever be None here. fail fast with .get
         mAudioTrack.get.write(data, 0, data.length)
@@ -57,12 +63,12 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
   }
 
   def start(): Unit = {
-    if (running) return
+    if (active) return
 
-    running = true
+    active = true
     new Thread(new Runnable {
       override def run(): Unit = {
-        while (running) {
+        while (active) {
           val sleepTime = playAudioFrame()
           Thread.sleep(sleepTime)
         }
@@ -71,7 +77,7 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
   }
 
   def stop(): Unit = {
-    running = false
+    active = false
   }
 
   def cleanUp(): Unit = {
@@ -82,20 +88,4 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
       audioTrack.release()
     })
   }
-
-  //getters
-  def sampleRate = _sampleRate
-  def channels = _channels
-
-  //setters
-  def sampleRate_= (sampleRate: Int): Unit = {
-    _sampleRate = sampleRate
-    dirty = true
-  }
-
-  def channels_= (channels: Int): Unit = {
-    _channels = channels
-    dirty = true
-  }
-
 }

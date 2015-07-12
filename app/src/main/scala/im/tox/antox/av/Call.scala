@@ -14,6 +14,7 @@ class Call(val friendNumber: Int) {
 
   private var selfState = SelfCallState.DEFAULT
 
+  //only for outgoing audio
   private val sampleRate = 48000 //in Hz
   private val audioLength = 20 //in ms
   private val channels = 2
@@ -24,7 +25,7 @@ class Call(val friendNumber: Int) {
   def active = !friendState.contains(ToxCallState.FINISHED)
   def onHold = friendState.isEmpty
 
-  val audioCapture: AudioCapture = new AudioCapture()
+  val audioCapture: AudioCapture = new AudioCapture(sampleRate, channels)
   val audioPlayer = new AudioPlayer(sampleRate, channels)
 
   private def frameSize = (sampleRate * audioLength) / 1000
@@ -62,7 +63,7 @@ class Call(val friendNumber: Int) {
   private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
     new Thread(new Runnable {
       override def run(): Unit = {
-        audioCapture.startCapture(sampleRate, channels)
+        audioCapture.start()
         Thread.sleep(audioLength)
 
         while (active) {
@@ -82,27 +83,25 @@ class Call(val friendNumber: Int) {
           if (timeTaken < audioLength)
             Thread.sleep((audioLength - (timeTaken / 10^6)) - 1)
         }
-
-        audioCapture.stopCapture()
       }
     }).start()
 
     audioPlayer.start()
   }
 
-  def onAudioFrame(pcm: Array[Short]): Unit = {
-    audioPlayer.bufferAudioFrame(pcm)
+  def onAudioFrame(pcm: Array[Short], channels: Int, sampleRate: Int): Unit = {
+    audioPlayer.bufferAudioFrame(pcm, channels, sampleRate)
   }
 
   def muteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = true)
     ToxSingleton.toxAv.audioBitRateSet(friendNumber, 0, force = true)
-    audioCapture.stopCapture()
+    audioCapture.stop()
   }
 
   def unmuteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = false)
-    audioCapture.startCapture(sampleRate, channels)
+    audioCapture.start()
   }
 
   def hideSelfVideo(): Unit = {
@@ -136,7 +135,7 @@ class Call(val friendNumber: Int) {
       ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.CANCEL)
     }
 
-    audioCapture.stopCapture()
+    audioCapture.stop()
     cleanUp()
 
     friendState = Set()
