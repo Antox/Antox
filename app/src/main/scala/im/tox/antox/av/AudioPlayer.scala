@@ -5,9 +5,10 @@ import android.util.Log
 import org.apache.commons.collections4.queue.CircularFifoQueue
 
 class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8) {
+
   private var running = false
 
-  private var audioTrack: AudioTrack = null
+  private var mAudioTrack: Option[AudioTrack] = None
   private val audioBuffer = new CircularFifoQueue[Array[Short]](bufferSize)
 
   // if the track is dirty it will be recreated on the next playback
@@ -25,9 +26,9 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
       }
 
     val bufferSize = sampleRate * channels * 2
-    audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, channelConfig,
-      AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM) //TODO: change this back to a phone call
-    audioTrack.play ()
+    mAudioTrack = Some(new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, channelConfig,
+      AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)) //TODO: change this back to a phone call
+    mAudioTrack.foreach(_.play())
     dirty = false
     println("recreating audio whatever")
   }
@@ -44,7 +45,8 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
 
     if (data != null) {
       try {
-        audioTrack.write(data, 0, data.length)
+        // mAudioTrack shouldn't ever be None here. fail fast with .get
+        mAudioTrack.get.write(data, 0, data.length)
       } catch {
         case e: Exception => Log.e("AudioPlayback", e.getMessage)
       }
@@ -74,9 +76,11 @@ class AudioPlayer(var _sampleRate: Int, var _channels: Int, bufferSize: Int = 8)
 
   def cleanUp(): Unit = {
     stop()
-    audioTrack.stop ()
-    audioTrack.flush()
-    audioTrack.release()
+
+    mAudioTrack.foreach(audioTrack => {
+      audioTrack.flush()
+      audioTrack.release()
+    })
   }
 
   //getters

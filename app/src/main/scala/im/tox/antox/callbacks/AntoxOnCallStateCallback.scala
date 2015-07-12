@@ -14,6 +14,11 @@ class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallba
 
   override def callState(friendNumber: Int, collectionState: util.Collection[ToxCallState]): Unit = {
     Log.d("OnAvCallbackCallback", "Received a callback from: " + friendNumber)
+    println("*************************************************************************************" +
+    "*************************************************************************************" +
+    "!!A CALL STATE CALLBACK!! !!A CALL STATE CALLBACK!! !!A CALL STATE CALLBACK!!" +
+    "State is " + collectionState)
+
     val call = ToxSingleton.getAntoxFriend(friendNumber).get.call
     val state = collectionState.toSet
     call.updateFriendState(state)

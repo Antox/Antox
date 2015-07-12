@@ -8,7 +8,7 @@ import rx.lang.scala.Observable
 
 import scala.None
 
-class AudioCapture {
+class AudioCapture(var _sampleRate: Int, var _channels: Int) {
 
   val TAG = "im.tox.antox.utils.CaptureAudio"
 
@@ -17,9 +17,15 @@ class AudioCapture {
 
   var capturing: Boolean = false
 
-  def startCapture(sampleRate: Int, channels: Int): Unit = {
-    if (capturing) stopCapture() //if already capturing stop and reset the audio record with a (possibly new) bitrate
+  // if the track is dirty it will be recreated on the next playback
+  private var dirty = true
+
+  def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
+  }
+
+  def startCapture(sampleRate: Int, channels: Int): Unit = {
+    if (capturing) stopCapture() //if already capturing stop and reset the audio record with a (possibly new)
 
     mAudioRecord = findAudioRecord(sampleRate, channels)
     mAudioRecord match {
@@ -37,21 +43,13 @@ class AudioCapture {
   }
 
   def stopCapture(): Unit = {
-    mAudioRecord match {
-      case Some(audioRecord) =>
-        audioRecord.stop()
-      case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
-    }
-
+    mAudioRecord.foreach(_.stop())
     capturing = false
   }
 
   def cleanUp(): Unit = {
     stopCapture()
-    mAudioRecord match {
-      case Some(audioRecord) =>
-        audioRecord.release()
-    }
+    mAudioRecord.foreach(_.release())
   }
 
   private def findAudioRecord(sampleRate: Int, channels: Int): Option[AudioRecord] = {
@@ -84,5 +82,20 @@ class AudioCapture {
     }
 
     None
+  }
+
+  //getters
+  def sampleRate = _sampleRate
+  def channels = _channels
+
+  //setters
+  def sampleRate_= (sampleRate: Int): Unit = {
+    _sampleRate = sampleRate
+    dirty = true
+  }
+
+  def channels_= (channels: Int): Unit = {
+    _channels = channels
+    dirty = true
   }
 }

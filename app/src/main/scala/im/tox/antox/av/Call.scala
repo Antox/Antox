@@ -3,6 +3,8 @@ package im.tox.antox.av
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AudioCapture
 import im.tox.tox4j.av.enums.{ToxCallControl, ToxCallState}
+import im.tox.tox4j.av.exceptions.ToxAvSendFrameException
+import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.subjects.BehaviorSubject
 
 class Call(val friendNumber: Int) {
@@ -19,7 +21,7 @@ class Call(val friendNumber: Int) {
   val ringing = BehaviorSubject[Boolean](false)
   var incoming = false
 
-  def active = friendState.nonEmpty && !friendState.contains(ToxCallState.FINISHED)
+  def active = !friendState.contains(ToxCallState.FINISHED)
   def onHold = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture()
@@ -61,13 +63,19 @@ class Call(val friendNumber: Int) {
     new Thread(new Runnable {
       override def run(): Unit = {
         audioCapture.startCapture(sampleRate, channels)
+        Thread.sleep(audioLength)
 
         while (active) {
           val start = System.nanoTime()
           if (selfState.sendingAudio) {
-            ToxSingleton.toxAv.audioSendFrame(friendNumber,
-              audioCapture.readAudio(frameSize, channels),
-              frameSize, channels, sampleRate)
+            try {
+              ToxSingleton.toxAv.audioSendFrame(friendNumber,
+                audioCapture.readAudio(frameSize, channels),
+                frameSize, channels, sampleRate)
+            } catch {
+              case e: ToxException[_] =>
+                end(error = true)
+            }
           }
 
           val timeTaken = System.nanoTime() - start
@@ -122,10 +130,17 @@ class Call(val friendNumber: Int) {
     ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.SHOW_VIDEO)
   }
 
-  def end(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.CANCEL)
+  def end(error: Boolean = false): Unit = {
+    // only send a call control if the call wasn't ended unexpectedly
+    if (!error) {
+      ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.CANCEL)
+    }
+
     audioCapture.stopCapture()
     cleanUp()
+
+    friendState = Set()
+    selfState = SelfCallState.DEFAULT
   }
 
   private def cleanUp(): Unit = {

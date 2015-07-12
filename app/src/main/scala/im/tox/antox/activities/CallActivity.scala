@@ -2,7 +2,9 @@ package im.tox.antox.activities
 
 import android.app.Activity
 import android.content.Context
-import android.os.{Vibrator, Build, Bundle}
+import android.hardware.{SensorEvent, Sensor, SensorManager, SensorEventListener}
+import android.os.{PowerManager, Vibrator, Build, Bundle}
+import android.util.TypedValue
 import android.view.View.OnClickListener
 import android.view.ViewGroup.LayoutParams
 import android.view.{View, WindowManager}
@@ -23,8 +25,13 @@ class CallActivity extends Activity {
 
   var answerCallButton: View = _
   var endCallButton: View = _
+  val callButtonSize = 72 // in dp
 
   var vibrator: Vibrator = _
+  val vibrationPattern = Array[Long](0, 1000, 1000)
+
+  private var powerManager: PowerManager = _
+  private var maybeWakeLock: Option[PowerManager#WakeLock] = None
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -46,6 +53,14 @@ class CallActivity extends Activity {
     setContentView(R.layout.activity_call)
 
     vibrator = this.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
+
+    // power manager used to turn off screen when the proximity sensor is triggered
+    powerManager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
+    if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+      maybeWakeLock = Some(powerManager.newWakeLock(
+        PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+        "im.tox.antox.CallActivity"))
+    }
 
     /* Set up avatar and name */
     val name = findViewById(R.id.friend_name).asInstanceOf[TextView]
@@ -78,7 +93,7 @@ class CallActivity extends Activity {
         micOff.setVisibility(View.GONE)
         micOn.setVisibility(View.VISIBLE)
 
-        call.muteSelfAudio()
+        call.unmuteSelfAudio()
       }
     })
 
@@ -89,7 +104,7 @@ class CallActivity extends Activity {
         micOff.setVisibility(View.VISIBLE)
         micOn.setVisibility(View.GONE)
 
-        call.unmuteSelfAudio()
+        call.muteSelfAudio()
       }
     })
 
@@ -139,19 +154,17 @@ class CallActivity extends Activity {
     })
 
     /* Set up the answer and av buttons */
-    answerCallButton = findViewById(R.id.answerCallButton)
+    answerCallButton = findViewById(R.id.answer_call_circle)
 
     answerCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
         call.answerCall(receivingAudio = true, receivingVideo = false) //TODO FIXME HELP
-
-        endCall()
       }
     })
 
 
     /* Set up the end call and av buttons */
-    endCallButton = findViewById(R.id.endCallButton)
+    endCallButton = findViewById(R.id.end_call_circle)
 
     endCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
@@ -160,11 +173,15 @@ class CallActivity extends Activity {
         endCall()
       }
     })
+  }
 
+  def onSensorChanged(event: SensorEvent) {
+    val distance: Float = event.values(0)
   }
 
   override def onResume(): Unit = {
     super.onResume()
+
     stateSub = call.friendStateSubject
       .subscribe(callState => {
       if (callState.contains(ToxCallState.FINISHED)) {
@@ -175,12 +192,12 @@ class CallActivity extends Activity {
     call.ringing.subscribe(ringing => {
       if (ringing) {
         if (call.incoming) {
-          setupViewIncoming()
+          setupIncoming()
         } else {
-          setupViewOutgoing()
+          setupOutgoing()
         }
       } else {
-        setupViewActive()
+        setupActive()
       }
     })
   }
@@ -191,29 +208,39 @@ class CallActivity extends Activity {
     stateSub.unsubscribe()
   }
 
-  def setupViewIncoming(): Unit = {
-    //Do nothing, incoming by default
-    //vibrator.vibrate()
+  def setupIncoming(): Unit = {
+    // vibrate on incoming call
+    vibrator.vibrate(vibrationPattern, 0)
+  }
+
+  def setupOutgoing(): Unit = {
+    hideAnswerButton()
+  }
+
+  def setupActive(): Unit = {
     vibrator.cancel()
-  }
-
-  def setupViewOutgoing(): Unit = {
     hideAnswerButton()
-  }
 
-  def setupViewActive(): Unit = {
-    hideAnswerButton()
+    maybeWakeLock.foreach(wakeLock => {
+      if (!wakeLock.isHeld) {
+        wakeLock.acquire()
+      }
+    })
   }
 
   def hideAnswerButton(): Unit = {
-    answerCallButton.setVisibility(View.GONE)
+    findViewById(R.id.answer_call_frame).setVisibility(View.GONE)
+
+    // hack to reset the end call button to
+    // its original size and center it in the call view
     val lp = new LinearLayout.LayoutParams(
-      LayoutParams.MATCH_PARENT,
-      LayoutParams.MATCH_PARENT, 1f)
-    endCallButton.setLayoutParams(lp)
+      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, callButtonSize, getResources.getDisplayMetrics).asInstanceOf[Int],
+      TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, callButtonSize, getResources.getDisplayMetrics).asInstanceOf[Int], 1f)
+
+    findViewById(R.id.end_call_frame).setLayoutParams(lp)
   }
 
-  def setupViewOnHold(): Unit = {
+  def setupOnHold(): Unit = {
     //NA TODO
   }
 
@@ -221,8 +248,19 @@ class CallActivity extends Activity {
     //NA TODO
   }
 
+  // Called when the call ends (both by the user and by friend)
   def endCall(): Unit = {
+    maybeWakeLock.foreach(wakeLock => {
+      if (wakeLock.isHeld) {
+        wakeLock.release()
+      }
+    })
+
     finish()
+  }
+
+  override def onDestroy(): Unit = {
+    vibrator.cancel()
   }
 }
 
