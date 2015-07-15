@@ -9,32 +9,45 @@
     android:layout_gravity="center_horizontal"
     tools:context="im.tox.antox.CallActivity">
 
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@color/grey_light"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/friend_profile_nick"
         android:id="@+id/friend_name"
+        android:text="Nickname"
+        android:singleLine="true"
         android:textSize="20sp"
-        android:paddingTop="20dp"
+        android:paddingTop="16dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:textStyle="bold"
         android:layout_below="@+id/avatar"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/duration"
+        android:text="12:23:28"
+        android:textSize="@dimen/text_smallish"
+        android:singleLine="true"
+        android:paddingTop="8dp"
+        android:layout_below="@+id/friend_name"
         android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:weightSum="3"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="70dp"
         android:layout_below="@+id/friend_name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -59,14 +72,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_volume_up_black_36dp"
-            android:id="@+id/volume_on" />
+            android:id="@+id/speaker_on" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_volume_off_black_36dp"
-            android:id="@+id/volume_off"
+            android:id="@+id/speaker_off"
             android:visibility="gone" />
 
         <ImageView

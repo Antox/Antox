@@ -53,7 +53,7 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
   def stop(): Unit = {
     mAudioRecord.foreach(audioRecord => {
-      if (audioRecord.getState == AudioRecord.STATE_INITIALIZED) {
+      if (audioRecord.getState == AudioRecord.STATE_INITIALIZED && active) {
         audioRecord.stop()
       }
     })

@@ -31,8 +31,7 @@ class ToxService extends Service() {
       override def run() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext)
         while (keepRunning) {
-
-          if (!ToxSingleton.isToxConnected(preferences, thisService)) {
+          if (1 == 0 && !ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
               Thread.sleep(10000)
             } catch {
@@ -40,9 +39,8 @@ class ToxService extends Service() {
             }
           } else {
             try {
-              Thread.sleep(ToxSingleton.interval)
               ToxSingleton.tox.iterate()
-              ToxSingleton.toxAv.iterate()
+              Thread.sleep(ToxSingleton.interval)
             } catch {
               case e: Exception =>
             }
@@ -50,6 +48,16 @@ class ToxService extends Service() {
         }
       }
     }
+
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        while (keepRunning) {
+          ToxSingleton.toxAv.iterate()
+          Thread.sleep(0)
+        }
+      }
+    }).start()
+
     serviceThread = new Thread(start)
     serviceThread.start()
   }

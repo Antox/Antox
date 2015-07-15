@@ -55,7 +55,7 @@ object ToxSingleton {
   var dhtNodes: Array[DhtNode] = Array()
 
   def interval: Int = {
-    List(State.transfers.interval, tox.interval, toxAv.interval).min
+    Math.min(Math.min(State.transfers.interval, tox.interval), toxAv.interval)
   }
 
   def getAntoxFriendList: AntoxFriendList = antoxFriendList

@@ -22,6 +22,9 @@ class Call(val friendNumber: Int) {
   val ringing = BehaviorSubject[Boolean](false)
   var incoming = false
 
+  var startTime: Long = 0
+  def duration = System.currentTimeMillis() - startTime //in seconds
+
   def active = !friendState.contains(ToxCallState.FINISHED)
   def onHold = friendState.isEmpty
 
@@ -61,10 +64,11 @@ class Call(val friendNumber: Int) {
   }
 
   private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
+    startTime = System.currentTimeMillis()
+
     new Thread(new Runnable {
       override def run(): Unit = {
         audioCapture.start()
-        Thread.sleep(audioLength)
 
         while (active) {
           val start = System.nanoTime()
@@ -81,7 +85,7 @@ class Call(val friendNumber: Int) {
 
           val timeTaken = System.nanoTime() - start
           if (timeTaken < audioLength)
-            Thread.sleep((audioLength - (timeTaken / 10^6)) - 1)
+            Thread.sleep(audioLength - (timeTaken / 10^6))
         }
       }
     }).start()

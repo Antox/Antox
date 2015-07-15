@@ -19,6 +19,5 @@ case class ToxKey(key: String) {
 
   def bytes = Hex.hexStringToBytes(key)
 
-
   override def toString: String = key
 }

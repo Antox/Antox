@@ -26,18 +26,18 @@ import scala.concurrent.duration._
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
   //var ARG_CONTACT_NUMBER: String = "contact_number"
-  var adapter: ChatMessagesAdapter = null
-  var messageBox: EditText = null
-  var isTypingBox: TextView = null
-  var statusTextBox: TextView = null
-  var chatListView: ListView = null
-  var displayNameView: TextView = null
-  var statusIconView: View = null
-  var avatarActionView: View = null
-  var messagesSub: Subscription = null
-  var progressSub: Subscription = null
-  var titleSub: Subscription = null
-  var activeKey: ToxKey = null
+  var adapter: ChatMessagesAdapter = _
+  var messageBox: EditText = _
+  var isTypingBox: TextView = _
+  var statusTextBox: TextView = _
+  var chatListView: ListView = _
+  var displayNameView: TextView = _
+  var statusIconView: View = _
+  var avatarActionView: View = _
+  var messagesSub: Subscription = _
+  var progressSub: Subscription = _
+  var titleSub: Subscription = _
+  var activeKey: ToxKey = _
   var scrolling: Boolean = false
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50

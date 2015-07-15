@@ -32,9 +32,7 @@ class GroupChatActivity extends GenericChatActivity {
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(groupInfo => {
       val id = activeKey
-      val mGroup: Option[GroupInfo] = groupInfo
-        .filter(groupInfo => groupInfo.key == id)
-        .headOption
+      val mGroup: Option[GroupInfo] = groupInfo.find(groupInfo => groupInfo.key == id)
       mGroup match {
         case Some(group) => {
           thisActivity.setDisplayName(group.getAliasOrName)

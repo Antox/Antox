@@ -4,6 +4,7 @@ import java.io.{IOException, UnsupportedEncodingException}
 import java.util.Scanner
 
 import android.util.{Base64, Log}
+import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.toxdns.ToxDNS.RegError.RegError
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.Raw

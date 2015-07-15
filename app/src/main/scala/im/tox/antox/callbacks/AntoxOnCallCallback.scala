@@ -20,7 +20,6 @@ class AntoxOnCallCallback(private var ctx: Context) extends CallCallback {
         val callActivity = new Intent(ctx, classOf[CallActivity])
         // Add avatar and nickname as extras
         callActivity.putExtra("key", friend.key.toString)
-        callActivity.putExtra("name", friend.name)
         callActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         ctx.startActivity(callActivity)
       }

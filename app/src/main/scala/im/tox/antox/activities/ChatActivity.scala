@@ -188,10 +188,11 @@ class ChatActivity extends GenericChatActivity {
   def onClickInfo(v: View): Unit = {}
 
   def onClickVoiceCall(v: View): Unit = {
+    if (!ToxSingleton.getAntoxFriend(activeKey).get.online) return
+
     val callActivity = new Intent(this, classOf[CallActivity])
     // Add avatar and nickname as extras
     callActivity.putExtra("key", activeKey.toString)
-    callActivity.putExtra("name", displayNameView.getText)
     startActivity(callActivity)
   }
 
