@@ -3,8 +3,8 @@ package im.tox.antox.av
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.AudioCapture
 import im.tox.tox4j.av.enums.{ToxCallControl, ToxCallState}
-import im.tox.tox4j.av.exceptions.ToxAvSendFrameException
 import im.tox.tox4j.exceptions.ToxException
+import im.tox.tox4j.impl.jni.ToxCryptoImpl
 import rx.lang.scala.subjects.BehaviorSubject
 
 class Call(val friendNumber: Int) {
@@ -23,7 +23,7 @@ class Call(val friendNumber: Int) {
   var incoming = false
 
   var startTime: Long = 0
-  def duration = System.currentTimeMillis() - startTime //in seconds
+  def duration = System.currentTimeMillis() - startTime //in milliseconds
 
   def active = !friendState.contains(ToxCallState.FINISHED)
   def onHold = friendState.isEmpty

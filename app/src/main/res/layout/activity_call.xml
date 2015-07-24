@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/duration"
-        android:text="12:23:28"
+        android:text="23:59:59"
         android:textSize="@dimen/text_smallish"
         android:singleLine="true"
         android:paddingTop="8dp"

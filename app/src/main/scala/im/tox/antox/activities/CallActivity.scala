@@ -4,23 +4,26 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-import android.app.Activity
-import android.content.Context
+import android.app.{PendingIntent, Notification, Activity}
+import android.content.{IntentFilter, Intent, Context}
 import android.hardware.{SensorEvent, Sensor, SensorManager, SensorEventListener}
-import android.media.RingtoneManager
+import android.media.{AudioManager, MediaPlayer, Ringtone, RingtoneManager}
 import android.os.{PowerManager, Vibrator, Build, Bundle}
+import android.provider.Settings
+import android.support.v4.app.{TaskStackBuilder, NotificationCompat}
 import android.util.TypedValue
 import android.view.View.OnClickListener
 import android.view.ViewGroup.LayoutParams
 import android.view.{View, WindowManager}
 import android.widget.{FrameLayout, LinearLayout, ImageView, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.av.Call
+import im.tox.antox.av.{OngoingCallNotification, Call}
 import im.tox.antox.tox.{Reactive, ToxSingleton}
-import im.tox.antox.utils.{IconColor, BitmapManager}
+import im.tox.antox.utils.{RxAndroid, Constants, IconColor, BitmapManager}
 import im.tox.antox.wrapper.{UserStatus, FriendInfo, ToxKey}
 import im.tox.antoxnightly.R
 import im.tox.tox4j.av.enums.ToxCallState
+import rx.functions.Action0
 import rx.lang.scala.{Observable, Subscription}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
@@ -43,8 +46,11 @@ class CallActivity extends Activity {
   var vibrator: Vibrator = _
   val vibrationPattern = Array[Long](0, 1000, 1000)
 
-  val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-  val ringtone = RingtoneManager.getRingtone(this, notification)
+  var audioManager: AudioManager = _
+  var ringtone: MediaPlayer = _
+  var ringerMode: Observable[Int] = _
+
+  var callNotification: OngoingCallNotification = _
 
   private var powerManager: PowerManager = _
   private var maybeWakeLock: Option[PowerManager#WakeLock] = None
@@ -63,12 +69,13 @@ class CallActivity extends Activity {
 
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      flags = flags | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+      flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
     }
 
     getWindow.addFlags(flags)
 
     setContentView(R.layout.activity_call)
+    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
 
     vibrator = this.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
 
@@ -81,6 +88,8 @@ class CallActivity extends Activity {
     }
 
     activeKey = new ToxKey(getIntent.getStringExtra("key"))
+    val friend = ToxSingleton.getAntoxFriend(activeKey).get
+    call = friend.call
 
     avatarView = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
     nameView = findViewById(R.id.friend_name).asInstanceOf[TextView]
@@ -123,6 +132,25 @@ class CallActivity extends Activity {
       }
     })
 
+    durationView = findViewById(R.id.duration).asInstanceOf[TextView]
+
+    callNotification = new OngoingCallNotification(this, friend, call)
+    callNotification.updateName("LET US TEST THIS")
+    callNotification.show()
+
+    ringtone = new MediaPlayer()
+    ringtone.setDataSource(this, Settings.System.DEFAULT_RINGTONE_URI)
+    audioManager = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+    if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+      ringtone.setAudioStreamType(AudioManager.STREAM_RING)
+      ringtone.setLooping(true)
+      ringtone.prepare()
+    }
+
+    ringerMode = RxAndroid
+      .fromBroadcast(this, new IntentFilter(AudioManager.RINGER_MODE_CHANGED_ACTION))
+      .map(_.getIntExtra(AudioManager.EXTRA_RINGER_MODE, -1))
+
     registerSubscriptions()
   }
 
@@ -149,7 +177,7 @@ class CallActivity extends Activity {
       })
 
     compositeSubscription +=
-      call.ringing.subscribe(ringing => {
+      call.ringing.distinctUntilChanged.subscribe(ringing => {
         if (ringing) {
           if (call.incoming) {
             setupIncoming()
@@ -158,6 +186,18 @@ class CallActivity extends Activity {
           }
         } else {
           setupActive()
+        }
+      })
+
+    compositeSubscription +=
+      ringerMode.subscribe(mode => {
+        println("got stream type change")
+        if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+          //ringtone.start()
+        }
+
+        if (audioManager.getRingerMode != AudioManager.RINGER_MODE_SILENT) {
+          //vibrator.vibrate(vibrationPattern, 0)
         }
       })
 
@@ -202,8 +242,8 @@ class CallActivity extends Activity {
 
   def setupIncoming(): Unit = {
     // vibrate and ring on incoming call
+    ringtone.start()
     vibrator.vibrate(vibrationPattern, 0)
-    ringtone.play()
   }
 
   def setupOutgoing(): Unit = {

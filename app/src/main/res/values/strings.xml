@@ -197,6 +197,18 @@
     <string name="file_rejected">Rejected</string>
     <string name="file_time_remaining">%s seconds left</string>
 
+    <!-- Call Activity -->
+    <string name="call_incoming">Incoming Call</string>
+    <string name="call_ringing">Ringing</string>
+    <string name="call_duration">Call Duration</string>
+    <string name="call_notification_header">Incoming Call</string>
+    <string name="call_mute">Mute</string>
+    <string name="call_unmute">Unmute</string>
+    <string name="call_show_video">Enable video</string>
+    <string name="call_hide_video">Disable video</string>
+    <string name="call_mute_speaker">Mute speaker</string>
+    <string name="call_unmute_speaker">Unmute speaker</string>
+
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>
     <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>

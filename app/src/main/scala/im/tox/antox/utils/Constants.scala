@@ -12,6 +12,8 @@ object Constants {
 
   val SWITCH_TO_CALL = "im.tox.antox.SWITCH_TO_CALL"
 
+  val END_CALL = "im.tox.antox.SWITCH_TO_CALL"
+
   val UPDATE = "im.tox.antox.UPDATE"
 
   val DOWNLOAD_DIRECTORY = "Tox Received Files"

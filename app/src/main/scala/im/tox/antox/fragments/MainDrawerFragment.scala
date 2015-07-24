@@ -30,7 +30,6 @@ class MainDrawerFragment extends Fragment {
 
   var preferences: SharedPreferences = _
 
-  var ringingStart
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     preferences = PreferenceManager.getDefaultSharedPreferences(getActivity)
