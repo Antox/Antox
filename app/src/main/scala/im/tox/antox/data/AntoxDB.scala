@@ -10,6 +10,7 @@ import android.database.Cursor
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
 import android.util.Log
+import com.squareup.sqlbrite.{BriteDatabase, SqlBrite}
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
@@ -18,10 +19,15 @@ import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxUserStatus
+import im.tox.tox4j.impl.jni.ToxCryptoImpl
+import rx.lang.scala.JavaConversions._
+import rx.lang.scala.Observable
 
 import scala.collection.mutable.ArrayBuffer
 
 object AntoxDB {
+
+  val sqlBrite = SqlBrite.create()
 
   private class DatabaseHelper(context: Context, activeDatabase: String) extends SQLiteOpenHelper(context,
     activeDatabase, null, Constants.DATABASE_VERSION) {
@@ -88,7 +94,7 @@ class AntoxDB(ctx: Context) {
 
   private var mDbHelper: DatabaseHelper = _
 
-  private var mDb: SQLiteDatabase = _
+  private var mDb: BriteDatabase = _
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
@@ -96,7 +102,7 @@ class AntoxDB(ctx: Context) {
 
   private def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
-    mDb = if (writeable) mDbHelper.getWritableDatabase else mDbHelper.getReadableDatabase
+    mDb = sqlBrite.wrapDatabaseHelper(mDbHelper)
     this
   }
 
@@ -147,7 +153,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_IGNORED, false)
     values.put(Constants.COLUMN_NAME_FAVORITE, false)
     values.put(Constants.COLUMN_NAME_CONTACT_TYPE, contactType.id: java.lang.Integer)
-    mDb.insert(Constants.TABLE_CONTACTS, null, values)
+    mDb.insert(Constants.TABLE_CONTACTS, values)
     this.close()
   }
 
@@ -180,7 +186,7 @@ class AntoxDB(ctx: Context) {
     }
     values.put(Constants.COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
     values.put("size", size: java.lang.Integer)
-    val id = mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
+    val id = mDb.insert(Constants.TABLE_CHAT_LOGS, values)
     this.close()
     id
   }
@@ -202,7 +208,7 @@ class AntoxDB(ctx: Context) {
     val values = new ContentValues()
     values.put(Constants.COLUMN_NAME_KEY, key.toString)
     values.put(Constants.COLUMN_NAME_MESSAGE, message)
-    mDb.insert(Constants.TABLE_FRIEND_REQUESTS, null, values)
+    mDb.insert(Constants.TABLE_FRIEND_REQUESTS, values)
     this.close()
   }
 
@@ -212,7 +218,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_KEY, key.toString)
     values.put(Constants.COLUMN_NAME_GROUP_INVITER, inviter)
     values.put(Constants.COLUMN_NAME_GROUP_DATA, data)
-    mDb.insert(Constants.TABLE_GROUP_INVITES, null, values)
+    mDb.insert(Constants.TABLE_GROUP_INVITES, values)
     this.close()
   }
 
@@ -235,7 +241,7 @@ class AntoxDB(ctx: Context) {
     values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
     values.put("type", `type`.id: java.lang.Integer)
     values.put(Constants.COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
-    mDb.insert(Constants.TABLE_CHAT_LOGS, null, values)
+    mDb.insert(Constants.TABLE_CHAT_LOGS, values)
     this.close()
   }
 
@@ -254,18 +260,21 @@ class AntoxDB(ctx: Context) {
       " OR messages.file_kind == " + FileKind.DATA.kindId + ") " +
       "GROUP BY contacts.tox_key"
 
-    val cursor = mDb.rawQuery(selectQuery, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val key = new ToxKey(cursor.getString(0))
-        val count = cursor.getInt(1).intValue
-        map.put(key, count)
-      } while (cursor.moveToNext())
-    }
+    mDb.createQuery(Constants.TABLE_CONTACTS, selectQuery).map(cursor => {
+      if (cursor.moveToFirst()) {
+        do {
+          val key = new ToxKey(cursor.getString(0))
+          val count = cursor.getInt(1).intValue
+          map.put(key, count)
+        } while (cursor.moveToNext())
+      }
 
-    cursor.close()
-    this.close()
-    map.toMap
+      cursor.close()
+      this.close()
+      map.toMap
+    })
+
+    map
   }
 
   def getFilePath(key: ToxKey, fileNumber: Int): String = {

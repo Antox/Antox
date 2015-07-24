@@ -78,4 +78,5 @@ dependencies {
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
+    compile 'com.squareup.sqlbrite:sqlbrite:0.2.1'
 }
