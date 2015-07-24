@@ -5,7 +5,8 @@ import java.util.concurrent.{LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 
 import android.graphics.BitmapFactory.Options
 import android.graphics.{Bitmap, BitmapFactory}
-import android.util.{Log, LruCache}
+import android.support.v4.util.LruCache
+import android.util.Log
 import android.widget.ImageView
 import im.tox.antox.utils.BitmapManager._
 import im.tox.antox.wrapper.BitmapUtils.RichBitmap
