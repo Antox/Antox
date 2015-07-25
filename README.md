@@ -14,8 +14,6 @@ Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia su
 
 To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
 
-To install on F-Droid, add https://repo.tox.im/android and search for "Antox".
-
 ###What Is Currently Working
 - One to one messaging
 - File transfers
