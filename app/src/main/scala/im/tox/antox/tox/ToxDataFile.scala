@@ -5,7 +5,7 @@ import java.io._
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
-import im.tox.antox.transfer.FileUtils
+import im.tox.antox.utils.FileUtils
 import im.tox.tox4j.core.enums.ToxSaveDataType
 import im.tox.tox4j.core.options.SaveDataOptions
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave

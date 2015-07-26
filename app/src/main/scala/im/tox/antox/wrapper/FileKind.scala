@@ -5,7 +5,7 @@ import java.io.File
 import android.content.Context
 import android.os.Environment
 import im.tox.antox.utils.StorageType.StorageType
-import im.tox.antox.utils.{Constants, FileUtil, StorageType}
+import im.tox.antox.utils.{FileUtils, Constants, StorageType}
 
 trait Enum[A] {
   trait Value { self: A => }
@@ -18,7 +18,7 @@ sealed trait FileKind extends FileKind.Value {
   protected def rawStorageDirectory: String
   protected def storageType: StorageType
   def getStorageDir(context: Context): File = {
-    val dir = FileUtil.getDirectory(rawStorageDirectory, storageType, context)
+    val dir = FileUtils.getDirectory(rawStorageDirectory, storageType, context)
     dir.mkdirs()
     dir
   }

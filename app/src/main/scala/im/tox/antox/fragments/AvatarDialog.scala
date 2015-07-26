@@ -22,8 +22,7 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.{Toast, Button, ImageView}
 import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
-import im.tox.antox.transfer.FileUtils
-import im.tox.antox.utils.Constants
+import im.tox.antox.utils.{FileUtils, Constants}
 import im.tox.antox.wrapper.BitmapUtils.RichBitmap
 import im.tox.antox.wrapper.FileKind
 import im.tox.antox.wrapper.FileKind.AVATAR
