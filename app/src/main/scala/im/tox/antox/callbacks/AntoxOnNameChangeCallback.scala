@@ -22,6 +22,5 @@ class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCall
     val db = new AntoxDB(ctx)
     db.updateContactName(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, name)
     db.close()
-    ToxSingleton.updateFriendsList(ctx)
   }
 }

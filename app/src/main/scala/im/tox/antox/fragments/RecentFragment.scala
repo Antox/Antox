@@ -9,8 +9,8 @@ import im.tox.antoxnightly.R
 
 class RecentFragment extends AbstractContactsFragment(showSearch = false, showFab = false) {
 
-  override def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest],
-    Array[GroupInvite], Array[GroupInfo])) {
+  override def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
+    Seq[GroupInvite], Seq[GroupInfo])) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new ContactListAdapter(getActivity)
@@ -27,9 +27,9 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
     rootView
   }
 
-  def updateContactsLists(leftPaneAdapter: ContactListAdapter, contactList: Array[ContactInfo]): Unit = {
+  def updateContactsLists(leftPaneAdapter: ContactListAdapter, contactList: Seq[ContactInfo]): Unit = {
     val sortedContactList = contactList.filter(c => c.lastMessage != "").sortWith(compareNames).sortWith(compareLastMessageTimestamp)
-    if (sortedContactList.length > 0) {
+    if (sortedContactList.nonEmpty) {
       getView.findViewById(R.id.center_text).setVisibility(View.GONE)
       for (contact <- sortedContactList) {
         val itemType = if (contact.isInstanceOf[GroupInfo]) {

@@ -9,8 +9,9 @@ import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.util.Log
 import im.tox.antox.utils.{Constants, DatabaseUtil}
 import im.tox.antox.wrapper.UserInfo
+import im.tox.antox.utils.DbConstants._
 
-class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, Constants.USER_DATABASE_VERSION) {
+class UserDB(ctx: Context) extends SQLiteOpenHelper(ctx, "userdb", null, USER_DATABASE_VERSION) {
 
   private val CREATE_TABLE_USERS: String = "CREATE TABLE IF NOT EXISTS users" + " ( _id integer primary key , " +
     "username text," +

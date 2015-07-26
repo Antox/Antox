@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget._
+import im.tox.antox.data.AntoxDB
 import im.tox.antox.tox.{MessageHelper, Reactive}
 import im.tox.antox.wrapper._
 import im.tox.antoxnightly.R
@@ -23,7 +24,8 @@ class GroupChatActivity extends GenericChatActivity {
   override def onResume() = {
     super.onResume()
     val thisActivity = this
-    titleSub = Reactive.groupInfoList
+    val db = new AntoxDB(this)
+    titleSub = db.groupInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(groupInfo => {

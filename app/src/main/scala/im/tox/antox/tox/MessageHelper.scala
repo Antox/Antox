@@ -30,7 +30,6 @@ object MessageHelper {
       db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
         has_been_read = chatActive, successfully_sent = true, messageType)
 
-      ToxSingleton.updateMessages(ctx)
       val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
       if (preferences.getBoolean("notifications_enable_notifications", true) &&
         preferences.getBoolean("notifications_new_message", true)) {
@@ -69,7 +68,6 @@ object MessageHelper {
     db.addMessage(-1, groupKey, peerName, message, has_been_received = true,
       has_been_read = chatActive, successfully_sent = true, messageType)
     db.close()
-    ToxSingleton.updateMessages(ctx)
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val notificationsEnabled = preferences.getBoolean("notifications_enable_notifications", true) &&
@@ -126,7 +124,6 @@ object MessageHelper {
             }
           }
           db.close()
-          ToxSingleton.updateMessages(ctx)
       }
   }
 
@@ -155,7 +152,6 @@ object MessageHelper {
       }
     }
     db.close()
-    ToxSingleton.updateMessages(ctx)
   }
 
   def splitMessage(msg: String): Array[String] = {

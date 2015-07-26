@@ -175,8 +175,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         } catch {
           case e: Exception =>
         }
-        ToxSingleton.updateFriendRequests(context)
-        ToxSingleton.updateFriendsList(context)
       }
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +183,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         val antoxDB = new AntoxDB(context)
         antoxDB.deleteFriendRequest(key)
         antoxDB.close()
-        ToxSingleton.updateFriendsList(context)
-        ToxSingleton.updateFriendRequests(context)
       }
     })
   }
@@ -196,18 +192,20 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       override def onClick(view: View) {
         Log.d("OnClick", "Joining Group: " + groupKey)
         val db = new AntoxDB(context)
-        try {
-          val inviteData = db.getGroupInvitesList.filter(groupInvite => groupInvite.groupKey == groupKey).head.data
-          ToxSingleton.tox.acceptGroupInvite(inviteData)
-          ToxSingleton.save()
-        } catch {
-          case e: Exception => e.printStackTrace()
-        }
+
+        db.groupInvites.first.subscribe(invites => {
+          try {
+            val inviteData = invites.filter(groupInvite => groupInvite.groupKey == groupKey).head.data
+            ToxSingleton.tox.acceptGroupInvite(inviteData)
+            ToxSingleton.save()
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+        })
+
         db.addGroup(groupKey, UIUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
         db.close()
-        ToxSingleton.updateGroupList(context)
-        ToxSingleton.updateGroupInvites(context)
       }
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
@@ -216,13 +214,11 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         val antoxDB = new AntoxDB(context)
         antoxDB.deleteGroupInvite(groupKey)
         antoxDB.close()
-        ToxSingleton.updateGroupList(context)
-        ToxSingleton.updateGroupInvites(context)
       }
     })
   }
 
-  override def getFilter(): Filter = {
+  override def getFilter: Filter = {
     if (mFilter == null) {
       mFilter = new Filter() {
 

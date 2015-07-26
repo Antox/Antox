@@ -40,6 +40,5 @@ class AntoxOnFileRecvControlCallback(private var ctx: Context) extends FileRecvC
           }
         case None => Log.d(TAG, "Transfer not found")
       }
-      Reactive.updatedMessages.onNext(true)
     }
 }

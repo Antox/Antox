@@ -28,7 +28,6 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
     db.addGroupInvite(key, inviter.getName, inviteData)
     db.close()
 
-    ToxSingleton.updateGroupInvites(ctx)
     Log.d("GroupInviteCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&

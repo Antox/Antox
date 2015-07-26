@@ -15,9 +15,8 @@ object AntoxOnReadReceiptCallback {
 class AntoxOnReadReceiptCallback(private var ctx: Context) extends FriendReadReceiptCallback {
   override def friendReadReceipt(friendNumber: Int, messageId: Int): Unit = {
     val db = new AntoxDB(this.ctx)
-    val key = db.setMessageReceived(messageId)
-    Log.d(TAG, "read receipt, for key: " + key)
+    db.setMessageReceived(messageId)
+    Log.d(TAG, "read receipt, for message " + messageId)
     db.close()
-    ToxSingleton.updateMessages(ctx)
   }
 }

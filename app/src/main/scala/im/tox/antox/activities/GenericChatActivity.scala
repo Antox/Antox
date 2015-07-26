@@ -121,13 +121,12 @@ abstract class GenericChatActivity extends AppCompatActivity {
     super.onResume()
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
-    val antoxDB = new AntoxDB(getApplicationContext)
-    antoxDB.markIncomingMessagesRead(activeKey)
-    ToxSingleton.updateMessages(getApplicationContext)
-    messagesSub = Reactive.updatedMessages.subscribe(x => {
+    val db = new AntoxDB(getApplicationContext)
+    db.markIncomingMessagesRead(activeKey)
+    messagesSub = getMessageObservable.subscribe(messageList => {
       Log.d(TAG, "Messages updated")
-      updateChat()
-      antoxDB.close()
+      updateChat(messageList)
+      db.close()
     })
     progressSub = Observable.interval(500 milliseconds)
       .observeOn(AndroidMainThreadScheduler())
@@ -138,27 +137,16 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
   }
 
-  def updateChat() = {
-    val observable: Observable[util.ArrayList[Message]] = Observable((observer) => {
-      val cursor: util.ArrayList[Message] = getMessageList
-      observer.onNext(cursor)
-      observer.onCompleted()
-    })
-    observable
-      .subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe((messageList: util.ArrayList[Message]) => {
-      //FIXME make this more efficient
-      adapter.setNotifyOnChange(false)
-      adapter.clear()
-      //add all is not available on api 10
-      for (message <- messageList) {
-        adapter.add(message)
-      }
-      adapter.notifyDataSetChanged()
-      Log.d(TAG, "changing chat list cursor")
-    })
-    Log.d("ChatFragment", "new key: " + activeKey)
+  def updateChat(messageList: Seq[Message]) = {
+    //FIXME make this more efficient
+    adapter.setNotifyOnChange(false)
+    adapter.clear()
+    //add all is not available on api 10
+    for (message <- messageList) {
+      adapter.add(message)
+    }
+    adapter.notifyDataSetChanged()
+    Log.d(TAG, "changing chat list cursor")
   }
 
   private def updateProgress() {
@@ -203,11 +191,16 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
   }
 
-  def getMessageList: util.ArrayList[Message] = {
+  def getMessageObservable: Observable[Seq[Message]] = {
     val antoxDB = new AntoxDB(this)
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val messageList: util.ArrayList[Message] = antoxDB.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
-    messageList
+    antoxDB.messageListObservable(Some(activeKey), preferences.getBoolean("action_messages", true))
+  }
+
+  def getMessageList: Seq[Message] = {
+    val antoxDB = new AntoxDB(this)
+    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+    antoxDB.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
   }
 
   override def onPause() = {

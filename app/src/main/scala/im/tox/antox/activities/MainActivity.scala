@@ -79,31 +79,11 @@ class MainActivity extends AppCompatActivity {
 
     // Removes the drop shadow from the actionbar as it overlaps the tabs
     getSupportActionBar.setElevation(0)
-
-    ToxSingleton.updateLastMessageMap(this)
-    ToxSingleton.updateUnreadCountMap(this)
-    updateLeftPane()
-  }
-
-  def updateLeftPane() {
-    ToxSingleton.updateFriendRequests(getApplicationContext)
-    ToxSingleton.updateFriendsList(getApplicationContext)
-    ToxSingleton.updateMessages(getApplicationContext)
-    ToxSingleton.updateGroupInvites(getApplicationContext)
-    ToxSingleton.updateGroupList(getApplicationContext)
   }
 
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
-  }
-
-  protected override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == Constants.ADD_FRIEND_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-      ToxSingleton.updateFriendsList(this)
-      ToxSingleton.updateGroupList(this)
-    }
   }
 
   override def onPause() {

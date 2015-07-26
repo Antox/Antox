@@ -12,6 +12,5 @@ class AntoxOnGroupTopicChangeCallback(private var ctx: Context) /* extends Group
     val db = new AntoxDB(ctx)
     db.updateContactStatusMessage(group.key, group.topic)
     db.close()
-    ToxSingleton.updateGroupList(ctx)
   }
 }

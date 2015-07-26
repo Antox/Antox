@@ -7,6 +7,5 @@ class AntoxOnPeerJoinCallback(private var ctx: Context) /* extends GroupPeerJoin
   def groupPeerJoin(groupNumber: Int, peerNumber: Int): Unit = {
     ToxSingleton.getGroup(groupNumber).addPeer(ToxSingleton.tox, peerNumber)
     println("new peer")
-    ToxSingleton.updateGroupList(ctx)
   }
 }

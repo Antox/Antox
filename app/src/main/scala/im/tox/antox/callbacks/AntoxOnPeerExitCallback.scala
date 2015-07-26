@@ -7,6 +7,5 @@ class AntoxOnPeerExitCallback(private var ctx: Context) /* extends GroupPeerExit
   def groupPeerExit(groupNumber: Int, peerNumber: Int, partMessage: Array[Byte]): Unit = {
     ToxSingleton.getGroup(groupNumber).peers.removeGroupPeer(peerNumber)
     println("peer exit")
-    ToxSingleton.updateGroupList(ctx)
   }
 }

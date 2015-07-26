@@ -32,7 +32,6 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendReque
     }
 
     db.close()
-    ToxSingleton.updateFriendRequests(ctx)
     Log.d("FriendRequestCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&

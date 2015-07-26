@@ -113,83 +113,6 @@ object ToxSingleton {
      })
   }
 
-  def updateContactsList(ctx: Context): Unit = {
-    updateFriendsList(ctx)
-    updateGroupList(ctx)
-  }
-
-  def updateFriendsList(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val friendList = antoxDB.getFriendList
-      antoxDB.close()
-      Reactive.friendList.onNext(friendList)
-    } catch {
-      case e: Exception => Reactive.friendList.onError(e)
-    }
-  }
-
-  def updateGroupList(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val groupList = antoxDB.getGroupList
-      antoxDB.close()
-      Reactive.groupList.onNext(groupList)
-    } catch {
-      case e: Exception => e.printStackTrace()
-    }
-  }
-
-  def updateFriendRequests(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val friendRequest = antoxDB.getFriendRequestsList
-      antoxDB.close()
-      Reactive.friendRequests.onNext(friendRequest.toArray(new Array[FriendRequest](friendRequest.size)))
-    } catch {
-      case e: Exception => Reactive.friendRequests.onError(e)
-    }
-  }
-
-  def updateGroupInvites(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val groupInvites = antoxDB.getGroupInvitesList
-      antoxDB.close()
-      Reactive.groupInvites.onNext(groupInvites.toArray(new Array[GroupInvite](groupInvites.size)))
-    } catch {
-      case e: Exception => Reactive.groupInvites.onError(e)
-    }
-  }
-
-  def updateMessages(ctx: Context) {
-    Reactive.updatedMessages.onNext(true)
-    updateLastMessageMap(ctx)
-    updateUnreadCountMap(ctx)
-  }
-
-  def updateLastMessageMap(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val map = antoxDB.getLastMessages
-      antoxDB.close()
-      Reactive.lastMessages.onNext(map)
-    } catch {
-      case e: Exception => Reactive.lastMessages.onError(e)
-    }
-  }
-
-  def updateUnreadCountMap(ctx: Context) {
-    try {
-      val antoxDB = new AntoxDB(ctx)
-      val map = antoxDB.getUnreadCounts
-      antoxDB.close()
-      Reactive.unreadCounts.onNext(map)
-    } catch {
-      case e: Exception => Reactive.unreadCounts.onError(e)
-    }
-  }
-
   def updateDhtNodes(ctx: Context) {
     Log.d(TAG, "updateDhtNodes")
     val connMgr = ctx.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
@@ -320,14 +243,7 @@ object ToxSingleton {
     val db = new AntoxDB(ctx)
     db.setAllOffline()
 
-    val friends = db.getFriendList
-    val groups = db.getGroupList
-
-    db.synchroniseWithTox(tox)
-
-    if (friends.length > 0 || groups.length > 0) {
-      populateAntoxLists(db)
-
+    db.friendList.first.subscribe(friends => {
       for (friend <- friends) {
         try {
           antoxFriendList.updateFromFriend(friend)
@@ -341,9 +257,11 @@ object ToxSingleton {
             }
         }
       }
-    }
+    })
 
-    updateGroupList(ctx)
+    db.synchroniseWithTox(tox)
+    populateAntoxLists(db)
+
     registerCallbacks(ctx)
 
     try {

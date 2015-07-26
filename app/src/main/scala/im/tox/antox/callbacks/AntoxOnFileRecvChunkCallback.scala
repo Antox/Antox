@@ -13,7 +13,6 @@ class AntoxOnFileRecvChunkCallback(private var ctx: Context) extends FileRecvChu
     
     if (position == size) {
       State.transfers.fileFinished(key, fileNumber, ctx)
-      ToxSingleton.updateMessages(ctx)
     } else {
       State.transfers.receiveFileData(key, fileNumber, data, ctx)
     }

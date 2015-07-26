@@ -14,6 +14,7 @@ import com.squareup.sqlbrite.{BriteDatabase, SqlBrite}
 import im.tox.antox.data.AntoxDB._
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
+import im.tox.antox.utils.DbConstants._
 import im.tox.antox.wrapper.ContactType.ContactType
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType
@@ -23,6 +24,7 @@ import im.tox.tox4j.impl.jni.ToxCryptoImpl
 import rx.lang.scala.JavaConversions._
 import rx.lang.scala.Observable
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 object AntoxDB {
@@ -30,7 +32,7 @@ object AntoxDB {
   val sqlBrite = SqlBrite.create()
 
   private class DatabaseHelper(context: Context, activeDatabase: String) extends SQLiteOpenHelper(context,
-    activeDatabase, null, Constants.DATABASE_VERSION) {
+    activeDatabase, null, DATABASE_VERSION) {
 
     var CREATE_TABLE_CONTACTS: String = "CREATE TABLE IF NOT EXISTS contacts" + " (tox_key text primary key, " +
       "username text, " +
@@ -76,16 +78,16 @@ object AntoxDB {
     }
 
     override def onUpgrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CONTACTS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGES)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIEND_REQUESTS)
       onCreate(mDb)
     }
 
     override def onDowngrade(mDb: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CONTACTS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_CHAT_LOGS)
-      mDb.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_FRIEND_REQUESTS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_MESSAGES)
+      mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIEND_REQUESTS)
     }
   }
 }
@@ -94,7 +96,7 @@ class AntoxDB(ctx: Context) {
 
   private var mDbHelper: DatabaseHelper = _
 
-  private var mDb: BriteDatabase = _
+  private var mDb: BriteScalaDatabase = _
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
@@ -102,7 +104,7 @@ class AntoxDB(ctx: Context) {
 
   private def open(writeable: Boolean): AntoxDB = {
     mDbHelper = new DatabaseHelper(ctx, activeDatabase)
-    mDb = sqlBrite.wrapDatabaseHelper(mDbHelper)
+    mDb = new BriteScalaDatabase(sqlBrite.wrapDatabaseHelper(mDbHelper))
     this
   }
 
@@ -141,19 +143,19 @@ class AntoxDB(ctx: Context) {
     }
 
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_KEY, key.toString)
-    values.put(Constants.COLUMN_NAME_STATUS, "0")
-    values.put(Constants.COLUMN_NAME_NOTE, statusMessage)
-    values.put(Constants.COLUMN_NAME_USERNAME, username)
-    values.put(Constants.COLUMN_NAME_ISONLINE, false)
-    values.put(Constants.COLUMN_NAME_ALIAS, alias)
-    values.put(Constants.COLUMN_NAME_ISBLOCKED, false)
-    values.put(Constants.COLUMN_NAME_AVATAR, key.toString)
-    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, false)
-    values.put(Constants.COLUMN_NAME_IGNORED, false)
-    values.put(Constants.COLUMN_NAME_FAVORITE, false)
-    values.put(Constants.COLUMN_NAME_CONTACT_TYPE, contactType.id: java.lang.Integer)
-    mDb.insert(Constants.TABLE_CONTACTS, values)
+    values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_STATUS, "0")
+    values.put(COLUMN_NAME_NOTE, statusMessage)
+    values.put(COLUMN_NAME_USERNAME, username)
+    values.put(COLUMN_NAME_ISONLINE, false)
+    values.put(COLUMN_NAME_ALIAS, alias)
+    values.put(COLUMN_NAME_ISBLOCKED, false)
+    values.put(COLUMN_NAME_AVATAR, key.toString)
+    values.put(COLUMN_NAME_RECEIVED_AVATAR, false)
+    values.put(COLUMN_NAME_IGNORED, false)
+    values.put(COLUMN_NAME_FAVORITE, false)
+    values.put(COLUMN_NAME_CONTACT_TYPE, contactType.id: java.lang.Integer)
+    mDb.insert(TABLE_CONTACTS, values)
     this.close()
   }
 
@@ -173,52 +175,52 @@ class AntoxDB(ctx: Context) {
     sending: Boolean): Long = {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_KEY, key.toString)
-    values.put(Constants.COLUMN_NAME_MESSAGE, path)
-    values.put(Constants.COLUMN_NAME_MESSAGE_ID, fileNumber: java.lang.Integer)
-    values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, false)
-    values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, false)
-    values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, false)
+    values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_MESSAGE, path)
+    values.put(COLUMN_NAME_MESSAGE_ID, fileNumber: java.lang.Integer)
+    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, false)
+    values.put(COLUMN_NAME_HAS_BEEN_READ, false)
+    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, false)
     if (sending) {
       values.put("type", MessageType.FILE_TRANSFER.id: java.lang.Integer)
     } else {
       values.put("type", MessageType.FILE_TRANSFER_FRIEND.id: java.lang.Integer)
     }
-    values.put(Constants.COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
+    values.put(COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
     values.put("size", size: java.lang.Integer)
-    val id = mDb.insert(Constants.TABLE_CHAT_LOGS, values)
+    val id = mDb.insert(TABLE_MESSAGES, values)
     this.close()
     id
   }
 
   def fileTransferStarted(key: ToxKey, fileNumber: Int) {
     this.open(writeable = false)
-    val query = "UPDATE messages SET " + Constants.COLUMN_NAME_SUCCESSFULLY_SENT +
-      " = 1 WHERE (type == 3 OR type == 4) AND message_id == " +
-      fileNumber +
-      " AND tox_key = '" +
-      key +
-      "'"
-    mDb.execSQL(query)
+    val where =
+      s"""WHERE (type == ${MessageType.FILE_TRANSFER}
+         |OR type == ${MessageType.FILE_TRANSFER_FRIEND})
+         |AND message_id == $fileNumber
+         |AND tox_key = '$key'""".stripMargin
+
+    mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE), where)
     this.close()
   }
 
   def addFriendRequest(key: ToxKey, message: String) {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_KEY, key.toString)
-    values.put(Constants.COLUMN_NAME_MESSAGE, message)
-    mDb.insert(Constants.TABLE_FRIEND_REQUESTS, values)
+    values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_MESSAGE, message)
+    mDb.insert(TABLE_FRIEND_REQUESTS, values)
     this.close()
   }
 
   def addGroupInvite(key: ToxKey, inviter: String, data: Array[Byte]) {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_KEY, key.toString)
-    values.put(Constants.COLUMN_NAME_GROUP_INVITER, inviter)
-    values.put(Constants.COLUMN_NAME_GROUP_DATA, data)
-    mDb.insert(Constants.TABLE_GROUP_INVITES, values)
+    values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_GROUP_INVITER, inviter)
+    values.put(COLUMN_NAME_GROUP_DATA, data)
+    mDb.insert(TABLE_GROUP_INVITES, values)
     this.close()
   }
 
@@ -232,35 +234,32 @@ class AntoxDB(ctx: Context) {
     `type`: MessageType) {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
-    values.put(Constants.COLUMN_NAME_KEY, key.toString)
-    values.put(Constants.COLUMN_NAME_SENDER_NAME, sender_name)
-    values.put(Constants.COLUMN_NAME_MESSAGE, message)
-    values.put(Constants.COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received)
-    values.put(Constants.COLUMN_NAME_HAS_BEEN_READ, has_been_read)
-    values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
+    values.put(COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
+    values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_SENDER_NAME, sender_name)
+    values.put(COLUMN_NAME_MESSAGE, message)
+    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received)
+    values.put(COLUMN_NAME_HAS_BEEN_READ, has_been_read)
+    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
     values.put("type", `type`.id: java.lang.Integer)
-    values.put(Constants.COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
-    mDb.insert(Constants.TABLE_CHAT_LOGS, values)
+    values.put(COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
+    mDb.insert(TABLE_MESSAGES, values)
     this.close()
   }
 
-  def getUnreadCounts: Map[ToxKey, Integer] = {
+  val unreadCounts: Observable[Map[ToxKey, Integer]] = {
     this.open(writeable = false)
     val map = scala.collection.mutable.Map.empty[ToxKey, Integer]
-    val selectQuery = "SELECT contacts.tox_key, COUNT(messages._id) " + "FROM messages " +
-      "JOIN contacts ON contacts.tox_key = messages.tox_key " +
-      "WHERE messages.has_been_read == 0 " +
-      "AND (messages.type == " + MessageType.FRIEND.id +
-      " OR messages.type == " + MessageType.ACTION.id +
-      " OR messages.type == " + MessageType.GROUP_PEER.id +
-      " OR messages.type == " + MessageType.GROUP_ACTION.id +
-      " OR messages.type == " + MessageType.FILE_TRANSFER_FRIEND.id + ") " +
-      "AND (messages.file_kind == " + FileKind.INVALID.kindId +
-      " OR messages.file_kind == " + FileKind.DATA.kindId + ") " +
-      "GROUP BY contacts.tox_key"
+    val selectQuery =
+      s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY,
+        |COUNT($TABLE_MESSAGES._id) FROM $TABLE_MESSAGES JOIN $TABLE_CONTACTS
+        |ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
+        |WHERE $TABLE_MESSAGES.$COLUMN_NAME_HAS_BEEN_READ == $FALSE
+        |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.values -- MessageType.selfValues, TABLE_MESSAGES)}
+        |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible), TABLE_MESSAGES)} GROUP BY contacts.tox_key""".stripMargin
 
-    mDb.createQuery(Constants.TABLE_CONTACTS, selectQuery).map(cursor => {
+    mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
+      val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
           val key = new ToxKey(cursor.getString(0))
@@ -273,17 +272,15 @@ class AntoxDB(ctx: Context) {
       this.close()
       map.toMap
     })
-
-    map
   }
 
-  def getFilePath(key: ToxKey, fileNumber: Int): String = {
+/*  def getFilePath(key: ToxKey, fileNumber: Int): String = {
     this.open(writeable = false)
     var path = ""
     val selectQuery = "SELECT message FROM messages WHERE tox_key = '" + key +
       "' AND (type == 3 OR type == 4) AND message_id == " +
       fileNumber
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     Log.d("getFilePath count: ", java.lang.Integer.toString(cursor.getCount) + " filenumber: " +
       fileNumber)
     if (cursor.moveToFirst()) {
@@ -292,15 +289,18 @@ class AntoxDB(ctx: Context) {
     cursor.close()
     this.close()
     path
-  }
+  } */
 
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
     this.open(writeable = false)
     var id = -1
-    val selectQuery = "SELECT _id FROM messages WHERE tox_key = '" + key +
-      "' AND (type == 3 OR type == 4) AND message_id == " +
-      fileNumber
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val selectQuery =
+      s"""SELECT _id FROM $TABLE_MESSAGES
+         |WHERE tox_key = '$key'
+         |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues, TABLE_MESSAGES)}
+         |AND $COLUMN_NAME_MESSAGE_ID == $fileNumber""".stripMargin
+
+    val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       id = cursor.getInt(0)
     }
@@ -311,85 +311,100 @@ class AntoxDB(ctx: Context) {
 
   def clearFileNumbers() {
     this.open(writeable = false)
-    val query = "UPDATE messages SET message_id = -1 WHERE (type == 3 OR type == 4)"
-    mDb.execSQL(query)
+    val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues)
+    mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_MESSAGE_ID, -1), where)
     this.close()
   }
 
   def clearFileNumber(key: ToxKey, fileNumber: Int) {
     this.open(writeable = false)
-    val query = "UPDATE messages SET message_id = -1 WHERE (type == 3 OR type == 4) AND message_id == " +
-      fileNumber +
-      " AND tox_key = '" +
-      key +
-      "'"
-    mDb.execSQL(query)
+    val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues) +
+      s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
+
+    mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_MESSAGE_ID, -1), where)
     this.close()
   }
 
   def fileFinished(key: ToxKey, fileNumber: Int) {
     Log.d("AntoxDB", "fileFinished")
     this.open(writeable = false)
-    val query = "UPDATE messages SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED +
-      "=1, message_id = -1 WHERE (type == 3 OR type == 4) AND message_id == " +
-      fileNumber +
-      " AND tox_key = '" +
-      key +
-      "'"
-    mDb.execSQL(query)
+    val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues) +
+      s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
+
+    val values = new ContentValues()
+    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, TRUE.asInstanceOf[java.lang.Integer])
+    values.put(COLUMN_NAME_MESSAGE_ID, -1.asInstanceOf[java.lang.Integer])
+    mDb.update(TABLE_MESSAGES, values, where)
     this.close()
   }
 
-  def getLastMessages: Map[ToxKey, (String, Timestamp)] = {
+  val lastMessages: Observable[Map[ToxKey, (String, Timestamp)]] = {
     this.open(writeable = false)
     val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
-    val selectQuery = "SELECT tox_key, message, timestamp FROM messages WHERE _id IN (" +
-      "SELECT MAX(_id) " +
-      "FROM messages WHERE (type == " + MessageType.OWN.id +
-      " OR type == " + MessageType.FRIEND.id +
-      " OR type == " + MessageType.ACTION.id +
-      " OR type == " + MessageType.GROUP_OWN.id +
-      " OR type == " + MessageType.GROUP_ACTION.id +
-      " OR type == " + MessageType.GROUP_PEER.id + ") " +
-      "GROUP BY tox_key)"
-    val cursor = mDb.rawQuery(selectQuery, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val key = new ToxKey(cursor.getString(0))
-        val message = cursor.getString(1)
-        val timestamp = Timestamp.valueOf(cursor.getString(2))
-        map.put(key, (message, timestamp))
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    this.close()
-    map.toMap
+    val selectQuery =
+      s"""SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_MESSAGE, $COLUMN_NAME_TIMESTAMP
+         |FROM $TABLE_MESSAGES WHERE _id
+         |IN (SELECT MAX(_id) FROM $TABLE_MESSAGES
+         |WHERE ${createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.values -- MessageType.transferValues)}
+         |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
+
+    mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
+      val cursor = query.run()
+      if (cursor.moveToFirst()) {
+        do {
+          val key = new ToxKey(cursor.getString(0))
+          val message = cursor.getString(1)
+          val timestamp = Timestamp.valueOf(cursor.getString(2))
+          map.put(key, (message, timestamp))
+        } while (cursor.moveToNext())
+      }
+      cursor.close()
+      this.close()
+      map.toMap
+    })
   }
 
-  def getMessageList(key: Option[ToxKey], actionMessages: Boolean): util.ArrayList[Message] = {
+  def messageListObservable(key: Option[ToxKey], actionMessages: Boolean): Observable[Seq[Message]] = {
     this.open(writeable = false)
-    val messageList = new util.ArrayList[Message]()
-    var selectQuery: String = null
+    val selectQuery: String = getMessageQuery(key, actionMessages)
+
+    mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
+      messageListFromCursor(query.run())
+    })
+  }
+
+  def getMessageList(key: Option[ToxKey], actionMessages: Boolean): Seq[Message] = {
+    this.open(writeable = false)
+    val selectQuery: String = getMessageQuery(key, actionMessages)
+
+    messageListFromCursor(mDb.query(selectQuery))
+  }
+
+  private def getMessageQuery(key: Option[ToxKey], actionMessages: Boolean): String = {
     key match {
       case Some(toxKey) =>
         var act: String = null
         act = getQueryTypes(actionMessages)
-        selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
-          Constants.COLUMN_NAME_KEY +
+
+        "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
+          COLUMN_NAME_KEY +
           " = '" +
           toxKey +
           "' " +
           act +
           "ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+          COLUMN_NAME_TIMESTAMP +
           " ASC"
 
       case None =>
-        selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+        "SELECT * FROM " + TABLE_MESSAGES + " ORDER BY " +
+          COLUMN_NAME_TIMESTAMP +
           " DESC"
     }
-    val cursor = mDb.rawQuery(selectQuery, null)
+  }
+
+  private def messageListFromCursor(cursor: Cursor): Seq[Message] = {
+    val messageList = new ArrayBuffer[Message]()
     if (cursor.moveToFirst()) {
       do {
         val id = cursor.getInt(0)
@@ -405,9 +420,8 @@ class AntoxDB(ctx: Context) {
         val `type` = cursor.getInt(10)
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(11))
         if (fileKind == FileKind.INVALID || fileKind.visible) {
-          messageList.add(new Message(id, message_id, key, sender_name, message, received, read, sent,
-          time, size,
-          MessageType(`type`), fileKind))
+          messageList += new Message(id, message_id, key, sender_name, message, received, read, sent,
+            time, size, MessageType(`type`), fileKind)
         }
       } while (cursor.moveToNext())
     }
@@ -417,35 +431,36 @@ class AntoxDB(ctx: Context) {
   }
 
   def getQueryTypes(actionMessages: Boolean): String = {
-    if (actionMessages) "" else "AND (type == 1 OR type == 2 OR type == 3 OR type == 4 OR type == 6 OR type == 7) "
+    val condition = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.values.filterNot(_ == MessageType.ACTION).toSeq, TABLE_MESSAGES)
+    if (actionMessages) "" else s"AND $condition"
   }
 
-  def getMessageIds(key: Option[ToxKey], actionMessages: Boolean): util.HashSet[Integer] = {
+  def getMessageIds(key: Option[ToxKey], actionMessages: Boolean): mutable.Set[Integer] = {
     this.open(writeable = false)
-    val idSet = new util.HashSet[Integer]()
+    val idSet = new mutable.HashSet[Integer]()
     val selectQuery = key match {
       case Some(toxKey) =>
-        var types: String = getQueryTypes(actionMessages)
+        val types: String = getQueryTypes(actionMessages)
 
-        "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
-          Constants.COLUMN_NAME_KEY +
+        "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
+          COLUMN_NAME_KEY +
           " = '" +
           toxKey +
           "' " +
           types +
           "ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+          COLUMN_NAME_TIMESTAMP +
           " ASC"
       case None =>
-        "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+        "SELECT * FROM " + TABLE_MESSAGES + " ORDER BY " +
+          COLUMN_NAME_TIMESTAMP +
           " DESC"
     }
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
-        val id = cursor.getInt(0)
-        val fileKind = FileKind.fromToxFileKind(cursor.getInt(11))
+        val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY))
+        val fileKind = FileKind.fromToxFileKind(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NAME_FILE_KIND)))
 
         if (fileKind == FileKind.INVALID || fileKind.visible) idSet.add(id)
       } while (cursor.moveToNext())
@@ -455,76 +470,80 @@ class AntoxDB(ctx: Context) {
     idSet
   }
 
-  def getMessageCursor(key: Option[ToxKey], actionMessages: Boolean): Cursor = {
+ /* def getMessageCursor(key: Option[ToxKey], actionMessages: Boolean): Cursor = {
     this.open(writeable = false)
     val selectQuery: String =
     key match {
       case Some(toxKey) =>
         val types: String = getQueryTypes(actionMessages)
-        "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
-          Constants.COLUMN_NAME_KEY +
+        "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
+          COLUMN_NAME_KEY +
           " = '" +
           toxKey +
           "' " +
           types +
           "ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+          COLUMN_NAME_TIMESTAMP +
           " ASC"
       case None =>
-        "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " ORDER BY " +
-          Constants.COLUMN_NAME_TIMESTAMP +
+        "SELECT * FROM " + TABLE_MESSAGES + " ORDER BY " +
+          COLUMN_NAME_TIMESTAMP +
           " DESC"
     }
 
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.rawQuery(selectQuery)
     cursor
+  } */
+
+  def friendRequests: Observable[Seq[FriendRequest]] = {
+    this.open(writeable = false)
+    val selectQuery = s"SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_MESSAGE FROM $TABLE_FRIEND_REQUESTS"
+    mDb.createQuery(TABLE_FRIEND_REQUESTS, selectQuery).map(query => {
+      val cursor = query.run()
+      val friendRequests = new ArrayBuffer[FriendRequest]()
+      if (cursor.moveToFirst()) {
+        do {
+          val key = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE))
+          friendRequests += new FriendRequest(key, message)
+        } while (cursor.moveToNext())
+      }
+      cursor.close()
+      this.close()
+      friendRequests
+    })
   }
 
-  def getFriendRequestsList: util.ArrayList[FriendRequest] = {
+  def groupInvites: Observable[Seq[GroupInvite]] = {
     this.open(writeable = false)
-    val friendRequests = new util.ArrayList[FriendRequest]()
-    val projection = Array(Constants.COLUMN_NAME_KEY, Constants.COLUMN_NAME_MESSAGE)
-    val cursor = mDb.query(Constants.TABLE_FRIEND_REQUESTS, projection, null, null, null, null, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val key = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)))
-        val message = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_MESSAGE))
-        friendRequests.add(new FriendRequest(key, message))
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    this.close()
-    friendRequests
-  }
+    val selectQuery = s"SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_GROUP_INVITER, $COLUMN_NAME_GROUP_DATA FROM $TABLE_GROUP_INVITES"
 
-  def getGroupInvitesList: util.ArrayList[GroupInvite] = {
-    this.open(writeable = false)
-    val groupInvites = new util.ArrayList[GroupInvite]()
-    val projection = Array(Constants.COLUMN_NAME_KEY, Constants.COLUMN_NAME_GROUP_INVITER,
-      Constants.COLUMN_NAME_GROUP_DATA)
-    val cursor = mDb.query(Constants.TABLE_GROUP_INVITES, projection, null, null, null, null, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val groupKey = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_KEY)))
-        val inviter = cursor.getString(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_INVITER))
-        val data = cursor.getBlob(cursor.getColumnIndexOrThrow(Constants.COLUMN_NAME_GROUP_DATA))
-        groupInvites.add(new GroupInvite(groupKey, inviter, data))
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    this.close()
-    groupInvites
+    mDb.createQuery(TABLE_GROUP_INVITES, selectQuery).map(query => {
+      val cursor = query.run()
+      val groupInvites = new ArrayBuffer[GroupInvite]()
+      if (cursor.moveToFirst()) {
+        do {
+          val groupKey = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val inviter = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_GROUP_INVITER))
+          val data = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_NAME_GROUP_DATA))
+          groupInvites += new GroupInvite(groupKey, inviter, data)
+        } while (cursor.moveToNext())
+      }
+      cursor.close()
+      this.close()
+      groupInvites
+    })
   }
 
   def getUnsentMessageList: Array[Message] = {
     this.open(writeable = false)
     val messageList = new util.ArrayList[Message]()
-    val selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
-      Constants.COLUMN_NAME_SUCCESSFULLY_SENT +
+    val selectQuery = "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
+      COLUMN_NAME_SUCCESSFULLY_SENT +
       "=0 AND type == 1 ORDER BY " +
-      Constants.COLUMN_NAME_TIMESTAMP +
+      COLUMN_NAME_TIMESTAMP +
       " ASC"
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
         val id = cursor.getInt(0)
@@ -552,111 +571,132 @@ class AntoxDB(ctx: Context) {
   def updateUnsentMessage(message_id: Integer, id: Integer) {
     this.open(writeable = true)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_SUCCESSFULLY_SENT, "1")
+    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, "1")
     values.put("type", 1: java.lang.Integer)
     val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
     val date = new Date()
-    values.put(Constants.COLUMN_NAME_TIMESTAMP, dateFormat.format(date))
-    values.put(Constants.COLUMN_NAME_MESSAGE_ID, message_id)
-    mDb.update(Constants.TABLE_CHAT_LOGS, values, "_id" + "=" + id + " AND " +
-      Constants.COLUMN_NAME_SUCCESSFULLY_SENT +
-      "=0", null)
+    values.put(COLUMN_NAME_TIMESTAMP, dateFormat.format(date))
+    values.put(COLUMN_NAME_MESSAGE_ID, message_id)
+    mDb.update(TABLE_MESSAGES, values, s"_id = $id AND $COLUMN_NAME_SUCCESSFULLY_SENT = 0")
     this.close()
   }
 
-  def setMessageReceived(receipt: Int): String = {
+  def setMessageReceived(receipt: Int): Unit = {
     this.open(writeable = true)
-    val query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_RECEIVED +
-      "=1 WHERE " +
-      Constants.COLUMN_NAME_MESSAGE_ID +
-      "=" +
-      receipt +
-      " AND " +
-      Constants.COLUMN_NAME_SUCCESSFULLY_SENT +
-      "=1 AND type =1"
-    mDb.execSQL(query)
-    val selectQuery = "SELECT * FROM " + Constants.TABLE_CHAT_LOGS + " WHERE " +
-      Constants.COLUMN_NAME_MESSAGE_ID +
-      "=" +
-      receipt +
-      " AND " +
-      Constants.COLUMN_NAME_SUCCESSFULLY_SENT +
-      "=1 AND type=1"
-    val cursor = mDb.rawQuery(selectQuery, null)
-    var k = ""
-    if (cursor.moveToFirst()) {
-      k = cursor.getString(3)
-    }
-    cursor.close()
-    this.close()
-    k
+    val where = s"$COLUMN_NAME_MESSAGE_ID = $receipt AND $COLUMN_NAME_SUCCESSFULLY_SENT = $TRUE AND type = ${MessageType.OWN}"
+
+    mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_RECEIVED, TRUE), where)
   }
 
   def markIncomingMessagesRead(key: ToxKey) {
     this.open(writeable = true)
-    val query = "UPDATE " + Constants.TABLE_CHAT_LOGS + " SET " + Constants.COLUMN_NAME_HAS_BEEN_READ +
-      "=1 WHERE " +
-      Constants.COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "' AND (type == 2 OR type == 4 OR type == " + MessageType.GROUP_PEER.id + ")"
-    mDb.execSQL(query)
+    val where =
+      s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.values -- MessageType.selfValues)}"
+    mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
     this.close()
     Log.d("", "marked incoming messages as read")
   }
 
   def deleteMessage(id: Int) {
     this.open(writeable = true)
-    val query = "DELETE FROM " + Constants.TABLE_CHAT_LOGS + " WHERE _id == " +
-      id
-    mDb.execSQL(query)
+    val where = s"_id == $id"
+    mDb.delete(TABLE_MESSAGES, where)
     this.close()
     Log.d("", "Deleted message")
   }
 
-  def getFriendList: Array[FriendInfo] = {
+  val friendList: Observable[Seq[FriendInfo]] = {
     this.open(writeable = false)
     val friendList = new ArrayBuffer[FriendInfo]()
-    val selectQuery = "SELECT  * FROM " + Constants.TABLE_CONTACTS +
-      " WHERE " + Constants.COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.FRIEND.id
-    val cursor = mDb.rawQuery(selectQuery, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val friendInfo = getFriendInfoFromCursor(cursor)
-        if (!friendInfo.blocked) friendList += friendInfo
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    this.close()
-    friendList.toArray
+    val selectQuery =
+      s"SELECT  * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_CONTACT_TYPE == ${ContactType.FRIEND.id}"
+    mDb.createQuery(TABLE_CONTACTS, selectQuery).map(query => {
+      val cursor = query.run()
+      if (cursor.moveToFirst()) {
+        do {
+          val friendInfo = getFriendInfoFromCursor(cursor)
+          if (!friendInfo.blocked) friendList += friendInfo
+        } while (cursor.moveToNext())
+      }
+      cursor.close()
+      this.close()
+      friendList
+    })
   }
 
-  def getGroupList: Array[GroupInfo] = {
+  val groupList: Observable[Seq[GroupInfo]] = {
     this.open(writeable = false)
-    val groupList = new ArrayBuffer[GroupInfo]()
-    val selectQuery = "SELECT  * FROM " + Constants.TABLE_CONTACTS +
-      " WHERE " + Constants.COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.GROUP.id
-    val cursor = mDb.rawQuery(selectQuery, null)
-    if (cursor.moveToFirst()) {
-      do {
-        val groupInfo = getGroupInfoFromCursor(cursor)
-        if (!groupInfo.blocked) groupList += groupInfo
-      } while (cursor.moveToNext())
-    }
+    val selectQuery = "SELECT  * FROM " + TABLE_CONTACTS +
+      " WHERE " + COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.GROUP.id
 
-    cursor.close()
-    this.close()
-    groupList.toArray
+    mDb.createQuery(TABLE_CONTACTS, selectQuery).map(query => {
+      val cursor = query.run()
+      val groupList = new ArrayBuffer[GroupInfo]()
+      if (cursor.moveToFirst()) {
+        do {
+          val groupInfo = getGroupInfoFromCursor(cursor)
+          if (!groupInfo.blocked) groupList += groupInfo
+        } while (cursor.moveToNext())
+      }
+
+      cursor.close()
+      this.close()
+      groupList
+    })
   }
+
+  val friendInfoList = friendList
+    .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
+    .combineLatestWith(unreadCounts)((tup, uc) => {
+    tup match {
+      case (fl, lm) =>
+        fl.map(f => {
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
+          val unreadCount: Option[Integer] = uc.get(f.key)
+          (lastMessageTup, unreadCount) match {
+            case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = unreadCount)
+            case (Some((lastMessage, lastMessageTimestamp)), None) =>
+              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
+            case _ =>
+              f.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
+          }
+        })
+    }
+  })
+
+  val groupInfoList = groupList
+    .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
+    .combineLatestWith(unreadCounts)((tup, uc) => {
+    tup match {
+      case (gl, lm) =>
+        gl.map(g => {
+          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.key)
+          val unreadCount: Option[Integer] = uc.get(g.key)
+          (lastMessageTup, uc) match {
+            case (Some((lastMessage, lastMessageTimestamp)), _) =>
+              g.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
+            case _ =>
+              g.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
+          }
+        })
+    }
+  })
+
+  //this is bad FIXME
+  val contactListElements = friendInfoList
+    .combineLatestWith(friendRequests)((friendInfos, friendRequests) => (friendInfos, friendRequests)) //combine friendinfolist and friend requests and return them in a tuple
+    .combineLatestWith(groupInvites)((a, gil) => (a._1, a._2, gil)) //return friendinfolist, friendrequests (a) and groupinvites (gi) in a tuple
+    .combineLatestWith(groupInfoList)((a, gil) => (a._1, a._2, a._3, gil)) //return friendinfolist, friendrequests and groupinvites (a), and groupInfoList (gl) in a tuple
 
   def doesContactExist(key: ToxKey): Boolean = {
     this.open(writeable = false)
-    val mCount = mDb.rawQuery("SELECT count(*) FROM " + Constants.TABLE_CONTACTS + " WHERE " +
-      Constants.COLUMN_NAME_KEY +
+    val mCount = mDb.query("SELECT count(*) FROM " + TABLE_CONTACTS + " WHERE " +
+      COLUMN_NAME_KEY +
       "='" +
       key +
-      "'", null)
+      "'")
     mCount.moveToFirst()
     val count = mCount.getInt(0)
     if (count > 0) {
@@ -672,30 +712,30 @@ class AntoxDB(ctx: Context) {
   def setAllOffline() {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_ISONLINE, "0")
-    mDb.update(Constants.TABLE_CONTACTS, values, Constants.COLUMN_NAME_ISONLINE + "='1'", null)
+    values.put(COLUMN_NAME_ISONLINE, "0")
+    mDb.update(TABLE_CONTACTS, values, COLUMN_NAME_ISONLINE + "='1'")
     values.clear()
     this.close()
   }
 
   private def deleteWithKey(key: ToxKey, tableName: String): Unit = {
     this.open(writeable = false)
-    mDb.delete(tableName, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.delete(tableName, COLUMN_NAME_KEY + "='" + key + "'")
     this.close()
   }
 
-  def deleteContact(key: ToxKey): Unit = deleteWithKey(key, Constants.TABLE_CONTACTS)
-  def deleteFriendRequest(key: ToxKey): Unit = deleteWithKey(key, Constants.TABLE_FRIEND_REQUESTS)
-  def deleteGroupInvite(key: ToxKey): Unit = deleteWithKey(key, Constants.TABLE_GROUP_INVITES)
-  def deleteChatLogs(key: ToxKey): Unit = deleteWithKey(key, Constants.TABLE_CHAT_LOGS)
+  def deleteContact(key: ToxKey): Unit = deleteWithKey(key, TABLE_CONTACTS)
+  def deleteFriendRequest(key: ToxKey): Unit = deleteWithKey(key, TABLE_FRIEND_REQUESTS)
+  def deleteGroupInvite(key: ToxKey): Unit = deleteWithKey(key, TABLE_GROUP_INVITES)
+  def deleteChatLogs(key: ToxKey): Unit = deleteWithKey(key, TABLE_MESSAGES)
 
   def getFriendRequestMessage(key: ToxKey): String = {
     this.open(writeable = false)
-    val selectQuery = "SELECT message FROM " + Constants.TABLE_FRIEND_REQUESTS +
+    val selectQuery = "SELECT message FROM " + TABLE_FRIEND_REQUESTS +
       " WHERE tox_key='" +
       key +
       "'"
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     var message = ""
     if (cursor.moveToFirst()) {
       message = cursor.getString(0)
@@ -710,7 +750,7 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(columnName, value)
-    mDb.update(table, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.update(table, values, COLUMN_NAME_KEY + "='" + key + "'")
     this.close()
   }
 
@@ -718,48 +758,48 @@ class AntoxDB(ctx: Context) {
     this.open(writeable = false)
     val values = new ContentValues()
     values.put(columnName, value)
-    mDb.update(table, values, Constants.COLUMN_NAME_KEY + "='" + key + "'", null)
+    mDb.update(table, values, COLUMN_NAME_KEY + "='" + key + "'")
     this.close()
   }
 
   def updateContactName(key: ToxKey, newName: String) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_USERNAME, newName)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_USERNAME, newName)
 
   def updateContactStatusMessage(key: ToxKey, newMessage: String) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_NOTE, newMessage)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_NOTE, newMessage)
 
   def updateContactStatus(key: ToxKey, status: ToxUserStatus) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_STATUS, UserStatus.getStringFromToxUserStatus(status))
 
   def updateContactOnline(key: ToxKey, online: Boolean) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_ISONLINE, online)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_ISONLINE, online)
 
   def updateFriendAvatar(key: ToxKey, avatar: String) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_AVATAR, avatar)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_AVATAR, avatar)
 
   def setAllFriendReceivedAvatar(receivedAvatar: Boolean) {
     this.open(writeable = false)
     val values = new ContentValues()
-    values.put(Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
-    mDb.update(Constants.TABLE_CONTACTS, values, null, null)
+    values.put(COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
+    mDb.update(TABLE_CONTACTS, values, null)
     this.close()
   }
 
   def updateContactReceivedAvatar(key: ToxKey, receivedAvatar: Boolean) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_RECEIVED_AVATAR, receivedAvatar)
 
   def updateContactFavorite(key: ToxKey, favorite: Boolean) =
-    updateColumnWithKey(Constants.TABLE_CONTACTS, key, Constants.COLUMN_NAME_FAVORITE, favorite)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_FAVORITE, favorite)
 
   def getContactDetails(key: ToxKey): Array[String] = {
     var details = Array[String](null, null, null)
     this.open(writeable = false)
-    val selectQuery = "SELECT * FROM " + Constants.TABLE_CONTACTS + " WHERE " +
-      Constants.COLUMN_NAME_KEY +
+    val selectQuery = "SELECT * FROM " + TABLE_CONTACTS + " WHERE " +
+      COLUMN_NAME_KEY +
       "='" +
       key +
       "'"
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
         var name = cursor.getString(1)
@@ -790,11 +830,11 @@ class AntoxDB(ctx: Context) {
 
     val query =
       "SELECT * " +
-        " FROM " + Constants.TABLE_CONTACTS +
-        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " FROM " + TABLE_CONTACTS +
+        " WHERE " + COLUMN_NAME_KEY +
         " = '" + key + "'"
 
-    val cursor = mDb.rawQuery(query, null)
+    val cursor = mDb.query(query)
     var contactInfo: ContactInfo = null
     if (cursor.moveToFirst()) {
       contactInfo = ContactType(cursor.getInt(11)) match {
@@ -815,11 +855,11 @@ class AntoxDB(ctx: Context) {
 
     val query =
       "SELECT * " +
-        " FROM " + Constants.TABLE_CONTACTS +
-        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " FROM " + TABLE_CONTACTS +
+        " WHERE " + COLUMN_NAME_KEY +
         " = '" + key + "'"
 
-    val cursor = mDb.rawQuery(query, null)
+    val cursor = mDb.query(query)
     var friendInfo: FriendInfo = null
     if (cursor.moveToFirst()) {
       friendInfo = getFriendInfoFromCursor(cursor)
@@ -835,11 +875,11 @@ class AntoxDB(ctx: Context) {
 
     val query =
       "SELECT * " +
-        " FROM " + Constants.TABLE_CONTACTS +
-        " WHERE " + Constants.COLUMN_NAME_KEY +
+        " FROM " + TABLE_CONTACTS +
+        " WHERE " + COLUMN_NAME_KEY +
         " = '" + key + "'"
 
-    val cursor = mDb.rawQuery(query, null)
+    val cursor = mDb.query(query)
     var groupInfo: GroupInfo = null
     if (cursor.moveToFirst()) {
        groupInfo = getGroupInfoFromCursor(cursor)
@@ -892,27 +932,21 @@ class AntoxDB(ctx: Context) {
 
   def updateAlias(alias: String, key: ToxKey) {
     this.open(writeable = true)
-    val query = "UPDATE " + Constants.TABLE_CONTACTS + " SET " + Constants.COLUMN_NAME_ALIAS +
-      "='" +
-      alias +
-      "' WHERE " +
-      Constants.COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "'"
-    mDb.execSQL(query)
+    val where =
+      s"$COLUMN_NAME_KEY ='$key'"
+    mDb.update(TABLE_CONTACTS, contentValue(COLUMN_NAME_ALIAS, alias), where)
     this.close()
   }
 
   def isContactBlocked(key: ToxKey): Boolean = {
     var isBlocked = false
     this.open(writeable = false)
-    val selectQuery = "SELECT isBlocked FROM " + Constants.TABLE_CONTACTS + " WHERE " +
-      Constants.COLUMN_NAME_KEY +
+    val selectQuery = "SELECT isBlocked FROM " + TABLE_CONTACTS + " WHERE " +
+      COLUMN_NAME_KEY +
       "='" +
       key +
       "'"
-    val cursor = mDb.rawQuery(selectQuery, null)
+    val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       isBlocked = cursor.getInt(0) > 0
     }

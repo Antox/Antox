@@ -63,8 +63,6 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
       ToxSingleton.typingMap.put(friendKey, false)
       Reactive.typing.onNext(true)
     }
-    ToxSingleton.updateFriendsList(ctx)
-    ToxSingleton.updateMessages(ctx)
 
     db.close()
   }

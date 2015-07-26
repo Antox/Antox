@@ -31,7 +31,6 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
         db.updateContactOnline(group.key, online = true)
         db.updateContactStatusMessage(group.key, group.topic)
         db.close()
-        ToxSingleton.updateGroupList(ctx)
       }
     }).start()
   }

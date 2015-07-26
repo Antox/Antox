@@ -21,6 +21,9 @@ import im.tox.antox.wrapper.{Message, MessageType}
 import im.tox.antoxnightly.R
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
+import scala.collection.mutable
+import scala.collection.mutable.Set
+import scala.collection.mutable.ArrayBuffer
 
 
 object ChatMessagesAdapter {
@@ -65,8 +68,8 @@ object ChatMessagesAdapter {
   }
 }
 
-class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message], ids: util.HashSet[Integer])
-  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages) {
+class ChatMessagesAdapter(var context: Context, messages: Seq[Message], ids: mutable.Set[Integer])
+  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages.toArray) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
@@ -76,7 +79,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
   private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE).asInstanceOf[LayoutInflater]
 
-  private val animatedIds: util.HashSet[Integer] = ids
+  private val animatedIds: mutable.Set[Integer] = ids
 
   override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
     var view: View = null
@@ -292,7 +295,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
     if (!animatedIds.contains(msg.id)) {
       holder.row.startAnimation(anim)
-      animatedIds.add(msg.id)
+      animatedIds += msg.id
     }
     view.setOnLongClickListener(new View.OnLongClickListener() {
 
@@ -312,7 +315,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                   val antoxDB = new AntoxDB(context.getApplicationContext)
                   antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
-                  ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 
@@ -331,7 +333,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                   val antoxDB = new AntoxDB(context.getApplicationContext)
                   antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
-                  ToxSingleton.updateMessages(context)
                   subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 

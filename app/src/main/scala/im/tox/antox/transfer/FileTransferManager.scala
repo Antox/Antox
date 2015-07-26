@@ -99,9 +99,6 @@ class FileTransferManager extends Intervals {
         antoxDB.close()
       })
     }
-
-    ToxSingleton.updateContactsList(context)
-    ToxSingleton.updateMessages(context)
   }
 
   def sendFileDeleteRequest(key: ToxKey, fileKind: FileKind, context: Context): Unit = {
@@ -150,7 +147,6 @@ class FileTransferManager extends Intervals {
     val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
     antoxDB.close()
-    ToxSingleton.updateMessages(context)
   }
 
   private def fileAcceptOrReject(key: ToxKey, fileNumber: Integer, context: Context, accept: Boolean) {
@@ -179,7 +175,6 @@ class FileTransferManager extends Intervals {
           case e: Exception => e.printStackTrace()
         }
       })
-      Reactive.updatedMessages.onNext(true)
     }
   }
 
@@ -231,9 +226,6 @@ class FileTransferManager extends Intervals {
             db.close()
           }
         }
-        Reactive.updatedMessages.onNext(true)
-        ToxSingleton.updateFriendsList(context)
-        ToxSingleton.updateGroupList(context)
 
       case None => Log.d(TAG, "fileFinished: No transfer found")
     }
@@ -245,7 +237,6 @@ class FileTransferManager extends Intervals {
     State.transfers.remove(key, fileNumber)
     db.clearFileNumber(key, fileNumber)
     db.close()
-    Reactive.updatedMessages.onNext(true)
   }
 
   def getProgress(id: Long): Long = {
@@ -279,7 +270,8 @@ class FileTransferManager extends Intervals {
 
   def updateSelfAvatar(context: Context): Unit = {
     val db = new AntoxDB(context)
-    db.getFriendList.filter(_.online).find(!_.receivedAvatar) match {
+    db.friendList.first.subscribe(friendList =>
+      friendList.filter(_.online).find(!_.receivedAvatar) match {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
@@ -291,6 +283,6 @@ class FileTransferManager extends Intervals {
 
       case None =>
         //avatar has been sent to all friends, do nothing
-    }
+    })
   }
 }

@@ -12,6 +12,5 @@ class AntoxOnGroupSelfTimeoutCallback(private var ctx: Context) /* extends Group
     val db = new AntoxDB(ctx)
     db.updateContactOnline(ToxSingleton.getGroup(groupNumber).key, false)
     db.close()
-    ToxSingleton.updateGroupList(ctx)
   }
 }

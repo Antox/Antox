@@ -3,7 +3,7 @@ package im.tox.antox.utils
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
 import java.util.concurrent.{LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 
-import android.graphics.BitmapFactory.Options
+import android.graphics.BitmapFactory.{Options => BitmapOptions}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.support.v4.util.LruCache
 import android.util.Log
@@ -84,7 +84,7 @@ object BitmapManager {
    * Will decode the byte Array and proceed to return the bitmap or null if the byte array
    * could not be decoded
    */
-  def decodeAndCheck(byteArr: Array[Byte], options: Options): Boolean = {
+  def decodeAndCheck(byteArr: Array[Byte], options: BitmapOptions): Boolean = {
     options.inJustDecodeBounds = true
     BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
 
@@ -136,7 +136,7 @@ object BitmapManager {
       // Get the bytes from the image file
       val byteArr = getBytesFromStream(fis)
 
-      val options = new Options
+      val options = new BitmapOptions()
 
       if (!decodeAndCheck(byteArr, options))
         return null

@@ -14,7 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget._
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.data.State
+import im.tox.antox.data.{AntoxDB, State}
 import im.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils.{BitmapManager, Constants, IconColor}
@@ -107,7 +107,8 @@ class ChatActivity extends GenericChatActivity {
   override def onResume() = {
     super.onResume()
     ToxSingleton.clearUselessNotifications(activeKey)
-    titleSub = Reactive.friendInfoList
+    val db = new AntoxDB(this)
+    titleSub = db.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
@@ -115,7 +116,7 @@ class ChatActivity extends GenericChatActivity {
     })
   }
 
-  private def updateDisplayedState(fi: Array[FriendInfo]): Unit = {
+  private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
     val thisActivity = this
     val key = activeKey
     val mFriend: Option[FriendInfo] = fi

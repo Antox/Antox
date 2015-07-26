@@ -15,6 +15,9 @@ object MessageType extends Enumeration {
   val GROUP_PEER = Value(7)
   val GROUP_ACTION = Value(8)
 
+  val selfValues = Set(OWN, FILE_TRANSFER, GROUP_PEER, GROUP_ACTION)
+  val transferValues = Set(FILE_TRANSFER, FILE_TRANSFER_FRIEND)
+
   def fromToxMessageType(messageType: ToxMessageType): MessageType = {
     if (messageType == ToxMessageType.ACTION) {
       ACTION

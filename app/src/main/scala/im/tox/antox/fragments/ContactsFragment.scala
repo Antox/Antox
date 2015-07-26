@@ -10,8 +10,8 @@ import im.tox.tox4j.core.enums.ToxUserStatus
 
 class ContactsFragment extends AbstractContactsFragment(showSearch = true, showFab = true) {
 
-  override def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest],
-    Array[GroupInvite], Array[GroupInfo])) {
+  override def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
+    Seq[GroupInvite], Seq[GroupInfo])) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new ContactListAdapter(getActivity)
@@ -30,9 +30,9 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     rootView
   }
 
-  def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Array[FriendInfo]): Unit = {
+  def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Seq[FriendInfo]): Unit = {
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
-    if (sortedFriendsList.length > 0) {
+    if (sortedFriendsList.nonEmpty) {
       for (f <- sortedFriendsList) {
         val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
@@ -42,8 +42,8 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateFriendRequests(leftPaneAdapter: ContactListAdapter, friendRequests: Array[FriendRequest]): Unit = {
-    if (friendRequests.length > 0) {
+  def updateFriendRequests(leftPaneAdapter: ContactListAdapter, friendRequests: Seq[FriendRequest]): Unit = {
+    if (friendRequests.nonEmpty) {
       for (r <- friendRequests) {
         val request = new LeftPaneItem(ContactItemType.FRIEND_REQUEST, r.requestKey, r.requestMessage)
         leftPaneAdapter.insert(0, request) // insert friend requests at top of contact list
@@ -51,8 +51,8 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateGroupInvites(leftPaneAdapter: ContactListAdapter, groupInvites: Array[GroupInvite]): Unit = {
-    if (groupInvites.length > 0) {
+  def updateGroupInvites(leftPaneAdapter: ContactListAdapter, groupInvites: Seq[GroupInvite]): Unit = {
+    if (groupInvites.nonEmpty) {
       for (invite <- groupInvites) {
         val request = new LeftPaneItem(ContactItemType.GROUP_INVITE, invite.groupKey, getResources.getString(R.string.invited_by) + " " + invite.inviter)
         leftPaneAdapter.addItem(request)
@@ -60,9 +60,9 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     }
   }
 
-  def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Array[GroupInfo]): Unit = {
+  def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Seq[GroupInfo]): Unit = {
     val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
-    if (groups.length > 0) {
+    if (groups.nonEmpty) {
       for (group <- groups) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.name, group.topic,
           group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)

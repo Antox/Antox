@@ -30,8 +30,6 @@ class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback {
         val db = new AntoxDB(ctx)
         db.updateFriendAvatar(key, "")
         db.close()
-        ToxSingleton.updateContactsList(ctx)
-        ToxSingleton.updateMessages(ctx)
         return
       }
 

@@ -47,12 +47,13 @@ abstract class AbstractContactsFragment extends Fragment {
     this.showFab = showFab
   }
 
-  def updateContacts(contactInfoTuple: (Array[FriendInfo], Array[FriendRequest],
-    Array[GroupInvite], Array[GroupInfo]))
+  def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
+    Seq[GroupInvite], Seq[GroupInfo]))
 
   override def onResume() {
     super.onResume()
-    contactChangeSub = Reactive.contactListElements.observeOn(AndroidMainThreadScheduler())
+    val db = new AntoxDB(getActivity)
+    contactChangeSub = db.contactListElements.observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
   }
 
@@ -185,8 +186,6 @@ abstract class AbstractContactsFragment extends Fragment {
               }
 
               ToxSingleton.save()
-              ToxSingleton.updateGroupList(getActivity)
-              ToxSingleton.updateMessages(getActivity)
           }
         }
         dialog.cancel()
@@ -223,8 +222,6 @@ abstract class AbstractContactsFragment extends Fragment {
             }
           })
           subscriber.onCompleted()
-          ToxSingleton.updateFriendsList(getActivity)
-          ToxSingleton.updateMessages(getActivity)
         }).subscribeOn(IOScheduler()).subscribe()
       }
     })
@@ -244,7 +241,7 @@ abstract class AbstractContactsFragment extends Fragment {
       override def directorySelected(directory: File): Unit = {
         try {
           val db = new AntoxDB(getActivity)
-          val messageList: util.ArrayList[Message] = db.getMessageList(Some(key), actionMessages = true)
+          val messageList: Seq[Message] = db.getMessageList(Some(key), actionMessages = true)
           val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimId(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
@@ -277,7 +274,6 @@ abstract class AbstractContactsFragment extends Fragment {
           val db = new AntoxDB(getActivity)
           db.deleteChatLogs(key)
           db.close()
-          ToxSingleton.updateMessages(getActivity)
         }
       })
       .setNegativeButton(getResources.getString(R.string.button_no), new DialogInterface.OnClickListener() {
