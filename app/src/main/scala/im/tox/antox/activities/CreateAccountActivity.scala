@@ -15,7 +15,7 @@ import im.tox.antox.data.UserDB
 import im.tox.antox.tox.{ToxDataFile, ToxService}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxDNS, ToxData}
-import im.tox.antox.transfer.{FileDialog, FileUtils}
+import im.tox.antox.transfer.FileDialog
 import im.tox.antox.utils._
 import im.tox.antoxnightly.R
 import im.tox.tox4j.core.exceptions.ToxNewException

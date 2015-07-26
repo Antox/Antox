@@ -3,7 +3,6 @@ package im.tox.antox.wrapper
 import java.io.File
 
 import im.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
-import im.tox.antox.transfer.FileUtils
 import im.tox.antox.utils._
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._

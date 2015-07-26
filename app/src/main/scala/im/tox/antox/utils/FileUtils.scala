@@ -1,12 +1,23 @@
-package im.tox.antox.transfer
+package im.tox.antox.utils
 
 import java.io._
 
+import android.content.Context
 import android.graphics.Bitmap
-
-import scala.util.Try
+import im.tox.antox.utils.StorageType._
 
 object FileUtils {
+
+  /**
+  * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
+  */
+  def getDirectory(path: String, storageType: StorageType, context: Context): File = {
+    if (storageType == StorageType.EXTERNAL) {
+      new File(path)
+    } else {
+      new File(context.getFilesDir, path)
+    }
+  }
 
   def copy(source: File, destination: File): Unit = {
     val inStream = new FileInputStream(source)
@@ -36,5 +47,16 @@ object FileUtils {
     bitmap.compress(format, quality, outStream)
     outStream.flush()
     outStream.close()
+  }
+
+  def writePrivateFile(fileName: String, write: String, context: Context): Unit = {
+    try {
+      val outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
+      outputStream.write(write.getBytes)
+      outputStream.close()
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
   }
 }

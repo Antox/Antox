@@ -1,6 +1,6 @@
 package im.tox.antox.tox
 
-import java.io.{BufferedReader, File, InputStreamReader, Reader}
+import java.io._
 import java.net.URL
 import java.nio.charset.Charset
 import java.util
@@ -22,6 +22,8 @@ import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+
+import scala.io.Source
 
 object ToxSingleton {
 
@@ -198,76 +200,62 @@ object ToxSingleton {
       Log.d(TAG, "updateDhtNodes: connected")
       Observable[JSONObject](subscriber => {
         Log.d(TAG, "updateDhtNodes: in observable")
-         object JsonReader {
-
-          private def readAll(rd: Reader): String = {
-            val sb = new StringBuilder()
-            var cp: Int = rd.read()
-            while (cp != -1) {
-              sb.append(cp.toChar)
-              cp = rd.read()
-            }
-            sb.toString()
-          }
-
-          def readJsonFromUrl(url: String): JSONObject = {
-            val is = new URL(url).openStream()
-            try {
-              val rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))
-              val jsonText = readAll(rd)
-              val json = new JSONObject(jsonText)
-              json
-            } catch {
-              case e: Exception => {
-                Log.e(TAG, "JsonReader readJsonFromUrl error: " + e)
-                new JSONObject()
-              }
-              } finally {
-                is.close()
-              }
-          }
-        }
         try {
           Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
-          val json = JsonReader.readJsonFromUrl("https://dist-build.tox.im/Nodefile.json")
-            subscriber.onNext(json)
-            subscriber.onCompleted()
+
+          val nodeFileUrl =
+            "https://build.tox.chat/job/nodefile_build_linux_x86_64_release" +
+              "/lastSuccessfulBuild/artifact/Nodefile.json"
+          val fileName = "Nodefile.json"
+
+          try {
+            FileUtils.writePrivateFile(fileName, JsonReader.readFromUrl(nodeFileUrl), ctx)
           } catch {
-            case e: Exception => {
-              Log.e(TAG, "update dht nodes error: " + e)
-              subscriber.onError(e)
-            }
+            //try to continue with stored nodefile if the nodefile is down
+            case e: IOException =>
+              Log.e(TAG, "couldn't reach Nodefile URL")
           }
-          }).map(json => {
-            Log.d(TAG, json.toString)
-            var dhtNodes: Array[DhtNode] = Array()
-            val serverArray = json.getJSONArray("servers")
-            for (i <- 0 until serverArray.length) {
-              val jsonObject = serverArray.getJSONObject(i)
-              dhtNodes +:= new DhtNode(
-                jsonObject.getString("owner"),
-                jsonObject.getString("ipv6"),
-                jsonObject.getString("ipv4"),
-                new ToxKey(jsonObject.getString("pubkey")),
-                jsonObject.getInt("port"))
-            }
-            dhtNodes
-          }).subscribeOn(IOScheduler())
-            .observeOn(AndroidMainThreadScheduler())
-            .subscribe(nodes => {
-              dhtNodes = nodes
-              Log.d(TAG, "Trying to bootstrap")
-              try {
-                for (i <- nodes.indices) {
-                  tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
-                }
-              } catch {
-                case e: Exception =>
-              }
-              Log.d(TAG, "Successfully bootstrapped")
-              }, error => {
-                Log.e(TAG, "Failed bootstrapping " + error)
-              })
+
+          val json = JsonReader.readJsonFromFile(new File(ctx.getFilesDir, fileName))
+
+          println(json)
+          subscriber.onNext(json)
+          subscriber.onCompleted()
+        } catch {
+          case e: Exception =>
+            Log.e(TAG, "update dht nodes error: " + e)
+            subscriber.onError(e)
+        }
+      }).map(json => {
+        Log.d(TAG, json.toString)
+        var dhtNodes: Array[DhtNode] = Array()
+        val serverArray = json.getJSONArray("servers")
+        for (i <- 0 until serverArray.length) {
+          val jsonObject = serverArray.getJSONObject(i)
+          dhtNodes +:= new DhtNode(
+            jsonObject.getString("owner"),
+            jsonObject.getString("ipv6"),
+            jsonObject.getString("ipv4"),
+            new ToxKey(jsonObject.getString("pubkey")),
+            jsonObject.getInt("port"))
+        }
+        dhtNodes
+      }).subscribeOn(IOScheduler())
+        .observeOn(AndroidMainThreadScheduler())
+        .subscribe(nodes => {
+        dhtNodes = nodes
+        Log.d(TAG, "Trying to bootstrap")
+        try {
+          for (i <- nodes.indices) {
+            tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+          }
+        } catch {
+          case e: Exception =>
+        }
+        Log.d(TAG, "Successfully bootstrapped")
+      }, error => {
+        Log.e(TAG, "Failed bootstrapping " + error)
+      })
     }
   }
 
