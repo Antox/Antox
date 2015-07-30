@@ -13,7 +13,7 @@ import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.adapters.ContactListAdapter._
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.fragments.ContactItemType
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
@@ -165,10 +165,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Accepting Friend: " + key)
-        val db = new AntoxDB(context)
-        db.addFriend(key, "", "Friend Accepted", "")
+        val db = State.db
+        db.addFriend(key, "", "", "Friend Accepted")
         db.deleteFriendRequest(key)
-        db.close()
         try {
           ToxSingleton.tox.addFriendNoRequest(key)
           ToxSingleton.save()
@@ -180,7 +179,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Rejecting Friend: " + key)
-        val antoxDB = new AntoxDB(context)
+        val antoxDB = State.db
         antoxDB.deleteFriendRequest(key)
         antoxDB.close()
       }
@@ -191,7 +190,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Joining Group: " + groupKey)
-        val db = new AntoxDB(context)
+        val db = State.db
 
         db.groupInvites.first.subscribe(invites => {
           try {
@@ -205,13 +204,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
         db.addGroup(groupKey, UIUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
-        db.close()
       }
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Joining Group: " + groupKey)
-        val antoxDB = new AntoxDB(context)
+        val antoxDB = State.db
         antoxDB.deleteGroupInvite(groupKey)
         antoxDB.close()
       }

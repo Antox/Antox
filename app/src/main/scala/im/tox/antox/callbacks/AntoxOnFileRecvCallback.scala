@@ -27,9 +27,8 @@ class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback {
       } else if (fileSize == 0) {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
         ToxSingleton.getAntoxFriend(friendNumber).get.deleteAvatar()
-        val db = new AntoxDB(ctx)
+        val db = State.db
         db.updateFriendAvatar(key, "")
-        db.close()
         return
       }
 

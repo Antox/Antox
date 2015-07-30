@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
 import im.tox.antox.activities.MainActivity
-import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.{ToxKey, MessageType}
 import im.tox.antox.wrapper.MessageType.MessageType
@@ -21,7 +21,7 @@ object MessageHelper {
   val TAG = "im.tox.antox.tox.MessageHelper"
 
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: ToxKey, message: String, messageType: MessageType): Unit = {
-    val db = new AntoxDB(ctx)
+    val db = State.db
     val friendName = db.getContactNameOrAlias(friendKey)
 
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
@@ -56,18 +56,16 @@ object MessageHelper {
       }
     }
 
-    db.close()
   }
 
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType) = {
-    val db = new AntoxDB(ctx)
+    val db = State.db
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
     val chatActive = State.chatActive && State.activeKey.contains(groupKey)
 
     db.addMessage(-1, groupKey, peerName, message, has_been_received = true,
       has_been_read = chatActive, successfully_sent = true, messageType)
-    db.close()
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val notificationsEnabled = preferences.getBoolean("notifications_enable_notifications", true) &&
@@ -99,7 +97,7 @@ object MessageHelper {
       mFriend match {
         case None =>
         case Some(friend) =>
-          val db = new AntoxDB(ctx)
+          val db = State.db
           for (splitMsg <- splitMessage(msg)) {
             val mId = try {
               Some(
@@ -123,13 +121,12 @@ object MessageHelper {
                 has_been_read = false, successfully_sent = false, messageType)
             }
           }
-          db.close()
       }
   }
 
   def sendGroupMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
     val group = ToxSingleton.getGroup(key)
-    val db = new AntoxDB(ctx)
+    val db = State.db
     val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN
     for (splitMsg <- splitMessage(msg)) {
       try {
@@ -151,7 +148,6 @@ object MessageHelper {
             true, has_been_read = true, successfully_sent = true, messageType)
       }
     }
-    db.close()
   }
 
   def splitMessage(msg: String): Array[String] = {
@@ -178,9 +174,8 @@ object MessageHelper {
   }
 
   def sendUnsentMessages(ctx: Context) {
-    val db = new AntoxDB(ctx)
+    val db = State.db
     val unsentMessageList = db.getUnsentMessageList
-    db.close()
     for (unsentMessage <- unsentMessageList) {
       val mFriend = ToxSingleton.getAntoxFriend(unsentMessage.key)
       mFriend.foreach(friend => {

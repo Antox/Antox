@@ -27,12 +27,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val db = new UserDB(this)
     if (!db.doUsersExist()) {
-      db.close()
       val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
       startActivity(createAccount)
       finish()
     } else if (preferences.getBoolean("loggedin", false)) {
-      db.close()
       val startTox = new Intent(getApplicationContext, classOf[ToxService])
       getApplicationContext.startService(startTox)
       val main = new Intent(getApplicationContext, classOf[MainActivity])
@@ -40,7 +38,6 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       finish()
     } else {
       val profiles = db.getAllProfiles
-      db.close()
       val profileSpinner = findViewById(R.id.login_account_name).asInstanceOf[Spinner]
       val adapter = new ArrayAdapter[String](this, android.R.layout.simple_spinner_dropdown_item, profiles)
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -72,7 +69,6 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       val db = new UserDB(this)
       if (db.doesUserExist(account)) {
         val details = db.getUserDetails(account)
-        db.close()
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = preferences.edit()
         editor.putBoolean("loggedin", true)

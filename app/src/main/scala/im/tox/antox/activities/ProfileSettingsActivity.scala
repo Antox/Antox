@@ -289,7 +289,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case _ =>
     }
 
-    db.close()
   }
 
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Unit = {

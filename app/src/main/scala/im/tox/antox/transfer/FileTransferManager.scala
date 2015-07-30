@@ -6,7 +6,7 @@ import android.content.Context
 import android.os.Environment
 import android.preference.PreferenceManager
 import android.util.Log
-import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.{IntervalLevels, Intervals, Reactive, ToxSingleton}
 import im.tox.antox.utils.BitmapManager
 import im.tox.antox.wrapper.{ToxKey, FileKind}
@@ -92,7 +92,7 @@ class FileTransferManager extends Intervals {
           }
         }
       }).foreach(fileNumber => {
-        val antoxDB = new AntoxDB(context)
+        val antoxDB = State.db
         Log.d(TAG, "adding File Transfer")
         val id = antoxDB.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
@@ -143,7 +143,7 @@ class FileTransferManager extends Intervals {
       } while (file.exists())
     }
 
-    val antoxDB = new AntoxDB(context)
+    val antoxDB = State.db
     val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
     antoxDB.close()
@@ -221,9 +221,8 @@ class FileTransferManager extends Intervals {
             BitmapManager.setAvatarInvalid(t.file)
 
             mFriend.get.setAvatar(Some(t.file))
-            val db = new AntoxDB(context)
+            val db = State.db
             db.updateFriendAvatar(key, t.file.getName)
-            db.close()
           }
         }
 
@@ -233,10 +232,9 @@ class FileTransferManager extends Intervals {
 
   def cancelFile(key: ToxKey, fileNumber: Int, context: Context) {
     Log.d(TAG, "cancelFile")
-    val db = new AntoxDB(context)
+    val db = State.db
     State.transfers.remove(key, fileNumber)
     db.clearFileNumber(key, fileNumber)
-    db.close()
   }
 
   def getProgress(id: Long): Long = {
@@ -262,14 +260,13 @@ class FileTransferManager extends Intervals {
   }
 
   def onSelfAvatarSendFinished(sentTo: ToxKey, context: Context): Unit = {
-    val db = new AntoxDB(context)
+    val db = State.db
     db.updateContactReceivedAvatar(sentTo, receivedAvatar = true)
     updateSelfAvatar(context)
-    db.close()
   }
 
   def updateSelfAvatar(context: Context): Unit = {
-    val db = new AntoxDB(context)
+    val db = State.db
     db.friendList.first.subscribe(friendList =>
       friendList.filter(_.online).find(!_.receivedAvatar) match {
       case Some(friend) =>

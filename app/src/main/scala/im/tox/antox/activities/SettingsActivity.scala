@@ -5,7 +5,7 @@ import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.view.MenuItem
 import im.tox.antox.activities.SettingsActivity._
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.{ToxService, ToxSingleton}
 import im.tox.antox.utils.Options
 import im.tox.antoxnightly.R
@@ -76,7 +76,7 @@ class SettingsActivity extends BetterPreferenceActivity {
     }
     if (key == "wifi_only") {
       if (!ToxSingleton.isToxConnected(sharedPreferences, this)) {
-        val antoxDB = new AntoxDB(this)
+        val antoxDB = State.db
         antoxDB.setAllOffline()
         antoxDB.close()
       }

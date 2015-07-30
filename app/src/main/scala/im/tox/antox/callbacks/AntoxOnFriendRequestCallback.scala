@@ -6,7 +6,7 @@ import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import im.tox.antox.activities.MainActivity
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
 import im.tox.antox.wrapper.ToxKey
@@ -25,13 +25,12 @@ object AntoxOnFriendRequestCallback {
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
 
   override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
-    val db = new AntoxDB(this.ctx)
+    val db = State.db
     val key = new ToxKey(keyBytes)
     if (!db.isContactBlocked(key)){
       db.addFriendRequest(key, new String(message, "UTF-8"))
     }
 
-    db.close()
     Log.d("FriendRequestCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)
     if (preferences.getBoolean("notifications_enable_notifications", true) &&

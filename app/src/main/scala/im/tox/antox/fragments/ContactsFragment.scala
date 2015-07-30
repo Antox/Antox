@@ -34,7 +34,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.nonEmpty) {
       for (f <- sortedFriendsList) {
-        val friend = new LeftPaneItem(f.key, f.avatar, f.name, f.statusMessage,
+        val friend = new LeftPaneItem(f.key, f.avatar, f.getAliasOrName, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
           f.lastMessageTimestamp)
         leftPaneAdapter.addItem(friend)
@@ -64,7 +64,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
     if (groups.nonEmpty) {
       for (group <- groups) {
-        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.name, group.topic,
+        val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.getAliasOrName, group.topic,
           group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)
       }

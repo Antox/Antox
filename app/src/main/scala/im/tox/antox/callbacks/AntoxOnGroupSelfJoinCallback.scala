@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antoxnightly.R
 
@@ -26,11 +26,10 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
         group.connected = true
 
 
-        val db = new AntoxDB(ctx)
+        val db = State.db
         db.updateContactName(group.key, group.name)
         db.updateContactOnline(group.key, online = true)
         db.updateContactStatusMessage(group.key, group.topic)
-        db.close()
       }
     }).start()
   }

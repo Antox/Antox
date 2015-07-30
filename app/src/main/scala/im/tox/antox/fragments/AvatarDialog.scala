@@ -61,9 +61,8 @@ class AvatarDialog(activity: Activity) {
           avatarFile.delete()
           Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)
       }
-      val db = new AntoxDB(activity)
+      val db = State.db
       db.setAllFriendReceivedAvatar(false)
-      db.close()
       State.transfers.updateSelfAvatar(activity)
 
     }

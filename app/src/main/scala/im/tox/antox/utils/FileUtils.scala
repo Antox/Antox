@@ -21,6 +21,10 @@ object FileUtils {
 
   def copy(source: File, destination: File): Unit = {
     val inStream = new FileInputStream(source)
+    copy(inStream, destination)
+  }
+
+  def copy(inStream: FileInputStream, destination: File): Unit = {
     val outStream = new FileOutputStream(destination)
     val inChannel = inStream.getChannel
     val outChannel = outStream.getChannel

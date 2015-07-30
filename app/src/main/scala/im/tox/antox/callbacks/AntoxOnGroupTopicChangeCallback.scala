@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupTopicChangeCallback(private var ctx: Context) /* extends GroupTopicChangeCallback */ {
@@ -9,8 +9,7 @@ class AntoxOnGroupTopicChangeCallback(private var ctx: Context) /* extends Group
     val group = ToxSingleton.getGroup(groupNumber)
     group.topic = new String(topic, "UTF-8")
 
-    val db = new AntoxDB(ctx)
+    val db = State.db
     db.updateContactStatusMessage(group.key, group.topic)
-    db.close()
   }
 }

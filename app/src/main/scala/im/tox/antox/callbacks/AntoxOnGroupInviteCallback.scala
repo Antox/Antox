@@ -6,7 +6,7 @@ import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import im.tox.antox.activities.MainActivity
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.Hex
 import im.tox.antox.wrapper.ToxKey
@@ -19,14 +19,13 @@ object AntoxOnGroupInviteCallback {
 class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInviteCallback */ {
 
   def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
-    val db = new AntoxDB(this.ctx)
+    val db = State.db
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
     if (db.isContactBlocked(inviter.getKey)) return
 
     val key = new ToxKey(inviteData.slice(0, 32))
     println("invite key is " + key)
     db.addGroupInvite(key, inviter.getName, inviteData)
-    db.close()
 
     Log.d("GroupInviteCallback", "")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this.ctx)

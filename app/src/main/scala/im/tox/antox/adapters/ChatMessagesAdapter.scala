@@ -24,6 +24,7 @@ import rx.lang.scala.schedulers.IOScheduler
 import scala.collection.mutable
 import scala.collection.mutable.Set
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.JavaConversions._
 
 
 object ChatMessagesAdapter {
@@ -68,8 +69,8 @@ object ChatMessagesAdapter {
   }
 }
 
-class ChatMessagesAdapter(var context: Context, messages: Seq[Message], ids: mutable.Set[Integer])
-  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages.toArray) {
+class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message], ids: mutable.Set[Integer])
+  extends ArrayAdapter[Message](context, R.layout.chat_message_row, messages) {
 
   var layoutResourceId: Int = R.layout.chat_message_row
 
@@ -312,7 +313,7 @@ class ChatMessagesAdapter(var context: Context, messages: Seq[Message], ids: mut
 
               case 1 =>
                 Observable[Boolean](subscriber => {
-                  val antoxDB = new AntoxDB(context.getApplicationContext)
+                  val antoxDB = State.db
                   antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   subscriber.onCompleted()
@@ -330,7 +331,7 @@ class ChatMessagesAdapter(var context: Context, messages: Seq[Message], ids: mut
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 Observable[Boolean](subscriber => {
-                  val antoxDB = new AntoxDB(context.getApplicationContext)
+                  val antoxDB = State.db
                   antoxDB.deleteMessage(msg.id)
                   antoxDB.close()
                   subscriber.onCompleted()

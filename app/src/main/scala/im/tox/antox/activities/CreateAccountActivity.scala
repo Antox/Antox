@@ -215,7 +215,6 @@ class CreateAccountActivity extends AppCompatActivity {
         }
       }
     } finally {
-      db.close()
     }
   }
 

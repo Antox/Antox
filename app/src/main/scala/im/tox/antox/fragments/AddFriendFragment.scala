@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.toxdns.ToxDNS
 import im.tox.antox.utils.Constants
@@ -106,7 +106,7 @@ class AddFriendFragment extends Fragment with InputableID {
 
         if (message == "") message = getString(R.string.addfriend_default_message)
 
-        val db = new AntoxDB(getActivity.getApplicationContext)
+        val db = State.db
         if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.addFriend(address, message)
@@ -115,14 +115,12 @@ class AddFriendFragment extends Fragment with InputableID {
             case e: ToxException[_] => e.printStackTrace()
           }
           Log.d("AddFriendActivity", "Adding friend to database")
-          db.addFriend(key, originalUsername, "Friend Request Sent", alias)
+          db.addFriend(key, originalUsername, alias, "Friend Request Sent")
         } else {
-          db.close()
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
           toast.show()
           -2
         }
-        db.close()
         toast = Toast.makeText(context, text, duration)
         toast.show()
         0

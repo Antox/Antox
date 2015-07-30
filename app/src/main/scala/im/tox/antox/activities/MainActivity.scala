@@ -22,7 +22,7 @@ import android.support.annotation.IntDef
 import android.widget.{TextView, AdapterView, ListView, Toast}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.callbacks.{SelfConnectionStatusChangeListener, AntoxOnSelfConnectionStatusCallback}
-import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.fragments.MainDrawerFragment
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
@@ -73,9 +73,8 @@ class MainActivity extends AppCompatActivity {
     // Initialise the bitmap manager for storing bitmaps in a cache
     new BitmapManager()
 
-    val db = new AntoxDB(getApplicationContext)
+    val db = State.db
     db.clearFileNumbers()
-    db.close()
 
     // Removes the drop shadow from the actionbar as it overlaps the tabs
     getSupportActionBar.setElevation(0)

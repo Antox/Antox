@@ -12,7 +12,7 @@ import android.view.View
 import android.widget.{EditText, TextView}
 import com.shamanland.fab.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.utils.BitmapManager
 import im.tox.antox.wrapper.ToxKey
 import im.tox.antoxnightly.R
@@ -32,7 +32,7 @@ class FriendProfileActivity extends AppCompatActivity {
     }
 
     friendKey = new ToxKey(getIntent.getStringExtra("key"))
-    val db = new AntoxDB(this)
+    val db = State.db
     val friendNote = db.getContactStatusMessage(friendKey)
 
     setTitle(getResources.getString(R.string.friend_profile_title, getIntent.getStringExtra("name")))
@@ -87,13 +87,12 @@ class FriendProfileActivity extends AppCompatActivity {
     /* Update friend alias after text has been changed */
     if (nickChanged) {
       val editFriendAlias = findViewById(R.id.friendAlias).asInstanceOf[EditText]
-      val db = new AntoxDB(getApplicationContext)
-      db.updateAlias(editFriendAlias.getText.toString, friendKey)
+      State.db.updateAlias(editFriendAlias.getText.toString, friendKey)
     }
   }
 
   def onClickFavorite(view: View): Unit = {
-    val db = new AntoxDB(this)
+    val db = State.db
     val favorite = !db.getFriendInfo(friendKey).favorite
     db.updateContactFavorite(friendKey, favorite)
     updateFab(favorite)

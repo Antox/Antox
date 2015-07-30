@@ -11,7 +11,7 @@ import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.util.Log
 import im.tox.antox.callbacks._
-import im.tox.antox.data.{AntoxDB, State}
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.utils._
 import im.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxUserStatus
@@ -204,12 +204,14 @@ object ToxSingleton {
   }
 
   def initTox(ctx: Context) {
-    State.db = new AntoxDB(ctx)
+    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+    State.db = new AntoxDB(ctx, preferences.getString("active_account", ""))
+    val db = State.db
+
     antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
     dataFile = new ToxDataFile(ctx)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val options = new ToxOptions(
       udpEnabled,
@@ -228,7 +230,6 @@ object ToxSingleton {
 
     //toxAv = new ToxAvImpl(tox.getTox)
 
-    val db = new AntoxDB(ctx)
     db.setAllOffline()
 
     db.friendList.first.subscribe(friends => {
@@ -262,7 +263,6 @@ object ToxSingleton {
     } catch {
       case e: ToxException[_] =>
     } finally {
-      db.close()
     }
     updateDhtNodes(ctx)
   }

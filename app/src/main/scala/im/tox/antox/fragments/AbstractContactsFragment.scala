@@ -14,7 +14,7 @@ import android.widget._
 import com.shamanland.fab.{FloatingActionButton, ShowHideOnScroll}
 import im.tox.antox.activities.{ChatActivity, FriendProfileActivity, GroupChatActivity}
 import im.tox.antox.adapters.ContactListAdapter
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.transfer.FileDialog
 import im.tox.antox.transfer.FileDialog.DirectorySelectedListener
@@ -52,7 +52,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
   override def onResume() {
     super.onResume()
-    val db = new AntoxDB(getActivity)
+    val db = State.db
     contactChangeSub = db.contactListElements.observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
   }
@@ -174,10 +174,9 @@ abstract class AbstractContactsFragment extends Fragment {
         if (parentItem.viewType == ContactItemType.GROUP) {
           index match {
             case 0 =>
-              val db = new AntoxDB(getActivity)
+              val db = State.db
               db.deleteChatLogs(key)
               db.deleteContact(key)
-              db.close()
               val group = ToxSingleton.getGroupList.getGroup(key)
               try {
                 group.leave(getResources.getString(R.string.group_default_part_message))
@@ -208,10 +207,9 @@ abstract class AbstractContactsFragment extends Fragment {
 
       def onClick(dialog: DialogInterface, id: Int) {
         Observable[Boolean](subscriber => {
-          val db = new AntoxDB(getActivity)
+          val db = State.db
           if (deleteLogsCheckboxView.isChecked) db.deleteChatLogs(key)
           db.deleteContact(key)
-          db.close()
           val mFriend = ToxSingleton.getAntoxFriend(key)
           mFriend.foreach(friend => {
             try {
@@ -240,7 +238,7 @@ abstract class AbstractContactsFragment extends Fragment {
     fileDialog.addDirectoryListener(new DirectorySelectedListener {
       override def directorySelected(directory: File): Unit = {
         try {
-          val db = new AntoxDB(getActivity)
+          val db = State.db
           val messageList: Seq[Message] = db.getMessageList(Some(key), actionMessages = true)
           val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimId(key) + "-log.txt"
 
@@ -252,7 +250,6 @@ abstract class AbstractContactsFragment extends Fragment {
           }
           log.close()
           Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
-          db.close()
         } catch {
           case e: Exception =>
             Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
@@ -271,9 +268,8 @@ abstract class AbstractContactsFragment extends Fragment {
       .setPositiveButton(getResources.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
 
         def onClick(dialog: DialogInterface, id: Int) {
-          val db = new AntoxDB(getActivity)
+          val db = State.db
           db.deleteChatLogs(key)
-          db.close()
         }
       })
       .setNegativeButton(getResources.getString(R.string.button_no), new DialogInterface.OnClickListener() {

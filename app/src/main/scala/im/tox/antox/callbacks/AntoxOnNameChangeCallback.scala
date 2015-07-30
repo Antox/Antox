@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
 import im.tox.tox4j.core.callbacks.FriendNameCallback
@@ -19,8 +19,7 @@ class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCall
       case None => throw new Exception("Friend not found.")
     }
 
-    val db = new AntoxDB(ctx)
+    val db = State.db
     db.updateContactName(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, name)
-    db.close()
   }
 }

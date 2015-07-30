@@ -50,6 +50,8 @@ object DbConstants {
 
   val COLUMN_NAME_SUCCESSFULLY_SENT = "successfully_sent"
 
+  val COLUMN_NAME_SIZE = "size"
+
   val COLUMN_NAME_FILE_KIND = "file_kind"
 
   val COLUMN_NAME_ISONLINE = "isonline"

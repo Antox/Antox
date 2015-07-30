@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import im.tox.antox.adapters.ChatMessagesAdapter
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.{Reactive, ToxSingleton}
 import im.tox.antox.utils.Constants
 import im.tox.antox.wrapper.{ToxKey, Message}
@@ -21,7 +21,9 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
+import scala.collection.{JavaConversions, mutable}
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "im.tox.antox.activities.ChatActivity"
@@ -55,8 +57,8 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val thisActivity = this
     Log.d(TAG, "key = " + activeKey)
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val antoxDB = new AntoxDB(this)
-    adapter = new ChatMessagesAdapter(this, getMessageList, antoxDB.getMessageIds(Some(activeKey), preferences.getBoolean("action_messages", false)))
+    val db = State.db
+    adapter = new ChatMessagesAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getMessageList)), db.getMessageIds(Some(activeKey), preferences.getBoolean("action_messages", false)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -121,13 +123,17 @@ abstract class GenericChatActivity extends AppCompatActivity {
     super.onResume()
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
-    val db = new AntoxDB(getApplicationContext)
+    val db = State.db
     db.markIncomingMessagesRead(activeKey)
-    messagesSub = getMessageObservable.subscribe(messageList => {
-      Log.d(TAG, "Messages updated")
-      updateChat(messageList)
-      db.close()
-    })
+    try {
+      messagesSub = getMessageObservable.subscribe(messageList => {
+        Log.d(TAG, "Messages updated")
+        updateChat(messageList)
+      })
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
     progressSub = Observable.interval(500 milliseconds)
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(x => {
@@ -191,14 +197,14 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
   }
 
-  def getMessageObservable: Observable[Seq[Message]] = {
-    val antoxDB = new AntoxDB(this)
+  def getMessageObservable: Observable[ArrayBuffer[Message]] = {
+    val antoxDB = State.db
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
     antoxDB.messageListObservable(Some(activeKey), preferences.getBoolean("action_messages", true))
   }
 
-  def getMessageList: Seq[Message] = {
-    val antoxDB = new AntoxDB(this)
+  def getMessageList: ArrayBuffer[Message] = {
+    val antoxDB = State.db
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
     antoxDB.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
   }

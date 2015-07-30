@@ -128,10 +128,9 @@ class MainDrawerFragment extends Fragment {
           override def groupCreationConfimed(name: String): Unit = {
             val groupNumber = ToxSingleton.tox.newGroup(name)
             val groupId = ToxSingleton.tox.getGroupChatId(groupNumber)
-            val db = new AntoxDB(getApplicationContext)
+            val db = State.db
 
             db.addGroup(groupId, name, "")
-            db.close()
             ToxSingleton.updateGroupList(getApplicationContext)
           }
         })

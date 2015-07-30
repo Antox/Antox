@@ -51,7 +51,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
   override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection): Unit = {
     val online = connectionStatus != ToxConnection.NONE
 
-    val db = new AntoxDB(ctx)
+    val db = State.db
     val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
     db.updateContactOnline(friendKey, online)
     ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
@@ -64,6 +64,5 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
       Reactive.typing.onNext(true)
     }
 
-    db.close()
   }
 }

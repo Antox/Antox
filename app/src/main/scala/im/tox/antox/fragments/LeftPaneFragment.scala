@@ -67,6 +67,7 @@ class LeftPaneFragment extends Fragment {
     val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
+
     tabs.setViewPager(pager)
 
     rootView

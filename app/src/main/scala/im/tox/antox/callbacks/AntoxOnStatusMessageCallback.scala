@@ -1,7 +1,7 @@
 package im.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.antox.data.AntoxDB
+import im.tox.antox.data.{State, AntoxDB}
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils.UIUtils
 import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
@@ -18,8 +18,7 @@ class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatu
 
     ToxSingleton.getAntoxFriend(friendNumber).get.setStatusMessage(statusMessage)
 
-    val db = new AntoxDB(ctx)
+    val db = State.db
     db.updateContactStatusMessage(ToxSingleton.tox.getFriendKey(friendNumber), statusMessage)
-    db.close()
   }
 }
