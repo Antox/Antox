@@ -11,9 +11,9 @@ object AntoxOnStatusMessageCallback {
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatusMessageCallback {
+class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatusMessageCallback[Unit] {
 
-  override def friendStatusMessage(friendNumber: Int, messageBytes: Array[Byte]): Unit = {
+  override def friendStatusMessage(friendNumber: Int, messageBytes: Array[Byte])(state: Unit): Unit = {
     val statusMessage = UIUtils.removeNewlines(new String(messageBytes, "UTF-8"))
 
     ToxSingleton.getAntoxFriend(friendNumber).get.setStatusMessage(statusMessage)

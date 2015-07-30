@@ -12,8 +12,8 @@ object AntoxOnReadReceiptCallback {
   private val TAG = "im.tox.antox.callbacks.AntoxOnReadReceiptCallback"
 }
 
-class AntoxOnReadReceiptCallback(private var ctx: Context) extends FriendReadReceiptCallback {
-  override def friendReadReceipt(friendNumber: Int, messageId: Int): Unit = {
+class AntoxOnReadReceiptCallback(private var ctx: Context) extends FriendReadReceiptCallback[Unit] {
+  override def friendReadReceipt(friendNumber: Int, messageId: Int)(state: Unit): Unit = {
     val db = new AntoxDB(this.ctx)
     val key = db.setMessageReceived(messageId)
     Log.d(TAG, "read receipt, for key: " + key)

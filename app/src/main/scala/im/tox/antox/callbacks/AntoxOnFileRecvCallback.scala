@@ -9,8 +9,12 @@ import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.tox4j.core.callbacks.FileRecvCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
-class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback {
-  override def fileRecv(friendNumber: Int, fileNumber: Int, toxFileKind: Int, fileSize: Long, filename: Array[Byte]): Unit = {
+class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback[Unit] {
+  override def fileRecv(friendNumber: Int,
+                        fileNumber: Int,
+                        toxFileKind: Int,
+                        fileSize: Long,
+                        filename: Array[Byte])(state: Unit): Unit = {
     val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
     val key = ToxSingleton.getAntoxFriend(friendNumber).get.key
 

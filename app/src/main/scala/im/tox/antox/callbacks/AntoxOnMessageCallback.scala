@@ -11,9 +11,9 @@ object AntoxOnMessageCallback {
   val TAG = "im.tox.antox.callbacks.AntoxOnMessageCallback"
 }
 
-class AntoxOnMessageCallback(private var ctx: Context) extends FriendMessageCallback {
+class AntoxOnMessageCallback(private var ctx: Context) extends FriendMessageCallback[Unit] {
 
-  override def friendMessage(friendNumber: Int, messageType: ToxMessageType, timeDelta: Int, message: Array[Byte]): Unit = {
+  override def friendMessage(friendNumber: Int, messageType: ToxMessageType, timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
     MessageHelper.handleMessage(ctx, friendNumber,
       ToxSingleton.getAntoxFriend(friendNumber).get.getKey,
       new String(message, "UTF-8"), MessageType.fromToxMessageType(messageType))

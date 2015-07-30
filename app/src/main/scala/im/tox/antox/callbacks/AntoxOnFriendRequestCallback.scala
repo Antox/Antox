@@ -22,9 +22,9 @@ object AntoxOnFriendRequestCallback {
   val FRIEND_MESSAGE = "im.tox.antox.FRIEND_MESSAGE"
 }
 
-class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback {
+class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback[Unit] {
 
-  override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte]): Unit = {
+  override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
     val db = new AntoxDB(this.ctx)
     val key = new ToxKey(keyBytes)
     if (!db.isContactBlocked(key)){

@@ -12,7 +12,7 @@ import im.tox.tox4j.impl.jni.{ToxCryptoImpl, ToxCoreImpl}
 
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions) extends Intervals {
 
-  val tox: ToxCoreImpl = new ToxCoreImpl(options)
+  val tox = new ToxCoreImpl[Unit](options)
 
   var selfConnectionStatus: ToxConnection = ToxConnection.NONE
 
@@ -24,7 +24,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def close(): Unit = tox.close()
 
-  def getSaveData: Array[Byte] = tox.getSaveData
+  def getSaveData: Array[Byte] = tox.getSavedata
 
   def bootstrap(address: String, port: Int, publicKey: ToxKey): Unit = {
     tox.bootstrap(address, port, publicKey.bytes)
@@ -39,7 +39,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def iterationInterval(): Int = tox.iterationInterval
 
-  def iterate(): Unit = tox.iterate()
+  def iterate(): Unit = tox.iterate(Unit)
 
   override def interval: Int = IntervalLevels.AWAKE.id
 
@@ -47,9 +47,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def getSecretKey: Array[Byte] = tox.getSecretKey
 
-  def setNospam(nospam: Int): Unit = tox.setNoSpam(nospam)
+  def setNospam(nospam: Int): Unit = tox.setNospam(nospam)
 
-  def getNospam: Int = tox.getNoSpam
+  def getNospam: Int = tox.getNospam
 
   def getAddress: ToxAddress = new ToxAddress(tox.getAddress)
 
@@ -91,7 +91,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   }
 
   def addFriendNoRequest(key: ToxKey): Int = {
-    val friendNumber = tox.addFriendNoRequest(Hex.hexStringToBytes(key.toString))
+    val friendNumber = tox.addFriendNorequest(Hex.hexStringToBytes(key.toString))
     antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
     antoxFriend.setKey(key)
@@ -103,7 +103,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     tox.deleteFriend(friendNumber)
   }
 
-  def getFriendByKey(key: ToxKey): Int = tox.getFriendByPublicKey(key.bytes)
+  def getFriendByKey(key: ToxKey): Int = tox.friendByPublicKey(key.bytes)
 
   def getFriendKey(friendNumber: Int): ToxKey = new ToxKey(tox.getFriendPublicKey(friendNumber))
 
@@ -113,27 +113,9 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def setTyping(friendNumber: Int, typing: Boolean): Unit = tox.setTyping(friendNumber, typing)
 
-  def sendMessage(friendNumber: Int, message: String): Int = tox.sendMessage(friendNumber, ToxMessageType.NORMAL, 0, message.getBytes)
+  def sendMessage(friendNumber: Int, message: String): Int = tox.friendSendMessage(friendNumber, ToxMessageType.NORMAL, 0, message.getBytes)
 
-  def sendAction(friendNumber: Int, action: String): Int = tox.sendMessage(friendNumber, ToxMessageType.ACTION, 0, action.getBytes)
-
-  def callbackSelfConnectionStatus(callback: SelfConnectionStatusCallback): Unit = tox.callbackSelfConnectionStatus(callback)
-
-  def callbackFriendName(callback: FriendNameCallback): Unit = tox.callbackFriendName(callback)
-
-  def callbackFriendStatusMessage(callback: FriendStatusMessageCallback): Unit = tox.callbackFriendStatusMessage(callback)
-
-  def callbackFriendStatus(callback: FriendStatusCallback): Unit = tox.callbackFriendStatus(callback)
-
-  def callbackFriendConnectionStatus(callback: FriendConnectionStatusCallback): Unit = tox.callbackFriendConnectionStatus(callback)
-
-  def callbackFriendTyping(callback: FriendTypingCallback): Unit = tox.callbackFriendTyping(callback)
-
-  def callbackReadReceipt(callback: FriendReadReceiptCallback): Unit = tox.callbackFriendReadReceipt(callback)
-
-  def callbackFriendRequest(callback: FriendRequestCallback): Unit = tox.callbackFriendRequest(callback)
-
-  def callbackFriendMessage(callback: FriendMessageCallback): Unit = tox.callbackFriendMessage(callback)
+  def sendAction(friendNumber: Int, action: String): Int = tox.friendSendMessage(friendNumber, ToxMessageType.ACTION, 0, action.getBytes)
 
   def hash(bytes: Array[Byte]): Array[Byte] = ToxCryptoImpl.hash(bytes)
 
@@ -142,8 +124,6 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
   }
 
   def fileControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(friendNumber, fileNumber, control)
-
-  def callbackFileControl(callback: FileRecvControlCallback): Unit = tox.callbackFileRecvControl(callback)
 
   def fileSend(friendNumber: Int, kind: Int, fileSize: Long, fileId: String, filename: String): Int = {
     val fileIdBytes = Option(fileId).map(_.getBytes).orNull
@@ -154,21 +134,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def fileGetFileId(friendNumber: Int, fileNumber: Int): Array[Byte] = Array[Byte](0) //tox.fileGetFileId(friendNumber, fileNumber)
 
-  def callbackFileRequestChunk(callback: FileChunkRequestCallback): Unit = tox.callbackFileChunkRequest(callback)
-
-  def callbackFileReceive(callback: FileRecvCallback): Unit = tox.callbackFileRecv(callback)
-
-  def callbackFileReceiveChunk(callback: FileRecvChunkCallback): Unit = tox.callbackFileRecvChunk(callback)
-
-  def sendLossyPacket(friendNumber: Int, data: Array[Byte]): Unit = tox.sendLossyPacket(friendNumber, data)
-
-  def callbackFriendLossyPacket(callback: FriendLossyPacketCallback): Unit = tox.callbackFriendLossyPacket(callback)
-
-  def sendLosslessPacket(friendNumber: Int, data: Array[Byte]): Unit = tox.sendLosslessPacket(friendNumber, data)
-
-  def callbackFriendLosslessPacket(callback: FriendLosslessPacketCallback): Unit = tox.callbackFriendLosslessPacket(callback)
-
-  def callback(handler: ToxEventListener): Unit = tox.callback(handler)
+  def callback(handler: ToxEventListener[Unit]): Unit = tox.callback(handler)
 
   //def callbackGroupJoinRejected(callback: GroupJoinRejectedCallback): Unit = tox.callbackGroupJoinRejected(callback)
 
