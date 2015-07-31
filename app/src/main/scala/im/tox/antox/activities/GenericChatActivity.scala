@@ -42,7 +42,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var activeKey: ToxKey = null
   var scrolling: Boolean = false
 
-  val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 50
+  val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
   override def onCreate(savedInstanceState: Bundle) = {
     super.onCreate(savedInstanceState)
@@ -125,15 +125,12 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Reactive.chatActive.onNext(true)
     val db = State.db
     db.markIncomingMessagesRead(activeKey)
-    try {
-      messagesSub = getMessageObservable.subscribe(messageList => {
-        Log.d(TAG, "Messages updated")
-        updateChat(messageList)
-      })
-    } catch {
-      case e: Exception =>
-        e.printStackTrace()
-    }
+    messagesSub = getMessageObservable
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(messageList => {
+      Log.d(TAG, "Messages updated")
+      updateChat(messageList)
+    })
     progressSub = Observable.interval(500 milliseconds)
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(x => {
@@ -198,15 +195,15 @@ abstract class GenericChatActivity extends AppCompatActivity {
   }
 
   def getMessageObservable: Observable[ArrayBuffer[Message]] = {
-    val antoxDB = State.db
+    val db = State.db
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    antoxDB.messageListObservable(Some(activeKey), preferences.getBoolean("action_messages", true))
+    db.messageListObservable(Some(activeKey), preferences.getBoolean("action_messages", true))
   }
 
   def getMessageList: ArrayBuffer[Message] = {
-    val antoxDB = State.db
+    val db = State.db
     val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    antoxDB.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
+    db.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
   }
 
   override def onPause() = {

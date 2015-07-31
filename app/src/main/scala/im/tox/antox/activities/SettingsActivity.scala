@@ -76,9 +76,8 @@ class SettingsActivity extends BetterPreferenceActivity {
     }
     if (key == "wifi_only") {
       if (!ToxSingleton.isToxConnected(sharedPreferences, this)) {
-        val antoxDB = State.db
-        antoxDB.setAllOffline()
-        antoxDB.close()
+        val antoxDb = State.db
+        antoxDb.setAllOffline()
       }
     }
     if (key == "language") {

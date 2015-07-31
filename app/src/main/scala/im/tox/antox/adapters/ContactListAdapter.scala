@@ -179,9 +179,8 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Rejecting Friend: " + key)
-        val antoxDB = State.db
-        antoxDB.deleteFriendRequest(key)
-        antoxDB.close()
+        val db = State.db
+        db.deleteFriendRequest(key)
       }
     })
   }
@@ -209,9 +208,8 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         Log.d("OnClick", "Joining Group: " + groupKey)
-        val antoxDB = State.db
-        antoxDB.deleteGroupInvite(groupKey)
-        antoxDB.close()
+        val db = State.db
+        db.deleteGroupInvite(groupKey)
       }
     })
   }

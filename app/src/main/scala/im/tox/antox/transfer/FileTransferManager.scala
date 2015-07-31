@@ -92,11 +92,10 @@ class FileTransferManager extends Intervals {
           }
         }
       }).foreach(fileNumber => {
-        val antoxDB = State.db
+        val db = State.db
         Log.d(TAG, "adding File Transfer")
-        val id = antoxDB.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
+        val id = db.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
-        antoxDB.close()
       })
     }
   }
@@ -143,10 +142,9 @@ class FileTransferManager extends Intervals {
       } while (file.exists())
     }
 
-    val antoxDB = State.db
-    val id = antoxDB.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
+    val db = State.db
+    val id = db.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
-    antoxDB.close()
   }
 
   private def fileAcceptOrReject(key: ToxKey, fileNumber: Integer, context: Context, accept: Boolean) {

@@ -36,7 +36,7 @@ class AntoxDBTest extends AndroidTestCase {
 
   @Test
   def testAddFriend(): Unit = {
-    /* db.addFriend(key, name, alias, statusMessage)
+    db.addFriend(key, name, alias, statusMessage)
 
     db.friendList.subscribe(friendList => {
       assert(friendList.size == 1)
@@ -45,7 +45,7 @@ class AntoxDBTest extends AndroidTestCase {
       assert(friendList.exists(_.getAliasOrName equals alias))
       assert(friendList.exists(_.statusMessage equals statusMessage))
       assert(friendList.exists(_.key equals key))
-    }) */
+    })
   }
 
   @Test
@@ -53,8 +53,8 @@ class AntoxDBTest extends AndroidTestCase {
     db.addFriend(key, name, alias, statusMessage)
 
     var number = 0
-    db.lastMessageTest.subscribe(friendList => {
-      println("GOT A FIRENLIST CLLBACK")
+    db.messageListObservable.subscribe(friendList => {
+      println("GOT A MESSAGE CLLBACK")
       number += 1
     })
 
@@ -66,8 +66,10 @@ class AntoxDBTest extends AndroidTestCase {
     db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
 
     db.lastMessages.subscribe(friendList => {
-      println("GOT A FIRENLIST CLLBACK")
+      println("GOT A MESSAGE CLLBACK")
       number += 1
     })
+
+    println("number is " + number)
   }
 }

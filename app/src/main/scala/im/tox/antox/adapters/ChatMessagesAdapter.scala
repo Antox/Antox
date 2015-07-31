@@ -313,9 +313,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
               case 1 =>
                 Observable[Boolean](subscriber => {
-                  val antoxDB = State.db
-                  antoxDB.deleteMessage(msg.id)
-                  antoxDB.close()
+                  val db = State.db
+                  db.deleteMessage(msg.id)
                   subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 
@@ -331,9 +330,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 Observable[Boolean](subscriber => {
-                  val antoxDB = State.db
-                  antoxDB.deleteMessage(msg.id)
-                  antoxDB.close()
+                  val db = State.db
+                  db.deleteMessage(msg.id)
                   subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
 

@@ -108,10 +108,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   mDbHelper = new DatabaseHelper(ctx, activeDatabase)
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
 
-  private def open(writeable: Boolean): AntoxDB = {
-    this
-  }
-
   def close() {
     mDbHelper.close()
   }
@@ -137,8 +133,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
                  alias: String,
                  statusMessage: String,
                  contactType: ContactType) {
-    this.open(writeable = true)
-
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_STATUS, "0")
@@ -169,7 +163,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     fileKind: Int,
     size: Int,
     sending: Boolean): Long = {
-    this.open(writeable = true)
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_MESSAGE, path)
@@ -189,7 +182,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def fileTransferStarted(key: ToxKey, fileNumber: Int) {
-    this.open(writeable = false)
     val where =
       s"""(type == ${MessageType.FILE_TRANSFER}
          |OR type == ${MessageType.FILE_TRANSFER_FRIEND})
@@ -200,7 +192,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def addFriendRequest(key: ToxKey, message: String) {
-    this.open(writeable = true)
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_MESSAGE, message)
@@ -208,7 +199,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def addGroupInvite(key: ToxKey, inviter: String, data: Array[Byte]) {
-    this.open(writeable = true)
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_GROUP_INVITER, inviter)
@@ -240,9 +230,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   val unreadCounts: Observable[Map[ToxKey, Integer]] = {
     val map = scala.collection.mutable.Map.empty[ToxKey, Integer]
     val selectQuery =
-      s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY,
-        |COUNT($TABLE_MESSAGES._id) FROM $TABLE_MESSAGES JOIN $TABLE_CONTACTS
-        |ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
+      s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY, COUNT($TABLE_MESSAGES._id)
+        |FROM $TABLE_MESSAGES
+        |JOIN $TABLE_CONTACTS ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
         |WHERE $TABLE_MESSAGES.$COLUMN_NAME_HAS_BEEN_READ == $FALSE
         |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id), TABLE_MESSAGES)}
         |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)} GROUP BY contacts.tox_key""".stripMargin
@@ -265,7 +255,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
     var id = -1
     val selectQuery =
-      s"""SELECT _id FROM $TABLE_MESSAGES
+      s"""SELECT _id
+         |FROM $TABLE_MESSAGES
          |WHERE $COLUMN_NAME_KEY = '$key'
          |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues.map(_.id), TABLE_MESSAGES)}
          |AND $COLUMN_NAME_MESSAGE_ID == $fileNumber""".stripMargin
@@ -305,7 +296,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
     val selectQuery =
       s"""SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_MESSAGE, $COLUMN_NAME_TIMESTAMP
-         |FROM $TABLE_MESSAGES WHERE _id
+         |FROM $TABLE_MESSAGES
+         |WHERE _id
          |IN (SELECT MAX(_id) FROM $TABLE_MESSAGES
          |WHERE ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.transferValues).map(_.id))}
          |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
@@ -325,12 +317,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     })
 
     Observable.just(map.toMap)
-  }
-
-  val lastMessageTest = {
-    val selectQuery =
-
-    mDb.createQuery(TABLE_MESSAGES, selectQuery)
   }
 
   def messageListObservable(key: Option[ToxKey], actionMessages: Boolean): Observable[ArrayBuffer[Message]] = {
@@ -353,20 +339,13 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         var act: String = null
         act = getQueryTypes(actionMessages)
 
-        "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
-          COLUMN_NAME_KEY +
-          " = '" +
-          toxKey +
-          "' " +
-          act +
-          "ORDER BY " +
-          COLUMN_NAME_TIMESTAMP +
-          " ASC"
+        s"""SELECT *
+           |FROM $TABLE_MESSAGES
+           |WHERE $COLUMN_NAME_KEY = '$toxKey' $act
+           |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
       case None =>
-        "SELECT * FROM " + TABLE_MESSAGES + " ORDER BY " +
-          COLUMN_NAME_TIMESTAMP +
-          " DESC"
+        s"SELECT * FROM $TABLE_MESSAGES ORDER BY $COLUMN_NAME_TIMESTAMP DESC"
     }
   }
 
@@ -403,24 +382,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   def getMessageIds(key: Option[ToxKey], actionMessages: Boolean): mutable.Set[Integer] = {
     val idSet = new mutable.HashSet[Integer]()
-    val selectQuery = key match {
-      case Some(toxKey) =>
-        val types: String = getQueryTypes(actionMessages)
-
-        "SELECT * FROM " + TABLE_MESSAGES + " WHERE " +
-          COLUMN_NAME_KEY +
-          " = '" +
-          toxKey +
-          "' " +
-          types +
-          "ORDER BY " +
-          COLUMN_NAME_TIMESTAMP +
-          " ASC"
-      case None =>
-        "SELECT * FROM " + TABLE_MESSAGES + " ORDER BY " +
-          COLUMN_NAME_TIMESTAMP +
-          " DESC"
-    }
+    val selectQuery = getMessageQuery(key, actionMessages)
     val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
@@ -473,7 +435,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def getUnsentMessageList: Array[Message] = {
     val messageList = new util.ArrayList[Message]()
     val selectQuery =
-      s"""SELECT * FROM $TABLE_MESSAGES
+      s"""SELECT *
+         |FROM $TABLE_MESSAGES
          |WHERE $COLUMN_NAME_SUCCESSFULLY_SENT =$FALSE
          |AND type == ${MessageType.OWN}
          |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
@@ -552,8 +515,10 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   val groupList: Observable[Seq[GroupInfo]] = {
-    val selectQuery = "SELECT  * FROM " + TABLE_CONTACTS +
-      " WHERE " + COLUMN_NAME_CONTACT_TYPE + " == " + ContactType.GROUP.id
+    val selectQuery =
+      s"""SELECT *
+         |FROM $TABLE_CONTACTS
+         |WHERE $COLUMN_NAME_CONTACT_TYPE == ${ContactType.GROUP.id}""".stripMargin
 
     mDb.createQuery(TABLE_CONTACTS, selectQuery).map(query => {
       val cursor = query.run()
@@ -615,11 +580,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     .combineLatestWith(groupInfoList)((a, gil) => (a._1, a._2, a._3, gil)) //return friendinfolist, friendrequests and groupinvites (a), and groupInfoList (gl) in a tuple
 
   def doesContactExist(key: ToxKey): Boolean = {
-    val mCount = mDb.query("SELECT count(*) FROM " + TABLE_CONTACTS + " WHERE " +
-      COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "'")
+    val mCount = mDb.query(s"SELECT count(*) FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY ='$key'")
     mCount.moveToFirst()
     val count = mCount.getInt(0)
     if (count > 0) {
@@ -638,7 +599,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   private def deleteWithKey(key: ToxKey, tableName: String): Unit = {
-    mDb.delete(tableName, COLUMN_NAME_KEY + "='" + key + "'")
+    mDb.delete(tableName, s"$COLUMN_NAME_KEY ='$key'")
   }
 
   def deleteContact(key: ToxKey): Unit = deleteWithKey(key, TABLE_CONTACTS)
@@ -647,10 +608,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def deleteChatLogs(key: ToxKey): Unit = deleteWithKey(key, TABLE_MESSAGES)
 
   def getFriendRequestMessage(key: ToxKey): String = {
-    val selectQuery = "SELECT message FROM " + TABLE_FRIEND_REQUESTS +
-      " WHERE tox_key='" +
-      key +
-      "'"
+    val selectQuery = s"SELECT message FROM $TABLE_FRIEND_REQUESTS WHERE tox_key='$key'"
     val cursor = mDb.query(selectQuery)
     var message = ""
     if (cursor.moveToFirst()) {
@@ -702,11 +660,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   def getContactDetails(key: ToxKey): Array[String] = {
     var details = Array[String](null, null, null)
-    val selectQuery = "SELECT * FROM " + TABLE_CONTACTS + " WHERE " +
-      COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "'"
+    val selectQuery = s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY ='$key'"
+
     val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
@@ -733,12 +688,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
 
   def getContactInfo(key: ToxKey): ContactInfo = {
-
     val query =
-      "SELECT * " +
-        " FROM " + TABLE_CONTACTS +
-        " WHERE " + COLUMN_NAME_KEY +
-        " = '" + key + "'"
+      s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
 
     val cursor = mDb.query(query)
     var contactInfo: ContactInfo = null
@@ -756,12 +707,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def getFriendInfo(key: ToxKey): FriendInfo = {
-
     val query =
-      "SELECT * " +
-        " FROM " + TABLE_CONTACTS +
-        " WHERE " + COLUMN_NAME_KEY +
-        " = '" + key + "'"
+      s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
 
     val cursor = mDb.query(query)
     var friendInfo: FriendInfo = null
@@ -774,12 +721,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def getGroupInfo(key: ToxKey): GroupInfo = {
-
     val query =
-      "SELECT * " +
-        " FROM " + TABLE_CONTACTS +
-        " WHERE " + COLUMN_NAME_KEY +
-        " = '" + key + "'"
+      s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
 
     val cursor = mDb.query(query)
     var groupInfo: GroupInfo = null
@@ -839,11 +782,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   def isContactBlocked(key: ToxKey): Boolean = {
     var isBlocked = false
-    val selectQuery = "SELECT isBlocked FROM " + TABLE_CONTACTS + " WHERE " +
-      COLUMN_NAME_KEY +
-      "='" +
-      key +
-      "'"
+    val selectQuery = s"SELECT isBlocked FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY ='$key'"
     val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       isBlocked = cursor.getInt(0) > 0

@@ -10,7 +10,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.View.OnClickListener
 import android.view.{View, ViewGroup, LayoutInflater, MenuItem}
-import android.widget.{Toast, TextView}
+import android.widget.{ImageView, Toast, TextView}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.activities.{AboutActivity, SettingsActivity, ProfileSettingsActivity}
 import im.tox.antox.callbacks.{SelfConnectionStatusChangeListener, AntoxOnSelfConnectionStatusCallback}
@@ -73,13 +73,14 @@ class MainDrawerFragment extends Fragment {
     super.onResume()
     // Update navigation drawer header in onResume because
     // nothing other than status can change without exiting the Activity
-    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[ImageView]
 
     val avatar = AVATAR.getAvatarFile(preferences.getString("avatar", ""), getActivity)
     avatarView.setImageResource(R.color.grey_light)
 
     avatar.foreach(av => {
       BitmapManager.load(av, avatarView, isAvatar = true)
+      println("loaded avatar into drawer")
     })
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
@@ -99,7 +100,7 @@ class MainDrawerFragment extends Fragment {
     val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      statusView.setBackground(drawable)
+      statusView.setBacbkground(drawable)
     } else {
       statusView.setBackgroundDrawable(drawable)
     }

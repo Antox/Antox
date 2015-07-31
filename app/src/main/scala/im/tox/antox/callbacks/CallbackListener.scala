@@ -17,7 +17,7 @@ class CallbackListener(ctx: Context) extends ToxEventListener[Unit] {
   val fileRecvCallback = new AntoxOnFileRecvCallback(ctx)
   val fileRecvChunkCallback = new AntoxOnFileRecvChunkCallback(ctx)
   val fileChunkRequestCallback = new AntoxOnFileChunkRequestCallback(ctx)
-  val fileRecvControlChunkCallback = new AntoxOnFileRecvControlCallback(ctx)
+  val fileRecvControlCallback = new AntoxOnFileRecvControlCallback(ctx)
   val friendLosslessPacketCallback = new AntoxOnFriendLosslessPacketCallback(ctx)
 
   override def friendTyping(friendNumber: Int, isTyping: Boolean)(state: Unit): Unit =
@@ -27,7 +27,7 @@ class CallbackListener(ctx: Context) extends ToxEventListener[Unit] {
     fileRecvChunkCallback.fileRecvChunk(friendNumber, fileNumber, position, data)(Unit)
 
   override def fileRecvControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl)(state: Unit): Unit =
-    fileRecvControl(friendNumber, fileNumber, control)(Unit)
+    fileRecvControlCallback.fileRecvControl(friendNumber, fileNumber, control)(Unit)
 
   override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection)(state: Unit): Unit =
     connectionStatusCallback.friendConnectionStatus(friendNumber, connectionStatus)(Unit)
