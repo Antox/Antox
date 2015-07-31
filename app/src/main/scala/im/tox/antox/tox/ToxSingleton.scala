@@ -33,7 +33,7 @@ object ToxSingleton {
 
   var tox: ToxCore = _
 
-  var toxAv: ToxAvImpl = _
+  var toxAv: ToxAvImpl[Unit] = _
 
   private var antoxFriendList: AntoxFriendList = _
 
@@ -269,30 +269,7 @@ object ToxSingleton {
 
 
   def registerCallbacks(ctx: Context): Unit = {
-    tox.callbackSelfConnectionStatus(new AntoxOnSelfConnectionStatusCallback(ctx))
-    tox.callbackFriendMessage(new AntoxOnMessageCallback(ctx))
-    tox.callbackFriendRequest(new AntoxOnFriendRequestCallback(ctx))
-    tox.callbackFriendConnectionStatus(new AntoxOnConnectionStatusCallback(ctx))
-    tox.callbackFriendName(new AntoxOnNameChangeCallback(ctx))
-    tox.callbackReadReceipt(new AntoxOnReadReceiptCallback(ctx))
-    tox.callbackFriendStatusMessage(new AntoxOnStatusMessageCallback(ctx))
-    tox.callbackFriendStatus(new AntoxOnUserStatusCallback(ctx))
-    tox.callbackFriendTyping(new AntoxOnTypingChangeCallback(ctx))
-    tox.callbackFileReceive(new AntoxOnFileRecvCallback(ctx))
-    tox.callbackFileReceiveChunk(new AntoxOnFileRecvChunkCallback(ctx))
-    tox.callbackFileRequestChunk(new AntoxOnFileChunkRequestCallback(ctx))
-    tox.callbackFileControl(new AntoxOnFileRecvControlCallback(ctx))
-    /* tox.callbackGroupTopicChange(new AntoxOnGroupTopicChangeCallback(ctx))
-    tox.callbackPeerJoin(new AntoxOnPeerJoinCallback(ctx))
-    tox.callbackPeerExit(new AntoxOnPeerExitCallback(ctx))
-    tox.callbackGroupPeerlistUpdate(new AntoxOnGroupPeerlistUpdateCallback(ctx))
-    tox.callbackGroupNickChange(new AntoxOnGroupNickChangeCallback(ctx))
-    tox.callbackGroupInvite(new AntoxOnGroupInviteCallback(ctx))
-    tox.callbackGroupSelfJoin(new AntoxOnGroupSelfJoinCallback(ctx))
-    tox.callbackGroupJoinRejected(new AntoxOnGroupJoinRejectedCallback(ctx))
-    tox.callbackGroupSelfTimeout(new AntoxOnGroupSelfTimeoutCallback(ctx))
-    tox.callbackGroupMessage(new AntoxOnGroupMessageCallback(ctx)) */
-    tox.callbackFriendLosslessPacket(new AntoxOnFriendLosslessPacketCallback(ctx))
+    tox.callback(new CallbackListener(ctx))
   }
 
   def save(): Unit = {

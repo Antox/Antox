@@ -21,9 +21,9 @@ object AntoxOnSelfConnectionStatusCallback {
   }
 
 }
-class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback {
+class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback[Unit] {
 
-  override def selfConnectionStatus(toxConnection: ToxConnection): Unit = {
+  override def selfConnectionStatus(toxConnection: ToxConnection)(state: Unit): Unit = {
     ToxSingleton.tox.setSelfConnectionStatus(toxConnection)
 
     println("got self connection status callback")

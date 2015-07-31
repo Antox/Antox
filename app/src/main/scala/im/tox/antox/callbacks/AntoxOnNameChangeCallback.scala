@@ -11,8 +11,8 @@ object AntoxOnNameChangeCallback {
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback {
-  override def friendName(friendNumber: Int, nameBytes: Array[Byte]): Unit = {
+class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback[Unit] {
+  override def friendName(friendNumber: Int, nameBytes: Array[Byte])(state: Unit): Unit = {
     val name = UIUtils.removeNewlines(new String(nameBytes, "UTF-8"))
     ToxSingleton.getAntoxFriend(friendNumber) match {
       case Some(friend) => friend.setName(name)

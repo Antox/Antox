@@ -87,4 +87,6 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.3'
     androidTestCompile 'com.android.support.test:rules:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'
+    compile 'com.intellij:annotations:12.0'
+    compile 'org.scalaz:scalaz-core_2.11:7.2.0-M1'
 }

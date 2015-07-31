@@ -7,9 +7,9 @@ import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileStatus
 import im.tox.tox4j.core.callbacks.FileChunkRequestCallback
 
-class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback {
+class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback[Unit] {
 
-  override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int): Unit = {
+  override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)
     val mTransfer = State.transfers.get(mFriend.get.getKey, fileNumber)
 

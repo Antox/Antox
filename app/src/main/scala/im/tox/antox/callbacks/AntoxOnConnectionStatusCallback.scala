@@ -16,7 +16,7 @@ object AntoxOnConnectionStatusCallback {
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback {
+class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback[Unit] {
 
   private val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
   private var preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener = _
@@ -24,7 +24,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
   def setAllStatusNone(): Unit = {
     if (!ToxSingleton.isToxConnected(preferences, ctx)) {
       for (friend <- ToxSingleton.getAntoxFriendList.all()) {
-        friendConnectionStatus(friend.getFriendNumber, ToxConnection.NONE)
+        friendConnectionStatus(friend.getFriendNumber, ToxConnection.NONE)(Unit)
       }
     }
   }
@@ -48,7 +48,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
   preferences.registerOnSharedPreferenceChangeListener(preferencesListener)
 
 
-  override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection): Unit = {
+  override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection)(state: Unit): Unit = {
     val online = connectionStatus != ToxConnection.NONE
 
     val db = State.db

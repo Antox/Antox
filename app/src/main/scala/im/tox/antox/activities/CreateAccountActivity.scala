@@ -105,7 +105,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
-    toxDataFile.saveFile(tox.getSaveData)
+    toxDataFile.saveFile(tox.getSavedata)
     toxData.ID = im.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData

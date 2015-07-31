@@ -11,9 +11,9 @@ object AntoxOnUserStatusCallback {
   private val TAG = "im.tox.antox.TAG"
 }
 
-class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCallback {
+class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCallback[Unit] {
 
-  override def friendStatus (friendNumber: Int, status: ToxUserStatus): Unit = {
+  override def friendStatus(friendNumber: Int, status: ToxUserStatus)(state: Unit): Unit = {
     val db = State.db
     db.updateContactStatus(ToxSingleton.tox.getFriendKey(friendNumber), status)
   }
