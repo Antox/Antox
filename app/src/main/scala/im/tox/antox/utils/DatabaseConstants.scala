@@ -8,7 +8,7 @@ object DatabaseConstants {
 
   val TRUE = 1
 
-  val DATABASE_VERSION = 13
+  val DATABASE_VERSION = 14
 
   val USER_DATABASE_VERSION = 4
 
@@ -80,7 +80,7 @@ object DatabaseConstants {
 
   val COLUMN_NAME_RECEIVED_AVATAR = "received_avatar"
 
-  val COLUMN_NAME_ACTIVE_MESSAGE = "active_message"
+  val COLUMN_NAME_UNSENT_MESSAGE = "unsent_message"
 
   def createSqlEqualsCondition(columnName: String, list: Iterable[_], tableName: String = ""): String = {
     val table = if (!tableName.isEmpty) tableName + "." else ""

@@ -93,13 +93,15 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
     messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
     messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
+    messageBox.setText(db.getContactUnsentMessage(activeKey))
     messageBox.addTextChangedListener(new TextWatcher() {
       override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
         val isTyping = after > 0
         setTyping(isTyping)
       }
 
-      override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+      override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int): Unit = {
+        db.updateContactUnsentMessage(activeKey, charSequence.toString)
       }
 
       override def afterTextChanged(editable: Editable) {

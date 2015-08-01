@@ -53,7 +53,7 @@ class AntoxDBTest extends AndroidTestCase {
     db.addFriend(key, name, alias, statusMessage)
 
     var number = 0
-    db.messageListObservable.subscribe(friendList => {
+    db.messageListObservable(Some(key), actionMessages = true).subscribe(friendList => {
       println("GOT A MESSAGE CLLBACK")
       number += 1
     })

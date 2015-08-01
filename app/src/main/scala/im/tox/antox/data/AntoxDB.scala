@@ -47,7 +47,8 @@ object AntoxDB {
          |$COLUMN_NAME_RECEIVED_AVATAR boolean,
          |$COLUMN_NAME_IGNORED boolean,
          |$COLUMN_NAME_FAVORITE boolean,
-         |$COLUMN_NAME_CONTACT_TYPE int);""".stripMargin
+         |$COLUMN_NAME_CONTACT_TYPE int,
+         |$COLUMN_NAME_UNSENT_MESSAGE text);""".stripMargin
 
     var CREATE_TABLE_MESSAGES: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_MESSAGES ( _id integer primary key ,
@@ -654,6 +655,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def updateContactFavorite(key: ToxKey, favorite: Boolean) =
     updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_FAVORITE, favorite)
 
+  def updateContactUnsentMessage(key: ToxKey, unsentMessage: String) =
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_UNSENT_MESSAGE, unsentMessage)
+
   def getContactDetails(key: ToxKey): Array[String] = {
     var details = Array[String](null, null, null)
     val selectQuery = s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY ='$key'"
@@ -682,6 +686,18 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     getContactInfo(key).statusMessage
   }
 
+  def getContactUnsentMessage(key: ToxKey): String = {
+    val query = s"SELECT $COLUMN_NAME_UNSENT_MESSAGE FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
+
+    val cursor = mDb.query(query)
+    var unsentMessage: String = ""
+    if (cursor.moveToFirst()) {
+      unsentMessage = cursor.getString(0)
+    }
+    cursor.close()
+
+    unsentMessage
+  }
 
   def getContactInfo(key: ToxKey): ContactInfo = {
     val query =
