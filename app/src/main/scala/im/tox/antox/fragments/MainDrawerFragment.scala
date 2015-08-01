@@ -91,7 +91,7 @@ class MainDrawerFragment extends Fragment {
         println("loaded avatar into drawer")
       })
 
-      avatarView.invalidate()
+      mDrawerLayout.invalidate()
 
       val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
       nameView.setText(userInfo.nickname)

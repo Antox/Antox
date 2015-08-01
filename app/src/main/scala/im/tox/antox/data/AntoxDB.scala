@@ -465,15 +465,11 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     messageList.toArray(new Array[Message](messageList.size))
   }
 
-  def updateUnsentMessage(message_id: Integer, id: Integer) {
+  def updateUnsentMessage(message_id: Int, id: Int) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
     values.put("type", MessageType.OWN.id: java.lang.Integer)
-    val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-    val date = new Date()
-    values.put(COLUMN_NAME_TIMESTAMP, dateFormat.format(date))
-    values.put(COLUMN_NAME_MESSAGE_ID, message_id)
+    values.put(COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
     mDb.update(TABLE_MESSAGES, values, s"_id = $id AND $COLUMN_NAME_SUCCESSFULLY_SENT = $FALSE")
   }
 
