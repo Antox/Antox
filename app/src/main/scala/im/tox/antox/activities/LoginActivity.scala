@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
 import android.widget._
-import im.tox.antox.data.UserDB
+import im.tox.antox.data.{State, UserDB}
 import im.tox.antox.tox.ToxService
 import im.tox.antoxnightly.R
 
@@ -20,13 +20,16 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
+
+    State.userDb = new UserDB(this)
+
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
     }
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val db = new UserDB(this)
-    if (!db.doUsersExist()) {
+    val userDb = State.userDb
+    if (!userDb.doUsersExist()) {
       val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
       startActivity(createAccount)
       finish()
@@ -37,7 +40,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       startActivity(main)
       finish()
     } else {
-      val profiles = db.getAllProfiles
+      val profiles = userDb.getAllProfiles
       val profileSpinner = findViewById(R.id.login_account_name).asInstanceOf[Spinner]
       val adapter = new ArrayAdapter[String](this, android.R.layout.simple_spinner_dropdown_item, profiles)
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -66,7 +69,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       val toast = Toast.makeText(context, text, duration)
       toast.show()
     } else {
-      val db = new UserDB(this)
+      val db = State.userDb
       if (db.doesUserExist(account)) {
         val details = db.getUserDetails(account)
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)

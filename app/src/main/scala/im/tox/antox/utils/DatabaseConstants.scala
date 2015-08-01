@@ -2,7 +2,7 @@ package im.tox.antox.utils
 
 import android.content.ContentValues
 
-object DbConstants {
+object DatabaseConstants {
 
   val FALSE = 0
 
@@ -20,6 +20,8 @@ object DbConstants {
 
   val TABLE_GROUP_INVITES = "group_invites"
 
+  val TABLE_USERS = "users"
+
   val COLUMN_NAME_KEY = "tox_key"
 
   val COLUMN_NAME_GROUP_INVITER = "group_inviter"
@@ -34,9 +36,17 @@ object DbConstants {
 
   val COLUMN_NAME_USERNAME = "username"
 
+  val COLUMN_NAME_PASSWORD = "password"
+
+  val COLUMN_NAME_NICKNAME = "nickname"
+
   val COLUMN_NAME_TIMESTAMP = "timestamp"
 
   val COLUMN_NAME_NOTE = "note"
+
+  val COLUMN_NAME_STATUS_MESSAGE = "status_message"
+
+  val COLUMN_NAME_LOGGING_ENABLED = "logging_enabled"
 
   val COLUMN_NAME_STATUS = "status"
 

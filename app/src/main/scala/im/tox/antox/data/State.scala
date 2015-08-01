@@ -20,6 +20,7 @@ object State {
   val calls: CallManager = new CallManager()
 
   var db: AntoxDB = _
+  var userDb: UserDB = _
 
   def chatActive = _chatActive
 

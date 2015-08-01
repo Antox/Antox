@@ -15,7 +15,7 @@ import com.squareup.sqlbrite.{BriteDatabase, SqlBrite}
 import im.tox.antox.data.AntoxDB.DatabaseHelper
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._
-import im.tox.antox.utils.DbConstants._
+import im.tox.antox.utils.DatabaseConstants._
 import im.tox.antox.wrapper.ContactType.ContactType
 import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.MessageType.MessageType

@@ -20,6 +20,9 @@ object AntoxOnSelfConnectionStatusCallback {
     listenerList += listener
   }
 
+  def removeConnectionStatusChangeListener(listener: SelfConnectionStatusChangeListener) = {
+    listenerList -= listener
+  }
 }
 class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback[Unit] {
 

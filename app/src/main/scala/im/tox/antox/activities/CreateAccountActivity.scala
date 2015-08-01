@@ -11,7 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
-import im.tox.antox.data.UserDB
+import im.tox.antox.data.{State, UserDB}
 import im.tox.antox.tox.{ToxDataFile, ToxService}
 import im.tox.antox.toxdns.ToxDNS.RegError
 import im.tox.antox.toxdns.{ToxDNS, ToxData}
@@ -144,12 +144,11 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
-  //db is expected to be open and is closed at the end of the method
-  def createAccount(accountName: String, db: UserDB, createDataFile: Boolean, shouldRegister: Boolean): Unit = {
+  def createAccount(accountName: String, userDb: UserDB, createDataFile: Boolean, shouldRegister: Boolean): Unit = {
     try {
       if (!validAccountName(accountName)) {
         showBadAccountNameError()
-      } else if (db.doesUserExist(accountName)) {
+      } else if (userDb.doesUserExist(accountName)) {
         val context = getApplicationContext
         val text = getString(R.string.create_profile_exists)
         val duration = Toast.LENGTH_LONG
@@ -208,8 +207,8 @@ class CreateAccountActivity extends AppCompatActivity {
         }
 
         if (successful) {
-          db.addUser(accountName, "")
-          db.updateUserDetail(accountName, "password", accountPassword)
+          userDb.addUser(accountName, "")
+          userDb.updateUserDetail(accountName, "password", accountPassword)
 
           saveAccountAndStartMain(accountName, accountPassword, toxData.ID)
         }
@@ -222,8 +221,8 @@ class CreateAccountActivity extends AppCompatActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
-    val db = new UserDB(this)
-    createAccount(account, db, createDataFile = true, shouldRegister = false)
+    val userDb = State.userDb
+    createAccount(account, userDb, createDataFile = true, shouldRegister = false)
   }
 
   def onClickImportProfile(view: View): Unit = {
@@ -261,7 +260,7 @@ class CreateAccountActivity extends AppCompatActivity {
         if (validAccountName(accountName)) {
           val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
           FileUtils.copy(file, toxDataFile)
-          createAccount(accountName, new UserDB(this), createDataFile = false, shouldRegister = false)
+          createAccount(accountName, State.userDb, createDataFile = false, shouldRegister = false)
         } else {
           showBadAccountNameError()
         }
@@ -274,8 +273,8 @@ class CreateAccountActivity extends AppCompatActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
-    val db = new UserDB(this)
+    val userDb = State.userDb
 
-    createAccount(account, db, createDataFile = true, shouldRegister = true)
+    createAccount(account, userDb, createDataFile = true, shouldRegister = true)
   }
 }

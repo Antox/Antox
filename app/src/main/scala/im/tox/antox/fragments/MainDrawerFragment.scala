@@ -21,6 +21,8 @@ import im.tox.antox.wrapper.FileKind.AVATAR
 import im.tox.antox.wrapper.UserStatus
 import im.tox.antoxnightly.R
 import im.tox.tox4j.core.enums.ToxConnection
+import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 class MainDrawerFragment extends Fragment {
 
@@ -30,17 +32,19 @@ class MainDrawerFragment extends Fragment {
 
   var preferences: SharedPreferences = _
 
+  var connectionStatusListener: SelfConnectionStatusChangeListener = _
+  var userDetailsSubscription: Subscription = _
+
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     preferences = PreferenceManager.getDefaultSharedPreferences(getActivity)
 
-    AntoxOnSelfConnectionStatusCallback
-      .addConnectionStatusChangeListener(new SelfConnectionStatusChangeListener {
+    connectionStatusListener = new SelfConnectionStatusChangeListener {
       override def onSelfConnectionStatusChange(toxConnection: ToxConnection): Unit = {
         println("connection status change called " + toxConnection)
         updateNavigationHeaderStatus(toxConnection)
       }
-    })
+    }
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -71,25 +75,32 @@ class MainDrawerFragment extends Fragment {
 
   override def onResume(): Unit = {
     super.onResume()
-    // Update navigation drawer header in onResume because
-    // nothing other than status can change without exiting the Activity
-    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[ImageView]
 
-    val avatar = AVATAR.getAvatarFile(preferences.getString("avatar", ""), getActivity)
-    avatarView.setImageResource(R.color.grey_light)
+    //FIXME
+    userDetailsSubscription = State.userDb.userDetailsObservable(preferences.getString("active_account", ""))
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(userInfo => {
 
-    avatar.foreach(av => {
-      BitmapManager.load(av, avatarView, isAvatar = true)
-      println("loaded avatar into drawer")
+      val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+
+      val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
+      avatarView.setImageResource(R.color.grey_light)
+
+      avatar.foreach(av => {
+        BitmapManager.load(av, avatarView, isAvatar = true)
+        println("loaded avatar into drawer")
+      })
+
+      avatarView.invalidate()
+
+      val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
+      nameView.setText(userInfo.nickname)
+
+      val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
+      statusMessageView.setText(userInfo.statusMessage)
+
+      updateNavigationHeaderStatus(ToxSingleton.tox.getSelfConnectionStatus)
     })
-
-    val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    nameView.setText(preferences.getString("nickname", ""))
-
-    val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    statusMessageView.setText(preferences.getString("status_message", ""))
-
-    updateNavigationHeaderStatus(ToxSingleton.tox.getSelfConnectionStatus)
   }
 
   def updateNavigationHeaderStatus(toxConnection: ToxConnection): Unit = {
@@ -100,7 +111,7 @@ class MainDrawerFragment extends Fragment {
     val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      statusView.setBacbkground(drawable)
+      statusView.setBackground(drawable)
     } else {
       statusView.setBackgroundDrawable(drawable)
     }
@@ -149,5 +160,16 @@ class MainDrawerFragment extends Fragment {
     }
 
     mDrawerLayout.closeDrawer(mNavigationView)
+  }
+
+  override def onPause(): Unit = {
+    super.onPause()
+    userDetailsSubscription.unsubscribe()
+  }
+
+  override def onDestroy(): Unit = {
+    super.onDestroy()
+    AntoxOnSelfConnectionStatusCallback
+      .removeConnectionStatusChangeListener(connectionStatusListener)
   }
 }

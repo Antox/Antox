@@ -56,9 +56,10 @@ class AvatarDialog(activity: Activity) {
       resizeAvatar(avatarFile) match {
         case Some(bitmap) =>
           FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 0, avatarFile)
-          preferences.edit().putString("avatar", name).commit()
+          preferences.edit().putString("avatar", name).apply()
+          State.userDb.updateUserDetail(preferences.getString("active_account", ""), "avatar", name)
+
         case None =>
-          avatarFile.delete()
           Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)
       }
       val db = State.db

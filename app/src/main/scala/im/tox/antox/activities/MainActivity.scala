@@ -22,7 +22,7 @@ import android.support.annotation.IntDef
 import android.widget.{TextView, AdapterView, ListView, Toast}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.antox.callbacks.{SelfConnectionStatusChangeListener, AntoxOnSelfConnectionStatusCallback}
-import im.tox.antox.data.{State, AntoxDB}
+import im.tox.antox.data.{UserDB, State, AntoxDB}
 import im.tox.antox.fragments.MainDrawerFragment
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.utils._

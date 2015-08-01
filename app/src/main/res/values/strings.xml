@@ -180,6 +180,7 @@
     <string name="connection_offline">gone offline</string>
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="default_status_message">Hey! I\'m using Antox</string>
 
     <!-- Avatar Dialog -->
     <string name="dialog_avatar_take_photo">Take Photo</string>

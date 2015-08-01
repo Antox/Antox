@@ -17,7 +17,7 @@ import android.widget.{LinearLayout, ImageButton, Toast}
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.QR.{Contents, QRCodeEncode}
 import im.tox.antox.activities.ProfileSettingsActivity._
-import im.tox.antox.data.UserDB
+import im.tox.antox.data.{State, UserDB}
 import im.tox.antox.fragments.AvatarDialog
 import im.tox.antox.tox.ToxSingleton
 import im.tox.antox.transfer.FileDialog
@@ -241,7 +241,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-    val db = new UserDB(this)
+    val userDb = State.userDb
     val activeAccount = sharedPreferences.getString("active_account", "")
 
     key match {
@@ -253,11 +253,11 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, key, name)
+        userDb.updateUserDetail(activeAccount, key, name)
 
       case "password" =>
         val password = sharedPreferences.getString(key, "")
-        db.updateUserDetail(activeAccount, key, password)
+        userDb.updateUserDetail(activeAccount, key, password)
 
       case "status" =>
         val newStatusString = sharedPreferences.getString(key, "")
@@ -267,7 +267,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, key, newStatusString)
+        userDb.updateUserDetail(activeAccount, key, newStatusString)
 
       case "status_message" =>
         val statusMessage = sharedPreferences.getString(key, "")
@@ -276,15 +276,15 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        db.updateUserDetail(activeAccount, key, statusMessage)
+        userDb.updateUserDetail(activeAccount, key, statusMessage)
 
       case "logging_enabled" =>
         val loggingEnabled = sharedPreferences.getBoolean(key, true)
-        db.updateUserDetail(activeAccount, key, loggingEnabled)
+        userDb.updateUserDetail(activeAccount, key, loggingEnabled)
 
       case "avatar" =>
         val avatar = sharedPreferences.getString(key, "")
-        db.updateUserDetail(activeAccount, key, avatar)
+        userDb.updateUserDetail(activeAccount, key, avatar)
 
       case _ =>
     }
