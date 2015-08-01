@@ -31,7 +31,7 @@
             android:defaultValue="-1"
             android:entries="@array/pref_language_list_titles"
             android:entryValues="@array/pref_language_list_values"
-            android:key="language"
+            android:key="locale"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_language" />

@@ -53,7 +53,7 @@ class SettingsActivity extends BetterPreferenceActivity {
       getActionBar.setDisplayHomeAsUpEnabled(true)
     }
 
-    bindPreferenceSummaryToValue(findPreference("language"))
+    bindPreferenceSummaryToValue(findPreference("locale"))
   }
 
   override def onResume() {
@@ -80,7 +80,7 @@ class SettingsActivity extends BetterPreferenceActivity {
         antoxDb.setAllOffline()
       }
     }
-    if (key == "language") {
+    if (key == "locale") {
       val intent = getBaseContext.getPackageManager.getLaunchIntentForPackage(getBaseContext.getPackageName)
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
       startActivity(intent)

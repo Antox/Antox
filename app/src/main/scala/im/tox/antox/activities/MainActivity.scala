@@ -55,7 +55,7 @@ class MainActivity extends AppCompatActivity {
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
 
     // Set the right language
-    setLanguage()
+    selectLanguage()
 
     // Fix for Android 4.1.x
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
@@ -140,16 +140,25 @@ class MainActivity extends AppCompatActivity {
     super.onOptionsItemSelected(item)
   }
 
-  private def setLanguage() {
-    val language = preferences.getString("language", "-1")
+  private def selectLanguage() {
+    val localeString = preferences.getString("locale", "-1")
+    val locale = getResources.getConfiguration.locale
 
-    if (language == "-1") {
+    if (localeString == "-1") {
       val editor = preferences.edit()
-      val currentLanguage = getResources.getConfiguration.locale.getCountry.toLowerCase
-      editor.putString("language", currentLanguage)
+      val currentLanguage = locale.getLanguage.toLowerCase
+      val currentCountry = locale.getCountry
+
+      editor.putString("locale", currentLanguage + "_" + currentCountry)
       editor.apply()
     } else {
-      val locale = new Locale(language)
+      val locale = if (localeString.contains("_")) {
+        val (language, country) = localeString.splitAt(localeString.indexOf("_"))
+        new Locale(language, country)
+      } else {
+        new Locale(localeString)
+      }
+
       Locale.setDefault(locale)
       val config = new Configuration()
       config.locale = locale

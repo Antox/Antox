@@ -77,7 +77,8 @@ class MainDrawerFragment extends Fragment {
     super.onResume()
 
     //FIXME
-    userDetailsSubscription = State.userDb.userDetailsObservable(preferences.getString("active_account", ""))
+    userDetailsSubscription =
+      State.userDb.userDetailsObservable(preferences.getString("active_account", ""))
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(userInfo => {
 
