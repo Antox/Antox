@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/drawer"
-        android:name="im.tox.antox.fragments.MainDrawerFragment"
+        android:name="chat.tox.antox.fragments.MainDrawerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_main_drawer"/>

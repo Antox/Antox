@@ -14,7 +14,7 @@ public protected *;
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**
 -dontnote scala.Enumeration
--keep class im.tox.** { *; }
+-keep class chat.tox.** { *; }
 -keep public class scala.Option
 -keep public class scala.Function0
 -keep public class scala.Function1
@@ -56,6 +56,6 @@ public static ** valueOf(java.lang.String);
 -keep class * implements android.os.Parcelable {
 public static final android.os.Parcelable$Creator *;
 }
--keep public class im.tox.** {
+-keep public class chat.tox.** {
 public protected *;
 }

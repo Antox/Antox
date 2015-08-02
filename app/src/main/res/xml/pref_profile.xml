@@ -65,6 +65,13 @@
         android:title="@string/pref_title_logging_enabled" />
 
     <Preference
+        android:defaultValue="@color/brand_primary"
+        android:key="theme_color"
+        android:editable="false"
+        android:singleLine="true"
+        android:title="@string/pref_title_theme_color" />
+
+    <Preference
         android:key="nospam"
         android:title="@string/pref_nospam" />
 

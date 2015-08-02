@@ -2,8 +2,8 @@ import android.preference.PreferenceManager
 import android.support.test.filters.RequiresDevice
 import android.support.test.runner.AndroidJUnit4
 import android.test.{RenamingDelegatingContext, AndroidTestCase}
-import im.tox.antox.data.AntoxDB
-import im.tox.antox.wrapper.{MessageType, FriendInfo, ToxKey}
+import chat.tox.antox.data.AntoxDB
+import chat.tox.antox.wrapper.{MessageType, FriendInfo, ToxKey}
 import org.junit.{Test, After, Before}
 import org.junit.runner.RunWith
 import org.junit.Assert._

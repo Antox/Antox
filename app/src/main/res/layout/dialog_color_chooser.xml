@@ -1,0 +1,11 @@
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/color_grid"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnWidth="56dp"
+    android:horizontalSpacing="5dp"
+    android:padding="14dp"
+    android:numColumns="auto_fit"
+    android:orientation="vertical"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="10dp" />

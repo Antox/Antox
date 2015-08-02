@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/message_row_layout"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
@@ -14,6 +15,7 @@
         android:layout_marginLeft="3dp"
         android:layout_marginRight="5dp"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/message_bubble"
             android:layout_width="300dp"
@@ -27,7 +29,6 @@
                 android:layout_width="12dp"
                 android:layout_height="15dp"
                 android:visibility="gone" />
-
             <LinearLayout
                 android:id="@+id/message_background_wrapper"
                 android:layout_width="288dp"

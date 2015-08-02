@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
     <fragment android:id="@+id/fragment_add_pane"
-        android:name="im.tox.antox.fragments.AddPaneFragment"
+        android:name="chat.tox.antox.fragments.AddPaneFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_pane" />
