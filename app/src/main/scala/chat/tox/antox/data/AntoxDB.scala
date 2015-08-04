@@ -288,7 +288,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   val lastMessages: Observable[Map[ToxKey, (String, Timestamp)]] = {
-    val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
     val selectQuery =
       s"""SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_MESSAGE, $COLUMN_NAME_TIMESTAMP
          |FROM $TABLE_MESSAGES
@@ -298,6 +297,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
          |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
+      val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
@@ -310,8 +310,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
       cursor.close()
       map.toMap
     })
-
-    Observable.just(map.toMap)
   }
 
   def messageListObservable(key: Option[ToxKey], actionMessages: Boolean): Observable[ArrayBuffer[Message]] = {
