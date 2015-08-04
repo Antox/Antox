@@ -75,6 +75,15 @@ class MainActivity extends AppCompatActivity {
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
   }
 
+  override def onBackPressed(): Unit = {
+    val drawerFragment = getSupportFragmentManager.findFragmentById(R.id.drawer).asInstanceOf[MainDrawerFragment]
+    if (drawerFragment.isDrawerOpen) {
+      drawerFragment.closeDrawer()
+    } else {
+      super.onBackPressed()
+    }
+  }
+
   override def onPause() {
     super.onPause()
     ToxSingleton.chatActive = false

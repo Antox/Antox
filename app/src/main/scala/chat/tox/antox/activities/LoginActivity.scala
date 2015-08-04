@@ -21,7 +21,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
-    ThemeManager.applyTheme(this, getSupportActionBar)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow.setStatusBarColor(getResources.getColor(R.color.black))
+    }
 
     State.userDb = new UserDB(this)
 
