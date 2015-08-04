@@ -31,6 +31,9 @@ class MainActivity extends AppCompatActivity {
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
     ThemeManager.init(getApplicationContext)
 
+    // Set the right language
+    selectLanguage()
+
     setContentView(R.layout.activity_main)
 
     // Use a toolbar so that the drawer goes above the action bar
@@ -43,9 +46,6 @@ class MainActivity extends AppCompatActivity {
 
     // The app will control the voice call audio level
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
-
-    // Set the right language
-    selectLanguage()
 
     // Fix for Android 4.1.x
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
