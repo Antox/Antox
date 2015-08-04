@@ -9,6 +9,8 @@ import org.junit.runner.RunWith
 import org.junit.Assert._
 import org.hamcrest.CoreMatchers._
 
+import scala.collection.mutable.ArrayBuffer
+
 @RunWith(classOf[AndroidJUnit4])
 class AntoxDBTest extends AndroidTestCase {
 
@@ -49,27 +51,30 @@ class AntoxDBTest extends AndroidTestCase {
   }
 
   @Test
-  def testContactChange(): Unit = {
+  def testLastMessages(): Unit = {
     db.addFriend(key, name, alias, statusMessage)
 
     var number = 0
-    db.messageListObservable(Some(key), actionMessages = true).subscribe(friendList => {
+    db.messageListObservable(Some(key), actionMessages = true)
+      .subscribe(messages => {
+      assertEquals(messages, ArrayBuffer.empty)
       println("GOT A MESSAGE CLLBACK")
       number += 1
     })
 
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "asd", false, false, true, MessageType.FRIEND)
+    db.addMessage(-1, key, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
+    db.addMessage(-1, key, "asdf", "test1", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
+    db.addMessage(-1, key, "asdf", "test2", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
 
-    db.lastMessages.subscribe(friendList => {
+    db.lastMessages
+      .subscribe(messages => {
+      assertEquals(messages.size, 3)
+      assert(messages.exists(_._2._1 eq "test"))
+
       println("GOT A MESSAGE CLLBACK")
       number += 1
     })
 
-    println("number is " + number)
+    assertEquals(number, 5)
   }
 }

@@ -201,22 +201,22 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     mDb.insert(TABLE_GROUP_INVITES, values)
   }
 
-  def addMessage(message_id: Int,
+  def addMessage(messageId: Int,
     key: ToxKey,
-    sender_name: String,
+    senderName: String,
     message: String,
-    has_been_received: Boolean,
-    has_been_read: Boolean,
-    successfully_sent: Boolean,
+    hasBeenReceived: Boolean,
+    hasBeenRead: Boolean,
+    successfullySent: Boolean,
     `type`: MessageType) {
     val values = new ContentValues()
-    values.put(COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
+    values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     values.put(COLUMN_NAME_KEY, key.toString)
-    values.put(COLUMN_NAME_SENDER_NAME, sender_name)
+    values.put(COLUMN_NAME_SENDER_NAME, senderName)
     values.put(COLUMN_NAME_MESSAGE, message)
-    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, has_been_received)
-    values.put(COLUMN_NAME_HAS_BEEN_READ, has_been_read)
-    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfully_sent)
+    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, hasBeenReceived)
+    values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
+    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfullySent)
     values.put("type", `type`.id: java.lang.Integer)
     values.put(COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
     mDb.insert(TABLE_MESSAGES, values)
@@ -312,11 +312,15 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     })
   }
 
+  def messageVisible(message: Message) =
+    message.fileKind == FileKind.INVALID || message.fileKind.visible
+
   def messageListObservable(key: Option[ToxKey], actionMessages: Boolean): Observable[ArrayBuffer[Message]] = {
     val selectQuery: String = getMessageQuery(key, actionMessages)
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
       messageListFromCursor(query.run())
+        .filter(messageVisible)
     })
   }
 
@@ -324,6 +328,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     val selectQuery: String = getMessageQuery(key, actionMessages)
 
     messageListFromCursor(mDb.query(selectQuery))
+      .filter(messageVisible)
   }
 
   private def getMessageQuery(key: Option[ToxKey], actionMessages: Boolean): String = {
@@ -348,9 +353,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
       do {
         val id = cursor.getInt(0)
         val time = Timestamp.valueOf(cursor.getString(1))
-        val message_id = cursor.getInt(2)
+        val messageId = cursor.getInt(2)
         val key = new ToxKey(cursor.getString(3))
-        val sender_name = cursor.getString(4)
+        val senderName = cursor.getString(4)
         val message = cursor.getString(5)
         val received = cursor.getInt(6) > 0
         val read = cursor.getInt(7) > 0
@@ -358,10 +363,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         val size = cursor.getInt(9)
         val `type` = cursor.getInt(10)
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(11))
-        if (fileKind == FileKind.INVALID || fileKind.visible) {
-          messageList += new Message(id, message_id, key, sender_name, message, received, read, sent,
-            time, size, MessageType(`type`), fileKind)
-        }
+        messageList += new Message(id, messageId, key, senderName, message, received, read, sent,
+          time, size, MessageType(`type`), fileKind)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -426,7 +429,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def getUnsentMessageList: Array[Message] = {
-    val messageList = new util.ArrayList[Message]()
     val selectQuery =
       s"""SELECT *
          |FROM $TABLE_MESSAGES
@@ -435,34 +437,17 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
          |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
     val cursor = mDb.query(selectQuery)
-    if (cursor.moveToFirst()) {
-      do {
-        val id = cursor.getInt(0)
-        val time = Timestamp.valueOf(cursor.getString(1))
-        val m_id = cursor.getInt(2)
-        Log.d("UNSENT MESAGE ID: ", "" + m_id)
-        val key = new ToxKey(cursor.getString(3))
-        val sender_name = cursor.getString(4)
-        val message = cursor.getString(5)
-        val received = cursor.getInt(6) > 0
-        val read = cursor.getInt(7) > 0
-        val sent = cursor.getInt(8) > 0
-        val size = cursor.getInt(9)
-        val `type` = cursor.getInt(10)
-        val fileKind = cursor.getInt(11)
-        messageList.add(new Message(id, m_id, key, sender_name, message, received, read, sent, time, size,
-          MessageType(`type`), FileKind.fromToxFileKind(fileKind)))
-      } while (cursor.moveToNext())
-    }
+
+    val messageList = messageListFromCursor(cursor)
     cursor.close()
-    messageList.toArray(new Array[Message](messageList.size))
+    messageList.toArray
   }
 
-  def updateUnsentMessage(message_id: Int, id: Int) {
+  def updateUnsentMessage(messageId: Int, id: Int) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
     values.put("type", MessageType.OWN.id: java.lang.Integer)
-    values.put(COLUMN_NAME_MESSAGE_ID, message_id: java.lang.Integer)
+    values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     mDb.update(TABLE_MESSAGES, values, s"_id = $id AND $COLUMN_NAME_SUCCESSFULLY_SENT = $FALSE")
   }
 
