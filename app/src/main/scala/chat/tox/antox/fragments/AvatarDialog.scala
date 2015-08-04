@@ -16,7 +16,7 @@ import android.view.View.OnClickListener
 import android.widget.{Button, ImageView, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{Constants, FileUtils}
+import chat.tox.antox.utils.{BitmapManager, Constants, FileUtils}
 import chat.tox.antox.wrapper.BitmapUtils
 import chat.tox.antox.wrapper.BitmapUtils.RichBitmap
 import chat.tox.antox.wrapper.FileKind.AVATAR
@@ -51,6 +51,7 @@ class AvatarDialog(activity: Activity) {
           FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 0, avatarFile)
           preferences.edit().putString("avatar", name).apply()
           State.userDb.updateUserDetail(preferences.getString("active_account", ""), "avatar", name)
+          BitmapManager.setAvatarInvalid(avatarFile)
 
         case None =>
           Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)

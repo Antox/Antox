@@ -1,6 +1,11 @@
 package chat.tox.antox.fragments
 
+import java.util.Random
+
 import android.content.{Intent, SharedPreferences}
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
@@ -10,16 +15,16 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, MenuItem, View, ViewGroup}
-import android.widget.{TextView, Toast}
+import android.widget.{RelativeLayout, TextView, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.activities.{AboutActivity, ProfileSettingsActivity, SettingsActivity}
-import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback, SelfConnectionStatusChangeListener}
+import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback}
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{BitmapManager, IconColor}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.UserStatus
+import chat.tox.antox.wrapper.{UserInfo, UserStatus}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.enums.ToxConnection
 import rx.lang.scala.Subscription
@@ -28,24 +33,15 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 class MainDrawerFragment extends Fragment {
 
   private var mDrawerLayout: DrawerLayout = _
-
   private var mNavigationView: NavigationView = _
 
-  var preferences: SharedPreferences = _
+  private var preferences: SharedPreferences = _
 
-  var connectionStatusListener: SelfConnectionStatusChangeListener = _
-  var userDetailsSubscription: Subscription = _
+  private var userDetailsSubscription: Subscription = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     preferences = PreferenceManager.getDefaultSharedPreferences(getActivity)
-
-    connectionStatusListener = new SelfConnectionStatusChangeListener {
-      override def onSelfConnectionStatusChange(toxConnection: ToxConnection): Unit = {
-        println("connection status change called " + toxConnection)
-        updateNavigationHeaderStatus(toxConnection)
-      }
-    }
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -64,6 +60,7 @@ class MainDrawerFragment extends Fragment {
     })
 
     val drawerHeader = rootView.findViewById(R.id.drawer_header)
+
     drawerHeader.setOnClickListener(new OnClickListener {
       override def onClick(v: View): Unit = {
         val intent = new Intent(getActivity, classOf[ProfileSettingsActivity])
@@ -72,38 +69,40 @@ class MainDrawerFragment extends Fragment {
     })
 
     drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
+
+    userDetailsSubscription = State.userDb
+      .userDetailsObservable(preferences.getString("active_account", ""))
+      .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe((tuple) => {
+      refreshDrawerHeader(tuple._1, tuple._2)
+    })
+
     rootView
   }
 
   override def onResume(): Unit = {
     super.onResume()
+  }
 
-    //FIXME
-    userDetailsSubscription =
-      State.userDb.userDetailsObservable(preferences.getString("active_account", ""))
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(userInfo => {
+  def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
+    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
 
-      val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+    val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
+    avatarView.setImageResource(R.color.grey_light)
 
-      val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
-      avatarView.setImageResource(R.color.grey_light)
-
-      avatar.foreach(av => {
-        BitmapManager.load(av, avatarView, isAvatar = true)
-        println("loaded avatar into drawer")
-      })
-
-      mDrawerLayout.invalidate()
-
-      val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-      nameView.setText(userInfo.nickname)
-
-      val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-      statusMessageView.setText(userInfo.statusMessage)
-
-      updateNavigationHeaderStatus(ToxSingleton.tox.getSelfConnectionStatus)
+    avatar.foreach(av => {
+      avatarView.setImageURI(Uri.fromFile(av))
+      BitmapManager.load(av, avatarView, isAvatar = true)
     })
+
+    val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
+    nameView.setText(userInfo.nickname)
+
+    val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
+    statusMessageView.setText(userInfo.statusMessage)
+
+    updateNavigationHeaderStatus(connectionStatus)
   }
 
   def updateNavigationHeaderStatus(toxConnection: ToxConnection): Unit = {
@@ -120,8 +119,14 @@ class MainDrawerFragment extends Fragment {
     }
   }
 
+  def isDrawerOpen = mDrawerLayout.isDrawerOpen(GravityCompat.START)
+
   def openDrawer(): Unit = {
     mDrawerLayout.openDrawer(GravityCompat.START)
+  }
+
+  def closeDrawer(): Unit = {
+    mDrawerLayout.closeDrawer(GravityCompat.START)
   }
 
   private def selectItem(menuItem: MenuItem) {
@@ -167,12 +172,11 @@ class MainDrawerFragment extends Fragment {
 
   override def onPause(): Unit = {
     super.onPause()
-    userDetailsSubscription.unsubscribe()
   }
 
   override def onDestroy(): Unit = {
     super.onDestroy()
-    AntoxOnSelfConnectionStatusCallback
-      .removeConnectionStatusChangeListener(connectionStatusListener)
+
+    userDetailsSubscription.unsubscribe()
   }
 }
