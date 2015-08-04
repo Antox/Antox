@@ -85,6 +85,7 @@ class SettingsActivity extends BetterPreferenceActivity {
     if (key == "locale") {
       val intent = new Intent(getApplicationContext, classOf[MainActivity])
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      finish()
       startActivity(intent)
     }
   }

@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
 import chat.tox.antox.R
-import chat.tox.antox.activities.MainActivity
+import chat.tox.antox.activities.{GroupChatActivity, ChatActivity, MainActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.MessageType.MessageType
@@ -40,7 +40,7 @@ object MessageHelper {
               .setContentTitle(name)
               .setContentText(message)
               .setDefaults(Notification.DEFAULT_ALL)
-            val resultIntent = new Intent(ctx, classOf[MainActivity])
+            val resultIntent = new Intent(ctx, classOf[ChatActivity])
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
             resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
             resultIntent.putExtra("key", friendKey.toString)
@@ -77,7 +77,7 @@ object MessageHelper {
         .setContentTitle(groupName)
         .setContentText(message)
         .setDefaults(Notification.DEFAULT_ALL)
-      val resultIntent = new Intent(ctx, classOf[MainActivity])
+      val resultIntent = new Intent(ctx, classOf[GroupChatActivity])
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
       resultIntent.putExtra("key", groupKey.toString)

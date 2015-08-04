@@ -13,7 +13,6 @@ import scala.collection.JavaConversions._
 
 object CreateGroupDialog {
   trait CreateGroupListener {
-
     def groupCreationConfimed(name: String): Unit
   }
 }
