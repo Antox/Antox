@@ -14,6 +14,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.{Message, ToxKey}
@@ -51,6 +52,8 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val avatarView = getLayoutInflater.inflate(R.layout.avatar_actionview, null)
     actionBar.setCustomView(avatarView)
     actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
+    ThemeManager.applyTheme(this, getSupportActionBar)
+
     val extras: Bundle = getIntent.getExtras
     activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this

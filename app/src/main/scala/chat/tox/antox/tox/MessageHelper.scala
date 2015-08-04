@@ -27,8 +27,8 @@ object MessageHelper {
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isContactBlocked(friendKey)) {
       val chatActive = State.chatActive && State.activeKey.contains(friendKey)
-      db.addMessage(-1, friendKey, friendName, message, has_been_received = true,
-        has_been_read = chatActive, successfully_sent = true, messageType)
+      db.addMessage(-1, friendKey, friendName, message, hasBeenReceived = true,
+        hasBeenRead = chatActive, successfullySent = true, messageType)
 
       val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
       if (preferences.getBoolean("notifications_enable_notifications", true) &&
@@ -64,8 +64,8 @@ object MessageHelper {
 
     val chatActive = State.chatActive && State.activeKey.contains(groupKey)
 
-    db.addMessage(-1, groupKey, peerName, message, has_been_received = true,
-      has_been_read = chatActive, successfully_sent = true, messageType)
+    db.addMessage(-1, groupKey, peerName, message, hasBeenReceived = true,
+      hasBeenRead = chatActive, successfullySent = true, messageType)
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val notificationsEnabled = preferences.getBoolean("notifications_enable_notifications", true) &&
@@ -114,11 +114,11 @@ object MessageHelper {
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
                   case None => db.addMessage(id, key, senderName,
-                    splitMsg, has_been_received =
-                    false, has_been_read = false, successfully_sent = true, messageType)
+                    splitMsg, hasBeenReceived =
+                    false, hasBeenRead = false, successfullySent = true, messageType)
                 }
-              case None => db.addMessage(-1, key, senderName, splitMsg, has_been_received = false,
-                has_been_read = false, successfully_sent = false, messageType)
+              case None => db.addMessage(-1, key, senderName, splitMsg, hasBeenReceived = false,
+                hasBeenRead = false, successfullySent = false, messageType)
             }
           }
       }
@@ -144,8 +144,8 @@ object MessageHelper {
       mDbId match {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
         case None => db.addMessage(0, key, senderName,
-          splitMsg, has_been_received =
-            true, has_been_read = true, successfully_sent = true, messageType)
+          splitMsg, hasBeenReceived =
+            true, hasBeenRead = true, successfullySent = true, messageType)
       }
     }
   }

@@ -13,6 +13,7 @@ import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
 import chat.tox.antox.toxdns.ToxDNS.RegError
 import chat.tox.antox.toxdns.{ToxDNS, ToxData}
@@ -29,6 +30,8 @@ class CreateAccountActivity extends AppCompatActivity {
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     getSupportActionBar.hide()
+    ThemeManager.applyTheme(this, getSupportActionBar)
+
     setContentView(R.layout.activity_create_account)
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

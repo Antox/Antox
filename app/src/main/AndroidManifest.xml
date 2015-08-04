@@ -67,19 +67,19 @@
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity android:name="chat.tox.antox.activities.GroupChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="chat.tox.antox.activities.AddActivity"
             android:label="@string/title_activity_add" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
 
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
@@ -97,7 +97,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
 
         <activity
@@ -106,7 +106,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ScClass: GroupChatActivity" />
+                android:value="chat.tox.antox.activities.GroupChatActivity" />
         </activity>
 
         <receiver

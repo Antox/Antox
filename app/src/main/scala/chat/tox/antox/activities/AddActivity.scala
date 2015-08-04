@@ -9,6 +9,7 @@ import android.view.{Menu, MenuItem, WindowManager}
 import chat.tox.QR.IntentIntegrator
 import chat.tox.antox.R
 import chat.tox.antox.fragments.{AddPaneFragment, InputableID}
+import chat.tox.antox.theme.ThemeManager
 
 class AddActivity extends AppCompatActivity {
 
@@ -27,6 +28,7 @@ class AddActivity extends AppCompatActivity {
     context = getApplicationContext
 
     setContentView(R.layout.activity_add)
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     val intent = getIntent
     if (Intent.ACTION_VIEW == intent.getAction && intent != null) {

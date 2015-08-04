@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.BitmapManager
 import chat.tox.antox.wrapper.ToxKey
 import com.shamanland.fab.FloatingActionButton
@@ -30,6 +31,7 @@ class FriendProfileActivity extends AppCompatActivity {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       getSupportActionBar.setIcon(R.drawable.ic_actionbar)
     }
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     friendKey = new ToxKey(getIntent.getStringExtra("key"))
     val db = State.db

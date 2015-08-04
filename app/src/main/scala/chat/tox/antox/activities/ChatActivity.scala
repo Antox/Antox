@@ -15,6 +15,7 @@ import android.view.View
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.{BitmapManager, Constants, IconColor}
@@ -34,6 +35,7 @@ class ChatActivity extends GenericChatActivity {
     val thisActivity = this
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     this.findViewById(R.id.info).setVisibility(View.GONE)
 

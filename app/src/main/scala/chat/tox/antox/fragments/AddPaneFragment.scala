@@ -7,6 +7,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{FrameLayout, ImageView, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.pager.BetterFragmentPagerAdapter
+import chat.tox.antox.theme.ThemeManager
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import com.balysv.materialripple.MaterialRippleLayout
@@ -65,6 +66,7 @@ class AddPaneFragment extends Fragment {
     pager.setAdapter(new AddPagerAdapter(getFragmentManager))
     tabs.setViewPager(pager)
 
+    tabs.setBackgroundColor(ThemeManager.primaryColor)
     rootView
   }
 

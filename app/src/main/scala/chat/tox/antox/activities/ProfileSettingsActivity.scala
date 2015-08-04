@@ -12,7 +12,7 @@ import android.os.{Build, Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v7.app.AlertDialog
-import android.view.{MenuItem, View}
+import android.view.{Window, MenuItem, View}
 import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
@@ -65,22 +65,22 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     super.onCreate(savedInstanceState)
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      getSupportActionBar.setBackgroundDrawable(new ColorDrawable(ThemeManager.primaryColor))
-    }
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     addPreferencesFromResource(R.xml.pref_profile)
 
     themeDialog = new ColorPickerDialog(ProfileSettingsActivity.this, new ColorPickerDialog.Callback {
       override def onColorSelection(index: Int, color: Int, darker: Int): Unit = {
         ThemeManager.primaryColor = color
-        ThemeManager.darkerPrimaryColor = darker
-
-        val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        preferences.edit.putInt("theme_color", color).apply()
+        ThemeManager.primaryColorDark = darker
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          recreate()
+          // it's a shame this can't be
+          // used to recreate this activity and still change the theme
+          val i = new Intent(getApplicationContext, classOf[MainActivity])
+          i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+          ProfileSettingsActivity.this.finish()
+          ProfileSettingsActivity.this.startActivity(i)
         }
       }
     })
@@ -234,8 +234,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   def showThemeDialog(): Unit = {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-    val currentColor = preferences.getInt("theme_color", -1)
+    val currentColor = ThemeManager.primaryColor
 
     themeDialog.show(currentColor match{
       case -1 => None

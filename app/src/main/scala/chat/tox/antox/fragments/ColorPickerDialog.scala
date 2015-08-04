@@ -54,8 +54,6 @@ class ColorPickerDialog(activity: Activity, callback: ColorPickerDialog.Callback
     val list: GridView = view.findViewById(R.id.color_grid).asInstanceOf[GridView]
     list.setAdapter(new ColorCircleAdapter(activity, mColors, preselect))
 
-    mColors.foreach(println(_))
-
     mDialog = Some(new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle)
       .setView(view).setTitle(R.string.dialog_color_picker_title).create())
 

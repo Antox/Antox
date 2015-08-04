@@ -10,6 +10,7 @@ import android.view.{View, WindowManager}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxService
 
 class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedListener {
@@ -20,6 +21,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     State.userDb = new UserDB(this)
 

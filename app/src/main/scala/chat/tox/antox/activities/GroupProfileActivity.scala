@@ -5,6 +5,7 @@ import android.os.{Build, Bundle}
 import android.support.v7.app.AppCompatActivity
 import android.widget.{EditText, TextView}
 import chat.tox.antox.R
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.UIUtils
 import chat.tox.antox.wrapper.ToxKey
@@ -19,6 +20,8 @@ class GroupProfileActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_group_profile)
     groupKey = new ToxKey(getIntent.getStringExtra("key"))
+
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     val group = ToxSingleton.getGroup(groupKey)
     setTitle(getResources.getString(R.string.title_activity_group_profile))

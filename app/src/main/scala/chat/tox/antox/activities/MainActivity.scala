@@ -15,6 +15,7 @@ import android.view.{MenuItem, View, WindowManager}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils._
 
@@ -27,9 +28,10 @@ class MainActivity extends AppCompatActivity {
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.activity_main)
-
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    ThemeManager.init(getApplicationContext)
+
+    setContentView(R.layout.activity_main)
 
     // Use a toolbar so that the drawer goes above the action bar
     val toolbar = findViewById(R.id.toolbar).asInstanceOf[Toolbar]
@@ -37,6 +39,7 @@ class MainActivity extends AppCompatActivity {
 
     getSupportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     // The app will control the voice call audio level
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)

@@ -15,6 +15,7 @@ import chat.tox.antox.R
 import chat.tox.antox.activities.{AboutActivity, ProfileSettingsActivity, SettingsActivity}
 import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback, SelfConnectionStatusChangeListener}
 import chat.tox.antox.data.State
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{BitmapManager, IconColor}
 import chat.tox.antox.wrapper.FileKind.AVATAR
@@ -70,6 +71,7 @@ class MainDrawerFragment extends Fragment {
       }
     })
 
+    drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
     rootView
   }
 

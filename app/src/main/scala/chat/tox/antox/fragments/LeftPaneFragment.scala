@@ -8,6 +8,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{FrameLayout, ImageView, RelativeLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
+import chat.tox.antox.theme.ThemeManager
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
 import com.balysv.materialripple.MaterialRippleLayout
@@ -62,6 +63,8 @@ class LeftPaneFragment extends Fragment {
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val thisActivity = this.getActivity.asInstanceOf[MainActivity]
     val actionBar = thisActivity.getSupportActionBar
+    ThemeManager.applyTheme(thisActivity, actionBar)
+
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
     val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
     val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
@@ -69,6 +72,7 @@ class LeftPaneFragment extends Fragment {
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
 
     tabs.setViewPager(pager)
+    tabs.setBackgroundColor(ThemeManager.primaryColor)
 
     rootView
   }

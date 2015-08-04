@@ -9,6 +9,7 @@ import android.text.util.Linkify
 import android.view.MenuItem
 import android.widget.TextView
 import chat.tox.antox.R
+import chat.tox.antox.theme.ThemeManager
 
 class AboutActivity extends AppCompatActivity {
 
@@ -16,6 +17,8 @@ class AboutActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.about)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+    ThemeManager.applyTheme(this, getSupportActionBar)
+
     val tw = findViewById(R.id.textView).asInstanceOf[TextView]
     val tw10 = findViewById(R.id.textView10).asInstanceOf[TextView]
     val pattern = Pattern.compile("https://github.com/subliun/Antox")

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import chat.tox.antox.R
 import chat.tox.antox.activities.SettingsActivity._
 import chat.tox.antox.data.State
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.utils.Options
 
@@ -45,6 +46,7 @@ class SettingsActivity extends BetterPreferenceActivity {
     super.onCreate(savedInstanceState)
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
+    ThemeManager.applyTheme(this, getSupportActionBar)
 
     addPreferencesFromResource(R.xml.settings_main)
 
