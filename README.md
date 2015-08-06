@@ -1,7 +1,8 @@
 Antox
 =====
 
-### Development is on hold until such a time that I am confident the Tox Project will be able to provide the services and infrastructure Antox needs to become a successful project. - subliun
+### Development is on hold until such a time that I am confident the Tox Project will be able to provide the services and infrastructure Antox needs to become a successful project. 
+###- subliun
 
 
 <img src="http://i.imgur.com/PvY7zCQ.jpg" width="230px" height="400px"/><img src="http://i.imgur.com/Hmnjpv3.png" width="230px" height="400px"/><img src="http://i.imgur.com/jApGiZQ.png" width="230px" height="400px"/>
