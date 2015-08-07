@@ -1,10 +1,6 @@
 Antox
 =====
 
-### Development is on hold until such a time that I am confident the Tox Project will be able to provide the services and infrastructure Antox needs to become a successful project. 
-###- subliun
-
-
 <img src="http://i.imgur.com/PvY7zCQ.jpg" width="230px" height="400px"/><img src="http://i.imgur.com/Hmnjpv3.png" width="230px" height="400px"/><img src="http://i.imgur.com/jApGiZQ.png" width="230px" height="400px"/>
 
 Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
