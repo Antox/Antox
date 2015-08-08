@@ -8,6 +8,7 @@ import android.app.{Activity, AlertDialog, Dialog}
 import android.content.DialogInterface
 import android.os.Environment
 import android.util.Log
+import chat.tox.antox.R
 import chat.tox.antox.transfer.FileDialog.{DirectorySelectedListener, FileSelectedListener}
 import chat.tox.antox.transfer.ListenerList.FireHandler
 
@@ -52,7 +53,7 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
 
   def createFileDialog(): Dialog = {
     var dialog: Dialog = null
-    val builder = new AlertDialog.Builder(activity)
+    val builder = new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle)
     builder.setTitle(currentPath.getPath)
     if (selectDirectoryOption) {
       builder.setPositiveButton("Select directory", new DialogInterface.OnClickListener() {

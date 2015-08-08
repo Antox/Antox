@@ -198,7 +198,7 @@ abstract class AbstractContactsFragment extends Fragment {
     val key = fkey
     val delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend, null)
     val deleteLogsCheckboxView = delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox).asInstanceOf[CheckBox]
-    val builder = new AlertDialog.Builder(context)
+    val builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
     builder.setView(delete_friend_dialog).setCancelable(false)
       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
@@ -259,7 +259,7 @@ abstract class AbstractContactsFragment extends Fragment {
 
   def showDeleteChatDialog(context: Context, fkey: ToxKey) {
     val key = fkey
-    val builder = new AlertDialog.Builder(context)
+    val builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
     builder.setMessage(getResources.getString(R.string.friend_action_delete_chat_confirmation))
       .setCancelable(false)
       .setPositiveButton(getResources.getString(R.string.button_yes), new DialogInterface.OnClickListener() {
