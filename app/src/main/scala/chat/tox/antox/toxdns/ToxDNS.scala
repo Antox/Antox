@@ -68,7 +68,7 @@ object ToxDNS {
   }
 
   /**
-   *  Registers a new account on toxme.se with name 'accountName' using the information
+   *  Registers a new account on toxme.io with name 'accountName' using the information
    *  (toxID, etc) contained in data file 'toxData'.
    *
    *  @return tuple: (toxme password, errorCode)
@@ -91,7 +91,7 @@ object ToxDNS {
         unencryptedPayload.put("timestamp", epoch)
         val hexEncoder = new org.abstractj.kalium.encoders.Hex
         val rawEncoder = new Raw
-        val toxmePK = "5D72C517DF6AEC54F1E977A6B6F25914EA4CF7277A85027CD9F5196DF17E0B13"
+        val toxmePK = "1A39E7A5D5FA9CF155C751570A32E625698A60A55F6D88028F949F66144F4F25"
         val serverPublicKey = hexEncoder.decode(toxmePK)
         val ourSecretKey = Array.ofDim[Byte](32)
         System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
@@ -136,7 +136,7 @@ object ToxDNS {
     def run() {
       val httpClient = new DefaultHttpClient()
       try {
-        val post = new HttpPost("https://toxme.se/api")
+        val post = new HttpPost("https://toxme.io/api")
         post.setHeader("Content-Type", "application/json")
         post.setEntity(new StringEntity(finalJson.toString))
         val response = httpClient.execute(post)

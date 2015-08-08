@@ -289,7 +289,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   val lastMessages: Observable[Map[ToxKey, (String, Timestamp)]] = {
     val selectQuery =
-      s"""SELECT $COLUMN_NAME_KEY, $COLUMN_NAME_MESSAGE, $COLUMN_NAME_TIMESTAMP
+      s"""SELECT *
          |FROM $TABLE_MESSAGES
          |WHERE _id
          |IN (SELECT MAX(_id) FROM $TABLE_MESSAGES
@@ -301,10 +301,11 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxKey(cursor.getString(0))
-          val message = cursor.getString(1)
-          val timestamp = Timestamp.valueOf(cursor.getString(2))
-          map.put(key, (message, timestamp))
+          //val key = new ToxKey(cursor.getString(0))
+          //val message = cursor.getString(1)
+          //val timestamp = Timestamp.valueOf(cursor.getString(2))
+          val message = messageListFromCursor(cursor).head
+          map.put(message.key, (message.message, message.timestamp))
         } while (cursor.moveToNext())
       }
       cursor.close()

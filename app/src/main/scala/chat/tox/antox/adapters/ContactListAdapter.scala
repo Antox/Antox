@@ -105,6 +105,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     }
     val item = getItem(position)
     holder.firstText.setText(item.first)
+    holder.firstText.setTextColor(context.getResources.getColor(R.color.black))
 
     if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
 
