@@ -299,15 +299,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
       val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
       val cursor = query.run()
-      if (cursor.moveToFirst()) {
-        do {
-          //val key = new ToxKey(cursor.getString(0))
-          //val message = cursor.getString(1)
-          //val timestamp = Timestamp.valueOf(cursor.getString(2))
-          val message = messageListFromCursor(cursor).head
-          map.put(message.key, (message.message, message.timestamp))
-        } while (cursor.moveToNext())
-      }
+      val messages = messageListFromCursor(cursor).filter(messageVisible)
+      messages.foreach(message => map.put(message.key, (message.message, message.timestamp)))
+
       cursor.close()
       map.toMap
     })
