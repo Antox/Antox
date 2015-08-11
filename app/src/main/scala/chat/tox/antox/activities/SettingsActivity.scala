@@ -113,9 +113,6 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       finish()
       startActivity(intent)
     }
-    if (key == "theme_color") {
-      showThemeDialog()
-    }
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
