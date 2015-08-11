@@ -3,7 +3,7 @@
 
     <!-- Activity titles -->
     <string name="title_activity_add">Добавить контакт</string>
-    <string name="title_activity_friend_profile">Friend Profile</string>
+    <string name="title_activity_friend_profile">Профиль</string>
     <string name="title_activity_group_profile">Информация о группе</string>
     <string name="title_activity_profile_settings">Настройки профиля</string>
 
@@ -37,7 +37,7 @@
     <string name="create_account_load_profile_unknown">Неизвестная ошибка при загрузке профиля</string>
 
     <!-- Main Activity -->
-    <string name="main_no_active_chat">Нет активных чатов. Для начала разговора выберите друга в панели слева.</string>
+    <string name="main_no_active_chat">Нет активных диалогов. Для начала разговора выберите друга в панели слева.</string>
     <string name="main_recent_no">Нет недавних бесед</string>
     <string name="main_no_internet">Проверьте интернет соединение</string>
     <string name="main_not_connected">Подключение к интернету не было обнаружено. Вы будете иметь ограниченные возможности, если вы используете Antox только в локальной сети</string>
@@ -209,7 +209,7 @@
     <string name="title_activity_call">Вызов/string>
     <string name="end_call">Завешить вызов</string>
     <string name="mute_call">Без звука</string>
-    <string name="mute_mic">Отключить микрофом</string>
+    <string name="mute_mic">Отключить микрофон</string>
     <string name="profile_info_description">Информация о пользователе</string>
 
 </resources>
