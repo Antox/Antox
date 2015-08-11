@@ -1,11 +1,9 @@
 package chat.tox.antox.theme
 
-import java.util.prefs.Preferences
-
 import android.app.Activity
-import android.content.{SharedPreferences, Context}
+import android.content.{Context, SharedPreferences}
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.graphics.{PorterDuff, Color}
 import android.os.Build
 import android.preference.PreferenceManager
 import android.support.v7.app.ActionBar
