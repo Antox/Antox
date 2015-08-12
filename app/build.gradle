@@ -71,7 +71,7 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'org.scaloid:scaloid_2.11:3.6.1-10'
     compile 'com.android.support:appcompat-v7:22.2.0'
-    compile "com.android.support:gridlayout-v7:22.0.0"
+    compile 'com.android.support:gridlayout-v7:22.2.0'
     compile 'com.shamanland:fab:0.0.8'
     compile 'io.reactivex:rxjava:1.0.6'
     compile 'io.reactivex:rxandroid:0.24.0'
