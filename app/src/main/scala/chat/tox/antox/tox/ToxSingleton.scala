@@ -169,6 +169,7 @@ object ToxSingleton {
           }
         } catch {
           case e: Exception =>
+            e.printStackTrace()
         }
         Log.d(TAG, "Successfully bootstrapped")
       }, error => {
