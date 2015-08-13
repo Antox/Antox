@@ -25,7 +25,7 @@ To install on F-Droid, add https://repo.tox.im/android and search for "Antox".
 ###Translating Antox
 You can localize the application via github pull request or by requesting a new language or join an existing translation team on [Transifex](https://www.transifex.com/projects/p/antox/).
 
-###Compiling Antox From Source with IntelliJ IDE
+###Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools.
