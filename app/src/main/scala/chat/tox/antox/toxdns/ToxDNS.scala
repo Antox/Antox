@@ -29,24 +29,17 @@ object ToxDNS {
  /**
   * Performs a DNS lookup and returns the Tox ID registered to the given DNSName.
   *
-  * @param DNSName the dns name to lookup
+  * @param dnsName the dns name to lookup
   * @return the ID or None if the name is not found
   */
- def lookup(DNSName: String): Observable[Option[String]] = {
+ def lookup(dnsName: String): Observable[Option[String]] = {
     Observable(subscriber => {
-      var user: String = null
-      var domain: String = null
-      var lookup: String = null
-
-      if (DNSName.contains("@")) {
-        user = DNSName.substring(0, DNSName.indexOf("@"))
-        domain = DNSName.substring(DNSName.indexOf("@") + 1)
-
-        lookup = user + "._tox." + domain
-        var txt: TXTRecord = null
+      if (dnsName.contains("@")) {
+        val parsedDnsName = DnsName.fromString(dnsName)
+        val lookup = parsedDnsName.user + "._tox." + parsedDnsName.domain
         try {
           val records = new Lookup(lookup, Type.TXT).run()
-          txt = records(0).asInstanceOf[TXTRecord]
+          val txt = records(0).asInstanceOf[TXTRecord]
           val txtString = txt.toString.substring(txt.toString.indexOf('"'))
           if (txtString.contains("tox1")) {
             val key = txtString.substring(11, 11 + 76)
@@ -62,6 +55,17 @@ object ToxDNS {
     })
   }
 
+  def lookupPublicKey(dnsDomain: String): Option[String] = {
+    try {
+      val records = new Lookup("_tox." + dnsDomain, Type.TXT).run()
+      val txt = records(0).asInstanceOf[TXTRecord]
+      Some(txt.toString.substring(txt.toString.indexOf('"')).replace("\"", ""))
+    } catch {
+      case e: Exception =>
+        None
+    }
+  }
+
   //ToxDNS Registration Error
   object RegError extends Enumeration {
     type RegError = Value
@@ -71,6 +75,7 @@ object ToxDNS {
     val INTERNAL = Value("-26")
     val UNKNOWN = Value("")
     val KALIUM_LINK_ERROR = Value("KALIUM")
+    val INVALID_DOMAIN = Value("INVALID_DOMAIN")
 
     def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
   }
@@ -83,23 +88,22 @@ object ToxDNS {
    *
    * @return toxme request observable
    */
-  def registerAccount(accountName: String, toxData: ToxData): Observable[RegistrationResult[String]] = {
-    constructRegistrationRequestJson(accountName, toxData).flatMap(result =>
+  def registerAccount(name: DnsName, toxData: ToxData): Observable[RegistrationResult[String]] = {
+    constructRegistrationRequestJson(name, toxData).flatMap(result =>
       result match {
         case Left(error: RegError) => Observable.just(Left(error))
         case Right(result: JSONObject) => postRegistrationJson(result)
       }
     ).onErrorReturn(_ => Left(RegError.UNKNOWN))
       .subscribeOn(IOScheduler())
-      .observeOn(IOScheduler())
   }
 
   final case class EncryptedPayload(payload: String, nonce: String)
 
-  private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData): EncryptedPayload = {
+  private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData, publicKey: String): EncryptedPayload = {
     val hexEncoder = new org.abstractj.kalium.encoders.Hex
     val rawEncoder = new Raw
-    val toxmePK = "1A39E7A5D5FA9CF155C751570A32E625698A60A55F6D88028F949F66144F4F25"
+    val toxmePK = publicKey
     val serverPublicKey = hexEncoder.decode(toxmePK)
     val ourSecretKey = Array.ofDim[Byte](32)
     System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
@@ -114,7 +118,7 @@ object ToxDNS {
     EncryptedPayload(payload, nonceString)
   }
 
-  private def constructRegistrationRequestJson(accountName: String, toxData: ToxData): Observable[RegistrationResult[JSONObject]] = {
+  private def constructRegistrationRequestJson(name: DnsName, toxData: ToxData): Observable[RegistrationResult[JSONObject]] = {
     Observable(subscriber => {
       try {
         System.load("libkaliumjni.so")
@@ -128,20 +132,25 @@ object ToxDNS {
 
         val unencryptedPayload = new JSONObject
         unencryptedPayload.put("tox_id", toxData.ID)
-        unencryptedPayload.put("name", accountName)
+        unencryptedPayload.put("name", name.user)
         unencryptedPayload.put("privacy", privacy)
         unencryptedPayload.put("bio", "")
         val epoch = System.currentTimeMillis() / 1000
         unencryptedPayload.put("timestamp", epoch)
 
-        val encryptedPayload = encryptPayload(unencryptedPayload, toxData)
+        lookupPublicKey(name.domain.getOrElse("toxme.io")) match {
+          case Some(publicKey) =>
+            val encryptedPayload = encryptPayload(unencryptedPayload, toxData, publicKey)
 
-        val requestJson = new JSONObject
-        requestJson.put("action", 1)
-        requestJson.put("public_key", toxData.ID.substring(0, 64))
-        requestJson.put("encrypted", encryptedPayload.payload)
-        requestJson.put("nonce", encryptedPayload.nonce)
-        subscriber.onNext(Right(requestJson))
+            val requestJson = new JSONObject
+            requestJson.put("action", 1)
+            requestJson.put("public_key", toxData.ID.substring(0, 64))
+            requestJson.put("encrypted", encryptedPayload.payload)
+            requestJson.put("nonce", encryptedPayload.nonce)
+            subscriber.onNext(Right(requestJson))
+          case None =>
+            subscriber.onNext(Left(RegError.INVALID_DOMAIN))
+        }
       } catch {
         case e: JSONException =>
           Log.d("CreateAccount", "JSON Exception " + e.getMessage)

@@ -23,6 +23,7 @@
     <string name="create_name_hint">Profile Name</string>
     <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
+    <string name="create_registering">Registering account...</string>
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_import_profile">Import Profile</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
@@ -35,6 +36,7 @@
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
+    <string name="create_account_invalid_domain">Invalid toxdns domain supplied.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
