@@ -71,7 +71,7 @@ class MainDrawerFragment extends Fragment {
     drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
 
     userDetailsSubscription = State.userDb
-      .userDetailsObservable(preferences.getString("active_account", ""))
+      .activeUserDetailsObservable()
       .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
       .observeOn(AndroidMainThreadScheduler())
       .subscribe((tuple) => {
@@ -108,7 +108,7 @@ class MainDrawerFragment extends Fragment {
   def updateNavigationHeaderStatus(toxConnection: ToxConnection): Unit = {
     val statusView = getView.findViewById(R.id.status)
 
-    val status = UserStatus.getToxUserStatusFromString(preferences.getString("status", ""))
+    val status = UserStatus.getToxUserStatusFromString(State.userDb.getActiveUserDetails.status)
     val online = toxConnection != ToxConnection.NONE
     val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
 

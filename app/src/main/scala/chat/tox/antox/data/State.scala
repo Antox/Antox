@@ -36,8 +36,7 @@ object State {
   }
 
   def logout(activity: Activity): Unit = {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-    if (!preferences.getBoolean("logging_enabled", true)) {
+    if (!State.userDb.getActiveUserDetails.loggingEnabled) {
       ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
     }
 
@@ -45,11 +44,9 @@ object State {
     db.synchroniseWithTox(ToxSingleton.tox)
 
     State.db.close()
-    val editor = preferences.edit()
-    editor.putBoolean("loggedin", false)
-    editor.apply()
     val startTox = new Intent(activity, classOf[ToxService])
     activity.stopService(startTox)
+    userDb.logout()
     val login = new Intent(activity, classOf[LoginActivity])
     activity.startActivity(login)
     activity.finish()

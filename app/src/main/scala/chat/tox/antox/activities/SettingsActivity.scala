@@ -70,7 +70,6 @@ class SettingsActivity extends BetterPreferenceActivity {
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
     if (key == "enable_udp") {
-      val toxSingleton = ToxSingleton.getInstance()
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
       val service = new Intent(this, classOf[ToxService])
       this.stopService(service)

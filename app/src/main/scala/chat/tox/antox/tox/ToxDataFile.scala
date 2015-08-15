@@ -11,11 +11,6 @@ import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
-  def this(context: Context) = this(context, {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    preferences.getString("active_account", "")
-  })
-
   def doesFileExist(): Boolean = {
     if (ctx == null) {
       Log.d("ToxDataFile", "Context is null!")

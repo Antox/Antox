@@ -16,6 +16,8 @@ import chat.tox.antox.wrapper.UserInfo
 import com.squareup.sqlbrite.SqlBrite
 import rx.lang.scala.Observable
 
+import scala.collection.mutable.ArrayBuffer
+
 object UserDB {
 
   val databaseName = "userdb"
@@ -57,11 +59,16 @@ object UserDB {
 
 class UserDB(ctx: Context) {
 
+  case class NotLoggedInException(message: String = "Invalid request. No active user found.") extends RuntimeException
+
   private var mDbHelper: DatabaseHelper = _
 
   private var mDb: BriteScalaDatabase = _
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+
+  var activeUser: Option[String] = None
+  def getActiveUser = activeUser.getOrElse(throw new NotLoggedInException())
 
   mDbHelper = new DatabaseHelper(ctx)
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
@@ -70,7 +77,28 @@ class UserDB(ctx: Context) {
     mDbHelper.close()
   }
 
-  def addUser(username: String, password: String) {
+  def login(username: String): Unit = {
+    activeUser = Some(username)
+    val activeUserDetails = getActiveUserDetails
+
+    val editor = preferences.edit()
+    editor.putString("active_account", username)
+    editor.putString("nickname", activeUserDetails.nickname)
+    editor.putString("password", activeUserDetails.password)
+    editor.putString("status", activeUserDetails.status)
+    editor.putString("status_message", activeUserDetails.statusMessage)
+    editor.putString("avatar", activeUserDetails.avatarName)
+    editor.putBoolean("logging_enabled", activeUserDetails.loggingEnabled)
+    editor.commit()
+  }
+
+  def loggedIn = activeUser.isDefined
+
+  def logout(): Unit = {
+    activeUser = None
+  }
+
+  def addUser(username: String, toxID: String, password: String) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_USERNAME, username)
     values.put(COLUMN_NAME_PASSWORD, password)
@@ -81,6 +109,12 @@ class UserDB(ctx: Context) {
     values.put(COLUMN_NAME_AVATAR, "")
     values.put(COLUMN_NAME_LOGGING_ENABLED, true)
     mDb.insert(TABLE_USERS, values)
+
+    val editor = preferences.edit()
+    editor.putString("tox_id", toxID)
+    editor.putBoolean("logging_enabled", true)
+    editor.putBoolean("autostart", true)
+    editor.commit()
   }
 
   def doesUserExist(username: String): Boolean = {
@@ -95,12 +129,12 @@ class UserDB(ctx: Context) {
     count > 0
   }
 
-  def userDetailsQuery(username: String): String =
+  private def userDetailsQuery(username: String): String =
     s"""SELECT *
        |FROM $TABLE_USERS
        |WHERE $COLUMN_NAME_USERNAME='$username'""".stripMargin
 
-  def userInfoFromCursor(cursor: Cursor): UserInfo = {
+  private def userInfoFromCursor(cursor: Cursor): UserInfo = {
     var userInfo: UserInfo = null
     if (cursor.moveToFirst()) {
       userInfo = new UserInfo(
@@ -115,6 +149,9 @@ class UserDB(ctx: Context) {
     userInfo
   }
 
+  def getActiveUserDetails: UserInfo =
+    getUserDetails(getActiveUser)
+
   def getUserDetails(username: String): UserInfo = {
     val query = userDetailsQuery(username)
 
@@ -123,6 +160,9 @@ class UserDB(ctx: Context) {
     cursor.close()
     userInfo
   }
+
+  def activeUserDetailsObservable(): Observable[UserInfo] =
+    userDetailsObservable(getActiveUser)
 
   def userDetailsObservable(username: String): Observable[UserInfo] = {
     val query = userDetailsQuery(username)
@@ -136,7 +176,21 @@ class UserDB(ctx: Context) {
     })
   }
 
-  def updateUserDetail(username: String, detail: String, newDetail: String) {
+  def updateActiveUserDetail(detail: String, newDetail: String) = {
+    if (!preferences.getString(detail, "").equals(newDetail)) {
+      preferences.edit().putString(detail, newDetail).apply()
+    }
+    updateUserDetail(getActiveUser, detail, newDetail)
+  }
+
+  def updateActiveUserDetail(detail: String, newDetail: Boolean) = {
+    if (!preferences.getBoolean(detail, false) == newDetail) {
+      preferences.edit().putBoolean(detail, newDetail).apply()
+    }
+    updateUserDetail(getActiveUser, detail, newDetail)
+  }
+
+  private def updateUserDetail(username: String, detail: String, newDetail: String) {
     val whereClause = s"$COLUMN_NAME_USERNAME='$username'"
     mDb.update(TABLE_USERS, contentValue(detail, newDetail), whereClause)
   }
@@ -146,21 +200,21 @@ class UserDB(ctx: Context) {
     mDb.update(TABLE_USERS, contentValue(detail, if (newDetail) TRUE else FALSE), whereClause)
   }
 
-  def doUsersExist(): Boolean = {
+  def numUsers(): Int = {
     val cursor = mDb.query(s"SELECT count(*) FROM $TABLE_USERS")
     cursor.moveToFirst()
     val count = cursor.getInt(0)
     cursor.close()
-    count > 0
+    count
   }
 
-  def getAllProfiles: util.ArrayList[String] = {
-    val profiles = new util.ArrayList[String]()
+  def getAllProfiles: ArrayBuffer[String] = {
+    val profiles = new ArrayBuffer[String]()
     val query = s"SELECT $COLUMN_NAME_USERNAME FROM $TABLE_USERS"
     val cursor = mDb.query(query)
     if (cursor.moveToFirst()) {
       do {
-        profiles.add(cursor.getString(0))
+        profiles += cursor.getString(0)
       } while (cursor.moveToNext())
     }
     cursor.close()

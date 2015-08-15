@@ -23,7 +23,7 @@
   <string name="create_register">Registrazione</string>
   <string name="create_register_incog">Crea profilo</string>
   <string name="create_import_profile">Importa Profilo</string>
-  <string name="create_skip">Registra il nome profilo su toxme.se (opzionale)</string>
+  <string name="create_skip">Registra il nome profilo su toxme.io (opzionale)</string>
   <string name="create_must_fill_in">Devi compilare tutti i campi</string>
   <string name="create_bad_profile_name">Il nome profilo non può contenere \" \", \"/\", \"\\" o essere vuoto</string>
   <string name="create_profile_exists">Questo nome profilo esiste già</string>
@@ -32,7 +32,7 @@
   <string name="create_account_internal_error">Antox: errore interno. Riavvia l\'applicazione e riprova</string>
   <string name="create_account_reached_registration_limit">Puoi registrare solo 13 accounts ogni ora. Hai raggiunto questo limite</string>
   <string name="create_account_unknown_error">Errore sconosciuto durante la registrazione, riprova più tardi</string>
-  <string name="create_account_kalium_link_error">Errore caricamento libreria. Impossibile registrare accounts su toxme.se</string>
+  <string name="create_account_kalium_link_error">Errore caricamento libreria. Impossibile registrare accounts su toxme.io</string>
   <string name="create_account_encrypted_profile_error">Attualmente Antox non supporta i profili criptati</string>
   <string name="create_account_load_profile_unknown">Errore sconosciuto durante il caricamento del profilo</string>
 

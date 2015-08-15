@@ -2,19 +2,27 @@ package chat.tox.antox.toxdns
 
 import java.io.{IOException, UnsupportedEncodingException}
 import java.util.Scanner
+import java.util.concurrent.ThreadPoolExecutor
 
 import android.util.{Base64, Log}
+import chat.tox.antox.toxdns.ToxDNS.RegError
 import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import com.squareup.okhttp.Request.Builder
+import com.squareup.okhttp.{MediaType, RequestBody, Request, OkHttpClient}
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.Raw
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.DefaultHttpClient
-import org.json.{JSONException, JSONObject}
+import org.json.{JSONObject, JSONException}
 import org.xbill.DNS.{Lookup, TXTRecord, Type}
-import rx.lang.scala.Observable
+import rx.Scheduler
+import rx.lang.scala.{Subscriber, Observable}
+import rx.lang.scala.schedulers.{IOScheduler}
 
 import scala.util.Try
+import language.higherKinds
 
 object ToxDNS {
 
@@ -67,122 +75,112 @@ object ToxDNS {
     def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
   }
 
-  /**
-   *  Registers a new account on toxme.io with name 'accountName' using the information
-   *  (toxID, etc) contained in data file 'toxData'.
-   *
-   *  @return tuple: (toxme password, errorCode)
-   */
-  def registerAccount(accountName: String, toxData: ToxData): Either[RegError, String] = {
-    try {
-      System.load("libkaliumjni.so")
+  type RegistrationResult[Success] = Either[RegError, Success]
 
-      val allow = 0
-      val jsonPost = new JSONPost
-      val toxmeThread = new Thread(jsonPost)
+  /**
+   * Registers a new account on toxme.io with name 'accountName' using the information
+   * (toxID, etc) contained in data file 'toxData'.
+   *
+   * @return toxme request observable
+   */
+  def registerAccount(accountName: String, toxData: ToxData): Observable[RegistrationResult[String]] = {
+    constructRegistrationRequestJson(accountName, toxData).flatMap(result =>
+      result match {
+        case Left(error: RegError) => Observable.just(Left(error))
+        case Right(result: JSONObject) => postRegistrationJson(result)
+      }
+    ).onErrorReturn(_ => Left(RegError.UNKNOWN))
+      .subscribeOn(IOScheduler())
+      .observeOn(IOScheduler())
+  }
+
+  final case class EncryptedPayload(payload: String, nonce: String)
+
+  private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData): EncryptedPayload = {
+    val hexEncoder = new org.abstractj.kalium.encoders.Hex
+    val rawEncoder = new Raw
+    val toxmePK = "1A39E7A5D5FA9CF155C751570A32E625698A60A55F6D88028F949F66144F4F25"
+    val serverPublicKey = hexEncoder.decode(toxmePK)
+    val ourSecretKey = Array.ofDim[Byte](32)
+    System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
+    val box = new Box(serverPublicKey, ourSecretKey)
+    val random = new org.abstractj.kalium.crypto.Random()
+    var nonce = random.randomBytes(24)
+    var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
+    payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
+    nonce = Base64.encode(nonce, Base64.NO_WRAP)
+    val payload = rawEncoder.encode(payloadBytes)
+    val nonceString = rawEncoder.encode(nonce)
+    EncryptedPayload(payload, nonceString)
+  }
+
+  private def constructRegistrationRequestJson(accountName: String, toxData: ToxData): Observable[RegistrationResult[JSONObject]] = {
+    Observable(subscriber => {
+      try {
+        System.load("libkaliumjni.so")
+      } catch {
+        case e: UnsatisfiedLinkError =>
+          subscriber.onNext(Left(RegError.KALIUM_LINK_ERROR))
+      }
 
       try {
+        val privacy = 0
+
         val unencryptedPayload = new JSONObject
         unencryptedPayload.put("tox_id", toxData.ID)
         unencryptedPayload.put("name", accountName)
-        unencryptedPayload.put("privacy", allow)
+        unencryptedPayload.put("privacy", privacy)
         unencryptedPayload.put("bio", "")
         val epoch = System.currentTimeMillis() / 1000
         unencryptedPayload.put("timestamp", epoch)
-        val hexEncoder = new org.abstractj.kalium.encoders.Hex
-        val rawEncoder = new Raw
-        val toxmePK = "1A39E7A5D5FA9CF155C751570A32E625698A60A55F6D88028F949F66144F4F25"
-        val serverPublicKey = hexEncoder.decode(toxmePK)
-        val ourSecretKey = Array.ofDim[Byte](32)
-        System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
-        val box = new Box(serverPublicKey, ourSecretKey)
-        val random = new org.abstractj.kalium.crypto.Random()
-        var nonce = random.randomBytes(24)
-        var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
-        payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
-        nonce = Base64.encode(nonce, Base64.NO_WRAP)
-        val payload = rawEncoder.encode(payloadBytes)
-        val nonceString = rawEncoder.encode(nonce)
-        val json = new JSONObject
-        json.put("action", 1)
-        json.put("public_key", toxData.ID.substring(0, 64))
-        json.put("encrypted", payload)
-        json.put("nonce", nonceString)
-        jsonPost.setJSON(json.toString)
-        toxmeThread.start()
-        toxmeThread.join()
-      } catch {
-        case e: JSONException => Log.d("CreateAccount", "JSON Exception " + e.getMessage)
-        case e: InterruptedException =>
-      }
 
-      if (Try(RegError.withName(jsonPost.getErrorCode)).getOrElse(RegError.UNKNOWN) == RegError.SUCCESS) {
-        Right(jsonPost.getPassword)
-      } else {
-        Left(RegError.valueOf(jsonPost.getErrorCode))
+        val encryptedPayload = encryptPayload(unencryptedPayload, toxData)
+
+        val requestJson = new JSONObject
+        requestJson.put("action", 1)
+        requestJson.put("public_key", toxData.ID.substring(0, 64))
+        requestJson.put("encrypted", encryptedPayload.payload)
+        requestJson.put("nonce", encryptedPayload.nonce)
+        subscriber.onNext(Right(requestJson))
+      } catch {
+        case e: JSONException =>
+          Log.d("CreateAccount", "JSON Exception " + e.getMessage)
+          subscriber.onError(e)
       }
-    } catch {
-      case e: UnsatisfiedLinkError => Left(RegError.KALIUM_LINK_ERROR)
-    }
+      subscriber.onCompleted()
+    })
   }
 
-  private class JSONPost extends Runnable {
+  private def postRegistrationJson(requestJson: JSONObject): Observable[RegistrationResult[String]] = {
+    Observable(subscriber => {
+        val httpClient = new OkHttpClient()
+        try {
+          val mediaType = MediaType.parse("application/json; charset=utf-8")
+          val requestBody = RequestBody.create(mediaType, requestJson.toString)
+          val request = new Builder().url("https://toxme.io/api").post(requestBody).build()
+          val response = httpClient.newCall(request).execute()
 
-    @volatile private var errorCode: String = "notdone"
-    @volatile private var password: String = ""
+          Log.d("CreateAccount", "Response code: " + response.toString)
+          val json = new JSONObject(response.body().string())
+          val errorCode = json.getString("c")
+          val password = json.getString("password")
 
-    private var finalJson: String = _
-
-    def run() {
-      val httpClient = new DefaultHttpClient()
-      try {
-        val post = new HttpPost("https://toxme.io/api")
-        post.setHeader("Content-Type", "application/json")
-        post.setEntity(new StringEntity(finalJson.toString))
-        val response = httpClient.execute(post)
-        Log.d("CreateAccount", "Response code: " + response.toString)
-        val entity = response.getEntity
-        val in = new Scanner(entity.getContent)
-        while (in.hasNext) {
-          val responseString = in.next()
-          Log.d("CreateAccount", "Response: " + responseString)
-          if (responseString.contains("\"c\":")) {
-            errorCode = in.next()
-            errorCode = errorCode.replaceAll("\"", "")
-            errorCode = errorCode.replaceAll(",", "")
-            errorCode = errorCode.replaceAll("\\}", "")
-            Log.d("CreateAccount", "Error Code: " + errorCode)
+          val error = Try(RegError.withName(errorCode)).getOrElse(RegError.UNKNOWN)
+          if (error == RegError.SUCCESS) {
+            subscriber.onNext(Right(password))
+          } else {
+            subscriber.onNext(Left(error))
           }
-
-          if (responseString.contains("\"password\":")) {
-            password = in.next()
-            password = password.replaceAll("\"", "")
-            password = password.replaceAll(",", "")
-            password = password.replaceAll("\\}", "")
-            Log.d("CreateAccount", "Password: " + password)
-          }
+        } catch {
+          case e: UnsupportedEncodingException =>
+            Log.d("CreateAccount", "Unsupported Encoding Exception: " + e.getMessage)
+            subscriber.onError(e)
+          case e: Exception =>
+            Log.d("CreateAccount", "IOException: " + e.getMessage)
+            subscriber.onError(e)
         }
-        in.close()
-      } catch {
-        case e: UnsupportedEncodingException => Log.d("CreateAccount", "Unsupported Encoding Exception: " + e.getMessage)
-        case e: IOException => Log.d("CreateAccount", "IOException: " + e.getMessage)
-      } finally {
-        httpClient.getConnectionManager.shutdown()
-      }
-    }
 
-    def getErrorCode: String = synchronized {
-      errorCode
-    }
-
-    def getPassword: String = synchronized {
-      password
-    }
-
-    def setJSON(json: String) {
-      synchronized {
-        finalJson = json
-      }
-    }
+      subscriber.onCompleted()
+    })
   }
 }

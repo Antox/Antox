@@ -8,7 +8,7 @@
   <string name="pref_title_nickname">Nome</string>
   <string name="pref_default_nickname">Utente Antox</string>
 
-  <string name="pref_title_password">Password per Toxme.se</string>
+  <string name="pref_title_password">Password per Toxme.io</string>
   <string name="pref_default_password">Nessuna Password Impostata</string>
 
   <string name="pref_title_status">Stato</string>

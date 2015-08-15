@@ -23,7 +23,7 @@ class AntoxDBTest extends AndroidTestCase {
     val context = new RenamingDelegatingContext(getContext, "test_")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    db = new AntoxDB(context, preferences.getString("active_account", ""))
+    db = new AntoxDB(context, "jim")
   }
 
   @After
