@@ -5,20 +5,19 @@ import java.util.Random
 
 import android.content.DialogInterface.OnClickListener
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
-import android.graphics.drawable.ColorDrawable
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
-import android.os.{Build, Bundle, Environment}
+import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v7.app.AlertDialog
-import android.view.{Window, MenuItem, View}
+import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
 import chat.tox.antox.data.State
-import chat.tox.antox.fragments.{AvatarDialog, ColorPickerDialog}
+import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileDialog
@@ -57,7 +56,6 @@ object ProfileSettingsActivity {
 class ProfileSettingsActivity extends BetterPreferenceActivity {
 
   private var avatarDialog: AvatarDialog = _
-  private var themeDialog: ColorPickerDialog = _
 
   override def onCreate(savedInstanceState: Bundle) {
     getDelegate.installViewFactory()
@@ -69,27 +67,10 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
 
     addPreferencesFromResource(R.xml.pref_profile)
 
-    themeDialog = new ColorPickerDialog(ProfileSettingsActivity.this, new ColorPickerDialog.Callback {
-      override def onColorSelection(index: Int, color: Int, darker: Int): Unit = {
-        ThemeManager.primaryColor = color
-        ThemeManager.primaryColorDark = darker
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          // it's a shame this can't be
-          // used to recreate this activity and still change the theme
-          val i = new Intent(getApplicationContext, classOf[MainActivity])
-          i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-          ProfileSettingsActivity.this.finish()
-          ProfileSettingsActivity.this.startActivity(i)
-        }
-      }
-    })
-
     avatarDialog = new AvatarDialog(ProfileSettingsActivity.this)
 
     if (savedInstanceState != null) {
       if (savedInstanceState.getBoolean("showing_avatar_dialog", false)) avatarDialog.show()
-      if (savedInstanceState.getBoolean("showing_theme_dialog", false)) showThemeDialog()
     }
 
     bindPreferenceSummaryToValue(findPreference("nickname"))
@@ -176,15 +157,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         true
       }
     })
-
-    val themePreference = findPreference("theme_color")
-    themePreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
-      override def onPreferenceClick(preference: Preference): Boolean = {
-        showThemeDialog()
-
-        true
-      }
-    })
   }
 
   def createToxIDDialog() {
@@ -233,15 +205,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     builder.create().show()
   }
 
-  def showThemeDialog(): Unit = {
-    val currentColor = ThemeManager.primaryColor
-
-    themeDialog.show(currentColor match{
-      case -1 => None
-      case _ => Some(currentColor)
-    })
-  }
-
   def onExportDataFileSelected(dest: File): Unit = {
     try {
       ToxSingleton.exportDataFile(dest)
@@ -285,7 +248,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   override def onStop(): Unit = {
     super.onStop()
     avatarDialog.close()
-    themeDialog.close()
   }
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
@@ -348,7 +310,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     super.onSaveInstanceState(savedInstanceState)
 
     savedInstanceState.putBoolean("showing_avatar_dialog", avatarDialog.isShowing)
-    savedInstanceState.putBoolean("showing_theme_dialog", themeDialog.isShowing)
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {

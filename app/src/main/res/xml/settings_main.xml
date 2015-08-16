@@ -36,6 +36,13 @@
             android:positiveButtonText="@null"
             android:title="@string/pref_title_language" />
 
+        <Preference
+            android:defaultValue="@color/brand_primary"
+            android:editable="false"
+            android:key="theme_color"
+            android:singleLine="true"
+            android:title="@string/pref_title_theme_color" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="wifi_only"
