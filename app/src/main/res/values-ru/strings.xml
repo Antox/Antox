@@ -1,112 +1,215 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Добавить друга</string>
-  <string name="title_activity_friend_profile">Профиль друга</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Добавить друга</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Вы должны указать имя профиля</string>
-  <string name="login_login">Вход</string>
-  <string name="login_account_hint">Имя профиля</string>
-  <string name="login_create_account_text">Создать Tox профиль</string>
-  <string name="login_bad_login">Имя профиля не обнаружено</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Имя профиля</string>
-  <string name="create_text">Ваша подпись</string>
-  <string name="create_register">Зарегистрировать</string>
-  <string name="create_register_incog">Зарегистрироваться Инкогнито</string>
-  <string name="create_skip">Позволить добавлять Вас, используя имя профиля</string>
-  <string name="create_must_fill_in">Необходимо заполнить все поля</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Нет активных чатов. Для начала разговора выберите друга в панели слева.</string>
-  <string name="main_recent_no">Нет недавних бесед</string>
-  <string name="main_no_internet">Нет Интернет-соединения</string>
-  <string name="main_not_connected">Подключение к интернету не было обнаружено. Вы будете иметь ограниченные возможности, если вы используете Antox только в локальной сети</string>
-  <string name="search_all_contacts">Поиск контактов</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Отправить сообщение</string>
-  <string name="chat_file_transfer">Передача файлов</string>
-  <!--Add Friend Activity-->
-  <string name="addfriend_friend_key">Tox ID Вашего друга</string>
-  <string name="addfriend_friend_message">Отправить сообщение с Вашим запросом</string>
-  <string name="addfriend_button">Добавить друга</string>
-  <string name="addfriend_friend_added">Друг добавлен</string>
-  <string name="addfriend_friend_exists">Друг уже существует</string>
-  <string name="scanqr_button">Сканировать QR-код</string>
-  <string name="invalid_friend_ID">Неверный Tox ID</string>
-  <string name="addfriend_nick_hint">Задайте ник для друга</string>
-  <string name="addfriend_optional_title">Необязательные сведения</string>
-  <string name="dialog_pin">Введите pin Вашего друга</string>
-  <string name="addfriend_invalid_pin">Неверный pin</string>
-  <string name="addfriend_own_key">Невозможно добавлять самого себя</string>
-  <string name="addfriend_friend_pin_title">Введите pin друга</string>
-  <string name="addfriend_friend_pin_text">Введите pin друга</string>
-  <string name="addfriend_default_message">Привет! Прими, пожалуйста, мой запрос на добавлени в друзья</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Ник</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Статус</string>
-  <string name="friend_profile_button">Обновить</string>
-  <string name="friend_profile_updated">Профиль обновлен</string>
-  <string name="friend_profile_copied">Tox ID скопирован</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">%1$s\' Профилей</string>
-  <string name="friendrequest_accept">Принять</string>
-  <string name="friendrequest_reject">Отклонить</string>
-  <string name="friend_request">Новый запрос в друзья</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Профиль</string>
-  <string name="friend_action_delete">Удалить друга</string>
-  <string name="friend_action_delete_chat">Удалить историю чата</string>
-  <string name="friend_action_block">Заблокировать</string>
-  <string name="contacts_actions_on">Действия включены</string>
-  <string name="contacts_delimiter_requests">Запросы</string>
-  <string name="contacts_delimiter_friends">Друзья</string>
-  <string name="contacts_delimiter_offline">Не в сети</string>
-  <string name="contacts_delimiter_online">В сети</string>
-  <string name="contacts_resend_friend_request">Повторно отправить запрос на добавление в друзья</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Вы уверены, что хотите удалить этого друга?</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Вы уверены, что хотите удалить историю чата?</string>
-  <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Блокировка пользователя удалит его, из вашего списка друзей и вы больше не будет получать от него запросов на добавление в друзья.
-Вы уверены, что хотите продолжить?</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Прикрепить фото</string>
-  <string name="attachment_file">Прикрепить файл</string>
-  <string name="attachment_takephoto">Сделать снимок</string>
-  <string name="message_copy">Копировать сообщение</string>
-  <string name="message_delete">Удалить сообщение</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Недавние</string>
-  <string name="titles_contacts">Контакты</string>
-  <string name="titles_settings">Настройки</string>
-  <!--Misc-->
-  <string name="button_confirm">Подтвердить</string>
-  <string name="button_cancel">Отмена</string>
-  <string name="button_yes">Да</string>
-  <string name="button_no">Нет</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Скопировать Tox ID в буфер обмена</string>
-  <string name="share_with">Поделиться с</string>
-  <string name="connection_has">перешел</string>
-  <string name="connection_online">в онлайн</string>
-  <string name="connection_offline">в оффлайн</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Настройки</string>
-  <!--QR-->
-  <string name="qr_default_title">Установить Сканер штрих-кодов?</string>
-  <string name="qr_default_message">Это приложение требует Сканер штрих-кодов. Хотите установить его?</string>
-  <string name="qr_button_yes">Да</string>
-  <string name="qr_button_no">Нет</string>
-  <!-- nav bar -->
-  <string name="n_settings">НАСТРОЙКИ</string>
-  <string name="n_profile_options">ПРОФИЛЬ</string>
-  <string name="n_create_group">СОЗДАТЬ БЕСЕДУ</string>
-  <string name="n_add_person">ДОБАВИТЬ ДРУГА</string>
-  <string name="n_about">О ПРОДУКТЕ</string>
-  <string name="n_open_source">ЛИЦЕНЗИЯ OPEN SOURCE</string>
-  <string name="n_logout">ВЫЙТИ</string>
+
+    <!-- Activity titles -->
+    <string name="title_activity_add">Добавить контакт</string>
+    <string name="title_activity_friend_profile">Профиль</string>
+    <string name="title_activity_group_profile">Информация о группе</string>
+    <string name="title_activity_profile_settings">Настройки профиля</string>
+
+    <!-- Navigation / Action Bar -->
+    <string name="add_contact">Добавить контакт</string>
+
+    <!-- Login Activity -->
+    <string name="login_must_fill_in">Вы должны указать имя профиля</string>
+    <string name="login_login">Вход</string>
+    <string name="login_account_hint">Имя профиля</string>
+    <string name="login_create_account_text">Создать Tox профиль</string>
+    <string name="login_bad_login">Аккаунт с таким именем не обнаружен</string>
+
+    <!-- Create Account Activity -->
+    <string name="create_name_hint">Имя профиля</string>
+    <string name="create_text">Подпись</string>
+    <string name="create_register">Зарегистрировать</string>
+    <string name="create_register_incog">Войти без регистрации</string>
+    <string name="create_import_profile">Загрузить профиль</string>
+    <string name="create_skip">Разрешить добавлять Вас, используя имя профиля</string>
+    <string name="create_must_fill_in">Вы должны указать имя профиля</string>
+    <string name="create_bad_profile_name">Имя профиля не может содержать пробелы или быть пустым</string>
+    <string name="create_profile_exists">Этот профиль уже добавлен</string>
+    <string name="import_profile_invalid_file">Выбранный файл не является допустимым tox-профилем </string>
+    <string name="create_account_exists">Это имя уже занято</string>
+    <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
+    <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
+    <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
+    <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
+    <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
+    <string name="create_account_load_profile_unknown">Неизвестная ошибка при загрузке профиля</string>
+
+    <!-- Main Activity -->
+    <string name="main_no_active_chat">Нет активных диалогов. Для начала разговора выберите друга в панели слева.</string>
+    <string name="main_recent_no">Нет недавних бесед</string>
+    <string name="main_no_internet">Проверьте интернет соединение</string>
+    <string name="main_not_connected">Подключение к интернету не было обнаружено. Вы будете иметь ограниченные возможности, если вы используете Antox только в локальной сети</string>
+    <string name="main_mobile_disabled">Currently offline as Wi-Fi only mode is enabled. Touch to open settings. </string>
+    <string name="search_all_contacts">Поиск контактов</string>
+
+    <!-- Chat Activity -->
+    <string name="chat_enter_message">Отправьте сообщение</string>
+    <string name="chat_file_transfer">Передача файлов</string>
+    <string name="chat_message_too_long">Сообщение не может быть отправлено, поскольку оно слишком длинное.</string>
+    <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
+
+    <!-- Add Pane Fragment -->
+    <string name="addpane_friend_label">Контакты</string>
+    <string name="addpane_group_label">Группы</string>
+
+    <!-- Add Friend Fragment -->
+    <string name="addfriend_friend_key">Tox ID</string>
+    <string name="addfriend_friend_message">Отправить сообщение с Вашим запросом</string>
+    <string name="addfriend_button">Добавить контакт</string>
+    <string name="addfriend_friend_added">Контакт добавлен</string>
+    <string name="addfriend_friend_exists">Контакт уже добавлен</string>
+    <string name="scanqr_button">Сканировать QR-код</string>
+    <string name="invalid_friend_ID">Неверный Tox ID</string>
+    <string name="addfriend_nick_hint">Изменить название контакта</string>
+    <string name="addfriend_optional_title">Дополнительно</string>
+    <string name="dialog_pin">Введите pin Вашего друга</string>
+    <string name="addfriend_invalid_pin">Неверный pin</string>
+    <string name="addfriend_own_key">Соединение с параллельной вселенной не установлено :-(</string>
+    <string name="addfriend_friend_pin_title">Введите pin друга</string>
+    <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
+    <string name="addfriend_default_message">Привет! Я хочу внести Вас в свой список контактов</string>
+
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">The group\'s ID</string>
+    <string name="addgroup_button">Join Group</string>
+    <string name="addgroup_group_added">Group Joined</string>
+    <string name="addgroup_group_exists">Group already exists</string>
+    <string name="invalid_group_ID">Invalid Group ID</string>
+    <string name="addgroup_alias_hint">Set an alias for this group</string>
+    <string name="addgroup_optional_title">Optional Extras</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_nick">Подпись</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Статус</string>
+    <string name="friend_profile_button">Обновить</string>
+    <string name="friend_profile_updated">Профиль обновлен</string>
+    <string name="friend_profile_copied">Tox ID скопирован</string>
+
+    <!-- Group Profile Activity -->
+    <string name="group_profile_peer_list_head">Участники</string>
+
+    <!-- Friend request fragment -->
+    <string name="friend_profile_title">Информация о контакте</string>
+    <string name="friendrequest_accept">Принять</string>
+    <string name="friendrequest_reject">Отклонить</string>
+    <string name="friend_request">Новый запрос в друзья</string>
+
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">Принять</string>
+    <string name="groupinvite_reject">Отклонить</string>
+    <string name="group_invite">New Group Invite</string>
+    <string name="invited_by">You were invited by </string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Профиль</string>
+    <string name="friend_action_delete">Удалить контакт</string>
+    <string name="friend_action_export_chat">Архивировать</string>
+    <string name="friend_action_delete_chat">Очистить историю сообщений</string>
+    <string name="friend_action_block">Заблокировать</string>
+    <string name="group_default_peer_name">Anonymous</string>
+    <string name="group_action_delete">Покинуть группу</string>
+    <string name="contacts_actions_on">Редактировать</string>
+    <string name="contacts_delimiter_requests">Запросы</string>
+    <string name="contacts_delimiter_invites">Приглашения</string>
+    <string name="contacts_delimiter_groups">Группы</string>
+    <string name="contacts_delimiter_friends">Друзья</string>
+    <string name="contacts_delimiter_offline">Не в сети</string>
+    <string name="contacts_delimiter_online">В сети</string>
+    <string name="contacts_resend_friend_request">Повторно отправить запрос на добавление в друзья.</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Вы уверены, что хотите удалить этот контакт?</string>
+
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Chat log exported to %s</string>
+    <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Вы уверены, что хотите удалить историю сообщений?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">Если вы заблокируете пользователя, то не сможете больше получать от него сообщения и оповещенияе, он также будет автоматически удален из вашего списка контактов.</string>
+
+    <!-- Reset ToxID Dialog -->
+    <string name="reset_tox_id_dialog_message">Resetting your Tox ID changes your ID permanently. You will
+        keep your current contacts list, but other people won\'t be able to add you using your old ID. </string>
+    <string name="reset_tox_id_dialog_title">Spam Protection</string>
+    <string name="reset_tox_id_dialog_confirm">Сбросить</string>
+    <string name="reset_tox_id_dialog_cancel">Отмена</string>
+    <string name="tox_id_reset">Публичный Tox ID изменен</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">Новая группа</string>
+    <string name="create_group_dialog_create_group">Создать группу</string>
+    <string name="create_group_dialog_cancel">Отмена</string>
+    <string name="create_group_dialog_name_header">Имя группы</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">Goodbye</string>
+
+    <!-- Color Picker Dialog -->
+    <string name="dialog_color_picker_title">Изменить тему</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Прикрепить фото</string>
+    <string name="attachment_file">Прикрепить файл</string>
+    <string name="attachment_takephoto">Сделать снимок</string>
+    <string name="message_copy">Копировать</string>
+    <string name="message_delete">Удалить</string>
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Недавние</string>
+    <string name="titles_contacts">Контакты</string>
+    <string name="titles_settings">Настройки</string>
+
+    <!-- Misc -->
+    <string name="button_confirm">Подтвердить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Нет</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Скопировать Tox ID</string>
+    <string name="share_with">Поделиться с</string>
+    <string name="connection_has">перешел</string>
+    <string name="connection_online">в онлайн</string>
+    <string name="connection_offline">в оффлайн</string>
+    <string name="action_settings">Настройки</string>
+
+    <!-- Avatar Dialog -->
+    <string name="dialog_avatar_take_photo">Камера</string>
+    <string name="dialog_avatar_use_file">Галлерея</string>
+    <string name="avatar_too_large_error">Ошибка: Avatar file too large.</string>
+    <string name="no_camera_intent_error">Ошибка: No valid camera application found.</string>
+    <string name="dialog_avatar_description">аватар</string>
+
+    <!-- File transfer -->
+    <string name="file_finished">Finished</string>
+    <string name="file_failed">Failed</string>
+    <string name="file_in_progress">Передача файла</string>
+    <string name="file_request_sent">Отправить</string>
+    <string name="file_rejected">Отклонить</string>
+    <string name="file_time_remaining">осталось %s сек.</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Установить Сканер штрих-кодов?</string>
+    <string name="qr_default_message">Этому приложению требуется Сканер штрих-кодов. Хотите установить его?</string>
+    <string name="qr_button_yes">Установить</string>
+    <string name="qr_button_no">Отмена</string>
+
+    <!-- nav bar -->
+    <string name="n_settings">Настройки</string>
+    <string name="n_profile_options">Профиль</string>
+    <string name="n_create_group">Создать группу</string>
+    <string name="n_add_person">Добавить друга</string>
+    <string name="n_about">О продукте</string>
+    <string name="n_logout">Выйти</string>
+    <string name="title_activity_call">Вызов/string>
+    <string name="end_call">Завешить вызов</string>
+    <string name="mute_call">Без звука</string>
+    <string name="mute_mic">Отключить микрофон</string>
+    <string name="profile_info_description">Информация о пользователе</string>
+
 </resources>
