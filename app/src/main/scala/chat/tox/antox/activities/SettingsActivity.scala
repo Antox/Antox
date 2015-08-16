@@ -67,6 +67,10 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     })
 
+    if (savedInstanceState != null) {
+      if (savedInstanceState.getBoolean("showing_theme_dialog", false)) showThemeDialog()
+    }
+
     addPreferencesFromResource(R.xml.settings_main)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB &&
@@ -91,6 +95,14 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   override def onStop() {
     super.onStop()
     themeDialog.close()
+  }
+
+  override def onSaveInstanceState(savedInstanceState: Bundle): Unit = {
+    super.onSaveInstanceState(savedInstanceState)
+
+    // this is needed to keep the theme dialog open on rotation
+    // the hack is required because PreferenceActivity doesn't allow for dialog fragments
+    savedInstanceState.putBoolean("showing_theme_dialog", themeDialog.isShowing)
   }
 
   override def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

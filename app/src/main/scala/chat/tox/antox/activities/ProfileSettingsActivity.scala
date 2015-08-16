@@ -309,6 +309,8 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   override def onSaveInstanceState(savedInstanceState: Bundle): Unit = {
     super.onSaveInstanceState(savedInstanceState)
 
+    // this is needed to keep the avatar dialog open on rotation
+    // the hack is required because PreferenceActivity doesn't allow for dialog fragments
     savedInstanceState.putBoolean("showing_avatar_dialog", avatarDialog.isShowing)
   }
 
