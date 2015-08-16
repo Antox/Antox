@@ -35,6 +35,8 @@ object BitmapManager {
   }
 
   private def getBitmapFromMemCache(key: String): Option[Bitmap] = {
+    if (mMemoryCache == null) return None
+
     Option(mMemoryCache.get(key))
   }
 
