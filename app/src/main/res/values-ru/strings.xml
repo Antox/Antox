@@ -206,7 +206,7 @@
     <string name="n_add_person">Добавить друга</string>
     <string name="n_about">О продукте</string>
     <string name="n_logout">Выйти</string>
-    <string name="title_activity_call">Вызов/string>
+    <string name="title_activity_call">Вызов</string>
     <string name="end_call">Завешить вызов</string>
     <string name="mute_call">Без звука</string>
     <string name="mute_mic">Отключить микрофон</string>
