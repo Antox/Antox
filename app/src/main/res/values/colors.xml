@@ -10,7 +10,8 @@
     <color name="black">#222222</color>
     <color name="green">#339554</color>
     <color name="green_light">#ff31cb37</color>
-    <color name="green_dark">#24683B</color>
+    <color name="green_dark">#2e7d32</color>
+    <color name="green_darker">#1b5e20</color>
     <color name="orange">#FF9900</color>
     <color name="material_orange_700">#f57c00</color>
     <color name="red">#FF3333</color>
@@ -22,6 +23,7 @@
     <color name="brand_primary_dark">@color/purple_darker</color>
     <color name="brand_secondary">@color/green</color>
     <color name="brand_secondary_dark">@color/green_dark</color>
+    <color name="brand_secondary_darker">@color/green_darker</color>
 
     <color name="online">@color/green</color>
     <color name="away">@color/orange</color>

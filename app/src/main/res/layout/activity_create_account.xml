@@ -29,18 +29,18 @@
             android:layout_marginBottom="20dp"
             android:textStyle="italic"
             android:textSize="20dp"
-            android:text="@string/create_text"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/create_text" />
 
-    <EditText
-        android:id="@+id/create_account_name"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:hint="@string/create_name_hint"
-        android:layout_width="300dp"
-        android:background="@drawable/edittextbackground"
-        android:layout_height="50dp"
-        android:singleLine="true" />
+        <EditText
+            android:id="@+id/create_account_name"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/edittextbackground"
+            android:gravity="center"
+            android:hint="@string/create_name_hint"
+            android:singleLine="true" />
 
 
         <EditText
@@ -62,6 +62,16 @@
             android:background="@color/brand_secondary"
             android:layout_marginTop="10dp"
             android:onClick="onClickRegisterAccount"/>
+
+        <ProgressBar
+            android:id="@+id/login_progress_bar"
+            android:visibility="gone"
+            android:layout_width="300dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="-8dp"
+            android:layout_marginLeft="14dp"
+            android:indeterminate="true"
+            style="@android:style/Widget.Material.Light.ProgressBar.Horizontal" />
 
     </LinearLayout>
 

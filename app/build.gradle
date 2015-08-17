@@ -84,6 +84,9 @@ dependencies {
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
     compile 'com.squareup.sqlbrite:sqlbrite:0.2.1'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
 
     androidTestCompile 'com.android.support.test:runner:0.3'
     androidTestCompile 'com.android.support.test:rules:0.3'

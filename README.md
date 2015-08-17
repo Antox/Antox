@@ -15,7 +15,7 @@ Antox is an Android 2.3+ client for Tox. It aims to bring the full multimedia su
 
 To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
 
-To install on F-Droid, add https://repo.tox.im/android and search for "Antox".
+To install on F-Droid, add https://antox.me/fdroid/repo and search for "Antox".
 
 ###What Is Currently Working
 - One to one messaging
@@ -25,7 +25,7 @@ To install on F-Droid, add https://repo.tox.im/android and search for "Antox".
 ###Translating Antox
 You can localize the application via github pull request or by requesting a new language or join an existing translation team on [Transifex](https://www.transifex.com/projects/p/antox/).
 
-###Compiling Antox From Source with IntelliJ IDE
+###Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
 - In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools.

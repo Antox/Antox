@@ -252,7 +252,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
     val userDb = State.userDb
-    val activeAccount = sharedPreferences.getString("active_account", "")
 
     key match {
       case "nickname" =>
@@ -263,11 +262,11 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        userDb.updateUserDetail(activeAccount, key, name)
+        userDb.updateActiveUserDetail(key, name)
 
       case "password" =>
         val password = sharedPreferences.getString(key, "")
-        userDb.updateUserDetail(activeAccount, key, password)
+        userDb.updateActiveUserDetail(key, password)
 
       case "status" =>
         val newStatusString = sharedPreferences.getString(key, "")
@@ -277,7 +276,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        userDb.updateUserDetail(activeAccount, key, newStatusString)
+        userDb.updateActiveUserDetail(key, newStatusString)
 
       case "status_message" =>
         val statusMessage = sharedPreferences.getString(key, "")
@@ -286,15 +285,15 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
-        userDb.updateUserDetail(activeAccount, key, statusMessage)
+        userDb.updateActiveUserDetail(key, statusMessage)
 
       case "logging_enabled" =>
         val loggingEnabled = sharedPreferences.getBoolean(key, true)
-        userDb.updateUserDetail(activeAccount, key, loggingEnabled)
+        userDb.updateActiveUserDetail(key, loggingEnabled)
 
       case "avatar" =>
         val avatar = sharedPreferences.getString(key, "")
-        userDb.updateUserDetail(activeAccount, key, avatar)
+        userDb.updateActiveUserDetail(key, avatar)
 
       case _ =>
     }
@@ -310,6 +309,8 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   override def onSaveInstanceState(savedInstanceState: Bundle): Unit = {
     super.onSaveInstanceState(savedInstanceState)
 
+    // this is needed to keep the avatar dialog open on rotation
+    // the hack is required because PreferenceActivity doesn't allow for dialog fragments
     savedInstanceState.putBoolean("showing_avatar_dialog", avatarDialog.isShowing)
   }
 

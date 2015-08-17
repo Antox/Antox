@@ -169,6 +169,7 @@ object ToxSingleton {
           }
         } catch {
           case e: Exception =>
+            e.printStackTrace()
         }
         Log.d(TAG, "Successfully bootstrapped")
       }, error => {
@@ -200,13 +201,17 @@ object ToxSingleton {
 
   def initTox(ctx: Context) {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-    State.db = new AntoxDB(ctx, preferences.getString("active_account", ""))
+
+    val userDb = State.userDb
+    State.db = new AntoxDB(ctx, userDb.getActiveUser)
     val db = State.db
 
     antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
+
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
-    dataFile = new ToxDataFile(ctx)
+    dataFile = new ToxDataFile(ctx, userDb.getActiveUser)
+
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val options = new ToxOptions(
       udpEnabled,
@@ -249,10 +254,11 @@ object ToxSingleton {
     registerCallbacks(ctx)
 
     try {
-      tox.setName(preferences.getString("nickname", ""))
-      tox.setStatusMessage(preferences.getString("status_message", ""))
+      val details = userDb.getActiveUserDetails
+      tox.setName(details.nickname)
+      tox.setStatusMessage(details.statusMessage)
       var newStatus: ToxUserStatus = ToxUserStatus.NONE
-      val newStatusString = preferences.getString("status", "")
+      val newStatusString = details.status
       newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
       tox.setStatus(newStatus)
     } catch {

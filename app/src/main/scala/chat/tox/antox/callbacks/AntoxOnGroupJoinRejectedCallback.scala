@@ -9,9 +9,7 @@ class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends Grou
     if (reason == ToxGroupJoinRejected.NICK_TAKEN) {
       if (ToxSingleton.tox.getGroupSelfName(groupNumber).length < Constants.MAX_NAME_LENGTH) {
         //FIXME
-        //ToxSingleton.tox.setGroupSelfName(groupNumber, PreferenceManager
-        //  .getDefaultSharedPreferences(ctx)
-        //  .getString("nickname", ""))
+        //ToxSingleton.tox.setGroupSelfName(groupNumber, name)
         if (!reconnecting) {
           new Thread(new Runnable {
             override def run(): Unit = {

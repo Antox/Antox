@@ -9,7 +9,7 @@ import chat.tox.antox.tox.ToxService
  */
 class BootReceiver extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent): Unit = {
-    /* Check if autostart setting is enabled first */
+    // Check if autostart setting is enabled first
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     if (preferences.getBoolean("autostart", true))

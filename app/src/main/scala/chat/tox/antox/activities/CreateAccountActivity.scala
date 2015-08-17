@@ -3,6 +3,8 @@ package chat.tox.antox.activities
 import java.io.File
 import java.util.regex.Pattern
 
+import android.animation.ValueAnimator.AnimatorUpdateListener
+import android.animation.{ValueAnimator, ArgbEvaluator}
 import android.app.Activity
 import android.content.Intent
 import android.os.{Build, Bundle, Environment}
@@ -10,13 +12,15 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
-import android.widget.{EditText, Toast}
+import android.widget.{ProgressBar, Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
 import chat.tox.antox.toxdns.ToxDNS.RegError
-import chat.tox.antox.toxdns.{ToxDNS, ToxData}
+import chat.tox.antox.toxdns.ToxDNS.RegError
+import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import chat.tox.antox.toxdns.{DnsName, ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
 import im.tox.tox4j.core.exceptions.ToxNewException
@@ -24,6 +28,9 @@ import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.ToxCoreImpl
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+
 
 class CreateAccountActivity extends AppCompatActivity {
 
@@ -78,20 +85,10 @@ class CreateAccountActivity extends AppCompatActivity {
     toast.show()
   }
 
-  def saveAccountAndStartMain(accountName: String, password: String, toxID: String) {
-    // Save preferences
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val editor = preferences.edit()
-    editor.putString("active_account", accountName)
-    editor.putString("nickname", accountName)
-    editor.putString("password", password)
-    editor.putString("status", "online")
-    editor.putString("status_message", getResources.getString(R.string.pref_default_status_message))
-    editor.putString("tox_id", toxID)
-    editor.putBoolean("logging_enabled", true)
-    editor.putBoolean("loggedin", true)
-    editor.putBoolean("autostart", true)
-    editor.apply()
+  def loginAndStartMain(accountName: String, password: String, toxId: String) {
+    val userDb = State.userDb
+    userDb.login(accountName)
+    userDb.updateActiveUserDetail(DatabaseConstants.COLUMN_NAME_PASSWORD, password)
 
     // Start the activity
     val startTox = new Intent(getApplicationContext, classOf[ToxService])
@@ -147,85 +144,146 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
-  def createAccount(accountName: String, userDb: UserDB, createDataFile: Boolean, shouldRegister: Boolean): Unit = {
-    try {
-      if (!validAccountName(accountName)) {
-        showBadAccountNameError()
-      } else if (userDb.doesUserExist(accountName)) {
-        val context = getApplicationContext
-        val text = getString(R.string.create_profile_exists)
-        val duration = Toast.LENGTH_LONG
-        val toast = Toast.makeText(context, text, duration)
-        toast.show()
+  def disableRegisterButton(): Unit = {
+    //prevent user from registering some other way while trying to register
+    val registerIncognitoButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
+    registerIncognitoButton.setEnabled(false)
+
+    val importProfileButton = findViewById(R.id.create_account_import).asInstanceOf[Button]
+    importProfileButton.setEnabled(false)
+
+    val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
+    registerButton.setText(getResources.getText(R.string.create_registering))
+    registerButton.setEnabled(false)
+
+    //only animate on 2.3+ because animation was added in 3.0
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      val colorFrom = getResources.getColor(R.color.brand_secondary)
+      val colorTo = getResources.getColor(R.color.brand_secondary_darker)
+      val colorAnimation = ValueAnimator.ofObject(
+        new ArgbEvaluator(),
+        colorFrom.asInstanceOf[java.lang.Integer],
+        colorTo.asInstanceOf[java.lang.Integer])
+
+      colorAnimation.addUpdateListener(new AnimatorUpdateListener {
+        override def onAnimationUpdate(animation: ValueAnimator): Unit = {
+          registerButton.setBackgroundColor(animation.getAnimatedValue.asInstanceOf[Int])
+        }
+      })
+      colorAnimation.start()
+    }
+
+    val progressBar = findViewById(R.id.login_progress_bar).asInstanceOf[ProgressBar]
+    progressBar.setVisibility(View.VISIBLE)
+  }
+
+  def enableRegisterButton(): Unit = {
+    val registerIncognitoButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
+    registerIncognitoButton.setEnabled(true)
+
+    val importProfileButton = findViewById(R.id.create_account_import).asInstanceOf[Button]
+    importProfileButton.setEnabled(true)
+
+    val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
+    registerButton.setEnabled(true)
+    registerButton.setText(getResources.getText(R.string.create_register))
+    registerButton.setBackgroundColor(getResources.getColor(R.color.brand_secondary))
+
+    val progressBar = findViewById(R.id.login_progress_bar).asInstanceOf[ProgressBar]
+    progressBar.setVisibility(View.GONE)
+  }
+
+  def createAccount(rawAccountName: String, userDb: UserDB, shouldCreateDataFile: Boolean, shouldRegister: Boolean): Unit = {
+    val accountName = DnsName.fromString(rawAccountName)
+    if (!validAccountName(accountName.user)) {
+      showBadAccountNameError()
+    } else if (userDb.doesUserExist(accountName.user)) {
+      val context = getApplicationContext
+      val text = getString(R.string.create_profile_exists)
+      val duration = Toast.LENGTH_LONG
+      val toast = Toast.makeText(context, text, duration)
+      toast.show()
+    } else {
+      disableRegisterButton()
+
+      var toxData = new ToxData
+
+      if (shouldCreateDataFile) {
+        // Create tox data save file
+        try {
+          toxData = createToxData(accountName.user)
+        } catch {
+          case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
+        }
       } else {
-        var toxData = new ToxData
+        val result = loadToxData(accountName.user)
 
-        if (createDataFile) {
-          // Create tox data save file
-          try {
-            toxData = createToxData(accountName)
-          } catch {
-            case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
-          }
-        } else {
-          val result = loadToxData(accountName)
+        result match {
+          case Some(data) =>
+            toxData = data
 
-          result match {
-            case Some(data) =>
-              toxData = data
-
-            // If None is returned then failed to load data so exit the createAccount function
-            case None =>
-              return
-          }
-        }
-
-        var successful = true
-        var accountPassword: String = ""
-        if (shouldRegister) {
-          // Register on toxme.se
-          val registerResult = ToxDNS.registerAccount(accountName, toxData)
-
-          val toastMessage = registerResult match {
-            case Left(error) =>
-              successful = false
-              error match {
-                case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
-                case RegError.INTERNAL => getString(R.string.create_account_internal_error)
-                case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
-                case RegError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
-                case _ => getString(R.string.create_account_unknown_error)
-              }
-            case Right(password) =>
-              successful = true
-              accountPassword = password
-              null
-          }
-
-          if (toastMessage != null) {
-            val context = getApplicationContext
-            val duration = Toast.LENGTH_LONG
-            Toast.makeText(context, toastMessage, duration).show()
-          }
-        }
-
-        if (successful) {
-          userDb.addUser(accountName, "")
-          userDb.updateUserDetail(accountName, "password", accountPassword)
-
-          saveAccountAndStartMain(accountName, accountPassword, toxData.ID)
+          // If None is returned then failed to load data so exit the createAccount function
+          case None =>
+            return
         }
       }
-    } finally {
+
+      val observable = if (shouldRegister) {
+        // Register on toxme.io
+        ToxDNS.registerAccount(accountName, toxData)
+      } else {
+        //succeed with empty password
+        Observable.just(Right(""))
+      }
+
+      observable
+        .observeOn(AndroidMainThreadScheduler())
+        .subscribe(result => {
+        onRegistrationResult(accountName.user, toxData, result)
+      }, error => {
+        Log.d("", "Unexpected error registering account.")
+      })
     }
   }
 
+  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[RegError, String]) = {
+    var successful = true
+    var accountPassword = ""
+    val toastMessage: Option[String] = result match {
+      case Left(error) =>
+        successful = false
+        Some(error match {
+          case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
+          case RegError.INTERNAL => getString(R.string.create_account_internal_error)
+          case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+          case RegError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
+          case RegError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
+          case _ => getString(R.string.create_account_unknown_error)
+        })
+      case Right(password) =>
+        successful = true
+        accountPassword = password
+        None
+    }
+    if (successful) {
+      State.userDb.addUser(accountName, toxData.ID, "")
+      loginAndStartMain(accountName, accountPassword, toxData.ID)
+    } else {
+      toastMessage.foreach(message => {
+        val context = getApplicationContext
+        val duration = Toast.LENGTH_LONG
+        Toast.makeText(context, message, duration).show()
+      })
+    }
+
+    enableRegisterButton()
+  }
   def onClickRegisterIncogAccount(view: View) {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
     val userDb = State.userDb
-    createAccount(account, userDb, createDataFile = true, shouldRegister = false)
+    createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = false)
   }
 
   def onClickImportProfile(view: View): Unit = {
@@ -263,7 +321,7 @@ class CreateAccountActivity extends AppCompatActivity {
         if (validAccountName(accountName)) {
           val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
           FileUtils.copy(file, toxDataFile)
-          createAccount(accountName, State.userDb, createDataFile = false, shouldRegister = false)
+          createAccount(accountName, State.userDb, shouldCreateDataFile = false, shouldRegister = false)
         } else {
           showBadAccountNameError()
         }
@@ -278,6 +336,6 @@ class CreateAccountActivity extends AppCompatActivity {
 
     val userDb = State.userDb
 
-    createAccount(account, userDb, createDataFile = true, shouldRegister = true)
+    createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = true)
   }
 }
