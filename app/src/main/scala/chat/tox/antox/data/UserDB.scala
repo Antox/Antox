@@ -67,7 +67,16 @@ class UserDB(ctx: Context) {
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-  var activeUser: Option[String] = None
+  def activeUser: Option[String] = {
+    val user = preferences.getString("active_account", "")
+    user match {
+      case "" =>
+        None
+      case _ =>
+        Some(user)
+    }
+  }
+
   def getActiveUser = activeUser.getOrElse(throw new NotLoggedInException())
 
   mDbHelper = new DatabaseHelper(ctx)
@@ -78,11 +87,10 @@ class UserDB(ctx: Context) {
   }
 
   def login(username: String): Unit = {
-    activeUser = Some(username)
-    val activeUserDetails = getActiveUserDetails
+    preferences.edit().putString("active_account", username).commit()
 
     val editor = preferences.edit()
-    editor.putString("active_account", username)
+    val activeUserDetails = getActiveUserDetails
     editor.putString("nickname", activeUserDetails.nickname)
     editor.putString("password", activeUserDetails.password)
     editor.putString("status", activeUserDetails.status)
@@ -95,7 +103,7 @@ class UserDB(ctx: Context) {
   def loggedIn = activeUser.isDefined
 
   def logout(): Unit = {
-    activeUser = None
+    preferences.edit().putString("active_account", "").commit()
   }
 
   def addUser(username: String, toxID: String, password: String) {

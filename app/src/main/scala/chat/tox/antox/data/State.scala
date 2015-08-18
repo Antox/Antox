@@ -1,7 +1,7 @@
 package chat.tox.antox.data
 
 import android.app.Activity
-import android.content.Intent
+import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import chat.tox.antox.activities.LoginActivity
 import chat.tox.antox.av.CallManager
@@ -20,7 +20,18 @@ object State {
   val calls: CallManager = new CallManager()
 
   var db: AntoxDB = _
-  var userDb: UserDB = _
+  private var _userDb: Option[UserDB] = None
+
+  def userDb(context: Context): UserDB = {
+    _userDb match {
+      case Some(userDb) =>
+        userDb
+      case None =>
+        val db = new UserDB(context)
+        _userDb = Some(db)
+        db
+    }
+  }
 
   def chatActive = _chatActive
 
@@ -35,18 +46,24 @@ object State {
     _activeKey = k
   }
 
+  def login(name: String, context: Context): Unit = {
+    userDb(context).login(name)
+  }
+
   def logout(activity: Activity): Unit = {
-    if (!State.userDb.getActiveUserDetails.loggingEnabled) {
+    if (userDb(activity).getActiveUserDetails.loggingEnabled) {
       ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
     }
 
+    val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+    preferences.edit().putString("active_user", "").commit()
     //workaround for contacts appearing offline when the DB is upgraded
     db.synchroniseWithTox(ToxSingleton.tox)
 
     State.db.close()
     val startTox = new Intent(activity, classOf[ToxService])
     activity.stopService(startTox)
-    userDb.logout()
+    userDb(activity).logout()
     val login = new Intent(activity, classOf[LoginActivity])
     activity.startActivity(login)
     activity.finish()

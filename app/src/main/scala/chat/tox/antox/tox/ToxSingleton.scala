@@ -9,7 +9,7 @@ import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.callbacks.CallbackListener
-import chat.tox.antox.data.{AntoxDB, State}
+import chat.tox.antox.data.{UserDB, AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.tox4j.core.enums.ToxUserStatus
@@ -202,7 +202,7 @@ object ToxSingleton {
   def initTox(ctx: Context) {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-    val userDb = State.userDb
+    val userDb = State.userDb(ctx)
     State.db = new AntoxDB(ctx, userDb.getActiveUser)
     val db = State.db
 

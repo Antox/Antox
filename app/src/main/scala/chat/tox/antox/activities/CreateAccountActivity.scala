@@ -86,8 +86,8 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def loginAndStartMain(accountName: String, password: String, toxId: String) {
-    val userDb = State.userDb
-    userDb.login(accountName)
+    val userDb = State.userDb(this)
+    State.login(accountName, this)
     userDb.updateActiveUserDetail(DatabaseConstants.COLUMN_NAME_PASSWORD, password)
 
     // Start the activity
@@ -266,7 +266,7 @@ class CreateAccountActivity extends AppCompatActivity {
         None
     }
     if (successful) {
-      State.userDb.addUser(accountName, toxData.ID, "")
+      State.userDb(this).addUser(accountName, toxData.ID, "")
       loginAndStartMain(accountName, accountPassword, toxData.ID)
     } else {
       toastMessage.foreach(message => {
@@ -282,7 +282,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
-    val userDb = State.userDb
+    val userDb = State.userDb(this)
     createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = false)
   }
 
@@ -321,7 +321,7 @@ class CreateAccountActivity extends AppCompatActivity {
         if (validAccountName(accountName)) {
           val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
           FileUtils.copy(file, toxDataFile)
-          createAccount(accountName, State.userDb, shouldCreateDataFile = false, shouldRegister = false)
+          createAccount(accountName, State.userDb(this), shouldCreateDataFile = false, shouldRegister = false)
         } else {
           showBadAccountNameError()
         }
@@ -334,7 +334,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString
 
-    val userDb = State.userDb
+    val userDb = State.userDb(this)
 
     createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = true)
   }

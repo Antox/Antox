@@ -1,33 +1,25 @@
 package chat.tox.antox.toxdns
 
-import java.io.{IOException, UnsupportedEncodingException}
-import java.util.Scanner
-import java.util.concurrent.ThreadPoolExecutor
+import java.io.UnsupportedEncodingException
 
 import android.util.{Base64, Log}
-import chat.tox.antox.toxdns.ToxDNS.RegError
-import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
 import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
 import com.squareup.okhttp.Request.Builder
-import com.squareup.okhttp.{MediaType, RequestBody, Request, OkHttpClient}
+import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.Raw
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.client.DefaultHttpClient
-import org.json.{JSONObject, JSONException}
+import org.json.{JSONException, JSONObject}
 import org.xbill.DNS.{Lookup, TXTRecord, Type}
-import rx.Scheduler
-import rx.lang.scala.{Subscriber, Observable}
-import rx.lang.scala.schedulers.{IOScheduler}
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.IOScheduler
 
+import scala.language.higherKinds
 import scala.util.Try
-import language.higherKinds
 
 object ToxDNS {
 
  /**
-  * Performs a DNS lookup and returns the Tox ID registered to the given DNSName.
+  * Performs a DNS lookup and returns the Tox ID registered to the given dnsName.
   *
   * @param dnsName the dns name to lookup
   * @return the ID or None if the name is not found
@@ -36,7 +28,7 @@ object ToxDNS {
     Observable(subscriber => {
       if (dnsName.contains("@")) {
         val parsedDnsName = DnsName.fromString(dnsName)
-        val lookup = parsedDnsName.user + "._tox." + parsedDnsName.domain
+        val lookup = parsedDnsName.user + "._tox." + parsedDnsName.domain.get
         try {
           val records = new Lookup(lookup, Type.TXT).run()
           val txt = records(0).asInstanceOf[TXTRecord]
@@ -55,6 +47,15 @@ object ToxDNS {
     })
   }
 
+  /**
+   * Performs a DNS lookup for the given dnsDomain to retrieve
+   * the service's public key to be used for encrypted toxdns3 requests.
+   *
+   * If the dns server does not exist or a network-related error occurs, None is returned.
+   *
+   * @param dnsDomain the domain on which to perform the lookup (e.g. toxme.io)
+   * @return the public key of the dns service
+   */
   def lookupPublicKey(dnsDomain: String): Option[String] = {
     try {
       val records = new Lookup("_tox." + dnsDomain, Type.TXT).run()
@@ -86,7 +87,10 @@ object ToxDNS {
    * Registers a new account on toxme.io with name 'accountName' using the information
    * (toxID, etc) contained in data file 'toxData'.
    *
-   * @return toxme request observable
+   * If the service cannot be contacted, the network is down, or some other error occurs,
+   * the appropriate RegError is returned.
+   *
+   * @return toxme request observable that contains password on success, RegError on lookup error
    */
   def registerAccount(name: DnsName, toxData: ToxData): Observable[RegistrationResult[String]] = {
     constructRegistrationRequestJson(name, toxData).flatMap(result =>

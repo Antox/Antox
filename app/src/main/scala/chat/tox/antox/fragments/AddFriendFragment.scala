@@ -20,6 +20,7 @@ import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.ToxCoreConstants
 import im.tox.tox4j.exceptions.ToxException
+import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class AddFriendFragment extends Fragment with InputableID {
@@ -43,6 +44,8 @@ class AddFriendFragment extends Fragment with InputableID {
   var friendMessage: EditText = _
 
   var friendAlias: EditText = _
+
+  var lookupSubscription: Option[Subscription] = None
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     super.onCreate(savedInstanceState)
@@ -69,6 +72,7 @@ class AddFriendFragment extends Fragment with InputableID {
 
   override def onPause() = {
     super.onPause()
+    lookupSubscription.foreach(_.unsubscribe())
   }
 
   def inputID(input: String) {
@@ -153,7 +157,8 @@ class AddFriendFragment extends Fragment with InputableID {
       // Attempt to use ID as a dns account name
       _originalUsername = friendID.getText.toString
       try {
-        ToxDNS.lookup(_originalUsername)
+        lookupSubscription = Some(
+          ToxDNS.lookup(_originalUsername)
           .subscribeOn(IOScheduler())
           .observeOn(AndroidMainThreadScheduler())
           .subscribe((m_key: Option[String]) => {
@@ -170,7 +175,7 @@ class AddFriendFragment extends Fragment with InputableID {
                 }
               case None => showToastInvalidID()
             }
-          })
+          }))
       } catch {
         case e: Exception => e.printStackTrace()
       }

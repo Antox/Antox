@@ -52,6 +52,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles 'proguard-rules.txt'
+            testProguardFile 'proguard-rules.txt'
         }
         debug {
             minifyEnabled true

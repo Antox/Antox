@@ -251,7 +251,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-    val userDb = State.userDb
+    val userDb = State.userDb(this)
 
     key match {
       case "nickname" =>

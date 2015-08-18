@@ -49,7 +49,7 @@ class AvatarDialog(activity: Activity) {
       resizeAvatar(avatarFile) match {
         case Some(bitmap) =>
           FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 0, avatarFile)
-          State.userDb.updateActiveUserDetail("avatar", name)
+          State.userDb(activity).updateActiveUserDetail("avatar", name)
           BitmapManager.setAvatarInvalid(avatarFile)
 
         case None =>

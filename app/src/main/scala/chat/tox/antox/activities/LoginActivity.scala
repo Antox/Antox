@@ -28,10 +28,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       getWindow.setStatusBarColor(getResources.getColor(R.color.black))
     }
 
-    // Close unused userDBs to prevent memory leaks
-    if (State.userDb != null) State.userDb.close()
 
-    State.userDb = new UserDB(this)
 
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -39,7 +36,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     }
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val userDb = State.userDb
+    val userDb = State.userDb(this)
 
     // if the user is starting the app for the first
     // time, go directly to the register account screen
@@ -83,10 +80,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       val toast = Toast.makeText(context, text, duration)
       toast.show()
     } else {
-      val userDb = State.userDb
+      val userDb = State.userDb(this)
       if (userDb.doesUserExist(account)) {
         val details = userDb.getUserDetails(account)
-        userDb.login(account)
+        State.login(account, this)
         val startTox = new Intent(getApplicationContext, classOf[ToxService])
         getApplicationContext.startService(startTox)
         val main = new Intent(getApplicationContext, classOf[MainActivity])
