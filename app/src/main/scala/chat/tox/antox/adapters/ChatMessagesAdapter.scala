@@ -5,11 +5,11 @@ import java.util
 import java.util.Random
 
 import android.app.AlertDialog
-import android.content.{Context, DialogInterface, Intent}
+import android.content._
 import android.graphics.{Color, Typeface}
 import android.net.Uri
 import android.os.{Build, Environment}
-import android.text.{ClipboardManager, Html}
+import android.text.Html
 import android.view.View.OnLongClickListener
 import android.view.animation.{Animation, AnimationUtils}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
@@ -65,6 +65,7 @@ object ChatMessagesAdapter {
 
     var receivedTriangle: View = _
   }
+
 }
 
 class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message], ids: mutable.Set[Integer])
@@ -298,18 +299,17 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
       holder.row.startAnimation(anim)
       animatedIds += msg.id
     }
-    view.setOnLongClickListener(new OnLongClickListener() {
+    holder.background.setOnLongClickListener(new OnLongClickListener() {
 
       override def onLongClick(view: View): Boolean = {
         if (msg.`type` == MessageType.OWN || msg.`type` == MessageType.FRIEND) {
-          val builder = new AlertDialog.Builder(context)
           val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
-          builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
+          new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
-                clipboard.setText(msg.message)
+                clipboard.setPrimaryClip(ClipData.newPlainText(null, msg.message))
 
               case 1 =>
                 Observable[Boolean](subscriber => {
@@ -317,15 +317,13 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                   db.deleteMessage(msg.id)
                   subscriber.onCompleted()
                 }).subscribeOn(IOScheduler()).subscribe()
-
             }
-          })
-          val alert = builder.create()
-          alert.show()
-        } else {
-          val builder = new AlertDialog.Builder(context)
+
+          }).create().show()
+        }
+        else {
           val items = Array[CharSequence](context.getResources.getString(R.string.message_delete))
-          builder.setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
+          new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
             def onClick(dialog: DialogInterface, index: Int) = index match {
               case 0 =>
@@ -336,9 +334,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
                 }).subscribeOn(IOScheduler()).subscribe()
 
             }
-          })
-          val alert = builder.create()
-          alert.show()
+          }).create().show()
         }
         true
       }
