@@ -165,7 +165,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       override def onClick(view: View) {
         Log.d("OnClick", "Accepting Friend: " + key)
         val db = State.db
-        db.addFriend(key, "", "", "Friend Accepted")
+        db.addFriend(key, "", "", context.getResources.getString(R.string.friend_accepted_default_status))
         db.deleteFriendRequest(key)
         try {
           ToxSingleton.tox.addFriendNoRequest(key)

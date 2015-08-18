@@ -115,6 +115,7 @@
     <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
+    <string name="friend_accepted_default_status">Friend Accepted</string>
     <string name="group_default_peer_name">Anonymous</string>
     <string name="group_action_delete">Leave Group</string>
     <string name="contacts_actions_on">Actions on</string>
