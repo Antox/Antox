@@ -1,10 +1,6 @@
 package chat.tox.antox.fragments
 
-import java.util.Random
-
 import android.content.{Intent, SharedPreferences}
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
@@ -15,13 +11,12 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, MenuItem, View, ViewGroup}
-import android.widget.{RelativeLayout, TextView, Toast}
+import android.widget.{TextView, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.activities.{AboutActivity, ProfileSettingsActivity, SettingsActivity}
-import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback}
+import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{BitmapManager, IconColor}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{UserInfo, UserStatus}
