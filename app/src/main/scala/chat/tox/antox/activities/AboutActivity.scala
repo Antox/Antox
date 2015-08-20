@@ -19,8 +19,8 @@ class AboutActivity extends AppCompatActivity {
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 
-    val tw = findViewById(R.id.textView).asInstanceOf[TextView]
-    val tw10 = findViewById(R.id.textView10).asInstanceOf[TextView]
+    val tw = findViewById(R.id.version_text).asInstanceOf[TextView]
+    val tw10 = findViewById(R.id.source_link).asInstanceOf[TextView]
     val pattern = Pattern.compile("https://github.com/subliun/Antox")
     Linkify.addLinks(tw10, pattern, "")
     var version = "-.-.-"
@@ -36,6 +36,5 @@ class AboutActivity extends AppCompatActivity {
     case android.R.id.home =>
       finish()
       true
-
   }
 }
