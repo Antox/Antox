@@ -40,8 +40,8 @@ object ThemeManager {
   }
 
   //getters
-  def primaryColor = _primaryColor
-  def primaryColorDark = _primaryColorDark
+  def primaryColor: Int = _primaryColor
+  def primaryColorDark: Int = _primaryColorDark
 
   //setters
   def primaryColor_=(primaryColor: Int): Unit = {

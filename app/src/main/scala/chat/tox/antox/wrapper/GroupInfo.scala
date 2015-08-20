@@ -16,7 +16,7 @@ case class GroupInfo(key: ToxKey,
                      unreadCount: Int,
                      alias: String) extends ContactInfo {
 
-  def statusMessage = topic
+  def statusMessage: String = topic
   val status = if (online) "online" else "offline"
   val receivedAvatar = true
   val avatar = None

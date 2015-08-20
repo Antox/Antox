@@ -44,7 +44,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
-  override def onCreate(savedInstanceState: Bundle) = {
+  override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
     setContentView(R.layout.activity_chat)
@@ -119,11 +119,11 @@ abstract class GenericChatActivity extends AppCompatActivity {
     super.onCreateOptionsMenu(menu)
   }
 
-  def setDisplayName(name: String) = {
+  def setDisplayName(name: String): Unit = {
     this.displayNameView.setText(name)
   }
 
-  override def onResume() = {
+  override def onResume(): Unit = {
     super.onResume()
     Reactive.activeKey.onNext(Some(activeKey))
     Reactive.chatActive.onNext(true)
@@ -144,7 +144,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
   }
 
-  def updateChat(messageList: Seq[Message]) = {
+  def updateChat(messageList: Seq[Message]): Unit = {
     //FIXME make this more efficient
     adapter.setNotifyOnChange(false)
     adapter.clear()
@@ -210,7 +210,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     db.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
   }
 
-  override def onPause() = {
+  override def onPause(): Unit = {
     super.onPause()
     Reactive.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)

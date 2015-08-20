@@ -1,6 +1,7 @@
 package chat.tox.antox.fragments
 
-//Don't change this order (it will break the DB)
+// Don't change this order (it will break the DB)
+// scalastyle:off
 object ContactItemType extends Enumeration {
   type ContactItemType = Value
   val FRIEND_REQUEST = Value(1)

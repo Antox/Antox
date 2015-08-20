@@ -10,7 +10,7 @@ import scala.collection.JavaConversions._
 
 trait ConnectionTypeChangeListener {
   //only called when network is connected
-  def connectionTypeChange(connectionType: Int)
+  def connectionTypeChange(connectionType: Int): Unit
 }
 
 object ConnectionManager {

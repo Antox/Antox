@@ -16,7 +16,7 @@ import chat.tox.antox.theme.ThemeManager
 object ColorPickerDialog {
 
   trait Callback {
-    def onColorSelection(index: Int, color: Int, darker: Int)
+    def onColorSelection(index: Int, color: Int, darker: Int): Unit
   }
 
 }

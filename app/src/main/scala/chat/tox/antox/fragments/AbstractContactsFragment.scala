@@ -45,7 +45,7 @@ abstract class AbstractContactsFragment extends Fragment {
   }
 
   def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
-    Seq[GroupInvite], Seq[GroupInfo]))
+    Seq[GroupInvite], Seq[GroupInfo])): Unit
 
   override def onResume() {
     super.onResume()
@@ -237,13 +237,14 @@ abstract class AbstractContactsFragment extends Fragment {
         try {
           val db = State.db
           val messageList: Seq[Message] = db.getMessageList(Some(key), actionMessages = true)
-          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UIUtils.trimId(key) + "-log.txt"
+          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UiUtils.trimId(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
           for (message: Message <- messageList) {
             val formattedMessage = message.logFormat()
-            if (formattedMessage.isDefined)
+            if (formattedMessage.isDefined) {
               log.print(formattedMessage.get + '\n')
+            }
           }
           log.close()
           Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()

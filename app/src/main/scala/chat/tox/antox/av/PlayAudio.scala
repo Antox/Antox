@@ -11,7 +11,8 @@ class PlayAudio{
   def playAudioBuffer(data: Array[Byte]): Unit ={
     try {
       if (audioTrack == null || audioTrack.getState == AudioTrack.STATE_UNINITIALIZED){
-        audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 48000, AudioFormat.CHANNEL_OUT_DEFAULT,
+        val defaultBitrate = 48000
+        audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, defaultBitrate, AudioFormat.CHANNEL_OUT_DEFAULT,
           AudioFormat.ENCODING_PCM_16BIT, data.length, AudioTrack.MODE_STREAM) //TODO: change this back to a phone call
       }
           audioTrack.play ()

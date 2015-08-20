@@ -20,7 +20,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     this(antoxFriendList, groupList, new ToxOptions)
   }
 
-  def getTox = tox
+  def getTox: ToxCoreImpl[Unit] = tox
 
   def close(): Unit = tox.close()
 

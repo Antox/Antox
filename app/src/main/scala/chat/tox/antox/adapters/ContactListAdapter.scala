@@ -200,7 +200,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           }
         })
 
-        db.addGroup(groupKey, UIUtils.trimId(groupKey), "")
+        db.addGroup(groupKey, UiUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
       }
     })

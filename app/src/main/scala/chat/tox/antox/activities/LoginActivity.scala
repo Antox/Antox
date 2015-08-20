@@ -9,8 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.data.{State, UserDB}
-import chat.tox.antox.theme.ThemeManager
+import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
 
 import scala.collection.JavaConversions._
@@ -64,8 +63,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
   def onItemSelected(parent: AdapterView[_], view: View, pos: Int, id: Long) {
     profileSelected = parent.getItemAtPosition(pos).toString
 
-    if (parent.getChildAt(0) != null) // getChildAt(pos) returns a view, or null if non-existant
+    if (parent.getChildAt(0) != null) {
+      // getChildAt(pos) returns a view, or null if non-existant
       parent.getChildAt(0).asInstanceOf[TextView].setTextColor(Color.BLACK)
+    }
   }
 
   def onNothingSelected(parent: AdapterView[_]) {

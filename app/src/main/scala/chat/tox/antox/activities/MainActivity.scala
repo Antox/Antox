@@ -54,8 +54,9 @@ class MainActivity extends AppCompatActivity {
     }
 
     // Check to see if Internet is potentially available and show a warning if it isn't
-    if (!isNetworkConnected)
+    if (!isNetworkConnected) {
       showAlertDialog(MainActivity.this, getString(R.string.main_no_internet), getString(R.string.main_not_connected))
+    }
 
     // Give ToxSingleton an instance of notification manager for use in displaying notifications from callbacks
     ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
@@ -119,11 +120,11 @@ class MainActivity extends AppCompatActivity {
     val networkInfo = connectivityManager.getAllNetworkInfo
 
     for (info <- networkInfo) {
-      if ("WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected)
+      if ("WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
         return true
-
-      else if ("MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected)
+      } else if ("MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
         return true
+      }
     }
 
     false

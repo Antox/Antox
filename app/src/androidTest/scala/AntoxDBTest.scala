@@ -1,13 +1,11 @@
 import android.preference.PreferenceManager
-import android.support.test.filters.RequiresDevice
 import android.support.test.runner.AndroidJUnit4
-import android.test.{RenamingDelegatingContext, AndroidTestCase}
+import android.test.{AndroidTestCase, RenamingDelegatingContext}
 import chat.tox.antox.data.AntoxDB
-import chat.tox.antox.wrapper.{MessageType, FriendInfo, ToxKey}
-import org.junit.{Test, After, Before}
-import org.junit.runner.RunWith
+import chat.tox.antox.wrapper.{MessageType, ToxKey}
 import org.junit.Assert._
-import org.hamcrest.CoreMatchers._
+import org.junit.runner.RunWith
+import org.junit.{After, Before, Test}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -54,6 +52,7 @@ class AntoxDBTest extends AndroidTestCase {
   def testLastMessages(): Unit = {
     db.addFriend(key, name, alias, statusMessage)
 
+    val numChanges = 5
     var number = 0
     db.messageListObservable(Some(key), actionMessages = true)
       .subscribe(messages => {
@@ -62,19 +61,20 @@ class AntoxDBTest extends AndroidTestCase {
       number += 1
     })
 
+    val numMessages = 3
     db.addMessage(-1, key, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
     db.addMessage(-1, key, "asdf", "test1", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
     db.addMessage(-1, key, "asdf", "test2", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
 
     db.lastMessages
       .subscribe(messages => {
-      assertEquals(messages.size, 3)
+      assertEquals(messages.size, numMessages)
       assert(messages.exists(_._2._1 eq "test"))
 
       println("GOT A MESSAGE CLLBACK")
       number += 1
     })
 
-    assertEquals(number, 5)
+    assertEquals(number, numChanges)
   }
 }

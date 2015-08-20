@@ -1,8 +1,6 @@
 
 package chat.tox.antox.data
 
-import java.util
-
 import android.content.{ContentValues, Context}
 import android.database.Cursor
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
@@ -12,7 +10,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{BriteScalaDatabase, DatabaseUtil}
-import chat.tox.antox.wrapper.UserInfo
+import chat.tox.antox.wrapper.{ToxAddress, ToxKey, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
 import rx.lang.scala.Observable
 
@@ -44,8 +42,9 @@ object UserDB {
       for (currVersion <- oldVersion to newVersion) {
         currVersion match {
           case 1 =>
-            if (!DatabaseUtil.isColumnInTable(db, TABLE_USERS, COLUMN_NAME_AVATAR))
+            if (!DatabaseUtil.isColumnInTable(db, TABLE_USERS, COLUMN_NAME_AVATAR)) {
               db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_AVATAR text")
+            }
           case 2 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_LOGGING_ENABLED integer")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_LOGGING_ENABLED = $TRUE")
@@ -77,7 +76,7 @@ class UserDB(ctx: Context) {
     }
   }
 
-  def getActiveUser = activeUser.getOrElse(throw new NotLoggedInException())
+  def getActiveUser: String = activeUser.getOrElse(throw new NotLoggedInException())
 
   mDbHelper = new DatabaseHelper(ctx)
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
@@ -100,13 +99,13 @@ class UserDB(ctx: Context) {
     editor.commit()
   }
 
-  def loggedIn = activeUser.isDefined
+  def loggedIn: Boolean = activeUser.isDefined
 
   def logout(): Unit = {
     preferences.edit().putString("active_account", "").commit()
   }
 
-  def addUser(username: String, toxID: String, password: String) {
+  def addUser(username: String, toxId: ToxAddress, password: String) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_USERNAME, username)
     values.put(COLUMN_NAME_PASSWORD, password)
@@ -119,7 +118,7 @@ class UserDB(ctx: Context) {
     mDb.insert(TABLE_USERS, values)
 
     val editor = preferences.edit()
-    editor.putString("tox_id", toxID)
+    editor.putString("tox_id", toxId.toString)
     editor.putBoolean("logging_enabled", true)
     editor.putBoolean("autostart", true)
     editor.commit()
@@ -146,13 +145,13 @@ class UserDB(ctx: Context) {
     var userInfo: UserInfo = null
     if (cursor.moveToFirst()) {
       userInfo = new UserInfo(
-        username = cursor.getString(1),
-        password = cursor.getString(2),
-        nickname = cursor.getString(3),
-        status = cursor.getString(4),
-        statusMessage = cursor.getString(5),
-        loggingEnabled = cursor.getInt(7) > 0,
-        avatarName = cursor.getString(6))
+        username = cursor.getString(COLUMN_NAME_USERNAME),
+        password = cursor.getString(COLUMN_NAME_PASSWORD),
+        nickname = cursor.getString(COLUMN_NAME_NICKNAME),
+        status = cursor.getString(COLUMN_NAME_STATUS),
+        statusMessage = cursor.getString(COLUMN_NAME_STATUS_MESSAGE),
+        loggingEnabled = cursor.getBoolean(COLUMN_NAME_LOGGING_ENABLED),
+        avatarName = cursor.getString(COLUMN_NAME_AVATAR))
     }
     userInfo
   }
@@ -184,14 +183,14 @@ class UserDB(ctx: Context) {
     })
   }
 
-  def updateActiveUserDetail(detail: String, newDetail: String) = {
+  def updateActiveUserDetail(detail: String, newDetail: String): Unit = {
     if (!preferences.getString(detail, "").equals(newDetail)) {
       preferences.edit().putString(detail, newDetail).apply()
     }
     updateUserDetail(getActiveUser, detail, newDetail)
   }
 
-  def updateActiveUserDetail(detail: String, newDetail: Boolean) = {
+  def updateActiveUserDetail(detail: String, newDetail: Boolean): Unit = {
     if (!preferences.getBoolean(detail, false) == newDetail) {
       preferences.edit().putBoolean(detail, newDetail).apply()
     }

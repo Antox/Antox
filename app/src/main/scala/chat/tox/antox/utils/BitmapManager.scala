@@ -9,7 +9,6 @@ import android.support.v4.util.LruCache
 import android.util.Log
 import android.widget.ImageView
 import chat.tox.antox.utils.BitmapManager._
-import chat.tox.antox.wrapper.BitmapUtils
 import chat.tox.antox.wrapper.BitmapUtils.RichBitmap
 import org.scaloid.common._
 
@@ -28,15 +27,14 @@ object BitmapManager {
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
   private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
-    if (isAvatar)
+    if (isAvatar) {
       getAvatarFromCache(key)
-    else
+    } else {
       getBitmapFromMemCache(key)
+    }
   }
 
   private def getBitmapFromMemCache(key: String): Option[Bitmap] = {
-    if (mMemoryCache == null) return None
-
     Option(mMemoryCache.get(key))
   }
 
@@ -55,8 +53,9 @@ object BitmapManager {
   }
 
   private def addBitmapToMemoryCache(key: String, bitmap: Bitmap) {
-    if (getBitmapFromMemCache(key).isEmpty && mMemoryCache != null)
+    if (mMemoryCache != null && getBitmapFromMemCache(key).isEmpty) {
       mMemoryCache.put(key, bitmap)
+    }
   }
 
   private def addAvatarToCache(key: String, bitmap: Bitmap) {
@@ -99,7 +98,7 @@ object BitmapManager {
    */
   private def getBytesFromStream(inputStream: InputStream): Array[Byte] = {
     var byteArr = Array.ofDim[Byte](0)
-    val buffer = Array.ofDim[Byte](1024)
+    val buffer = Array.ofDim[Byte](2^10)
     var len: Int = 0
     var count = 0
 
@@ -141,8 +140,9 @@ object BitmapManager {
 
       val options = new BitmapOptions()
 
-      if (!decodeAndCheck(byteArr, options))
+      if (!decodeAndCheck(byteArr, options)) {
         return null
+      }
 
       options.inSampleSize = calculateInSampleSize(options, 200)
       options.inPreferredConfig = Bitmap.Config.RGB_565
@@ -150,10 +150,11 @@ object BitmapManager {
 
       val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
 
-      if (isAvatar)
+      if (isAvatar) {
         addAvatarToCache(imageKey, bitmap)
-      else
+      } else {
         addBitmapToMemoryCache(imageKey, bitmap)
+      }
 
       bitmap
     } catch {
@@ -162,16 +163,20 @@ object BitmapManager {
         e.printStackTrace()
         null
     } finally {
-      if (fis != null)
+      if (fis != null) {
         fis.close()
+      }
     }
   }
 
   // Execution context needed for Futures
   // For why this is needed, see http://blog.scaloid.org/2013/11/using-scalaconcurrentfuture-in-android.html
-  implicit val exec = ExecutionContext.fromExecutor(
-    new ThreadPoolExecutor(100, 100, 1000, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
-  )
+  implicit val exec = {
+    val poolSize = 100
+    val poolTimeout = 1000
+    ExecutionContext.fromExecutor(
+    new ThreadPoolExecutor(poolSize, poolSize, poolTimeout, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
+  )}
 
   def load(file: File, imageView: ImageView, isAvatar: Boolean) {
       val imageKey = file.getPath + file.getName

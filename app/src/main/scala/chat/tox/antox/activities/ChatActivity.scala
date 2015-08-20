@@ -28,7 +28,7 @@ class ChatActivity extends GenericChatActivity {
 
   var photoPath: String = null
 
-  override def onCreate(savedInstanceState: Bundle) = {
+  override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     val extras: Bundle = getIntent.getExtras
     activeKey = new ToxKey(extras.getString("key"))
@@ -106,7 +106,7 @@ class ChatActivity extends GenericChatActivity {
     })
   }
 
-  override def onResume() = {
+  override def onResume(): Unit = {
     super.onResume()
     ToxSingleton.clearUselessNotifications(activeKey)
     titleSub = State.db.friendInfoList
@@ -184,7 +184,7 @@ class ChatActivity extends GenericChatActivity {
 
   def onClickInfo(v: View): Unit = {}
 
-  override def onPause() = {
+  override def onPause(): Unit = {
     super.onPause()
   }
 

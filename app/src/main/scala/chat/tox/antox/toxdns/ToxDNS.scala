@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException
 
 import android.util.{Base64, Log}
 import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import chat.tox.antox.wrapper.ToxAddress
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
 import org.abstractj.kalium.crypto.Box
@@ -34,7 +35,8 @@ object ToxDNS {
           val txt = records(0).asInstanceOf[TXTRecord]
           val txtString = txt.toString.substring(txt.toString.indexOf('"'))
           if (txtString.contains("tox1")) {
-            val key = txtString.substring(11, 11 + 76)
+            val offset = 11
+            val key = txtString.substring(offset, offset + ToxAddress.MAX_ADDRESS_LENGTH)
             subscriber.onNext(Some(key))
           }
         } catch {
@@ -135,7 +137,7 @@ object ToxDNS {
         val privacy = 0
 
         val unencryptedPayload = new JSONObject
-        unencryptedPayload.put("tox_id", toxData.ID)
+        unencryptedPayload.put("tox_id", toxData.address)
         unencryptedPayload.put("name", name.user)
         unencryptedPayload.put("privacy", privacy)
         unencryptedPayload.put("bio", "")
@@ -148,7 +150,7 @@ object ToxDNS {
 
             val requestJson = new JSONObject
             requestJson.put("action", 1)
-            requestJson.put("public_key", toxData.ID.substring(0, 64))
+            requestJson.put("public_key", toxData.address.key.toString)
             requestJson.put("encrypted", encryptedPayload.payload)
             requestJson.put("nonce", encryptedPayload.nonce)
             subscriber.onNext(Right(requestJson))

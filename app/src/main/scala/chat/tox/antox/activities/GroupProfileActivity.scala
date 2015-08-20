@@ -7,7 +7,7 @@ import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.UIUtils
+import chat.tox.antox.utils.UiUtils
 import chat.tox.antox.wrapper.ToxKey
 
 class GroupProfileActivity extends AppCompatActivity {
@@ -30,7 +30,7 @@ class GroupProfileActivity extends AppCompatActivity {
       findViewById(R.id.group_name).asInstanceOf[TextView].setText(if (group.name != null) {
         group.name
       } else {
-        UIUtils.trimId(group.key)
+        UiUtils.trimId(group.key)
       })
 
     findViewById(R.id.group_status_message).asInstanceOf[EditText].setText(group.topic)

@@ -1,6 +1,7 @@
 package chat.tox.antox.utils
 
 import android.content.ContentValues
+import android.database.Cursor
 
 object DatabaseConstants {
 
@@ -52,6 +53,8 @@ object DatabaseConstants {
 
   val COLUMN_NAME_TYPE = "type"
 
+  val COLUMN_NAME_ID = "_id"
+
   val COLUMN_NAME_MESSAGE_ID = "message_id"
 
   val COLUMN_NAME_HAS_BEEN_RECEIVED = "has_been_received"
@@ -88,15 +91,29 @@ object DatabaseConstants {
     "(" + list.slice(0, list.size - 1).map(i => s"$table$columnName == " + i.toString + " OR ").mkString + list.last + ")"
   }
 
-  def contentValue(key: String, value: String) = {
+  def contentValue(key: String, value: String): ContentValues = {
     val values = new ContentValues()
     values.put(key, value)
     values
   }
 
-  def contentValue(key: String, value: Int) = {
+  def contentValue(key: String, value: Int): ContentValues = {
     val values = new ContentValues()
     values.put(key, value.asInstanceOf[java.lang.Integer])
     values
+  }
+
+  implicit class RichCursor(val cursor: Cursor) extends AnyVal {
+    def getString(columnName: String): String = {
+      cursor.getString(cursor.getColumnIndexOrThrow(columnName))
+    }
+
+    def getInt(columnName: String): Int = {
+      cursor.getInt(cursor.getColumnIndexOrThrow(columnName))
+    }
+
+    def getBoolean(columnName: String): Boolean = {
+      cursor.getInt(cursor.getColumnIndexOrThrow(columnName)) > 0
+    }
   }
 }

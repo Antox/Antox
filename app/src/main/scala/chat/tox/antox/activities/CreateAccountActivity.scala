@@ -4,25 +4,24 @@ import java.io.File
 import java.util.regex.Pattern
 
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.animation.{ValueAnimator, ArgbEvaluator}
+import android.animation.{ArgbEvaluator, ValueAnimator}
 import android.app.Activity
 import android.content.Intent
 import android.os.{Build, Bundle, Environment}
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
-import android.widget.{ProgressBar, Button, EditText, Toast}
+import android.widget.{Button, EditText, ProgressBar, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
 import chat.tox.antox.toxdns.ToxDNS.RegError
-import chat.tox.antox.toxdns.ToxDNS.RegError
 import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
 import chat.tox.antox.toxdns.{DnsName, ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
+import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions
@@ -71,10 +70,7 @@ class CreateAccountActivity extends AppCompatActivity {
     matcher = pattern2.matcher(account)
     val containsFileSeparator = matcher.find()
 
-    if (account == "" || containsSpaces || containsFileSeparator)
-      return false
-
-    true
+    !(account == "" || containsSpaces || containsFileSeparator)
   }
 
   def showBadAccountNameError(): Unit = {
@@ -85,7 +81,7 @@ class CreateAccountActivity extends AppCompatActivity {
     toast.show()
   }
 
-  def loginAndStartMain(accountName: String, password: String, toxId: String) {
+  def loginAndStartMain(accountName: String, password: String) {
     val userDb = State.userDb(this)
     State.login(accountName, this)
     userDb.updateActiveUserDetail(DatabaseConstants.COLUMN_NAME_PASSWORD, password)
@@ -106,7 +102,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.getSavedata)
-    toxData.ID = chat.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+    toxData.address = new ToxAddress(tox.getAddress)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
   }
@@ -121,24 +117,25 @@ class CreateAccountActivity extends AppCompatActivity {
 
     try {
       val tox = new ToxCoreImpl(toxOptions)
-      toxData.ID = chat.tox.antox.utils.Hex.bytesToHexString(tox.getAddress)
+      toxData.address = new ToxAddress(tox.getAddress)
       toxData.fileBytes = toxDataFile.loadFile()
 
       Option(toxData)
     } catch {
       case error: ToxNewException =>
-        if (error.code == ToxNewException.Code.LOAD_ENCRYPTED)
+        if (error.code == ToxNewException.Code.LOAD_ENCRYPTED) {
           Toast.makeText(
             getBaseContext,
             getString(R.string.create_account_encrypted_profile_error),
             Toast.LENGTH_SHORT
           ).show()
-        else
+        } else {
           Toast.makeText(
             getBaseContext,
             getString(R.string.create_account_load_profile_unknown),
             Toast.LENGTH_SHORT
           ).show()
+        }
 
         None
     }
@@ -246,7 +243,7 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
-  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[RegError, String]) = {
+  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[RegError, String]): Unit = {
     var successful = true
     var accountPassword = ""
     val toastMessage: Option[String] = result match {
@@ -266,8 +263,8 @@ class CreateAccountActivity extends AppCompatActivity {
         None
     }
     if (successful) {
-      State.userDb(this).addUser(accountName, toxData.ID, "")
-      loginAndStartMain(accountName, accountPassword, toxData.ID)
+      State.userDb(this).addUser(accountName, toxData.address, "")
+      loginAndStartMain(accountName, accountPassword)
     } else {
       toastMessage.foreach(message => {
         val context = getApplicationContext

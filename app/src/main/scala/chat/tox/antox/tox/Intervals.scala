@@ -14,6 +14,7 @@ trait Intervals {
  * An enumeration to store the different possible levels the app can be 'working' at.
  * Enumeration makes it extensible
  */
+// scalastyle:off
 object IntervalLevels extends Enumeration {
   type IntervalLevels = Value
   val WORKING = Value(50)

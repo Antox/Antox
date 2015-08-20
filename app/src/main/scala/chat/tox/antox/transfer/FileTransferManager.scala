@@ -22,13 +22,14 @@ class FileTransferManager extends Intervals {
   def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.INPROGRESS)
 
   override def interval: Int = {
-    if (isTransferring)
+    if (isTransferring) {
       IntervalLevels.WORKING.id
-    else
+    } else {
       IntervalLevels.AWAKE.id
+    }
   }
 
-  def add(t: FileTransfer) = {
+  def add(t: FileTransfer): Unit = {
     _transfers = _transfers + (t.id -> t)
     _keyAndFileNumberToId = _keyAndFileNumberToId + ((t.key, t.fileNumber) -> t.id)
   }
@@ -176,9 +177,11 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def acceptFile(key: ToxKey, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = true)
+  def acceptFile(key: ToxKey, fileNumber: Int, context: Context): Unit =
+    fileAcceptOrReject(key, fileNumber, context, accept = true)
 
-  def rejectFile(key: ToxKey, fileNumber: Int, context: Context) = fileAcceptOrReject(key, fileNumber, context, accept = false)
+  def rejectFile(key: ToxKey, fileNumber: Int, context: Context): Unit =
+    fileAcceptOrReject(key, fileNumber, context, accept = false)
 
   def receiveFileData(key: ToxKey,
                       fileNumber: Int,

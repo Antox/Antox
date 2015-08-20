@@ -9,7 +9,7 @@ object CallManager {
 class CallManager {
   private var _calls: Map[Integer, Call] = Map[Integer, Call]()
 
-  def add(c: Call) = {
+  def add(c: Call): Unit = {
     Log.d(CallManager.TAG, "Adding call")
     _calls = _calls + (c.id -> c)
   }

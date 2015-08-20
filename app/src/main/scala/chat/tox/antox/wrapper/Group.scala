@@ -53,7 +53,7 @@ class Group(val key: ToxKey,
   override def toString: String = name
 
   //Getters
-  def name = _name
+  def name: String = _name
 
   //Setters
   def name_= (name: String): Unit = {

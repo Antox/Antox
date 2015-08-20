@@ -17,7 +17,7 @@ case class ToxKey(key: String) {
   def this(bytes: Array[Byte]) =
     this(Hex.bytesToHexString(bytes))
 
-  def bytes = Hex.hexStringToBytes(key)
+  def bytes: Array[Byte] = Hex.hexStringToBytes(key)
 
   override def toString: String = key
 }

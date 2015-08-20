@@ -51,7 +51,7 @@ object FileKind extends Enum[FileKind] {
     val kindId = 0
     val visible = true
     val rawStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY).getPath
-    def storageType = StorageType.EXTERNAL
+    def storageType: StorageType = StorageType.EXTERNAL
     val autoAccept = false
     val replaceExisting = false
   }

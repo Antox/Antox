@@ -33,15 +33,15 @@ object State {
     }
   }
 
-  def chatActive = _chatActive
+  def chatActive: Boolean = _chatActive
 
-  def chatActive(b: Boolean) = {
+  def chatActive(b: Boolean): Unit = {
     _chatActive = b
   }
 
-  def activeKey = _activeKey
+  def activeKey: Option[ToxKey] = _activeKey
 
-  def activeKey(k: Option[ToxKey]) = {
+  def activeKey(k: Option[ToxKey]): Unit = {
     require(k != null)
     _activeKey = k
   }

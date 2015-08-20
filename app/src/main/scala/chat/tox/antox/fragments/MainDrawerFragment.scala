@@ -114,7 +114,7 @@ class MainDrawerFragment extends Fragment {
     }
   }
 
-  def isDrawerOpen = mDrawerLayout.isDrawerOpen(GravityCompat.START)
+  def isDrawerOpen: Boolean = mDrawerLayout.isDrawerOpen(GravityCompat.START)
 
   def openDrawer(): Unit = {
     mDrawerLayout.openDrawer(GravityCompat.START)

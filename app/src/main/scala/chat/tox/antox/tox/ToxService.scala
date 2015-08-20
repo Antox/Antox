@@ -13,6 +13,8 @@ class ToxService extends Service() {
 
   private var keepRunning: Boolean = true
 
+  private val connectionCheckInterval = 10000 //in ms
+
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
@@ -26,10 +28,9 @@ class ToxService extends Service() {
       override def run() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext)
         while (keepRunning) {
-
           if (!ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
-              Thread.sleep(10000)
+              Thread.sleep(connectionCheckInterval)
             } catch {
               case e: Exception =>
             }

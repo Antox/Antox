@@ -23,6 +23,16 @@ object ToxAddress {
     }
     x == 0
   }
+
+  def removePrefix(address: String): String = {
+    val prefix = "tox:"
+
+    if (address.toLowerCase.contains(prefix)) {
+      address.substring(prefix.length)
+    } else {
+      address
+    }
+  }
 }
 
 case class ToxAddress(address: String) {
@@ -33,8 +43,8 @@ case class ToxAddress(address: String) {
   def this(bytes: Array[Byte]) =
     this(Hex.bytesToHexString(bytes))
 
-  def bytes = Hex.hexStringToBytes(address)
-  def key = new ToxKey(address.substring(0, ToxKey.MAX_KEY_LENGTH))
+  def bytes: Array[Byte] = Hex.hexStringToBytes(address)
+  def key: ToxKey = new ToxKey(address.substring(0, ToxKey.MAX_KEY_LENGTH))
 
   override def toString: String = address
 }

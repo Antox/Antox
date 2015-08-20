@@ -19,9 +19,9 @@ class FileTransfer(val key: ToxKey,
 
     private var _status: FileStatus = initialStatus
 
-    def status = _status
+    def status: FileStatus = _status
 
-    def status_=(x: FileStatus) = {_status = x}
+    def status_=(x: FileStatus): Unit = {_status = x}
 
     private var _outputStream: Option[FileOutputStream] = None
 
@@ -31,11 +31,11 @@ class FileTransfer(val key: ToxKey,
 
     private var _bInputStream: Option[BufferedInputStream] = None
 
-    def progress = {
+    def progress: Long = {
       progressHistory.last._2
     }
 
-    def addToProgress(prog: Long) = {
+    def addToProgress(prog: Long): Unit = {
       progressHistory = progressHistory :+ (System.currentTimeMillis, prog)
     }
 

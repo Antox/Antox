@@ -132,7 +132,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
     }
     cursor.moveToPrevious() */
 
-    holder.message.setTextSize(16)
+    val messageTextSize = 16
+    holder.message.setTextSize(messageTextSize)
     holder.message.setVisibility(View.GONE)
     holder.time.setVisibility(View.GONE)
     holder.title.setVisibility(View.GONE)
@@ -193,7 +194,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               holder.progress.setVisibility(View.VISIBLE)
               holder.progress.setMax(msg.size)
               holder.progress.setProgress(State.transfers.getProgress(msg.id).toInt)
-              val mProgress = State.transfers.getProgressSinceXAgo(msg.id, 500)
+              val updateRate = 500
+              val mProgress = State.transfers.getProgressSinceXAgo(msg.id, updateRate)
               val bytesPerSecond = mProgress match {
                 case Some(p) => ((p._1 * 1000) / p._2).toInt
                 case None => 0
@@ -254,10 +256,11 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               //Log.d("ChatMessagesAdapter", extension)
               if (file.getName.toLowerCase.endsWith(extension)) {
                 // Set a placeholder in the image in case bitmap needs to be loaded from disk
-                if (msg.isMine)
+                if (msg.isMine) {
                   holder.imageMessage.setImageResource(R.drawable.sent)
-                else
+                } else {
                   holder.imageMessage.setImageResource(R.drawable.received)
+                }
 
                 BitmapManager.load(file, holder.imageMessage, isAvatar = false)
                 holder.imageMessage.setVisibility(View.VISIBLE)
@@ -306,7 +309,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
           val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
           new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
-            def onClick(dialog: DialogInterface, index: Int) = index match {
+            def onClick(dialog: DialogInterface, index: Int): Unit = index match {
               case 0 =>
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
                 clipboard.setPrimaryClip(ClipData.newPlainText(null, msg.message))
@@ -325,7 +328,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
           val items = Array[CharSequence](context.getResources.getString(R.string.message_delete))
           new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
-            def onClick(dialog: DialogInterface, index: Int) = index match {
+            def onClick(dialog: DialogInterface, index: Int): Unit = index match {
               case 0 =>
                 Observable[Boolean](subscriber => {
                   val db = State.db
@@ -406,7 +409,8 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
   private def actionMessage(holder: ChatMessagesHolder) {
     holder.message.setVisibility(View.VISIBLE)
-    holder.message.setTextSize(18)
+    val actionMessageFontSize = 18
+    holder.message.setTextSize(actionMessageFontSize)
     holder.message.setTextColor(context.getResources.getColor(R.color.black))
     holder.time.setGravity(Gravity.CENTER)
     holder.layout.setGravity(Gravity.CENTER)

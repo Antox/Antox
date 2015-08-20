@@ -24,8 +24,6 @@ object ToxSingleton {
 
   private val TAG = "chat.tox.antox.tox.ToxSingleton"
 
-  def getInstance() = this
-
   var tox: ToxCore = _
 
   var toxAv: ToxAvImpl[Unit] = _

@@ -120,8 +120,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     val nospamPreference = findPreference("nospam")
     nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val toxSingleton = ToxSingleton.getInstance()
-
         val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
         builder.setMessage(R.string.reset_tox_id_dialog_message)
           .setTitle(R.string.reset_tox_id_dialog_title)
@@ -130,11 +128,12 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
           override def onClick(dialog: DialogInterface, which: Int): Unit = {
             try {
               val random = new Random()
-              val nospam = random.nextInt(1234567890)
-              toxSingleton.tox.setNospam(nospam)
+              val maxNospam = 1234567890
+              val nospam = random.nextInt(maxNospam)
+              ToxSingleton.tox.setNospam(nospam)
               val preferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
               val editor = preferences.edit()
-              editor.putString("tox_id", toxSingleton.tox.getAddress.toString)
+              editor.putString("tox_id", ToxSingleton.tox.getAddress.toString)
               editor.apply()
 
               // Display toast to inform user of successful change

@@ -12,13 +12,13 @@ class GroupChatActivity extends GenericChatActivity {
 
   var photoPath: String = null
 
-  override def onCreate(savedInstanceState: Bundle) = {
+  override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
 
     statusIconView.setVisibility(View.GONE)
   }
 
-  override def onResume() = {
+  override def onResume(): Unit = {
     super.onResume()
     val thisActivity = this
     val db = State.db
@@ -51,7 +51,7 @@ class GroupChatActivity extends GenericChatActivity {
     startActivity(profile)
   }
 
-  override def onPause() = {
+  override def onPause(): Unit = {
     super.onPause()
   }
 

@@ -20,6 +20,28 @@ object MessageHelper {
 
   val TAG = "chat.tox.antox.tox.MessageHelper"
 
+  def createRequestNotification(contentText: Option[String], context: Context): Unit = {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+    if (preferences.getBoolean("notifications_enable_notifications", true) &&
+      preferences.getBoolean("notifications_friend_request", true)) {
+      val vibrateDuration = 500
+      val vibratePattern = Array[Long](0, vibrateDuration)
+      if (!preferences.getBoolean("notifications_new_message_vibrate", true)) {
+        vibratePattern(1) = 0
+      }
+      val mBuilder = new NotificationCompat.Builder(context)
+        .setSmallIcon(R.drawable.ic_actionbar)
+        .setContentTitle(context.getString(R.string.friend_request))
+        .setVibrate(vibratePattern)
+        .setDefaults(Notification.DEFAULT_ALL)
+        .setAutoCancel(true)
+      contentText.foreach(text => mBuilder.setContentText(text))
+      val targetIntent = new Intent(context, classOf[MainActivity])
+      val contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+      mBuilder.setContentIntent(contentIntent)
+      ToxSingleton.mNotificationManager.notify(0, mBuilder.build())
+    }
+  }
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: ToxKey, message: String, messageType: MessageType): Unit = {
     val db = State.db
     val friendName = db.getContactNameOrAlias(friendKey)
@@ -58,7 +80,7 @@ object MessageHelper {
 
   }
 
-  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType) = {
+  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType): Unit = {
     val db = State.db
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
 
@@ -91,7 +113,7 @@ object MessageHelper {
     }
   }
 
-  def sendMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
+  def sendMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]): Unit = {
       val mFriend = ToxSingleton.getAntoxFriend(key)
       val messageType = if (isAction) MessageType.ACTION else MessageType.OWN
       mFriend match {
@@ -124,7 +146,7 @@ object MessageHelper {
       }
   }
 
-  def sendGroupMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]) = {
+  def sendGroupMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]): Unit = {
     val group = ToxSingleton.getGroup(key)
     val db = State.db
     val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN

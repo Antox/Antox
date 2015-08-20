@@ -42,7 +42,7 @@ class AddActivity extends AppCompatActivity {
     }
   }
 
-  override def onPause() = {
+  override def onPause(): Unit = {
     super.onPause()
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_bottom)
   }

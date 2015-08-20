@@ -16,7 +16,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.toxdns.ToxDNS
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{UiUtils, Constants}
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.ToxCoreConstants
 import im.tox.tox4j.exceptions.ToxException
@@ -70,15 +70,15 @@ class AddFriendFragment extends Fragment with InputableID {
     rootView
   }
 
-  override def onPause() = {
+  override def onPause(): Unit = {
     super.onPause()
     lookupSubscription.foreach(_.unsubscribe())
   }
 
   def inputID(input: String) {
     val addFriendKey = getView.findViewById(R.id.addfriend_key).asInstanceOf[EditText]
-    val friendAddress = (if (input.toLowerCase.contains("tox:")) input.substring(4) else input)
-      .replaceAll("\uFEFF", "").replace(" ", "") //remove start-of-file unicode char and spaces
+    val friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix(input))
+
     if (ToxAddress.isAddressValid(friendAddress)) {
       addFriendKey.setText(friendAddress)
     } else {
@@ -90,16 +90,12 @@ class AddFriendFragment extends Fragment with InputableID {
 
   private def isAddressOwn(address: ToxAddress): Boolean = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    var tmp = preferences.getString("tox_id", "")
+    val ownAddress = ToxAddress.removePrefix(preferences.getString("tox_id", ""))
 
-    if (tmp.toLowerCase.startsWith("tox:")) {
-      tmp = tmp.substring(4)
-    }
-
-    new ToxAddress(tmp) == address
+    new ToxAddress(ownAddress) == address
   }
 
-  private def checkAndSend(rawAddress: String, originalUsername: String): Int = {
+  private def checkAndSend(rawAddress: String, originalUsername: String): Boolean = {
     if (ToxAddress.isAddressValid(rawAddress)) {
       val address = new ToxAddress(rawAddress)
 
@@ -123,21 +119,19 @@ class AddFriendFragment extends Fragment with InputableID {
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
           toast.show()
-          -2
         }
         toast = Toast.makeText(context, text, duration)
         toast.show()
-        0
+        true
       } else {
 
         toast = Toast.makeText(context, getResources.getString(R.string.addfriend_own_key), Toast.LENGTH_SHORT)
         toast.show()
-        -3
+        false
       }
     } else {
-
       showToastInvalidID()
-      -1
+      false
     }
   }
 
@@ -145,7 +139,7 @@ class AddFriendFragment extends Fragment with InputableID {
     if (friendID.length == 76) {
       // Attempt to use ID as a Tox ID
       val result = checkAndSend(friendID.getText.toString, _originalUsername)
-      if (result == 0) {
+      if (result) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)
         LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)

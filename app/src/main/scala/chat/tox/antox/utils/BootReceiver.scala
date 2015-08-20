@@ -12,7 +12,8 @@ class BootReceiver extends BroadcastReceiver {
     // Check if autostart setting is enabled first
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
-    if (preferences.getBoolean("autostart", true))
+    if (preferences.getBoolean("autostart", true)) {
       context.startService(new Intent(context, classOf[ToxService]))
+    }
   }
 }
