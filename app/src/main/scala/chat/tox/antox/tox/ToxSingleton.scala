@@ -275,4 +275,3 @@ object ToxSingleton {
     dataFile.saveFile(tox.getSaveData)
   }
 }
-
