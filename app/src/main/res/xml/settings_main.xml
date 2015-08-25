@@ -49,11 +49,6 @@
             android:title="@string/pref_title_wifi_only" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="action_messages"
-            android:title="@string/pref_title_connection_status_messages" />
-
-        <CheckBoxPreference
             android:defaultValue="false"
             android:key="enable_udp"
             android:title="@string/pref_udp" />

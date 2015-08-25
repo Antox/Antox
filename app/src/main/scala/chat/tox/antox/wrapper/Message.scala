@@ -9,12 +9,12 @@ import chat.tox.antox.wrapper.MessageType.MessageType
 
 class Message(
   val id: Int,
-  val message_id: Int,
+  val messageId: Int,
   val key: ToxKey,
-  val sender_name: String,
+  val senderName: String,
   val message: String,
   val received: Boolean,
-  val has_been_read: Boolean,
+  val read: Boolean,
   val sent: Boolean,
   val timestamp: Timestamp,
   val size: Int,

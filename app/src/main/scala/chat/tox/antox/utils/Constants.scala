@@ -32,7 +32,7 @@ object Constants {
 
   val MAX_NAME_LENGTH = 128
 
-  val MAX_MESSAGE_LENGTH = 1367 //in bytes
+  val MAX_MESSAGE_LENGTH = 1363 //in bytes
 
   val MAX_AVATAR_SIZE = 64 * 1024 //in bytes
 

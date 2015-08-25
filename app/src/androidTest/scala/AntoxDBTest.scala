@@ -54,7 +54,7 @@ class AntoxDBTest extends AndroidTestCase {
 
     val numChanges = 5
     var number = 0
-    db.messageListObservable(Some(key), actionMessages = true)
+    db.messageListObservable(Some(key))
       .subscribe(messages => {
       assertEquals(messages, ArrayBuffer.empty)
       println("GOT A MESSAGE CLLBACK")

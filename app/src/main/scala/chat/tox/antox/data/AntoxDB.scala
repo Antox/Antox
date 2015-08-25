@@ -310,8 +310,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def messageVisible(message: Message): Boolean =
     message.fileKind == FileKind.INVALID || message.fileKind.visible
 
-  def messageListObservable(key: Option[ToxKey], actionMessages: Boolean): Observable[ArrayBuffer[Message]] = {
-    val selectQuery: String = getMessageQuery(key, actionMessages)
+  def messageListObservable(key: Option[ToxKey]): Observable[ArrayBuffer[Message]] = {
+    val selectQuery: String = getMessageQuery(key)
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
       messageListFromCursor(query.run())
@@ -319,22 +319,19 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     })
   }
 
-  def getMessageList(key: Option[ToxKey], actionMessages: Boolean): ArrayBuffer[Message] = {
-    val selectQuery: String = getMessageQuery(key, actionMessages)
+  def getMessageList(key: Option[ToxKey]): ArrayBuffer[Message] = {
+    val selectQuery: String = getMessageQuery(key)
 
     messageListFromCursor(mDb.query(selectQuery))
       .filter(messageVisible)
   }
 
-  private def getMessageQuery(key: Option[ToxKey], actionMessages: Boolean): String = {
+  private def getMessageQuery(key: Option[ToxKey]): String = {
     key match {
       case Some(toxKey) =>
-        var act: String = null
-        act = getQueryTypes(actionMessages)
-
         s"""SELECT *
            |FROM $TABLE_MESSAGES
-           |WHERE $COLUMN_NAME_KEY = '$toxKey' $act
+           |WHERE $COLUMN_NAME_KEY = '$toxKey'
            |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
       case None =>
@@ -366,14 +363,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     messageList
   }
 
-  def getQueryTypes(actionMessages: Boolean): String = {
-    val condition = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.values.filterNot(_ == MessageType.ACTION).map(_.id), TABLE_MESSAGES)
-    if (actionMessages) "" else s"AND $condition"
-  }
-
-  def getMessageIds(key: Option[ToxKey], actionMessages: Boolean): mutable.Set[Integer] = {
+  def getMessageIds(key: Option[ToxKey]): mutable.Set[Integer] = {
     val idSet = new mutable.HashSet[Integer]()
-    val selectQuery = getMessageQuery(key, actionMessages)
+    val selectQuery = getMessageQuery(key)
     val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {

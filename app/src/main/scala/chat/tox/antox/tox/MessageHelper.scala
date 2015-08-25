@@ -1,20 +1,18 @@
 package chat.tox.antox.tox
 
-import java.util
-
 import android.app.{Notification, PendingIntent}
 import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
 import chat.tox.antox.R
-import chat.tox.antox.activities.{GroupChatActivity, ChatActivity, MainActivity}
+import chat.tox.antox.activities.{ChatActivity, GroupChatActivity, MainActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{MessageType, ToxKey}
 
-import scala.collection.JavaConverters._
+import scala.collection.mutable.ArrayBuffer
 
 object MessageHelper {
 
@@ -174,25 +172,27 @@ object MessageHelper {
 
   def splitMessage(msg: String): Array[String] = {
     var currSplitPos = 0
-    val result: util.ArrayList[String] = new util.ArrayList[String]()
+    // convert the string to bytes to handle multibyte languages
+    val message = msg.getBytes("UTF-8")
+    val result: ArrayBuffer[String] = new ArrayBuffer[String]()
 
-    while (msg.length - currSplitPos > Constants.MAX_MESSAGE_LENGTH) {
-      val str = msg.substring(currSplitPos, currSplitPos + Constants.MAX_MESSAGE_LENGTH)
-      val spacePos = str.lastIndexOf(' ')
+    while (message.length - currSplitPos > Constants.MAX_MESSAGE_LENGTH) {
+      var pos = currSplitPos + Constants.MAX_MESSAGE_LENGTH
 
-      if (spacePos <= 0) {
-        result.add(str)
-        currSplitPos += Constants.MAX_MESSAGE_LENGTH
-      } else {
-        result.add(str.substring(0, spacePos))
-        currSplitPos += spacePos + 1
+      // find the last whole unicode char
+      while ((message(pos) & 0xc0) == 0x80) {
+        pos -= 1
       }
+
+      val str = new String(message.slice(currSplitPos, pos))
+      result += str
+      currSplitPos = pos
     }
-    if (msg.length - currSplitPos > 0) {
-      result.add(msg.substring(currSplitPos))
+    if (message.length - currSplitPos > 0) {
+      result += new String(message.slice(currSplitPos, message.length))
     }
 
-    result.asScala.toArray
+    result.toArray
   }
 
   def sendUnsentMessages(ctx: Context) {

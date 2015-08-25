@@ -159,7 +159,7 @@ class AddFriendFragment extends Fragment with InputableID {
             m_key match {
               case Some(key) =>
                 val result = checkAndSend(key, _originalUsername)
-                if (result == 0) {
+                if (result) {
                   val update = new Intent(Constants.BROADCAST_ACTION)
                   update.putExtra("action", Constants.UPDATE)
                   LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)

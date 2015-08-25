@@ -2,9 +2,8 @@ package chat.tox.antox.activities
 
 import java.util
 
-import android.content.{Context, SharedPreferences}
+import android.content.Context
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
@@ -58,9 +57,10 @@ abstract class GenericChatActivity extends AppCompatActivity {
     activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
     Log.d(TAG, "key = " + activeKey)
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+
     val db = State.db
-    adapter = new ChatMessagesAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getMessageList)), db.getMessageIds(Some(activeKey), preferences.getBoolean("action_messages", false)))
+    adapter = new ChatMessagesAdapter(this,
+      new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -129,7 +129,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Reactive.chatActive.onNext(true)
     val db = State.db
     db.markIncomingMessagesRead(activeKey)
-    messagesSub = getMessageObservable
+    messagesSub = getActiveMessageObservable
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(messageList => {
       Log.d(TAG, "Messages updated")
@@ -198,16 +198,14 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
   }
 
-  def getMessageObservable: Observable[ArrayBuffer[Message]] = {
+  def getActiveMessageObservable: Observable[ArrayBuffer[Message]] = {
     val db = State.db
-    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    db.messageListObservable(Some(activeKey), preferences.getBoolean("action_messages", true))
+    db.messageListObservable(Some(activeKey))
   }
 
-  def getMessageList: ArrayBuffer[Message] = {
+  def getActiveMessageList: ArrayBuffer[Message] = {
     val db = State.db
-    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-    db.getMessageList(Some(activeKey), preferences.getBoolean("action_messages", true))
+    db.getMessageList(Some(activeKey))
   }
 
   override def onPause(): Unit = {

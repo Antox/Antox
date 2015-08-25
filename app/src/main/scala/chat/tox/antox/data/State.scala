@@ -51,7 +51,7 @@ object State {
   }
 
   def logout(activity: Activity): Unit = {
-    if (userDb(activity).getActiveUserDetails.loggingEnabled) {
+    if (!userDb(activity).getActiveUserDetails.loggingEnabled) {
       ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
     }
 

@@ -50,7 +50,8 @@ abstract class AbstractContactsFragment extends Fragment {
   override def onResume() {
     super.onResume()
     val db = State.db
-    contactChangeSub = db.contactListElements.observeOn(AndroidMainThreadScheduler())
+    contactChangeSub = db.contactListElements
+      .observeOn(AndroidMainThreadScheduler())
       .subscribe(updateContacts(_))
   }
 
@@ -236,7 +237,7 @@ abstract class AbstractContactsFragment extends Fragment {
       override def directorySelected(directory: File): Unit = {
         try {
           val db = State.db
-          val messageList: Seq[Message] = db.getMessageList(Some(key), actionMessages = true)
+          val messageList: Seq[Message] = db.getMessageList(Some(key))
           val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UiUtils.trimId(key) + "-log.txt"
 
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
