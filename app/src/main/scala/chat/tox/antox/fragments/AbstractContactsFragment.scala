@@ -93,7 +93,6 @@ abstract class AbstractContactsFragment extends Fragment {
       fab.setColor(getResources.getColor(R.color.fab_normal))
       fab.initBackground()
       fab.setImageResource(R.drawable.ic_action_new)
-      contactsListView.setOnTouchListener(new ShowHideOnScroll(fab))
     } else {
       rootView.findViewById(R.id.fab).setVisibility(View.GONE)
     }
