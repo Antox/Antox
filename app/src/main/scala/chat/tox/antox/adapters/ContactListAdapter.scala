@@ -133,12 +133,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         holder.icon.setBackgroundDrawable(drawable)
       }
       if (item.favorite) {
-        val drawable = context.getResources.getDrawable(R.drawable.ic_star_deep_purple_900_24dp)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-          holder.favorite.setBackground(drawable)
-        } else {
-          holder.favorite.setBackgroundDrawable(drawable)
-        }
         holder.favorite.setVisibility(View.VISIBLE)
       } else {
         holder.favorite.setVisibility(View.GONE)

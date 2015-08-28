@@ -88,7 +88,7 @@ object DatabaseConstants {
   def createSqlEqualsCondition(columnName: String, list: Iterable[_], tableName: String = ""): String = {
     val table = if (!tableName.isEmpty) tableName + "." else ""
 
-    "(" + list.slice(0, list.size - 1).map(i => s"$table$columnName == " + i.toString + " OR ").mkString + list.last + ")"
+    "(" + list.map(i => s"$table$columnName == " + i.toString).mkString(" OR ") + ")"
   }
 
   def contentValue(key: String, value: String): ContentValues = {

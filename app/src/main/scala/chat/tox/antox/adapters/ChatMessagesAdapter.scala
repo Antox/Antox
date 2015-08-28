@@ -86,7 +86,6 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
 
     val msg = getItem(position)
 
-    //FIXME
     val lastMsg: Option[Message] = messages.lift(position - 1)
     val nextMsg: Option[Message] = messages.lift(position + 1)
 
@@ -231,13 +230,13 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
           }
         }
         if (msg.received || msg.isMine) {
-          var file: File =
+          val file: File =
             if (msg.message.contains("/")) {
               new File(msg.message)
             } else {
-              file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+              val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 Constants.DOWNLOAD_DIRECTORY)
-              new File(file.getAbsolutePath + "/" + msg.message)
+              new File(f.getAbsolutePath + "/" + msg.message)
             }
 
           if (file.exists() && (msg.received || msg.isMine)) {

@@ -40,7 +40,7 @@ object FileKind extends Enum[FileKind] {
 
   case object INVALID extends FileKind {
     val kindId = -1
-    val visible = false
+    val visible = true
     val rawStorageDirectory: String = ""
     val autoAccept: Boolean = false
     val storageType: StorageType = StorageType.NONE

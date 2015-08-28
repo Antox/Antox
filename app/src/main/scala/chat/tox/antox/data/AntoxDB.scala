@@ -223,7 +223,6 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   val unreadCounts: Observable[Map[ToxKey, Integer]] = {
-    val map = scala.collection.mutable.Map.empty[ToxKey, Integer]
     val selectQuery =
       s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY, COUNT($TABLE_MESSAGES._id)
         |FROM $TABLE_MESSAGES
@@ -233,6 +232,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)} GROUP BY contacts.tox_key""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
+      val map = scala.collection.mutable.Map.empty[ToxKey, Integer]
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
@@ -445,8 +445,8 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def markIncomingMessagesRead(key: ToxKey) {
-    val where =
-      s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id))}"
+    val where = ""
+      //s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id))}"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
     Log.d("", "marked incoming messages as read")
   }
@@ -498,13 +498,13 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   val friendInfoList = friendList
     .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
-    .combineLatestWith(unreadCounts)((tup, uc) => {
+    .combineLatestWith(unreadCounts)((tup, unreadCountList) => {
     tup match {
       case (fl, lm) =>
         fl.map(f => {
           val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
-          val unreadCount: Option[Integer] = uc.get(f.key)
-          (lastMessageTup, unreadCount) match {
+          val maybeUnreadCount: Option[Integer] = unreadCountList.get(f.key)
+          (lastMessageTup, maybeUnreadCount) match {
             case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
               f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = unreadCount)
             case (Some((lastMessage, lastMessageTimestamp)), None) =>
