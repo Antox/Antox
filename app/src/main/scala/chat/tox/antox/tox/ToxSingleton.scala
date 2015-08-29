@@ -8,8 +8,9 @@ import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.util.Log
+import chat.tox.antox.R
 import chat.tox.antox.callbacks.CallbackListener
-import chat.tox.antox.data.{UserDB, AntoxDB, State}
+import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.tox4j.core.enums.ToxUserStatus
@@ -19,6 +20,8 @@ import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+
+import scala.io.Source
 
 object ToxSingleton {
 
@@ -132,7 +135,15 @@ object ToxSingleton {
               Log.e(TAG, "couldn't reach Nodefile URL")
           }
 
-          val json = JsonReader.readJsonFromFile(new File(ctx.getFilesDir, fileName))
+          val savedNodeFile = new File(ctx.getFilesDir, fileName)
+          if (!savedNodeFile.exists()) {
+            FileUtils.writePrivateFile(
+              fileName,
+              Source.fromInputStream(ctx.getResources.openRawResource(R.raw.nodefile)).mkString,
+              ctx)
+          }
+
+          val json = JsonReader.readJsonFromFile(savedNodeFile)
 
           println(json)
           subscriber.onNext(json)
