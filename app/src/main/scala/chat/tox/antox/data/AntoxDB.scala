@@ -247,6 +247,9 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     })
   }
 
+  def getUnreadCounts: Map[ToxKey, Integer] =
+    unreadCounts.toBlocking.first
+
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
     var id = -1
     val selectQuery =

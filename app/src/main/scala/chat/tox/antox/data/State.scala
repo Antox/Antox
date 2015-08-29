@@ -57,6 +57,7 @@ object State {
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
     preferences.edit().putString("active_user", "").commit()
+
     //workaround for contacts appearing offline when the DB is upgraded
     db.synchroniseWithTox(ToxSingleton.tox)
 

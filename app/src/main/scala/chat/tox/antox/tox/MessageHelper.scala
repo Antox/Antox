@@ -40,6 +40,7 @@ object MessageHelper {
       ToxSingleton.mNotificationManager.notify(0, mBuilder.build())
     }
   }
+
   def handleMessage(ctx: Context, friendNumber: Int, friendKey: ToxKey, message: String, messageType: MessageType): Unit = {
     val db = State.db
     val friendName = db.getContactNameOrAlias(friendKey)
@@ -50,29 +51,16 @@ object MessageHelper {
       db.addMessage(-1, friendKey, friendName, message, hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
-      val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-      if (preferences.getBoolean("notifications_enable_notifications", true) &&
-        preferences.getBoolean("notifications_new_message", true)) {
-        if (!chatActive) {
-          val mName = ToxSingleton.getAntoxFriend(friendKey).map(_.getName)
-          mName.foreach(name => {
-            val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
-              .setContentTitle(name)
-              .setContentText(message)
-              .setDefaults(Notification.DEFAULT_ALL)
-            val resultIntent = new Intent(ctx, classOf[ChatActivity])
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-            resultIntent.putExtra("key", friendKey.toString)
-            resultIntent.putExtra("name", name)
-            val stackBuilder = TaskStackBuilder.create(ctx)
-            stackBuilder.addParentStack(classOf[MainActivity])
-            stackBuilder.addNextIntent(resultIntent)
-            val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
-            mBuilder.setContentIntent(resultPendingIntent)
-            ToxSingleton.mNotificationManager.notify(friendNumber, mBuilder.build())
-          })
-        }
+      if (!chatActive) {
+        val unreadCount = db.getUnreadCounts(friendKey)
+        val notificationContent =
+          if (unreadCount > 1) {
+            ctx.getResources.getString(R.string.unread_count, unreadCount.toString)
+          } else {
+            message
+          }
+
+        createMessageNotification(ctx, classOf[ChatActivity], friendNumber, friendKey, friendName, notificationContent)
       }
     }
 
@@ -81,33 +69,39 @@ object MessageHelper {
   def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType): Unit = {
     val db = State.db
     val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
+    val groupName = ToxSingleton.getGroup(groupNumber).name
 
     val chatActive = State.chatActive && State.activeKey.contains(groupKey)
 
     db.addMessage(-1, groupKey, peerName, message, hasBeenReceived = true,
       hasBeenRead = chatActive, successfullySent = true, messageType)
 
+    if (!chatActive) {
+      createMessageNotification(ctx, classOf[GroupChatActivity], groupNumber, groupKey, groupName, message)
+    }
+  }
+
+  def createMessageNotification(ctx: Context, intentClass: Class[_], number: Int, key: ToxKey, name: String, content: String): Unit = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
     val notificationsEnabled = preferences.getBoolean("notifications_enable_notifications", true) &&
-                               preferences.getBoolean("notifications_new_message", true)
+      preferences.getBoolean("notifications_new_message", true)
 
-    if (!chatActive && notificationsEnabled) {
-      val groupName = ToxSingleton.getGroup(groupNumber).name
+    if (notificationsEnabled) {
       val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
-        .setContentTitle(groupName)
-        .setContentText(message)
+        .setContentTitle(name)
+        .setContentText(content)
         .setDefaults(Notification.DEFAULT_ALL)
-      val resultIntent = new Intent(ctx, classOf[GroupChatActivity])
+      val resultIntent = new Intent(ctx, intentClass)
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-      resultIntent.putExtra("key", groupKey.toString)
-      resultIntent.putExtra("name", groupName)
+      resultIntent.putExtra("key", key.toString)
+      resultIntent.putExtra("name", name)
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])
       stackBuilder.addNextIntent(resultIntent)
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
       mBuilder.setContentIntent(resultPendingIntent)
-      ToxSingleton.mNotificationManager.notify(groupNumber, mBuilder.build())
+      ToxSingleton.mNotificationManager.notify(number, mBuilder.build())
     }
   }
 
