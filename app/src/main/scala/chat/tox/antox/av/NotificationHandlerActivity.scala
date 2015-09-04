@@ -2,6 +2,7 @@ package chat.tox.antox.av
 
 import android.app.Activity
 import android.content.{BroadcastReceiver, Context, Intent, IntentFilter}
+import chat.tox.antox.utils.Constants
 
 class NotificationHandlerActivity extends Activity {
 

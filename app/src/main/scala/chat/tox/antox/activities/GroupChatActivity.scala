@@ -3,6 +3,7 @@ package chat.tox.antox.activities
 import android.content.{Context, Intent}
 import android.os.Bundle
 import android.view.View
+import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.wrapper._

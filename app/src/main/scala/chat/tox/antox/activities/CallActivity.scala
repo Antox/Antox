@@ -12,9 +12,14 @@ import android.util.TypedValue
 import android.view.View.OnClickListener
 import android.view.{View, WindowManager}
 import android.widget.{LinearLayout, TextView}
-import chat.tox.antox.av.OngoingCallNotification
+import chat.tox.antox.R
+import chat.tox.antox.av.{Call, OngoingCallNotification}
+import chat.tox.antox.data.State
+import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.{BitmapManager, RxAndroid}
+import chat.tox.antox.wrapper.{FriendInfo, ToxKey}
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.antox.utils.RxAndroid
+import im.tox.tox4j.av.enums.ToxavFriendCallState
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
@@ -162,7 +167,7 @@ class CallActivity extends Activity {
     compositeSubscription +=
       call.friendStateSubject
         .subscribe(callState => {
-        if (callState.contains(ToxCallState.FINISHED)) {
+        if (callState.contains(ToxavFriendCallState.FINISHED)) {
           endCall()
         }
       })
@@ -194,7 +199,7 @@ class CallActivity extends Activity {
 
     // update displayed friend info on change
     compositeSubscription +=
-      Reactive.friendInfoList
+      State.db.friendInfoList
         .subscribeOn(IOScheduler())
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
@@ -213,7 +218,7 @@ class CallActivity extends Activity {
       })
   }
 
-  private def updateDisplayedState(fi: Array[FriendInfo]): Unit = {
+  private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
     val key = activeKey
     val mFriend: Option[FriendInfo] = fi.find(f => f.key == key)
 

@@ -101,7 +101,7 @@
                 android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity
-            android:name="im.tox.antox.activities.CallActivity"
+            android:name=".activities.CallActivity"
             android:label="@string/title_activity_friend_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data

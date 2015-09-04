@@ -3,7 +3,11 @@ package chat.tox.antox.av
 import android.app.{Notification, PendingIntent}
 import android.content.{Context, Intent}
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
-import im.tox.antox.activities.CallActivity
+import chat.tox.antox.R
+import chat.tox.antox.activities.{MainActivity, CallActivity}
+import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.Constants
+import chat.tox.antox.wrapper.Friend
 
 class OngoingCallNotification(context: Context, friend: Friend, call: Call) {
 

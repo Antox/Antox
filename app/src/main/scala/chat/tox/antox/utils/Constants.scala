@@ -6,9 +6,13 @@ object Constants {
 
   val STOP_TOX = "chat.tox.antox.STOP_TOX"
 
+  val END_CALL = "chat.tox.antox.END_CALL"
+
   val BROADCAST_ACTION = "chat.tox.antox.BROADCAST"
 
   val SWITCH_TO_FRIEND = "chat.tox.antox.SWITCH_TO_FRIEND"
+
+  val SWITCH_TO_CALL = "chat.tox.antox.SWITCH_TO_CALL"
 
   val UPDATE = "chat.tox.antox.UPDATE"
 

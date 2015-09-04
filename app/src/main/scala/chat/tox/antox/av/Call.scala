@@ -2,15 +2,14 @@ package chat.tox.antox.av
 
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.AudioCapture
-import im.tox.tox4j.av.enums.{ToxCallControl, ToxCallState}
+import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.impl.jni.ToxCryptoImpl
 import rx.lang.scala.subjects.BehaviorSubject
 
 class Call(val friendNumber: Int) {
 
-  private var friendState: Set[ToxCallState] = Set()
-  val friendStateSubject = BehaviorSubject[Set[ToxCallState]](friendState)
+  private var friendState: Set[ToxavFriendCallState] = Set()
+  val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](friendState)
 
   private var selfState = SelfCallState.DEFAULT
 
@@ -25,7 +24,7 @@ class Call(val friendNumber: Int) {
   var startTime: Long = 0
   def duration = System.currentTimeMillis() - startTime //in milliseconds
 
-  def active = !friendState.contains(ToxCallState.FINISHED)
+  def active = !friendState.contains(ToxavFriendCallState.FINISHED)
   def onHold = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture(sampleRate, channels)
@@ -58,7 +57,7 @@ class Call(val friendNumber: Int) {
     selfState = selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo)
   }
 
-  def updateFriendState(state: Set[ToxCallState]): Unit = {
+  def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {
     friendState = state
     friendStateSubject.onNext(friendState)
   }
@@ -99,7 +98,7 @@ class Call(val friendNumber: Int) {
 
   def muteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = true)
-    ToxSingleton.toxAv.audioBitRateSet(friendNumber, 0, force = true)
+    ToxSingleton.toxAv.setAudioBitRate(friendNumber, 0, force = true)
     audioCapture.stop()
   }
 
@@ -118,25 +117,25 @@ class Call(val friendNumber: Int) {
   }
 
   def muteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.MUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.MUTE_AUDIO)
   }
 
   def unmuteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.UNMUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.UNMUTE_AUDIO)
   }
 
   def hideFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.HIDE_VIDEO)
+    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.HIDE_VIDEO)
   }
 
   def showFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.SHOW_VIDEO)
+    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.SHOW_VIDEO)
   }
 
   def end(error: Boolean = false): Unit = {
     // only send a call control if the call wasn't ended unexpectedly
     if (!error) {
-      ToxSingleton.toxAv.callControl(friendNumber, ToxCallControl.CANCEL)
+      ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.CANCEL)
     }
 
     audioCapture.stop()

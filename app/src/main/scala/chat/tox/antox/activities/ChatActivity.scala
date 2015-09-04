@@ -14,7 +14,6 @@ import android.util.Log
 import android.view.View
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.activities.GenericChatActivity
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
