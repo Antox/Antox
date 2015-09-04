@@ -28,6 +28,7 @@
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - You should not see this</string>
     <string name="pref_title_logging_enabled">Keep Chat History on Logout</string>
+    <string name="pref_title_theme_color">Change Theme Color</string>
     <string name="pref_title_avatar">Avatar</string>
     <string name="pref_title_account_name">Profile Name</string>
     <string name="pref_title_export">Export Profile</string>
@@ -84,7 +85,7 @@
         <item>sr</item>
         <item>uk</item>
         <item>pt</item>
-        <item>cn</item>
+        <item>zh_CN</item>
     </string-array>
 
     <!-- Menu strings -->

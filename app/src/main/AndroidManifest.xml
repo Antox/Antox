@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="im.tox.antoxnightly"
+    package="chat.tox.antox"
     android:versionCode="47"
     android:versionName="0.23" >
 
@@ -37,24 +37,24 @@
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/AntoxTheme" >
         <service
-            android:name="im.tox.antox.tox.ToxService"
+            android:name="chat.tox.antox.tox.ToxService"
             android:exported="false"
             android:label="Antox" />
 
-        <receiver android:name="im.tox.antox.utils.BootReceiver">
+        <receiver android:name="chat.tox.antox.utils.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="im.tox.antox.activities.MainActivity"
+            android:name="chat.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AntoxTheme.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
-            android:name="im.tox.antox.activities.LoginActivity"
+            android:name="chat.tox.antox.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" >
@@ -64,23 +64,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="im.tox.antox.activities.ChatActivity"
+            android:name=".activities.ChatActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
-        <activity android:name="im.tox.antox.activities.GroupChatActivity" >
+        <activity android:name="chat.tox.antox.activities.GroupChatActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity
-            android:name="im.tox.antox.activities.AddActivity"
+            android:name="chat.tox.antox.activities.AddActivity"
             android:label="@string/title_activity_add" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
 
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
@@ -93,12 +93,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="im.tox.antox.activities.FriendProfileActivity"
+            android:name=".activities.FriendProfileActivity"
             android:label="@string/title_activity_friend_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.MainActivity" />
+                android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="im.tox.antox.activities.CallActivity"
@@ -110,16 +110,16 @@
         </activity>
 
         <activity
-            android:name="im.tox.antox.activities.GroupProfileActivity"
+            android:name="chat.tox.antox.activities.GroupProfileActivity"
             android:label="@string/title_activity_group_profile"
             android:windowSoftInputMode="stateAlwaysHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="im.tox.antox.activities.GroupChatActivity" />
+                android:value="chat.tox.antox.activities.GroupChatActivity" />
         </activity>
 
         <receiver
-            android:name="im.tox.antox.utils.ConnectionManager"
+            android:name=".utils.ConnectionManager"
             android:label="NetworkConnection" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -127,17 +127,17 @@
         </receiver>
 
         <activity
-            android:name="im.tox.antox.activities.CreateAccountActivity"
+            android:name="chat.tox.antox.activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:screenOrientation="portrait" />
         <activity
-            android:name="im.tox.antox.activities.ProfileSettingsActivity"
+            android:name="chat.tox.antox.activities.ProfileSettingsActivity"
             android:label="@string/title_activity_profile_settings" />
         <activity
-            android:name="im.tox.antox.activities.AboutActivity"
+            android:name="chat.tox.antox.activities.AboutActivity"
             android:label="@string/about" />
         <activity
-            android:name="im.tox.antox.activities.SettingsActivity"
+            android:name="chat.tox.antox.activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
     </application>
 

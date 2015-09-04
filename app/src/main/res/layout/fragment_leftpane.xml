@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/AntoxTheme.ActionBar"/>
 
-    <fragment android:name="im.tox.antox.fragments.WifiWarningFragment"
+    <fragment android:name="chat.tox.antox.fragments.WifiWarningFragment"
         android:id="@+id/wifi_warning_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"

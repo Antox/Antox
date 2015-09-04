@@ -2,13 +2,16 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="8dip">
+    android:layout_height="match_parent" android:padding="8dip"
+    android:theme="@style/AntoxTheme">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/friend_action_delete_friend_confirmation"
         android:id="@+id/textView"
+        android:textColor="@color/black"
         android:layout_gravity="start|center"
         android:layout_marginLeft="7dip"
         android:layout_marginStart="7dip"

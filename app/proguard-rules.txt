@@ -9,10 +9,12 @@ public protected *;
 -dontoptimize
 -dontpreverify
 -dontwarn **
+-ignorewarnings
 -dontnote javax.xml.**
 -dontnote org.w3c.dom.**
 -dontnote org.xml.sax.**
 -dontnote scala.Enumeration
+-keep class chat.tox.** { *; }
 -keep class im.tox.** { *; }
 -keep public class scala.Option
 -keep public class scala.Function0
@@ -35,6 +37,7 @@ public protected *;
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
+-keep class rx.** { *; }
 # -keep public class com.android.vending.licensing.ILicensingService
 -keepclasseswithmembernames class * {
 native <methods>;
@@ -54,6 +57,9 @@ public static ** valueOf(java.lang.String);
 }
 -keep class * implements android.os.Parcelable {
 public static final android.os.Parcelable$Creator *;
+}
+-keep public class chat.tox.** {
+public protected *;
 }
 -keep public class im.tox.** {
 public protected *;

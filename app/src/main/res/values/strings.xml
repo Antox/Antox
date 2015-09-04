@@ -23,6 +23,7 @@
     <string name="create_name_hint">Profile Name</string>
     <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
+    <string name="create_registering">Registering account…</string>
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_import_profile">Import Profile</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
@@ -35,6 +36,7 @@
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
+    <string name="create_account_invalid_domain">Invalid toxdns domain supplied.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
@@ -114,6 +116,7 @@
     <string name="friend_action_export_chat">Export Chat Logs</string>
     <string name="friend_action_delete_chat">Delete Chat Logs</string>
     <string name="friend_action_block">Block</string>
+    <string name="friend_accepted_default_status">Friend Accepted</string>
     <string name="group_default_peer_name">Anonymous</string>
     <string name="group_action_delete">Leave Group</string>
     <string name="contacts_actions_on">Actions on</string>
@@ -155,6 +158,9 @@
 
     <!-- Group Chat Delete -->
     <string name="group_default_part_message">Goodbye</string>
+
+    <!-- Color Picker Dialog -->
+    <string name="dialog_color_picker_title">Select theme color</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
@@ -215,6 +221,9 @@
     <string name="qr_button_yes">Yes</string>
     <string name="qr_button_no">No</string>
 
+    <!-- Notifications -->
+    <string name="unread_count">%s Unread Messages</string>
+
     <!-- nav bar -->
     <string name="n_settings">Settings</string>
     <string name="n_profile_options">Profile</string>
@@ -226,7 +235,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
-    <string name="license1">Distributed under the GNU GPL v3.</string>
+    <string name="license1">Distributed under the GNU GPL v3. Created by Mark Winter, maintained by subliun and others.</string>
     <string name="license2">Source code is available at\nhttps://github.com/subliun/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>

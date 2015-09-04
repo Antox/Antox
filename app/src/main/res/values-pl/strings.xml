@@ -1,8 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
 
-    <string name="app_name" translatable="false">Antox</string>
-
     <!--Activity titles-->
     <string name="title_activity_add">Dodaj znajomego</string>
     <string name="title_activity_friend_profile">Profil znajomego</string>

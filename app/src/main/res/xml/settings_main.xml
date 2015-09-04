@@ -31,20 +31,22 @@
             android:defaultValue="-1"
             android:entries="@array/pref_language_list_titles"
             android:entryValues="@array/pref_language_list_values"
-            android:key="language"
+            android:key="locale"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null"
             android:title="@string/pref_title_language" />
+
+        <Preference
+            android:defaultValue="@color/brand_primary"
+            android:editable="false"
+            android:key="theme_color"
+            android:singleLine="true"
+            android:title="@string/pref_title_theme_color" />
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="wifi_only"
             android:title="@string/pref_title_wifi_only" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="action_messages"
-            android:title="@string/pref_title_connection_status_messages" />
 
         <CheckBoxPreference
             android:defaultValue="false"

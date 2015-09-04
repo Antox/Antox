@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:gravity="center_horizontal"
     android:layout_gravity="center_horizontal"
-    tools:context="im.tox.antox.CallActivity">
+    tools:context="chat.tox.antox.CallActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"

@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <fragment android:id="@+id/fragment_leftpane"
-            android:name="im.tox.antox.fragments.LeftPaneFragment"
+            android:name="chat.tox.antox.fragments.LeftPaneFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_pane" />
