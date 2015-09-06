@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import chat.tox.antox.activities.LoginActivity
-import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.transfer.FileTransferManager
 import chat.tox.antox.wrapper.ToxKey
@@ -17,7 +16,6 @@ object State {
   private var _activeKey: Option[ToxKey] = None
 
   val transfers: FileTransferManager = new FileTransferManager()
-  val calls: CallManager = new CallManager()
 
   var db: AntoxDB = _
   private var _userDb: Option[UserDB] = None
@@ -52,7 +50,7 @@ object State {
 
   def logout(activity: Activity): Unit = {
     if (!userDb(activity).getActiveUserDetails.loggingEnabled) {
-      ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
+      ToxSingleton.getAntoxFriendList.all.foreach(f => db.deleteChatLogs(f.key))
     }
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity)

@@ -284,6 +284,8 @@ class CallActivity extends Activity {
   }
 
   override def onPause(): Unit = {
+    super.onPause()
+
     maybeWakeLock.foreach(wakeLock => {
       if (wakeLock.isHeld) {
         wakeLock.release()

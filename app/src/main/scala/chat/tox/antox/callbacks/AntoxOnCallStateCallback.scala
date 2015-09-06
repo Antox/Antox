@@ -6,11 +6,11 @@ import android.content.Context
 import android.util.Log
 import chat.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.av.callbacks.CallStateCallback
-import im.tox.tox4j.av.enums.{ToxavFriendCallState, ToxavCallControl}
+import im.tox.tox4j.av.enums.ToxavFriendCallState
 
 import scala.collection.JavaConversions._
 
-class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallback {
+class AntoxOnCallStateCallback(private var ctx: Context) extends CallStateCallback[Unit] {
 
   override def callState(friendNumber: Int, collectionState: util.Collection[ToxavFriendCallState])(state: Unit): Unit = {
     Log.d("OnAvCallbackCallback", "Received a callback from: " + friendNumber)

@@ -22,10 +22,10 @@ class Call(val friendNumber: Int) {
   var incoming = false
 
   var startTime: Long = 0
-  def duration = System.currentTimeMillis() - startTime //in milliseconds
+  def duration: Long = System.currentTimeMillis() - startTime //in milliseconds
 
-  def active = !friendState.contains(ToxavFriendCallState.FINISHED)
-  def onHold = friendState.isEmpty
+  def active: Boolean = !friendState.contains(ToxavFriendCallState.FINISHED)
+  def onHold: Boolean = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture(sampleRate, channels)
   val audioPlayer = new AudioPlayer(sampleRate, channels)
@@ -73,9 +73,9 @@ class Call(val friendNumber: Int) {
           val start = System.nanoTime()
           if (selfState.sendingAudio) {
             try {
-              ToxSingleton.toxAv.audioSendFrame(friendNumber,
-                audioCapture.readAudio(frameSize, channels),
-                frameSize, channels, sampleRate)
+           //   ToxSingleton.toxAv.audioSendFrame(friendNumber,
+           //     audioCapture.readAudio(frameSize, channels),
+           //     frameSize, channels, sampleRate)
             } catch {
               case e: ToxException[_] =>
                 end(error = true)

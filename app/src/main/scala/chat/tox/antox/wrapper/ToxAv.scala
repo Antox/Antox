@@ -1,11 +1,15 @@
 package chat.tox.antox.wrapper
 
+import chat.tox.antox.av.Call
+import chat.tox.antox.tox.{ToxSingleton, Intervals}
 import im.tox.tox4j.av.callbacks._
 import im.tox.tox4j.impl.jni.{ToxAvImpl, ToxCoreImpl}
 
-class ToxAv(core: ToxCoreImpl) extends Intervals {
+import scala.collection.JavaConversions._
 
-  val toxAv: ToxAvImpl = new ToxAvImpl(core)
+class ToxAv(core: ToxCoreImpl[Unit]) extends Intervals {
+
+  val toxAv = new ToxAvImpl[Unit](core)
 
   def close(): Unit = toxAv.close()
 
@@ -13,9 +17,9 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   override def interval: Int = toxAv.iterationInterval / 4
 
-  def activeCall = ToxSingleton.getAntoxFriendList.all.find(p => p.call.active)
+  def activeCall: Option[Call] = ToxSingleton.getAntoxFriendList.all.find(p => p.call.active).map(_.call)
 
-  def onHoldCall = ToxSingleton.getAntoxFriendList.all.find(p => p.call.onHold)
+  def onHoldCall: Option[Call] = ToxSingleton.getAntoxFriendList.all.find(p => p.call.onHold).map(_.call)
 
   def answer(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.answer(friendNumber, audioBitRate, videoBitRate)
@@ -23,39 +27,19 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
   def call(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.call(friendNumber, audioBitRate, videoBitRate)
 
-  def callback(handler: ToxAvEventListener): Unit = toxAv.callback(handler)
-
-  def callbackCall(callback: CallCallback): Unit = toxAv.callbackCall(callback)
-
-  def callbackReceiveAudioFrame(callback: AudioReceiveFrameCallback): Unit =
-    toxAv.callbackAudioReceiveFrame(callback)
-
-  def callbackReceiveVideoFrame(callback: VideoReceiveFrameCallback): Unit =
-    toxAv.callbackVideoReceiveFrame(callback)
-
-  def callControl(friendNumber: Int, control: ToxCallControl): Unit =
-    toxAv.callControl(friendNumber, control)
+  def callback(handler: ToxAvEventListener[Unit]): Unit = toxAv.callback(handler)
 
   def audioSendFrame(friendNumber: Int, pcm: Array[Short], sampleCount: Int,
                      channels: Int, samplingRate: Int): Unit =
     toxAv.audioSendFrame(friendNumber, pcm, sampleCount, channels, samplingRate)
 
   def videoSendFrame(friendNumber: Int, width: Int, height: Int, y: Array[Byte],
-                     u: Array[Byte], v: Array[Byte], a: Array[Byte]): Unit =
-    toxAv.videoSendFrame(friendNumber, width, height, y, u, v, a)
+                     u: Array[Byte], v: Array[Byte]): Unit =
+    toxAv.videoSendFrame(friendNumber, width, height, y, u, v)
 
   def audioBitRateSet(friendNumber: Int, bitRate: Int, force: Boolean): Unit =
-    toxAv.audioBitRateSet(friendNumber, bitRate, force)
+    toxAv.setAudioBitRate(friendNumber, bitRate, force)
 
   def videoBitRateSet(friendNumber: Int, bitRate: Int, force: Boolean): Unit =
-    toxAv.videoBitRateSet(friendNumber, bitRate, force)
-
-  def callbackCallState(callback: CallStateCallback): Unit =
-    toxAv.callbackCallState(callback)
-
-  def callbackVideoBitRateStatus(callback: VideoBitRateStatusCallback): Unit =
-    toxAv.callbackVideoBitRateStatus(callback)
-
-  def callbackAudioBitRateStatus(callback: AudioBitRateStatusCallback): Unit =
-    toxAv.callbackAudioBitRateStatus(callback)
+    toxAv.setVideoBitRate(friendNumber, bitRate, force)
 }

@@ -4,7 +4,7 @@ import android.content.Context
 import im.tox.tox4j.core.callbacks.ToxEventListener
 import im.tox.tox4j.core.enums.{ToxConnection, ToxFileControl, ToxMessageType, ToxUserStatus}
 
-class CallbackListener(ctx: Context) extends ToxEventListener[Unit] {
+class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {
   val selfConnectionStatusCallback = new AntoxOnSelfConnectionStatusCallback(ctx)
   val messageCallback = new AntoxOnMessageCallback(ctx)
   val friendRequestCallback = new AntoxOnFriendRequestCallback(ctx)

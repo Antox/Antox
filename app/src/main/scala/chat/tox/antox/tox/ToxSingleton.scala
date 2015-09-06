@@ -9,7 +9,7 @@ import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.R
-import chat.tox.antox.callbacks.CallbackListener
+import chat.tox.antox.callbacks.{ToxavCallbackListener, ToxCallbackListener}
 import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
@@ -237,7 +237,7 @@ object ToxSingleton {
       case e: ToxException[_] => e.printStackTrace()
     }
 
-    //toxAv = new ToxAvImpl(tox.getTox)
+    toxAv = new ToxAvImpl[Unit](tox.getTox)
 
     db.setAllOffline()
 
@@ -279,7 +279,8 @@ object ToxSingleton {
 
 
   def registerCallbacks(ctx: Context): Unit = {
-    tox.callback(new CallbackListener(ctx))
+    tox.callback(new ToxCallbackListener(ctx))
+    toxAv.callback(new ToxavCallbackListener(ctx))
   }
 
   def save(): Unit = {

@@ -6,11 +6,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
-import chat.tox.antox.activities.{ChatActivity, CallActivity}
-import chat.tox.antox.callbacks.AntoxOnCallCallback
-import chat.tox.antox.wrapper.Friend
-import rx.Observer
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class ToxService extends Service() {
 
@@ -55,7 +50,6 @@ class ToxService extends Service() {
       override def run(): Unit = {
         while (keepRunning) {
           ToxSingleton.toxAv.iterate()
-          Thread.sleep(0)
         }
       }
     }).start()

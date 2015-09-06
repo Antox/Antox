@@ -2,12 +2,13 @@ package chat.tox.antox.callbacks
 
 import android.content.{Context, Intent}
 import chat.tox.antox.activities.CallActivity
+import chat.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.av.callbacks.CallCallback
 
-class AntoxOnCallCallback(private var ctx: Context) extends CallCallback {
+class AntoxOnCallCallback(private var ctx: Context) extends CallCallback[Unit] {
 
 
-  override def call(friendNumber: Int, audioEnabled: Boolean, videoEnabled: Boolean): Unit = {
+  override def call(friendNumber: Int, audioEnabled: Boolean, videoEnabled: Boolean)(state: Unit): Unit = {
     val friend = ToxSingleton.getAntoxFriend(friendNumber).get
     friend.call.onIncoming(audioEnabled, videoEnabled)
 
