@@ -116,7 +116,7 @@
   <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
   <string name="open_source_license">オープンソースライセンス</string>
   <string name="license1">GNU GPL v3の下で配布されています</string>
-  <string name="license2">ソースコードは以下より取得できます\nhttps://github.com/Astonex/Antox</string>
+  <string name="license2">ソースコードは以下より取得できます\nhttps://github.com/subliun/Antox</string>
   <string name="ver">バージョン</string>
   <string name="about">Antoxについて</string>
   <string name="about_antox_1">政府による監視が広がる中、Toxは盗み聞きされずに友達や家族と通信できる、誰にでも使えるアプリを提供します。</string>
