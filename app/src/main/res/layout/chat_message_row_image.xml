@@ -5,13 +5,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:gravity="end|right"
+    android:background="@color/white_absolute"
     android:padding="@dimen/padding_small">
 
     <LinearLayout
         android:id="@+id/message_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|right"
         android:orientation="horizontal">
 
         <View
@@ -53,7 +54,6 @@
         android:id="@+id/message_text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end|right"
         android:paddingEnd="@dimen/padding"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/padding"

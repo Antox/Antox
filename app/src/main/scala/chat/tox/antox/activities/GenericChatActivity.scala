@@ -70,19 +70,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     layoutManager.setStackFromEnd(true)
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
-    //chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
     chatListView.setAdapter(adapter)
-/*    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-      override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
-        scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-      }
-
-      override def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-
-      }
-
-    })*/
 
     val b = this.findViewById(R.id.sendMessageButton)
     b.setOnClickListener(new View.OnClickListener() {
@@ -143,20 +131,20 @@ abstract class GenericChatActivity extends AppCompatActivity {
     for (message <- messageList) {
       adapter.add(message)
     }
-    adapter.notifyDataSetChanged()
+    //chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     Log.d(TAG, "changing chat list cursor")
   }
 
-/*
-  private def updateProgress() {
-    val start = layoutManager.findFirstVisibleItemPosition()
-    val end = layoutManager.findLastVisibleItemPosition()
-    for (i <- start to end) {
-      val view = chatListView.getChildAt(i - start)
-      chatListView.getAdapter.getView(i, view, chatListView)
+  /*
+    private def updateProgress() {
+      val start = layoutManager.findFirstVisibleItemPosition()
+      val end = layoutManager.findLastVisibleItemPosition()
+      for (i <- start to end) {
+        val view = chatListView.getChildAt(i - start)
+        chatListView.getAdapter.getView(i, view, chatListView)
+      }
     }
-  }
-*/
+  */
 
   def validateMessageBox(): Option[String] = {
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {

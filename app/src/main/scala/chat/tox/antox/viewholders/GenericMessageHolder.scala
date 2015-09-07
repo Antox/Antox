@@ -3,8 +3,8 @@ package chat.tox.antox.viewholders
 import android.app.AlertDialog
 import android.content.{ClipData, ClipboardManager, Context, DialogInterface}
 import android.support.v7.widget.RecyclerView
-import android.view.{Gravity, View}
 import android.view.View.OnLongClickListener
+import android.view.{Gravity, View}
 import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -18,7 +18,9 @@ abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder
 
   protected val background = v.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
 
-  protected val time: TextView = v.findViewById(R.id.message_text_date).asInstanceOf[TextView]
+  protected val row = v.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
+
+  protected var time: TextView = v.findViewById(R.id.message_text_date).asInstanceOf[TextView]
 
   protected val sentTriangle = v.findViewById(R.id.sent_triangle)
 
@@ -39,16 +41,16 @@ abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder
   def ownMessage() {
     val context = v.getContext
     sentTriangle.setVisibility(View.VISIBLE)
-    time.setGravity(Gravity.RIGHT)
-    bubble.setGravity(Gravity.RIGHT)
+    receivedTriangle.setVisibility(View.GONE)
+    row.setGravity(Gravity.RIGHT)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
   }
 
   def contactMessage() {
     val context = v.getContext
     receivedTriangle.setVisibility(View.VISIBLE)
-    time.setGravity(Gravity.LEFT)
-    bubble.setGravity(Gravity.LEFT)
+    sentTriangle.setVisibility(View.GONE)
+    row.setGravity(Gravity.LEFT)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
   }
 
