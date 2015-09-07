@@ -1,17 +1,16 @@
 package chat.tox.antox.activities
 
-import java.util
-
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
 import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.adapters.ChatMessagesAdapter
+import chat.tox.antox.adapters.MessageAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
@@ -20,26 +19,24 @@ import chat.tox.antox.wrapper.{Message, ToxKey}
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
-import scala.collection.JavaConversions
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.duration._
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "ChatActivity"
   //var ARG_CONTACT_NUMBER: String = "contact_number"
-  var adapter: ChatMessagesAdapter = null
+  var adapter: MessageAdapter = null
   var messageBox: EditText = null
   var isTypingBox: TextView = null
   var statusTextBox: TextView = null
-  var chatListView: ListView = null
+  var chatListView: RecyclerView = null
   var displayNameView: TextView = null
   var statusIconView: View = null
   var avatarActionView: View = null
   var messagesSub: Subscription = null
-  var progressSub: Subscription = null
   var titleSub: Subscription = null
   var activeKey: ToxKey = null
   var scrolling: Boolean = false
+  val layoutManager = new LinearLayoutManager(this)
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
@@ -59,8 +56,8 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Log.d(TAG, "key = " + activeKey)
 
     val db = State.db
-    adapter = new ChatMessagesAdapter(this,
-      new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
+    adapter = new MessageAdapter()
+
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -69,11 +66,13 @@ abstract class GenericChatActivity extends AppCompatActivity {
         thisActivity.finish()
       }
     })
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-    chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
-    chatListView.setStackFromBottom(true)
+
+    layoutManager.setStackFromEnd(true)
+    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
+    chatListView.setLayoutManager(layoutManager)
+    //chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
     chatListView.setAdapter(adapter)
-    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+/*    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
       override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
         scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
@@ -83,7 +82,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
       }
 
-    })
+    })*/
 
     val b = this.findViewById(R.id.sendMessageButton)
     b.setOnClickListener(new View.OnClickListener() {
@@ -135,19 +134,11 @@ abstract class GenericChatActivity extends AppCompatActivity {
       Log.d(TAG, "Messages updated")
       updateChat(messageList)
     })
-    progressSub = Observable.interval(500 milliseconds)
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(x => {
-      if (!scrolling) {
-        updateProgress()
-      }
-    })
   }
 
   def updateChat(messageList: Seq[Message]): Unit = {
     //FIXME make this more efficient
-    adapter.setNotifyOnChange(false)
-    adapter.clear()
+    adapter.removeAll()
     //add all is not available on api 10
     for (message <- messageList) {
       adapter.add(message)
@@ -156,14 +147,16 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Log.d(TAG, "changing chat list cursor")
   }
 
+/*
   private def updateProgress() {
-    val start = chatListView.getFirstVisiblePosition
-    val end = chatListView.getLastVisiblePosition
+    val start = layoutManager.findFirstVisibleItemPosition()
+    val end = layoutManager.findLastVisibleItemPosition()
     for (i <- start to end) {
       val view = chatListView.getChildAt(i - start)
       chatListView.getAdapter.getView(i, view, chatListView)
     }
   }
+*/
 
   def validateMessageBox(): Option[String] = {
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
@@ -213,7 +206,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Reactive.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
-    progressSub.unsubscribe()
   }
 
   //Abstract Methods

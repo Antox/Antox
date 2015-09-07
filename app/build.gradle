@@ -68,9 +68,10 @@ dependencies {
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile files('libs/tox4j_2.11.jar')
     compile 'org.scala-lang:scala-library:2.11.7'
+    compile 'org.scaloid:scaloid_2.11:3.6.1-10'
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:design:22.2.0'
-    compile 'org.scaloid:scaloid_2.11:3.6.1-10'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:gridlayout-v7:22.2.0'
     compile 'com.shamanland:fab:0.0.8'
@@ -81,7 +82,6 @@ dependencies {
     compile 'com.jpardogo.materialtabstrip:library:1.0.3'
     compile 'com.balysv:material-ripple:1.0.2'
     compile 'com.afollestad:material-dialogs:0.7.3.0'
-    compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
     compile 'com.squareup.sqlbrite:sqlbrite:0.2.1'

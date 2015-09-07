@@ -8,17 +8,18 @@
 
     <LinearLayout
         android:id="@+id/message_text_layout"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:layout_marginRight="@dimen/margin_small"
-        android:layout_marginTop="@dimen/margin_small"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_small"
+        android:paddingRight="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small">
 
         <LinearLayout
             android:id="@+id/message_bubble"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -32,7 +33,7 @@
 
             <LinearLayout
                 android:id="@+id/message_background_wrapper"
-                android:layout_width="288dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -86,7 +87,7 @@
 
                     <FrameLayout
                         android:id="@+id/message_sent_photo_frame"
-                        android:layout_width="200dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:visibility="gone">
 
@@ -166,13 +167,13 @@
 
         <TextView
             android:id="@+id/message_text_date"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginEnd="12dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginStart="13dp"
+            android:paddingEnd="@dimen/padding"
+            android:paddingLeft="@dimen/padding"
+            android:paddingRight="@dimen/padding"
+            android:paddingStart="@dimen/padding"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_tiny"/>
 
