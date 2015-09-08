@@ -44,15 +44,14 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
     holder.setMessage(message)
     holder.setTimestamp(TimestampUtils.prettyTimestamp(message.timestamp, isChat = true))
 
-    if (holder.getMessage.isMine) {
-      holder.ownMessage()
-    } else {
-      holder.contactMessage()
-    }
-
     val viewType = getItemViewType(pos)
     viewType match {
       case TEXT =>
+        if (holder.getMessage.isMine) {
+          holder.ownMessage()
+        } else {
+          holder.contactMessage()
+        }
         val textHolder = holder.asInstanceOf[TextMessageHolder]
         textHolder.setText(message.message)
 
@@ -61,6 +60,11 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
         actionHolder.setText(message.senderName, message.message)
 
       case FILE =>
+        if (holder.getMessage.isMine) {
+          holder.ownMessage()
+        } else {
+          holder.contactMessage()
+        }
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
     }
 
