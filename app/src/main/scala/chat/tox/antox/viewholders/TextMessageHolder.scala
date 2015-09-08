@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import chat.tox.antox.R
 
-class TextMessageHolder(var view: View) extends GenericMessageHolder(view) {
+class TextMessageHolder(val view: View) extends GenericMessageHolder(view) {
 
   protected val messageText = view.findViewById(R.id.message_text).asInstanceOf[TextView]
 

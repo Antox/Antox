@@ -12,7 +12,7 @@ import chat.tox.antox.wrapper.{Message, MessageType}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
-abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder(v) with OnLongClickListener {
+abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder(v) with OnLongClickListener {
 
   protected val bubble = v.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
 
@@ -28,8 +28,11 @@ abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder
 
   protected var message: Message = _
 
+  private val density: Int = v.getContext.getResources.getDisplayMetrics.density.toInt
+
   def setMessage(message: Message): Unit = {
     this.message = message
+    bubble.setOnLongClickListener(this)
   }
 
   def getMessage: Message = message
@@ -43,6 +46,8 @@ abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder
     sentTriangle.setVisibility(View.VISIBLE)
     receivedTriangle.setVisibility(View.GONE)
     row.setGravity(Gravity.RIGHT)
+    //Set extra padding to the left of the bubble
+    bubble.setPadding(48 * density,0,0,0)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
   }
 
@@ -51,9 +56,10 @@ abstract class GenericMessageHolder(var v: View) extends RecyclerView.ViewHolder
     receivedTriangle.setVisibility(View.VISIBLE)
     sentTriangle.setVisibility(View.GONE)
     row.setGravity(Gravity.LEFT)
+    //Set extra padding to the right of the bubble
+    bubble.setPadding(0,0,48 * density,0)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
   }
-
 
   override def onLongClick(view: View): Boolean = {
     val context = view.getContext

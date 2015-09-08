@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.utils.TimestampUtils
-import chat.tox.antox.viewholders.{GenericMessageHolder, ImageMessageHolder, TextMessageHolder}
+import chat.tox.antox.viewholders.{ActionMessageHolder, FileMessageHolder, GenericMessageHolder, TextMessageHolder}
 import chat.tox.antox.wrapper.{Message, MessageType}
 
 class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
@@ -57,10 +57,11 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
         textHolder.setText(message.message)
 
       case ACTION =>
-        val actionHolder = holder.asInstanceOf[TextMessageHolder]
+        val actionHolder = holder.asInstanceOf[ActionMessageHolder]
+        actionHolder.setText(message.senderName, message.message)
 
       case FILE =>
-        val fileHolder = holder.asInstanceOf[ImageMessageHolder]
+        val fileHolder = holder.asInstanceOf[FileMessageHolder]
     }
 
   }
@@ -74,12 +75,12 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
         new TextMessageHolder(v)
 
       case ACTION =>
-        val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
-        new TextMessageHolder(v)
+        val v: View = inflater.inflate(R.layout.chat_message_row_action, viewGroup, false)
+        new ActionMessageHolder(v)
 
       case FILE =>
-        val v: View = inflater.inflate(R.layout.chat_message_row_image, viewGroup, false)
-        new ImageMessageHolder(v)
+        val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
+        new FileMessageHolder(v)
 
     }
   }

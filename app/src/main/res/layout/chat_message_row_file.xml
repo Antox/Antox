@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="end|right"
     android:background="@color/white_absolute"
+    android:gravity="end|right"
+    android:orientation="vertical"
     android:padding="@dimen/padding_small">
 
     <LinearLayout
@@ -38,6 +38,49 @@
                 android:contentDescription="Image"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_small"
+                android:text="Message Body: This is some long sample text"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_small"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/file_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/file_reject_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:contentDescription="Send Button"
+                    android:padding="@dimen/padding_small"
+                    android:src="@drawable/ic_action_cancel"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="#90909090"/>
+
+                <ImageView
+                    android:id="@+id/file_accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:adjustViewBounds="false"
+                    android:contentDescription="Send Button"
+                    android:padding="@dimen/padding_small"
+                    android:src="@drawable/ic_action_tick"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
