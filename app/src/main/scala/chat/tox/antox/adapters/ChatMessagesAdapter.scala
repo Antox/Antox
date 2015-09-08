@@ -239,7 +239,7 @@ class ChatMessagesAdapter(var context: Context, messages: util.ArrayList[Message
               new File(f.getAbsolutePath + "/" + msg.message)
             }
 
-          if (file.exists() && (msg.received || msg.isMine)) {
+          if (file.exists()) {
             val okFileExtensions = Array("jpg", "png", "gif", "jpeg")
             for (extension <- okFileExtensions) {
               if (file.getName.toLowerCase.endsWith(extension)) {

@@ -26,7 +26,7 @@
         <LinearLayout
             android:id="@+id/message_text_background"
             android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/conversation_item_sent_shape"
             android:orientation="vertical">
 
@@ -36,6 +36,8 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:contentDescription="Image"
+                android:maxHeight="200dp"
+                android:padding="@dimen/padding_small"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
 

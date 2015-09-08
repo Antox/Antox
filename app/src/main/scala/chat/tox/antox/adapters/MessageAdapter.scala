@@ -66,6 +66,7 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
           holder.contactMessage()
         }
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
+        fileHolder.setImage()
     }
 
   }
