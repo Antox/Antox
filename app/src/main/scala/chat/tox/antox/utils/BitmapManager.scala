@@ -68,7 +68,7 @@ object BitmapManager {
     mAvatarValid.put(key, false)
   }
 
-  private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
+  def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
     val width = options.outWidth
     var inSampleSize = 1
 
