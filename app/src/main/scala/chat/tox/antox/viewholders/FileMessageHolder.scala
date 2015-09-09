@@ -22,7 +22,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   protected var file: File = _
 
   def setImage(): Unit = {
-    val file: File =
       if (message.message.contains("/")) {
         new File(message.message)
       } else {
@@ -44,6 +43,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
           BitmapManager.load(file, imageMessage, isAvatar = false)
           imageMessage.setVisibility(View.VISIBLE)
+          imageMessage.setOnClickListener(this)
           fileButtons.setVisibility(View.GONE)
           fileSize.setVisibility(View.GONE)
         }
