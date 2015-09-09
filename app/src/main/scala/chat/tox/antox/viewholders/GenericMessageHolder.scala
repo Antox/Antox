@@ -14,7 +14,9 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   protected val row = v.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
 
-  protected var time: TextView = v.findViewById(R.id.message_text_date).asInstanceOf[TextView]
+  protected val messageText = v.findViewById(R.id.message_text).asInstanceOf[TextView]
+
+  protected val time = v.findViewById(R.id.message_text_date).asInstanceOf[TextView]
 
   protected val sentTriangle = v.findViewById(R.id.sent_triangle)
 

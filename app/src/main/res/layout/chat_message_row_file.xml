@@ -42,6 +42,16 @@
                 android:visibility="gone"/>
 
             <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web|phone|email"
+                android:linksClickable="true"
+                android:text="Afd"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_smallish"/>
+
+            <TextView
                 android:id="@+id/file_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -50,6 +60,32 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_small"
                 android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/file_transfer_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50"/>
+
+                <TextView
+                    android:id="@+id/file_transfer_progress_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:text="Finished"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_smallish"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/file_buttons"
@@ -69,8 +105,8 @@
 
                 <View
                     android:layout_width="1dp"
-                    android:layout_height="fill_parent"
-                    android:background="#90909090"/>
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_darker"/>
 
                 <ImageView
                     android:id="@+id/file_accept_button"

@@ -1,12 +1,14 @@
 package chat.tox.antox.adapters
 
+import java.io.File
 import java.util
 
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
-import chat.tox.antox.utils.TimestampUtils
-import chat.tox.antox.viewholders.{ActionMessageHolder, FileMessageHolder, GenericMessageHolder, TextMessageHolder}
+import chat.tox.antox.utils.{Constants, TimestampUtils}
+import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
 class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
@@ -66,7 +68,17 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
           holder.contactMessage()
         }
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
-        fileHolder.setImage()
+        if (message.received || message.isMine) {
+          val file =
+            if (message.message.contains("/")) {
+              new File(message.message)
+            } else {
+              val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                Constants.DOWNLOAD_DIRECTORY)
+              new File(f.getAbsolutePath + "/" + message.message)
+            }
+          fileHolder.setImage(file)
+        }
     }
 
   }
