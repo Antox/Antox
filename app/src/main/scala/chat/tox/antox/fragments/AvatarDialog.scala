@@ -17,7 +17,6 @@ import android.widget.{Button, ImageView, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.{BitmapManager, Constants, FileUtils}
-import chat.tox.antox.wrapper.BitmapUtils
 import chat.tox.antox.wrapper.BitmapUtils.RichBitmap
 import chat.tox.antox.wrapper.FileKind.AVATAR
 
@@ -63,7 +62,11 @@ class AvatarDialog(activity: Activity) {
   }
 
   def resizeAvatar(avatar: File): Option[Bitmap] = {
-    val rawBitmap = BitmapFactory.decodeFile(avatar.getPath)
+    val options = new BitmapFactory.Options()
+    options.inSampleSize = BitmapManager.calculateInSampleSize(options, 256)
+    options.inPreferredConfig = Bitmap.Config.RGB_565
+    options.inJustDecodeBounds = false
+    val rawBitmap = BitmapFactory.decodeFile(avatar.getPath, options)
     val cropDimension =
       if (rawBitmap.getWidth >= rawBitmap.getHeight) {
         rawBitmap.getHeight
