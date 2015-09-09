@@ -1,18 +1,12 @@
 package chat.tox.antox.viewholders
 
-import android.app.AlertDialog
-import android.content.{ClipData, ClipboardManager, Context, DialogInterface}
 import android.support.v7.widget.RecyclerView
-import android.view.View.OnLongClickListener
 import android.view.{Gravity, View}
 import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
-import chat.tox.antox.data.State
-import chat.tox.antox.wrapper.{Message, MessageType}
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.IOScheduler
+import chat.tox.antox.wrapper.Message
 
-abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder(v) with OnLongClickListener {
+abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder(v) {
 
   protected val bubble = v.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
 
@@ -32,7 +26,6 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   def setMessage(message: Message): Unit = {
     this.message = message
-    bubble.setOnLongClickListener(this)
   }
 
   def getMessage: Message = message
@@ -47,7 +40,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     receivedTriangle.setVisibility(View.GONE)
     row.setGravity(Gravity.RIGHT)
     //Set extra padding to the left of the bubble
-    bubble.setPadding(48 * density,0,0,0)
+    bubble.setPadding(48 * density, 0, 0, 0)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
   }
 
@@ -57,46 +50,8 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     sentTriangle.setVisibility(View.GONE)
     row.setGravity(Gravity.LEFT)
     //Set extra padding to the right of the bubble
-    bubble.setPadding(0,0,48 * density,0)
+    bubble.setPadding(0, 0, 48 * density, 0)
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
   }
 
-  override def onLongClick(view: View): Boolean = {
-    val context = view.getContext
-    if (message.`type` == MessageType.OWN || message.`type` == MessageType.FRIEND) {
-      val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
-      new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
-
-        def onClick(dialog: DialogInterface, index: Int): Unit = index match {
-          case 0 =>
-            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
-            clipboard.setPrimaryClip(ClipData.newPlainText(null, message.message))
-
-          case 1 =>
-            Observable[Boolean](subscriber => {
-              val db = State.db
-              db.deleteMessage(message.id)
-              subscriber.onCompleted()
-            }).subscribeOn(IOScheduler()).subscribe()
-        }
-
-      }).create().show()
-    }
-    else {
-      val items = Array[CharSequence](context.getResources.getString(R.string.message_delete))
-      new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
-
-        def onClick(dialog: DialogInterface, index: Int): Unit = index match {
-          case 0 =>
-            Observable[Boolean](subscriber => {
-              val db = State.db
-              db.deleteMessage(message.id)
-              subscriber.onCompleted()
-            }).subscribeOn(IOScheduler()).subscribe()
-
-        }
-      }).create().show()
-    }
-    true
-  }
 }

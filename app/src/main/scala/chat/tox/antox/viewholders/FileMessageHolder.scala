@@ -2,16 +2,20 @@ package chat.tox.antox.viewholders
 
 import java.io.File
 
-import android.content.Intent
+import android.app.AlertDialog
+import android.content._
 import android.net.Uri
 import android.os.Environment
 import android.view.View
-import android.view.View.OnClickListener
+import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget.{ImageView, LinearLayout, TextView}
 import chat.tox.antox.R
+import chat.tox.antox.data.State
 import chat.tox.antox.utils.{BitmapManager, Constants}
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.IOScheduler
 
-class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener {
+class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
 
   protected val imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
 
@@ -45,6 +49,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
           BitmapManager.load(file, imageMessage, isAvatar = false)
           imageMessage.setVisibility(View.VISIBLE)
           imageMessage.setOnClickListener(this)
+          imageMessage.setOnLongClickListener(this)
           fileButtons.setVisibility(View.GONE)
           fileSize.setVisibility(View.GONE)
         }
@@ -58,5 +63,24 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     i.setAction(android.content.Intent.ACTION_VIEW)
     i.setDataAndType(Uri.fromFile(file), "image/*")
     context.startActivity(i)
+  }
+
+  override def onLongClick(view: View): Boolean = {
+    val context = view.getContext
+    val items = Array[CharSequence](context.getResources.getString(R.string.message_delete))
+    new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
+
+      def onClick(dialog: DialogInterface, index: Int): Unit = index match {
+        case 0 =>
+          Observable[Boolean](subscriber => {
+            val db = State.db
+            db.deleteMessage(message.id)
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler()).subscribe()
+
+      }
+    }).create().show()
+
+    true
   }
 }
