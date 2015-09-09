@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Environment
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.{TextView, ImageView, LinearLayout}
+import android.widget.{ImageView, LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.utils.{BitmapManager, Constants}
 
@@ -22,6 +22,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   protected var file: File = _
 
   def setImage(): Unit = {
+    file =
       if (message.message.contains("/")) {
         new File(message.message)
       } else {
