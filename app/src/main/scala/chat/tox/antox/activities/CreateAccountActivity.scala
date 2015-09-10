@@ -253,7 +253,7 @@ class CreateAccountActivity extends AppCompatActivity {
         Some(error match {
           case DNSError.NAME_TAKEN => getString(R.string.create_account_exists)
           case DNSError.INTERNAL => getString(R.string.create_account_internal_error)
-          case DNSError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+          case DNSError.RATE_LIMIT => getString(R.string.create_account_reached_registration_limit)
           case DNSError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
           case DNSError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
           case _ => getString(R.string.create_account_unknown_error)
