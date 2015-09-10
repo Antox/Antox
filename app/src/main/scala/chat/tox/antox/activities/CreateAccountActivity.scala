@@ -209,7 +209,6 @@ class CreateAccountActivity extends AppCompatActivity {
         // Create tox data save file
         try {
           toxData = createToxData(accountName.user)
-          toxData = createToxData(accountName.user)
         } catch {
           case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
         }
