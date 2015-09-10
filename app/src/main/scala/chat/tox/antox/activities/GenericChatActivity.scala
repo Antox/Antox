@@ -3,6 +3,7 @@ package chat.tox.antox.activities
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
@@ -71,6 +72,16 @@ abstract class GenericChatActivity extends AppCompatActivity {
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
+    chatListView.addOnScrollListener(new OnScrollListener {
+      override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+          adapter.setScrolling(false)
+        }
+        else {
+          adapter.setScrolling(true)
+        }
+      }
+    })
 
     val b = this.findViewById(R.id.sendMessageButton)
     b.setOnClickListener(new View.OnClickListener() {

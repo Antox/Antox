@@ -19,6 +19,8 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
   private val ACTION = 2
   private val FILE = 3
 
+  private var scrolling: Boolean = false
+
   def add(msg: Message) {
     data.add(msg)
     notifyDataSetChanged()
@@ -37,6 +39,10 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
   def removeAll() {
     data.clear()
     notifyDataSetChanged()
+  }
+
+  def setScrolling(scrolling: Boolean) {
+    this.scrolling = scrolling
   }
 
   override def getItemCount: Int = if (data == null) 0 else data.size
@@ -75,7 +81,8 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
 
         if (message.sent) {
           if (message.messageId != -1) {
-            fileHolder.showProgressBar()
+            fileHolder.showProgressBar
+
           } else {
             //FIXME this should be "Failed" - fix the DB bug
             fileHolder.setProgressText(R.string.file_finished)

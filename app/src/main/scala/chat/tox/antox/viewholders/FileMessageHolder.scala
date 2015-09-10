@@ -5,14 +5,19 @@ import java.io.File
 import android.app.AlertDialog
 import android.content._
 import android.net.Uri
+import android.os.AsyncTask
+import android.util.Log
 import android.view.View
 import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.BitmapManager
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.IOScheduler
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.{Observable, Subscription}
+
+import scala.concurrent.duration._
+
 
 class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
 
@@ -30,7 +35,9 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
   protected val fileProgressBar = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
 
-  protected var file: File = _
+  private var file: File = _
+
+  private var progressSub: Subscription = _
 
   def setImage(file: File): Unit = {
     this.file = file
@@ -80,10 +87,14 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
   def showProgressBar(): Unit = {
     fileProgressBar.setMax(message.size)
-    fileProgressBar.setProgress(State.transfers.getProgress(message.id).toInt)
+    fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
 
-    updateProgressBar()
+    progressSub = Observable.interval(500 milliseconds)
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(x => {
+      updateProgressBar()
+    })
 
     imageMessage.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
@@ -103,6 +114,11 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         context.getResources.getString(R.string.file_time_remaining, secondsToComplete.toString))
     } else {
       fileProgressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s")
+    }
+    fileProgressBar.setProgress(State.transfers.getProgress(message.id).toInt)
+    if (fileProgressBar.getProgress >= message.size) {
+      progressSub.unsubscribe()
+      Log.d("FileProgessSub", "observer unsubscribed")
     }
   }
 
