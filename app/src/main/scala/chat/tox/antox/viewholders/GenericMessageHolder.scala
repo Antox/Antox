@@ -24,6 +24,8 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   protected var message: Message = _
 
+  protected val context = v.getContext
+
   private val density: Int = v.getContext.getResources.getDisplayMetrics.density.toInt
 
   def setMessage(message: Message): Unit = {

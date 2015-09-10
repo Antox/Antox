@@ -15,7 +15,6 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     messageText.setText(s)
     messageText.setOnLongClickListener(this)
 
-    val context = view.getContext
     if (message.isMine) {
       if (shouldGreentext(s)) {
         messageText.setTextColor(context.getResources.getColor(R.color.green_light))
@@ -36,7 +35,6 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   override def onLongClick(view: View): Boolean = {
-    val context = view.getContext
     val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 

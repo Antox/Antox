@@ -62,12 +62,36 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
         actionHolder.setText(message.senderName, message.message)
 
       case FILE =>
+        val fileHolder = holder.asInstanceOf[FileMessageHolder]
+
         if (holder.getMessage.isMine) {
           holder.ownMessage()
+          val split = message.message.split("/")
+          fileHolder.setFileText(split(split.length - 1))
         } else {
           holder.contactMessage()
+          fileHolder.setFileText(message.message)
         }
-        val fileHolder = holder.asInstanceOf[FileMessageHolder]
+
+        if (message.sent) {
+          if (message.messageId != -1) {
+            fileHolder.showProgressBar()
+          } else {
+            //FIXME this should be "Failed" - fix the DB bug
+            fileHolder.setProgressText(R.string.file_finished)
+          }
+        } else {
+          if (message.messageId != -1) {
+            if (message.isMine) {
+              fileHolder.setProgressText(R.string.file_request_sent)
+            } else {
+              fileHolder.showFileButtons()
+            }
+          } else {
+            fileHolder.setProgressText(R.string.file_rejected)
+          }
+        }
+
         if (message.received || message.isMine) {
           val file =
             if (message.message.contains("/")) {
@@ -77,10 +101,12 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
                 Constants.DOWNLOAD_DIRECTORY)
               new File(f.getAbsolutePath + "/" + message.message)
             }
-          fileHolder.setImage(file)
+
+          if (file.exists() && file.getName.toLowerCase.matches("^.+?\\.(jpg|jpeg|png|gif)$")) {
+            fileHolder.setImage(file)
+          }
         }
     }
-
   }
 
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {

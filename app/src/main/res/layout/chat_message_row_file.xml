@@ -25,10 +25,11 @@
 
         <LinearLayout
             android:id="@+id/message_text_background"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/conversation_item_sent_shape"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_small">
 
             <ImageView
                 android:id="@+id/message_sent_photo"
@@ -37,17 +38,24 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="Image"
                 android:maxHeight="200dp"
+                android:maxWidth="200dp"
                 android:padding="@dimen/padding_small"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
 
             <TextView
+                android:id="@+id/message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_file_transfer"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_smallish"/>
+
+            <TextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:autoLink="web|phone|email"
                 android:linksClickable="true"
-                android:text="Afd"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_smallish"/>
 
@@ -55,8 +63,6 @@
                 android:id="@+id/file_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_small"
-                android:text="Message Body: This is some long sample text"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_small"
                 android:visibility="gone"/>
@@ -80,7 +86,7 @@
                     android:id="@+id/file_transfer_progress_text"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
-                    android:text="Finished"
+                    android:text="@string/file_finished"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_smallish"
                     android:visibility="gone"/>
