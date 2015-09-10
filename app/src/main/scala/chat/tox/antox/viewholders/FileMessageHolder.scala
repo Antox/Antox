@@ -5,7 +5,6 @@ import java.io.File
 import android.app.AlertDialog
 import android.content._
 import android.net.Uri
-import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import android.view.View.{OnClickListener, OnLongClickListener}
@@ -90,11 +89,14 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
 
-    progressSub = Observable.interval(500 milliseconds)
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(x => {
-      updateProgressBar()
-    })
+    if (progressSub == null || progressSub.isUnsubscribed) {
+      Log.d("FileProgressSub", "observer subscribing")
+      progressSub = Observable.interval(500 milliseconds)
+        .observeOn(AndroidMainThreadScheduler())
+        .subscribe(x => {
+        updateProgressBar()
+      })
+    }
 
     imageMessage.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
@@ -118,7 +120,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     fileProgressBar.setProgress(State.transfers.getProgress(message.id).toInt)
     if (fileProgressBar.getProgress >= message.size) {
       progressSub.unsubscribe()
-      Log.d("FileProgessSub", "observer unsubscribed")
+      Log.d("FileProgressSub", "observer unsubscribed")
     }
   }
 

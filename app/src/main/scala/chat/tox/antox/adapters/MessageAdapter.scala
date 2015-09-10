@@ -81,8 +81,7 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
 
         if (message.sent) {
           if (message.messageId != -1) {
-            fileHolder.showProgressBar
-
+            fileHolder.showProgressBar()
           } else {
             //FIXME this should be "Failed" - fix the DB bug
             fileHolder.setProgressText(R.string.file_finished)
