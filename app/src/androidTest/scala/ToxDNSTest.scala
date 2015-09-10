@@ -44,19 +44,12 @@ class ToxDNSTest extends AndroidTestCase {
     val result = ToxDNS.registerAccount(dnsname, toxData ).toBlocking.first
     result match {
       case Left(error) => {
-        val message = Some(error match {
-          case DNSError.NAME_TAKEN => "create_account_exists"
-          case DNSError.INTERNAL => "create_account_internal_error"
-          case DNSError.REGISTRATION_LIMIT_REACHED => "create_account_reached_registration_limit"
-          case DNSError.KALIUM_LINK_ERROR => "create_account_kalium_link_error"
-          case DNSError.INVALID_DOMAIN => "create_account_invalid_domain"
-          case _ => "create_account_unknown_error"
-        })
-        assertTrue("Was left, Output: " + message , false)
+        val message = DNSError.getDescription(error)
+        assertTrue("Could not register, reason: " + message , false)
       }
 
       case Right(password) => {
-        assertTrue("Was right, Output: " + password , true)
+        assertTrue(true)
       }
     }
   }
@@ -73,30 +66,18 @@ class ToxDNSTest extends AndroidTestCase {
     val registerResult = ToxDNS.registerAccount(dnsname,toxData).toBlocking.first
 
     registerResult match {
-      case Left(error) => {
-        val message = Some(error match {
-          case DNSError.NAME_TAKEN => "create_account_exists"
-          case DNSError.INTERNAL => "create_account_internal_error"
-          case DNSError.REGISTRATION_LIMIT_REACHED => "create_account_reached_registration_limit"
-          case DNSError.KALIUM_LINK_ERROR => "create_account_kalium_link_error"
-          case DNSError.INVALID_DOMAIN => "create_account_invalid_domain"
-          case _ => "create_account_unknown_error"
-        })
-        assertTrue("Could not register, Output: " + message , false)
-      }
-
-      case Right(password) => {
+      case Left(error) =>
+        val message = DNSError.getDescription(error)
+        assertTrue("Could not register, reason: " + message , false)
+      case Right(password) =>
         val result = ToxDNS.deleteAccount(dnsname, toxData ).toBlocking.first
         result match {
-          case Left(error) => {
-            assertTrue("Was left, Output: " + error.toString, false)
-          }
-
-          case Right(message) => {
-            assertTrue("Was right, Output: " + message, true)
-          }
+          case Left(error) =>
+            val message = DNSError.getDescription(error)
+            assertTrue("Could not delete, reason: " + message,  false)
+          case Right(message) =>
+            assertTrue(true)
         }
-      }
     }
   }
 }
