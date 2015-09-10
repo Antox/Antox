@@ -3,7 +3,7 @@ package chat.tox.antox.toxdns
 import java.io.UnsupportedEncodingException
 
 import android.util.{Base64, Log}
-import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import chat.tox.antox.toxdns.ToxDNS.DNSError.DNSError
 import chat.tox.antox.wrapper.ToxAddress
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
@@ -25,7 +25,7 @@ object ToxDNS {
   * @param dnsName the dns name to lookup
   * @return the ID or None if the name is not found
   */
- def lookup(dnsName: String): Observable[Option[String]] = {
+  def lookup(dnsName: String): Observable[Option[String]] = {
     Observable(subscriber => {
       if (dnsName.contains("@")) {
         val parsedDnsName = DnsName.fromString(dnsName)
@@ -69,21 +69,30 @@ object ToxDNS {
     }
   }
 
-  //ToxDNS Registration Error
-  object RegError extends Enumeration {
-    type RegError = Value
+  //ToxDNS Error
+  object DNSError extends Enumeration {
+    type DNSError = Value
     val SUCCESS = Value("0")
+    val BAD_PAYLOAD = Value("-3")
+    val METHOD_UNSUPPORTED = Value("-1")
+    val NOTSECURE = Value("-2")
     val REGISTRATION_LIMIT_REACHED = Value("-4")
     val NAME_TAKEN = Value("-25")
     val INTERNAL = Value("-26")
     val UNKNOWN = Value("")
+    val LOOKUP_FAILED = Value("-41")
+    val NO_USER = Value("-42")
     val KALIUM_LINK_ERROR = Value("KALIUM")
     val INVALID_DOMAIN = Value("INVALID_DOMAIN")
 
     def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
+
+    override def toString: String = Value.toString
   }
 
-  type RegistrationResult[Success] = Either[RegError, Success]
+  type RegistrationResult[Success] = Either[DNSError, Success]
+
+  type DeletionResult[Success] = Either[DNSError, Success]
 
   /**
    * Registers a new account on toxme.io with name 'accountName' using the information
@@ -97,10 +106,10 @@ object ToxDNS {
   def registerAccount(name: DnsName, toxData: ToxData): Observable[RegistrationResult[String]] = {
     constructRegistrationRequestJson(name, toxData).flatMap(result =>
       result match {
-        case Left(error: RegError) => Observable.just(Left(error))
+        case Left(error: DNSError) => Observable.just(Left(error))
         case Right(result: JSONObject) => postRegistrationJson(result)
       }
-    ).onErrorReturn(_ => Left(RegError.UNKNOWN))
+    ).onErrorReturn(_ => Left(DNSError.UNKNOWN))
       .subscribeOn(IOScheduler())
   }
 
@@ -130,7 +139,7 @@ object ToxDNS {
         System.load("libkaliumjni.so")
       } catch {
         case e: UnsatisfiedLinkError =>
-          subscriber.onNext(Left(RegError.KALIUM_LINK_ERROR))
+          subscriber.onNext(Left(DNSError.KALIUM_LINK_ERROR))
       }
 
       try {
@@ -155,7 +164,7 @@ object ToxDNS {
             requestJson.put("nonce", encryptedPayload.nonce)
             subscriber.onNext(Right(requestJson))
           case None =>
-            subscriber.onNext(Left(RegError.INVALID_DOMAIN))
+            subscriber.onNext(Left(DNSError.INVALID_DOMAIN))
         }
       } catch {
         case e: JSONException =>
@@ -166,7 +175,7 @@ object ToxDNS {
     })
   }
 
-  private def postRegistrationJson(requestJson: JSONObject): Observable[RegistrationResult[String]] = {
+  private def postRegistrationJson(requestJson: JSONObject): Observable[DeletionResult[String]] = {
     Observable(subscriber => {
         val httpClient = new OkHttpClient()
         try {
@@ -178,10 +187,9 @@ object ToxDNS {
           Log.d("CreateAccount", "Response code: " + response.toString)
           val json = new JSONObject(response.body().string())
           val errorCode = json.getString("c")
-          val password = json.getString("password")
-
-          val error = Try(RegError.withName(errorCode)).getOrElse(RegError.UNKNOWN)
-          if (error == RegError.SUCCESS) {
+          val error = Try(DNSError.withName(errorCode)).getOrElse(DNSError.UNKNOWN)
+          if (error == DNSError.SUCCESS) {
+            val password = json.getString("password")
             subscriber.onNext(Right(password))
           } else {
             subscriber.onNext(Left(error))
@@ -196,6 +204,62 @@ object ToxDNS {
         }
 
       subscriber.onCompleted()
+    })
+  }
+
+  def deleteAccount(name: DnsName, toxData: ToxData): Observable[DeletionResult[String]] = {
+    constructDeletionRequestJson(name, toxData).flatMap(result =>
+      result match {
+        case Left(error: DNSError) => Observable.just(Left(error))
+        case Right(result: EncryptedPayload) => postDeletionJson(result)
+      }
+    ).onErrorReturn(_ => Left(DNSError.UNKNOWN))
+      .subscribeOn(IOScheduler())
+  }
+
+  private def constructDeletionRequestJson(name: DnsName, toxData: ToxData): Observable[DeletionResult[EncryptedPayload]] = {
+    Observable(subscriber => {
+      val unencryptedPayload = new JSONObject
+      unencryptedPayload.put("public_key",toxData.address.key.toString)
+      val epoch = System.currentTimeMillis() / 1000
+      unencryptedPayload.put("timestamp", epoch)
+      lookupPublicKey(name.domain.getOrElse("toxme.io")) match {
+        case Some(publicKey) =>
+          val encryptedPayload = encryptPayload(unencryptedPayload, toxData, publicKey)
+          subscriber.onNext(Right(encryptedPayload))
+        case None =>
+          subscriber.onNext(Left(DNSError.INVALID_DOMAIN))
+      }
+      subscriber.onCompleted()
+    })
+  }
+
+  private def postDeletionJson(requestJson: EncryptedPayload): Observable[DeletionResult[String]] = {
+    Observable(subscriber => {
+      val httpClient = new OkHttpClient()
+      try {
+        val mediaType = MediaType.parse("application/json; charset=utf-8")
+        val requestBody = RequestBody.create(mediaType, requestJson.payload)
+        val request = new Builder().url("https://toxme.io/api").post(requestBody).build()
+        val response = httpClient.newCall(request).execute()
+        Log.d("DeleteAccount", "Response code: " + response.toString)
+        val json = new JSONObject(response.body().string())
+        val errorCode = json.getString("c")
+
+        val error = Try(DNSError.withName(errorCode)).getOrElse(DNSError.UNKNOWN)
+        if (error == DNSError.SUCCESS) {
+          subscriber.onNext(Right("successfully deleted"))
+        } else {
+          subscriber.onNext(Left(error))
+        }
+      } catch {
+        case e: UnsupportedEncodingException =>
+          Log.d("DeleteAccount", "Unsupported Encoding Exception: " + e.getMessage)
+          subscriber.onError(e)
+        case e: Exception =>
+          Log.d("DeleteAccount", "IOException: " + e.getMessage)
+          subscriber.onError(e)
+      }
     })
   }
 }

@@ -16,8 +16,8 @@ import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
-import chat.tox.antox.toxdns.ToxDNS.RegError
-import chat.tox.antox.toxdns.ToxDNS.RegError.RegError
+import chat.tox.antox.toxdns.ToxDNS.DNSError
+import chat.tox.antox.toxdns.ToxDNS.DNSError.DNSError
 import chat.tox.antox.toxdns.{DnsName, ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
@@ -209,6 +209,7 @@ class CreateAccountActivity extends AppCompatActivity {
         // Create tox data save file
         try {
           toxData = createToxData(accountName.user)
+          toxData = createToxData(accountName.user)
         } catch {
           case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
         }
@@ -243,18 +244,18 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
-  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[RegError, String]): Unit = {
+  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[DNSError, String]): Unit = {
     var successful = true
     var accountPassword = ""
     val toastMessage: Option[String] = result match {
       case Left(error) =>
         successful = false
         Some(error match {
-          case RegError.NAME_TAKEN => getString(R.string.create_account_exists)
-          case RegError.INTERNAL => getString(R.string.create_account_internal_error)
-          case RegError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
-          case RegError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
-          case RegError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
+          case DNSError.NAME_TAKEN => getString(R.string.create_account_exists)
+          case DNSError.INTERNAL => getString(R.string.create_account_internal_error)
+          case DNSError.REGISTRATION_LIMIT_REACHED => getString(R.string.create_account_reached_registration_limit)
+          case DNSError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
+          case DNSError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
           case _ => getString(R.string.create_account_unknown_error)
         })
       case Right(password) =>
