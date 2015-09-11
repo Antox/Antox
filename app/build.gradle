@@ -30,6 +30,8 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        applicationId "chat.tox.antox"
+        testApplicationId "chat.tox.antox.tests"
     }
 
     lintOptions {
@@ -69,7 +71,6 @@ dependencies {
     compile files('libs/tox4j_2.11.jar')
     compile 'org.scala-lang:scala-library:2.11.7'
     compile 'org.scaloid:scaloid_2.11:3.6.1-10'
-    compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
@@ -89,6 +90,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
 
+    androidTestCompile 'org.scala-lang:scala-library:2.11.7'
     androidTestCompile 'com.android.support.test:runner:0.3'
     androidTestCompile 'com.android.support.test:rules:0.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2'

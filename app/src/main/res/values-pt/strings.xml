@@ -115,7 +115,7 @@
   <string name="drawer_close">Fechar gaveta de navegação</string>
   <string name="open_source_license">Licença de código aberto</string>
   <string name="license1">Distribuído sob GNU GPL v3.</string>
-  <string name="license2">Código fonte está disponível em\nhttps://github.com/Astonex/Antox</string>
+  <string name="license2">Código fonte está disponível em\nhttps://github.com/subliun/Antox</string>
   <string name="ver">Versão</string>
   <string name="about">Sobre</string>
   <string name="about_antox_1">Com o aumento de programas de monitoração dos governos, o Tox fornece uma aplicação fácil de usar que permite que você se conecte com amigos e familiares sem mais ninguém escutando.</string>

@@ -1,3 +1,5 @@
+package chat.tox.antox.tests
+
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
 import chat.tox.antox.tox.MessageHelper

@@ -34,6 +34,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         android:gravity="center_horizontal">
 
         <EditText
@@ -42,17 +44,15 @@
             android:layout_height="wrap_content"
             android:text="@string/friend_profile_nick"
             android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
             android:id="@+id/friendAlias"
-            android:layout_marginLeft="39dp"
-
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/editNameImage"
             android:layout_width="wrap_content"
-            android:paddingLeft="15dp"
+            android:layout_gravity="end"
+            android:paddingLeft="4dp"
             android:paddingTop="7dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_mode_edit_black_24dp" />
