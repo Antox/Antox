@@ -1,3 +1,5 @@
+package chat.tox.antox.tests
+
 import android.preference.PreferenceManager
 import android.support.test.runner.AndroidJUnit4
 import android.test.{AndroidTestCase, RenamingDelegatingContext}

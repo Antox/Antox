@@ -20,15 +20,15 @@ object DNSError extends Enumeration {
   val UNKNOWN = Value("")
   val JSON_ERROR = Value("JSON")
   val ENCODING_ERROR = Value("ENCODING")
-  val EXCEPTION = Value("IO")
+  val EXCEPTION = Value("EXCEPTION")
 
-  def valueOf(name: String) = values.find(_.toString == name)
+  def valueOf(name: String): Option[DNSError.Value] = values.find(_.toString == name)
 
   def exception(exception: Exception): DNSError = {
-    Value(exception.getClass.getSimpleName + ": " + exception.getMessage).asInstanceOf[DNSError]
+    Value(exception.getClass.getSimpleName + ": " + exception.getMessage)
   }
 
-  def getDescription(dnsError: DNSError):String = {
+  def getDebugDescription(dnsError: DNSError):String = {
     dnsError match {
       case OK => "OK"
       case METHOD_UNSUPPORTED => "Client didn't POST to /api"
@@ -48,7 +48,7 @@ object DNSError extends Enumeration {
       case UNKNOWN => "Unknown error code"
       case JSON_ERROR => "Error constructing JSON"
       case ENCODING_ERROR => "Encoding error"
-      case EXCEPTION => "Excepton thrown"
+      case EXCEPTION => "Exception thrown"
       case _ => dnsError.toString
     }
   }

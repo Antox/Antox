@@ -16,12 +16,12 @@ import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
-import chat.tox.antox.toxdns.DNSError
 import chat.tox.antox.toxdns.DNSError.DNSError
+import chat.tox.antox.toxdns.ToxDNS.PrivacyLevel
 import chat.tox.antox.toxdns.{DNSError, DnsName, ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
+import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions
@@ -226,8 +226,8 @@ class CreateAccountActivity extends AppCompatActivity {
       }
 
       val observable = if (shouldRegister) {
-        // Register on toxme.io
-        ToxDNS.registerAccount(accountName, toxData)
+        // Register acccount
+        ToxDNS.registerAccount(accountName, PrivacyLevel.PRIVATE, toxData)
       } else {
         //succeed with empty password
         Observable.just(Right(""))
@@ -262,6 +262,7 @@ class CreateAccountActivity extends AppCompatActivity {
         accountPassword = password
         None
     }
+
     if (successful) {
       State.userDb(this).addUser(accountName, toxData.address, "")
       loginAndStartMain(accountName, accountPassword)
@@ -275,6 +276,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
     enableRegisterButton()
   }
+
   def onClickRegisterIncogAccount(view: View) {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
     val account = accountField.getText.toString

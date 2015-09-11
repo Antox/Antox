@@ -30,6 +30,8 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        applicationId "chat.tox.antox"
+        testApplicationId "chat.tox.antox.tests"
     }
 
     lintOptions {
@@ -68,6 +70,7 @@ dependencies {
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile files('libs/tox4j_2.11.jar')
     compile 'org.scala-lang:scala-library:2.11.7'
+    androidTestCompile 'org.scala-lang:scala-library:2.11.7'
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:design:22.2.0'
     compile 'org.scaloid:scaloid_2.11:3.6.1-10'

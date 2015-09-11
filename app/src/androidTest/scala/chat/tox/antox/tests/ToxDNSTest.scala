@@ -1,13 +1,18 @@
+package chat.tox.antox.tests
+
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
-import chat.tox.antox.toxdns.{DNSError, ToxData, DnsName, ToxDNS}
+import chat.tox.antox.toxdns.ToxDNS.{DnsResult, PrivacyLevel}
+import chat.tox.antox.toxdns.{DNSError, DnsName, ToxDNS, ToxData}
 import chat.tox.antox.utils.Options
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.impl.jni.ToxCoreImpl
 import org.junit.Assert._
-import org.junit.{Ignore, Before, Test}
+import org.junit.Test
 import org.junit.runner.RunWith
+
+import scala.util.Random
 
 @RunWith(classOf[AndroidJUnit4])
 class ToxDNSTest extends AndroidTestCase {
@@ -31,50 +36,55 @@ class ToxDNSTest extends AndroidTestCase {
   }
 
 
-  @Test
-  def testRegistration(): Unit = {
+  def registerAccount(dnsName: DnsName, toxData: ToxData): DnsResult[String] = {
+    ToxDNS.registerAccount(dnsName, PrivacyLevel.PRIVATE, toxData).toBlocking.first
+  }
+
+  def genRandomDnsName(): DnsName = DnsName.fromString(Random.alphanumeric.take(10).mkString)
+
+  def createToxData(): ToxData = {
     val toxData = new ToxData
-    val accountName: String = "antoxtest" + (Math.random()*10000).toInt
-    val dnsname = DnsName.fromString(accountName)
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
     toxData.address = new ToxAddress(tox.getAddress)
     toxData.fileBytes = tox.getSavedata
-    val result = ToxDNS.registerAccount(dnsname, toxData ).toBlocking.first
-    result match {
-      case Left(error) => {
-        val message = DNSError.getDescription(error)
-        assertTrue("Could not register, reason: " + message , false)
-      }
 
-      case Right(password) => {
-        assertTrue(true)
-      }
+    toxData
+  }
+
+  @Test
+  def testRegistration(): Unit = {
+    val name = genRandomDnsName()
+    val data = createToxData()
+    val result = registerAccount(name, data)
+
+    result match {
+      case Left(error) =>
+        val message = DNSError.getDebugDescription(error)
+        fail("Could not register, reason: " + message)
+
+      case Right(password) =>
+        assertTrue(password.nonEmpty)
     }
   }
 
   @Test
   def testDeletion(): Unit = {
-    val toxData = new ToxData
-    val accountName: String = "antoxtest" + (Math.random()*10000).toInt
-    val dnsname = DnsName.fromString(accountName)
-    val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
-    val tox = new ToxCoreImpl(toxOptions)
-    toxData.address = new ToxAddress(tox.getAddress)
-    toxData.fileBytes = tox.getSavedata
-    val registerResult = ToxDNS.registerAccount(dnsname,toxData).toBlocking.first
+    val dnsName = genRandomDnsName()
+    val toxData = createToxData()
+    val registrationResult = registerAccount(dnsName, toxData)
 
-    registerResult match {
+    registrationResult match {
       case Left(error) =>
-        val message = DNSError.getDescription(error)
-        assertTrue("Could not register, reason: " + message , false)
+        val message = DNSError.getDebugDescription(error)
+        fail("Could not register, reason: " + message)
       case Right(password) =>
-        val result = ToxDNS.deleteAccount(dnsname, toxData ).toBlocking.first
+        val result = ToxDNS.deleteAccount(dnsName, toxData).toBlocking.first
         result match {
-          case Left(error) =>
-            val message = DNSError.getDescription(error)
-            assertTrue("Could not delete, reason: " + message,  false)
-          case Right(message) =>
+          case Some(error) =>
+            val message = DNSError.getDebugDescription(error)
+            fail("Could not delete, reason: " + message)
+          case None =>
             assertTrue(true)
         }
     }
