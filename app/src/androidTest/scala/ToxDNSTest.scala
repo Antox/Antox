@@ -56,7 +56,7 @@ class ToxDNSTest extends AndroidTestCase {
   @Test
   def testDeletion(): Unit = {
     val toxData = new ToxData
-    val accountName: String = "antoxtest"// + (Math.random()*10000).toInt
+    val accountName: String = "antoxtest" + (Math.random()*10000).toInt
     val dnsname = DnsName.fromString(accountName)
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
