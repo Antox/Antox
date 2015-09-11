@@ -21,6 +21,10 @@
 
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="chat.tox.antox"/>
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

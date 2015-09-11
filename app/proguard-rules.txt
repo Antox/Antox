@@ -38,6 +38,8 @@ public protected *;
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
 -keep class rx.** { *; }
+-keep class scala.util.** { *; }
+
 # -keep public class com.android.vending.licensing.ILicensingService
 -keepclasseswithmembernames class * {
 native <methods>;

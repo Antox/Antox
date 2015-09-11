@@ -116,7 +116,7 @@ Sans connexion à internet, les fonctionnalités auxquelles vous avez accès son
   <string name="drawer_close">Fermer le drawer</string>
   <string name="open_source_license">Licence libre</string>
   <string name="license1">Distributé sous licence GNU GPL v3</string>
-  <string name="license2">Le code source est disponible à l\'adresse\nhttps://github.com/Astonex/Antox</string>
+  <string name="license2">Le code source est disponible à l\'adresse\nhttps://github.com/subliun/Antox</string>
   <string name="ver">Version</string>
   <string name="about">À propos</string>
   <string name="about_antox_1">Avec l\'omniprésence des programmes gouvernementaux de surveillance d\'internet, Tox vous procure une une application facile à utiliser qui vous permet de discuter avec vos amis et votre famille sans être écouté par quelqu\'un d\'autre</string>
