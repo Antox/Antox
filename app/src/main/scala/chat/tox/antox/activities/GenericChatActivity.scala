@@ -1,5 +1,7 @@
 package chat.tox.antox.activities
 
+import java.util
+
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
@@ -20,6 +22,7 @@ import chat.tox.antox.wrapper.{Message, ToxKey}
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
+import scala.collection.JavaConversions
 import scala.collection.mutable.ArrayBuffer
 
 abstract class GenericChatActivity extends AppCompatActivity {
@@ -57,7 +60,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Log.d(TAG, "key = " + activeKey)
 
     val db = State.db
-    adapter = new MessageAdapter()
+    adapter = new MessageAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -72,14 +75,10 @@ abstract class GenericChatActivity extends AppCompatActivity {
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
+    chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-          adapter.setScrolling(false)
-        }
-        else {
-          adapter.setScrolling(true)
-        }
+        adapter.setScrolling(!(newState == RecyclerView.SCROLL_STATE_IDLE))
       }
     })
 
@@ -142,20 +141,11 @@ abstract class GenericChatActivity extends AppCompatActivity {
     for (message <- messageList) {
       adapter.add(message)
     }
-    //chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
+    if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
+      chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
+    }
     Log.d(TAG, "changing chat list cursor")
   }
-
-  /*
-    private def updateProgress() {
-      val start = layoutManager.findFirstVisibleItemPosition()
-      val end = layoutManager.findLastVisibleItemPosition()
-      for (i <- start to end) {
-        val view = chatListView.getChildAt(i - start)
-        chatListView.getAdapter.getView(i, view, chatListView)
-      }
-    }
-  */
 
   def validateMessageBox(): Option[String] = {
     if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {

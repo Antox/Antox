@@ -8,11 +8,11 @@ import chat.tox.antox.wrapper.Message
 
 abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder(v) {
 
+  val row = v.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
+
   protected val bubble = v.findViewById(R.id.message_bubble).asInstanceOf[LinearLayout]
 
   protected val background = v.findViewById(R.id.message_text_background).asInstanceOf[LinearLayout]
-
-  protected val row = v.findViewById(R.id.message_row_layout).asInstanceOf[LinearLayout]
 
   protected val messageText = v.findViewById(R.id.message_text).asInstanceOf[TextView]
 

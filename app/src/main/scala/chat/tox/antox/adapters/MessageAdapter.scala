@@ -3,17 +3,24 @@ package chat.tox.antox.adapters
 import java.io.File
 import java.util
 
+import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
+import android.view.animation.{Animation, AnimationUtils}
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.utils.{Constants, TimestampUtils}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
-class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
+import scala.collection.JavaConversions._
+import scala.collection.mutable
 
-  protected var data: util.ArrayList[Message] = new util.ArrayList[Message]
+class MessageAdapter(context: Context, data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
+
+  private val animatedIds: mutable.Set[Int] = mutable.Set(data.map(_.id): _*)
+
+  private val anim: Animation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom)
 
   private val TEXT = 1
   private val ACTION = 2
@@ -51,6 +58,11 @@ class MessageAdapter extends RecyclerView.Adapter[GenericMessageHolder] {
     val message = data.get(pos)
     holder.setMessage(message)
     holder.setTimestamp(TimestampUtils.prettyTimestamp(message.timestamp, isChat = true))
+
+    if (!animatedIds.contains(message.id)) {
+      holder.row.startAnimation(anim)
+      animatedIds += message.id
+    }
 
     val viewType = getItemViewType(pos)
     viewType match {
