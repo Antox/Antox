@@ -137,10 +137,10 @@ abstract class GenericChatActivity extends AppCompatActivity {
   def updateChat(messageList: Seq[Message]): Unit = {
     //FIXME make this more efficient
     adapter.removeAll()
-    //add all is not available on api 10
     for (message <- messageList) {
       adapter.add(message)
     }
+    // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
