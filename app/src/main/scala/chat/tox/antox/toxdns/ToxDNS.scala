@@ -3,7 +3,7 @@ package chat.tox.antox.toxdns
 import java.io.UnsupportedEncodingException
 
 import android.util.{Base64, Log}
-import chat.tox.antox.toxdns.ToxDNS.DNSError.DNSError
+import chat.tox.antox.toxdns.DNSError.DNSError
 import chat.tox.antox.toxdns.ToxDNS.RequestType.RequestType
 import chat.tox.antox.wrapper.ToxAddress
 import com.squareup.okhttp.Request.Builder
@@ -75,49 +75,6 @@ object ToxDNS {
 
   def APIof(dnsDomain: String): String = "https://" + dnsDomain + "/api"
 
-  //ToxDNS Error
-  object DNSError extends Enumeration {
-    type DNSError = Value
-    val OK = Value("0")
-    val METHOD_UNSUPPORTED = Value("-1")
-    val NOTSECURE = Value("-2")
-    val BAD_PAYLOAD = Value("-3")
-    val NAME_TAKEN = Value("-25")
-    val DUPE_ID = Value("-26")
-    val UNKNOWN_NAME = Value("-30")
-    val INVALID_ID = Value("-31")
-    val LOOKUP_FAILED = Value("-41")
-    val NO_USER = Value("-42")
-    val LOOKUP_INTERNAL = Value("-43")
-    val RATE_LIMIT = Value("-4")
-    val UNKNOWN = Value("")
-    val KALIUM_LINK_ERROR = Value("KALIUM")
-    val INVALID_DOMAIN = Value("INVALID_DOMAIN")
-    val INTERNAL = Value("INTERNAL")
-
-    def valueOf(name: String) = values.find(_.toString == name).getOrElse(UNKNOWN)
-
-    def getDescription(dnsError: DNSError) = dnsError match {
-      case OK => "OK"
-      case METHOD_UNSUPPORTED => "Client didn't POST to /api"
-      case NOTSECURE => "Client is not using a secure connection"
-      case BAD_PAYLOAD => "Bad encrypted payload (not encrypted with DNS key)"
-      case NAME_TAKEN => "Name is taken"
-      case DUPE_ID => "The public key given is bound to a name already"
-      case UNKNOWN_NAME => "Name not found"
-      case INVALID_ID => "Sent invalid data in place of an ID"
-      case LOOKUP_FAILED => "Lookup failed because of an error on the other domain's side."
-      case NO_USER => "Lookup failed because that user doesn't exist on the domain"
-      case LOOKUP_INTERNAL => "Lookup failed because of a DNS server error"
-      case RATE_LIMIT => "Client is publishing IDs too fast"
-      case UNKNOWN => "Unknown error"
-      case KALIUM_LINK_ERROR => "Kalium link error"
-      case INVALID_DOMAIN => "Invalid Tox DNS domain"
-      case INTERNAL => "Internal error"
-        "Unknown error " + dnsError.toString
-    }
-  }
-
   final case class EncryptedPayload(payload: String, nonce: String)
 
   private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData, publicKey: String): EncryptedPayload = {
@@ -170,7 +127,7 @@ object ToxDNS {
     constructRequestJson(name, toxData, RequestType.DELETION_REQUEST).flatMap(result =>
       result match {
         case Left(error: DNSError) => Observable.just(Left(error))
-        case Right(result: JSONObject) => postJson(result, APIof(name.domain.getOrElse(DEFAULT_TOXDNS_DOMAIN)), RequestType.REGISTRATION_REQUEST)
+        case Right(result: JSONObject) => postJson(result, APIof(name.domain.getOrElse(DEFAULT_TOXDNS_DOMAIN)), RequestType.DELETION_REQUEST)
       }
     ).onErrorReturn(_ => Left(DNSError.UNKNOWN))
       .subscribeOn(IOScheduler())
@@ -218,7 +175,7 @@ object ToxDNS {
             val encryptedPayload = encryptPayload(unencryptedPayload, toxData, publicKey)
 
             val requestJson = new JSONObject
-            requestJson.put("action", 1)
+            requestJson.put("action", requestType)
             requestJson.put("public_key", toxData.address.key.toString)
             requestJson.put("encrypted", encryptedPayload.payload)
             requestJson.put("nonce", encryptedPayload.nonce)
@@ -227,14 +184,15 @@ object ToxDNS {
             subscriber.onNext(Left(DNSError.INVALID_DOMAIN))
         }
       } catch {
-        case e: JSONException =>
-          Log.d(DEBUG_TAG, "JSON Exception " + e.getMessage)
-          subscriber.onError(e)
+        case e: Exception =>
+          Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+          subscriber.onNext(Left(DNSError.exception(e)))
       }
       subscriber.onCompleted()
     })
   }
 
+  // FIXME: Resolve error thrown when receiving deletion json (JSONException: No value for password)
   private def postJson(requestJson: JSONObject, apiURL: String, requestType: RequestType): Observable[Result[String]] = {
     Observable(subscriber => {
       val httpClient = new OkHttpClient()
@@ -248,7 +206,6 @@ object ToxDNS {
         val errorCode = json.getString("c")
         val error = Try(DNSError.withName(errorCode)).getOrElse(DNSError.UNKNOWN)
         if (error == DNSError.OK) {
-
           val result = requestType match {
             case RequestType.REGISTRATION_REQUEST => json.getString ("password")
             case RequestType.DELETION_REQUEST => "Deleted successfully"
@@ -258,12 +215,9 @@ object ToxDNS {
           subscriber.onNext(Left(error))
         }
       } catch {
-        case e: UnsupportedEncodingException =>
-          Log.d(DEBUG_TAG, "Unsupported Encoding Exception: " + e.getMessage)
-          subscriber.onError(e)
         case e: Exception =>
-          Log.d(DEBUG_TAG, "IOException: " + e.getMessage)
-          subscriber.onError(e)
+          Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+          subscriber.onNext(Left(DNSError.exception(e)))
       }
 
       subscriber.onCompleted()
