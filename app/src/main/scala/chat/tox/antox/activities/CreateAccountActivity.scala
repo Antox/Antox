@@ -16,9 +16,9 @@ import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
-import chat.tox.antox.toxdns.ToxDNS.DNSError
-import chat.tox.antox.toxdns.ToxDNS.DNSError.DNSError
-import chat.tox.antox.toxdns.{DnsName, ToxDNS, ToxData}
+import chat.tox.antox.toxdns.DNSError
+import chat.tox.antox.toxdns.DNSError.DNSError
+import chat.tox.antox.toxdns.{DNSError, DnsName, ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}

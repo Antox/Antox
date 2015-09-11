@@ -1,7 +1,6 @@
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
-import chat.tox.antox.toxdns.ToxDNS.DNSError
-import chat.tox.antox.toxdns.{ToxData, DnsName, ToxDNS}
+import chat.tox.antox.toxdns.{DNSError, ToxData, DnsName, ToxDNS}
 import chat.tox.antox.utils.Options
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.options.ToxOptions
@@ -57,7 +56,7 @@ class ToxDNSTest extends AndroidTestCase {
   @Test
   def testDeletion(): Unit = {
     val toxData = new ToxData
-    val accountName: String = "antoxtest" + (Math.random()*10000).toInt
+    val accountName: String = "antoxtest"// + (Math.random()*10000).toInt
     val dnsname = DnsName.fromString(accountName)
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
