@@ -87,9 +87,9 @@ class Call(val friendNumber: Int) {
             Thread.sleep(audioLength - (timeTaken / 10^6))
         }
       }
-    }).start()
+    })//.start()
 
-    audioPlayer.start()
+    //audioPlayer.start()
   }
 
   def onAudioFrame(pcm: Array[Short], channels: Int, sampleRate: Int): Unit = {

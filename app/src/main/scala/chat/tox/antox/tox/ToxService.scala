@@ -50,6 +50,7 @@ class ToxService extends Service() {
       override def run(): Unit = {
         while (keepRunning) {
           ToxSingleton.toxAv.iterate()
+          Thread.sleep(5)
         }
       }
     }).start()
