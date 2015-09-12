@@ -41,6 +41,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     // time, go directly to the register account screen
     if (userDb.numUsers() == 0) {
       val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
+      createAccount.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       startActivity(createAccount)
       finish()
     } else if (userDb.loggedIn) {
