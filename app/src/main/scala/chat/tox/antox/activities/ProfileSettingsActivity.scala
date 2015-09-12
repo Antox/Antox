@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
+import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
 import android.view.{MenuItem, View}
 import android.widget.{ImageButton, Toast}
@@ -144,7 +145,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             val startTox = new Intent(getApplicationContext, classOf[ToxService])
             stopService(startTox)
             val loginIntent = new Intent(ProfileSettingsActivity.this, classOf[LoginActivity])
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+              Intent.FLAG_ACTIVITY_CLEAR_TOP |
+              IntentCompat.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(loginIntent)
             finish()
 

@@ -141,6 +141,7 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
+
   def disableRegisterButton(): Unit = {
     //prevent user from registering some other way while trying to register
     val registerIncognitoButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]

@@ -148,7 +148,6 @@ class UserDB(ctx: Context) {
     logout()
     val where = s"$COLUMN_NAME_PROFILE_NAME == ?"
     mDb.delete(TABLE_USERS, where, username)
-    State.db.close()
     ctx.deleteDatabase(username)
   }
 
