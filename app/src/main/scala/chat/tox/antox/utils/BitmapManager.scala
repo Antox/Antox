@@ -68,7 +68,7 @@ object BitmapManager {
     mAvatarValid.put(key, false)
   }
 
-  private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
+  def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
     val width = options.outWidth
     var inSampleSize = 1
 
@@ -78,6 +78,7 @@ object BitmapManager {
         inSampleSize *= 2
       }
     }
+    Log.d("BitMapManager", "Using a sample size of " + inSampleSize)
 
     inSampleSize
   }
@@ -98,7 +99,7 @@ object BitmapManager {
    */
   private def getBytesFromStream(inputStream: InputStream): Array[Byte] = {
     var byteArr = Array.ofDim[Byte](0)
-    val buffer = Array.ofDim[Byte](2^10)
+    val buffer = Array.ofDim[Byte](2 ^ 10)
     var len: Int = 0
     var count = 0
 
@@ -138,7 +139,7 @@ object BitmapManager {
       // Get the bytes from the image file
       val byteArr = getBytesFromStream(fis)
 
-      val options = new BitmapOptions()
+      val options = new BitmapFactory.Options()
 
       if (!decodeAndCheck(byteArr, options)) {
         return null
@@ -175,25 +176,28 @@ object BitmapManager {
     val poolSize = 100
     val poolTimeout = 1000
     ExecutionContext.fromExecutor(
-    new ThreadPoolExecutor(poolSize, poolSize, poolTimeout, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
-  )}
+      new ThreadPoolExecutor(poolSize, poolSize, poolTimeout, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
+    )
+  }
 
   def load(file: File, imageView: ImageView, isAvatar: Boolean) {
-      val imageKey = file.getPath + file.getName
+    val imageKey = file.getPath + file.getName
 
-      getFromCache(isAvatar, imageKey) match {
-        case Some(bitmap) =>
-          imageView.setImageBitmap(bitmap)
+    getFromCache(isAvatar, imageKey) match {
+      case Some(bitmap) =>
+        Log.d("BitmapManager", "Loading Bitmap image from cache")
+        imageView.setImageBitmap(bitmap)
 
-        case None =>
-          Future {
-            val bitmap = decodeBitmap(file, imageKey, isAvatar)
+      case None =>
+        Log.d("BitmapManager", "Decoding Bitmap image")
+        Future {
+          val bitmap = decodeBitmap(file, imageKey, isAvatar)
 
-            if (bitmap != null) {
-              runOnUiThread(imageView.setImageBitmap(bitmap))
-            }
+          if (bitmap != null) {
+            runOnUiThread(imageView.setImageBitmap(bitmap))
           }
-      }
+        }
+    }
   }
 }
 
