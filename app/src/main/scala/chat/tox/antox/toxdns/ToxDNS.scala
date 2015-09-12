@@ -68,7 +68,7 @@ object ToxDNS {
     try {
       val client = new OkHttpClient()
 
-      val request = new Builder().url(dnsDomain + "/pk").build()
+      val request = new Builder().url(s"https://$dnsDomain/pk").build()
       val response = client.newCall(request).execute()
       val json = new JSONObject(response.body().string())
 
