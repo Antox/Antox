@@ -13,7 +13,7 @@ import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.adapters.ChatMessageAdapter
+import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
@@ -28,7 +28,7 @@ import scala.collection.mutable.ArrayBuffer
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "ChatActivity"
   //var ARG_CONTACT_NUMBER: String = "contact_number"
-  var adapter: ChatMessageAdapter = null
+  var adapter: ChatMessagesAdapter = null
   var messageBox: EditText = null
   var isTypingBox: TextView = null
   var statusTextBox: TextView = null
@@ -60,7 +60,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Log.d(TAG, "key = " + activeKey)
 
     val db = State.db
-    adapter = new ChatMessageAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
+    adapter = new ChatMessagesAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)

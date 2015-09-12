@@ -16,7 +16,7 @@ import chat.tox.antox.wrapper.{Message, MessageType}
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 
-class ChatMessageAdapter(context: Context, data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
+class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
 
   private val animatedIds: mutable.Set[Int] = mutable.Set(data.map(_.id): _*)
 
