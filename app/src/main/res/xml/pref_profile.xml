@@ -72,4 +72,8 @@
         android:key="export"
         android:title="@string/pref_title_export" />
 
+    <Preference
+        android:key="delete"
+        android:title="@string/pref_title_delete" />
+
 </PreferenceScreen>

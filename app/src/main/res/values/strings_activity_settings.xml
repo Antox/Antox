@@ -32,6 +32,7 @@
     <string name="pref_title_avatar">Avatar</string>
     <string name="pref_title_account_name">Profile Name</string>
     <string name="pref_title_export">Export Profile</string>
+    <string name="pref_title_delete">Delete account</string>
     <string name="pref_title_logout">Logout</string>
 
     <!-- Notifications -->

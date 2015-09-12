@@ -149,6 +149,14 @@
     <string name="reset_tox_id_dialog_cancel">Cancel</string>
     <string name="tox_id_reset">Your Tox ID has been reset</string>
 
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_dialog_message">This will permanently delete this Antox user and remove you from any ToxDNS service tied to your account</string>
+    <string name="delete_account_dialog_title">Confirm Antox Account Deletion</string>
+    <string name="delete_account_dialog_confirm">Delete Account</string>
+    <string name="delete_account_dialog_cancel">Cancel</string>
+    <string name="delete_account_successful">Account was successfully deleted</string>
+    <string name="delete_account_error">An error occured while deleting your Antox accont</string>
+
     <!-- Create Group Dialog -->
     <string name="create_group_dialog_message">Create a new Group Chat</string>
     <string name="create_group_dialog_create_group">Create Group</string>

@@ -33,8 +33,8 @@ object ToxDNS {
   def lookup(dnsName: String): Observable[Option[String]] = {
     Observable(subscriber => {
       if (dnsName.contains("@")) {
-        val parsedDnsName = DnsName.fromString(dnsName)
-        val lookup = parsedDnsName.user + "._tox." + parsedDnsName.domain.get
+        val parsedDnsName = DnsName.fromString(dnsName, true)
+        val lookup = parsedDnsName.username + "._tox." + parsedDnsName.domain.get
         try {
           val records = new Lookup(lookup, Type.TXT).run()
           val txt = records(0).asInstanceOf[TXTRecord]
@@ -112,7 +112,7 @@ object ToxDNS {
     Observable[DnsResult[Password]](subscriber => {
       val json = new JSONObject
       json.put("tox_id", toxData.address)
-      json.put("name", name.user)
+      json.put("name", name.username)
       json.put("privacy", privacyLevel.id)
       json.put("bio", "")
       json.put("timestamp", epoch)
@@ -146,7 +146,7 @@ object ToxDNS {
   }
 
   private def makeEncryptedRequest(name: DnsName, toxData: ToxData, json: JSONObject, action: EncryptedRequestAction) = {
-    val apiURL = makeApiURL(name.domain.getOrElse(DEFAULT_TOXDNS_DOMAIN))
+    val apiURL = makeApiURL(name.domain.get)
 
     encryptRequestJson(name, toxData, json, action)
       .right.flatMap(postJson(_, apiURL))
@@ -154,7 +154,7 @@ object ToxDNS {
 
   private def encryptRequestJson(name: DnsName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): DnsResult[JSONObject] = {
     try {
-      lookupPublicKey(name.domain.getOrElse(DEFAULT_TOXDNS_DOMAIN)) match {
+      lookupPublicKey(name.domain.get) match {
         case Some(publicKey) =>
           encryptPayload(requestJson, toxData, publicKey) match {
             case Some(encryptedPayload) =>

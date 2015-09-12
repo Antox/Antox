@@ -30,7 +30,7 @@ object AntoxDB {
 
     var CREATE_TABLE_CONTACTS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_CONTACTS ($COLUMN_NAME_KEY text primary key,
-         |$COLUMN_NAME_USERNAME text,
+         |$COLUMN_NAME_PROFILE_NAME text,
          |$COLUMN_NAME_STATUS text,
          |$COLUMN_NAME_NOTE text,
          |$COLUMN_NAME_ALIAS text,
@@ -132,7 +132,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_STATUS, "0")
     values.put(COLUMN_NAME_NOTE, statusMessage)
-    values.put(COLUMN_NAME_USERNAME, username)
+    values.put(COLUMN_NAME_PROFILE_NAME, username)
     values.put(COLUMN_NAME_ISONLINE, false)
     values.put(COLUMN_NAME_ALIAS, alias)
     values.put(COLUMN_NAME_ISBLOCKED, false)
@@ -596,7 +596,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def updateContactName(key: ToxKey, newName: String): Unit =
-    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_USERNAME, newName)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_PROFILE_NAME, newName)
 
   def updateContactStatusMessage(key: ToxKey, newMessage: String): Unit =
     updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_NOTE, newMessage)
@@ -632,7 +632,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
     val cursor = mDb.query(selectQuery)
     if (cursor.moveToFirst()) {
       do {
-        var name = cursor.getString(COLUMN_NAME_USERNAME)
+        var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
         val note = cursor.getString(COLUMN_NAME_NOTE)
         val alias = cursor.getString(COLUMN_NAME_ALIAS)
         if (name == null) name = ""
@@ -714,7 +714,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   private def getFriendInfoFromCursor(cursor: Cursor): FriendInfo = {
-    var name = cursor.getString(COLUMN_NAME_USERNAME)
+    var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
     val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val statusMessage = cursor.getString(COLUMN_NAME_NOTE)
@@ -734,7 +734,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   private def getGroupInfoFromCursor(cursor: Cursor): GroupInfo = {
-    var name = cursor.getString(COLUMN_NAME_USERNAME)
+    var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
     val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val topic = cursor.getString(COLUMN_NAME_NOTE)
