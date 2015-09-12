@@ -66,9 +66,13 @@ object ToxDNS {
    */
   def lookupPublicKey(dnsDomain: String): Option[String] = {
     try {
-      val records = new Lookup("_tox." + dnsDomain, Type.TXT).run()
-      val txt = records(0).asInstanceOf[TXTRecord]
-      Some(txt.toString.substring(txt.toString.indexOf('"')).replace("\"", ""))
+      val client = new OkHttpClient()
+
+      val request = new Builder().url(s"https://$dnsDomain/pk").build()
+      val response = client.newCall(request).execute()
+      val json = new JSONObject(response.body().string())
+
+      Some(json.getString("key"))
     } catch {
       case e: Exception =>
         e.printStackTrace()
