@@ -34,7 +34,9 @@ object ProfileSettingsActivity {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-
+      if(preference.getKey.equals("dns_info")) {
+        preference.setEnabled(true)
+      }
       preference match {
         case lp: ListPreference =>
           val index = lp.findIndexOfValue(stringValue)
@@ -43,7 +45,6 @@ object ProfileSettingsActivity {
         case _ =>
           preference.setSummary(stringValue)
       }
-
       true
     }
   }
@@ -87,6 +88,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     bindPreferenceSummaryToValue(findPreference("status_message"))
     bindPreferenceSummaryToValue(findPreference("tox_id"))
     bindPreferenceSummaryToValue(findPreference("active_account"))
+    bindPreferenceSummaryToValue(findPreference("dns_info"))
     val toxIDPreference = findPreference("tox_id")
     toxIDPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -202,6 +204,18 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         true
       }
     })
+
+    val toxDnsPreference = findPreference("dns_info")
+    toxDnsPreference.setEnabled(false)
+    toxDnsPreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+
+        true
+      }
+    })
+
+
+
   }
 
   def createToxIDDialog() {

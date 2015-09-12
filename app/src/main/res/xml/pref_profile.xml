@@ -59,6 +59,12 @@
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
 
+    <Preference
+        android:defaultValue="@string/pref_default_tox_dns"
+        android:title="@string/pref_title_tox_dns"
+        android:editable="false"
+        android:key="dns_info" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="logging_enabled"
