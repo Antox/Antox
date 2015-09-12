@@ -44,6 +44,9 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     messageText.setText(msg.message)
     messageTitle.setText(msg.senderName)
 
+    if (!msg.received) {
+      setAlpha(bubble, 0.5f)
+    }
     // generate name colour from hash to ensure names have consistent colours
     UiUtils.generateColor(msg.senderName.hashCode)
     if (lastMsg.isEmpty  || msg.senderName != lastMsg.get.senderName) {

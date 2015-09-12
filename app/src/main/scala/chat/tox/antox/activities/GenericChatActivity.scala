@@ -60,7 +60,8 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Log.d(TAG, "key = " + activeKey)
 
     val db = State.db
-    adapter = new ChatMessagesAdapter(this, new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
+    adapter = new ChatMessagesAdapter(this,
+      new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -72,14 +73,17 @@ abstract class GenericChatActivity extends AppCompatActivity {
     })
 
     layoutManager.setStackFromEnd(true)
+
     chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
     chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
+
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         adapter.setScrolling(!(newState == RecyclerView.SCROLL_STATE_IDLE))
       }
+
     })
 
     val b = this.findViewById(R.id.sendMessageButton)

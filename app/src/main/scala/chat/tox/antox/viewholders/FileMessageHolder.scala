@@ -5,6 +5,7 @@ import java.io.File
 import android.app.AlertDialog
 import android.content._
 import android.net.Uri
+import android.text.format.Formatter
 import android.util.Log
 import android.view.View
 import android.view.View.{OnClickListener, OnLongClickListener}
@@ -16,7 +17,6 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.concurrent.duration._
-
 
 class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
 
@@ -78,8 +78,9 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       }
     })
     fileButtons.setVisibility(View.VISIBLE)
+    fileSize.setText(Formatter.formatFileSize(context, msg.size))
+    fileSize.setVisibility(View.VISIBLE)
 
-    fileSize.setVisibility(View.GONE)
     progressLayout.setVisibility(View.GONE)
     imageMessage.setVisibility(View.GONE)
   }
