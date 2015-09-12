@@ -13,7 +13,7 @@ import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
 import android.view.{MenuItem, View}
-import android.widget.{ImageButton, Toast}
+import android.widget.{TextView, ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
@@ -34,9 +34,6 @@ object ProfileSettingsActivity {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
       val stringValue = value.toString
-      if(preference.getKey.equals("dns_info")) {
-        preference.setEnabled(true)
-      }
       preference match {
         case lp: ListPreference =>
           val index = lp.findIndexOfValue(stringValue)
@@ -77,18 +74,40 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     }
 
     bindPreferenceSummaryToValue(findPreference("nickname"))
+    bindPreferenceSummaryToValue(findPreference("status"))
+    bindPreferenceSummaryToValue(findPreference("status_message"))
+    bindPreferenceSummaryToValue(findPreference("tox_id"))
+    bindPreferenceSummaryToValue(findPreference("active_account"))
+
+
     val passwordPreference = findPreference("password")
+    passwordPreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        createPasswordDialog()
+        true
+      }
+    })
     if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
       .getString(passwordPreference.getKey, "").isEmpty) {
       getPreferenceScreen.removePreference(passwordPreference)
     } else {
       bindPreferenceSummaryToValue(passwordPreference)
     }
-    bindPreferenceSummaryToValue(findPreference("status"))
-    bindPreferenceSummaryToValue(findPreference("status_message"))
-    bindPreferenceSummaryToValue(findPreference("tox_id"))
-    bindPreferenceSummaryToValue(findPreference("active_account"))
-    bindPreferenceSummaryToValue(findPreference("dns_info"))
+
+    val dnsPreference = findPreference("dns_info")
+    dnsPreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        createDnsAddressDialog()
+        true
+      }
+    })
+    if (PreferenceManager.getDefaultSharedPreferences(dnsPreference.getContext)
+      .getString(dnsPreference.getKey, "").isEmpty) {
+      getPreferenceScreen.removePreference(dnsPreference)
+    } else {
+      bindPreferenceSummaryToValue(dnsPreference)
+    }
+
     val toxIDPreference = findPreference("tox_id")
     toxIDPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
@@ -205,17 +224,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       }
     })
 
-    val toxDnsPreference = findPreference("dns_info")
-    toxDnsPreference.setEnabled(false)
-    toxDnsPreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
-      override def onPreferenceClick(preference: Preference): Boolean = {
-
-        true
-      }
-    })
-
-
-
   }
 
   def createToxIDDialog() {
@@ -259,6 +267,38 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")))
         shareIntent.setType("image/jpeg")
         view.getContext.startActivity(Intent.createChooser(shareIntent, getResources.getString(R.string.share_with)))
+      }
+    })
+    builder.create().show()
+  }
+
+  def createDnsAddressDialog() {
+    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
+    builder.setTitle(pref.getString("dns_info",""))
+    builder.setPositiveButton(getString(R.string.button_ok), null)
+    builder.setNeutralButton(getString(R.string.dialog_dns_info), new DialogInterface.OnClickListener() {
+
+      def onClick(dialogInterface: DialogInterface, ID: Int) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
+        clipboard.setText(sharedPreferences.getString("dns_info", ""))
+      }
+    })
+    builder.create().show()
+  }
+
+  def createPasswordDialog() {
+    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
+    builder.setTitle(pref.getString("password",""))
+    builder.setPositiveButton(getString(R.string.button_ok), null)
+    builder.setNeutralButton(getString(R.string.dialog_password), new DialogInterface.OnClickListener() {
+
+      def onClick(dialogInterface: DialogInterface, ID: Int) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
+        clipboard.setText(sharedPreferences.getString("password", ""))
       }
     })
     builder.create().show()
