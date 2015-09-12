@@ -16,10 +16,11 @@ import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
-import chat.tox.antox.data.State
+import chat.tox.antox.data.{UserDB, State}
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.tox.{ToxService, ToxDataFile, ToxSingleton}
+import chat.tox.antox.toxdns.{DnsName, ToxData, ToxDNS}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
@@ -115,6 +116,52 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         fileDialog.showDialog()
         true
       }
+    })
+
+    val deleteAccount = findPreference("delete")
+    deleteAccount.setOnPreferenceClickListener(new OnPreferenceClickListener {
+      override def onPreferenceClick(preference: Preference): Boolean = {
+        val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+        builder.setMessage(R.string.delete_account_dialog_message)
+
+        builder.setTitle(R.string.delete_account_dialog_title)
+
+        builder.setPositiveButton(R.string.delete_account_dialog_confirm, new OnClickListener {
+          override def onClick(dialog: DialogInterface, which: Int): Unit = {
+
+            val userDb = State.userDb(getApplicationContext)
+            val userInfo = userDb.getActiveUserDetails
+            val dataFile = new ToxDataFile(getApplicationContext, userInfo.username)
+            val toxData = new ToxData
+            toxData.fileBytes = dataFile.loadFile()
+            toxData.address = ToxSingleton.tox.getAddress
+            val dnsName = DnsName.fromString(userInfo.getFullAddress)
+            ToxDNS.deleteAccount(dnsName,toxData).toBlocking.first
+            userDb.deleteCurrentUser()
+            val startTox = new Intent(ProfileSettingsActivity.this, classOf[ToxService])
+            stopService(startTox)
+
+            if(userDb.numUsers() > 0) {
+              val loginIntent = new Intent(ProfileSettingsActivity.this, classOf[LoginActivity])
+              startActivity(loginIntent)
+            }
+            else {
+              val createAccountIntent = new Intent(ProfileSettingsActivity.this, classOf[CreateAccountActivity])
+              startActivity(createAccountIntent)
+            }
+
+            finish()
+
+          }
+        })
+
+        builder.setNegativeButton(getString(R.string.delete_account_dialog_cancel), null)
+
+        builder.show()
+
+        true
+      }
+
     })
 
     val nospamPreference = findPreference("nospam")

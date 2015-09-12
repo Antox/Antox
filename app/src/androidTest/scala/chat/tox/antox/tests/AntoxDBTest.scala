@@ -79,4 +79,5 @@ class AntoxDBTest extends AndroidTestCase {
 
     assertEquals(number, numChanges)
   }
+
 }

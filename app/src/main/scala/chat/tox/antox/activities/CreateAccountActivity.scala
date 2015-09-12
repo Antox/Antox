@@ -191,10 +191,10 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def createAccount(rawAccountName: String, userDb: UserDB, shouldCreateDataFile: Boolean, shouldRegister: Boolean): Unit = {
-    val accountName = DnsName.fromString(rawAccountName)
-    if (!validAccountName(accountName.user)) {
+    val dnsName = DnsName.fromString(rawAccountName)
+    if (!validAccountName(dnsName.username)) {
       showBadAccountNameError()
-    } else if (userDb.doesUserExist(accountName.user)) {
+    } else if (userDb.doesUserExist(dnsName.username)) {
       val context = getApplicationContext
       val text = getString(R.string.create_profile_exists)
       val duration = Toast.LENGTH_LONG
@@ -208,12 +208,12 @@ class CreateAccountActivity extends AppCompatActivity {
       if (shouldCreateDataFile) {
         // Create tox data save file
         try {
-          toxData = createToxData(accountName.user)
+          toxData = createToxData(dnsName.username)
         } catch {
           case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
         }
       } else {
-        val result = loadToxData(accountName.user)
+        val result = loadToxData(dnsName.username)
 
         result match {
           case Some(data) =>
@@ -227,7 +227,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
       val observable = if (shouldRegister) {
         // Register acccount
-        ToxDNS.registerAccount(accountName, PrivacyLevel.PRIVATE, toxData)
+        ToxDNS.registerAccount(dnsName, PrivacyLevel.PRIVATE, toxData)
       } else {
         //succeed with empty password
         Observable.just(Right(""))
@@ -236,14 +236,14 @@ class CreateAccountActivity extends AppCompatActivity {
       observable
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(result => {
-        onRegistrationResult(accountName.user, toxData, result)
+        onRegistrationResult(dnsName, toxData, result)
       }, error => {
         Log.d("", "Unexpected error registering account.")
       })
     }
   }
 
-  def onRegistrationResult(accountName: String, toxData: ToxData, result: Either[DNSError, String]): Unit = {
+  def onRegistrationResult(dnsName: DnsName, toxData: ToxData, result: Either[DNSError, String]): Unit = {
     var successful = true
     var accountPassword = ""
     val toastMessage: Option[String] = result match {
@@ -264,8 +264,8 @@ class CreateAccountActivity extends AppCompatActivity {
     }
 
     if (successful) {
-      State.userDb(this).addUser(accountName, toxData.address, "")
-      loginAndStartMain(accountName, accountPassword)
+      State.userDb(this).addUser(dnsName.getFullAddress, toxData.address, "")
+      loginAndStartMain(dnsName.username, accountPassword)
     } else {
       toastMessage.foreach(message => {
         val context = getApplicationContext

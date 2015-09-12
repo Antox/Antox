@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
+import chat.tox.antox.toxdns.ToxDNS
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey, UserInfo}
@@ -30,7 +31,9 @@ object UserDB {
          |$COLUMN_NAME_STATUS text,
          |$COLUMN_NAME_STATUS_MESSAGE text,
          |$COLUMN_NAME_AVATAR text,
-         |$COLUMN_NAME_LOGGING_ENABLED boolean);""".stripMargin
+         |$COLUMN_NAME_LOGGING_ENABLED boolean,
+         |$COLUMN_NAME_DNS_DOMAIN text);""".stripMargin
+
 
     override def onCreate(db: SQLiteDatabase) {
       db.execSQL(CREATE_TABLE_USERS)
@@ -48,6 +51,9 @@ object UserDB {
           case 2 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_LOGGING_ENABLED integer")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_LOGGING_ENABLED = $TRUE")
+          case 6 =>
+            db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_DNS_DOMAIN text")
+            db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_DNS_DOMAIN = 'toxme.io' ")
           case _ =>
         }
       }
@@ -105,16 +111,22 @@ class UserDB(ctx: Context) {
     preferences.edit().putString("active_account", "").commit()
   }
 
-  def addUser(username: String, toxId: ToxAddress, password: String) {
+  def addUser(userAddress: String, toxId: ToxAddress, password: String) {
     val values = new ContentValues()
-    values.put(COLUMN_NAME_USERNAME, username)
+    val user = userAddress.split("@")(0)
+    val domain = {
+      if (userAddress.split("@").length == 1) ToxDNS.DEFAULT_TOXDNS_DOMAIN
+      else userAddress.split("@")(1)
+    }
+    values.put(COLUMN_NAME_USERNAME, user)
     values.put(COLUMN_NAME_PASSWORD, password)
-    values.put(COLUMN_NAME_NICKNAME, username)
+    values.put(COLUMN_NAME_NICKNAME, user)
     values.put(COLUMN_NAME_STATUS, "online")
     val defaultStatusMessage = ctx.getResources.getString(R.string.pref_default_status_message)
     values.put(COLUMN_NAME_STATUS_MESSAGE, defaultStatusMessage)
     values.put(COLUMN_NAME_AVATAR, "")
     values.put(COLUMN_NAME_LOGGING_ENABLED, true)
+    values.put(COLUMN_NAME_DNS_DOMAIN, domain)
     mDb.insert(TABLE_USERS, values)
 
     val editor = preferences.edit()
@@ -136,6 +148,16 @@ class UserDB(ctx: Context) {
     count > 0
   }
 
+  def deleteCurrentUser(): Boolean = {
+    val username = getActiveUserDetails.username
+    logout()
+    val where = s"$COLUMN_NAME_USERNAME == ?"
+    mDb.delete(TABLE_USERS, where, username)
+    State.db.close()
+    ctx.deleteDatabase(username)
+    true
+  }
+
   private def userDetailsQuery(username: String): String =
     s"""SELECT *
        |FROM $TABLE_USERS
@@ -146,6 +168,7 @@ class UserDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       userInfo = new UserInfo(
         username = cursor.getString(COLUMN_NAME_USERNAME),
+        domain = cursor.getString(COLUMN_NAME_DNS_DOMAIN),
         password = cursor.getString(COLUMN_NAME_PASSWORD),
         nickname = cursor.getString(COLUMN_NAME_NICKNAME),
         status = cursor.getString(COLUMN_NAME_STATUS),
