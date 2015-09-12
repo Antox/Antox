@@ -17,11 +17,11 @@ import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
-import chat.tox.antox.data.{UserDB, State}
+import chat.tox.antox.data.State
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.{ToxService, ToxDataFile, ToxSingleton}
-import chat.tox.antox.toxdns.{DnsName, ToxData, ToxDNS}
+import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
+import chat.tox.antox.toxdns.{ToxDNS, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
@@ -132,7 +132,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
 
             val userDb = State.userDb(getApplicationContext)
             val userInfo = userDb.getActiveUserDetails
-            val dataFile = new ToxDataFile(getApplicationContext, userInfo.username)
+            val dataFile = new ToxDataFile(getApplicationContext, userInfo.profileName)
             val toxData = new ToxData
             toxData.fileBytes = dataFile.loadFile()
             toxData.address = ToxSingleton.tox.getAddress

@@ -71,9 +71,7 @@ class MainDrawerFragment extends Fragment {
       .observeOn(AndroidMainThreadScheduler())
       .subscribe((tuple) => {
       refreshDrawerHeader(tuple._1, tuple._2)
-    },
-      error => error.printStackTrace() // TODO: Resolve
-    )
+    })
 
     rootView
   }
