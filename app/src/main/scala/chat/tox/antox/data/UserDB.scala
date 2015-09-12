@@ -25,7 +25,7 @@ object UserDB {
   class DatabaseHelper(context: Context) extends SQLiteOpenHelper(context, databaseName, null, USER_DATABASE_VERSION) {
     private val CREATE_TABLE_USERS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_USERS ( _id integer primary key ,
-         |$COLUMN_NAME_USERNAME text,
+         |$COLUMN_NAME_PROFILE_NAME text,
          |$COLUMN_NAME_PASSWORD text,
          |$COLUMN_NAME_NICKNAME text,
          |$COLUMN_NAME_STATUS text,
@@ -113,7 +113,7 @@ class UserDB(ctx: Context) {
 
   def addUser(dnsName: DnsName, toxId: ToxAddress, password: String) {
     val values = new ContentValues()
-    values.put(COLUMN_NAME_USERNAME, dnsName.username)
+    values.put(COLUMN_NAME_PROFILE_NAME, dnsName.username)
     values.put(COLUMN_NAME_PASSWORD, password)
     values.put(COLUMN_NAME_NICKNAME, dnsName.username)
     values.put(COLUMN_NAME_STATUS, "online")
@@ -121,7 +121,7 @@ class UserDB(ctx: Context) {
     values.put(COLUMN_NAME_STATUS_MESSAGE, defaultStatusMessage)
     values.put(COLUMN_NAME_AVATAR, "")
     values.put(COLUMN_NAME_LOGGING_ENABLED, true)
-    values.put(COLUMN_NAME_DNS_DOMAIN, dnsName.domain)
+    values.put(COLUMN_NAME_DNS_DOMAIN, dnsName.domain.getOrElse(""))
     mDb.insert(TABLE_USERS, values)
 
     val editor = preferences.edit()
@@ -135,7 +135,7 @@ class UserDB(ctx: Context) {
     val cursor = mDb.query(
       s"""SELECT count(*)
          |FROM $TABLE_USERS
-         |WHERE $COLUMN_NAME_USERNAME='$username'""".stripMargin)
+         |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin)
 
     cursor.moveToFirst()
     val count = cursor.getInt(0)
@@ -143,28 +143,27 @@ class UserDB(ctx: Context) {
     count > 0
   }
 
-  def deleteCurrentUser(): Boolean = {
+  def deleteActiveUser() {
     val username = getActiveUserDetails.username
     logout()
-    val where = s"$COLUMN_NAME_USERNAME == ?"
+    val where = s"$COLUMN_NAME_PROFILE_NAME == ?"
     mDb.delete(TABLE_USERS, where, username)
     State.db.close()
     ctx.deleteDatabase(username)
-    true
   }
 
   private def userDetailsQuery(username: String): String =
     s"""SELECT *
        |FROM $TABLE_USERS
-       |WHERE $COLUMN_NAME_USERNAME='$username'""".stripMargin
+       |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
   private def userInfoFromCursor(cursor: Cursor): UserInfo = {
     var userInfo: UserInfo = null
     if (cursor.moveToFirst()) {
       userInfo = new UserInfo(
-        username = cursor.getString(COLUMN_NAME_USERNAME),
+        username = cursor.getString(COLUMN_NAME_PROFILE_NAME),
         dnsName = new DnsName(
-          cursor.getString(COLUMN_NAME_USERNAME),cursor.getString(COLUMN_NAME_DNS_DOMAIN) ),
+          cursor.getString(COLUMN_NAME_PROFILE_NAME),Some(cursor.getString(COLUMN_NAME_DNS_DOMAIN)) ),
         password = cursor.getString(COLUMN_NAME_PASSWORD),
         nickname = cursor.getString(COLUMN_NAME_NICKNAME),
         status = cursor.getString(COLUMN_NAME_STATUS),
@@ -217,12 +216,12 @@ class UserDB(ctx: Context) {
   }
 
   private def updateUserDetail(username: String, detail: String, newDetail: String) {
-    val whereClause = s"$COLUMN_NAME_USERNAME='$username'"
+    val whereClause = s"$COLUMN_NAME_PROFILE_NAME='$username'"
     mDb.update(TABLE_USERS, contentValue(detail, newDetail), whereClause)
   }
 
   def updateUserDetail(username: String, detail: String, newDetail: Boolean) {
-    val whereClause = s"$COLUMN_NAME_USERNAME='$username'"
+    val whereClause = s"$COLUMN_NAME_PROFILE_NAME='$username'"
     mDb.update(TABLE_USERS, contentValue(detail, if (newDetail) TRUE else FALSE), whereClause)
   }
 
@@ -236,7 +235,7 @@ class UserDB(ctx: Context) {
 
   def getAllProfiles: ArrayBuffer[String] = {
     val profiles = new ArrayBuffer[String]()
-    val query = s"SELECT $COLUMN_NAME_USERNAME FROM $TABLE_USERS"
+    val query = s"SELECT $COLUMN_NAME_PROFILE_NAME FROM $TABLE_USERS"
     val cursor = mDb.query(query)
     if (cursor.moveToFirst()) {
       do {

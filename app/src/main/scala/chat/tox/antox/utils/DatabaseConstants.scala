@@ -35,7 +35,7 @@ object DatabaseConstants {
 
   val COLUMN_NAME_NAME = "name"
 
-  val COLUMN_NAME_USERNAME = "username"
+  val COLUMN_NAME_PROFILE_NAME = "username"
 
   val COLUMN_NAME_DNS_DOMAIN = "domain"
 

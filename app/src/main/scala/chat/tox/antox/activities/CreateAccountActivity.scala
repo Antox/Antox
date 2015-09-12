@@ -191,7 +191,7 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def createAccount(rawAccountName: String, userDb: UserDB, shouldCreateDataFile: Boolean, shouldRegister: Boolean): Unit = {
-    val dnsName = DnsName.fromString(rawAccountName)
+    val dnsName = DnsName.fromString(rawAccountName, shouldRegister)
     if (!validAccountName(dnsName.username)) {
       showBadAccountNameError()
     } else if (userDb.doesUserExist(dnsName.username)) {
@@ -238,7 +238,8 @@ class CreateAccountActivity extends AppCompatActivity {
         .subscribe(result => {
         onRegistrationResult(dnsName, toxData, result)
       }, error => {
-        Log.d("", "Unexpected error registering account.")
+        Log.d("CreateAccount", "Unexpected error registering account.")
+        error.printStackTrace()
       })
     }
   }

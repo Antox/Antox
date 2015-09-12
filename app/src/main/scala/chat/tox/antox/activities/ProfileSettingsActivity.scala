@@ -136,20 +136,14 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             toxData.fileBytes = dataFile.loadFile()
             toxData.address = ToxSingleton.tox.getAddress
             val dnsName = userInfo.dnsName
-            ToxDNS.deleteAccount(dnsName,toxData).toBlocking.first
-            userDb.deleteCurrentUser()
+            if (dnsName.domain.isDefined) {
+              // Delete from toxdns
+            }
+            userDb.deleteActiveUser()
             val startTox = new Intent(ProfileSettingsActivity.this, classOf[ToxService])
             stopService(startTox)
-
-            if(userDb.numUsers() > 0) {
-              val loginIntent = new Intent(ProfileSettingsActivity.this, classOf[LoginActivity])
-              startActivity(loginIntent)
-            }
-            else {
-              val createAccountIntent = new Intent(ProfileSettingsActivity.this, classOf[CreateAccountActivity])
-              startActivity(createAccountIntent)
-            }
-
+            val loginIntent = new Intent(ProfileSettingsActivity.this, classOf[LoginActivity])
+            startActivity(loginIntent)
             finish()
 
           }
