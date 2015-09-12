@@ -5,6 +5,7 @@ import java.io.File
 import android.app.AlertDialog
 import android.content._
 import android.net.Uri
+import android.os.Environment
 import android.text.format.Formatter
 import android.util.Log
 import android.view.View
@@ -12,7 +13,7 @@ import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.BitmapManager
+import chat.tox.antox.utils.{BitmapManager, Constants}
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
@@ -156,7 +157,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   override def onLongClick(view: View): Boolean = {
-    val items = Array[CharSequence](context.getResources.getString(R.string.message_delete))
+    val items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
+      context.getResources.getString(R.string.file_delete))
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
       def onClick(dialog: DialogInterface, index: Int): Unit = index match {
@@ -166,7 +168,23 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
             db.deleteMessage(msg.id)
             subscriber.onCompleted()
           }).subscribeOn(IOScheduler()).subscribe()
+        case 1 =>
+          Observable[Boolean](subscriber => {
+            val db = State.db
+            db.deleteMessage(msg.id)
 
+            val file =
+              if (msg.message.contains("/")) {
+                new File(msg.message)
+              } else {
+                val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                  Constants.DOWNLOAD_DIRECTORY)
+                new File(f.getAbsolutePath + "/" + msg.message)
+              }
+            file.delete()
+
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler()).subscribe()
       }
     }).create().show()
 
