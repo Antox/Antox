@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:gravity="end|right"
     android:background="@color/white_absolute"
+    android:gravity="end|right"
+    android:orientation="vertical"
     android:padding="@dimen/padding_small">
 
     <LinearLayout
@@ -29,6 +29,16 @@
             android:layout_height="wrap_content"
             android:background="@drawable/conversation_item_sent_shape"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_file_transfer"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_smallish"
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/message_text"

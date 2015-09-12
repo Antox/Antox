@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.animation.{Animation, AnimationUtils}
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
-import chat.tox.antox.utils.{Constants, TimestampUtils}
+import chat.tox.antox.utils.Constants
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
@@ -55,13 +55,16 @@ class MessageAdapter(context: Context, data: util.ArrayList[Message]) extends Re
   override def getItemCount: Int = if (data == null) 0 else data.size
 
   override def onBindViewHolder(holder: GenericMessageHolder, pos: Int): Unit = {
-    val message = data.get(pos)
-    holder.setMessage(message)
-    holder.setTimestamp(TimestampUtils.prettyTimestamp(message.timestamp, isChat = true))
+    val msg = data.get(pos)
+    val lastMsg: Option[Message] = data.lift(pos - 1)
+    val nextMsg: Option[Message] = data.lift(pos + 1)
 
-    if (!animatedIds.contains(message.id)) {
+    holder.setMessage(msg, lastMsg, nextMsg)
+    holder.setTimestamp()
+
+    if (!animatedIds.contains(msg.id)) {
       holder.row.startAnimation(anim)
-      animatedIds += message.id
+      animatedIds += msg.id
     }
 
     val viewType = getItemViewType(pos)
@@ -73,34 +76,34 @@ class MessageAdapter(context: Context, data: util.ArrayList[Message]) extends Re
           holder.contactMessage()
         }
         val textHolder = holder.asInstanceOf[TextMessageHolder]
-        textHolder.setText(message.message)
+        textHolder.setText(msg.message)
 
       case ACTION =>
         val actionHolder = holder.asInstanceOf[ActionMessageHolder]
-        actionHolder.setText(message.senderName, message.message)
+        actionHolder.setText(msg.senderName, msg.message)
 
       case FILE =>
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
 
         if (holder.getMessage.isMine) {
           holder.ownMessage()
-          val split = message.message.split("/")
+          val split = msg.message.split("/")
           fileHolder.setFileText(split(split.length - 1))
         } else {
           holder.contactMessage()
-          fileHolder.setFileText(message.message)
+          fileHolder.setFileText(msg.message)
         }
 
-        if (message.sent) {
-          if (message.messageId != -1) {
+        if (msg.sent) {
+          if (msg.messageId != -1) {
             fileHolder.showProgressBar()
           } else {
             //FIXME this should be "Failed" - fix the DB bug
             fileHolder.setProgressText(R.string.file_finished)
           }
         } else {
-          if (message.messageId != -1) {
-            if (message.isMine) {
+          if (msg.messageId != -1) {
+            if (msg.isMine) {
               fileHolder.setProgressText(R.string.file_request_sent)
             } else {
               fileHolder.showFileButtons()
@@ -110,14 +113,14 @@ class MessageAdapter(context: Context, data: util.ArrayList[Message]) extends Re
           }
         }
 
-        if (message.received || message.isMine) {
+        if (msg.received || msg.isMine) {
           val file =
-            if (message.message.contains("/")) {
-              new File(message.message)
+            if (msg.message.contains("/")) {
+              new File(msg.message)
             } else {
               val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 Constants.DOWNLOAD_DIRECTORY)
-              new File(f.getAbsolutePath + "/" + message.message)
+              new File(f.getAbsolutePath + "/" + msg.message)
             }
 
           if (file.exists() && file.getName.toLowerCase.matches("^.+?\\.(jpg|jpeg|png|gif)$")) {

@@ -41,7 +41,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   def setImage(file: File): Unit = {
     this.file = file
     // Set a placeholder in the image in case bitmap needs to be loaded from disk
-    if (message.isMine) {
+    if (msg.isMine) {
       imageMessage.setImageResource(R.drawable.sent)
     } else {
       imageMessage.setImageResource(R.drawable.received)
@@ -68,13 +68,13 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     accept.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        State.transfers.acceptFile(message.key, message.messageId, context)
+        State.transfers.acceptFile(msg.key, msg.messageId, context)
       }
     })
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        State.transfers.rejectFile(message.key, message.messageId, context)
+        State.transfers.rejectFile(msg.key, msg.messageId, context)
       }
     })
     fileButtons.setVisibility(View.VISIBLE)
@@ -85,7 +85,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   def showProgressBar(): Unit = {
-    fileProgressBar.setMax(message.size)
+    fileProgressBar.setMax(msg.size)
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
 
@@ -104,21 +104,21 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
   def updateProgressBar(): Unit = {
     val updateRate = 500
-    val mProgress = State.transfers.getProgressSinceXAgo(message.id, updateRate)
+    val mProgress = State.transfers.getProgressSinceXAgo(msg.id, updateRate)
     val bytesPerSecond = mProgress match {
       case Some(p) => ((p._1 * 1000) / p._2).toInt
       case None => 0
     }
 
     if (bytesPerSecond != 0) {
-      val secondsToComplete = message.size / bytesPerSecond
+      val secondsToComplete = msg.size / bytesPerSecond
       fileProgressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s, " +
         context.getResources.getString(R.string.file_time_remaining, secondsToComplete.toString))
     } else {
       fileProgressText.setText(java.lang.Integer.toString(bytesPerSecond / 1024) + " KiB/s")
     }
-    fileProgressBar.setProgress(State.transfers.getProgress(message.id).toInt)
-    if (fileProgressBar.getProgress >= message.size) {
+    fileProgressBar.setProgress(State.transfers.getProgress(msg.id).toInt)
+    if (fileProgressBar.getProgress >= msg.size) {
       progressSub.unsubscribe()
       Log.d("FileProgressSub", "observer unsubscribed")
     }
@@ -162,7 +162,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         case 0 =>
           Observable[Boolean](subscriber => {
             val db = State.db
-            db.deleteMessage(message.id)
+            db.deleteMessage(msg.id)
             subscriber.onCompleted()
           }).subscribeOn(IOScheduler()).subscribe()
 
