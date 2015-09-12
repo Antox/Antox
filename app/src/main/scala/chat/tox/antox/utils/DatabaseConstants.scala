@@ -11,7 +11,7 @@ object DatabaseConstants {
 
   val DATABASE_VERSION = 14
 
-  val USER_DATABASE_VERSION = 6
+  val USER_DATABASE_VERSION = 5
 
   val TABLE_CONTACTS = "contacts"
 

@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
-import chat.tox.antox.toxdns.ToxDNS
+import chat.tox.antox.toxdns.{DnsName, ToxDNS}
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey, UserInfo}
@@ -51,7 +51,7 @@ object UserDB {
           case 2 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_LOGGING_ENABLED integer")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_LOGGING_ENABLED = $TRUE")
-          case 6 =>
+          case 5 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_DNS_DOMAIN text")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_DNS_DOMAIN = 'toxme.io' ")
           case _ =>
@@ -111,22 +111,17 @@ class UserDB(ctx: Context) {
     preferences.edit().putString("active_account", "").commit()
   }
 
-  def addUser(userAddress: String, toxId: ToxAddress, password: String) {
+  def addUser(dnsName: DnsName, toxId: ToxAddress, password: String) {
     val values = new ContentValues()
-    val user = userAddress.split("@")(0)
-    val domain = {
-      if (userAddress.split("@").length == 1) ToxDNS.DEFAULT_TOXDNS_DOMAIN
-      else userAddress.split("@")(1)
-    }
-    values.put(COLUMN_NAME_USERNAME, user)
+    values.put(COLUMN_NAME_USERNAME, dnsName.username)
     values.put(COLUMN_NAME_PASSWORD, password)
-    values.put(COLUMN_NAME_NICKNAME, user)
+    values.put(COLUMN_NAME_NICKNAME, dnsName.username)
     values.put(COLUMN_NAME_STATUS, "online")
     val defaultStatusMessage = ctx.getResources.getString(R.string.pref_default_status_message)
     values.put(COLUMN_NAME_STATUS_MESSAGE, defaultStatusMessage)
     values.put(COLUMN_NAME_AVATAR, "")
     values.put(COLUMN_NAME_LOGGING_ENABLED, true)
-    values.put(COLUMN_NAME_DNS_DOMAIN, domain)
+    values.put(COLUMN_NAME_DNS_DOMAIN, dnsName.domain)
     mDb.insert(TABLE_USERS, values)
 
     val editor = preferences.edit()
@@ -168,7 +163,8 @@ class UserDB(ctx: Context) {
     if (cursor.moveToFirst()) {
       userInfo = new UserInfo(
         username = cursor.getString(COLUMN_NAME_USERNAME),
-        domain = cursor.getString(COLUMN_NAME_DNS_DOMAIN),
+        dnsName = new DnsName(
+          cursor.getString(COLUMN_NAME_USERNAME),cursor.getString(COLUMN_NAME_DNS_DOMAIN) ),
         password = cursor.getString(COLUMN_NAME_PASSWORD),
         nickname = cursor.getString(COLUMN_NAME_NICKNAME),
         status = cursor.getString(COLUMN_NAME_STATUS),

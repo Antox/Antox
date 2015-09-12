@@ -135,7 +135,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             val toxData = new ToxData
             toxData.fileBytes = dataFile.loadFile()
             toxData.address = ToxSingleton.tox.getAddress
-            val dnsName = DnsName.fromString(userInfo.getFullAddress)
+            val dnsName = userInfo.dnsName
             ToxDNS.deleteAccount(dnsName,toxData).toBlocking.first
             userDb.deleteCurrentUser()
             val startTox = new Intent(ProfileSettingsActivity.this, classOf[ToxService])

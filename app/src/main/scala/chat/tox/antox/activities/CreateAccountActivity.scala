@@ -264,7 +264,7 @@ class CreateAccountActivity extends AppCompatActivity {
     }
 
     if (successful) {
-      State.userDb(this).addUser(dnsName.getFullAddress, toxData.address, "")
+      State.userDb(this).addUser(dnsName, toxData.address, "")
       loginAndStartMain(dnsName.username, accountPassword)
     } else {
       toastMessage.foreach(message => {
