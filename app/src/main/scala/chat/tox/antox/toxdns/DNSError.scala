@@ -20,7 +20,6 @@ object DNSError extends Enumeration {
   val UNKNOWN = Value("")
   val JSON_ERROR = Value("JSON")
   val ENCODING_ERROR = Value("ENCODING")
-  val EXCEPTION = Value("EXCEPTION")
 
   def valueOf(name: String): Option[DNSError.Value] = values.find(_.toString == name)
 
@@ -48,7 +47,6 @@ object DNSError extends Enumeration {
       case UNKNOWN => "Unknown error code"
       case JSON_ERROR => "Error constructing JSON"
       case ENCODING_ERROR => "Encoding error"
-      case EXCEPTION => "Exception thrown"
       case _ => dnsError.toString
     }
   }
