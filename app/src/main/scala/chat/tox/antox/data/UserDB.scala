@@ -10,7 +10,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{BriteScalaDatabase, DatabaseUtil}
-import chat.tox.antox.wrapper.{ToxAddress, ToxKey, UserInfo}
+import chat.tox.antox.wrapper.{ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
 import rx.lang.scala.Observable
 
@@ -38,7 +38,6 @@ object UserDB {
 
     override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
       Log.w("UserDB", "Upgrading UserDB from version " + oldVersion + " to " + newVersion)
-
       for (currVersion <- oldVersion to newVersion) {
         currVersion match {
           case 1 =>
@@ -48,6 +47,8 @@ object UserDB {
           case 2 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_LOGGING_ENABLED integer")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_LOGGING_ENABLED = $TRUE")
+          case 2 | 3 =>
+
           case _ =>
         }
       }
