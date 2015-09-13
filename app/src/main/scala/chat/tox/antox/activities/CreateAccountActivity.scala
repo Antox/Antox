@@ -16,9 +16,9 @@ import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
-import chat.tox.antox.toxdns.DNSError.DNSError
-import chat.tox.antox.toxdns.ToxDNS.PrivacyLevel
-import chat.tox.antox.toxdns.{DNSError, DnsName, ToxDNS, ToxData}
+import chat.tox.antox.toxme.ToxMeError.ToxMeError
+import chat.tox.antox.toxme.ToxMe.PrivacyLevel
+import chat.tox.antox.toxme.{ToxMeError, ToxMeName, ToxMe, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ToxAddress
@@ -192,10 +192,10 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def createAccount(rawAccountName: String, userDb: UserDB, shouldCreateDataFile: Boolean, shouldRegister: Boolean): Unit = {
-    val dnsName = DnsName.fromString(rawAccountName, shouldRegister)
-    if (!validAccountName(dnsName.username)) {
+    val toxMeName = ToxMeName.fromString(rawAccountName, shouldRegister)
+    if (!validAccountName(toxMeName.username)) {
       showBadAccountNameError()
-    } else if (userDb.doesUserExist(dnsName.username)) {
+    } else if (userDb.doesUserExist(toxMeName.username)) {
       val context = getApplicationContext
       val text = getString(R.string.create_profile_exists)
       val duration = Toast.LENGTH_LONG
@@ -209,12 +209,12 @@ class CreateAccountActivity extends AppCompatActivity {
       if (shouldCreateDataFile) {
         // Create tox data save file
         try {
-          toxData = createToxData(dnsName.username)
+          toxData = createToxData(toxMeName.username)
         } catch {
           case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
         }
       } else {
-        val result = loadToxData(dnsName.username)
+        val result = loadToxData(toxMeName.username)
 
         result match {
           case Some(data) =>
@@ -228,7 +228,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
       val observable = if (shouldRegister) {
         // Register acccount
-        ToxDNS.registerAccount(dnsName, PrivacyLevel.PRIVATE, toxData)
+        ToxMe.registerAccount(toxMeName, PrivacyLevel.PRIVATE, toxData)
       } else {
         //succeed with empty password
         Observable.just(Right(""))
@@ -237,7 +237,7 @@ class CreateAccountActivity extends AppCompatActivity {
       observable
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(result => {
-        onRegistrationResult(dnsName, toxData, result)
+        onRegistrationResult(toxMeName, toxData, result)
       }, error => {
         Log.d("CreateAccount", "Unexpected error registering account.")
         error.printStackTrace()
@@ -245,18 +245,18 @@ class CreateAccountActivity extends AppCompatActivity {
     }
   }
 
-  def onRegistrationResult(dnsName: DnsName, toxData: ToxData, result: Either[DNSError, String]): Unit = {
+  def onRegistrationResult(toxMeName: ToxMeName, toxData: ToxData, result: Either[ToxMeError, String]): Unit = {
     var successful = true
     var accountPassword = ""
     val toastMessage: Option[String] = result match {
       case Left(error) =>
         successful = false
         Some(error match {
-          case DNSError.NAME_TAKEN => getString(R.string.create_account_exists)
-          case DNSError.INTERNAL => getString(R.string.create_account_internal_error)
-          case DNSError.RATE_LIMIT => getString(R.string.create_account_reached_registration_limit)
-          case DNSError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
-          case DNSError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
+          case ToxMeError.NAME_TAKEN => getString(R.string.create_account_exists)
+          case ToxMeError.INTERNAL => getString(R.string.create_account_internal_error)
+          case ToxMeError.RATE_LIMIT => getString(R.string.create_account_reached_registration_limit)
+          case ToxMeError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
+          case ToxMeError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
           case _ => getString(R.string.create_account_unknown_error)
         })
       case Right(password) =>
@@ -266,8 +266,8 @@ class CreateAccountActivity extends AppCompatActivity {
     }
 
     if (successful) {
-      State.userDb(this).addUser(dnsName, toxData.address, "")
-      loginAndStartMain(dnsName.username, accountPassword)
+      State.userDb(this).addUser(toxMeName, toxData.address, "")
+      loginAndStartMain(toxMeName.username, accountPassword)
     } else {
       toastMessage.foreach(message => {
         val context = getApplicationContext

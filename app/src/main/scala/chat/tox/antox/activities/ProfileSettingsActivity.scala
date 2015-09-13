@@ -21,7 +21,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
-import chat.tox.antox.toxdns.{ToxDNS, ToxData}
+import chat.tox.antox.toxme.{ToxMe, ToxData}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
@@ -136,9 +136,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             val toxData = new ToxData
             toxData.fileBytes = dataFile.loadFile()
             toxData.address = ToxSingleton.tox.getAddress
-            val dnsName = userInfo.dnsName
-            if (dnsName.domain.isDefined) {
-              val observable = ToxDNS.deleteAccount(dnsName, toxData)
+            val toxMeName = userInfo.toxMeName
+            if (toxMeName.domain.isDefined) {
+              val observable = ToxMe.deleteAccount(toxMeName, toxData)
               observable.subscribe()
             }
             userDb.deleteActiveUser()

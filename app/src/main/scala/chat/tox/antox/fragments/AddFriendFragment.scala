@@ -15,7 +15,7 @@ import android.widget.{Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.toxdns.ToxDNS
+import chat.tox.antox.toxme.ToxMe
 import chat.tox.antox.utils.{UiUtils, Constants}
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.ToxCoreConstants
@@ -148,11 +148,11 @@ class AddFriendFragment extends Fragment with InputableID {
         getActivity.finish()
       }
     } else {
-      // Attempt to use ID as a dns account name
+      // Attempt to use ID as a toxme account name
       _originalUsername = friendID.getText.toString
       try {
         lookupSubscription = Some(
-          ToxDNS.lookup(_originalUsername)
+          ToxMe.lookup(_originalUsername)
           .subscribeOn(IOScheduler())
           .observeOn(AndroidMainThreadScheduler())
           .subscribe((m_key: Option[String]) => {
