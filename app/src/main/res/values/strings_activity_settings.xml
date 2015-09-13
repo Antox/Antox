@@ -8,7 +8,7 @@
     <string name="pref_title_nickname">Name</string>
     <string name="pref_default_nickname">Antox User</string>
 
-    <string name="pref_title_password">Tox DNS Password</string>
+    <string name="pref_title_password">ToxMe Password</string>
     <string name="pref_default_password">No Set Password</string>
 
     <string name="pref_title_status">Status</string>
@@ -27,8 +27,8 @@
     <string name="pref_default_status_message">Hey! I\'m using Antox</string>
     <string name="pref_title_tox_id">Tox ID</string>
     <string name="pref_default_tox_id">Default Tox ID - You should not see this</string>
-    <string name="pref_title_tox_dns">Tox DNS Address</string>
-    <string name="pref_default_tox_dns">This profile is currently in incognito mode</string>
+    <string name="pref_title_toxme">ToxMe Address</string>
+    <string name="pref_default_toxme">This profile is currently in incognito mode</string>
     <string name="pref_title_logging_enabled">Keep Chat History on Logout</string>
     <string name="pref_title_theme_color">Change Theme Color</string>
     <string name="pref_title_avatar">Avatar</string>

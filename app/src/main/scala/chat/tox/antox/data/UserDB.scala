@@ -102,11 +102,11 @@ class UserDB(ctx: Context) {
     editor.putString("status_message", activeUserDetails.statusMessage)
     editor.putString("avatar", activeUserDetails.avatarName)
     editor.putBoolean("logging_enabled", activeUserDetails.loggingEnabled)
-    activeUserDetails.dnsName.domain match {
+    activeUserDetails.toxMeName.domain match {
       case Some(domain) =>
-        editor.putString("dns_info", activeUserDetails.dnsName.username + "@" + domain)
+        editor.putString("toxme_info", activeUserDetails.toxMeName.username + "@" + domain)
       case None =>
-        editor.putString("dns_info", "")
+        editor.putString("toxme_info", "")
     }
 
     editor.commit()
