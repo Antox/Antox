@@ -54,10 +54,10 @@
         android:title="@string/pref_title_tox_id" />
 
     <Preference
-        android:defaultValue="@string/pref_default_tox_dns"
-        android:title="@string/pref_title_tox_dns"
+        android:defaultValue="@string/pref_default_toxme"
+        android:title="@string/pref_title_toxme"
         android:editable="false"
-        android:key="dns_info" />
+        android:key="toxme_info" />
 
     <Preference
         android:defaultValue="@string/pref_default_password"

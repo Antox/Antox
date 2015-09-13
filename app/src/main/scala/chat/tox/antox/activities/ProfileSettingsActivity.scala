@@ -94,18 +94,18 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       bindPreferenceSummaryToValue(passwordPreference)
     }
 
-    val dnsPreference = findPreference("dns_info")
-    dnsPreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
+    val toxMePreference = findPreference("toxme_info")
+    toxMePreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        createDnsAddressDialog()
+        createToxMeAddressDialog()
         true
       }
     })
-    if (PreferenceManager.getDefaultSharedPreferences(dnsPreference.getContext)
-      .getString(dnsPreference.getKey, "").isEmpty) {
-      getPreferenceScreen.removePreference(dnsPreference)
+    if (PreferenceManager.getDefaultSharedPreferences(toxMePreference.getContext)
+      .getString(toxMePreference.getKey, "").isEmpty) {
+      getPreferenceScreen.removePreference(toxMePreference)
     } else {
-      bindPreferenceSummaryToValue(dnsPreference)
+      bindPreferenceSummaryToValue(toxMePreference)
     }
 
     val toxIDPreference = findPreference("tox_id")
@@ -272,17 +272,17 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     builder.create().show()
   }
 
-  def createDnsAddressDialog() {
+  def createToxMeAddressDialog() {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString("dns_info",""))
+    builder.setTitle(pref.getString("toxme_info",""))
     builder.setPositiveButton(getString(R.string.button_ok), null)
-    builder.setNeutralButton(getString(R.string.dialog_dns_info), new DialogInterface.OnClickListener() {
+    builder.setNeutralButton(getString(R.string.dialog_toxme), new DialogInterface.OnClickListener() {
 
       def onClick(dialogInterface: DialogInterface, ID: Int) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
         val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString("dns_info", ""))
+        clipboard.setText(sharedPreferences.getString("toxme_info", ""))
       }
     })
     builder.create().show()

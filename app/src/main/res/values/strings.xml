@@ -188,7 +188,7 @@
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
     <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
-    <string name="dialog_dns_info">Copy to clipboard</string>
+    <string name="dialog_toxme">Copy to clipboard</string>
     <string name="dialog_password">Copy to clipboard</string>
     <string name="share_with">Share with</string>
     <string name="connection_has">has</string>
