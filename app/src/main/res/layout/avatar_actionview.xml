@@ -14,7 +14,7 @@
             android:id="@+id/avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@color/grey_light"
+            android:src="@drawable/ic_contact_picture"
             />
         <TextView
             android:id="@+id/icon"
