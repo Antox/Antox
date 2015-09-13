@@ -1,49 +1,44 @@
-package chat.tox.antox.toxdns
+package chat.tox.antox.toxme
 
 import android.util.{Base64, Log}
-import chat.tox.antox.toxdns.DNSError.DNSError
-import chat.tox.antox.toxdns.ToxDNS.EncryptedRequestAction.EncryptedRequestAction
-import chat.tox.antox.toxdns.ToxDNS.PrivacyLevel.PrivacyLevel
-import chat.tox.antox.wrapper.ToxAddress
+import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
+import chat.tox.antox.toxme.ToxMe.PrivacyLevel.PrivacyLevel
+import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.Raw
 import org.json.JSONObject
-import org.xbill.DNS.{Lookup, TXTRecord, Type}
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
 import scala.language.higherKinds
 import scala.util.Try
 
-object ToxDNS {
+object ToxMe {
 
-  val DEFAULT_TOXDNS_DOMAIN = "toxme.io"
-  val DEBUG_TAG = "TOX_DNS"
+  val DEFAULT_TOXME_DOMAIN = "toxme.io"
+  val DEBUG_TAG = "TOXME"
 
   private def epoch = System.currentTimeMillis() / 1000
 
  /**
-  * Performs a DNS lookup and returns the Tox ID registered to the given dnsName.
+  * Performs a lookup and returns the Tox ID registered to the given toxMeName.
   *
-  * @param dnsName the dns name to lookup
+  * @param rawToxMeName the ToxMe name to lookup
   * @return the ID or None if the name is not found or no domain is supplied
   */
-  def lookup(dnsName: String): Observable[Option[String]] = {
+  def lookup(rawToxMeName: String): Observable[Option[String]] = {
     Observable(subscriber => {
-      if (dnsName.contains("@")) {
-        val parsedDnsName = DnsName.fromString(dnsName, true)
-        val lookup = parsedDnsName.username + "._tox." + parsedDnsName.domain.get
+      if (rawToxMeName.contains("@")) {
+        val toxMeName = ToxMeName.fromString(rawToxMeName, useToxMe = true)
         try {
-          val records = new Lookup(lookup, Type.TXT).run()
-          val txt = records(0).asInstanceOf[TXTRecord]
-          val txtString = txt.toString.substring(txt.toString.indexOf('"'))
-          if (txtString.contains("tox1")) {
-            val offset = 11
-            val key = txtString.substring(offset, offset + ToxAddress.MAX_ADDRESS_LENGTH)
-            subscriber.onNext(Some(key))
-          }
+          val json = new JSONObject()
+          json.put("action", RequestAction.LOOKUP)
+          json.put("name", toxMeName.username)
+
+          val response = postJson(json, makeApiURL(toxMeName.domain.get))
+          subscriber.onNext(response.right.toOption.map(_.getString("tox_id")))
         } catch {
           case e: Exception =>
             subscriber.onNext(None)
@@ -56,19 +51,19 @@ object ToxDNS {
   }
 
   /**
-   * Performs a DNS lookup for the given dnsDomain to retrieve
-   * the service's public key to be used for encrypted toxdns3 requests.
+   * Performs a https lookup for the given domain to retrieve
+   * the service's public key to be used for encrypted requests.
    *
-   * If the dns server does not exist or a network-related error occurs, None is returned.
+   * If the server does not exist or a network-related error occurs, None is returned.
    *
-   * @param dnsDomain the domain on which to perform the lookup (e.g. toxme.io)
-   * @return the public key of the dns service
+   * @param domain the domain on which to perform the lookup (e.g. toxme.io)
+   * @return the public key of the ToxMe service or None
    */
-  def lookupPublicKey(dnsDomain: String): Option[String] = {
+  def lookupPublicKey(domain: String): Option[String] = {
     try {
       val client = new OkHttpClient()
 
-      val request = new Builder().url(s"https://$dnsDomain/pk").build()
+      val request = new Builder().url(s"https://$domain/pk").build()
       val response = client.newCall(request).execute()
       val json = new JSONObject(response.body().string())
 
@@ -80,18 +75,20 @@ object ToxDNS {
     }
   }
 
-  def makeApiURL(dnsDomain: String): String = "https://" + dnsDomain + "/api"
+  def makeApiURL(domain: String): String = "https://" + domain + "/api"
 
   type Password = String
-  type DnsResult[Success] = Either[DNSError, Success]
+  type ToxmeResult[Success] = Either[ToxMeError, Success]
 
   /**
-   * Different request types for the ToxDNS
+   * Different request types for the ToxMe
    */
-  object EncryptedRequestAction extends Enumeration {
+  object RequestAction extends Enumeration {
     type EncryptedRequestAction = Int
     val REGISTRATION = 1
     val DELETION = 2
+    val LOOKUP = 3
+    val REVERSE_LOOKUP = 5
   }
 
   object PrivacyLevel extends Enumeration {
@@ -101,15 +98,15 @@ object ToxDNS {
   }
 
   /**
-   * Registers a new account on the specified ToxDNS (DnsName.domain)
+   * Registers a new account on the specified ToxMe (ToxMeName.domain)
    *
    * If the service cannot be contacted, the network is down, or some other error occurs,
    * the appropriate RegError is returned.
    *
-   * @return ToxDNS request observable that contains password on success, RegError on lookup error
+   * @return ToxMe request observable that contains password on success, RegError on lookup error
    */
-  def registerAccount(name: DnsName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[DnsResult[Password]] = {
-    Observable[DnsResult[Password]](subscriber => {
+  def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[ToxmeResult[Password]] = {
+    Observable[ToxmeResult[Password]](subscriber => {
       val json = new JSONObject
       json.put("tox_id", toxData.address)
       json.put("name", name.username)
@@ -117,7 +114,7 @@ object ToxDNS {
       json.put("bio", "")
       json.put("timestamp", epoch)
       subscriber.onNext(
-        makeEncryptedRequest(name, toxData, json, EncryptedRequestAction.REGISTRATION)
+        makeEncryptedRequest(name, toxData, json, RequestAction.REGISTRATION)
         .right
         .map(_.getString("password")))
       subscriber.onCompleted()
@@ -125,34 +122,34 @@ object ToxDNS {
   }
 
   /**
-   * Deletes an account on the specified ToxDNS (DnsName.domain)
+   * Deletes an account on the specified ToxMe (ToxMeName.domain)
    *
    * If the service cannot be contacted, the network is down, or some other error occurs,
    * the appropriate RegError is returned.
    *
-   * @return ToxDNS request observable that contains a confirmation string on success. RegError on lookup error
+   * @return ToxMe request observable that contains a confirmation string on success. RegError on lookup error
    */
-  def deleteAccount(name: DnsName, toxData: ToxData): Observable[Option[DNSError]] = {
-    Observable[Option[DNSError]](subscriber => {
+  def deleteAccount(name: ToxMeName, toxData: ToxData): Observable[Option[ToxMeError]] = {
+    Observable[Option[ToxMeError]](subscriber => {
       val json = new JSONObject
       json.put("public_key", toxData.address.key.toString)
       json.put("timestamp", epoch)
       subscriber.onNext(
-        makeEncryptedRequest(name, toxData, json, EncryptedRequestAction.DELETION)
+        makeEncryptedRequest(name, toxData, json, RequestAction.DELETION)
         .left
         .toOption)
       subscriber.onCompleted()
     }).subscribeOn(IOScheduler())
   }
 
-  private def makeEncryptedRequest(name: DnsName, toxData: ToxData, json: JSONObject, action: EncryptedRequestAction) = {
+  private def makeEncryptedRequest(name: ToxMeName, toxData: ToxData, json: JSONObject, action: EncryptedRequestAction) = {
     val apiURL = makeApiURL(name.domain.get)
 
     encryptRequestJson(name, toxData, json, action)
       .right.flatMap(postJson(_, apiURL))
   }
 
-  private def encryptRequestJson(name: DnsName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): DnsResult[JSONObject] = {
+  private def encryptRequestJson(name: ToxMeName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): ToxmeResult[JSONObject] = {
     try {
       lookupPublicKey(name.domain.get) match {
         case Some(publicKey) =>
@@ -165,15 +162,15 @@ object ToxDNS {
               requestJson.put("nonce", encryptedPayload.nonce)
               Right(requestJson)
             case None =>
-              Left(DNSError.KALIUM_LINK_ERROR)
+              Left(ToxMeError.KALIUM_LINK_ERROR)
           }
         case None =>
-          Left(DNSError.INVALID_DOMAIN)
+          Left(ToxMeError.INVALID_DOMAIN)
       }
     } catch {
       case e: Exception =>
         Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
-        Left(DNSError.exception(e))
+        Left(ToxMeError.exception(e))
     }
   }
 
@@ -189,8 +186,8 @@ object ToxDNS {
 
     val hexEncoder = new org.abstractj.kalium.encoders.Hex
     val rawEncoder = new Raw
-    val dnsPK = publicKey
-    val serverPublicKey = hexEncoder.decode(dnsPK)
+    val toxmePk = publicKey
+    val serverPublicKey = hexEncoder.decode(toxmePk)
     val ourSecretKey = Array.ofDim[Byte](32)
     System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
     val box = new Box(serverPublicKey, ourSecretKey)
@@ -204,18 +201,18 @@ object ToxDNS {
     Some(EncryptedPayload(payload, nonceString))
   }
 
-  private def postJson(requestJson: JSONObject, dnsApiURL: String): DnsResult[JSONObject] = {
+  private def postJson(requestJson: JSONObject, toxMeApiUrl: String): ToxmeResult[JSONObject] = {
     val httpClient = new OkHttpClient()
     try {
       val mediaType = MediaType.parse("application/json; charset=utf-8")
       val requestBody = RequestBody.create(mediaType, requestJson.toString)
-      val request = new Builder().url(dnsApiURL).post(requestBody).build()
+      val request = new Builder().url(toxMeApiUrl).post(requestBody).build()
       val response = httpClient.newCall(request).execute()
       Log.d(DEBUG_TAG, "Response code: " + response.toString)
       val responseJson = new JSONObject(response.body().string())
-      val error = Try(DNSError.withName(responseJson.getString("c"))).getOrElse(DNSError.UNKNOWN)
+      val error = Try(ToxMeError.withName(responseJson.getString("c"))).getOrElse(ToxMeError.UNKNOWN)
 
-      if (error == DNSError.OK) {
+      if (error == ToxMeError.OK) {
         Right(responseJson)
       } else {
         Left(error)
@@ -223,7 +220,7 @@ object ToxDNS {
     } catch {
       case e: Exception =>
         Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
-        Left(DNSError.exception(e))
+        Left(ToxMeError.exception(e))
     }
   }
 }
