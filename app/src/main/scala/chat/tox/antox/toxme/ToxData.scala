@@ -1,4 +1,4 @@
-package chat.tox.antox.toxdns
+package chat.tox.antox.toxme
 
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 
