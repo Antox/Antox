@@ -5,7 +5,7 @@
               android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/chatMessages"
+        android:id="@+id/chat_messages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -15,7 +15,6 @@
         android:dividerHeight="0dp"/>
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutSend"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/white_absolute">
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/yourMessage"
+                android:id="@+id/your_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -50,7 +49,7 @@
                 android:textSize="@dimen/text_medium"/>
 
             <ImageView
-                android:id="@+id/sendMessageButton"
+                android:id="@+id/send_message_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -70,7 +69,7 @@
         android:paddingTop="7dp">
 
         <ImageView
-            android:id="@+id/attachmentButton"
+            android:id="@+id/attachment_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -80,7 +79,7 @@
             android:src="@drawable/ic_attach_file_black_24dp"/>
 
         <ImageView
-            android:id="@+id/cameraButton"
+            android:id="@+id/camera_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -89,7 +88,7 @@
             android:src="@drawable/ic_photo_camera_black_24dp"/>
 
         <ImageView
-            android:id="@+id/imageButton"
+            android:id="@+id/image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
