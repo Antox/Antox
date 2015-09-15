@@ -74,7 +74,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
     layoutManager.setStackFromEnd(true)
 
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[RecyclerView]
+    chatListView = this.findViewById(R.id.chat_messages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
     chatListView.setVerticalScrollBarEnabled(true)
@@ -86,7 +86,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
     })
 
-    val b = this.findViewById(R.id.sendMessageButton)
+    val b = this.findViewById(R.id.send_message_button)
     b.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         onSendMessage()
@@ -94,7 +94,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
       }
     })
 
-    messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
+    messageBox = this.findViewById(R.id.your_message).asInstanceOf[EditText]
     messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
     messageBox.setText(db.getContactUnsentMessage(activeKey))
     messageBox.addTextChangedListener(new TextWatcher() {

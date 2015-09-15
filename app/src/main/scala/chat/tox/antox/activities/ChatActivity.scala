@@ -40,9 +40,9 @@ class ChatActivity extends GenericChatActivity {
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
-    val attachmentButton = this.findViewById(R.id.attachmentButton)
-    val cameraButton = this.findViewById(R.id.cameraButton)
-    val imageButton = this.findViewById(R.id.imageButton)
+    val attachmentButton = this.findViewById(R.id.attachment_button)
+    val cameraButton = this.findViewById(R.id.camera_button)
+    val imageButton = this.findViewById(R.id.image_button)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
