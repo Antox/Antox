@@ -12,12 +12,6 @@
         android:singleLine="true"
         android:title="@string/pref_title_nickname" />
 
-    <Preference
-        android:defaultValue="@string/pref_default_password"
-        android:key="password"
-        android:singleLine="true"
-        android:title="@string/pref_title_password"/>
-
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
@@ -58,6 +52,18 @@
         android:singleLine="true"
         android:textIsSelectable="true"
         android:title="@string/pref_title_tox_id" />
+
+    <Preference
+        android:defaultValue="@string/pref_default_toxme"
+        android:title="@string/pref_title_toxme"
+        android:editable="false"
+        android:key="toxme_info" />
+
+    <Preference
+        android:defaultValue="@string/pref_default_password"
+        android:key="password"
+        android:singleLine="true"
+        android:title="@string/pref_title_password"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
