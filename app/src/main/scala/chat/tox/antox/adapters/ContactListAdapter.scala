@@ -123,7 +123,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       if (item.image.isDefined && item.image.get.exists()) {
         BitmapManager.load(item.image.get, holder.avatar, isAvatar = true)
       } else {
-        holder.avatar.setImageResource(R.drawable.ic_contact_picture)
+        holder.avatar.setImageResource(R.drawable.default_avatar)
       }
 
       val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))

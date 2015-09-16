@@ -84,7 +84,7 @@ class MainDrawerFragment extends Fragment {
     val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
 
     val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
-    avatarView.setImageResource(R.drawable.ic_contact_picture)
+    avatarView.setImageResource(R.drawable.default_avatar)
 
     avatar.foreach(av => {
       avatarView.setImageURI(Uri.fromFile(av))
