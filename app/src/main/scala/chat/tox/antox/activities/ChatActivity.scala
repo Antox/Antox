@@ -40,9 +40,9 @@ class ChatActivity extends GenericChatActivity {
     this.findViewById(R.id.info).setVisibility(View.GONE)
 
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
-    val attachmentButton = this.findViewById(R.id.attachmentButton)
-    val cameraButton = this.findViewById(R.id.cameraButton)
-    val imageButton = this.findViewById(R.id.imageButton)
+    val attachmentButton = this.findViewById(R.id.attachment_button)
+    val cameraButton = this.findViewById(R.id.camera_button)
+    val imageButton = this.findViewById(R.id.image_button)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
@@ -113,7 +113,7 @@ class ChatActivity extends GenericChatActivity {
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-        updateDisplayedState(fi)
+      updateDisplayedState(fi)
     })
   }
 
@@ -123,7 +123,7 @@ class ChatActivity extends GenericChatActivity {
     val mFriend: Option[FriendInfo] = fi
       .find(f => f.key == key)
     mFriend match {
-      case Some(friend) => {
+      case Some(friend) =>
         thisActivity.setDisplayName(friend.getAliasOrName)
 
         val avatar = friend.avatar
@@ -136,10 +136,9 @@ class ChatActivity extends GenericChatActivity {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         } else {
-            thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
+          thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
-      }
       case None =>
         thisActivity.setDisplayName("")
     }
@@ -178,7 +177,7 @@ class ChatActivity extends GenericChatActivity {
     }
   }
 
-  def onClickVoiceCallFriend(v: View){}
+  def onClickVoiceCallFriend(v: View) {}
 
   def onClickVideoCallFriend(v: View): Unit = {}
 
@@ -198,10 +197,8 @@ class ChatActivity extends GenericChatActivity {
       try {
         ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
       } catch {
-        case te: ToxException[_] => {
-        }
-        case e: Exception => {
-        }
+        case te: ToxException[_] =>
+        case e: Exception =>
       }
     })
   }

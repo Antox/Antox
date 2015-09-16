@@ -5,6 +5,8 @@ import java.util
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.support.v7.widget.RecyclerView.OnScrollListener
+import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
 import android.util.Log
@@ -22,7 +24,6 @@ import rx.lang.scala.{Observable, Subscription}
 
 import scala.collection.JavaConversions
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.duration._
 
 abstract class GenericChatActivity extends AppCompatActivity {
   val TAG: String = "ChatActivity"
@@ -31,15 +32,15 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var messageBox: EditText = null
   var isTypingBox: TextView = null
   var statusTextBox: TextView = null
-  var chatListView: ListView = null
+  var chatListView: RecyclerView = null
   var displayNameView: TextView = null
   var statusIconView: View = null
   var avatarActionView: View = null
   var messagesSub: Subscription = null
-  var progressSub: Subscription = null
   var titleSub: Subscription = null
   var activeKey: ToxKey = null
   var scrolling: Boolean = false
+  val layoutManager = new LinearLayoutManager(this)
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
@@ -61,6 +62,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
       new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
+
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
     avatarActionView = this.findViewById(R.id.avatarActionView)
@@ -69,23 +71,22 @@ abstract class GenericChatActivity extends AppCompatActivity {
         thisActivity.finish()
       }
     })
-    chatListView = this.findViewById(R.id.chatMessages).asInstanceOf[ListView]
-    chatListView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
-    chatListView.setStackFromBottom(true)
+
+    layoutManager.setStackFromEnd(true)
+
+    chatListView = this.findViewById(R.id.chat_messages).asInstanceOf[RecyclerView]
+    chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
-    chatListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+    chatListView.setVerticalScrollBarEnabled(true)
+    chatListView.addOnScrollListener(new OnScrollListener {
 
-      override def onScrollStateChanged(view: AbsListView, scrollState: Int) {
-        scrolling = !(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
-      }
-
-      override def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-
+      override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        adapter.setScrolling(!(newState == RecyclerView.SCROLL_STATE_IDLE))
       }
 
     })
 
-    val b = this.findViewById(R.id.sendMessageButton)
+    val b = this.findViewById(R.id.send_message_button)
     b.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         onSendMessage()
@@ -93,7 +94,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
       }
     })
 
-    messageBox = this.findViewById(R.id.yourMessage).asInstanceOf[EditText]
+    messageBox = this.findViewById(R.id.your_message).asInstanceOf[EditText]
     messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
     messageBox.setText(db.getContactUnsentMessage(activeKey))
     messageBox.addTextChangedListener(new TextWatcher() {
@@ -135,34 +136,19 @@ abstract class GenericChatActivity extends AppCompatActivity {
       Log.d(TAG, "Messages updated")
       updateChat(messageList)
     })
-    progressSub = Observable.interval(500 milliseconds)
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(x => {
-      if (!scrolling) {
-        updateProgress()
-      }
-    })
   }
 
   def updateChat(messageList: Seq[Message]): Unit = {
     //FIXME make this more efficient
-    adapter.setNotifyOnChange(false)
-    adapter.clear()
-    //add all is not available on api 10
+    adapter.removeAll()
     for (message <- messageList) {
       adapter.add(message)
     }
-    adapter.notifyDataSetChanged()
-    Log.d(TAG, "changing chat list cursor")
-  }
-
-  private def updateProgress() {
-    val start = chatListView.getFirstVisiblePosition
-    val end = chatListView.getLastVisiblePosition
-    for (i <- start to end) {
-      val view = chatListView.getChildAt(i - start)
-      chatListView.getAdapter.getView(i, view, chatListView)
+    // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
+    if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
+      chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
+    Log.d(TAG, "changing chat list cursor")
   }
 
   def validateMessageBox(): Option[String] = {
@@ -213,7 +199,6 @@ abstract class GenericChatActivity extends AppCompatActivity {
     Reactive.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
-    progressSub.unsubscribe()
   }
 
   //Abstract Methods

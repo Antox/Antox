@@ -26,6 +26,8 @@ object BitmapManager {
   // has updated their avatar - contact's avatars are stored under the name of their public key
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
+  private val TAG = "BitmapManager"
+
   private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
     if (isAvatar) {
       getAvatarFromCache(key)
@@ -78,7 +80,7 @@ object BitmapManager {
         inSampleSize *= 2
       }
     }
-    Log.d("BitMapManager", "Using a sample size of " + inSampleSize)
+    Log.d(TAG, "Using a sample size of " + inSampleSize)
 
     inSampleSize
   }
@@ -160,7 +162,7 @@ object BitmapManager {
       bitmap
     } catch {
       case e: FileNotFoundException =>
-        Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
+        Log.d(TAG, "File not found when trying to be used for FileInputStream")
         e.printStackTrace()
         null
     } finally {
@@ -183,13 +185,15 @@ object BitmapManager {
   def load(file: File, imageView: ImageView, isAvatar: Boolean) {
     val imageKey = file.getPath + file.getName
 
+    Log.d(TAG, imageKey)
+
     getFromCache(isAvatar, imageKey) match {
       case Some(bitmap) =>
-        Log.d("BitmapManager", "Loading Bitmap image from cache")
+        Log.d(TAG, "Loading Bitmap image from cache")
         imageView.setImageBitmap(bitmap)
 
       case None =>
-        Log.d("BitmapManager", "Decoding Bitmap image")
+        Log.d(TAG, "Decoding Bitmap image")
         Future {
           val bitmap = decodeBitmap(file, imageKey, isAvatar)
 
