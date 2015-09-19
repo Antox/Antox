@@ -120,11 +120,10 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       }
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
-      if (item.image.isDefined && item.image.get.exists()) {
-        BitmapManager.load(item.image.get, holder.avatar, isAvatar = true)
-      } else {
-        holder.avatar.setImageResource(R.drawable.default_avatar)
-      }
+
+      holder.avatar.setImageResource(R.drawable.default_avatar)
+
+      item.image.foreach(img => BitmapManager.load(img, holder.avatar, isAvatar = true))
 
       val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
