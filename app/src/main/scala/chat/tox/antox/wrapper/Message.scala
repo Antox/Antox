@@ -7,19 +7,18 @@ import chat.tox.antox.utils.TimestampUtils
 import chat.tox.antox.wrapper.MessageType.MessageType
 
 
-class Message(
-  val id: Int,
-  val messageId: Int,
-  val key: ToxKey,
-  val senderName: String,
-  val message: String,
-  val received: Boolean,
-  val read: Boolean,
-  val sent: Boolean,
-  val timestamp: Timestamp,
-  val size: Int,
-  val `type`: MessageType,
-  val fileKind: FileKind) {
+case class Message(id: Int,
+                   messageId: Int,
+                   key: ToxKey,
+                   senderName: String,
+                   message: String,
+                   received: Boolean,
+                   read: Boolean,
+                   sent: Boolean,
+                   timestamp: Timestamp,
+                   size: Int,
+                   `type`: MessageType,
+                   fileKind: FileKind) {
 
   def logFormat(): Option[String] = {
     if (this.isFileTransfer) return None

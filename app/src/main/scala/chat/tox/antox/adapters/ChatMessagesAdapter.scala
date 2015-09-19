@@ -6,7 +6,6 @@ import java.util
 import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
-import android.view.animation.{Animation, AnimationUtils}
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.utils.Constants
@@ -14,13 +13,8 @@ import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
 import scala.collection.JavaConversions._
-import scala.collection.mutable
 
 class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
-
-  private val animatedIds: mutable.Set[Int] = mutable.Set(data.map(_.id): _*)
-
-  private val anim: Animation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom)
 
   private val TEXT = 1
   private val ACTION = 2
@@ -33,7 +27,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     notifyDataSetChanged()
   }
 
-  def addAll(list: util.ArrayList[Message]) {
+  def addAll(list: Seq[Message]) {
     data.addAll(list)
     notifyDataSetChanged()
   }
@@ -61,11 +55,6 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
     holder.setMessage(msg, lastMsg, nextMsg)
     holder.setTimestamp()
-
-    if (!animatedIds.contains(msg.id)) {
-      holder.row.startAnimation(anim)
-      animatedIds += msg.id
-    }
 
     val viewType = getItemViewType(pos)
     viewType match {

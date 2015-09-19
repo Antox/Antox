@@ -68,8 +68,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     bubble.setPadding(48 * density, 0, 0, 0)
     if (!msg.received) {
       setAlpha(bubble, 0.5f)
-    }
-    else {
+    } else {
       setAlpha(bubble, 1f)
     }
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))

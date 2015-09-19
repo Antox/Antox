@@ -19,10 +19,11 @@ import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.{Message, ToxKey}
+import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
-import scala.collection.JavaConversions
+import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
 
 abstract class GenericChatActivity extends AppCompatActivity {
@@ -61,7 +62,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
 
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
-      new util.ArrayList(JavaConversions.mutableSeqAsJavaList(getActiveMessageList)))
+      new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList)))
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -77,6 +78,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     chatListView = this.findViewById(R.id.chat_messages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
+    chatListView.setItemAnimator(new LandingAnimator())
     chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
 
@@ -141,9 +143,11 @@ abstract class GenericChatActivity extends AppCompatActivity {
   def updateChat(messageList: Seq[Message]): Unit = {
     //FIXME make this more efficient
     adapter.removeAll()
+
     for (message <- messageList) {
       adapter.add(message)
     }
+
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
