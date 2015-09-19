@@ -11,7 +11,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:src="@color/grey_light" />
+        android:src="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/status"
