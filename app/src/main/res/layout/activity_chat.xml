@@ -1,96 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-    <ListView
-        android:id="@+id/chatMessages"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chat_messages"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white_absolute"
         android:layout_weight="1"
+        android:background="@color/white_absolute"
+        android:clipToPadding="false"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"/>
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutSend"
         android:layout_width="fill_parent"
-        android:background="@color/white_absolute"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white_absolute">
+
         <View
             android:id="@+id/divider_comment"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/grey_dark" />
+            android:background="@color/grey_dark"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/yourMessage"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:paddingLeft="20dp"
-            android:imeOptions="actionSend"
-            android:minLines="2"
-            android:maxLines="4"
-            android:inputType="textShortMessage|textCapSentences|textMultiLine|textAutoCorrect"
-            android:textSize="@dimen/text_medium"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            android:background="@android:color/transparent"
-            android:hint="@string/chat_enter_message" />
-        <ImageView
-            android:contentDescription="Send Button"
-            android:id="@+id/sendMessageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="15dp"
-            android:src="@drawable/ic_send" />
+            <EditText
+                android:id="@+id/your_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="@string/chat_enter_message"
+                android:imeOptions="actionSend"
+                android:inputType="textShortMessage|textCapSentences|textMultiLine|textAutoCorrect"
+                android:maxLines="4"
+                android:minLines="2"
+                android:paddingBottom="@dimen/margin_small"
+                android:paddingLeft="20dp"
+                android:paddingTop="@dimen/margin_small"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium"/>
+
+            <ImageView
+                android:id="@+id/send_message_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="Send Button"
+                android:paddingRight="15dp"
+                android:src="@drawable/ic_send"/>
         </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:paddingTop="7dp"
-        android:paddingBottom="7dp"
         android:layout_width="match_parent"
-        android:background="@color/white_absolute"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white_absolute"
+        android:orientation="horizontal"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp">
 
         <ImageView
-            android:contentDescription="@string/attachment_file"
-            android:id="@+id/attachmentButton"
+            android:id="@+id/attachment_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_attach_file_black_24dp"
             android:layout_weight="0.33"
-            android:paddingRight="0dp" />
+            android:contentDescription="@string/attachment_file"
+            android:paddingRight="0dp"
+            android:src="@drawable/ic_attach_file_black_24dp"/>
 
         <ImageView
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
             android:contentDescription="@string/attachment_takephoto"
-            android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_photo_camera_black_24dp"
-            android:layout_weight="0.33"/>
+            android:src="@drawable/ic_photo_camera_black_24dp"/>
 
         <ImageView
-            android:contentDescription="@string/attachment_photo"
-            android:id="@+id/imageButton"
+            android:id="@+id/image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_image_black_24dp"
-            android:layout_weight="0.33" />
+            android:layout_weight="0.33"
+            android:contentDescription="@string/attachment_photo"
+            android:src="@drawable/ic_image_black_24dp"/>
 
     </LinearLayout>
 </LinearLayout>
