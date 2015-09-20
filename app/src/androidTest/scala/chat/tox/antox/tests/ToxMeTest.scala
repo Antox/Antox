@@ -2,7 +2,7 @@ package chat.tox.antox.tests
 
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
-import chat.tox.antox.toxme.ToxMe.{ToxmeResult, PrivacyLevel}
+import chat.tox.antox.toxme.ToxMe.{ToxMeResult, PrivacyLevel}
 import chat.tox.antox.toxme.{ToxMeError, ToxMeName, ToxMe, ToxData}
 import chat.tox.antox.utils.Options
 import chat.tox.antox.wrapper.ToxAddress
@@ -36,7 +36,7 @@ class ToxMeTest extends AndroidTestCase {
   }
 
 
-  def registerAccount(toxMeName: ToxMeName, toxData: ToxData): ToxmeResult[String] = {
+  def registerAccount(toxMeName: ToxMeName, toxData: ToxData): ToxMeResult[String] = {
     ToxMe.registerAccount(toxMeName, PrivacyLevel.PRIVATE, toxData).toBlocking.first
   }
 
@@ -97,7 +97,7 @@ class ToxMeTest extends AndroidTestCase {
       case Left(error) =>
         assertTrue(error.toString, false)
       case Right(result) =>
-        assertEquals("subliun",result(0).name)
+        assertEquals("subliun", result(0).name)
     }
   }
 }
