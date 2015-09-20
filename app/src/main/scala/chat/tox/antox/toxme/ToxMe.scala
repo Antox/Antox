@@ -50,6 +50,35 @@ object ToxMe {
     })
   }
 
+  final case class ToxMeSearchResult(name: String, bio: String)
+
+  def search(query: String, domain: String): Observable[ToxmeResult[Array[ToxMeSearchResult]]] = search(query, domain, 1)
+
+  def search(query: String, domain: String, page: Int): Observable[ToxmeResult[Array[ToxMeSearchResult]]] = {
+    Observable(subscriber => {
+      try {
+        val json = new JSONObject()
+        json.put("action", RequestAction.SEARCH)
+        json.put("name", query)
+        json.put("page", page)
+
+        val response = postJson(json, domain)
+        var users: Array[ToxMeSearchResult] = Array[ToxMeSearchResult]()
+        if(response.isLeft) subscriber.onNext(Left(response.left.get))
+        val results = response.right.get.getJSONArray("users")
+        for(i <- 0 until results.length()){
+          val result = results.getJSONObject(i)
+          users = users :+ new ToxMeSearchResult(result.getString("name"), result.getString("bio"))
+        }
+        subscriber.onNext(Right(users))
+      } catch {
+        case e: Exception =>
+          subscriber.onNext(Left(ToxMeError.exception(e)))
+      }
+      subscriber.onCompleted()
+    })
+  }
+
   /**
    * Performs a https lookup for the given domain to retrieve
    * the service's public key to be used for encrypted requests.
@@ -89,6 +118,7 @@ object ToxMe {
     val DELETION = 2
     val LOOKUP = 3
     val REVERSE_LOOKUP = 5
+    val SEARCH = 6
   }
 
   object PrivacyLevel extends Enumeration {
