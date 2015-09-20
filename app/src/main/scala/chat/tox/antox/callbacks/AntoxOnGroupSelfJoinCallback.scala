@@ -1,6 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
@@ -8,7 +9,7 @@ import chat.tox.antox.tox.ToxSingleton
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override
   def groupSelfJoin(groupNumber: Int): Unit = {
-    println("got self join callback")
+    Log.d("GroupSelfJoinCallback", "got self join callback")
     new Thread(new Runnable {
       override def run(): Unit = {
         val group = ToxSingleton.getGroup(groupNumber)
@@ -21,7 +22,7 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
           }
         }
         group.name = ToxSingleton.tox.getGroupName(groupNumber)
-        println("set name to " + group.name)
+        Log.d("GroupSelfJoinCallback", "set name to " + group.name)
         group.topic = ToxSingleton.tox.getGroupTopic(groupNumber)
         group.connected = true
 

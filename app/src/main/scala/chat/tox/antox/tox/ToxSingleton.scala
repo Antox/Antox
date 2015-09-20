@@ -145,7 +145,7 @@ object ToxSingleton {
 
           val json = JsonReader.readJsonFromFile(savedNodeFile)
 
-          println(json)
+          Log.d("ToxSingleton",json.toString)
           subscriber.onNext(json)
           subscriber.onCompleted()
         } catch {

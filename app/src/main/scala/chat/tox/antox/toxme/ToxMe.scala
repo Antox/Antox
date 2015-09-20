@@ -169,7 +169,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        e.printStackTrace()
         Left(ToxMeError.exception(e))
     }
   }
@@ -219,7 +219,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        e.printStackTrace()
         Left(ToxMeError.exception(e))
     }
   }

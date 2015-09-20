@@ -273,7 +273,7 @@ class FileTransferManager extends Intervals {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
-            println(file.length())
+            Log.d("FileTransferManager",file.length().toString)
             sendFileSendRequest(file.getPath, friend.key, AVATAR, fileId = ToxSingleton.tox.hash(file).orNull, context = context)
           case None =>
             sendFileDeleteRequest(friend.key, AVATAR, context)

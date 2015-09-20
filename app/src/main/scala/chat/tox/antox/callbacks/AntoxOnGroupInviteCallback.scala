@@ -19,7 +19,7 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
 
     val inviteKeyLength = 32
     val key = new ToxKey(inviteData.slice(0, inviteKeyLength))
-    println("invite key is " + key)
+    Log.d("GroupInviteCallback", "invite key is " + key)
     db.addGroupInvite(key, inviter.getName, inviteData)
 
     Log.d("GroupInviteCallback", "")

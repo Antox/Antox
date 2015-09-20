@@ -81,7 +81,7 @@ class AddGroupFragment extends Fragment with InputableID {
         if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.joinGroup(key)
-            println("joined group : " + groupKey)
+            Log.d("AddGroupFragment","joined group : " + groupKey)
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()
@@ -97,7 +97,7 @@ class AddGroupFragment extends Fragment with InputableID {
         toast.show()
         true
       } else {
-        println("not validated")
+        Log.d("AddGroupFragment","not validated")
         showToastInvalidID()
         false
       }
@@ -116,7 +116,7 @@ class AddGroupFragment extends Fragment with InputableID {
         getActivity.finish()
       }
     } else {
-      println("length is not 64")
+      Log.d("AddGroupFragment","length is not 64")
       showToastInvalidID()
     }
   }

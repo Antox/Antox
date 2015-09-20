@@ -76,7 +76,7 @@ class ChatActivity extends GenericChatActivity {
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
-        println("image name " + image_name)
+        Log.d(TAG,"image name " + image_name)
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
           val file = File.createTempFile(image_name, ".jpg", storageDir)

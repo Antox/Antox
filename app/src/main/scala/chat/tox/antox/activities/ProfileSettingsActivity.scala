@@ -12,6 +12,7 @@ import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.{MenuItem, View}
 import android.widget.{TextView, ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
@@ -356,7 +357,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          println("Tox is " + ToxSingleton.tox)
+          Log.d("ProfileSettingsActivity","Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
           case e: ToxException[_] => e.printStackTrace()

@@ -22,7 +22,7 @@ class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends Grou
         }
       }
     } else {
-      println("Tox Group Join Rejected: " + reason)
+      Log.d("GroupJoinRejectedCallback","Tox Group Join Rejected: " + reason)
     }
   } */
 }
