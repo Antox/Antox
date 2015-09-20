@@ -12,6 +12,7 @@ import org.json.JSONObject
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
+import scala.collection.mutable.ArrayBuffer
 import scala.language.higherKinds
 import scala.util.Try
 
@@ -63,14 +64,18 @@ object ToxMe {
         json.put("page", page)
 
         val response = postJson(json, domain)
-        var users: Array[SearchResult] = Array[SearchResult]()
-        if(response.isLeft) subscriber.onNext(Left(response.left.get))
-        val results = response.right.get.getJSONArray("users")
-        for(i <- 0 until results.length()){
-          val result = results.getJSONObject(i)
-          users = users :+ new SearchResult(result.getString("name"), result.getString("bio"))
+        var users = ArrayBuffer[SearchResult]()
+        response match{
+          case Left(error) =>
+            subscriber.onNext(Left(error))
+          case Right(jsonResult) =>
+            val results = jsonResult.getJSONArray("users")
+            for(i <- 0 until results.length()) {
+              val result = results.getJSONObject(i)
+              users += new SearchResult(result.getString("name"), result.getString("bio"))
+            }
+            subscriber.onNext(Right(users))
         }
-        subscriber.onNext(Right(users))
       } catch {
         case e: Exception =>
           subscriber.onNext(Left(ToxMeError.exception(e)))
