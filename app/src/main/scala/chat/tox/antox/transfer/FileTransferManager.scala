@@ -95,7 +95,7 @@ class FileTransferManager extends Intervals {
       }).foreach(fileNumber => {
         val db = State.db
         Log.d(TAG, "adding File Transfer")
-        val id = db.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
+        val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, path, fileNumber, fileKind.kindId, file.length.toInt)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
       })
     }
@@ -144,7 +144,7 @@ class FileTransferManager extends Intervals {
     }
 
     val db = State.db
-    val id = db.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
+    val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, fileN, fileNumber, fileKind.kindId, fileSize.toInt)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
   }
 

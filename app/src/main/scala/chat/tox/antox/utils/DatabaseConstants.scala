@@ -9,7 +9,7 @@ object DatabaseConstants {
 
   val TRUE = 1
 
-  val DATABASE_VERSION = 14
+  val DATABASE_VERSION = 15
 
   val USER_DATABASE_VERSION = 5
 
@@ -24,6 +24,8 @@ object DatabaseConstants {
   val TABLE_USERS = "users"
 
   val COLUMN_NAME_KEY = "tox_key"
+
+  val COLUMN_NAME_SENDER_KEY = "sender_key"
 
   val COLUMN_NAME_GROUP_INVITER = "group_inviter"
 

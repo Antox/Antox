@@ -142,9 +142,9 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   override def getItemViewType(pos: Int): Int = {
     val messageType = data.get(pos).`type`
     messageType match {
-      case MessageType.OWN | MessageType.GROUP_OWN | MessageType.FRIEND | MessageType.GROUP_PEER => TEXT
+      case MessageType.MESSAGE | MessageType.GROUP_MESSAGE => TEXT
       case MessageType.ACTION | MessageType.GROUP_ACTION => ACTION
-      case MessageType.FILE_TRANSFER | MessageType.FILE_TRANSFER_FRIEND => FILE
+      case MessageType.FILE_TRANSFER => FILE
     }
   }
 

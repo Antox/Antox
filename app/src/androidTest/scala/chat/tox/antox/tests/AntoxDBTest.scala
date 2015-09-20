@@ -23,13 +23,15 @@ class AntoxDBTest extends AndroidTestCase {
     val context = new RenamingDelegatingContext(getContext, "test_")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    db = new AntoxDB(context, "jim")
+    db = new AntoxDB(context, "jim", selfKey)
   }
 
   @After
   override def tearDown(): Unit = {
     super.tearDown()
   }
+
+  val selfKey = new ToxKey("11BB3CCDD46346EAA76FF935F1CB31CDC11C56803F1077745124A1C7C63F7E6C8B286B415682")
 
   val key = new ToxKey("828435142ACE09E8677427E6180BFB27E38FB589A3B84C24976AE49F80A69C68")
   val name = "Steve Appleseed"
@@ -59,21 +61,17 @@ class AntoxDBTest extends AndroidTestCase {
     db.messageListObservable(Some(key))
       .subscribe(messages => {
       assertEquals(messages, ArrayBuffer.empty)
-      println("GOT A MESSAGE CLLBACK")
       number += 1
     })
 
-    val numMessages = 3
-    db.addMessage(-1, key, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "test1", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
-    db.addMessage(-1, key, "asdf", "test2", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
+    val numMessages = 1
+    db.addMessage(-1, key, selfKey, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
 
     db.lastMessages
       .subscribe(messages => {
       assertEquals(messages.size, numMessages)
       assert(messages.exists(_._2._1 eq "test"))
-
-      println("GOT A MESSAGE CLLBACK")
+      
       number += 1
     })
 

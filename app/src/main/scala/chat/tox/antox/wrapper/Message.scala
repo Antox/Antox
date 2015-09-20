@@ -10,6 +10,7 @@ import chat.tox.antox.wrapper.MessageType.MessageType
 case class Message(id: Int,
                    messageId: Int,
                    key: ToxKey,
+                   senderKey: ToxKey,
                    senderName: String,
                    message: String,
                    received: Boolean,
@@ -23,20 +24,23 @@ case class Message(id: Int,
   def logFormat(): Option[String] = {
     if (this.isFileTransfer) return None
 
-    val name = if (`type` == MessageType.OWN) {
-      ToxSingleton.tox.getName
-    } else {
-      ToxSingleton.getAntoxFriend(key).get.name
-    }
-    Some("<" + name + "> " +
-      message + "  [" + TimestampUtils.prettyTimestamp(timestamp, isChat = true) + "]")
+    val name =
+      if (isMine) {
+        ToxSingleton.tox.getName
+      } else {
+        ToxSingleton.getAntoxFriend(key).get.name
+      }
+
+    val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
+
+    Some(s"<$name> $message [$prettyTimestamp]")
   }
 
   def isMine: Boolean = {
-    `type` == MessageType.OWN || `type` == MessageType.FILE_TRANSFER || `type` == MessageType.GROUP_OWN
+    senderKey.equals(ToxSingleton.tox.getSelfKey)
   }
 
   def isFileTransfer: Boolean = {
-    `type` == MessageType.FILE_TRANSFER || `type` == MessageType.FILE_TRANSFER_FRIEND
+    MessageType.transferValues.contains(`type`)
   }
 }

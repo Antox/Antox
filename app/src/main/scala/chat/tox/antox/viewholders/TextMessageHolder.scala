@@ -34,7 +34,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       } else {
         messageText.setTextColor(context.getResources.getColor(R.color.black))
       }
-      if (msg.`type` == MessageType.GROUP_PEER) {
+      if (msg.`type` == MessageType.GROUP_MESSAGE) {
         groupMessage()
       }
     }

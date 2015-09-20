@@ -212,8 +212,6 @@ object ToxSingleton {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     val userDb = State.userDb(ctx)
-    State.db = new AntoxDB(ctx, userDb.getActiveUser)
-    val db = State.db
 
     antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
@@ -236,6 +234,9 @@ object ToxSingleton {
     } catch {
       case e: ToxException[_] => e.printStackTrace()
     }
+
+    State.db = new AntoxDB(ctx, userDb.getActiveUser, tox.getSelfKey)
+    val db = State.db
 
     //toxAv = new ToxAvImpl(tox.getTox)
 
