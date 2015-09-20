@@ -212,7 +212,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
               ).show()
 
             } catch {
-              case e: ToxException[_] => e.printStackTrace()
+              case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
             }
           }
         })
@@ -250,7 +250,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       try {
         noMedia.createNewFile()
       } catch {
-        case e: IOException => e.printStackTrace()
+        case e: IOException => Log.e("ProfileSettingsActivity", "exception", e)
       }
     }
 
@@ -312,7 +312,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         .show()
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e("ProfileSettingsActivity", "exception", e)
         Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
     }
   }
@@ -329,9 +329,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
       out.close()
     } catch {
-      case e: WriterException => e.printStackTrace()
-      case e: FileNotFoundException => e.printStackTrace()
-      case e: IOException => e.printStackTrace()
+      case e: WriterException => Log.e("ProfileSettingsActivity", "exception", e)
+      case e: FileNotFoundException => Log.e("ProfileSettingsActivity", "exception", e)
+      case e: IOException => Log.e("ProfileSettingsActivity", "exception", e)
     }
   }
 
@@ -360,7 +360,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
           Log.d("ProfileSettingsActivity","Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
         }
         userDb.updateActiveUserDetail(key, name)
 
@@ -374,7 +374,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
         }
         userDb.updateActiveUserDetail(key, newStatusString)
 
@@ -383,7 +383,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
         }
         userDb.updateActiveUserDetail(key, statusMessage)
 

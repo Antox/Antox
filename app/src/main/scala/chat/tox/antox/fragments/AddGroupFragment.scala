@@ -84,7 +84,7 @@ class AddGroupFragment extends Fragment with InputableID {
             Log.d("AddGroupFragment","joined group : " + groupKey)
             ToxSingleton.save()
           } catch {
-            case e: ToxException[_] => e.printStackTrace()
+            case e: ToxException[_] => Log.e("AddGroupFragment", "exception", e)
           }
           Log.d("AddGroupKey", "Adding group to database")
           db.addGroup(key, UiUtils.trimId(key), topic = "")

@@ -44,15 +44,15 @@ class ToxDataFile(ctx: Context, fileName: String) {
       data = Array.ofDim[Byte](file.length.toInt)
       fin.read(data)
     } catch {
-      case e: FileNotFoundException => e.printStackTrace()
-      case e: IOException => e.printStackTrace()
+      case e: FileNotFoundException => Log.e("ToxDataFile", "exception", e)
+      case e: IOException => Log.e("ToxDataFile", "exception", e)
     } finally {
       try {
         if (fin != null) {
           fin.close()
         }
       } catch {
-        case ioe: IOException => ioe.printStackTrace()
+        case e: IOException => Log.e("ToxDataFile", "exception", e)
       }
     }
     data
@@ -71,14 +71,14 @@ class ToxDataFile(ctx: Context, fileName: String) {
     try {
       myFile.createNewFile()
     } catch {
-      case e1: IOException => e1.printStackTrace()
+      case e1: IOException => Log.e("ToxDataFile", "exception", e1)
     }
     try {
       val output = new FileOutputStream(myFile)
       output.write(dataToBeSaved, 0, dataToBeSaved.length)
       output.close()
     } catch {
-      case e: IOException => e.printStackTrace()
+      case e: IOException => Log.e("ToxDataFile", "exception", e)
     }
   }
 }

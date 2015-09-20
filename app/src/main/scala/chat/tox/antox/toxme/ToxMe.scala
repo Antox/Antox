@@ -70,7 +70,7 @@ object ToxMe {
       Some(json.getString("key"))
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e("ToxMe", "exception", e)
         None
     }
   }
@@ -169,7 +169,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e("ToxMe", "exception", e)
         Left(ToxMeError.exception(e))
     }
   }
@@ -219,7 +219,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e("ToxMe", "exception", e)
         Left(ToxMeError.exception(e))
     }
   }

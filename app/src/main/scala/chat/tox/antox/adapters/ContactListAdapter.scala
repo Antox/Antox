@@ -189,7 +189,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
             ToxSingleton.tox.acceptGroupInvite(inviteData)
             ToxSingleton.save()
           } catch {
-            case e: Exception => e.printStackTrace()
+            case e: Exception => Log.e("ContactListAdapter", "exception", e)
           }
         })
 

@@ -88,7 +88,7 @@ class FileTransferManager extends Intervals {
           }
         } catch {
           case e: Exception => {
-            e.printStackTrace()
+            Log.e(TAG, "exception", e)
             None
           }
         }
@@ -171,7 +171,7 @@ class FileTransferManager extends Intervals {
             case None =>
           }
         } catch {
-          case e: Exception => e.printStackTrace()
+          case e: Exception => Log.e(TAG, "exception", e)
         }
       })
     }
@@ -273,7 +273,7 @@ class FileTransferManager extends Intervals {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
-            Log.d("FileTransferManager",file.length().toString)
+            Log.d(TAG,file.length().toString)
             sendFileSendRequest(file.getPath, friend.key, AVATAR, fileId = ToxSingleton.tox.hash(file).orNull, context = context)
           case None =>
             sendFileDeleteRequest(friend.key, AVATAR, context)
@@ -282,5 +282,6 @@ class FileTransferManager extends Intervals {
       case None =>
         //avatar has been sent to all friends, do nothing
     })
+
   }
 }

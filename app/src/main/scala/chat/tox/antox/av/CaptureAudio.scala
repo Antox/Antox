@@ -6,7 +6,7 @@ import rx.lang.scala.Observable
 
 object CaptureAudio {
 
-  val TAG = "chat.tox.antox.utils.CaptureAudio"
+  val TAG = "CaptureAudio"
 
   var bufferSizeBytes: Int = _
 
@@ -35,7 +35,7 @@ object CaptureAudio {
               sendAudio(callID, audioRecord, codecSettings)
             } catch {
               case e: Exception =>
-                e.printStackTrace
+                Log.e(TAG, "exception", e)
                 subscriber.onError(e)
             }
           }
@@ -72,7 +72,7 @@ object CaptureAudio {
       }
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         None
     }
   }

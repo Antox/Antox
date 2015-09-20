@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import chat.tox.antox.R
@@ -27,7 +28,7 @@ class AboutActivity extends AppCompatActivity {
     try {
       version = getPackageManager.getPackageInfo(getPackageName, 0).versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => e.printStackTrace()
+      case e: PackageManager.NameNotFoundException => Log.e("AboutActivity", "exception", e)
     }
     tw.setText(getString(R.string.ver) + " " + version)
   }

@@ -62,7 +62,7 @@ object ToxSingleton {
       antoxFriendList.getByKey(key)
     } catch {
       case e: Exception => {
-        e.printStackTrace()
+        Log.e("ToxSingleton", "exception", e)
         None
       }
     }
@@ -73,7 +73,7 @@ object ToxSingleton {
       antoxFriendList.getByFriendNumber(friendNumber)
     } catch {
       case e: Exception => {
-        e.printStackTrace()
+        Log.e("ToxSingleton", "exception", e)
         None
       }
     }
@@ -106,7 +106,7 @@ object ToxSingleton {
        try {
          if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendNumber)
        } catch {
-         case e: Exception => e.printStackTrace()
+         case e: Exception => Log.e("ToxSingleton", "exception", e)
        }
      })
   }
@@ -178,7 +178,7 @@ object ToxSingleton {
           }
         } catch {
           case e: Exception =>
-            e.printStackTrace()
+            Log.e("ToxSingleton", "exception", e)
         }
         Log.d(TAG, "Successfully bootstrapped")
       }, error => {
@@ -234,7 +234,7 @@ object ToxSingleton {
       editor.putString("tox_id", tox.getAddress.toString)
       editor.commit()
     } catch {
-      case e: ToxException[_] => e.printStackTrace()
+      case e: ToxException[_] => Log.e("ToxSingleton", "exception", e)
     }
 
     //toxAv = new ToxAvImpl(tox.getTox)

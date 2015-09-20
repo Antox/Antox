@@ -11,6 +11,7 @@ import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.{Button, ImageView, Toast}
@@ -121,7 +122,7 @@ class AvatarDialog(activity: Activity) {
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
             activity.startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
           } catch {
-            case e: IOException => e.printStackTrace()
+            case e: IOException => Log.e("AvatarDialog", "exception", e)
           }
         } else {
           Toast.makeText(activity, activity.getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)

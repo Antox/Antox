@@ -8,6 +8,7 @@ import android.content.{Context, DialogInterface, Intent}
 import android.os.{Bundle, Environment}
 import android.support.v4.app.Fragment
 import android.text.{Editable, TextWatcher}
+import android.util.Log
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget._
 import chat.tox.antox.R
@@ -251,7 +252,7 @@ abstract class AbstractContactsFragment extends Fragment {
         } catch {
           case e: Exception =>
             Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
-            e.printStackTrace()
+            Log.e("AbstractContactsFragment", "exception", e)
         }
       }
     })

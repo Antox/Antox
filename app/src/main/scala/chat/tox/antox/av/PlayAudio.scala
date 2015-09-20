@@ -19,7 +19,7 @@ class PlayAudio{
           audioTrack.write (data, 0, data.length)
           audioTrack.stop ()
     } catch {
-      case e: Exception => Log.e("AudioPlayback", e.getMessage)
+      case e: Exception => Log.e("PlayAudio", "exception", e)
     }
   }
 

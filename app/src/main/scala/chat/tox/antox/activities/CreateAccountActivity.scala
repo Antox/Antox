@@ -238,9 +238,8 @@ class CreateAccountActivity extends AppCompatActivity {
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(result => {
         onRegistrationResult(toxMeName, toxData, result)
-      }, error => {
-        Log.d("CreateAccount", "Unexpected error registering account.")
-        error.printStackTrace()
+      }, e => {
+        Log.e("CreateAccountActivity", "exception", e)
       })
     }
   }

@@ -4,6 +4,7 @@ import java.io._
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import chat.tox.antox.utils.StorageType._
 
 object FileUtils {
@@ -60,7 +61,7 @@ object FileUtils {
       outputStream.close()
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e("FileUtils", "exception", e)
     }
   }
 }

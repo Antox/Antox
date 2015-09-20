@@ -2,6 +2,7 @@ package chat.tox.antox.transfer
 
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
+import android.util.Log
 import chat.tox.antox.transfer.FileStatus.FileStatus
 import chat.tox.antox.wrapper.{FileKind, ToxKey}
 
@@ -62,11 +63,11 @@ class FileTransfer(val key: ToxKey,
                 _bOutputStream = Some(bOutput)
               }
             } catch {
-              case e: Exception => e.printStackTrace()
+              case e: Exception => Log.e("FileTransfer", "exception", e)
             }
           }
         } catch {
-          case e: Exception => e.printStackTrace()
+          case e: Exception => Log.e("FileTransfer", "exception", e)
         }
       }
     }
@@ -83,11 +84,11 @@ class FileTransfer(val key: ToxKey,
                 _bInputStream = Some(bInput)
               }
             } catch {
-              case e: Exception => e.printStackTrace()
+              case e: Exception => Log.e("FileTransfer", "exception", e)
             }
           } else {_inputStream = None}
         } catch {
-          case e: Exception => e.printStackTrace()
+          case e: Exception => Log.e("FileTransfer", "exception", e)
         }
       }
     }
@@ -127,7 +128,7 @@ class FileTransfer(val key: ToxKey,
               false
             }
           } catch {
-            case e: Exception => e.printStackTrace()
+            case e: Exception => Log.e("FileTransfer", "exception", e)
             false
           }
         case None =>
