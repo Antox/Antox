@@ -50,11 +50,11 @@ object ToxMe {
     })
   }
 
-  final case class ToxMeSearchResult(name: String, bio: String)
+  final class SearchResult(name: String, bio: String)
 
-  def search(query: String, domain: String): Observable[ToxmeResult[Array[ToxMeSearchResult]]] = search(query, domain, 1)
+  def search(query: String, domain: String): Observable[ToxMeResult[Seq[SearchResult]]] = search(query, domain, 1)
 
-  def search(query: String, domain: String, page: Int): Observable[ToxmeResult[Array[ToxMeSearchResult]]] = {
+  def search(query: String, domain: String, page: Int): Observable[ToxMeResult[Seq[SearchResult]]] = {
     Observable(subscriber => {
       try {
         val json = new JSONObject()
@@ -63,12 +63,12 @@ object ToxMe {
         json.put("page", page)
 
         val response = postJson(json, domain)
-        var users: Array[ToxMeSearchResult] = Array[ToxMeSearchResult]()
+        var users: Array[SearchResult] = Array[SearchResult]()
         if(response.isLeft) subscriber.onNext(Left(response.left.get))
         val results = response.right.get.getJSONArray("users")
         for(i <- 0 until results.length()){
           val result = results.getJSONObject(i)
-          users = users :+ new ToxMeSearchResult(result.getString("name"), result.getString("bio"))
+          users = users :+ new SearchResult(result.getString("name"), result.getString("bio"))
         }
         subscriber.onNext(Right(users))
       } catch {
@@ -107,7 +107,7 @@ object ToxMe {
   def makeApiURL(domain: String): String = "https://" + domain + "/api"
 
   type Password = String
-  type ToxmeResult[Success] = Either[ToxMeError, Success]
+  type ToxMeResult[Success] = Either[ToxMeError, Success]
 
   /**
    * Different request types for the ToxMe
@@ -135,8 +135,8 @@ object ToxMe {
    *
    * @return ToxMe request observable that contains password on success, RegError on lookup error
    */
-  def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[ToxmeResult[Password]] = {
-    Observable[ToxmeResult[Password]](subscriber => {
+  def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[ToxMeResult[Password]] = {
+    Observable[ToxMeResult[Password]](subscriber => {
       val json = new JSONObject
       json.put("tox_id", toxData.address)
       json.put("name", name.username)
@@ -179,7 +179,7 @@ object ToxMe {
       .right.flatMap(postJson(_, apiURL))
   }
 
-  private def encryptRequestJson(name: ToxMeName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): ToxmeResult[JSONObject] = {
+  private def encryptRequestJson(name: ToxMeName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): ToxMeResult[JSONObject] = {
     try {
       lookupPublicKey(name.domain.get) match {
         case Some(publicKey) =>
@@ -231,7 +231,7 @@ object ToxMe {
     Some(EncryptedPayload(payload, nonceString))
   }
 
-  private def postJson(requestJson: JSONObject, toxMeApiUrl: String): ToxmeResult[JSONObject] = {
+  private def postJson(requestJson: JSONObject, toxMeApiUrl: String): ToxMeResult[JSONObject] = {
     val httpClient = new OkHttpClient()
     try {
       val mediaType = MediaType.parse("application/json; charset=utf-8")
