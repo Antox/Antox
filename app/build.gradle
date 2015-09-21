@@ -76,11 +76,11 @@ dependencies {
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
     compile 'org.scalaz:scalaz-core_2.11:7.2.0-M1'
 
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.android.support:support-v4:22.2.0'
     compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:gridlayout-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
     compile 'io.reactivex:rxjava:1.0.6'
     compile 'io.reactivex:rxandroid:0.24.0'
     compile 'io.reactivex:rxscala_2.11:0.25.0'
