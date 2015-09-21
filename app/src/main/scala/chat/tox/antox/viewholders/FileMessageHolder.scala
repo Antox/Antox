@@ -142,6 +142,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     messageText.setText(text)
     if (msg.isMine) {
       messageText.setTextColor(context.getResources.getColor(R.color.white))
+    } else {
+      messageText.setTextColor(context.getResources.getColor(R.color.black))
     }
     messageTitle.setVisibility(View.VISIBLE)
     messageText.setVisibility(View.VISIBLE)
