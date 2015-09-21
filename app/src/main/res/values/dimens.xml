@@ -4,6 +4,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">16dp</dimen>
+    <dimen name="fab_margin">20dp</dimen>
     <dimen name="padding">16dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="text_tiny">10sp</dimen>

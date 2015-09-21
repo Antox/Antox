@@ -68,21 +68,7 @@
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="true"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:backgroundTint="@color/fab_colors_list"
-            android:clickable="true"
-            android:onClick="onClickAdd"
-            android:src="@drawable/ic_action_new"
-            app:borderWidth="0dp"/>
+        <include layout="@layout/floating_action_button"/>
 
     </RelativeLayout>
 </LinearLayout>
