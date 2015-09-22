@@ -122,7 +122,7 @@ object BitmapManager {
       byteArr
     } catch {
       case e: Exception =>
-        Log.e("BitmapManager", "exception", e)
+        Log.e(TAG, "exception", e)
         null
     }
   }
@@ -163,7 +163,7 @@ object BitmapManager {
     } catch {
       case e: FileNotFoundException =>
         Log.d(TAG, "File not found when trying to be used for FileInputStream")
-        Log.e("BitmapManager", "exception", e)
+        Log.e(TAG, "exception", e)
         null
     } finally {
       if (fis != null) {

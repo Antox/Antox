@@ -42,6 +42,8 @@ object ContactListAdapter {
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
+  private val TAG = "ContactListAdapter"
+
   private val mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
   private var mData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
@@ -156,7 +158,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Accepting Friend: " + key)
+        Log.d(TAG, "Accepting Friend: " + key)
         val db = State.db
         db.addFriend(key, "", "", context.getResources.getString(R.string.friend_accepted_default_status))
         db.deleteFriendRequest(key)
@@ -170,7 +172,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Rejecting Friend: " + key)
+        Log.d(TAG, "Rejecting Friend: " + key)
         val db = State.db
         db.deleteFriendRequest(key)
       }
@@ -180,7 +182,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        Log.d(TAG, "Joining Group: " + groupKey)
         val db = State.db
 
         db.groupInvites.first.subscribe(invites => {
@@ -189,7 +191,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
             ToxSingleton.tox.acceptGroupInvite(inviteData)
             ToxSingleton.save()
           } catch {
-            case e: Exception => Log.e("ContactListAdapter", "exception", e)
+            case e: Exception => Log.e(TAG, "exception", e)
           }
         })
 
@@ -199,7 +201,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        Log.d(TAG, "Joining Group: " + groupKey)
         val db = State.db
         db.deleteGroupInvite(groupKey)
       }

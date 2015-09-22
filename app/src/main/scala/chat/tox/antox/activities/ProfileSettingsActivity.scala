@@ -31,6 +31,8 @@ import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
 
+  private val TAG = "ProfileSettingsActivity"
+
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
     override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
@@ -212,7 +214,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
               ).show()
 
             } catch {
-              case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
+              case e: ToxException[_] => Log.e(TAG, "exception", e)
             }
           }
         })
@@ -250,7 +252,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       try {
         noMedia.createNewFile()
       } catch {
-        case e: IOException => Log.e("ProfileSettingsActivity", "exception", e)
+        case e: IOException => Log.e(TAG, "exception", e)
       }
     }
 
@@ -312,7 +314,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         .show()
     } catch {
       case e: Exception =>
-        Log.e("ProfileSettingsActivity", "exception", e)
+        Log.e(TAG, "exception", e)
         Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
     }
   }
@@ -329,9 +331,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
       out.close()
     } catch {
-      case e: WriterException => Log.e("ProfileSettingsActivity", "exception", e)
-      case e: FileNotFoundException => Log.e("ProfileSettingsActivity", "exception", e)
-      case e: IOException => Log.e("ProfileSettingsActivity", "exception", e)
+      case e: WriterException => Log.e(TAG, "exception", e)
+      case e: FileNotFoundException => Log.e(TAG, "exception", e)
+      case e: IOException => Log.e(TAG, "exception", e)
     }
   }
 
@@ -357,10 +359,10 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          Log.d("ProfileSettingsActivity","Tox is " + ToxSingleton.tox)
+          Log.d(TAG,"Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
-          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, name)
 
@@ -374,7 +376,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
-          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, newStatusString)
 
@@ -383,7 +385,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
-          case e: ToxException[_] => Log.e("ProfileSettingsActivity", "exception", e)
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, statusMessage)
 

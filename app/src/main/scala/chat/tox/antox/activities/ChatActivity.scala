@@ -85,7 +85,7 @@ class ChatActivity extends GenericChatActivity {
           photoPath = file.getAbsolutePath
           startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
         } catch {
-          case e: IOException => Log.e("ChatActivity", "exception", e)
+          case e: IOException => Log.e(TAG, "exception", e)
         }
 
       }
@@ -161,7 +161,7 @@ class ChatActivity extends GenericChatActivity {
             try {
               State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, null, this)
             } catch {
-              case e: Exception => Log.e("ChatActivity", "exception", e)
+              case e: Exception => Log.e(TAG, "exception", e)
             }
           }
         }

@@ -14,6 +14,8 @@ import chat.tox.antox.theme.ThemeManager
 
 class AboutActivity extends AppCompatActivity {
 
+  private val TAG = "AboutActivity"
+
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.about)
@@ -28,7 +30,7 @@ class AboutActivity extends AppCompatActivity {
     try {
       version = getPackageManager.getPackageInfo(getPackageName, 0).versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => Log.e("AboutActivity", "exception", e)
+      case e: PackageManager.NameNotFoundException => Log.e(TAG, "exception", e)
     }
     tw.setText(getString(R.string.ver) + " " + version)
   }

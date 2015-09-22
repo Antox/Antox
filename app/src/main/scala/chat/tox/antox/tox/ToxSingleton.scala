@@ -25,7 +25,7 @@ import scala.io.Source
 
 object ToxSingleton {
 
-  private val TAG = "chat.tox.antox.tox.ToxSingleton"
+  private val TAG = "ToxSingleton"
 
   var tox: ToxCore = _
 
@@ -62,7 +62,7 @@ object ToxSingleton {
       antoxFriendList.getByKey(key)
     } catch {
       case e: Exception => {
-        Log.e("ToxSingleton", "exception", e)
+        Log.e(TAG, "exception", e)
         None
       }
     }
@@ -73,7 +73,7 @@ object ToxSingleton {
       antoxFriendList.getByFriendNumber(friendNumber)
     } catch {
       case e: Exception => {
-        Log.e("ToxSingleton", "exception", e)
+        Log.e(TAG, "exception", e)
         None
       }
     }
@@ -106,7 +106,7 @@ object ToxSingleton {
        try {
          if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendNumber)
        } catch {
-         case e: Exception => Log.e("ToxSingleton", "exception", e)
+         case e: Exception => Log.e(TAG, "exception", e)
        }
      })
   }
@@ -145,7 +145,7 @@ object ToxSingleton {
 
           val json = JsonReader.readJsonFromFile(savedNodeFile)
 
-          Log.d("ToxSingleton",json.toString)
+          Log.d(TAG,json.toString)
           subscriber.onNext(json)
           subscriber.onCompleted()
         } catch {
@@ -178,7 +178,7 @@ object ToxSingleton {
           }
         } catch {
           case e: Exception =>
-            Log.e("ToxSingleton", "exception", e)
+            Log.e(TAG, "exception", e)
         }
         Log.d(TAG, "Successfully bootstrapped")
       }, error => {
@@ -234,7 +234,7 @@ object ToxSingleton {
       editor.putString("tox_id", tox.getAddress.toString)
       editor.commit()
     } catch {
-      case e: ToxException[_] => Log.e("ToxSingleton", "exception", e)
+      case e: ToxException[_] => Log.e(TAG, "exception", e)
     }
 
     //toxAv = new ToxAvImpl(tox.getTox)
@@ -251,7 +251,7 @@ object ToxSingleton {
               tox.addFriendNoRequest(friend.key)
             } catch {
               case e: Exception =>
-                Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
+                Log.d(TAG, "this should not happen (error adding friend on init)")
             }
         }
       }

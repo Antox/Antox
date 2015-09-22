@@ -15,10 +15,12 @@ object AntoxOnSelfConnectionStatusCallback {
 
 class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback[Unit] {
 
+  private val TAG = "SelfConnectionStatusCallback"
+
   override def selfConnectionStatus(toxConnection: ToxConnection)(state: Unit): Unit = {
     ToxSingleton.tox.setSelfConnectionStatus(toxConnection)
 
-    Log.d("SelfConnectionStatusCallback","got self connection status callback")
+    Log.d(TAG,"got self connection status callback")
     AntoxOnSelfConnectionStatusCallback.connectionStatusSubject.onNext(toxConnection)
   }
 }

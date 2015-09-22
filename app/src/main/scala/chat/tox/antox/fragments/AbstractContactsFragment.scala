@@ -27,6 +27,8 @@ import rx.lang.scala.{Observable, Subscription}
 
 abstract class AbstractContactsFragment extends Fragment {
 
+  private val TAG = "AbstractContactsFragment"
+
   var showSearch: Boolean = _
 
   var showFab: Boolean = true
@@ -252,7 +254,7 @@ abstract class AbstractContactsFragment extends Fragment {
         } catch {
           case e: Exception =>
             Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
-            Log.e("AbstractContactsFragment", "exception", e)
+            Log.e(TAG, "exception", e)
         }
       }
     })

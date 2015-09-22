@@ -33,6 +33,8 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 class CreateAccountActivity extends AppCompatActivity {
 
+  private val TAG = "CreateAccount"
+
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     getSupportActionBar.hide()
@@ -211,7 +213,7 @@ class CreateAccountActivity extends AppCompatActivity {
         try {
           toxData = createToxData(toxMeName.username)
         } catch {
-          case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
+          case e: ToxException[_] => Log.d(TAG, "Failed creating tox data save file")
         }
       } else {
         val result = loadToxData(toxMeName.username)
@@ -239,7 +241,7 @@ class CreateAccountActivity extends AppCompatActivity {
         .subscribe(result => {
         onRegistrationResult(toxMeName, toxData, result)
       }, e => {
-        Log.e("CreateAccountActivity", "exception", e)
+        Log.e(TAG, "exception", e)
       })
     }
   }

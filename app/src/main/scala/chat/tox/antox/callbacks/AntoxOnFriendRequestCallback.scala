@@ -18,6 +18,8 @@ object AntoxOnFriendRequestCallback {
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback[Unit] {
 
+  private val TAG = "FriendRequestCallback"
+
   override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
     val db = State.db
     val key = new ToxKey(keyBytes)
@@ -25,7 +27,7 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendReque
       db.addFriendRequest(key, new String(message, "UTF-8"))
     }
 
-    Log.d("FriendRequestCallback", "")
+    Log.d(TAG, "")
     MessageHelper.createRequestNotification(Some(new String(message, "UTF-8")), ctx)
   }
 }

@@ -24,6 +24,8 @@ import chat.tox.antox.wrapper.FileKind.AVATAR
 //not a DialogFragment because they don't work with PreferenceActivity
 class AvatarDialog(activity: Activity) {
 
+  private val TAG = "AvatarDialog"
+
   val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
   def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -122,7 +124,7 @@ class AvatarDialog(activity: Activity) {
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file))
             activity.startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
           } catch {
-            case e: IOException => Log.e("AvatarDialog", "exception", e)
+            case e: IOException => Log.e(TAG, "exception", e)
           }
         } else {
           Toast.makeText(activity, activity.getResources.getString(R.string.no_camera_intent_error), Toast.LENGTH_SHORT)

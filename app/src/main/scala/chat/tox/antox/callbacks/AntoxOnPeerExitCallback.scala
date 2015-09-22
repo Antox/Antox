@@ -5,8 +5,11 @@ import android.util.Log
 import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnPeerExitCallback(private var ctx: Context) /* extends GroupPeerExitCallback */ {
+
+  private val TAG = "PeerExitCallback"
+
   def groupPeerExit(groupNumber: Int, peerNumber: Int, partMessage: Array[Byte]): Unit = {
     ToxSingleton.getGroup(groupNumber).peers.removeGroupPeer(peerNumber)
-    Log.d("PeerExitCallback", "peer exit")
+    Log.d(TAG, "peer exit")
   }
 }

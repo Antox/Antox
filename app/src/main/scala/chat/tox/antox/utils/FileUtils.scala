@@ -9,6 +9,8 @@ import chat.tox.antox.utils.StorageType._
 
 object FileUtils {
 
+  private val TAG = "FileUtils"
+
   /**
   * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
   */
@@ -61,7 +63,7 @@ object FileUtils {
       outputStream.close()
     } catch {
       case e: Exception =>
-        Log.e("FileUtils", "exception", e)
+        Log.e(TAG, "exception", e)
     }
   }
 }

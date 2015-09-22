@@ -10,6 +10,8 @@ import scala.collection.JavaConversions._
 
 class GroupList {
 
+  private val TAG = "GroupList"
+
   private var groups: util.List[Group] = new util.ArrayList[Group]()
 
   def this(groups: util.List[Group]) {
@@ -54,7 +56,7 @@ class GroupList {
   }
 
   def addGroup(group: Group): Unit = {
-    Log.d("GroupList","group " + group.groupNumber + " added")
+    Log.d(TAG,"group " + group.groupNumber + " added")
     groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber) match {
       case Some(f) => throw new Exception()
       case None => this.groups.add(group)

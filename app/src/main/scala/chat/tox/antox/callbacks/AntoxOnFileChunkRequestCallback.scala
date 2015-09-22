@@ -9,6 +9,8 @@ import im.tox.tox4j.core.callbacks.FileChunkRequestCallback
 
 class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback[Unit] {
 
+  private val TAG = "OnFileChunkRequestCallback"
+
   override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)
     val mTransfer = State.transfers.get(mFriend.get.getKey, fileNumber)
@@ -32,7 +34,7 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChun
           }
 
         })
-      case None => Log.d("AntoxOnFileChunkRequestCallback", "Can't find file transfer")
+      case None => Log.d(TAG, "Can't find file transfer")
     }
   }
 }

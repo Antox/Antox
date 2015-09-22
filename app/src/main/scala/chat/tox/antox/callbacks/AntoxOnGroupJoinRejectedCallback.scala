@@ -4,6 +4,7 @@ import android.content.Context
 
 class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends GroupJoinRejectedCallback */ {
   private var reconnecting = false
+  private val TAG = "GroupJoinRejectedCallback"
 
   /* override def groupJoinRejected(groupNumber: Int, reason: ToxGroupJoinRejected): Unit = {
     if (reason == ToxGroupJoinRejected.NICK_TAKEN) {
@@ -22,7 +23,7 @@ class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends Grou
         }
       }
     } else {
-      Log.d("GroupJoinRejectedCallback","Tox Group Join Rejected: " + reason)
+      Log.d(TAG,"Tox Group Join Rejected: " + reason)
     }
   } */
 }

@@ -5,8 +5,10 @@ import android.util.Log
 import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnPeerJoinCallback(private var ctx: Context) /* extends GroupPeerJoinCallback */ {
+
+  private val TAG = "PeerJoinCallback"
   def groupPeerJoin(groupNumber: Int, peerNumber: Int): Unit = {
     ToxSingleton.getGroup(groupNumber).addPeer(ToxSingleton.tox, peerNumber)
-    Log.d("PeerJoinCallback","new peer")
+    Log.d(TAG,"new peer")
   }
 }

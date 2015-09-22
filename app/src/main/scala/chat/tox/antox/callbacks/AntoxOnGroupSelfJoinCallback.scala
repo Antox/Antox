@@ -7,9 +7,12 @@ import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
+
+  private val TAG = "GroupSelfJoinCallback"
+  
   //override
   def groupSelfJoin(groupNumber: Int): Unit = {
-    Log.d("GroupSelfJoinCallback", "got self join callback")
+    Log.d(TAG, "got self join callback")
     new Thread(new Runnable {
       override def run(): Unit = {
         val group = ToxSingleton.getGroup(groupNumber)
@@ -22,7 +25,7 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
           }
         }
         group.name = ToxSingleton.tox.getGroupName(groupNumber)
-        Log.d("GroupSelfJoinCallback", "set name to " + group.name)
+        Log.d(TAG, "set name to " + group.name)
         group.topic = ToxSingleton.tox.getGroupTopic(groupNumber)
         group.connected = true
 

@@ -9,6 +9,8 @@ import android.util.Log
 
 class ToxService extends Service() {
 
+  private val TAG = "ToxService"
+
   private var serviceThread: Thread = _
 
   private var keepRunning: Boolean = true
@@ -18,7 +20,7 @@ class ToxService extends Service() {
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
-      Log.d("ToxService", "Initting ToxSingleton")
+      Log.d(TAG, "Initting ToxSingleton")
     }
 
     keepRunning = true
@@ -59,6 +61,6 @@ class ToxService extends Service() {
     serviceThread.interrupt()
     ToxSingleton.save()
     ToxSingleton.isInited = false
-    Log.d("ToxService", "onDestroy() called")
+    Log.d(TAG, "onDestroy() called")
   }
 }

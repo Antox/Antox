@@ -5,10 +5,12 @@ import android.util.Log
 
 class AntoxOnVideoDataCallback(private var ctx: Context) {
 
+  private val TAG = "OnVideoDataCallback"
+
   def execute(callID: Int,
     data: Array[Byte],
     width: Int,
     height: Int) {
-    Log.d("OnVideoDataCallback", "Received a callback from: " + callID)
+    Log.d(TAG, "Received a callback from: " + callID)
   }
 }
