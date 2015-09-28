@@ -26,7 +26,7 @@ object BitmapManager {
   // has updated their avatar - contact's avatars are stored under the name of their public key
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
-  private val TAG = "BitmapManager"
+  private val TAG = this.getClass.getSimpleName
 
   private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
     if (isAvatar) {
@@ -122,7 +122,7 @@ object BitmapManager {
       byteArr
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         null
     }
   }
@@ -163,7 +163,7 @@ object BitmapManager {
     } catch {
       case e: FileNotFoundException =>
         Log.d(TAG, "File not found when trying to be used for FileInputStream")
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         null
     } finally {
       if (fis != null) {

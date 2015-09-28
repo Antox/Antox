@@ -21,6 +21,8 @@ import scala.concurrent.duration._
 
 class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
 
+  private val TAG = this.getClass.getSimpleName
+
   protected val imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
 
   protected val fileButtons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
@@ -92,7 +94,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     progressLayout.setVisibility(View.VISIBLE)
 
     if (progressSub == null || progressSub.isUnsubscribed) {
-      Log.d("FileProgressSub", "observer subscribing")
+      Log.d(TAG, "observer subscribing")
       progressSub = Observable.interval(500 milliseconds)
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(x => {
@@ -122,7 +124,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     fileProgressBar.setProgress(State.transfers.getProgress(msg.id).toInt)
     if (fileProgressBar.getProgress >= msg.size) {
       progressSub.unsubscribe()
-      Log.d("FileProgressSub", "observer unsubscribed")
+      Log.d(TAG, "observer unsubscribed")
     }
   }
 

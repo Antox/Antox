@@ -11,14 +11,16 @@ import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
+  private val TAG = this.getClass.getSimpleName
+
   def doesFileExist(): Boolean = {
     if (ctx == null) {
-      Log.d("ToxDataFile", "Context is null!")
+      Log.d(TAG, "Context is null!")
     }
-    Log.d("ToxDataFile", "fileName: " + fileName)
+    Log.d(TAG, "fileName: " + fileName)
     val myFile = ctx.getFileStreamPath(fileName)
     if (myFile == null) {
-      Log.d("ToxDataFile", "myFile is null!")
+      Log.d(TAG, "myFile is null!")
     }
     myFile.exists()
   }
@@ -44,15 +46,15 @@ class ToxDataFile(ctx: Context, fileName: String) {
       data = Array.ofDim[Byte](file.length.toInt)
       fin.read(data)
     } catch {
-      case e: FileNotFoundException => e.printStackTrace()
-      case e: IOException => e.printStackTrace()
+      case e: FileNotFoundException => Log.e(TAG, "exception", e)
+      case e: IOException => Log.e(TAG, "exception", e)
     } finally {
       try {
         if (fin != null) {
           fin.close()
         }
       } catch {
-        case ioe: IOException => ioe.printStackTrace()
+        case e: IOException => Log.e(TAG, "exception", e)
       }
     }
     data
@@ -71,14 +73,14 @@ class ToxDataFile(ctx: Context, fileName: String) {
     try {
       myFile.createNewFile()
     } catch {
-      case e1: IOException => e1.printStackTrace()
+      case e1: IOException => Log.e(TAG, "exception", e1)
     }
     try {
       val output = new FileOutputStream(myFile)
       output.write(dataToBeSaved, 0, dataToBeSaved.length)
       output.close()
     } catch {
-      case e: IOException => e.printStackTrace()
+      case e: IOException => Log.e(TAG, "exception", e)
     }
   }
 }

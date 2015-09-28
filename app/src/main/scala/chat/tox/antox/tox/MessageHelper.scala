@@ -16,7 +16,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object MessageHelper {
 
-  val TAG = "chat.tox.antox.tox.MessageHelper"
+  val TAG = this.getClass.getSimpleName
 
   def createRequestNotification(contentText: Option[String], context: Context): Unit = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)

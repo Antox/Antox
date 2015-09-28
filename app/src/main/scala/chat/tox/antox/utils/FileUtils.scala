@@ -4,9 +4,12 @@ import java.io._
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import chat.tox.antox.utils.StorageType._
 
 object FileUtils {
+
+  private val TAG = this.getClass.getSimpleName
 
   /**
   * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
@@ -60,7 +63,7 @@ object FileUtils {
       outputStream.close()
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
     }
   }
 }

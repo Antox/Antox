@@ -12,7 +12,7 @@ import scala.collection.JavaConversions._
 
 object AntoxOnConnectionStatusCallback {
 
-  private val TAG = "chat.tox.antox.TAG"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback[Unit] {

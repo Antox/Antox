@@ -1,6 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import android.util.Log
 import chat.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.core.callbacks.SelfConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
@@ -14,10 +15,12 @@ object AntoxOnSelfConnectionStatusCallback {
 
 class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback[Unit] {
 
+  private val TAG = this.getClass.getSimpleName
+
   override def selfConnectionStatus(toxConnection: ToxConnection)(state: Unit): Unit = {
     ToxSingleton.tox.setSelfConnectionStatus(toxConnection)
 
-    println("got self connection status callback")
+    Log.d(TAG,"got self connection status callback")
     AntoxOnSelfConnectionStatusCallback.connectionStatusSubject.onNext(toxConnection)
   }
 }

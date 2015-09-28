@@ -12,9 +12,10 @@ import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.support.v7.app.AlertDialog.Builder
 import android.view.{MenuItem, View}
-import android.widget.{TextView, ImageButton, Toast}
+import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
@@ -30,6 +31,8 @@ import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
+
+  private val TAG = this.getClass.getSimpleName
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
@@ -202,7 +205,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
               ).show()
 
             } catch {
-              case e: ToxException[_] => e.printStackTrace()
+              case e: ToxException[_] => Log.e(TAG, "exception", e)
             }
           }
         })
@@ -249,7 +252,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       try {
         noMedia.createNewFile()
       } catch {
-        case e: IOException => e.printStackTrace()
+        case e: IOException => Log.e(TAG, "exception", e)
       }
     }
 
@@ -303,7 +306,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         .show()
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
     }
   }
@@ -320,9 +323,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
       out.close()
     } catch {
-      case e: WriterException => e.printStackTrace()
-      case e: FileNotFoundException => e.printStackTrace()
-      case e: IOException => e.printStackTrace()
+      case e: WriterException => Log.e(TAG, "exception", e)
+      case e: FileNotFoundException => Log.e(TAG, "exception", e)
+      case e: IOException => Log.e(TAG, "exception", e)
     }
   }
 
@@ -348,10 +351,10 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          println("Tox is " + ToxSingleton.tox)
+          Log.d(TAG,"Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, name)
 
@@ -365,7 +368,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatus(newStatus)
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, newStatusString)
 
@@ -374,7 +377,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         try {
           ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
         } catch {
-          case e: ToxException[_] => e.printStackTrace()
+          case e: ToxException[_] => Log.e(TAG, "exception", e)
         }
         userDb.updateActiveUserDetail(key, statusMessage)
 

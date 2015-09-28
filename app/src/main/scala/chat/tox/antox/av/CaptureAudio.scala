@@ -6,7 +6,7 @@ import rx.lang.scala.Observable
 
 object CaptureAudio {
 
-  val TAG = "chat.tox.antox.utils.CaptureAudio"
+  val TAG = this.getClass.getSimpleName
 
   var bufferSizeBytes: Int = _
 
@@ -20,7 +20,7 @@ object CaptureAudio {
     val preparedBuffer = ToxSingleton.tox.avPrepareAudioFrame(callID,
       frameSize * 2, intBuffer, frameSize)
     ToxSingleton.tox.avSendAudio(callID, preparedBuffer) */
-    Log.d("Mic", "Sending audio to:" + callID)
+    Log.d(TAG, "Sending audio to:" + callID)
   }
 
   def makeObservable(callID: Integer, audioBitRate: Int): Observable[Boolean] = {
@@ -35,7 +35,7 @@ object CaptureAudio {
               sendAudio(callID, audioRecord, codecSettings)
             } catch {
               case e: Exception =>
-                e.printStackTrace
+                Log.e(TAG, "exception", e)
                 subscriber.onError(e)
             }
           }
@@ -54,7 +54,7 @@ object CaptureAudio {
       val audioFormat = AudioFormat.ENCODING_PCM_16BIT
       val channelConfig = AudioFormat.CHANNEL_IN_MONO
       val rate = 48000
-      Log.d("CaptureAudio", "Attempting rate " + rate + "Hz, bits: " + audioFormat +
+      Log.d(TAG, "Attempting rate " + rate + "Hz, bits: " + audioFormat +
         ", channel: " +
         channelConfig)
       val bufferSize = AudioRecord.getMinBufferSize(rate, channelConfig, audioFormat)
@@ -72,7 +72,7 @@ object CaptureAudio {
       }
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         None
     }
   }

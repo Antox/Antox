@@ -2,6 +2,7 @@ package chat.tox.antox.wrapper
 
 import java.io.File
 
+import android.util.Log
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils._
 import im.tox.tox4j.core.callbacks._
@@ -13,6 +14,8 @@ import im.tox.tox4j.impl.jni.{ToxCoreImpl, ToxCryptoImpl}
 class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: ToxOptions) extends Intervals {
 
   val tox = new ToxCoreImpl[Unit](options)
+
+  private val TAG = this.getClass.getSimpleName
 
   var selfConnectionStatus: ToxConnection = ToxConnection.NONE
 
@@ -60,7 +63,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
         //FIXME setGroupSelfName(groupNumber, name)
       } catch {
         case e: ToxException[_]  =>
-          println("could not set name in group " + groupNumber)
+          Log.d(TAG,"could not set name in group " + groupNumber)
       }
     }
   }
@@ -140,7 +143,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def acceptGroupInvite(inviteData: Array[Byte]): Int = {
     //val groupNumber = tox.acceptGroupInvite(inviteData)
-    //println("group invited with " + groupNumber + " and id ")
+    //Log.d(TAG,"group invited with " + groupNumber + " and id ")
     //groupList.addGroup(this, groupNumber)
     //groupNumber
     0
@@ -148,7 +151,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def newGroup(groupName: String): Int = {
     //val groupNumber = tox.newGroup(groupName.getBytes)
-    //println("group created with " + groupNumber + " and id " + Hex.bytesToHexString(tox.getGroupChatId(groupNumber)))
+    //Log.d(TAG,"group created with " + groupNumber + " and id " + Hex.bytesToHexString(tox.getGroupChatId(groupNumber)))
     //groupList.addGroup(this, groupNumber)
     //groupList.getGroup(groupNumber).name = groupName
     //groupNumber
@@ -157,7 +160,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   def joinGroup(groupKey: ToxKey): Int = {
     //val groupNumber = tox.joinGroup(groupKey.bytes)
-    //println("group number is " + groupNumber)
+    //Log.d(TAG,"group number is " + groupNumber)
     //groupList.addGroup(this, groupNumber)
     //groupNumber
     0
@@ -195,7 +198,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
             attemptName = name + "_"
         }
       }
-      println("group name " + getGroupSelfName(groupNumber))
+      Log.d(TAG,"group name " + getGroupSelfName(groupNumber))
     }
   }
 

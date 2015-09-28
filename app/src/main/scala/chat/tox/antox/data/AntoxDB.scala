@@ -23,6 +23,8 @@ import scala.collection.mutable.ArrayBuffer
 
 object AntoxDB {
 
+  val TAG = this.getClass.getSimpleName
+
   val sqlBrite = SqlBrite.create()
 
   class DatabaseHelper(context: Context, activeDatabase: String) extends SQLiteOpenHelper(context,
@@ -280,8 +282,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_MESSAGE_ID, -1), where)
   }
 
-  def fileTransferFinished(key: ToxKey, fileNumber: Int) {
-    Log.d("AntoxDB", "fileFinished")
+  def fileFinished(key: ToxKey, fileNumber: Int) {
+    Log.d(AntoxDB.TAG, "fileFinished")
+
     val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues.map(_.id)) +
         s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
 
@@ -452,13 +455,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     val where = ""
       //s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id))}"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
-    Log.d("", "marked incoming messages as read")
+    Log.d(AntoxDB.TAG, "marked incoming messages as read")
   }
 
   def deleteMessage(id: Int) {
     val where = s"_id == $id"
     mDb.delete(TABLE_MESSAGES, where)
-    Log.d("", "Deleted message")
+    Log.d(AntoxDB.TAG, "Deleted message")
   }
 
   def friendList: Observable[Seq[FriendInfo]] = {

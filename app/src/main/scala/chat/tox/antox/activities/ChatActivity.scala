@@ -76,7 +76,7 @@ class ChatActivity extends GenericChatActivity {
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
-        println("image name " + image_name)
+        Log.d(TAG,"image name " + image_name)
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
           val file = File.createTempFile(image_name, ".jpg", storageDir)
@@ -85,7 +85,7 @@ class ChatActivity extends GenericChatActivity {
           photoPath = file.getAbsolutePath
           startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
         } catch {
-          case e: IOException => e.printStackTrace()
+          case e: IOException => Log.e(TAG, "exception", e)
         }
 
       }
@@ -161,7 +161,7 @@ class ChatActivity extends GenericChatActivity {
             try {
               State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, null, this)
             } catch {
-              case e: Exception => e.printStackTrace()
+              case e: Exception => Log.e(TAG, "exception", e)
             }
           }
         }

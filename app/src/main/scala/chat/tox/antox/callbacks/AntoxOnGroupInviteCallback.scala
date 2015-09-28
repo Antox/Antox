@@ -12,6 +12,8 @@ object AntoxOnGroupInviteCallback {
 
 class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInviteCallback */ {
 
+
+  private val TAG = this.getClass.getSimpleName
   def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
     val db = State.db
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get
@@ -19,10 +21,10 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
 
     val inviteKeyLength = 32
     val key = new ToxKey(inviteData.slice(0, inviteKeyLength))
-    println("invite key is " + key)
+    Log.d(TAG, "invite key is " + key)
     db.addGroupInvite(key, inviter.getName, inviteData)
 
-    Log.d("GroupInviteCallback", "")
+    Log.d(TAG, "")
     MessageHelper.createRequestNotification(None, ctx)
   }
 }

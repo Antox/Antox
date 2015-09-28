@@ -4,7 +4,7 @@ import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
 
 class PlayAudio{
-  private val TAG = "chat.tox.antox.av.PlayAudio"
+  private val TAG = this.getClass.getSimpleName
 
   var audioTrack: AudioTrack = null
 
@@ -19,7 +19,7 @@ class PlayAudio{
           audioTrack.write (data, 0, data.length)
           audioTrack.stop ()
     } catch {
-      case e: Exception => Log.e("AudioPlayback", e.getMessage)
+      case e: Exception => Log.e(TAG, "exception", e)
     }
   }
 

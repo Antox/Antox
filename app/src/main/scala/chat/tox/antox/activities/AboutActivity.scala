@@ -6,12 +6,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.theme.ThemeManager
 
 class AboutActivity extends AppCompatActivity {
+
+  private val TAG = this.getClass.getSimpleName
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -27,7 +30,7 @@ class AboutActivity extends AppCompatActivity {
     try {
       version = getPackageManager.getPackageInfo(getPackageName, 0).versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => e.printStackTrace()
+      case e: PackageManager.NameNotFoundException => Log.e(TAG, "exception", e)
     }
     tw.setText(getString(R.string.ver) + " " + version)
   }

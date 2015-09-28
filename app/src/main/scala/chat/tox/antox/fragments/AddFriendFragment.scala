@@ -25,6 +25,8 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class AddFriendFragment extends Fragment with InputableID {
 
+  private val TAG = this.getClass.getSimpleName
+
   var _friendID: String = ""
 
   var _friendCHECK: String = ""
@@ -112,9 +114,9 @@ class AddFriendFragment extends Fragment with InputableID {
             ToxSingleton.tox.addFriend(address, message)
             ToxSingleton.save()
           } catch {
-            case e: ToxException[_] => e.printStackTrace()
+            case e: ToxException[_] => Log.e(TAG, "exception", e)
           }
-          Log.d("AddFriendActivity", "Adding friend to database")
+          Log.d(TAG, "Adding friend to database")
           db.addFriend(key, originalUsername, alias, "Friend Request Sent")
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
@@ -171,7 +173,7 @@ class AddFriendFragment extends Fragment with InputableID {
             }
           }))
       } catch {
-        case e: Exception => e.printStackTrace()
+        case e: Exception => Log.e(TAG, "exception", e)
       }
     }
   }

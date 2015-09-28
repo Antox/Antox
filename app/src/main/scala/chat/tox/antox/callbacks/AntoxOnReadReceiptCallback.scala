@@ -8,7 +8,7 @@ import im.tox.tox4j.core.callbacks.FriendReadReceiptCallback
 
 object AntoxOnReadReceiptCallback {
 
-  private val TAG = "AntoxOnReadReceiptCallback"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnReadReceiptCallback(private var ctx: Context) extends FriendReadReceiptCallback[Unit] {

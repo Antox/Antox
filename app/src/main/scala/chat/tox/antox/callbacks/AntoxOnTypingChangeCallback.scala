@@ -6,7 +6,7 @@ import im.tox.tox4j.core.callbacks.FriendTypingCallback
 
 object AntoxOnTypingChangeCallback {
 
-  private val TAG = "OnTypingChangeCallback"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnTypingChangeCallback(private var ctx: Context) extends FriendTypingCallback[Unit] {

@@ -11,6 +11,8 @@ import scala.io.Source
 
 object JsonReader {
 
+  private val TAG = this.getClass.getSimpleName
+
   private def readAll(rd: Reader): String = {
     val sb = new StringBuilder()
     var cp: Int = rd.read()
@@ -29,7 +31,7 @@ object JsonReader {
       jsonText
     } catch {
       case e: Exception => {
-        Log.e("", "JsonReader readJsonFromUrl error: " + e)
+        Log.e(TAG, "exception" + e)
         ""
       }
     } finally {
@@ -45,7 +47,7 @@ object JsonReader {
       new JSONObject(jsonText)
     } catch {
       case e: Exception => {
-        Log.e("", "JsonReader readJsonFromFile error: " + e)
+        Log.e(TAG, "exception" + e)
         new JSONObject()
       }
     }

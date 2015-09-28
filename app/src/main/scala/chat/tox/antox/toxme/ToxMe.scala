@@ -18,7 +18,7 @@ import scala.util.Try
 object ToxMe {
 
   val DEFAULT_TOXME_DOMAIN = "toxme.io"
-  val DEBUG_TAG = "TOXME"
+  val TAG = this.getClass.getSimpleName
 
   private def epoch = System.currentTimeMillis() / 1000
 
@@ -70,7 +70,7 @@ object ToxMe {
       Some(json.getString("key"))
     } catch {
       case e: Exception =>
-        e.printStackTrace()
+        Log.e(TAG, "exception", e)
         None
     }
   }
@@ -169,7 +169,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        Log.e(TAG, "exception", e)
         Left(ToxMeError.exception(e))
     }
   }
@@ -208,7 +208,7 @@ object ToxMe {
       val requestBody = RequestBody.create(mediaType, requestJson.toString)
       val request = new Builder().url(toxMeApiUrl).post(requestBody).build()
       val response = httpClient.newCall(request).execute()
-      Log.d(DEBUG_TAG, "Response code: " + response.toString)
+      Log.d(TAG, "Response code: " + response.toString)
       val responseJson = new JSONObject(response.body().string())
       val error = Try(ToxMeError.withName(responseJson.getString("c"))).getOrElse(ToxMeError.UNKNOWN)
 
@@ -219,7 +219,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        Log.e(TAG, "exception", e)
         Left(ToxMeError.exception(e))
     }
   }
