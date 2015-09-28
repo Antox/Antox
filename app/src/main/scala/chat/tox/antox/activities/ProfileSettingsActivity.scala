@@ -13,8 +13,9 @@ import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.support.v7.app.AlertDialog.Builder
 import android.view.{MenuItem, View}
-import android.widget.{TextView, ImageButton, Toast}
+import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
@@ -90,12 +91,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         true
       }
     })
-    if (PreferenceManager.getDefaultSharedPreferences(passwordPreference.getContext)
-      .getString(passwordPreference.getKey, "").isEmpty) {
-      getPreferenceScreen.removePreference(passwordPreference)
-    } else {
-      bindPreferenceSummaryToValue(passwordPreference)
-    }
+    bindPreferenceIfExists(passwordPreference)
 
     val toxMePreference = findPreference("toxme_info")
     toxMePreference.setOnPreferenceClickListener(new OnPreferenceClickListener {
@@ -104,15 +100,10 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         true
       }
     })
-    if (PreferenceManager.getDefaultSharedPreferences(toxMePreference.getContext)
-      .getString(toxMePreference.getKey, "").isEmpty) {
-      getPreferenceScreen.removePreference(toxMePreference)
-    } else {
-      bindPreferenceSummaryToValue(toxMePreference)
-    }
+    bindPreferenceIfExists(toxMePreference)
 
     val toxIDPreference = findPreference("tox_id")
-    toxIDPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+    toxIDPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
       override def onPreferenceClick(preference: Preference): Boolean = {
         createToxIDDialog()
@@ -121,7 +112,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     })
 
     val avatarPreference = findPreference("avatar")
-    avatarPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+    avatarPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
       override def onPreferenceClick(preference: Preference): Boolean = {
         avatarDialog.show()
         true
@@ -146,7 +137,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     val deleteAccount = findPreference("delete")
     deleteAccount.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+        val builder = new Builder(ProfileSettingsActivity.this)
         builder.setMessage(R.string.delete_account_dialog_message)
 
         builder.setTitle(R.string.delete_account_dialog_title)
@@ -188,9 +179,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     })
 
     val nospamPreference = findPreference("nospam")
-    nospamPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+    nospamPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+        val builder = new Builder(ProfileSettingsActivity.this)
         builder.setMessage(R.string.reset_tox_id_dialog_message)
           .setTitle(R.string.reset_tox_id_dialog_title)
 
@@ -227,6 +218,15 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       }
     })
 
+  }
+
+  def bindPreferenceIfExists(preference: Preference): AnyVal = {
+    if (PreferenceManager.getDefaultSharedPreferences(preference.getContext)
+      .getString(preference.getKey, "").isEmpty) {
+      getPreferenceScreen.removePreference(preference)
+    } else {
+      bindPreferenceSummaryToValue(preference)
+    }
   }
 
   def createToxIDDialog() {
@@ -275,36 +275,28 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     builder.create().show()
   }
 
-  def createToxMeAddressDialog() {
+  def createCopyToClipboardDialog(prefKey: String, dialogPositiveString: String, dialogNeutralString: String): Unit = {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString("toxme_info",""))
-    builder.setPositiveButton(getString(R.string.button_ok), null)
-    builder.setNeutralButton(getString(R.string.dialog_toxme), new DialogInterface.OnClickListener() {
-
+    builder.setTitle(pref.getString(prefKey,""))
+    builder.setPositiveButton(dialogPositiveString, null)
+    builder.setNeutralButton(dialogNeutralString,
+      new DialogInterface.OnClickListener() {
       def onClick(dialogInterface: DialogInterface, ID: Int) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
         val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString("toxme_info", ""))
+        clipboard.setText(sharedPreferences.getString(prefKey, ""))
       }
     })
     builder.create().show()
   }
 
-  def createPasswordDialog() {
-    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
-    val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString("password",""))
-    builder.setPositiveButton(getString(R.string.button_ok), null)
-    builder.setNeutralButton(getString(R.string.dialog_password), new DialogInterface.OnClickListener() {
+  def createToxMeAddressDialog(): Unit = {
+    createCopyToClipboardDialog("toxme_info", getString(R.string.button_ok), getString(R.string.dialog_toxme))
+  }
 
-      def onClick(dialogInterface: DialogInterface, ID: Int) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString("password", ""))
-      }
-    })
-    builder.create().show()
+  def createPasswordDialog(): Unit = {
+    createCopyToClipboardDialog("password", getString(R.string.button_ok), getString(R.string.dialog_password))
   }
 
   def onExportDataFileSelected(dest: File): Unit = {
