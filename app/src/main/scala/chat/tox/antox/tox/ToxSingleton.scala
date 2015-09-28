@@ -240,6 +240,7 @@ object ToxSingleton {
 
     //toxAv = new ToxAvImpl(tox.getTox)
 
+    db.clearFileNumbers()
     db.setAllOffline()
 
     db.friendList.first.subscribe(friends => {

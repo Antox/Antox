@@ -65,7 +65,7 @@ class AntoxDBTest extends AndroidTestCase {
     })
 
     val numMessages = 1
-    db.addMessage(-1, key, selfKey, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.FRIEND)
+    db.addMessage(-1, key, selfKey, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, MessageType.MESSAGE)
 
     db.lastMessages
       .subscribe(messages => {

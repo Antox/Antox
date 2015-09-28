@@ -64,9 +64,6 @@ class MainActivity extends AppCompatActivity {
     // Initialise the bitmap manager for storing bitmaps in a cache
     new BitmapManager()
 
-    val db = State.db
-    db.clearFileNumbers()
-
     // Removes the drop shadow from the actionbar as it overlaps the tabs
     getSupportActionBar.setElevation(0)
   }
