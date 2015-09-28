@@ -20,8 +20,8 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChun
         t.status = FileStatus.INPROGRESS
         mFriend.foreach(friend => {
           if (length <= 0) {
-            State.db.clearFileNumber(friend.getKey, fileNumber)
             State.transfers.fileFinished(friend.getKey, t.fileNumber, ctx)
+            State.db.clearFileNumber(friend.getKey, fileNumber)
           } else {
             val reset = position < t.progress
             val data = t.readData(reset, length)

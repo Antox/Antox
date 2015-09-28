@@ -202,6 +202,10 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     }
   }
 
+  def getGroupPeerPublicKey(groupNumber: Int, peerNumber: Int): ToxKey = {
+    new ToxKey("")
+  }
+
   def getGroupPeerName(groupNumber: Int, peerNumber: Int): String = {
     //val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
     //if (peerNameBytes == null) {

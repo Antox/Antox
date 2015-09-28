@@ -51,6 +51,7 @@ object AntoxDB {
          |$COLUMN_NAME_TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP,
          |$COLUMN_NAME_MESSAGE_ID integer,
          |$COLUMN_NAME_KEY text,
+         |$COLUMN_NAME_SENDER_KEY text,
          |$COLUMN_NAME_SENDER_NAME text,
          |$COLUMN_NAME_MESSAGE text,
          |$COLUMN_NAME_HAS_BEEN_RECEIVED boolean,
@@ -94,7 +95,7 @@ object AntoxDB {
   }
 }
 
-class AntoxDB(ctx: Context, activeDatabase: String) {
+class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
 
   private var mDbHelper: DatabaseHelper = _
 
@@ -155,33 +156,30 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def addFileTransfer(key: ToxKey,
-    path: String,
-    fileNumber: Int,
-    fileKind: Int,
-    size: Int,
-    sending: Boolean): Long = {
+                      senderKey: ToxKey,
+                      path: String,
+                      fileNumber: Int,
+                      fileKind: Int,
+                      size: Int): Long = {
+
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_SENDER_KEY, senderKey.toString)
     values.put(COLUMN_NAME_MESSAGE, path)
     values.put(COLUMN_NAME_MESSAGE_ID, fileNumber: java.lang.Integer)
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, false)
     values.put(COLUMN_NAME_HAS_BEEN_READ, false)
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, false)
-    if (sending) {
-      values.put("type", MessageType.FILE_TRANSFER.id: java.lang.Integer)
-    } else {
-      values.put("type", MessageType.FILE_TRANSFER_FRIEND.id: java.lang.Integer)
-    }
+    values.put(COLUMN_NAME_TYPE, MessageType.FILE_TRANSFER.id: java.lang.Integer)
     values.put(COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
-    values.put("size", size: java.lang.Integer)
+    values.put(COLUMN_NAME_SIZE, size: java.lang.Integer)
     val id = mDb.insert(TABLE_MESSAGES, values)
     id
   }
 
   def fileTransferStarted(key: ToxKey, fileNumber: Int) {
     val where =
-      s"""(type == ${MessageType.FILE_TRANSFER}
-         |OR type == ${MessageType.FILE_TRANSFER_FRIEND})
+      s"""type == ${MessageType.FILE_TRANSFER}
          |AND message_id == $fileNumber
          |AND tox_key = '$key'""".stripMargin
 
@@ -204,22 +202,25 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   }
 
   def addMessage(messageId: Int,
-    key: ToxKey,
-    senderName: String,
-    message: String,
-    hasBeenReceived: Boolean,
-    hasBeenRead: Boolean,
-    successfullySent: Boolean,
-    `type`: MessageType) {
+                 key: ToxKey,
+                 senderKey: ToxKey,
+                 senderName: String,
+                 message: String,
+                 hasBeenReceived: Boolean,
+                 hasBeenRead: Boolean,
+                 successfullySent: Boolean,
+                 `type`: MessageType) {
+
     val values = new ContentValues()
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     values.put(COLUMN_NAME_KEY, key.toString)
+    values.put(COLUMN_NAME_SENDER_KEY, senderKey.toString)
     values.put(COLUMN_NAME_SENDER_NAME, senderName)
     values.put(COLUMN_NAME_MESSAGE, message)
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, hasBeenReceived)
     values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfullySent)
-    values.put("type", `type`.id: java.lang.Integer)
+    values.put(COLUMN_NAME_TYPE, `type`.id: java.lang.Integer)
     values.put(COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
     mDb.insert(TABLE_MESSAGES, values)
   }
@@ -230,7 +231,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         |FROM $TABLE_MESSAGES
         |JOIN $TABLE_CONTACTS ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
         |WHERE $TABLE_MESSAGES.$COLUMN_NAME_HAS_BEEN_READ == $FALSE
-        |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id), TABLE_MESSAGES)}
+        |AND $COLUMN_NAME_SENDER_KEY != '${selfKey.toString}'
         |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)} GROUP BY contacts.tox_key""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
@@ -283,12 +284,12 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
 
   def fileFinished(key: ToxKey, fileNumber: Int) {
     Log.d(AntoxDB.TAG, "fileFinished")
+
     val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues.map(_.id)) +
-      s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
+        s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
 
     val values = new ContentValues()
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, TRUE.asInstanceOf[java.lang.Integer])
-    values.put(COLUMN_NAME_MESSAGE_ID, -1.asInstanceOf[java.lang.Integer])
     mDb.update(TABLE_MESSAGES, values, where)
   }
 
@@ -352,6 +353,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         val time = Timestamp.valueOf(cursor.getString(COLUMN_NAME_TIMESTAMP))
         val messageId = cursor.getInt(COLUMN_NAME_MESSAGE_ID)
         val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
+        val senderKey = new ToxKey(cursor.getString(COLUMN_NAME_SENDER_KEY))
         val senderName = cursor.getString(COLUMN_NAME_SENDER_NAME)
         val message = cursor.getString(COLUMN_NAME_MESSAGE)
         val received = cursor.getBoolean(COLUMN_NAME_HAS_BEEN_RECEIVED)
@@ -360,7 +362,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
         val size = cursor.getInt(COLUMN_NAME_SIZE)
         val `type` = cursor.getInt(COLUMN_NAME_TYPE)
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
-        messageList += new Message(id, messageId, key, senderName, message, received, read, sent,
+        messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
           time, size, MessageType(`type`), fileKind)
       } while (cursor.moveToNext())
     }
@@ -425,7 +427,7 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
       s"""SELECT *
          |FROM $TABLE_MESSAGES
          |WHERE $COLUMN_NAME_SUCCESSFULLY_SENT =$FALSE
-         |AND type == ${MessageType.OWN}
+         |AND $COLUMN_NAME_SENDER_KEY == '${selfKey.toString}'
          |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
     val cursor = mDb.query(selectQuery)
@@ -438,13 +440,13 @@ class AntoxDB(ctx: Context, activeDatabase: String) {
   def updateUnsentMessage(messageId: Int, id: Int) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
-    values.put("type", MessageType.OWN.id: java.lang.Integer)
+    values.put("type", MessageType.MESSAGE.id: java.lang.Integer)
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     mDb.update(TABLE_MESSAGES, values, s"_id = $id AND $COLUMN_NAME_SUCCESSFULLY_SENT = $FALSE")
   }
 
   def setMessageReceived(receipt: Int): Unit = {
-    val where = s"$COLUMN_NAME_MESSAGE_ID = $receipt AND $COLUMN_NAME_SUCCESSFULLY_SENT = $TRUE AND type = ${MessageType.OWN.id}"
+    val where = s"$COLUMN_NAME_MESSAGE_ID = $receipt AND $COLUMN_NAME_SUCCESSFULLY_SENT = $TRUE AND type = ${MessageType.MESSAGE.id}"
 
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_RECEIVED, TRUE), where)
   }

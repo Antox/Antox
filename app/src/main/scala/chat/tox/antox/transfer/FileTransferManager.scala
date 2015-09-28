@@ -65,7 +65,7 @@ class FileTransferManager extends Intervals {
   }
 
 
-  def sendFileSendRequest(path: String, key: ToxKey, fileKind: FileKind, fileId: String = null, context: Context) {
+  def sendFileSendRequest(path: String, key: ToxKey, fileKind: FileKind, fileId: String, context: Context) {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
@@ -95,7 +95,7 @@ class FileTransferManager extends Intervals {
       }).foreach(fileNumber => {
         val db = State.db
         Log.d(TAG, "adding File Transfer")
-        val id = db.addFileTransfer(key, path, fileNumber, fileKind.kindId, file.length.toInt, sending = true)
+        val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, path, fileNumber, fileKind.kindId, file.length.toInt)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
       })
     }
@@ -144,7 +144,7 @@ class FileTransferManager extends Intervals {
     }
 
     val db = State.db
-    val id = db.addFileTransfer(key, fileN, fileNumber, fileKind.kindId, fileSize.toInt, sending = false)
+    val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, fileN, fileNumber, fileKind.kindId, fileSize.toInt)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
   }
 
@@ -213,7 +213,8 @@ class FileTransferManager extends Intervals {
       case Some(t) =>
         t.status = FileStatus.FINISHED
         val mFriend = ToxSingleton.getAntoxFriend(t.key)
-        State.db.fileFinished(key, fileNumber)
+        State.db.fileTransferFinished(key, fileNumber)
+        State.db.clearFileNumber(key, fileNumber)
         if (t.fileKind == FileKind.AVATAR) {
           if (t.sending) {
             onSelfAvatarSendFinished(key, context)

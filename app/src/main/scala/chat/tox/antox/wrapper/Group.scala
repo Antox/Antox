@@ -25,9 +25,10 @@ class Group(val key: ToxKey,
   }
 
   def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
+    val peerKey = tox.getGroupPeerPublicKey(groupNumber, peerNumber)
     var peerName = tox.getGroupPeerName(groupNumber, peerNumber)
     if (peerName == null) peerName = ""
-    this.peers.addGroupPeer(new GroupPeer(peerName, ignored = false))
+    this.peers.addGroupPeer(new GroupPeer(peerKey, peerName, ignored = false))
     printPeerList()
   }
 

@@ -48,7 +48,7 @@ object MessageHelper {
     Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
     if (!db.isContactBlocked(friendKey)) {
       val chatActive = State.chatActive && State.activeKey.contains(friendKey)
-      db.addMessage(-1, friendKey, friendName, message, hasBeenReceived = true,
+      db.addMessage(-1, friendKey, friendKey, friendName, message, hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
       if (!chatActive) {
@@ -66,18 +66,18 @@ object MessageHelper {
 
   }
 
-  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, groupKey: ToxKey, message: String, messageType: MessageType): Unit = {
+  def handleGroupMessage(ctx: Context, groupNumber: Int, peerNumber: Int, message: String, messageType: MessageType): Unit = {
     val db = State.db
-    val peerName = ToxSingleton.getGroupPeer(groupNumber, peerNumber).name
-    val groupName = ToxSingleton.getGroup(groupNumber).name
+    val peer = ToxSingleton.getGroupPeer(groupNumber, peerNumber)
+    val group = ToxSingleton.getGroup(groupNumber)
 
-    val chatActive = State.chatActive && State.activeKey.contains(groupKey)
+    val chatActive = State.chatActive && State.activeKey.contains(group.key)
 
-    db.addMessage(-1, groupKey, peerName, message, hasBeenReceived = true,
+    db.addMessage(-1, group.key, peer.key, peer.name, message, hasBeenReceived = true,
       hasBeenRead = chatActive, successfullySent = true, messageType)
 
     if (!chatActive) {
-      createMessageNotification(ctx, classOf[GroupChatActivity], groupNumber, groupKey, groupName, message)
+      createMessageNotification(ctx, classOf[GroupChatActivity], groupNumber, group.key, group.name, message)
     }
   }
 
@@ -107,7 +107,7 @@ object MessageHelper {
 
   def sendMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]): Unit = {
       val mFriend = ToxSingleton.getAntoxFriend(key)
-      val messageType = if (isAction) MessageType.ACTION else MessageType.OWN
+      val messageType = if (isAction) MessageType.ACTION else MessageType.MESSAGE
       mFriend match {
         case None =>
         case Some(friend) =>
@@ -123,15 +123,16 @@ object MessageHelper {
             }
 
             val senderName = ToxSingleton.tox.getName
+            val senderKey = ToxSingleton.tox.getSelfKey
             mId match {
               case Some(id) =>
                 mDbId match {
                   case Some(dbId) => db.updateUnsentMessage(id, dbId)
-                  case None => db.addMessage(id, key, senderName,
+                  case None => db.addMessage(id, key, senderKey, senderName,
                     splitMsg, hasBeenReceived =
                     false, hasBeenRead = false, successfullySent = true, messageType)
                 }
-              case None => db.addMessage(-1, key, senderName, splitMsg, hasBeenReceived = false,
+              case None => db.addMessage(-1, key, senderKey, senderName, splitMsg, hasBeenReceived = false,
                 hasBeenRead = false, successfullySent = false, messageType)
             }
           }
@@ -141,7 +142,7 @@ object MessageHelper {
   def sendGroupMessage(ctx: Context, key: ToxKey, msg: String, isAction: Boolean, mDbId: Option[Integer]): Unit = {
     val group = ToxSingleton.getGroup(key)
     val db = State.db
-    val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_OWN
+    val messageType = if (isAction) MessageType.GROUP_ACTION else MessageType.GROUP_MESSAGE
     for (splitMsg <- splitMessage(msg)) {
       try {
         if (isAction) {
@@ -154,10 +155,11 @@ object MessageHelper {
           None
       }
 
+      val senderKey = ToxSingleton.tox.getSelfKey
       val senderName = ToxSingleton.tox.getName
       mDbId match {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
-        case None => db.addMessage(0, key, senderName,
+        case None => db.addMessage(0, key, senderKey, senderName,
           splitMsg, hasBeenReceived =
             true, hasBeenRead = true, successfullySent = true, messageType)
       }

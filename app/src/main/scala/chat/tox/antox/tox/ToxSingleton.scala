@@ -212,8 +212,6 @@ object ToxSingleton {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     val userDb = State.userDb(ctx)
-    State.db = new AntoxDB(ctx, userDb.getActiveUser)
-    val db = State.db
 
     antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
@@ -237,8 +235,12 @@ object ToxSingleton {
       case e: ToxException[_] => Log.e(TAG, "exception", e)
     }
 
+    State.db = new AntoxDB(ctx, userDb.getActiveUser, tox.getSelfKey)
+    val db = State.db
+
     //toxAv = new ToxAvImpl(tox.getTox)
 
+    db.clearFileNumbers()
     db.setAllOffline()
 
     db.friendList.first.subscribe(friends => {
