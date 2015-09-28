@@ -15,7 +15,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
 
   val tox = new ToxCoreImpl[Unit](options)
 
-  private val TAG = "ToxCore"
+  private val TAG = this.getClass.getSimpleName
 
   var selfConnectionStatus: ToxConnection = ToxConnection.NONE
 

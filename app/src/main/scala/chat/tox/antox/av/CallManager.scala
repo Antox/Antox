@@ -3,7 +3,7 @@ package chat.tox.antox.av
 import android.util.Log
 
 object CallManager {
-  val TAG = "chat.tox.antox.av.CallManager"
+  val TAG = this.getClass.getSimpleName
 }
 
 class CallManager {

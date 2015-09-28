@@ -9,7 +9,7 @@ import im.tox.tox4j.core.callbacks.FileChunkRequestCallback
 
 class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback[Unit] {
 
-  private val TAG = "OnFileChunkRequestCallback"
+  private val TAG = this.getClass.getSimpleName
 
   override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)

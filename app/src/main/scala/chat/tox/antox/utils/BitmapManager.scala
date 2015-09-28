@@ -26,7 +26,7 @@ object BitmapManager {
   // has updated their avatar - contact's avatars are stored under the name of their public key
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
-  private val TAG = "BitmapManager"
+  private val TAG = this.getClass.getSimpleName
 
   private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
     if (isAvatar) {

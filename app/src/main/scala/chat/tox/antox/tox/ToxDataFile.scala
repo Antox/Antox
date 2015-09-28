@@ -11,7 +11,7 @@ import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
-  private val TAG = "ToxDataFile"
+  private val TAG = this.getClass.getSimpleName
 
   def doesFileExist(): Boolean = {
     if (ctx == null) {

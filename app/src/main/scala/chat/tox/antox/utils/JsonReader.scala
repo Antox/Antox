@@ -11,7 +11,7 @@ import scala.io.Source
 
 object JsonReader {
 
-  private val TAG = "JsonReader"
+  private val TAG = this.getClass.getSimpleName
 
   private def readAll(rd: Reader): String = {
     val sb = new StringBuilder()

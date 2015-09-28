@@ -8,7 +8,7 @@ import im.tox.tox4j.core.enums.ToxUserStatus
 
 object AntoxOnUserStatusCallback {
 
-  private val TAG = "chat.tox.antox.TAG"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCallback[Unit] {

@@ -33,7 +33,7 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 class CreateAccountActivity extends AppCompatActivity {
 
-  private val TAG = "CreateAccount"
+  private val TAG = this.getClass.getSimpleName
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)

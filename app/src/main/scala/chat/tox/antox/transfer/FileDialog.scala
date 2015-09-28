@@ -29,7 +29,7 @@ object FileDialog {
 
 class FileDialog(private val activity: Activity, path: File, selectDirectoryOption: Boolean) {
 
-  private val TAG = getClass.getName
+  private val TAG = this.getClass.getSimpleName
 
   private val PARENT_DIR = ".."
 

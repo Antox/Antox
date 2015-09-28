@@ -6,7 +6,7 @@ import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupNickChangeCallback(private var ctx: Context) /* extends GroupNickChangeCallback */ {
 
-  private val TAG = "GroupNickChangeCallback"
+  private val TAG = this.getClass.getSimpleName
   //override
   def groupNickChange(groupNumber: Int, peerNumber: Int, nick: Array[Byte]): Unit = {
     Log.d(TAG, "GOT NICK CHANGE " + peerNumber)

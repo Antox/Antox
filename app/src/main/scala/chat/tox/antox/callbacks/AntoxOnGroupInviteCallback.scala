@@ -13,7 +13,7 @@ object AntoxOnGroupInviteCallback {
 class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInviteCallback */ {
 
 
-  private val TAG = "GroupInviteCallback"
+  private val TAG = this.getClass.getSimpleName
   def groupInvite(friendNumber: Int, inviteData: Array[Byte]): Unit = {
     val db = State.db
     val inviter = ToxSingleton.getAntoxFriend(friendNumber).get

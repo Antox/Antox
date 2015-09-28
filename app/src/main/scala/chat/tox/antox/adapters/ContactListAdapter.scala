@@ -42,7 +42,7 @@ object ContactListAdapter {
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
-  private val TAG = "ContactListAdapter"
+  private val TAG = this.getClass.getSimpleName
 
   private val mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 

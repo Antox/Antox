@@ -8,7 +8,7 @@ import im.tox.tox4j.core.enums.ToxMessageType
 
 object AntoxOnMessageCallback {
 
-  val TAG = "chat.tox.antox.callbacks.AntoxOnMessageCallback"
+  val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnMessageCallback(private var ctx: Context) extends FriendMessageCallback[Unit] {

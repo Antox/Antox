@@ -8,7 +8,7 @@ import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
 
-  private val TAG = "GroupSelfJoinCallback"
+  private val TAG = this.getClass.getSimpleName
   
   //override
   def groupSelfJoin(groupNumber: Int): Unit = {

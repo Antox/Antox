@@ -11,7 +11,7 @@ import im.tox.tox4j.core.enums.ToxFileControl
 
 object AntoxOnFileRecvControlCallback {
 
-  private val TAG = "OnFileControlCallback"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnFileRecvControlCallback(private var ctx: Context) extends FileRecvControlCallback[Unit] {

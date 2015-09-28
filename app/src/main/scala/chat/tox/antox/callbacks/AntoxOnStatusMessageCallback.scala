@@ -8,7 +8,7 @@ import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
 
 object AntoxOnStatusMessageCallback {
 
-  private val TAG = "chat.tox.antox.TAG"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatusMessageCallback[Unit] {

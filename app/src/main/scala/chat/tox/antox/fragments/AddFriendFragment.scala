@@ -25,7 +25,7 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class AddFriendFragment extends Fragment with InputableID {
 
-  private val TAG = "AddFriendFragment"
+  private val TAG = this.getClass.getSimpleName
 
   var _friendID: String = ""
 

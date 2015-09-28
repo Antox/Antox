@@ -15,7 +15,7 @@ object AntoxOnSelfConnectionStatusCallback {
 
 class AntoxOnSelfConnectionStatusCallback(ctx: Context) extends SelfConnectionStatusCallback[Unit] {
 
-  private val TAG = "SelfConnectionStatusCallback"
+  private val TAG = this.getClass.getSimpleName
 
   override def selfConnectionStatus(toxConnection: ToxConnection)(state: Unit): Unit = {
     ToxSingleton.tox.setSelfConnectionStatus(toxConnection)

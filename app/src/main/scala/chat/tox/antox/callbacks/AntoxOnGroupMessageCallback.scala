@@ -7,7 +7,7 @@ import chat.tox.antox.wrapper.MessageType
 
 class AntoxOnGroupMessageCallback(private var ctx: Context) /* extends GroupMessageCallback */ {
 
-  private val TAG = "OnGroupMessageCallback"
+  private val TAG = this.getClass.getSimpleName
 
   //override
   def groupMessage(groupNumber: Int, peerNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {

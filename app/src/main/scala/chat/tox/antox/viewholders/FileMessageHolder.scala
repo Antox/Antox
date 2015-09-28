@@ -21,7 +21,7 @@ import scala.concurrent.duration._
 
 class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
 
-  private val TAG = "FileMessageHolder"
+  private val TAG = this.getClass.getSimpleName
 
   protected val imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
 

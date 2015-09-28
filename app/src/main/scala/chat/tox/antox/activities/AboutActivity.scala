@@ -14,7 +14,7 @@ import chat.tox.antox.theme.ThemeManager
 
 class AboutActivity extends AppCompatActivity {
 
-  private val TAG = "AboutActivity"
+  private val TAG = this.getClass.getSimpleName
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)

@@ -4,7 +4,7 @@ import android.content.Context
 
 class AntoxOnGroupJoinRejectedCallback(private var ctx: Context) /* extends GroupJoinRejectedCallback */ {
   private var reconnecting = false
-  private val TAG = "GroupJoinRejectedCallback"
+  private val TAG = this.getClass.getSimpleName
 
   /* override def groupJoinRejected(groupNumber: Int, reason: ToxGroupJoinRejected): Unit = {
     if (reason == ToxGroupJoinRejected.NICK_TAKEN) {

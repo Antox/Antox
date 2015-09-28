@@ -24,7 +24,7 @@ import chat.tox.antox.wrapper.FileKind.AVATAR
 //not a DialogFragment because they don't work with PreferenceActivity
 class AvatarDialog(activity: Activity) {
 
-  private val TAG = "AvatarDialog"
+  private val TAG = this.getClass.getSimpleName
 
   val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 

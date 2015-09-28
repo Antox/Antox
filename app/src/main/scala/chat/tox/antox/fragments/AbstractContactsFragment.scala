@@ -27,7 +27,7 @@ import rx.lang.scala.{Observable, Subscription}
 
 abstract class AbstractContactsFragment extends Fragment {
 
-  private val TAG = "AbstractContactsFragment"
+  private val TAG = this.getClass.getSimpleName
 
   var showSearch: Boolean = _
 

@@ -4,7 +4,7 @@ import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
 
 class PlayAudio{
-  private val TAG = "chat.tox.antox.av.PlayAudio"
+  private val TAG = this.getClass.getSimpleName
 
   var audioTrack: AudioTrack = null
 

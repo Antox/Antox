@@ -9,7 +9,7 @@ import chat.tox.antox.utils.StorageType._
 
 object FileUtils {
 
-  private val TAG = "FileUtils"
+  private val TAG = this.getClass.getSimpleName
 
   /**
   * Gets the directory designated by 'path' from the appropriate place based on 'storageType'

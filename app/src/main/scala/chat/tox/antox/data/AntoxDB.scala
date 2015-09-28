@@ -23,7 +23,7 @@ import scala.collection.mutable.ArrayBuffer
 
 object AntoxDB {
 
-  val TAG = "AntoxDB"
+  val TAG = this.getClass.getSimpleName
 
   val sqlBrite = SqlBrite.create()
 

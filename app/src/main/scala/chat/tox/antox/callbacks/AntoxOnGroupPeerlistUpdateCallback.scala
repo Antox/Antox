@@ -6,7 +6,7 @@ import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupPeerlistUpdateCallback(private var ctx: Context) /* extends GroupPeerlistUpdateCallback */ {
 
-  private val TAG = "AntoxOnGroupPeerlistUpdateCallback"
+  private val TAG = this.getClass.getSimpleName
 
   //override
   def groupPeerlistUpdate(groupNumber: Int): Unit = {

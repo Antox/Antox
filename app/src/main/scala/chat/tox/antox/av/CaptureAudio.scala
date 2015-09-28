@@ -6,7 +6,7 @@ import rx.lang.scala.Observable
 
 object CaptureAudio {
 
-  val TAG = "CaptureAudio"
+  val TAG = this.getClass.getSimpleName
 
   var bufferSizeBytes: Int = _
 

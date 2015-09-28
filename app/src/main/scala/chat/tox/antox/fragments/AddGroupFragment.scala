@@ -18,7 +18,7 @@ import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {
 
-  private val TAG = "AddGroupFragment"
+  private val TAG = this.getClass.getSimpleName
 
   var _groupKey: ToxKey = _
 

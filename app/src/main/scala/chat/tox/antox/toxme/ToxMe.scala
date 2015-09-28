@@ -18,7 +18,7 @@ import scala.util.Try
 object ToxMe {
 
   val DEFAULT_TOXME_DOMAIN = "toxme.io"
-  val TAG = "ToxMe"
+  val TAG = this.getClass.getSimpleName
 
   private def epoch = System.currentTimeMillis() / 1000
 

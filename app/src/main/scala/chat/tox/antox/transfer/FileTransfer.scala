@@ -16,7 +16,7 @@ class FileTransfer(val key: ToxKey,
                    val id: Long,
                    val fileKind: FileKind) {
 
-  private val TAG = "FileTransfer"
+  private val TAG = this.getClass.getSimpleName
 
   private var progressHistory: Array[(Long, Long)] = Array[(Long, Long)]((System.currentTimeMillis, initialProgress))
 

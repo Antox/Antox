@@ -25,7 +25,7 @@ import scala.io.Source
 
 object ToxSingleton {
 
-  private val TAG = "ToxSingleton"
+  private val TAG = this.getClass.getSimpleName
 
   var tox: ToxCore = _
 

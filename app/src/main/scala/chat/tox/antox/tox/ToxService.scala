@@ -9,7 +9,7 @@ import android.util.Log
 
 class ToxService extends Service() {
 
-  private val TAG = "ToxService"
+  private val TAG = this.getClass.getSimpleName
 
   private var serviceThread: Thread = _
 

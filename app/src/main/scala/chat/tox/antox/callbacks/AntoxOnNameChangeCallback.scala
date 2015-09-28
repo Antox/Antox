@@ -8,7 +8,7 @@ import im.tox.tox4j.core.callbacks.FriendNameCallback
 
 object AntoxOnNameChangeCallback {
 
-  private val TAG = "chat.tox.antox.TAG"
+  private val TAG = this.getClass.getSimpleName
 }
 
 class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback[Unit] {

@@ -10,7 +10,7 @@ import scala.collection.JavaConversions._
 
 class GroupList {
 
-  private val TAG = "GroupList"
+  private val TAG = this.getClass.getSimpleName
 
   private var groups: util.List[Group] = new util.ArrayList[Group]()
 

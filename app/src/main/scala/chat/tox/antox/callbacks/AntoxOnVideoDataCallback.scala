@@ -5,7 +5,7 @@ import android.util.Log
 
 class AntoxOnVideoDataCallback(private var ctx: Context) {
 
-  private val TAG = "OnVideoDataCallback"
+  private val TAG = this.getClass.getSimpleName
 
   def execute(callID: Int,
     data: Array[Byte],

@@ -9,7 +9,7 @@ import im.tox.tox4j.core.callbacks.FriendRequestCallback
 
 object AntoxOnFriendRequestCallback {
 
-  private val TAG = "chat.tox.antox.TAG"
+  private val TAG = this.getClass.getSimpleName
 
   val FRIEND_KEY = "chat.tox.antox.FRIEND_KEY"
 
@@ -18,7 +18,7 @@ object AntoxOnFriendRequestCallback {
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback[Unit] {
 
-  private val TAG = "FriendRequestCallback"
+  private val TAG = this.getClass.getSimpleName
 
   override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
     val db = State.db

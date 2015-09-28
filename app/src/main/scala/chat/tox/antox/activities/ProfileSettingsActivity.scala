@@ -31,7 +31,7 @@ import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
 
-  private val TAG = "ProfileSettingsActivity"
+  private val TAG = this.getClass.getSimpleName
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 

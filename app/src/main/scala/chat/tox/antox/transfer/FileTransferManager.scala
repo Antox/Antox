@@ -14,7 +14,7 @@ import chat.tox.antox.wrapper.{FileKind, ToxKey}
 import im.tox.tox4j.core.enums.ToxFileControl
 
 class FileTransferManager extends Intervals {
-  private val TAG = "FileTransferManager"
+  private val TAG = this.getClass.getSimpleName
 
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
   private var _keyAndFileNumberToId: Map[(ToxKey, Integer), Long] = Map[(ToxKey, Integer), Long]()

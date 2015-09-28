@@ -65,7 +65,7 @@ import android.view.ViewGroup;
  * complete}
  */
 public abstract class BetterFragmentPagerAdapter extends PagerAdapter {
-    private static final String TAG = "FragmentPagerAdapter";
+    private static final String TAG = BetterFragmentPagerAdapter.class.getSimpleName();
     private static final boolean DEBUG = false;
     private final FragmentManager mFragmentManager;
     private FragmentTransaction mCurTransaction = null;

@@ -4,7 +4,7 @@ import android.content.Context
 
 class AntoxOnAvCallbackCallback(private var ctx: Context){
 
-  private val TAG = "OnAvCallbackCallback"
+  private val TAG = this.getClass.getSimpleName
   
   //val toxCodecSettings = new ToxCodecSettings(ToxCallType.TYPE_AUDIO, 500,
   //  1280, 720, 64000, 20, 48000, 1)
