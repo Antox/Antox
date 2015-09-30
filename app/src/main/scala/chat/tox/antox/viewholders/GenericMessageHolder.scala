@@ -66,11 +66,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     row.setGravity(Gravity.RIGHT)
     //Set extra padding to the left of the bubble
     bubble.setPadding(48 * density, 0, 0, 0)
-    if (!msg.received) {
-      setAlpha(bubble, 0.5f)
-    } else {
-      setAlpha(bubble, 1f)
-    }
+    toggleReceived()
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
   }
 
@@ -81,12 +77,22 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     row.setGravity(Gravity.LEFT)
     //Set extra padding to the right of the bubble
     bubble.setPadding(0, 0, 48 * density, 0)
+    toggleReceived()
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
+  }
+
+  protected def toggleReceived(): Unit =  {
+    if (msg.received || msg.sent) {
+      setAlphaCompat(bubble, 1f)
+    }
+    else {
+      setAlphaCompat(bubble, 0.5f)
+    }
   }
 
   //utility method to set view's alpha on honeycomb+ devices,
   //does nothing on pre-honeycomb devices because setAlpha is unsupported
-  protected def setAlpha(view: View, value: Float): Unit = {
+  private def setAlphaCompat(view: View, value: Float): Unit = {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       //do nothing
     } else {
