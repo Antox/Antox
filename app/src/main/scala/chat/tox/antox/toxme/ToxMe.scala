@@ -56,22 +56,12 @@ object ToxMe {
   /**
    * Search a ToxMe service for a user
    *
-   *
-   * @param query The query to search for
-   * @param domain The ToxMe api URL
-   * @return A sequence of SearchResult
-   */
-  def search(query: String, domain: String): Observable[ToxMeResult[Seq[SearchResult]]] = search(query, domain, 1)
-
-  /**
-   * Search a ToxMe service for a user
-   *
    * @param query The query to search for
    * @param domain The ToxMe api URL
    * @param page The page number
    * @return A sequence of SearchResult
    */
-  def search(query: String, domain: String, page: Int): Observable[ToxMeResult[Seq[SearchResult]]] = {
+  def search(query: String, domain: String, page: Int = 0): Observable[ToxMeResult[Seq[SearchResult]]] = {
     Observable(subscriber => {
       try {
         val json = new JSONObject()

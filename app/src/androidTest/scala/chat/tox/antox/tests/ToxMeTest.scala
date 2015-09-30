@@ -92,12 +92,14 @@ class ToxMeTest extends AndroidTestCase {
 
   @Test
   def testSearch(): Unit ={
-    val result = ToxMe.search("subl", ToxMe.makeApiURL(ToxMe.DEFAULT_TOXME_DOMAIN)).toBlocking.first
-    val message = result match {
+    val maybeResults = ToxMe.search("subl", ToxMe.makeApiURL(ToxMe.DEFAULT_TOXME_DOMAIN)).toBlocking.first
+    maybeResults match {
       case Left(error) =>
-        assertTrue(error.toString, false)
-      case Right(result) =>
-        assertEquals("subliun", result(0).name)
+        fail(error.toString)
+
+      case Right(results) =>
+        println(results)
+        assertTrue("The results for a search of 'subl' must contain 'subliun'", results.exists(_.name == "subliun"))
     }
   }
 }
