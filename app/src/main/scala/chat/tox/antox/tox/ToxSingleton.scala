@@ -113,78 +113,73 @@ object ToxSingleton {
 
   def updateDhtNodes(ctx: Context) {
     Log.d(TAG, "updateDhtNodes")
-    val connMgr = ctx.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val networkInfo = connMgr.getActiveNetworkInfo
-    if (networkInfo != null && networkInfo.isConnected) {
-      Log.d(TAG, "updateDhtNodes: connected")
-      Observable[JSONObject](subscriber => {
-        Log.d(TAG, "updateDhtNodes: in observable")
+    Observable[JSONObject](subscriber => {
+      Log.d(TAG, "updateDhtNodes: in observable")
+      try {
+        Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
+
+        val nodeFileUrl =
+          "https://build.tox.chat/job/nodefile_build_linux_x86_64_release" +
+            "/lastSuccessfulBuild/artifact/Nodefile.json"
+        val fileName = "Nodefile.json"
+
         try {
-          Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
-
-          val nodeFileUrl =
-            "https://build.tox.chat/job/nodefile_build_linux_x86_64_release" +
-              "/lastSuccessfulBuild/artifact/Nodefile.json"
-          val fileName = "Nodefile.json"
-
-          try {
-            FileUtils.writePrivateFile(fileName, JsonReader.readFromUrl(nodeFileUrl), ctx)
-          } catch {
-            //try to continue with stored nodefile if the nodefile is down
-            case e: IOException =>
-              Log.e(TAG, "couldn't reach Nodefile URL")
-          }
-
-          val savedNodeFile = new File(ctx.getFilesDir, fileName)
-          if (!savedNodeFile.exists()) {
-            FileUtils.writePrivateFile(
-              fileName,
-              Source.fromInputStream(ctx.getResources.openRawResource(R.raw.nodefile)).mkString,
-              ctx)
-          }
-
-          val json = JsonReader.readJsonFromFile(savedNodeFile)
-
-          println(json)
-          subscriber.onNext(json)
-          subscriber.onCompleted()
+          FileUtils.writePrivateFile(fileName, JsonReader.readFromUrl(nodeFileUrl), ctx)
         } catch {
-          case e: Exception =>
-            Log.e(TAG, "update dht nodes error: " + e)
-            subscriber.onError(e)
+          //try to continue with stored nodefile if the nodefile is down
+          case e: IOException =>
+            Log.e(TAG, "couldn't reach Nodefile URL")
         }
-      }).map(json => {
-        Log.d(TAG, json.toString)
-        var dhtNodes: Array[DhtNode] = Array()
-        val serverArray = json.getJSONArray("servers")
-        for (i <- 0 until serverArray.length) {
-          val jsonObject = serverArray.getJSONObject(i)
-          dhtNodes +:= new DhtNode(
-            jsonObject.getString("owner"),
-            jsonObject.getString("ipv6"),
-            jsonObject.getString("ipv4"),
-            new ToxKey(jsonObject.getString("pubkey")),
-            jsonObject.getInt("port"))
+
+        val savedNodeFile = new File(ctx.getFilesDir, fileName)
+        if (!savedNodeFile.exists()) {
+          FileUtils.writePrivateFile(
+            fileName,
+            Source.fromInputStream(ctx.getResources.openRawResource(R.raw.nodefile)).mkString,
+            ctx)
         }
-        dhtNodes
-      }).subscribeOn(IOScheduler())
-        .observeOn(AndroidMainThreadScheduler())
-        .subscribe(nodes => {
-        dhtNodes = nodes
-        Log.d(TAG, "Trying to bootstrap")
-        try {
-          for (i <- nodes.indices) {
-            tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
-          }
-        } catch {
-          case e: Exception =>
-            e.printStackTrace()
+
+        val json = JsonReader.readJsonFromFile(savedNodeFile)
+
+        println(json)
+        subscriber.onNext(json)
+        subscriber.onCompleted()
+      } catch {
+        case e: Exception =>
+          Log.e(TAG, "update dht nodes error: " + e)
+          subscriber.onError(e)
+      }
+    }).map(json => {
+      Log.d(TAG, json.toString)
+      var dhtNodes: Array[DhtNode] = Array()
+      val serverArray = json.getJSONArray("servers")
+      for (i <- 0 until serverArray.length) {
+        val jsonObject = serverArray.getJSONObject(i)
+        dhtNodes +:= new DhtNode(
+          jsonObject.getString("owner"),
+          jsonObject.getString("ipv6"),
+          jsonObject.getString("ipv4"),
+          new ToxKey(jsonObject.getString("pubkey")),
+          jsonObject.getInt("port"))
+      }
+      dhtNodes
+    }).subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(nodes => {
+      dhtNodes = nodes
+      Log.d(TAG, "Trying to bootstrap")
+      try {
+        for (i <- nodes.indices) {
+          tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
         }
-        Log.d(TAG, "Successfully bootstrapped")
-      }, error => {
-        Log.e(TAG, "Failed bootstrapping " + error)
-      })
-    }
+      } catch {
+        case e: Exception =>
+          e.printStackTrace()
+      }
+      Log.d(TAG, "Successfully bootstrapped")
+    }, error => {
+      Log.e(TAG, "Failed bootstrapping " + error)
+    })
   }
 
   def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {

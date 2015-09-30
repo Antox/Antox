@@ -20,6 +20,7 @@ object ToxMeError extends Enumeration {
   val UNKNOWN = Value("")
   val JSON_ERROR = Value("JSON")
   val ENCODING_ERROR = Value("ENCODING")
+  val CONNECTION_ERROR = Value("CONNECTION")
 
   def valueOf(name: String): Option[ToxMeError.Value] = values.find(_.toString == name)
 

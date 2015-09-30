@@ -37,6 +37,7 @@
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
     <string name="create_account_invalid_domain">Invalid toxme domain supplied.</string>
+    <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 

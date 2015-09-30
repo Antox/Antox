@@ -204,44 +204,49 @@ class CreateAccountActivity extends AppCompatActivity {
     } else {
       disableRegisterButton()
 
-      var toxData = new ToxData
-
-      if (shouldCreateDataFile) {
-        // Create tox data save file
-        try {
-          toxData = createToxData(toxMeName.username)
-        } catch {
-          case e: ToxException[_] => Log.d("CreateAccount", "Failed creating tox data save file")
+      val toxData =
+        if (shouldCreateDataFile) {
+          // Create tox data save file
+          try {
+            Some(createToxData(toxMeName.username))
+          } catch {
+            case e: ToxException[_] =>
+              Log.d("CreateAccount", "Failed creating tox data save file")
+              None
+          }
+        } else {
+          loadToxData(toxMeName.username)
         }
-      } else {
-        val result = loadToxData(toxMeName.username)
 
-        result match {
-          case Some(data) =>
-            toxData = data
+      toxData match {
+        case Some(data) =>
+          val observable =
+            if (shouldRegister) {
+              // Register acccount
+              if (ConnectionManager.isNetworkAvailable(this)) {
+                ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, data)
+              } else {
+                // fail if there is no connection
+                Observable.just(Left(ToxMeError.CONNECTION_ERROR))
+              }
 
-          // If None is returned then failed to load data so exit the createAccount function
-          case None =>
-            return
-        }
+            } else {
+              //succeed with empty password
+              Observable.just(Right(""))
+            }
+
+          observable
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe(result => {
+            onRegistrationResult(toxMeName, data, result)
+          }, error => {
+            Log.d("CreateAccount", "Unexpected error registering account.")
+            error.printStackTrace()
+          })
+
+        case None =>
+          enableRegisterButton()
       }
-
-      val observable = if (shouldRegister) {
-        // Register acccount
-        ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, toxData)
-      } else {
-        //succeed with empty password
-        Observable.just(Right(""))
-      }
-
-      observable
-        .observeOn(AndroidMainThreadScheduler())
-        .subscribe(result => {
-        onRegistrationResult(toxMeName, toxData, result)
-      }, error => {
-        Log.d("CreateAccount", "Unexpected error registering account.")
-        error.printStackTrace()
-      })
     }
   }
 
@@ -257,6 +262,7 @@ class CreateAccountActivity extends AppCompatActivity {
           case ToxMeError.RATE_LIMIT => getString(R.string.create_account_reached_registration_limit)
           case ToxMeError.KALIUM_LINK_ERROR => getString(R.string.create_account_kalium_link_error)
           case ToxMeError.INVALID_DOMAIN => getString(R.string.create_account_invalid_domain)
+          case ToxMeError.CONNECTION_ERROR => getString(R.string.create_account_connection_error)
           case _ => getString(R.string.create_account_unknown_error)
         })
       case Right(password) =>
