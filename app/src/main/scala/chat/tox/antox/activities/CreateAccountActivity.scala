@@ -228,7 +228,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
       val observable = if (shouldRegister) {
         // Register acccount
-        ToxMe.registerAccount(toxMeName, PrivacyLevel.PRIVATE, toxData)
+        ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, toxData)
       } else {
         //succeed with empty password
         Observable.just(Right(""))

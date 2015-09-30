@@ -2,7 +2,7 @@ package chat.tox.antox.tests
 
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
-import chat.tox.antox.toxme.ToxMe.{ToxmeResult, PrivacyLevel}
+import chat.tox.antox.toxme.ToxMe.{ToxMeResult, PrivacyLevel}
 import chat.tox.antox.toxme.{ToxMeError, ToxMeName, ToxMe, ToxData}
 import chat.tox.antox.utils.Options
 import chat.tox.antox.wrapper.ToxAddress
@@ -36,7 +36,7 @@ class ToxMeTest extends AndroidTestCase {
   }
 
 
-  def registerAccount(toxMeName: ToxMeName, toxData: ToxData): ToxmeResult[String] = {
+  def registerAccount(toxMeName: ToxMeName, toxData: ToxData): ToxMeResult[String] = {
     ToxMe.registerAccount(toxMeName, PrivacyLevel.PRIVATE, toxData).toBlocking.first
   }
 
@@ -87,6 +87,19 @@ class ToxMeTest extends AndroidTestCase {
           case None =>
             assertTrue(true)
         }
+    }
+  }
+
+  @Test
+  def testSearch(): Unit ={
+    val maybeResults = ToxMe.search("subl", ToxMe.makeApiURL(ToxMe.DEFAULT_TOXME_DOMAIN)).toBlocking.first
+    maybeResults match {
+      case Left(error) =>
+        fail(error.toString)
+
+      case Right(results) =>
+        println(results)
+        assertTrue("The results for a search of 'subl' must contain 'subliun'", results.exists(_.name == "subliun"))
     }
   }
 }
