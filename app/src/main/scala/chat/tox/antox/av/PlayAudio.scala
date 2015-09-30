@@ -2,9 +2,10 @@ package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
+import chat.tox.antox.utils.AntoxLog
+import org.scaloid.common.LoggerTag
 
 class PlayAudio{
-  private val TAG = "chat.tox.antox.av.PlayAudio"
 
   var audioTrack: AudioTrack = null
 
@@ -19,7 +20,8 @@ class PlayAudio{
           audioTrack.write (data, 0, data.length)
           audioTrack.stop ()
     } catch {
-      case e: Exception => Log.e("AudioPlayback", e.getMessage)
+      case e: Exception =>
+        AntoxLog.errorException(e.getMessage, e, LoggerTag("AudioPlayback"))
     }
   }
 

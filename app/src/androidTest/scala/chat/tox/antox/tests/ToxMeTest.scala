@@ -98,7 +98,6 @@ class ToxMeTest extends AndroidTestCase {
         fail(error.toString)
 
       case Right(results) =>
-        println(results)
         assertTrue("The results for a search of 'subl' must contain 'subliun'", results.exists(_.name == "subliun"))
     }
   }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.util.Log
+import chat.tox.antox.utils.AntoxLog
 
 class ToxService extends Service() {
 
@@ -18,7 +19,7 @@ class ToxService extends Service() {
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
-      Log.d("ToxService", "Initting ToxSingleton")
+      AntoxLog.debug("Initting ToxSingleton")
     }
 
     keepRunning = true
@@ -59,6 +60,6 @@ class ToxService extends Service() {
     serviceThread.interrupt()
     ToxSingleton.save()
     ToxSingleton.isInited = false
-    Log.d("ToxService", "onDestroy() called")
+    AntoxLog.debug("onDestroy() called for Tox service")
   }
 }

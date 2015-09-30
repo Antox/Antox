@@ -1,16 +1,13 @@
 package chat.tox.antox.av
 
 import android.util.Log
-
-object CallManager {
-  val TAG = "chat.tox.antox.av.CallManager"
-}
+import chat.tox.antox.utils.AntoxLog
 
 class CallManager {
   private var _calls: Map[Integer, Call] = Map[Integer, Call]()
 
   def add(c: Call): Unit = {
-    Log.d(CallManager.TAG, "Adding call")
+    AntoxLog.debug("Adding call")
     _calls = _calls + (c.id -> c)
   }
 
@@ -19,7 +16,7 @@ class CallManager {
   }
 
   def remove(id: Integer): Unit = {
-    Log.d(CallManager.TAG, "Removing call")
+    AntoxLog.debug("Removing call")
     val mCall = this.get(id)
     mCall match {
       case Some(c) => 

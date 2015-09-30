@@ -4,11 +4,13 @@ import android.util.{Base64, Log}
 import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
 import chat.tox.antox.toxme.ToxMe.PrivacyLevel.PrivacyLevel
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
+import chat.tox.antox.utils.AntoxLog
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
 import org.abstractj.kalium.crypto.Box
 import org.abstractj.kalium.encoders.Raw
 import org.json.JSONObject
+import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
@@ -19,7 +21,7 @@ import scala.util.Try
 object ToxMe {
 
   val DEFAULT_TOXME_DOMAIN = "toxme.io"
-  val DEBUG_TAG = "TOXME"
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   private def epoch = System.currentTimeMillis() / 1000
 
@@ -210,7 +212,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        AntoxLog.debug(e.getClass.getSimpleName + ": " + e.getMessage)
         Left(ToxMeError.exception(e))
     }
   }
@@ -249,7 +251,7 @@ object ToxMe {
       val requestBody = RequestBody.create(mediaType, requestJson.toString)
       val request = new Builder().url(toxMeApiUrl).post(requestBody).build()
       val response = httpClient.newCall(request).execute()
-      Log.d(DEBUG_TAG, "Response code: " + response.toString)
+      AntoxLog.debug("Response code: " + response.toString, TAG)
       val responseJson = new JSONObject(response.body().string())
       val error = Try(ToxMeError.withName(responseJson.getString("c"))).getOrElse(ToxMeError.UNKNOWN)
 
@@ -260,7 +262,7 @@ object ToxMe {
       }
     } catch {
       case e: Exception =>
-        Log.d(DEBUG_TAG, e.getClass.getSimpleName + ": " + e.getMessage)
+        AntoxLog.debugException(e.getMessage, e, TAG)
         Left(ToxMeError.exception(e))
     }
   }

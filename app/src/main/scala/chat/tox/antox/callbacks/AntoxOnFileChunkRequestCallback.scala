@@ -5,6 +5,7 @@ import android.util.Log
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileStatus
+import chat.tox.antox.utils.AntoxLog
 import im.tox.tox4j.core.callbacks.FileChunkRequestCallback
 
 class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChunkRequestCallback[Unit] {
@@ -32,7 +33,7 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChun
           }
 
         })
-      case None => Log.d("AntoxOnFileChunkRequestCallback", "Can't find file transfer")
+      case None => AntoxLog.debug("Can't find file transfer")
     }
   }
 }

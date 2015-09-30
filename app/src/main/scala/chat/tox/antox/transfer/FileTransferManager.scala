@@ -8,13 +8,14 @@ import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
-import chat.tox.antox.utils.BitmapManager
+import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, ToxKey}
 import im.tox.tox4j.core.enums.ToxFileControl
+import org.scaloid.common.LoggerTag
 
 class FileTransferManager extends Intervals {
-  private val TAG = "FileTransferManager"
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
   private var _keyAndFileNumberToId: Map[(ToxKey, Integer), Long] = Map[(ToxKey, Integer), Long]()
@@ -73,14 +74,14 @@ class FileTransferManager extends Intervals {
     val extension = splitFileName._2
     val name = splitFileName._1
     val nameTruncated = name.slice(0, 64 - 1 - extension.length)
-    Log.d(TAG, "sendFileSendRequest")
+    AntoxLog.debug("sendFileSendRequest", TAG)
     if (fileName != null) {
       require(key != null)
       ToxSingleton.getAntoxFriend(key)
         .map(_.getFriendNumber)
         .flatMap(friendNumber => {
         try {
-          Log.d(TAG, "Creating tox file sender")
+          AntoxLog.debug("Creating tox file sender", TAG)
           val fileNumber = ToxSingleton.tox.fileSend(friendNumber, fileKind.kindId, file.length(), fileId, fileName)
           fileNumber match {
             case -1 => None
@@ -94,7 +95,7 @@ class FileTransferManager extends Intervals {
         }
       }).foreach(fileNumber => {
         val db = State.db
-        Log.d(TAG, "adding File Transfer")
+        AntoxLog.debug("adding File Transfer", TAG)
         val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, path, fileNumber, fileKind.kindId, file.length.toInt)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
       })
@@ -117,7 +118,7 @@ class FileTransferManager extends Intervals {
                       fileSize: Long,
                       replaceExisting: Boolean,
                       context: Context) {
-    Log.d(TAG, "fileSendRequest")
+    AntoxLog.debug("fileSendRequest", TAG)
     var fileN = fileName
     val fileSplit = fileName.split("\\.")
     var filePre = ""
@@ -149,7 +150,7 @@ class FileTransferManager extends Intervals {
   }
 
   private def fileAcceptOrReject(key: ToxKey, fileNumber: Integer, context: Context, accept: Boolean) {
-    Log.d(TAG, "fileAcceptReject, accepting: " + accept)
+    AntoxLog.debug("fileAcceptReject, accepting: " + accept, TAG)
     val id = State.db.getFileId(key, fileNumber)
     if (id != -1) {
       val mFriend = ToxSingleton.getAntoxFriend(key)
@@ -207,7 +208,7 @@ class FileTransferManager extends Intervals {
   }
 
   def fileFinished(key: ToxKey, fileNumber: Integer, context: Context) {
-    Log.d(TAG, "fileFinished")
+    AntoxLog.debug("fileFinished", TAG)
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
       case Some(t) =>
@@ -228,12 +229,12 @@ class FileTransferManager extends Intervals {
           }
         }
 
-      case None => Log.d(TAG, "fileFinished: No transfer found")
+      case None => AntoxLog.debug("fileFinished: No transfer found", TAG)
     }
   }
 
   def cancelFile(key: ToxKey, fileNumber: Int, context: Context) {
-    Log.d(TAG, "cancelFile")
+    AntoxLog.debug("cancelFile", TAG)
     val db = State.db
     State.transfers.remove(key, fileNumber)
     db.clearFileNumber(key, fileNumber)
@@ -248,12 +249,12 @@ class FileTransferManager extends Intervals {
   }
 
   def fileTransferStarted(key: ToxKey, fileNumber: Integer, ctx: Context) {
-    Log.d(TAG, "fileTransferStarted")
+    AntoxLog.debug("fileTransferStarted", TAG)
     State.db.fileTransferStarted(key, fileNumber)
   }
 
   def pauseFile(id: Long, ctx: Context) {
-    Log.d(TAG, "pauseFile")
+    AntoxLog.debug("pauseFile", TAG)
     val mTransfer = State.transfers.get(id)
     mTransfer match {
       case Some(t) => t.status = FileStatus.PAUSED
@@ -274,7 +275,6 @@ class FileTransferManager extends Intervals {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
-            println(file.length())
             sendFileSendRequest(file.getPath, friend.key, AVATAR, fileId = ToxSingleton.tox.hash(file).orNull, context = context)
           case None =>
             sendFileDeleteRequest(friend.key, AVATAR, context)

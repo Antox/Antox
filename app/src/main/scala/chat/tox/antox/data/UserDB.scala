@@ -10,14 +10,17 @@ import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
 import chat.tox.antox.toxme.ToxMeName
 import chat.tox.antox.utils.DatabaseConstants._
-import chat.tox.antox.utils.{BriteScalaDatabase, DatabaseUtil}
+import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
+import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 
 import scala.collection.mutable.ArrayBuffer
 
 object UserDB {
+
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   val databaseName = "userdb"
   val sqlBrite = SqlBrite.create()
@@ -40,7 +43,7 @@ object UserDB {
     }
 
     override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-      Log.w("UserDB", "Upgrading UserDB from version " + oldVersion + " to " + newVersion)
+      AntoxLog.info(s"Upgrading UserDB from version $oldVersion to $newVersion", TAG)
 
       for (currVersion <- oldVersion to newVersion) {
         currVersion match {

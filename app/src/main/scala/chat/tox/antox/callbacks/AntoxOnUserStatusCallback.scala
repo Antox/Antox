@@ -6,11 +6,6 @@ import chat.tox.antox.tox.ToxSingleton
 import im.tox.tox4j.core.callbacks.FriendStatusCallback
 import im.tox.tox4j.core.enums.ToxUserStatus
 
-object AntoxOnUserStatusCallback {
-
-  private val TAG = "chat.tox.antox.TAG"
-}
-
 class AntoxOnUserStatusCallback(private var ctx: Context) extends FriendStatusCallback[Unit] {
 
   override def friendStatus(friendNumber: Int, status: ToxUserStatus)(state: Unit): Unit = {

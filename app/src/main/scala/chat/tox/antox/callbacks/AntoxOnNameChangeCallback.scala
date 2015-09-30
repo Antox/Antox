@@ -6,11 +6,6 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.UiUtils
 import im.tox.tox4j.core.callbacks.FriendNameCallback
 
-object AntoxOnNameChangeCallback {
-
-  private val TAG = "chat.tox.antox.TAG"
-}
-
 class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCallback[Unit] {
   override def friendName(friendNumber: Int, nameBytes: Array[Byte])(state: Unit): Unit = {
     val name = UiUtils.removeNewlines(new String(nameBytes, "UTF-8"))

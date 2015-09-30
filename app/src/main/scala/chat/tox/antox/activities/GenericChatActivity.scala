@@ -17,7 +17,7 @@ import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.{Message, ToxKey}
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
@@ -27,7 +27,7 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
 
 abstract class GenericChatActivity extends AppCompatActivity {
-  val TAG: String = "ChatActivity"
+
   //var ARG_CONTACT_NUMBER: String = "contact_number"
   var adapter: ChatMessagesAdapter = null
   var messageBox: EditText = null
@@ -58,7 +58,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     val extras: Bundle = getIntent.getExtras
     activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
-    Log.d(TAG, "key = " + activeKey)
+    AntoxLog.debug("key = " + activeKey)
 
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
@@ -135,7 +135,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     messagesSub = getActiveMessageObservable
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(messageList => {
-      Log.d(TAG, "Messages updated")
+      AntoxLog.debug("Messages updated")
       updateChat(messageList)
     })
   }
@@ -152,7 +152,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
-    Log.d(TAG, "changing chat list cursor")
+    AntoxLog.debug("changing chat list cursor")
   }
 
   def validateMessageBox(): Option[String] = {
@@ -171,7 +171,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   }
 
   private def onSendMessage() {
-    Log.d(TAG, "sendMessage")
+    AntoxLog.debug("sendMessage")
     val mMessage = validateMessageBox()
 
     mMessage.foreach(rawMessage => {

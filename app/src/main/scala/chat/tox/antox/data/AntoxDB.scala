@@ -16,12 +16,15 @@ import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{ToxCore, _}
 import com.squareup.sqlbrite.SqlBrite
 import im.tox.tox4j.core.enums.ToxUserStatus
+import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
 object AntoxDB {
+
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   val sqlBrite = SqlBrite.create()
 
@@ -146,10 +149,12 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   def addFriend(key: ToxKey, name: String, alias: String, statusMessage: String): Unit = {
+    AntoxLog.debug(s"Adding friend $key to database", AntoxDB.TAG)
     addContact(key, name, alias, statusMessage, ContactType.FRIEND)
   }
 
   def addGroup(key: ToxKey, name: String, topic: String): Unit = {
+    AntoxLog.debug(s"Adding group $key to database", AntoxDB.TAG)
     addContact(key, name, "", topic, ContactType.GROUP)
   }
 
@@ -281,7 +286,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   def fileTransferFinished(key: ToxKey, fileNumber: Int) {
-    Log.d("AntoxDB", "fileFinished")
+    AntoxLog.debug("fileFinished", AntoxDB.TAG)
     val where = createSqlEqualsCondition(COLUMN_NAME_TYPE, MessageType.transferValues.map(_.id)) +
         s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
 
@@ -452,13 +457,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     val where = ""
       //s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id))}"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
-    Log.d("", "marked incoming messages as read")
+    AntoxLog.debug("Marked incoming messages as read", AntoxDB.TAG)
   }
 
   def deleteMessage(id: Int) {
     val where = s"_id == $id"
     mDb.delete(TABLE_MESSAGES, where)
-    Log.d("", "Deleted message")
+    AntoxLog.debug(s"Deleted message: $id", AntoxDB.TAG)
   }
 
   def friendList: Observable[Seq[FriendInfo]] = {

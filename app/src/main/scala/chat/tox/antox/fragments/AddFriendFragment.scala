@@ -114,7 +114,6 @@ class AddFriendFragment extends Fragment with InputableID {
           } catch {
             case e: ToxException[_] => e.printStackTrace()
           }
-          Log.d("AddFriendActivity", "Adding friend to database")
           db.addFriend(key, originalUsername, alias, "Friend Request Sent")
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)

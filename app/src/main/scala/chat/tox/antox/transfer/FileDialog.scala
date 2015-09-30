@@ -11,6 +11,8 @@ import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.transfer.FileDialog.{DirectorySelectedListener, FileSelectedListener}
 import chat.tox.antox.transfer.ListenerList.FireHandler
+import chat.tox.antox.utils.AntoxLog
+import org.scaloid.common.LoggerTag
 
 import scala.collection.JavaConversions._
 
@@ -29,7 +31,7 @@ object FileDialog {
 
 class FileDialog(private val activity: Activity, path: File, selectDirectoryOption: Boolean) {
 
-  private val TAG = getClass.getName
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   private val PARENT_DIR = ".."
 
@@ -59,7 +61,7 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
       builder.setPositiveButton("Select directory", new DialogInterface.OnClickListener() {
 
         def onClick(dialog: DialogInterface, which: Int) {
-          Log.d(TAG, currentPath.getPath)
+          AntoxLog.debug(currentPath.getPath, TAG)
           fireDirectorySelectedEvent(currentPath)
         }
       })

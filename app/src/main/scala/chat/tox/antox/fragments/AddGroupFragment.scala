@@ -12,7 +12,7 @@ import android.widget.{Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{Constants, UiUtils}
+import chat.tox.antox.utils.{AntoxLog, Constants, UiUtils}
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.tox4j.exceptions.ToxException
 
@@ -81,12 +81,11 @@ class AddGroupFragment extends Fragment with InputableID {
         if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.joinGroup(key)
-            println("joined group : " + groupKey)
+            AntoxLog.debug("joined group : " + groupKey)
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()
           }
-          Log.d("AddGroupKey", "Adding group to database")
           db.addGroup(key, UiUtils.trimId(key), topic = "")
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
@@ -97,7 +96,6 @@ class AddGroupFragment extends Fragment with InputableID {
         toast.show()
         true
       } else {
-        println("not validated")
         showToastInvalidID()
         false
       }
@@ -116,7 +114,6 @@ class AddGroupFragment extends Fragment with InputableID {
         getActivity.finish()
       }
     } else {
-      println("length is not 64")
       showToastInvalidID()
     }
   }

@@ -18,14 +18,13 @@ import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
+import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 import scala.io.Source
 
 object ToxSingleton {
-
-  private val TAG = "chat.tox.antox.tox.ToxSingleton"
 
   var tox: ToxCore = _
 
@@ -112,11 +111,12 @@ object ToxSingleton {
   }
 
   def updateDhtNodes(ctx: Context) {
-    Log.d(TAG, "updateDhtNodes")
+    val TAG = LoggerTag("UpdateDhtNodes")
+
     Observable[JSONObject](subscriber => {
-      Log.d(TAG, "updateDhtNodes: in observable")
+      AntoxLog.debug("in observable", TAG)
       try {
-        Log.d(TAG, "updateDhtNodes: about to readJsonFromUrl")
+        AntoxLog.debug("about to readJsonFromUrl", TAG)
 
         val nodeFileUrl =
           "https://build.tox.chat/job/nodefile_build_linux_x86_64_release" +
@@ -128,7 +128,7 @@ object ToxSingleton {
         } catch {
           //try to continue with stored nodefile if the nodefile is down
           case e: IOException =>
-            Log.e(TAG, "couldn't reach Nodefile URL")
+            AntoxLog.error("couldn't reach Nodefile URL", TAG)
         }
 
         val savedNodeFile = new File(ctx.getFilesDir, fileName)
@@ -140,17 +140,15 @@ object ToxSingleton {
         }
 
         val json = JsonReader.readJsonFromFile(savedNodeFile)
-
-        println(json)
         subscriber.onNext(json)
         subscriber.onCompleted()
       } catch {
         case e: Exception =>
-          Log.e(TAG, "update dht nodes error: " + e)
+          AntoxLog.errorException("update dht nodes error", e, TAG)
           subscriber.onError(e)
       }
     }).map(json => {
-      Log.d(TAG, json.toString)
+      AntoxLog.debug(json.toString, TAG)
       var dhtNodes: Array[DhtNode] = Array()
       val serverArray = json.getJSONArray("servers")
       for (i <- 0 until serverArray.length) {
@@ -167,7 +165,7 @@ object ToxSingleton {
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(nodes => {
       dhtNodes = nodes
-      Log.d(TAG, "Trying to bootstrap")
+      AntoxLog.debug("Trying to bootstrap", TAG)
       try {
         for (i <- nodes.indices) {
           tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
@@ -176,9 +174,9 @@ object ToxSingleton {
         case e: Exception =>
           e.printStackTrace()
       }
-      Log.d(TAG, "Successfully bootstrapped")
+      AntoxLog.debug("Successfully bootstrapped", TAG)
     }, error => {
-      Log.e(TAG, "Failed bootstrapping " + error)
+      AntoxLog.errorException("Failed bootstrapping", error, TAG)
     })
   }
 

@@ -211,7 +211,7 @@ class CreateAccountActivity extends AppCompatActivity {
             Some(createToxData(toxMeName.username))
           } catch {
             case e: ToxException[_] =>
-              Log.d("CreateAccount", "Failed creating tox data save file")
+              AntoxLog.debug("Failed creating tox data save file")
               None
           }
         } else {
@@ -240,7 +240,7 @@ class CreateAccountActivity extends AppCompatActivity {
             .subscribe(result => {
             onRegistrationResult(toxMeName, data, result)
           }, error => {
-            Log.d("CreateAccount", "Unexpected error registering account.")
+            AntoxLog.debug("Unexpected error registering account.")
             error.printStackTrace()
           })
 

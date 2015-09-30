@@ -6,11 +6,6 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.UiUtils
 import im.tox.tox4j.core.callbacks.FriendStatusMessageCallback
 
-object AntoxOnStatusMessageCallback {
-
-  private val TAG = "chat.tox.antox.TAG"
-}
-
 class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatusMessageCallback[Unit] {
 
   override def friendStatusMessage(friendNumber: Int, messageBytes: Array[Byte])(state: Unit): Unit = {

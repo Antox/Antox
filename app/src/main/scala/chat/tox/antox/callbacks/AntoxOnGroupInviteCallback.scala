@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
+import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.ToxKey
 
 object AntoxOnGroupInviteCallback {
@@ -19,10 +20,9 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
 
     val inviteKeyLength = 32
     val key = new ToxKey(inviteData.slice(0, inviteKeyLength))
-    println("invite key is " + key)
     db.addGroupInvite(key, inviter.getName, inviteData)
 
-    Log.d("GroupInviteCallback", "")
+    AntoxLog.debug("New Group Invite")
     MessageHelper.createRequestNotification(None, ctx)
   }
 }

@@ -10,11 +10,6 @@ import im.tox.tox4j.core.enums.ToxConnection
 
 import scala.collection.JavaConversions._
 
-object AntoxOnConnectionStatusCallback {
-
-  private val TAG = "chat.tox.antox.TAG"
-}
-
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback[Unit] {
 
   private val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)

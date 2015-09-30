@@ -156,7 +156,8 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Accepting Friend: " + key)
+        AntoxLog.debug("Accepting Friend: " + key, AntoxLog.CLICK_TAG)
+
         val db = State.db
         db.addFriend(key, "", "", context.getResources.getString(R.string.friend_accepted_default_status))
         db.deleteFriendRequest(key)
@@ -170,7 +171,8 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Rejecting Friend: " + key)
+        AntoxLog.debug("Rejecting Friend: " + key, AntoxLog.CLICK_TAG)
+
         val db = State.db
         db.deleteFriendRequest(key)
       }
@@ -180,7 +182,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        AntoxLog.debug("Joining Group: " + groupKey, AntoxLog.CLICK_TAG)
         val db = State.db
 
         db.groupInvites.first.subscribe(invites => {
@@ -199,7 +201,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        AntoxLog.debug("Joining Group: " + groupKey, AntoxLog.CLICK_TAG)
         val db = State.db
         db.deleteGroupInvite(groupKey)
       }

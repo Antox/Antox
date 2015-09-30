@@ -26,7 +26,7 @@ object BitmapManager {
   // has updated their avatar - contact's avatars are stored under the name of their public key
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
-  private val TAG = "BitmapManager"
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
     if (isAvatar) {
@@ -80,7 +80,7 @@ object BitmapManager {
         inSampleSize *= 2
       }
     }
-    Log.d(TAG, "Using a sample size of " + inSampleSize)
+    AntoxLog.debug("Using a sample size of " + inSampleSize, TAG)
 
     inSampleSize
   }
@@ -162,7 +162,7 @@ object BitmapManager {
       bitmap
     } catch {
       case e: FileNotFoundException =>
-        Log.d(TAG, "File not found when trying to be used for FileInputStream")
+        AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)
         e.printStackTrace()
         null
     } finally {
@@ -185,15 +185,15 @@ object BitmapManager {
   def load(file: File, imageView: ImageView, isAvatar: Boolean) {
     val imageKey = file.getPath + file.getName
 
-    Log.d(TAG, imageKey)
+    AntoxLog.debug(imageKey, TAG)
 
     getFromCache(isAvatar, imageKey) match {
       case Some(bitmap) =>
-        Log.d(TAG, "Loading Bitmap image from cache")
+        AntoxLog.debug("Loading Bitmap image from cache", TAG)
         imageView.setImageBitmap(bitmap)
 
       case None =>
-        Log.d(TAG, "Decoding Bitmap image")
+        AntoxLog.debug("Decoding Bitmap image", TAG)
         Future {
           val bitmap = decodeBitmap(file, imageKey, isAvatar)
 

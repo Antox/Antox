@@ -5,22 +5,22 @@ import java.io._
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
-import chat.tox.antox.utils.FileUtils
+import chat.tox.antox.utils.{AntoxLog, FileUtils}
 import im.tox.tox4j.core.options.SaveDataOptions
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
+import org.scaloid.common.LoggerTag
 
 class ToxDataFile(ctx: Context, fileName: String) {
 
+  private val TAG = LoggerTag(getClass.getName)
+
   def doesFileExist(): Boolean = {
-    if (ctx == null) {
-      Log.d("ToxDataFile", "Context is null!")
+    AntoxLog.debug("fileName: " + fileName, TAG)
+    val selfFile = ctx.getFileStreamPath(fileName)
+    if (selfFile == null) {
+      AntoxLog.debug("selfFile is null!", TAG)
     }
-    Log.d("ToxDataFile", "fileName: " + fileName)
-    val myFile = ctx.getFileStreamPath(fileName)
-    if (myFile == null) {
-      Log.d("ToxDataFile", "myFile is null!")
-    }
-    myFile.exists()
+    selfFile.exists()
   }
 
   def exportFile(dest: File): Unit = {

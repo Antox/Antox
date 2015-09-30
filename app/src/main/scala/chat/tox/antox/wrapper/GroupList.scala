@@ -3,7 +3,7 @@ package chat.tox.antox.wrapper
 import java.util
 import java.util.Locale
 
-import chat.tox.antox.utils.UiUtils
+import chat.tox.antox.utils.{AntoxLog, UiUtils}
 
 import scala.collection.JavaConversions._
 
@@ -53,7 +53,7 @@ class GroupList {
   }
 
   def addGroup(group: Group): Unit = {
-    println("group " + group.groupNumber + " added")
+    AntoxLog.debug("group " + group.groupNumber + " added")
     groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber) match {
       case Some(f) => throw new Exception()
       case None => this.groups.add(group)

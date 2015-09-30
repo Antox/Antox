@@ -348,7 +348,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          println("Tox is " + ToxSingleton.tox)
           ToxSingleton.tox.setName(name)
         } catch {
           case e: ToxException[_] => e.printStackTrace()

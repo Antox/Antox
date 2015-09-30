@@ -13,13 +13,16 @@ import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{BitmapManager, Constants}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
+import org.scaloid.common.LoggerTag
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.concurrent.duration._
 
 class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with OnClickListener with OnLongClickListener {
+
+  private val TAG = LoggerTag(getClass.getSimpleName)
 
   protected val imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
 
@@ -92,7 +95,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     progressLayout.setVisibility(View.VISIBLE)
 
     if (progressSub == null || progressSub.isUnsubscribed) {
-      Log.d("FileProgressSub", "observer subscribing")
+      AntoxLog.debug("observer subscribing", TAG)
       progressSub = Observable.interval(500 milliseconds)
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(x => {
@@ -122,7 +125,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     fileProgressBar.setProgress(State.transfers.getProgress(msg.id).toInt)
     if (fileProgressBar.getProgress >= msg.size) {
       progressSub.unsubscribe()
-      Log.d("FileProgressSub", "observer unsubscribed")
+      AntoxLog.debug("observer unsubscribed", TAG)
     }
   }
 

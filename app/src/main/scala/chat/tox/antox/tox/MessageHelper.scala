@@ -8,15 +8,13 @@ import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.activities.{ChatActivity, GroupChatActivity, MainActivity}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{MessageType, ToxKey}
 
 import scala.collection.mutable.ArrayBuffer
 
 object MessageHelper {
-
-  val TAG = "chat.tox.antox.tox.MessageHelper"
 
   def createRequestNotification(contentText: Option[String], context: Context): Unit = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -45,7 +43,8 @@ object MessageHelper {
     val db = State.db
     val friendName = db.getContactNameOrAlias(friendKey)
 
-    Log.d(TAG, "friend id: " + friendKey + " activeKey: " + State.activeKey + " chatActive: " + State.chatActive)
+    AntoxLog.debug(s"Message from: friend id: $friendKey activeKey: ${State.activeKey} chatActive: ${State.chatActive}")
+
     if (!db.isContactBlocked(friendKey)) {
       val chatActive = State.chatActive && State.activeKey.contains(friendKey)
       db.addMessage(-1, friendKey, friendKey, friendName, message, hasBeenReceived = true,

@@ -60,7 +60,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
         //FIXME setGroupSelfName(groupNumber, name)
       } catch {
         case e: ToxException[_]  =>
-          println("could not set name in group " + groupNumber)
+          AntoxLog.debug("could not set name in group " + groupNumber)
       }
     }
   }
@@ -195,7 +195,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
             attemptName = name + "_"
         }
       }
-      println("group name " + getGroupSelfName(groupNumber))
+      AntoxLog.debug("group name " + getGroupSelfName(groupNumber))
     }
   }
 

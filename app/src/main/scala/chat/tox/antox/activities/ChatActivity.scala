@@ -18,7 +18,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
-import chat.tox.antox.utils.{BitmapManager, Constants, IconColor}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants, IconColor}
 import chat.tox.antox.wrapper.{FileKind, FriendInfo, ToxKey, UserStatus}
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.exceptions.ToxException
@@ -76,7 +76,7 @@ class ChatActivity extends GenericChatActivity {
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
-        println("image name " + image_name)
+
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
           val file = File.createTempFile(image_name, ".jpg", storageDir)
@@ -173,7 +173,7 @@ class ChatActivity extends GenericChatActivity {
         }
       }
     } else {
-      Log.d(TAG, "onActivityResult result code not okay, user cancelled")
+      AntoxLog.debug("onActivityResult result code not okay, user cancelled")
     }
   }
 
