@@ -4,8 +4,10 @@ package chat.tox.antox.activities
 import java.io.File
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.{Build, Bundle}
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.text.{Editable, TextWatcher}
 import android.view.View
@@ -15,7 +17,6 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.BitmapManager
 import chat.tox.antox.wrapper.ToxKey
-import com.shamanland.fab.FloatingActionButton
 import de.hdodenhof.circleimageview.CircleImageView
 
 class FriendProfileActivity extends AppCompatActivity {
@@ -102,8 +103,7 @@ class FriendProfileActivity extends AppCompatActivity {
 
   def updateFab(favorite: Boolean): Unit = {
     val fab = findViewById(R.id.favorite_button).asInstanceOf[FloatingActionButton]
-    fab.setSize(FloatingActionButton.SIZE_NORMAL)
-    fab.setColor(getResources.getColor(if (favorite) R.color.material_red_a700 else R.color.white))
+    fab.setBackgroundTintList(ColorStateList.valueOf(getResources.getColor(if (favorite) R.color.material_red_a700 else R.color.white)))
 
     if (favorite) {
       val drawable = getResources.getDrawable(R.drawable.ic_star_black_24dp)
@@ -113,8 +113,5 @@ class FriendProfileActivity extends AppCompatActivity {
       fab.setImageDrawable(
         getResources.getDrawable(R.drawable.ic_star_outline_black_24dp))
     }
-
-    fab.initBackground()
   }
-
 }

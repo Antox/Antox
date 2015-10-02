@@ -15,7 +15,6 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
       case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new ContactListAdapter(getActivity)
         updateContactsLists(leftPaneAdapter, friendsList ++ groupList)
-
         contactsListView.setAdapter(leftPaneAdapter)
     }
   }

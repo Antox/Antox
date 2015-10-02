@@ -72,8 +72,4 @@
     <style name="AppTheme" parent="AntoxTheme">
     </style>
 
-    <style name="AppTheme.Fab" parent="FloatingActionButton">
-        <item name="floatingActionButtonColor">#6BC25F</item>
-    </style>
-
 </resources>

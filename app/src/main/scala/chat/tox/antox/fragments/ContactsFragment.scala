@@ -62,8 +62,8 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
 
   def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Seq[GroupInfo]): Unit = {
     val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
-    if (groups.nonEmpty) {
-      for (group <- groups) {
+    if (sortedGroupList.nonEmpty) {
+      for (group <- sortedGroupList) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.getAliasOrName, group.topic,
           group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
         leftPaneAdapter.addItem(groupPane)

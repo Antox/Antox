@@ -20,13 +20,15 @@
             android:layout_gravity="center"
             android:src="@drawable/default_avatar"/>
 
-        <com.shamanland.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/favorite_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:clickable="true"
             android:onClick="onClickFavorite"
-            />
+            android:src="@drawable/ic_star_black_24dp"
+            app:borderWidth="0dp"/>
 
     </FrameLayout>
 
@@ -55,7 +57,6 @@
         android:textColor="#a0a2a2"
         android:typeface="serif"
         android:textSize="16sp" />
-
 
 
 </LinearLayout>
