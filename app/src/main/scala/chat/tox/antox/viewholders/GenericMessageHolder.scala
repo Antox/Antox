@@ -1,8 +1,10 @@
 package chat.tox.antox.viewholders
 
+import android.graphics.PorterDuff
 import android.os.Build
 import android.support.v7.widget.RecyclerView
-import android.view.{Gravity, View}
+import android.view.View.{OnClickListener, OnTouchListener}
+import android.view.{MotionEvent, Gravity, View}
 import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.utils.TimestampUtils
@@ -31,6 +33,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
   protected var nextMsg: Option[Message] = _
 
   protected val context = v.getContext
+
 
   private val density: Int = v.getContext.getResources.getDisplayMetrics.density.toInt
 
@@ -98,5 +101,4 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
       view.setAlpha(value)
     }
   }
-
 }

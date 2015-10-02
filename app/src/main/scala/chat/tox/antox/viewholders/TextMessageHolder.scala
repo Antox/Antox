@@ -2,8 +2,9 @@ package chat.tox.antox.viewholders
 
 import android.app.AlertDialog
 import android.content.{ClipData, ClipboardManager, Context, DialogInterface}
-import android.view.View
-import android.view.View.OnLongClickListener
+import android.graphics.PorterDuff
+import android.view.{MotionEvent, View}
+import android.view.View.{OnTouchListener, OnClickListener, OnLongClickListener}
 import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -12,13 +13,14 @@ import chat.tox.antox.wrapper.MessageType
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
-class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with OnLongClickListener {
+class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with OnLongClickListener with OnTouchListener {
 
   protected val messageTitle = view.findViewById(R.id.message_title).asInstanceOf[TextView]
 
   def setText(s: String): Unit = {
     messageText.setText(s)
     messageText.setOnLongClickListener(this)
+    messageText.setOnTouchListener(this)
 
     // Reset the visibility for non-group messages
     messageTitle.setVisibility(View.GONE)
@@ -79,4 +81,25 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     true
   }
 
+  override def onTouch(v: View, event: MotionEvent): Boolean = {
+    val darkenedViews = List(background, receivedTriangle)
+    event.getAction match {
+      case MotionEvent.ACTION_DOWN =>
+        for (view <- darkenedViews) {
+          view.getBackground.setColorFilter(0x55000000, PorterDuff.Mode.SRC_ATOP)
+          view.invalidate()
+        }
+
+      case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP =>
+        for (view <- darkenedViews) {
+          view.getBackground.clearColorFilter()
+          view.invalidate()
+        }
+
+      case _ =>
+      //do nothing
+    }
+
+    false
+  }
 }
