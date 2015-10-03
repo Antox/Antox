@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">تنظیمات</string>
+  <!--Profile-->
+  <string name="pref_header_profile">پروفایل</string>
+  <string name="pref_title_nickname">نام</string>
+  <string name="pref_default_nickname">کاربر انتاکس</string>
+  <string name="pref_default_password">هیچ گذرواژه‌ای تنظیم نشده</string>
+  <string name="pref_title_status">وضعیت</string>
+  <string-array name="pref_status_list_titles">
+    <item>آنلاین</item>
+    <item>دور از دسترس</item>
+    <item>مشغول</item>
+  </string-array>
+  <string name="pref_title_status_message">پیام وضعیت</string>
+  <string name="pref_default_status_message">سلام! من دارم از تاکس استفاده میکنم</string>
+  <string name="pref_title_tox_id">شناسه تاکس</string>
+  <string name="pref_default_tox_id">شناسه پیش‌فرض تاکس - شما نباید این را ببینید</string>
+  <string name="pref_title_logging_enabled">تاریخچه گفتگو را بعد از خروج نگهدار</string>
+  <string name="pref_title_avatar">چهرک (آواتار)</string>
+  <string name="pref_title_account_name">نام پروفایل</string>
+  <string name="pref_title_export">بیرون بردن پروفایل</string>
+  <string name="pref_title_logout">خروج</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">اطلاعیه‌ها</string>
+  <string name="pref_title_enable_notifications">فعال کردن اطلاعیه‌ها</string>
+  <string name="pref_title_new_message_notifications">اطلاعیه‌های پیام</string>
+  <string name="pref_title_new_friend_notifications">اطلاعیه‌های درخواست دوستی</string>
+  <!--Other-->
+  <string name="pref_header_other">سایر</string>
+  <string name="pref_title_connection_status_messages">پیام‌های کنشی</string>
+  <string name="pref_title_wifi_only">فقط Wi-Fi</string>
+  <string name="pref_title_language">زبان</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">کپی کردن شناسه تاکس</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">فعال کردن UDP</string>
+  <string name="pref_advanced">پیشرفته</string>
+  <string name="pref_nospam">بازنشانی شناسه تاکس</string>
+  <string name="pref_autostart">اجرا کردن انتاکس هنگام بوت</string>
+</resources>

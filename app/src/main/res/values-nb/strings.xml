@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_friend_profile">Venneprofil</string>
+  <string name="title_activity_profile_settings">Profilinnstillinger </string>
+  <!--Navigation / Action Bar-->
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Du må oppgi et profilnavn</string>
+  <string name="login_login">Log inn</string>
+  <string name="login_account_hint">Profilnavn</string>
+  <string name="login_create_account_text">Lag Tox profil</string>
+  <string name="login_bad_login">Profilnavnet er ukjent</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Profilnavn</string>
+  <string name="create_register">Registrer</string>
+  <string name="create_skip">Tillat alle å inkludere deg via ditt profilnavn</string>
+  <string name="create_must_fill_in">Du må fylle ut alle felt</string>
+  <string name="create_bad_profile_name">Profilnavnet kan ikke inneholde mellomrom, skråstek, eller vær blankt</string>
+  <string name="create_profile_exists">Dette profilnavnet finnes allerede </string>
+  <!--Main Activity-->
+  <string name="main_recent_no">Ingen nylige samtaler</string>
+  <string name="main_no_internet">Ingen Internet-tilgang</string>
+  <string name="search_all_contacts">Søk i alle kontakter</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Send melding</string>
+  <string name="chat_file_transfer">Fil-overføring</string>
+  <!--Add Pane Fragment-->
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">Din venns Tox ID</string>
+  <string name="addfriend_friend_message">Send en melding med din forespørsel </string>
+  <string name="addfriend_button">Legg til venn</string>
+  <string name="addfriend_friend_added">Venn lagt til</string>
+  <string name="addfriend_friend_exists">Venn finnes allerede</string>
+  <string name="scanqr_button">Les en QR-kode</string>
+  <string name="invalid_friend_ID">Feil Tox ID</string>
+  <string name="addfriend_nick_hint">Sett kallenavn for din venn</string>
+  <string name="dialog_pin">Skriv inn din venns PIN</string>
+  <string name="addfriend_invalid_pin">Feil PIN</string>
+  <string name="addfriend_own_key">Du kan ikke legge til deg selv</string>
+  <string name="addfriend_friend_pin_title">Skriv inn din venns PIN</string>
+  <string name="addfriend_friend_pin_text">Skriv inn din venns PIN</string>
+  <string name="addfriend_default_message">Hei! Kan du godta min venne-forespørsel?</string>
+  <!--Add Group Fragment-->
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Kallenavn</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">Status</string>
+  <string name="friend_profile_button">Oppdatering</string>
+  <string name="friend_profile_updated">Profilen er oppdatert</string>
+  <string name="friend_profile_copied">Tox ID kopiert</string>
+  <!--Group Profile Activity-->
+  <!--Friend request fragment-->
+  <string name="friendrequest_accept">Godta</string>
+  <string name="friendrequest_reject">Avvise</string>
+  <string name="friend_request">Ny venne-forespørsel</string>
+  <!--Group invite fragment-->
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profil</string>
+  <string name="friend_action_delete">Slett venn</string>
+  <string name="friend_action_delete_chat">Slett samtalelogger</string>
+  <string name="friend_action_block">Blokker</string>
+  <string name="contacts_delimiter_requests">Forespørsel</string>
+  <string name="contacts_delimiter_friends">Venner</string>
+  <string name="contacts_delimiter_offline">Offline</string>
+  <string name="contacts_delimiter_online">Online</string>
+  <string name="contacts_resend_friend_request">Send venne-forespørsel på nytt</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Er du sikker du vil slette denne vennen?</string>
+  <!--Export Chat Logs Toast-->
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Er du sikker du vil slette samtalelogger?</string>
+  <!--Block Friend Dialog-->
+  <!--Reset ToxID Dialog-->
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <!--Group Chat Delete-->
+  <!--Color Picker Dialog-->
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Legg til bilde</string>
+  <string name="attachment_file">Legg til fil</string>
+  <string name="attachment_takephoto">Ta bilde</string>
+  <string name="message_copy">Kopier melding</string>
+  <string name="message_delete">Slett melding</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Nylig</string>
+  <string name="titles_contacts">Kontakter</string>
+  <string name="titles_settings">Innstillinger</string>
+  <!--Misc-->
+  <string name="button_confirm">Godta</string>
+  <string name="button_cancel">Avbryt</string>
+  <string name="button_yes">Ja</string>
+  <string name="button_no">Nei</string>
+  <string name="button_ok">OK</string>
+  <string name="share_with">Del med</string>
+  <string name="connection_has">har</string>
+  <string name="connection_online">kommet online</string>
+  <string name="connection_offline">gått offline</string>
+  <string name="action_settings">Innstillinger</string>
+  <!--Avatar Dialog-->
+  <!--File transfer-->
+  <!--QR-->
+  <string name="qr_default_title">Installer strekkode skanner app</string>
+  <string name="qr_default_message">Denne app\'en trenger en strekkode app. Vil du installere en slik nå? </string>
+  <string name="qr_button_yes">Ja</string>
+  <string name="qr_button_no">Nei</string>
+  <!--Notifications-->
+  <!--nav bar-->
+  <string name="about_antox_2">Dette virker nå:</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Aturan</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Nama</string>
+  <string name="pref_default_nickname">Pengguna Antox</string>
+  <string name="pref_title_status">Status</string>
+  <string-array name="pref_status_list_titles">
+    <item>Ada</item>
+    <item>Melahu</item>
+    <item>Sibuk</item>
+  </string-array>
+  <string name="pref_title_status_message">Mesej Status</string>
+  <string name="pref_default_status_message">Hai! Saya guna Antox</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Tox ID lalai - Anda sepatutnya tidak melihat inI</string>
+  <string name="pref_title_account_name">Nama profil</string>
+  <string name="pref_title_logout">Daftar Keluar</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Pemberitahuan</string>
+  <string name="pref_title_enable_notifications">Aktifkan pemberitahuan</string>
+  <string name="pref_title_new_message_notifications">Pemberitahuan mesej</string>
+  <string name="pref_title_new_friend_notifications">Pemberitahuan permintaan sebagai kenalan</string>
+  <!--Other-->
+  <string name="pref_header_other">Lain-lain</string>
+  <string name="pref_title_wifi_only">Hanya Wi-Fi</string>
+  <string name="pref_title_language">Bahasa</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Salin Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Aktifkan UDP</string>
+  <string name="pref_advanced">Aturan Lanjut</string>
+</resources>

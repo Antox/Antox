@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Ρυθμίσεις</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Προφίλ</string>
+  <string name="pref_title_nickname">Όνομα</string>
+  <string name="pref_default_nickname">Χρήστης Antox</string>
+  <string name="pref_default_password">Δεν θέσατε κωδικό</string>
+  <!--Notifications-->
+  <!--Other-->
+  <!--Menu strings-->
+  <!--Advanced strings-->
+</resources>

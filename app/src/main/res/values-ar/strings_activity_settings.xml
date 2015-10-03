@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">الإعدادات</string>
+  <!--Profile-->
+  <string name="pref_header_profile">الملف الشخصي</string>
+  <string name="pref_title_nickname">الاسم</string>
+  <string name="pref_default_nickname">مستخدم انتوكس</string>
+  <string name="pref_title_password">كلمة سر ToxMe</string>
+  <string name="pref_default_password">لا توجد كلمة سر محددة</string>
+  <string name="pref_title_status">الحالة</string>
+  <string-array name="pref_status_list_titles"/>
+  <string name="pref_title_status_message">رسالة الحالة</string>
+  <string name="pref_default_status_message">يا! انا استخدم انتوكس</string>
+  <string name="pref_title_tox_id">معرف Tox</string>
+  <string name="pref_default_tox_id">معرف Tox الافتراضي - من المفترض ان لا ترى هذا</string>
+  <string name="pref_title_toxme">عنوان ToxMe</string>
+  <string name="pref_default_toxme">الملف الشخصي هذا حاليا في وضع التخفي</string>
+  <string name="pref_title_logging_enabled">ابق سجل الدردشة عند الخروج</string>
+  <string name="pref_title_theme_color">غير نمط اللون</string>
+  <string name="pref_title_avatar">الصورة الرمزية</string>
+  <string name="pref_title_account_name">اسم الملف الشخصي</string>
+  <string name="pref_title_export">صدّر الملف الشخصي</string>
+  <string name="pref_title_delete">احذف الحساب</string>
+  <string name="pref_title_logout">خروج</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">التنبيهات</string>
+  <string name="pref_title_enable_notifications">فعّل التنبيهات</string>
+  <string name="pref_title_new_message_notifications">تنبيهات الرسائل</string>
+  <string name="pref_title_new_friend_notifications">تنبيهات طلب صديق</string>
+  <!--Other-->
+  <string name="pref_header_other">اخرى</string>
+  <string name="pref_title_connection_status_messages">رسائل الفعالية</string>
+  <string name="pref_title_wifi_only">فقط Wi-Fi</string>
+  <string name="pref_title_language">اللغة</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">انسخ معرف Tox</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">فعل UDP</string>
+  <string name="pref_advanced">متقدم</string>
+  <string name="pref_nospam">اعد تحديد معرف Tox</string>
+  <string name="pref_autostart">ابدأ انتوكس عند التشغيل</string>
+</resources>
