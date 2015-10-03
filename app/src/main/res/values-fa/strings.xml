@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add">افزودن مخاطب تماس</string>
+  <string name="title_activity_friend_profile">پروفایل دوست</string>
+  <string name="title_activity_group_profile">اطلاعات گروه</string>
+  <string name="title_activity_profile_settings">گزینه‌های پروفایل</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_contact">افزودن مخاطب تماس</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">شما باید نامی برای پروفایل وارد کنید</string>
+  <string name="login_login">ورود</string>
+  <string name="login_account_hint">نام پروفایل</string>
+  <string name="login_create_account_text">ساختن پروفایل تاکس</string>
+  <string name="login_bad_login">نام پروفایل تشخیص داده نشد</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">نام پروفایل</string>
+  <string name="create_text">پیام‌رسانی ایمن برای همه.</string>
+  <string name="create_register">ثبت نام</string>
+  <string name="create_register_incog">ثبت نام بصورت ناشناس</string>
+  <string name="create_import_profile">وارد کردن پروفایل</string>
+  <string name="create_skip">اجازه دهید هر کسی شما را با نام پروفایلتان اضافه کند</string>
+  <string name="create_must_fill_in">شما باید همه خانه‌ها را پر کنید</string>
+  <string name="create_bad_profile_name">نام پروفایل نمی‌تواند شامل فاصله یا خط مورب باشد یا خالی باشد</string>
+  <string name="create_profile_exists">این نام پروفایل از پیش موجود است</string>
+  <string name="import_profile_invalid_file">فایل انتخابی یک پروفایل معتبر تاکس نیست</string>
+  <string name="create_account_exists">این نام از پیش گرفته شده</string>
+  <string name="create_account_internal_error">انتاکس دچار اشکال داخلی شد. لطفا برنامه را از نو شروع و باز امتحان کنید</string>
+  <string name="create_account_reached_registration_limit">شما در هر ساعت می‌توانید فقط ۱۳ حساب ثبت کنید که به این حد رسیده‌اید</string>
+  <string name="create_account_unknown_error">خطای نامشخص در ثبت نام، لطفا بعدا دوباره تلاش کنید</string>
+  <string name="create_account_kalium_link_error">بارگیری یک کتابخانه مورد نیاز ناموفق بود. امکان ساختن حساب‌های غیر-ناشناس وجود ندارد</string>
+  <string name="create_account_encrypted_profile_error">انتاکس هنوز پروفایل‌های رمزگذاری شده را پشتیبانی نمی‌کند</string>
+  <string name="create_account_load_profile_unknown">بارگیری پروفایل با اشکال نامشخص مواجه شد</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">هیچ گپ فعالی وجود ندارد. برای شروع دوستی را از پنجره سمت چپ انتخاب کنید</string>
+  <string name="main_recent_no">هیچ گفتگوی تازه‌ای وجود ندارد</string>
+  <string name="main_no_internet">اتصال اینترنتی وجود ندارد</string>
+  <string name="main_not_connected">هیچ اتصال اینترنتی پیدا نشد. بدون اتصال اینترنت قابلیت‌های برنامه محدود خواهد بود، مگر اینکه بخواهید از انتاکس فقط در شبکه داخلی استفاده کنید</string>
+  <string name="main_mobile_disabled">در حال حاضر آفلاین هستیم چون حالت «فقط Wi-Fi» فعال است. برای باز کردن تنظیمات لمس کنید</string>
+  <string name="search_all_contacts">جستجو در تمام مخاطبان تماس</string>
+  <string name="main_group_coming_soon">به زودی...</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">فرستادن پیام</string>
+  <string name="chat_file_transfer">انتقال فایل</string>
+  <string name="chat_message_too_long">این پیام بیش از حد بلند است و نمی‌تواند ارسال شود</string>
+  <string name="chat_ft_failed_friend_offline">ارسال ناموفق بود - برای دوست آفلاین نمی‌توان فایل فرستاد</string>
+  <!--Add Pane Fragment-->
+  <string name="addpane_friend_label">دوست</string>
+  <string name="addpane_group_label">گروه</string>
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">شناسه تاکس دوست شما</string>
+  <string name="addfriend_friend_message">همراه درخواست خود یک پیام بفرستید</string>
+  <string name="addfriend_button">افزودن دوست</string>
+  <string name="addfriend_friend_added">دوست اضافه شد</string>
+  <string name="addfriend_friend_exists">دوست از پیش موجود است</string>
+  <string name="scanqr_button">اسکن کد QR</string>
+  <string name="invalid_friend_ID">شناسه تاکس نادزست است</string>
+  <string name="addfriend_nick_hint">برای دوستتان یک نام مستعار تنظیم کنید</string>
+  <string name="addfriend_optional_title">سایر موارد اختیاری</string>
+  <string name="dialog_pin">شماره پین دوست خود را وارد کنید</string>
+  <string name="addfriend_invalid_pin">شماره پین نادرست است</string>
+  <string name="addfriend_own_key">خودتان را نمی‌توانید اضافه کنید</string>
+  <string name="addfriend_friend_pin_title">شماره پین دوست خود را وارد کنید</string>
+  <string name="addfriend_friend_pin_text">شماره پین دوست خود را وارد کنید</string>
+  <string name="addfriend_default_message">سلام! لطفا تقاضای دوستی من را بپذیرید</string>
+  <!--Add Group Fragment-->
+  <string name="addgroup_group_id">شناسه گروه</string>
+  <string name="addgroup_button">ورود به گروه</string>
+  <string name="addgroup_group_added">به گروه وارد شدید</string>
+  <string name="addgroup_group_exists">گروه از پیش موجود است</string>
+  <string name="invalid_group_ID">شناسه گروه نادرست است</string>
+  <string name="addgroup_alias_hint">برای این گروه یک نام مستعار بگذارید</string>
+  <string name="addgroup_optional_title">سایر موارد اختیاری</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">نام منستعار</string>
+  <string name="friend_profile_key">شناسه تاکس</string>
+  <string name="friend_profile_note">وضعیت</string>
+  <string name="friend_profile_button">بروزرسانی</string>
+  <string name="friend_profile_updated">پروفایل بروزرسانی شد</string>
+  <string name="friend_profile_copied">شناسه تاکس کپی شد</string>
+  <!--Group Profile Activity-->
+  <string name="group_profile_peer_list_head">شرکت‌کنندگان</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">پروفایل %1$s</string>
+  <string name="friendrequest_accept">پذیرفتن</string>
+  <string name="friendrequest_reject">رد کردن</string>
+  <string name="friend_request">درخواست دوستی جدید</string>
+  <!--Group invite fragment-->
+  <string name="groupinvite_accept">پذیرفتن</string>
+  <string name="groupinvite_reject">رد کردن</string>
+  <string name="group_invite">دعوت گروه جدید</string>
+  <string name="invited_by">شما را دعوت کرده</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">پروفایل</string>
+  <string name="friend_action_delete">حذف دوست</string>
+  <string name="friend_action_export_chat">بیرون بردن لاگ گپ</string>
+  <string name="friend_action_delete_chat">پاک کردن لاگ گپ</string>
+  <string name="friend_action_block">مسدود کردن</string>
+  <string name="group_default_peer_name">ناشناس</string>
+  <string name="group_action_delete">ترک گروه</string>
+  <string name="contacts_delimiter_requests">درخواست‌ها</string>
+  <string name="contacts_delimiter_invites">دعوت‌های گروه</string>
+  <string name="contacts_delimiter_groups">گروه‌ها</string>
+  <string name="contacts_delimiter_friends">دوستان</string>
+  <string name="contacts_delimiter_offline">آفلاین</string>
+  <string name="contacts_delimiter_online">آنلاین</string>
+  <string name="contacts_resend_friend_request">ارسال مجدد درخواست دوستی</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">آیا مطمئن هستید که می‌خواهید این دوست را حذف کنید؟</string>
+  <!--Export Chat Logs Toast-->
+  <string name="friend_action_chat_log_exported">لاگ گپ با موفقیت به %s منتقل شد</string>
+  <string name="friend_action_chat_log_export_failed">انتقال لاگ گپ به بیرون با مشکل مواجا شد.</string>
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">آیا مطمئن هستید می‌خواهید لاگ گپ را پاک کنید؟</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">مسدود کردن این کاربر او را از فهرست دوستان شما حذف می‌کند و شما دیگر هیچ درخواست دوستی از او نخواهید دید.
+
+آیا مطمئن هستید؟</string>
+  <!--Reset ToxID Dialog-->
+  <string name="reset_tox_id_dialog_message">بازنشانی شناسه تاکس باعث تغییر همیشگی شناسه تاکس شما می‌شود. فهرست کنونی مخاطبان تماس شما همچنان باقی می‌ماند ولی دیگران نمی‌توانند شما را با شناسه قبلی‌تان اضافه کنند.</string>
+  <string name="reset_tox_id_dialog_title">تایید بازنشانی شناسه تاکس</string>
+  <string name="reset_tox_id_dialog_confirm">بازنشانی شناسه تاکس</string>
+  <string name="reset_tox_id_dialog_cancel">لغو</string>
+  <string name="tox_id_reset">نشانه تاکس شما بازنشانی شد</string>
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <string name="create_group_dialog_message">ساختن یک گپ گروهی جدید</string>
+  <string name="create_group_dialog_create_group">ساختن گروه</string>
+  <string name="create_group_dialog_cancel">لغو</string>
+  <string name="create_group_dialog_name_header">نام گروه</string>
+  <!--Group Chat Delete-->
+  <string name="group_default_part_message">بدرود</string>
+  <!--Color Picker Dialog-->
+  <!--Chat Fragment-->
+  <string name="attachment_photo">پیوست عکس</string>
+  <string name="attachment_file">پیوست فایل</string>
+  <string name="attachment_takephoto">عکس گرفتن</string>
+  <string name="message_copy">کپی کردن پیام</string>
+  <string name="message_delete">پاک کردن پیام</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">تازه</string>
+  <string name="titles_contacts">مخاطبان تماس</string>
+  <string name="titles_settings">تنظیمات</string>
+  <!--Misc-->
+  <string name="button_confirm">تایید</string>
+  <string name="button_cancel">لغو</string>
+  <string name="button_yes">بله</string>
+  <string name="button_no">خیر</string>
+  <string name="button_ok">تایید</string>
+  <string name="dialog_tox_id">کپی کردن شناسه تاکس به حافظه</string>
+  <string name="share_with">اشتراک‌گذاری با</string>
+  <string name="connection_online">آنلاین شدیم</string>
+  <string name="connection_offline">آفلاین شدیم</string>
+  <string name="action_settings">تنظیمات</string>
+  <!--Avatar Dialog-->
+  <string name="dialog_avatar_take_photo">عکس گرفتن</string>
+  <string name="avatar_too_large_error">خطا: فایل آواتار بیش از حد بزرگ است.</string>
+  <string name="no_camera_intent_error">خطا: هیچ برنامه دوربین معتبری پیدا نشد.</string>
+  <string name="dialog_avatar_description">چهرک (آواتار)</string>
+  <!--File transfer-->
+  <string name="file_finished">پایان</string>
+  <string name="file_failed">ناموفق</string>
+  <string name="file_in_progress">در حال پیشرفت</string>
+  <string name="file_request_sent">درخواست فرستاده شد</string>
+  <string name="file_rejected">رد شد</string>
+  <string name="file_time_remaining">%s ثانیه باقی مانده</string>
+  <!--QR-->
+  <string name="qr_default_title">نصب اسکنر بارکد؟</string>
+  <string name="qr_default_message">این برنامه به یک اسکنر بارکد نیاز دارد. آیا می‌خواهید نصب کنید؟</string>
+  <string name="qr_button_yes">بله</string>
+  <string name="qr_button_no">خیر</string>
+  <!--Notifications-->
+  <!--nav bar-->
+  <string name="drawer_open">باز کردن کشوی جهت‌یابی</string>
+  <string name="drawer_close">بستن کشوی جهت‌یابی</string>
+  <string name="open_source_license">پروانه منبع باز</string>
+  <string name="license2">کد منبع در آدرس زیر در دسترس است:
+
+https://github.com/subliun/Antox</string>
+  <string name="ver">نسخه</string>
+  <string name="about">درباره</string>
+  <string name="about_antox_1">با ظهور برنامه‌های شنود توسط دولت‌ها و شرکت‌های تجاری، تاکس نرم افزار ساده و راحتی است که به شما امکان می‌دهد با دوستان و خانواده در تماس باشید بدون اینکه کس دیگری به صحبت‌های شما گوش دهد.</string>
+  <string name="about_antox_2">مواردی که الان کار می‌کند:</string>
+  <string name="about_antox_3">- پیام‌رسانی یک به یک</string>
+  <string name="about_antox_4">اطلاعیه‌ها</string>
+  <string name="about_antox_5">- انتقال فایل</string>
+  <string name="about_antox_6">کار نمی‌کند:</string>
+  <string name="about_antox_7">- صوت/ویدیو</string>
+  <string name="about_antox_8">- گروه‌ها</string>
+  <string name="end_call">پایان تماس</string>
+  <string name="mute_call">بی‌صدا</string>
+  <string name="mute_mic">بی‌صدا کردن میکروفن</string>
+  <string name="profile_info_description">گرفتن اطلاعات کاربر</string>
+</resources>

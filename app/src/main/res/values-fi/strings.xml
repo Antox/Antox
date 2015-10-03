@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add">Lisää yhteyshenkilö</string>
+  <string name="title_activity_friend_profile">Ystävän profiili</string>
+  <string name="title_activity_group_profile">Ryhmän tiedot</string>
+  <string name="title_activity_profile_settings">Profiilin asetukset</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_contact">Lisää yhteyshenkilö</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Sinun pitää antaa profiilin nimi</string>
+  <string name="login_login">Kirjaudu</string>
+  <string name="login_account_hint">Profiilin nimi</string>
+  <string name="login_create_account_text">Luo Tox-profiili</string>
+  <string name="login_bad_login">Profiilin nimeä ei tunnistettu</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Profiilin nimi</string>
+  <string name="create_register">Rekisteröidy</string>
+  <string name="create_registering">Rekisteröi käyttäjätili...</string>
+  <string name="create_register_incog">Rekisteröidy tuntemattomana</string>
+  <string name="create_import_profile">Tuo profiili</string>
+  <string name="create_skip">Salli kenen tahansa lisätä sinut käyttämällä profiilisi nimeä</string>
+  <string name="create_must_fill_in">Täytä kaikki kentät</string>
+  <string name="create_bad_profile_name">Profiilin nimi ei voi sisältää välilyöntejä tai olla tyhjä</string>
+  <string name="create_profile_exists">Profiilin nimi on jo olemassa</string>
+  <string name="import_profile_invalid_file">Valittu tiedosto ei kelpaa tox-profiiliksi</string>
+  <string name="create_account_exists">Tämä nimi on jo käytössä</string>
+  <string name="create_account_internal_error">Antox teki virheen. Käynnistä Antox uudelleen ja yritä uudestaan</string>
+  <string name="create_account_reached_registration_limit">Voit rekisteröidä vain 13 käyttäjätiliä tunnissa. Olet saavuttanut tämän rajan.</string>
+  <string name="create_account_unknown_error">Tuntematon rekisteröintivirhe, yritä uudestaan myöhemmin</string>
+  <string name="create_account_kalium_link_error">Ohjelmakirjaston lataaminen epäonnistui. Ei pystytä luomaan ei-tuntematonta käyttäjätiliä</string>
+  <string name="create_account_encrypted_profile_error">Antox ei vielä tue salattuja profiileja</string>
+  <string name="create_account_load_profile_unknown">Tuntematon virhe profiilin latauksessa</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">Ei aktiivista keskustelua. Aloita valitsemalla ystävä vasemmanpuoleisesta paneelista</string>
+  <string name="main_recent_no">Ei viimeisiä keskusteluja</string>
+  <string name="main_no_internet">Ei internet-yhteyttä</string>
+  <string name="main_not_connected">Internet-yhteyttä ei tunnistettu. Ilman internet-yhteyttä toimintoja on rajoitettu, paitsi kun käytät Antoxia vain LAN-yhteydellä</string>
+  <string name="main_mobile_disabled">Et ole tällä hetkellä yhteydessä, koska vain Wi-FI -tila on käytössä. Napauta avataksesi asetukset.</string>
+  <string name="search_all_contacts">Etsi kaikista kontakteista</string>
+  <string name="main_group_coming_soon">Tulossa pian...</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Lähetä viesti</string>
+  <string name="chat_file_transfer">Tiedoston siirto</string>
+  <string name="chat_message_too_long">Tämä viesti on liian pitkä eikä sitä voida lähettää</string>
+  <string name="chat_ft_failed_friend_offline">Lähettäminen epäonnistui - tiedostoa ei voida lähettää ei-paikallaolevalle ystävälle</string>
+  <!--Add Pane Fragment-->
+  <string name="addpane_friend_label">Ystävä</string>
+  <string name="addpane_group_label">Ryhmä</string>
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">Ystäväsi Tox ID</string>
+  <string name="addfriend_friend_message">Liitä viesti pyyntöösi</string>
+  <string name="addfriend_button">Lisää ystävä</string>
+  <string name="addfriend_friend_added">Ystävä lisätty</string>
+  <string name="addfriend_friend_exists">Ystävä on jo olemassa</string>
+  <string name="scanqr_button">Skannaa QR-koodi</string>
+  <string name="invalid_friend_ID">Virheellinen Tox ID</string>
+  <string name="addfriend_nick_hint">Aseta lempinimi ystävällesi</string>
+  <string name="addfriend_optional_title">Lisävalinnat</string>
+  <string name="dialog_pin">Lisää ystäväsi pin</string>
+  <string name="addfriend_invalid_pin">Virheellinen pin</string>
+  <string name="addfriend_own_key">Et voi lisätä itseäsi</string>
+  <string name="addfriend_friend_pin_title">Lisää ystäväsi pin</string>
+  <string name="addfriend_friend_pin_text">Lisää ystäväsi pin</string>
+  <string name="addfriend_default_message">Hei! Hyväksythän ystäväpyyntöni</string>
+  <!--Add Group Fragment-->
+  <string name="addgroup_group_id">Ryhmän ID</string>
+  <string name="addgroup_button">Liity ryhmään</string>
+  <string name="addgroup_group_exists">Ryhmä on jo olemassa</string>
+  <string name="invalid_group_ID">Virheellinen ryhmän ID</string>
+  <string name="addgroup_alias_hint">Aseta ryhmälle alias</string>
+  <string name="addgroup_optional_title">Lisävalinnat</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Lempinimi</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">Tila</string>
+  <string name="friend_profile_button">Päivitä</string>
+  <string name="friend_profile_updated">Profiilisi on päivitetty</string>
+  <string name="friend_profile_copied">Tox ID on kopioitu</string>
+  <!--Group Profile Activity-->
+  <string name="group_profile_peer_list_head">Osallistujat</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">Ystävän %1$s profiili</string>
+  <string name="friendrequest_accept">Hyväksy</string>
+  <string name="friendrequest_reject">Peruuta</string>
+  <string name="friend_request">Uusi ystäväpyyntö</string>
+  <!--Group invite fragment-->
+  <string name="groupinvite_accept">Hyväksy</string>
+  <string name="groupinvite_reject">Peruuta</string>
+  <string name="group_invite">Uusi ryhmäkutsu</string>
+  <string name="invited_by">Sinut kutsui</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profiili</string>
+  <string name="friend_action_delete">Poista ystävä</string>
+  <string name="friend_action_export_chat">Vie keskustelulokit</string>
+  <string name="friend_action_delete_chat">Poista keskustelulokit</string>
+  <string name="friend_action_block">Estä</string>
+  <string name="friend_accepted_default_status">Ystävä hyväksytty</string>
+  <string name="group_default_peer_name">Anonyymi</string>
+  <string name="group_action_delete">Lähde ryhmästä</string>
+  <string name="contacts_actions_on">Toiminnot päällä</string>
+  <string name="contacts_delimiter_requests">Pyynnöt</string>
+  <string name="contacts_delimiter_invites">Ryhmäkutsut</string>
+  <string name="contacts_delimiter_groups">Ryhmät</string>
+  <string name="contacts_delimiter_friends">Ystävät</string>
+  <string name="contacts_delimiter_offline">Offline</string>
+  <string name="contacts_delimiter_online">Online</string>
+  <string name="contacts_resend_friend_request">Uudellenlähetä ystäväpyyntö</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Oletko varma, että haluat poistaa tämän ystävän?</string>
+  <!--Export Chat Logs Toast-->
+  <string name="friend_action_chat_log_exported">Keskustelukoki onnistuneesti viety kohteeseen %s</string>
+  <string name="friend_action_chat_log_export_failed">Keskustelulokin vienti epäonnistui</string>
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Oletko varma, että haluat poistaa keskustelulokit?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Käyttäjän estäminen poistaa käyttäjän myös ystävälistalta, etkä tämän jälkeen näe
+pyyntöjä heiltä.\n\nOletko varma, että haluat jatkaa?</string>
+  <!--Reset ToxID Dialog-->
+  <string name="reset_tox_id_dialog_message">Tox ID:si resetointi muuttaa ID:si lopullisesti. Säilytät sinun 
+nykyiset yhteystiedot, mutta vanhaa ID:täsi ei voi enää käyttää sinun lisäämiseen. </string>
+  <string name="reset_tox_id_dialog_title">Vahvista Tox ID:n resetointi</string>
+  <string name="reset_tox_id_dialog_confirm">Resetoi ID</string>
+  <string name="reset_tox_id_dialog_cancel">Peruuta</string>
+  <string name="tox_id_reset">Tox ID:si on resetoitu</string>
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <string name="create_group_dialog_message">Luo uusi ryhmäkeskustelu</string>
+  <string name="create_group_dialog_create_group">Luo ryhmä</string>
+  <string name="create_group_dialog_cancel">Peruuta</string>
+  <string name="create_group_dialog_name_header">Ryhmän nimi</string>
+  <!--Group Chat Delete-->
+  <string name="group_default_part_message">Näkemiin</string>
+  <!--Color Picker Dialog-->
+  <string name="dialog_color_picker_title">Valitse teeman väri</string>
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Lisää kuva</string>
+  <string name="attachment_file">Lisää tiedosto</string>
+  <string name="attachment_takephoto">Ota kuva</string>
+  <string name="message_copy">Kopioi viesti</string>
+  <string name="message_delete">Poista viesti</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Viimeisimmät</string>
+  <string name="titles_contacts">Yhteystiedot</string>
+  <string name="titles_settings">Asetukset</string>
+  <!--Misc-->
+  <string name="button_confirm">Vahvista</string>
+  <string name="button_cancel">Peruuta</string>
+  <string name="button_yes">Kyllä</string>
+  <string name="button_no">Ei</string>
+  <string name="button_ok">OK</string>
+  <string name="dialog_tox_id">Kopioi Tox ID leikepöydälle</string>
+  <string name="share_with">Jaa seuraavan kanssa</string>
+  <string name="connection_has">on</string>
+  <string name="connection_online">kirjautunut sisään</string>
+  <string name="connection_offline">kirjautunut ulos</string>
+  <string name="title_activity_create_account">Tilinluontitapahtuma</string>
+  <string name="action_settings">Asetukset</string>
+  <!--Avatar Dialog-->
+  <string name="dialog_avatar_take_photo">Ota kuva</string>
+  <string name="dialog_avatar_use_file">Käytä tiedostoa</string>
+  <string name="avatar_too_large_error">Virhe: Avatar-tiedosto on liian suuri.</string>
+  <string name="no_camera_intent_error">Virhe: Kamera-sovellusta ei löytynyt</string>
+  <string name="dialog_avatar_description">avatar</string>
+  <!--File transfer-->
+  <string name="file_finished">Valmis</string>
+  <string name="file_failed">Epäonnistui</string>
+  <string name="file_in_progress">Meneillään</string>
+  <string name="file_request_sent">Pyyntö lähetetty</string>
+  <string name="file_rejected">Torjuttu</string>
+  <string name="file_time_remaining">%s sekuntia jäljellä</string>
+  <!--QR-->
+  <string name="qr_default_title">Asennetaanko Barcode Scanner -sovellus?</string>
+  <string name="qr_default_message">Tämä sovellus vaatii Barcode Scanner -sovelluksen. Haluatko asentaa sen?</string>
+  <string name="qr_button_yes">Kyllä</string>
+  <string name="qr_button_no">Ei</string>
+  <!--Notifications-->
+  <string name="unread_count">%s luemattomia viestejä</string>
+  <!--nav bar-->
+  <string name="n_settings">Asetukset</string>
+  <string name="n_profile_options">Profiili</string>
+  <string name="n_create_group">Luo ryhmä</string>
+  <string name="n_add_person">Lisää henkilö</string>
+  <string name="n_about">Tietoja</string>
+  <string name="n_open_source">Avoimen lähdekoodin lisenssi</string>
+  <string name="n_logout">Kirjaudu ulos</string>
+  <string name="drawer_open">Avaa navigointivalikko</string>
+  <string name="drawer_close">Sulje navigointivalikko</string>
+  <string name="open_source_license">Avoimen lähdekoodin lisenssi</string>
+  <string name="license1">Jaetaan GNU GPL v3 -lisenssin alaisena. Luojana Mark Winter, ylläpitäjinä sibliun ja muut.</string>
+  <string name="license2">Lähdekoodi on saatavissa osoitteessa\nhttps://github.com/subliun/Antox</string>
+  <string name="ver">Versio</string>
+  <string name="about">Tietoja</string>
+  <string name="about_antox_1">Valtioiden seurantaohjelmat lisääntyvät, joten Tox tarjoaa helppokäyttöisen ohjelman, joka yhdistää sinut ystäviesi ja perheesi kanssa ilman, että kukaan pääsee kuuntelemaan.</string>
+  <string name="about_antox_2">Tällä hetkellä toimivat ominaisuudet:</string>
+  <string name="about_antox_3">- Kahdenkeskinen viestintä</string>
+  <string name="about_antox_4">- Ilmoitukset</string>
+  <string name="about_antox_5">- Tiedostojen siirrot</string>
+  <string name="about_antox_6">Ei toimi:</string>
+  <string name="about_antox_7">- Ääni/video</string>
+  <string name="about_antox_8">- Ryhmät</string>
+  <string name="title_activity_call">CallActivity</string>
+  <string name="end_call">Päätä puhelu</string>
+  <string name="mute_call">Mykistä</string>
+  <string name="mute_mic">Mykistä mikrofoni</string>
+  <string name="profile_info_description">Hae käyttäjätiedot</string>
+</resources>
