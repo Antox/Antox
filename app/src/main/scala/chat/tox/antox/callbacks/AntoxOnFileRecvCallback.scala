@@ -16,11 +16,11 @@ class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback[Unit] {
                         fileSize: Long,
                         filename: Array[Byte])(state: Unit): Unit = {
     val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
-    val key = ToxSingleton.getAntoxFriend(friendNumber).get.key
+    val friend = ToxSingleton.getAntoxFriend(friendNumber).get
 
     val name =
       if (kind == FileKind.AVATAR) {
-        key.toString
+        friend.key.toString
       } else {
         new String(filename)
       }
@@ -32,7 +32,7 @@ class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback[Unit] {
         ToxSingleton.tox.fileControl(friendNumber, fileNumber, ToxFileControl.CANCEL)
         ToxSingleton.getAntoxFriend(friendNumber).get.deleteAvatar()
         val db = State.db
-        db.updateFriendAvatar(key, "")
+        db.updateFriendAvatar(friend.key, "")
         return
       }
 
@@ -48,9 +48,9 @@ class AntoxOnFileRecvCallback(ctx: Context) extends FileRecvCallback[Unit] {
       }
     }
 
-    State.transfers.fileSendRequest(key,
-      fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
+    val chatActive = State.isChatActive(friend.key)
+    State.transfers.fileIncomingRequest(friend.key, friend.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind.autoAccept) State.transfers.acceptFile(key, fileNumber, ctx)
+    if (kind.autoAccept) State.transfers.acceptFile(friend.key, fileNumber, ctx)
   }
 }

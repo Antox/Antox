@@ -8,6 +8,8 @@ import chat.tox.antox.utils.StorageType._
 
 object FileUtils {
 
+  val imageExtensions = List("jpg", "jpeg", "gif", "png")
+
   /**
   * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
   */

@@ -22,9 +22,9 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   protected val time = v.findViewById(R.id.message_text_date).asInstanceOf[TextView]
 
-  protected val sentTriangle = v.findViewById(R.id.sent_triangle)
+  protected val sentTriangle = v.findViewById(R.id.sent_triangle).asInstanceOf[View]
 
-  protected val receivedTriangle = v.findViewById(R.id.received_triangle)
+  protected val receivedTriangle = v.findViewById(R.id.received_triangle).asInstanceOf[View]
 
   protected var msg: Message = _
 
@@ -34,6 +34,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   protected val context = v.getContext
 
+  protected val backgroundViews = List(background, receivedTriangle, sentTriangle)
 
   private val density: Int = v.getContext.getResources.getDisplayMetrics.density.toInt
 
@@ -94,7 +95,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
 
   //utility method to set view's alpha on honeycomb+ devices,
   //does nothing on pre-honeycomb devices because setAlpha is unsupported
-  private def setAlphaCompat(view: View, value: Float): Unit = {
+  protected def setAlphaCompat(view: View, value: Float): Unit = {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
       //do nothing
     } else {

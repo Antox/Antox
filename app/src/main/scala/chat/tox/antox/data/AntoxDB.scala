@@ -160,7 +160,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
 
   def addFileTransfer(key: ToxKey,
                       senderKey: ToxKey,
+                      senderName: String,
                       path: String,
+                      hasBeenRead: Boolean,
                       fileNumber: Int,
                       fileKind: Int,
                       size: Int): Long = {
@@ -168,10 +170,11 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_SENDER_KEY, senderKey.toString)
+    values.put(COLUMN_NAME_SENDER_NAME, senderName)
     values.put(COLUMN_NAME_MESSAGE, path)
     values.put(COLUMN_NAME_MESSAGE_ID, fileNumber: java.lang.Integer)
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, false)
-    values.put(COLUMN_NAME_HAS_BEEN_READ, false)
+    values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, false)
     values.put(COLUMN_NAME_TYPE, MessageType.FILE_TRANSFER.id: java.lang.Integer)
     values.put(COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
@@ -228,7 +231,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     mDb.insert(TABLE_MESSAGES, values)
   }
 
-  val unreadCounts: Observable[Map[ToxKey, Integer]] = {
+  val unreadCounts: Observable[Map[ToxKey, Int]] = {
     val selectQuery =
       s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY, COUNT($TABLE_MESSAGES._id)
         |FROM $TABLE_MESSAGES
@@ -238,7 +241,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
         |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)} GROUP BY contacts.tox_key""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
-      val map = scala.collection.mutable.Map.empty[ToxKey, Integer]
+      val map = scala.collection.mutable.Map.empty[ToxKey, Int]
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
@@ -253,7 +256,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     })
   }
 
-  def getUnreadCounts: Map[ToxKey, Integer] =
+  def getUnreadCounts: Map[ToxKey, Int] =
     unreadCounts.toBlocking.first
 
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
@@ -295,23 +298,21 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     mDb.update(TABLE_MESSAGES, values, where)
   }
 
-  val lastMessages: Observable[Map[ToxKey, (String, Timestamp)]] = {
+  val lastMessages: Observable[Seq[Message]] = {
     val selectQuery =
       s"""SELECT *
          |FROM $TABLE_MESSAGES
          |WHERE _id
          |IN (SELECT MAX(_id) FROM $TABLE_MESSAGES
-         |WHERE ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.transferValues).map(_.id))}
          |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
       val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
       val cursor = query.run()
       val messages = messageListFromCursor(cursor).filter(messageVisible)
-      messages.foreach(message => map.put(message.key, (message.message, message.timestamp)))
 
       cursor.close()
-      map.toMap
+      messages
     })
   }
 
@@ -429,6 +430,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       s"""SELECT *
          |FROM $TABLE_MESSAGES
          |WHERE $COLUMN_NAME_SUCCESSFULLY_SENT =$FALSE
+         |AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.transferValues).map(_.id))}
          |AND $COLUMN_NAME_SENDER_KEY == '${selfKey.toString}'
          |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
@@ -442,7 +444,6 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   def updateUnsentMessage(messageId: Int, id: Int) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
-    values.put("type", MessageType.MESSAGE.id: java.lang.Integer)
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     mDb.update(TABLE_MESSAGES, values, s"_id = $id AND $COLUMN_NAME_SUCCESSFULLY_SENT = $FALSE")
   }
@@ -511,16 +512,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     tup match {
       case (fl, lm) =>
         fl.map(f => {
-          val lastMessageTup: Option[(String, Timestamp)] = lm.get(f.key)
-          val maybeUnreadCount: Option[Integer] = unreadCountList.get(f.key)
-          (lastMessageTup, maybeUnreadCount) match {
-            case (Some((lastMessage, lastMessageTimestamp)), Some(unreadCount)) =>
-              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = unreadCount)
-            case (Some((lastMessage, lastMessageTimestamp)), None) =>
-              f.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
-            case _ =>
-              f.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
-          }
+          val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
+          f.copy(lastMessage = lm.find(_.key == f.key), unreadCount = maybeUnreadCount.getOrElse(0))
         })
     }
   })
@@ -531,14 +524,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     tup match {
       case (gl, lm) =>
         gl.map(g => {
-          val lastMessageTup: Option[(String, Timestamp)] = lm.get(g.key)
-          val unreadCount: Option[Integer] = uc.get(g.key)
-          (lastMessageTup, uc) match {
-            case (Some((lastMessage, lastMessageTimestamp)), _) =>
-              g.copy(lastMessage = lastMessage, lastMessageTimestamp = lastMessageTimestamp, unreadCount = 0)
-            case _ =>
-              g.copy(lastMessage = "", lastMessageTimestamp = TimestampUtils.emptyTimestamp(), unreadCount = 0)
-          }
+          val unreadCount: Option[Int] = uc.get(g.key)
+          g.copy(lastMessage = lm.find(_.key == g.key), unreadCount = unreadCount.getOrElse(0))
         })
     }
   })

@@ -66,7 +66,7 @@ class FriendProfileActivity extends AppCompatActivity {
     val avatar = getIntent.getSerializableExtra("avatar").asInstanceOf[Option[File]]
     avatar.foreach(avatar => {
       val avatarHolder = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-      BitmapManager.load(avatar, avatarHolder, isAvatar = true)
+      BitmapManager.load(avatar, isAvatar = true).foreach(avatarHolder.setImageBitmap)
     })
 
     updateFab(db.getFriendInfo(friendKey).favorite)

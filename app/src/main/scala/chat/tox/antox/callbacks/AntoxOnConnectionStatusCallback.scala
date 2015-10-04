@@ -46,9 +46,9 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     val online = connectionStatus != ToxConnection.NONE
 
     val db = State.db
-    val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
+    val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.key
     db.updateContactOnline(friendKey, online)
-    ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
+    ToxSingleton.getAntoxFriend(friendNumber).get.online = online
 
     if (online) {
       MessageHelper.sendUnsentMessages(ctx)

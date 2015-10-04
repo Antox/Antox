@@ -88,7 +88,7 @@ class MainDrawerFragment extends Fragment {
 
     avatar.foreach(av => {
       avatarView.setImageURI(Uri.fromFile(av))
-      BitmapManager.load(av, avatarView, isAvatar = true)
+      BitmapManager.load(av, isAvatar = true).foreach(avatarView.setImageBitmap)
     })
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]

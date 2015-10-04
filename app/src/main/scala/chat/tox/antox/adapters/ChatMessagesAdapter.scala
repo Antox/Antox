@@ -8,7 +8,7 @@ import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{FileUtils, Constants}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
@@ -74,6 +74,8 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
       case FILE =>
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
 
+        fileHolder.render()
+
         if (holder.getMessage.isMine) {
           holder.ownMessage()
           val split = msg.message.split("/")
@@ -112,7 +114,10 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
               new File(f.getAbsolutePath + "/" + msg.message)
             }
 
-          if (file.exists() && file.getName.toLowerCase.matches("^.+?\\.(jpg|jpeg|png|gif)$")) {
+          val isImage = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
+
+          println("FILE LENGTH is " + file.length())
+          if (file.exists() && isImage && file.length > 0) {
             fileHolder.setImage(file)
           }
         }

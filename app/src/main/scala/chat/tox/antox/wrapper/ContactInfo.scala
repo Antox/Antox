@@ -14,8 +14,7 @@ trait ContactInfo {
   def blocked: Boolean
   def ignored: Boolean
   def favorite: Boolean
-  def lastMessage: String
-  def lastMessageTimestamp: Timestamp
+  def lastMessage: Option[Message]
   def unreadCount: Int
   def alias: String
 

@@ -46,7 +46,7 @@ object MessageHelper {
     AntoxLog.debug(s"Message from: friend id: $friendKey activeKey: ${State.activeKey} chatActive: ${State.chatActive}")
 
     if (!db.isContactBlocked(friendKey)) {
-      val chatActive = State.chatActive && State.activeKey.contains(friendKey)
+      val chatActive = State.isChatActive(friendKey)
       db.addMessage(-1, friendKey, friendKey, friendName, message, hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
@@ -70,7 +70,7 @@ object MessageHelper {
     val peer = ToxSingleton.getGroupPeer(groupNumber, peerNumber)
     val group = ToxSingleton.getGroup(groupNumber)
 
-    val chatActive = State.chatActive && State.activeKey.contains(group.key)
+    val chatActive = State.isChatActive(group.key)
 
     db.addMessage(-1, group.key, peer.key, peer.name, message, hasBeenReceived = true,
       hasBeenRead = chatActive, successfullySent = true, messageType)
@@ -196,7 +196,7 @@ object MessageHelper {
     for (unsentMessage <- unsentMessageList) {
       val mFriend = ToxSingleton.getAntoxFriend(unsentMessage.key)
       mFriend.foreach(friend => {
-        if (friend.isOnline && ToxSingleton.tox != null) {
+        if (friend.online && ToxSingleton.tox != null) {
           sendMessage(ctx, unsentMessage.key, unsentMessage.message,
             unsentMessage.`type` == MessageType.ACTION, Some(unsentMessage.id))
         }

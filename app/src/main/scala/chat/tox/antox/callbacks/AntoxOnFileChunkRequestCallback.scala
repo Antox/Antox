@@ -12,15 +12,15 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) extends FileChun
 
   override def fileChunkRequest(friendNumber: Int, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mFriend = ToxSingleton.getAntoxFriend(friendNumber)
-    val mTransfer = State.transfers.get(mFriend.get.getKey, fileNumber)
+    val mTransfer = State.transfers.get(mFriend.get.key, fileNumber)
 
     mTransfer match {
       case Some(t) =>
         t.status = FileStatus.INPROGRESS
         mFriend.foreach(friend => {
           if (length <= 0) {
-            State.transfers.fileFinished(friend.getKey, t.fileNumber, ctx)
-            State.db.clearFileNumber(friend.getKey, fileNumber)
+            State.transfers.fileFinished(friend.key, t.fileNumber, ctx)
+            State.db.clearFileNumber(friend.key, fileNumber)
           } else {
             val reset = position < t.progress
             val data = t.readData(reset, length)

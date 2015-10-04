@@ -26,7 +26,8 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class ChatActivity extends GenericChatActivity {
 
-  var photoPath: String = null
+  val photoPathSaveKey = "PHOTO_PATH"
+  var photoPath: Option[String] = None
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -47,7 +48,7 @@ class ChatActivity extends GenericChatActivity {
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.isOnline) {
+          if (!friend.online) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
           }
@@ -82,7 +83,7 @@ class ChatActivity extends GenericChatActivity {
           val file = File.createTempFile(image_name, ".jpg", storageDir)
           val imageUri = Uri.fromFile(file)
           cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-          photoPath = file.getAbsolutePath
+          photoPath = Some(file.getAbsolutePath)
           startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
         } catch {
           case e: IOException => e.printStackTrace()
@@ -94,7 +95,7 @@ class ChatActivity extends GenericChatActivity {
     imageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.isOnline) {
+          if (!friend.online) {
             Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
             return
           }
@@ -104,6 +105,20 @@ class ChatActivity extends GenericChatActivity {
         startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
+  }
+
+  override def onSaveInstanceState(savedInstanceState: Bundle): Unit = {
+    super.onSaveInstanceState(savedInstanceState)
+
+    //save the photo path to prevent it being lost on rotation
+    savedInstanceState.putString(photoPathSaveKey, photoPath.getOrElse(""))
+  }
+
+  override def onRestoreInstanceState(savedInstanceState: Bundle): Unit = {
+    super.onRestoreInstanceState(savedInstanceState)
+
+    val rawPhotoPath = savedInstanceState.getString(photoPathSaveKey)
+    photoPath = if (rawPhotoPath == "") None else Some(rawPhotoPath)
   }
 
   override def onResume(): Unit = {
@@ -129,7 +144,7 @@ class ChatActivity extends GenericChatActivity {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
-          BitmapManager.load(avatar, avatarView, isAvatar = true)
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -167,10 +182,8 @@ class ChatActivity extends GenericChatActivity {
         }
       }
       if (requestCode == Constants.PHOTO_RESULT) {
-        if (photoPath != null) {
-          State.transfers.sendFileSendRequest(photoPath, this.activeKey, FileKind.DATA, null, this)
-          photoPath = null
-        }
+          photoPath.foreach(path => State.transfers.sendFileSendRequest(path, this.activeKey, FileKind.DATA, null, this))
+          photoPath = None
       }
     } else {
       AntoxLog.debug("onActivityResult result code not okay, user cancelled")

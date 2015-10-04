@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/conversation_item_sent_shape"
             android:orientation="vertical"
-            android:padding="@dimen/padding_small">
+            android:padding="@dimen/padding_tiny">
 
             <ImageView
                 android:id="@+id/message_sent_photo"
@@ -93,18 +93,26 @@
 
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/image_loading"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:id="@+id/file_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:weightSum="1">
 
                 <ImageView
                     android:id="@+id/file_reject_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="0.5"
                     android:contentDescription="Send Button"
                     android:padding="@dimen/padding_small"
                     android:src="@drawable/ic_action_cancel"/>
@@ -118,7 +126,7 @@
                     android:id="@+id/file_accept_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="0.5"
                     android:adjustViewBounds="false"
                     android:contentDescription="Send Button"
                     android:padding="@dimen/padding_small"

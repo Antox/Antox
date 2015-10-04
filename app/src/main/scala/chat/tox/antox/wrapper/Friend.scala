@@ -10,30 +10,22 @@ import scala.beans.{BeanProperty, BooleanBeanProperty}
 
 class Friend(friendNumber: Int) extends Contact {
 
-  @BeanProperty
   var name: String = _
 
-  @BeanProperty
   var key: ToxKey = _
 
-  @BeanProperty
   var avatar: Option[File] = None
 
-  @BeanProperty
   var status: ToxUserStatus = ToxUserStatus.NONE
 
-  @BeanProperty
   var statusMessage: String = _
 
-  @BooleanBeanProperty
   var online: Boolean = false
 
   var isTyping: Boolean = _
 
-  @BeanProperty
   var nickname: String = _
 
-  @BeanProperty
   var previousNames: util.ArrayList[String] = _
 
   def getFriendNumber: Int = this.friendNumber
@@ -48,7 +40,7 @@ class Friend(friendNumber: Int) extends Contact {
 
   def deleteAvatar(): Unit = {
     avatar.map(_.delete())
-    setAvatar(None)
+    avatar = None
   }
 
   def setTyping(isTyping: Boolean) {

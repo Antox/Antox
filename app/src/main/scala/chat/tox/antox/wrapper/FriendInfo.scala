@@ -17,8 +17,7 @@ case class FriendInfo(
   blocked: Boolean,
   ignored: Boolean,
   favorite: Boolean,
-  lastMessage: String,
-  lastMessageTimestamp: Timestamp,
+  lastMessage: Option[Message],
   unreadCount: Int,
   alias: String) extends ContactInfo {
 
@@ -34,7 +33,7 @@ case class FriendInfo(
     ignored: Boolean,
     favorite: Boolean,
     alias: String) {
-    this(online, name, status, statusMessage, key, avatar, receivedAvatar, blocked, ignored, favorite, "", TimestampUtils.emptyTimestamp(), 0, alias)
+    this(online, name, status, statusMessage, key, avatar, receivedAvatar, blocked, ignored, favorite, None, 0, alias)
   }
 
   def getFriendStatusAsToxUserStatus: ToxUserStatus = {

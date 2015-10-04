@@ -11,8 +11,7 @@ case class GroupInfo(key: ToxKey,
                      blocked: Boolean,
                      ignored: Boolean,
                      favorite: Boolean,
-                     lastMessage: String,
-                     lastMessageTimestamp: Timestamp,
+                     lastMessage: Option[Message],
                      unreadCount: Int,
                      alias: String) extends ContactInfo {
 
@@ -24,6 +23,6 @@ case class GroupInfo(key: ToxKey,
   def this(key: ToxKey, online: Boolean, name: String, topic: String,
            blocked: Boolean, ignored: Boolean, favorite: Boolean, alias: String)  {
     this(key, online, name, topic, blocked, ignored, favorite,
-      "", TimestampUtils.emptyTimestamp(), 0, alias)
+      None, 0, alias)
   }
 }

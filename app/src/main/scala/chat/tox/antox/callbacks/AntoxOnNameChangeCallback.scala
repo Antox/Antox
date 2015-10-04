@@ -10,11 +10,11 @@ class AntoxOnNameChangeCallback(private var ctx: Context) extends FriendNameCall
   override def friendName(friendNumber: Int, nameBytes: Array[Byte])(state: Unit): Unit = {
     val name = UiUtils.removeNewlines(new String(nameBytes, "UTF-8"))
     ToxSingleton.getAntoxFriend(friendNumber) match {
-      case Some(friend) => friend.setName(name)
+      case Some(friend) => friend.name = name
       case None => throw new Exception("Friend not found.")
     }
 
     val db = State.db
-    db.updateContactName(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, name)
+    db.updateContactName(ToxSingleton.getAntoxFriend(friendNumber).get.key, name)
   }
 }

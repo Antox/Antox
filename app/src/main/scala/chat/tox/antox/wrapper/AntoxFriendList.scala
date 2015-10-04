@@ -19,7 +19,7 @@ class AntoxFriendList {
   }
 
   def getByKey(key: ToxKey): Option[Friend] = {
-    friends.find(friend => friend.getKey == key)
+    friends.find(friend => friend.key == key)
   }
 
   def getByName(name: String, ignorecase: Boolean): util.List[Friend] = {
@@ -43,11 +43,11 @@ class AntoxFriendList {
   }
 
   def getOnlineFriends: util.List[Friend] = {
-    friends.filter(friend => friend.isOnline)
+    friends.filter(friend => friend.online)
   }
 
   def getOfflineFriends: util.List[Friend] = {
-    friends.filter(friend => !friend.isOnline)
+    friends.filter(friend => !friend.online)
   }
 
   def all(): util.List[Friend] = {
@@ -76,9 +76,9 @@ class AntoxFriendList {
 
   def updateFromFriend(friend: FriendInfo): Unit = {
     val antoxFriend = getByKey(friend.key).get
-    antoxFriend.setName(friend.name)
-    antoxFriend.setStatusMessage(friend.status)
-    antoxFriend.setOnline(friend.online)
+    antoxFriend.name = friend.name
+    antoxFriend.statusMessage = friend.status
+    antoxFriend.online = friend.online
   }
 
   def removeFriend(friendnumber: Int) {

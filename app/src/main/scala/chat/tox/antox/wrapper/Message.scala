@@ -2,10 +2,11 @@ package chat.tox.antox.wrapper
 
 import java.sql.Timestamp
 
+import android.content.Context
+import chat.tox.antox.R
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.TimestampUtils
+import chat.tox.antox.utils.{FileUtils, TimestampUtils}
 import chat.tox.antox.wrapper.MessageType.MessageType
-
 
 case class Message(id: Int,
                    messageId: Int,
@@ -34,6 +35,33 @@ case class Message(id: Int,
     val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
 
     Some(s"<$name> $message [$prettyTimestamp]")
+  }
+
+  def toNotificationFormat(context: Context): String = {
+    `type` match {
+      case MessageType.ACTION | MessageType.GROUP_ACTION =>
+        s"$senderName $message"
+      case MessageType.FILE_TRANSFER =>
+        val extension = message.substring(message.lastIndexOf(".") + 1)
+        if (FileUtils.imageExtensions.contains(extension)) {
+          if (isMine) {
+            context.getResources.getString(R.string.you_sent_image)
+          } else {
+            context.getResources.getString(R.string.friend_sent_image, senderName)
+          }
+        } else {
+          if (isMine) {
+            context.getResources.getString(R.string.you_sent_file)
+          } else {
+            context.getResources.getString(R.string.friend_sent_file, senderName)
+          }
+        }
+      case MessageType.GROUP_MESSAGE =>
+        s"$senderName: $message"
+
+      case _ =>
+        message
+    }
   }
 
   def isMine: Boolean = {

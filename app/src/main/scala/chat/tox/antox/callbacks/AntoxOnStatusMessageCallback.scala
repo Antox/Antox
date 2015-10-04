@@ -11,7 +11,7 @@ class AntoxOnStatusMessageCallback(private var ctx: Context) extends FriendStatu
   override def friendStatusMessage(friendNumber: Int, messageBytes: Array[Byte])(state: Unit): Unit = {
     val statusMessage = UiUtils.removeNewlines(new String(messageBytes, "UTF-8"))
 
-    ToxSingleton.getAntoxFriend(friendNumber).get.setStatusMessage(statusMessage)
+    ToxSingleton.getAntoxFriend(friendNumber).get.statusMessage = statusMessage
 
     val db = State.db
     db.updateContactStatusMessage(ToxSingleton.tox.getFriendKey(friendNumber), statusMessage)

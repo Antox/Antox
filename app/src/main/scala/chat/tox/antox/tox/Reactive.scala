@@ -6,8 +6,8 @@ import rx.lang.scala.subjects.BehaviorSubject
 
 object Reactive {
   val chatActive = BehaviorSubject[Boolean](false)
-  val chatActiveSub = chatActive.subscribe(x => State.chatActive(x))
+  val chatActiveSub = chatActive.subscribe(x => State.setChatActive(x))
   val activeKey = BehaviorSubject[Option[ToxKey]](None)
-  val activeKeySub = activeKey.subscribe(x => State.activeKey(x))
+  val activeKeySub = activeKey.subscribe(x => State.setActiveKey(x))
   val typing = BehaviorSubject[Boolean](false)
 }

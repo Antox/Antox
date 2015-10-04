@@ -17,6 +17,7 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
 import chat.tox.antox.wrapper.ToxKey
 import de.hdodenhof.circleimageview.CircleImageView
+import rx.lang.scala.Subscription
 
 import scala.collection.JavaConversions._
 
@@ -37,6 +38,8 @@ object ContactListAdapter {
     var countText: TextView = _
 
     var timeText: TextView = _
+
+    var imageLoadingSubscription: Option[Subscription] = None
   }
 }
 
@@ -123,7 +126,15 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
       holder.avatar.setImageResource(R.drawable.default_avatar)
 
-      item.image.foreach(img => BitmapManager.load(img, holder.avatar, isAvatar = true))
+      holder.imageLoadingSubscription.foreach(_.unsubscribe())
+
+      holder.imageLoadingSubscription =
+        item.image
+          .map(img => {
+          BitmapManager
+            .load(img, isAvatar = true)
+            .subscribe(bitmap => holder.avatar.setImageBitmap(bitmap))
+        })
 
       val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

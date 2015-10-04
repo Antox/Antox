@@ -11,9 +11,10 @@ import android.widget.ImageView
 import chat.tox.antox.utils.BitmapManager._
 import chat.tox.antox.wrapper.BitmapUtils.RichBitmap
 import org.scaloid.common._
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.{NewThreadScheduler, AndroidMainThreadScheduler, IOScheduler}
 
 import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future}
 
 object BitmapManager {
   // Use a LRU Cache for storing inlined bitmap images in chats
@@ -23,7 +24,7 @@ object BitmapManager {
   private val mAvatarCache: mutable.HashMap[String, Bitmap] = new mutable.HashMap[String, Bitmap]
 
   // Hashmap used for storing whether a cached avatar is valid or needs to be updated because a contact
-  // has updated their avatar - contact's avatars are stored under the name of their public key
+  // has updated their avatar - contacts' avatars are stored under the name of their public key
   private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
 
   private val TAG = LoggerTag(getClass.getSimpleName)
@@ -41,17 +42,15 @@ object BitmapManager {
   }
 
   private def getAvatarFromCache(key: String): Option[Bitmap] = {
-    isAvatarValid(key) match {
-      case Some(true) =>
-        mAvatarCache.get(key)
-
-      case None | Some(false) =>
-        None
+    if (isAvatarValid(key)) {
+      mAvatarCache.get(key)
+    } else {
+      None
     }
   }
 
-  private def isAvatarValid(key: String): Option[Boolean] = {
-    mAvatarValid.get(key)
+  private def isAvatarValid(key: String): Boolean = {
+    mAvatarValid.getOrElse(key, false)
   }
 
   private def addBitmapToMemoryCache(key: String, bitmap: Bitmap) {
@@ -172,36 +171,24 @@ object BitmapManager {
     }
   }
 
-  // Execution context needed for Futures
-  // For why this is needed, see http://blog.scaloid.org/2013/11/using-scalaconcurrentfuture-in-android.html
-  implicit val exec = {
-    val poolSize = 100
-    val poolTimeout = 1000
-    ExecutionContext.fromExecutor(
-      new ThreadPoolExecutor(poolSize, poolSize, poolTimeout, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
-    )
-  }
-
-  def load(file: File, imageView: ImageView, isAvatar: Boolean) {
+  def load(file: File, isAvatar: Boolean): Observable[Bitmap] = {
     val imageKey = file.getPath + file.getName
 
     AntoxLog.debug(imageKey, TAG)
 
-    getFromCache(isAvatar, imageKey) match {
-      case Some(bitmap) =>
-        AntoxLog.debug("Loading Bitmap image from cache", TAG)
-        imageView.setImageBitmap(bitmap)
+    Observable[Bitmap](sub => {
+      sub.onNext(getFromCache(isAvatar, imageKey) match {
+        case Some(bitmap) =>
+          AntoxLog.debug("Loading Bitmap image from cache", TAG)
+          bitmap
 
-      case None =>
-        AntoxLog.debug("Decoding Bitmap image", TAG)
-        Future {
-          val bitmap = decodeBitmap(file, imageKey, isAvatar)
-
-          if (bitmap != null) {
-            runOnUiThread(imageView.setImageBitmap(bitmap))
-          }
-        }
-    }
+        case None =>
+          AntoxLog.debug("Decoding Bitmap image", TAG)
+          decodeBitmap(file, imageKey, isAvatar)
+      })
+      sub.onCompleted()
+    }).subscribeOn(NewThreadScheduler())
+      .observeOn(AndroidMainThreadScheduler())
   }
 }
 

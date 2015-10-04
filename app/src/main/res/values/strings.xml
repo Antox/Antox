@@ -127,6 +127,10 @@
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
     <string name="contacts_resend_friend_request">Resend Friend Request</string>
+    <string name="friend_sent_image">%s sent an image.</string>
+    <string name="friend_sent_file">%s sent a file.</string>
+    <string name="you_sent_image">You sent an image.</string>
+    <string name="you_sent_file">You sent a file.</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>

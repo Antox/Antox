@@ -35,13 +35,17 @@ object State {
 
   def chatActive: Boolean = _chatActive
 
-  def chatActive(b: Boolean): Unit = {
+  def isChatActive(chatKey: ToxKey): Boolean = {
+    State.chatActive && State.activeKey.contains(chatKey)
+  }
+
+  def setChatActive(b: Boolean): Unit = {
     _chatActive = b
   }
 
   def activeKey: Option[ToxKey] = _activeKey
 
-  def activeKey(k: Option[ToxKey]): Unit = {
+  def setActiveKey(k: Option[ToxKey]): Unit = {
     require(k != null)
     _activeKey = k
   }

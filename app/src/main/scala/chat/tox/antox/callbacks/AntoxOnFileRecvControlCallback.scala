@@ -13,7 +13,7 @@ class AntoxOnFileRecvControlCallback(private var ctx: Context) extends FileRecvC
   
   override def fileRecvControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl)(state: Unit): Unit = {
       AntoxLog.debug("control type: " + control.name())
-      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.getKey, fileNumber)
+      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.key, fileNumber)
       mTransfer match {
         case Some(t) =>
           (control, t.status) match {

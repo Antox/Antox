@@ -1,10 +1,12 @@
 package chat.tox.antox.fragments
 
+import java.sql.Timestamp
+
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter
-import chat.tox.antox.utils.LeftPaneItem
+import chat.tox.antox.utils.{TimestampUtils, LeftPaneItem}
 import chat.tox.antox.wrapper._
 
 class RecentFragment extends AbstractContactsFragment(showSearch = false, showFab = false) {
@@ -27,7 +29,7 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
   }
 
   def updateContactsLists(leftPaneAdapter: ContactListAdapter, contactList: Seq[ContactInfo]): Unit = {
-    val sortedContactList = contactList.filter(c => c.lastMessage != "").sortWith(compareNames).sortWith(compareLastMessageTimestamp)
+    val sortedContactList = contactList.filter(c => c.lastMessage.isDefined).sortWith(compareNames).sortWith(compareLastMessageTimestamp)
     if (sortedContactList.nonEmpty) {
       getView.findViewById(R.id.center_text).setVisibility(View.GONE)
       for (contact <- sortedContactList) {
@@ -37,9 +39,10 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
           ContactItemType.FRIEND
         }
 
-        val contactPaneItem = new LeftPaneItem(itemType, contact.key, contact.avatar, contact.getAliasOrName, contact.lastMessage,
+        val lastMessage = contact.lastMessage.get
+        val contactPaneItem = new LeftPaneItem(itemType, contact.key, contact.avatar, contact.getAliasOrName, lastMessage.toNotificationFormat(getActivity),
           contact.online, UserStatus.getToxUserStatusFromString(contact.status), contact.favorite, contact.unreadCount,
-          contact.lastMessageTimestamp)
+          lastMessage.timestamp)
         leftPaneAdapter.addItem(contactPaneItem)
       }
     } else {
@@ -48,6 +51,9 @@ class RecentFragment extends AbstractContactsFragment(showSearch = false, showFa
   }
 
   def compareLastMessageTimestamp(a: ContactInfo, b: ContactInfo): Boolean = {
-    a.lastMessageTimestamp.after(b.lastMessageTimestamp)
+    def lastMessageTimstamp(info: ContactInfo): Timestamp =
+      info.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp())
+
+    lastMessageTimstamp(a).after(lastMessageTimstamp(b))
   }
 }

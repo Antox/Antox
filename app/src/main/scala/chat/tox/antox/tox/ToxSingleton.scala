@@ -191,7 +191,7 @@ object ToxSingleton {
   def populateAntoxLists(db: AntoxDB): Unit = {
     for (friendNumber <- tox.getFriendList) {
       antoxFriendList.addFriendIfNotExists(friendNumber)
-      antoxFriendList.getByFriendNumber(friendNumber).get.setKey(tox.getFriendKey(friendNumber))
+      antoxFriendList.getByFriendNumber(friendNumber).get.key = tox.getFriendKey(friendNumber)
     }
 
     for (groupNumber <- tox.getGroupList) {

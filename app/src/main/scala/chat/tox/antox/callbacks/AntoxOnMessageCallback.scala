@@ -10,7 +10,7 @@ class AntoxOnMessageCallback(private var ctx: Context) extends FriendMessageCall
 
   override def friendMessage(friendNumber: Int, messageType: ToxMessageType, timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
     MessageHelper.handleMessage(ctx, friendNumber,
-      ToxSingleton.getAntoxFriend(friendNumber).get.getKey,
+      ToxSingleton.getAntoxFriend(friendNumber).get.key,
       new String(message, "UTF-8"), MessageType.fromToxMessageType(messageType))
   }
 }

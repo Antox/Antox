@@ -82,16 +82,15 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   override def onTouch(v: View, event: MotionEvent): Boolean = {
-    val darkenedViews = List(background, receivedTriangle)
     event.getAction match {
       case MotionEvent.ACTION_DOWN =>
-        for (view <- darkenedViews) {
+        for (view <- backgroundViews) {
           view.getBackground.setColorFilter(0x55000000, PorterDuff.Mode.SRC_ATOP)
           view.invalidate()
         }
 
       case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP =>
-        for (view <- darkenedViews) {
+        for (view <- backgroundViews) {
           view.getBackground.clearColorFilter()
           view.invalidate()
         }

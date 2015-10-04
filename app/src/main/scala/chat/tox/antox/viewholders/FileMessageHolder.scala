@@ -38,20 +38,31 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
   protected val fileProgressBar = view.findViewById(R.id.file_transfer_progress).asInstanceOf[ProgressBar]
 
+  protected val imageLoading = view.findViewById(R.id.image_loading).asInstanceOf[ProgressBar]
+
   private var file: File = _
 
   private var progressSub: Subscription = _
 
+  private var imageLoadingSub: Option[Subscription] = None
+
+  def render(): Unit = {
+    imageLoading.setVisibility(View.GONE)
+  }
+
   def setImage(file: File): Unit = {
     this.file = file
-    // Set a placeholder in the image in case bitmap needs to be loaded from disk
-    if (msg.isMine) {
-      imageMessage.setImageResource(R.drawable.sent)
-    } else {
-      imageMessage.setImageResource(R.drawable.received)
-    }
+    // Start a loading indicator in case the bitmap needs to be loaded from disk
+    imageMessage.setImageBitmap(null)
+    imageLoading.setVisibility(View.VISIBLE)
 
-    BitmapManager.load(file, imageMessage, isAvatar = false)
+    imageLoadingSub.foreach(_.unsubscribe())
+
+    imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+      imageLoading.setVisibility(View.GONE)
+      imageMessage.setImageBitmap(image)
+    }))
+
     imageMessage.setOnClickListener(this)
     imageMessage.setOnLongClickListener(this)
     imageMessage.setVisibility(View.VISIBLE)
@@ -150,6 +161,10 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     }
     messageTitle.setVisibility(View.VISIBLE)
     messageText.setVisibility(View.VISIBLE)
+  }
+
+  override def toggleReceived(): Unit = {
+    // do nothing
   }
 
   override def onClick(view: View) {

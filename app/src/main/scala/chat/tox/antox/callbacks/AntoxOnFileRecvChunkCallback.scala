@@ -8,7 +8,7 @@ import im.tox.tox4j.core.callbacks.FileRecvChunkCallback
 class AntoxOnFileRecvChunkCallback(private var ctx: Context) extends FileRecvChunkCallback[Unit] {
 
   override def fileRecvChunk(friendNumber: Int, fileNumber: Int, position: Long, data: Array[Byte])(state: Unit): Unit = {
-    val key = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
+    val key = ToxSingleton.getAntoxFriend(friendNumber).get.key
     val size = State.transfers.get(key, fileNumber).get.size
     
     if (position == size) {

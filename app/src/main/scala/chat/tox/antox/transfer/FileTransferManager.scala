@@ -96,7 +96,7 @@ class FileTransferManager extends Intervals {
       }).foreach(fileNumber => {
         val db = State.db
         AntoxLog.debug("adding File Transfer", TAG)
-        val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, path, fileNumber, fileKind.kindId, file.length.toInt)
+        val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, fileNumber, fileKind.kindId, file.length.toInt)
         State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUESTSENT, id, fileKind))
       })
     }
@@ -111,14 +111,34 @@ class FileTransferManager extends Intervals {
     })
   }
 
-  def fileSendRequest(key: ToxKey,
-                      fileNumber: Int,
-                      fileName: String,
-                      fileKind: FileKind,
-                      fileSize: Long,
-                      replaceExisting: Boolean,
-                      context: Context) {
-    AntoxLog.debug("fileSendRequest", TAG)
+  /**
+   * Adds a new incoming file request to the database and selects an unconflicting name for the file if necessary.
+   *
+   * Called when there is a new request to receive a file sent by a friend.
+   * (i.e. in [[chat.tox.antox.callbacks.AntoxOnFileRecvCallback]]
+   * This will not start the file transfer until it is accepted using [[acceptFile]]
+   *
+   * @param key ToxKey of the friend sending the file.
+   * @param senderName Name of the friend sending the file.
+   * @param fileNumber File number
+   * @param fileName Name of the file to be received.
+   *                 This will be changed to avoid conflicts if an existing
+   *                 file with the same name exists and 'replaceExisting' is false.
+   * @param fileKind Kind of the incoming file.
+   * @param fileSize Size of the incoming file in bytes.
+   * @param replaceExisting Whether or not to replace a file with the same name
+   * @param context Android context
+   */
+  def fileIncomingRequest(key: ToxKey,
+                          senderName: String,
+                          hasBeenRead: Boolean,
+                          fileNumber: Int,
+                          fileName: String,
+                          fileKind: FileKind,
+                          fileSize: Long,
+                          replaceExisting: Boolean,
+                          context: Context) {
+    AntoxLog.debug("fileIncomingRequest", TAG)
     var fileN = fileName
     val fileSplit = fileName.split("\\.")
     var filePre = ""
@@ -145,7 +165,7 @@ class FileTransferManager extends Intervals {
     }
 
     val db = State.db
-    val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, fileN, fileNumber, fileKind.kindId, fileSize.toInt)
+    val id = db.addFileTransfer(key, key, senderName, fileN, hasBeenRead, fileNumber, fileKind.kindId, fileSize.toInt)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUESTSENT, id, fileKind))
   }
 
@@ -223,7 +243,7 @@ class FileTransferManager extends Intervals {
             // Set current avatar as invalid in avatar cache in order to get it updated to new avatar
             BitmapManager.setAvatarInvalid(t.file)
 
-            mFriend.get.setAvatar(Some(t.file))
+            mFriend.get.avatar = Some(t.file)
             val db = State.db
             db.updateFriendAvatar(key, t.file.getName)
           }

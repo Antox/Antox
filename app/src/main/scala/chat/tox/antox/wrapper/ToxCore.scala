@@ -86,7 +86,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     val friendNumber = tox.addFriend(address.bytes, message.getBytes)
     antoxFriendList.addFriend(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setKey(address.key)
+    antoxFriend.key = address.key
     friendNumber
   }
 
@@ -94,7 +94,7 @@ class ToxCore(antoxFriendList: AntoxFriendList, groupList: GroupList, options: T
     val friendNumber = tox.addFriendNorequest(Hex.hexStringToBytes(key.toString))
     antoxFriendList.addFriendIfNotExists(friendNumber)
     val antoxFriend = antoxFriendList.getByFriendNumber(friendNumber).get
-    antoxFriend.setKey(key)
+    antoxFriend.key = key
     friendNumber
   }
 
