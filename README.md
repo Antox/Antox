@@ -23,7 +23,7 @@ To install on F-Droid, add https://antox.me/fdroid/repo and search for "Antox".
 - Avatars
 
 ###Translating Antox
-In the past, translating using Transifex was possible - currently there's an ongoing transition to Weblate - until it's done, translations are accepted via pull requests.
+-You can localize the application via github pull request or using [Weblate instance](https://weblate.antox.me/projects/antox/).
 
 ###Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
