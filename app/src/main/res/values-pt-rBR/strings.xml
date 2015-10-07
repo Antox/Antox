@@ -17,7 +17,7 @@
   <string name="create_name_hint">Nome do perfil</string>
   <string name="create_text">Mensagem segura para todos</string>
   <string name="create_register">Registrar</string>
-  <string name="create_registering">Registrando conta...</string>
+  <string name="create_registering">Registrando conta…</string>
   <string name="create_register_incog">Registro anônimo</string>
   <string name="create_import_profile">Importar perfil</string>
   <string name="create_skip">Permitir a qualquer um adicionar você usando seu nome de perfil</string>
