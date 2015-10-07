@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add">Shtoni Kontakt</string>
+  <string name="title_activity_friend_profile">Profili i Mikut</string>
+  <string name="title_activity_group_profile">Informacioni i Grupit </string>
+  <string name="title_activity_profile_settings">Opsionet e Profilit</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_contact">Shtoni Kontakt</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Duhet të plotësoni një emër profili</string>
+  <string name="login_login">Hyni</string>
+  <string name="login_account_hint">Emri i Profilit</string>
+  <string name="login_create_account_text">Krijoni një Profil Tox</string>
+  <string name="login_bad_login">Emri i profilit nuk u njoh</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Emri i Profilit</string>
+  <string name="create_register">Regjistrohuni</string>
+  <string name="create_register_incog">Regjistrohuni si i panjohur</string>
+  <string name="create_skip">Lejoni çdokënd t\'ju shtojë, duke përdorur emrin tuaj të profilit</string>
+  <string name="create_must_fill_in">Duhet t\'i plotësoni të gjitha fushat</string>
+  <string name="create_bad_profile_name">Emri i profilit s\'mund të përmbajë hapësira, vija të pjerrëta ose të jetë i zbrazët</string>
+  <string name="create_profile_exists">Ky emër profili ekziston tashmë</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">S\'ka biseda aktive. Niseni një duke përzgjedhur një mik nga paneli majtas.</string>
+  <string name="main_recent_no">S\'ka biseda të fundit</string>
+  <string name="main_no_internet">S\'ka lidhje Interneti</string>
+  <string name="main_not_connected">Nuk u pikas asnjë lidhje interneti. Pa një lidhje interneti, ju do të keni 
+funksionim të kufizuar, nëse nuk jeni duke përdorur Antox-in vetëm për LAN</string>
+  <string name="search_all_contacts">Kërkoni të gjitha kontaktet</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Dërgoni një mesazh</string>
+  <string name="chat_file_transfer">Transferimi i skedarit</string>
+  <!--Add Pane Fragment-->
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">ID Tox i mikut tuaj</string>
+  <string name="addfriend_friend_message">Dërgoni një mesazh, me kërkesën tuaj</string>
+  <string name="addfriend_button">Shtojeni Mikun</string>
+  <string name="addfriend_friend_added">Miku u Shtua</string>
+  <string name="addfriend_friend_exists">Miku ekziston tashmë</string>
+  <string name="scanqr_button">Skanoni një kod QR</string>
+  <string name="invalid_friend_ID">ID Tox i pavlefshëm </string>
+  <string name="addfriend_nick_hint">Vendosni një pseudonim për mikun tuaj</string>
+  <string name="addfriend_optional_title">Shtesa Jo Të Detyrueshme</string>
+  <string name="dialog_pin">Futni pin-in e mikut tuaj</string>
+  <string name="addfriend_invalid_pin">Pin-i i Pavlefshëm</string>
+  <string name="addfriend_own_key">S\'mund ta shtoni veten</string>
+  <string name="addfriend_friend_pin_title">Futni Pin-in e Mikut</string>
+  <string name="addfriend_friend_pin_text">Futni Pin-in e Mikut</string>
+  <string name="addfriend_default_message">Hej! Ju lutemi pranojeni kërkesën time për të qenë miq</string>
+  <!--Add Group Fragment-->
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Pseudonim</string>
+  <string name="friend_profile_key">ID Tox</string>
+  <string name="friend_profile_note">Statusi</string>
+  <string name="friend_profile_button">Përditësojeni</string>
+  <string name="friend_profile_updated">Profili u përditësua</string>
+  <string name="friend_profile_copied">ID Tox u Kopjua</string>
+  <!--Group Profile Activity-->
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">Profili i %1$s</string>
+  <string name="friendrequest_accept">Pranojeni</string>
+  <string name="friendrequest_reject">Refuzojeni</string>
+  <string name="friend_request">Kërkesë Nga Një Mik i Ri</string>
+  <!--Group invite fragment-->
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profili</string>
+  <string name="friend_action_delete">Lëvizeni Mikun</string>
+  <string name="friend_action_delete_chat">Hiqini Regjistrat e Bisedës</string>
+  <string name="friend_action_block">Pengojeni</string>
+  <string name="contacts_actions_on">Veprimet mbi</string>
+  <string name="contacts_delimiter_requests">Kërkesat</string>
+  <string name="contacts_delimiter_friends">Miqtë</string>
+  <string name="contacts_delimiter_offline">Jashtë linje</string>
+  <string name="contacts_delimiter_online">Në linjë</string>
+  <string name="contacts_resend_friend_request">Ridërgojeni Kërkesën për Mik</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Jeni i sigurt që doni ta largoni këtë mik?</string>
+  <!--Export Chat Logs Toast-->
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Jeni i sigurt që doni t\'i hiqni regjistrat e bisedës?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Pengimi i këtij përdoruesi do ta lëvizë atë nga lista e miqve tuaj dhe nuk do shihni më kërkesa për mik
+prej tij.\n\nJeni i sigurt se dëshironi të vazhdoni?</string>
+  <!--Reset ToxID Dialog-->
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <!--Group Chat Delete-->
+  <!--Color Picker Dialog-->
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Bashkëngjitni një fotografi</string>
+  <string name="attachment_file">Bashkëngjiteni Skedarin</string>
+  <string name="attachment_takephoto">Bëni fotografi</string>
+  <string name="message_copy">Kopjojeni mesazhin</string>
+  <string name="message_delete">Hiqeni mesazhin</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Më të fundit</string>
+  <string name="titles_contacts">Kontaktet</string>
+  <string name="titles_settings">Konfigurimi</string>
+  <!--Misc-->
+  <string name="button_confirm">Konfirmoni</string>
+  <string name="button_cancel">Anulojeni</string>
+  <string name="button_yes">Po</string>
+  <string name="button_no">Jo</string>
+  <string name="button_ok">Në rregull</string>
+  <string name="dialog_tox_id">Kopjojeni ID Tox tek shënimet</string>
+  <string name="share_with">Bashkëndajeni me</string>
+  <string name="connection_has">ka</string>
+  <string name="connection_online">hyrë në linjë</string>
+  <string name="connection_offline">dalë nga linja</string>
+  <string name="title_activity_create_account">Krijoni Veprimtarinë e Llogarisë</string>
+  <string name="action_settings">Konfigurimi</string>
+  <!--Avatar Dialog-->
+  <!--File transfer-->
+  <!--QR-->
+  <string name="qr_default_title">Ta Instalojmë Skanerin për Barkod?</string>
+  <string name="qr_default_message">Ky aplikacion kërkon Skanerin për Barkod. Ju pëlqen ta instaloni atë?</string>
+  <string name="qr_button_yes">Po</string>
+  <string name="qr_button_no">Jo</string>
+  <!--Notifications-->
+  <!--nav bar-->
+  <string name="drawer_open">Hapeni sirtarin e lundrimit</string>
+  <string name="drawer_close">Mbylleni sirtarin e lundrimit</string>
+  <string name="open_source_license">Licencë me burim të hapur</string>
+  <string name="ver">Version</string>
+  <string name="about">Rreth</string>
+  <string name="about_antox_1">Me shtimin e programeve qeveritare të monitorimit, Tox-i ofron një aplikacion të lehtë për t\'u përdorur, që ju lejon të lidheni me miqtë dhe familjen pa ju dëgjuar askush tjetër.</string>
+  <string name="about_antox_2">Ç\'po Punon Këtë Çast:</string>
+  <string name="end_call">Përfundoni Thirrjen</string>
+  <string name="mute_call">Heshteni</string>
+  <string name="mute_mic">Heshteni Mikrofonin</string>
+  <string name="profile_info_description">Merrni Informacionin e Përdoruesit</string>
+</resources>

@@ -5,6 +5,8 @@
   <string name="pref_header_profile">Профил</string>
   <string name="pref_title_nickname">Име</string>
   <string name="pref_default_nickname">Антокс корисник</string>
+  <string name="pref_title_password">„ToxMe“ лозинка</string>
+  <string name="pref_default_password">Лозинка није постављена</string>
   <string name="pref_title_status">Стање</string>
   <string-array name="pref_status_list_titles">
     <item>Присутан</item>
@@ -15,7 +17,14 @@
   <string name="pref_default_status_message">Хеј! Ја користим Антокс</string>
   <string name="pref_title_tox_id">Токс ИД</string>
   <string name="pref_default_tox_id">Подразумевани Токс ИД — не бисте требали да видите ово</string>
+  <string name="pref_title_toxme">„ToxMe“ адреса</string>
+  <string name="pref_default_toxme">Овај профил је тренутно у инкогнито режиму</string>
+  <string name="pref_title_logging_enabled">Задржи историјат ћаскања по одјави</string>
+  <string name="pref_title_theme_color">Промени боју теме</string>
+  <string name="pref_title_avatar">Аватар</string>
   <string name="pref_title_account_name">Име профила</string>
+  <string name="pref_title_export">Извоз профила</string>
+  <string name="pref_title_delete">Обриши налог</string>
   <string name="pref_title_logout">Одјава</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Обавештења</string>
@@ -24,7 +33,7 @@
   <string name="pref_title_new_friend_notifications">Обавештења о захтевима</string>
   <!--Other-->
   <string name="pref_header_other">Остало</string>
-  <string name="pref_title_connection_status_messages">Поруке на/ван везе</string>
+  <string name="pref_title_connection_status_messages">Поруке радњи</string>
   <string name="pref_title_wifi_only">Само бежична</string>
   <string name="pref_title_language">Језик</string>
   <!--Menu strings-->
@@ -32,5 +41,6 @@
   <!--Advanced strings-->
   <string name="pref_udp">Омогући УДП</string>
   <string name="pref_advanced">Напредно</string>
-  <string name="pref_nospam">Направи нови „носпам“</string>
+  <string name="pref_nospam">Ресетуј Токс ИД</string>
+  <string name="pref_autostart">Покрени Антокс при подизању система</string>
 </resources>
