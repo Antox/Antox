@@ -6,18 +6,19 @@ import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileStatus
 import chat.tox.antox.utils.AntoxLog
+import chat.tox.antox.wrapper.FriendInfo
 import im.tox.tox4j.core.callbacks.FileRecvControlCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
-class AntoxOnFileRecvControlCallback(private var ctx: Context) extends FileRecvControlCallback[Unit] {
+class AntoxOnFileRecvControlCallback(private var ctx: Context) {
   
-  override def fileRecvControl(friendNumber: Int, fileNumber: Int, control: ToxFileControl)(state: Unit): Unit = {
+  def fileRecvControl(friendInfo: FriendInfo, fileNumber: Int, control: ToxFileControl)(state: Unit): Unit = {
       AntoxLog.debug("control type: " + control.name())
-      val mTransfer = State.transfers.get(ToxSingleton.getAntoxFriend(friendNumber).get.key, fileNumber)
+      val mTransfer = State.transfers.get(friendInfo.key, fileNumber)
       mTransfer match {
         case Some(t) =>
           (control, t.status) match {
-            case (ToxFileControl.RESUME, FileStatus.REQUESTSENT) =>
+            case (ToxFileControl.RESUME, FileStatus.REQUEST_SENT) =>
               State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)
             case (ToxFileControl.RESUME, FileStatus.PAUSED) =>
               State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)

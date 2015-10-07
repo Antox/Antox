@@ -18,7 +18,9 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.Reactive
 import chat.tox.antox.utils.{AntoxLog, Constants}
+import chat.tox.antox.wrapper.MessageType._
 import chat.tox.antox.wrapper.{Message, ToxKey}
+import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
@@ -26,7 +28,7 @@ import rx.lang.scala.{Observable, Subscription}
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
 
-abstract class GenericChatActivity extends AppCompatActivity {
+abstract class GenericChatActivity[KeyType <: ToxKey] extends AppCompatActivity {
 
   //var ARG_CONTACT_NUMBER: String = "contact_number"
   var adapter: ChatMessagesAdapter = null
@@ -39,7 +41,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
   var avatarActionView: View = null
   var messagesSub: Subscription = null
   var titleSub: Subscription = null
-  var activeKey: ToxKey = null
+  var activeKey: KeyType = _
   var scrolling: Boolean = false
   val layoutManager = new LinearLayoutManager(this)
 
@@ -56,7 +58,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     ThemeManager.applyTheme(this, getSupportActionBar)
 
     val extras: Bundle = getIntent.getExtras
-    activeKey = new ToxKey(extras.getString("key"))
+    activeKey = getKey(extras.getString("key"))
     val thisActivity = this
     AntoxLog.debug("key = " + activeKey)
 
@@ -92,6 +94,7 @@ abstract class GenericChatActivity extends AppCompatActivity {
     b.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         onSendMessage()
+
         setTyping(typing = false)
       }
     })
@@ -177,14 +180,14 @@ abstract class GenericChatActivity extends AppCompatActivity {
     mMessage.foreach(rawMessage => {
       messageBox.setText("")
       val meMessagePrefix = "/me "
-      val isAction = rawMessage.startsWith(meMessagePrefix)
+      val messageType = if (rawMessage.startsWith(meMessagePrefix)) ToxMessageType.ACTION else ToxMessageType.NORMAL
       val message =
-        if (isAction) {
+        if (messageType == ToxMessageType.ACTION) {
           rawMessage.replaceFirst(meMessagePrefix, "")
         } else {
           rawMessage
         }
-      sendMessage(message, isAction, this)
+      sendMessage(message, messageType, this)
     })
   }
 
@@ -206,7 +209,9 @@ abstract class GenericChatActivity extends AppCompatActivity {
   }
 
   //Abstract Methods
-  def sendMessage(message: String, isAction: Boolean, context: Context): Unit
+  def getKey(key: String): KeyType
+
+  def sendMessage(message: String, messageType: ToxMessageType, context: Context): Unit
 
   def setTyping(typing: Boolean): Unit
 }

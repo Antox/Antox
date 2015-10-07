@@ -56,13 +56,13 @@ object State {
 
   def logout(activity: Activity): Unit = {
     if (!userDb(activity).getActiveUserDetails.loggingEnabled) {
-      ToxSingleton.getAntoxFriendList.all().foreach(f => db.deleteChatLogs(f.key))
+      db.friendInfoList.toBlocking.first.foreach(f => db.deleteChatLogs(f.key))
     }
 
     //workaround for contacts appearing offline when the DB is upgraded
     db.synchroniseWithTox(ToxSingleton.tox)
+    db.close()
 
-    State.db.close()
     val startTox = new Intent(activity, classOf[ToxService])
     activity.stopService(startTox)
     userDb(activity).logout()

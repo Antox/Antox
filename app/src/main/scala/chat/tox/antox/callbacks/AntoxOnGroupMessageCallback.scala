@@ -3,13 +3,14 @@ package chat.tox.antox.callbacks
 import android.content.Context
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.utils.AntoxLog
-import chat.tox.antox.wrapper.MessageType
+import chat.tox.antox.wrapper.{GroupPeer, GroupInfo, MessageType}
+import im.tox.tox4j.core.enums.ToxMessageType
 
 class AntoxOnGroupMessageCallback(private var ctx: Context) /* extends GroupMessageCallback */ {
 
   //override
-  def groupMessage(groupNumber: Int, peerNumber: Int, timeDelta: Int, message: Array[Byte]): Unit = {
-    AntoxLog.debug("new group message callback for id " + ToxSingleton.getGroupList.getGroup(groupNumber).key)
-    MessageHelper.handleGroupMessage(ctx, groupNumber, peerNumber, new String(message, "UTF-8"), MessageType.GROUP_MESSAGE)
+  def groupMessage(groupInfo: GroupInfo, peerInfo: GroupPeer, timeDelta: Int, message: Array[Byte]): Unit = {
+    AntoxLog.debug("new group message callback for id " + groupInfo.key)
+    MessageHelper.handleGroupMessage(ctx, groupInfo, peerInfo, new String(message, "UTF-8"), ToxMessageType.NORMAL)
   }
 }

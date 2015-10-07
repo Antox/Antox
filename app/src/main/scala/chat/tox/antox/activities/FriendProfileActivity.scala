@@ -16,12 +16,12 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.BitmapManager
-import chat.tox.antox.wrapper.ToxKey
+import chat.tox.antox.wrapper.{FriendKey, ToxKey}
 import de.hdodenhof.circleimageview.CircleImageView
 
 class FriendProfileActivity extends AppCompatActivity {
 
-  var friendKey: ToxKey = null
+  var friendKey: FriendKey = null
   var nickChanged: Boolean = false
 
   override def onCreate(savedInstanceState: Bundle) {
@@ -34,9 +34,9 @@ class FriendProfileActivity extends AppCompatActivity {
     }
     ThemeManager.applyTheme(this, getSupportActionBar)
 
-    friendKey = new ToxKey(getIntent.getStringExtra("key"))
+    friendKey = new FriendKey(getIntent.getStringExtra("key"))
     val db = State.db
-    val friendNote = db.getContactStatusMessage(friendKey)
+    val friendNote = db.getFriendInfo(friendKey).statusMessage
 
     setTitle(getResources.getString(R.string.friend_profile_title, getIntent.getStringExtra("name")))
 

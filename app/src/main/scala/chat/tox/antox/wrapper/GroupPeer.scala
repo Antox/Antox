@@ -1,6 +1,8 @@
 package chat.tox.antox.wrapper
 
-class GroupPeer(var key: ToxKey,
+import chat.tox.antox.utils.PeerKey
+
+class GroupPeer(var key: PeerKey,
                 var name: String,
                 var ignored: Boolean) {
 

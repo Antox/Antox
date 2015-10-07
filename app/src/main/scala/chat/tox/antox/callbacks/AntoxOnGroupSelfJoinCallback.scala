@@ -9,7 +9,7 @@ import chat.tox.antox.utils.AntoxLog
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override
   def groupSelfJoin(groupNumber: Int): Unit = {
-    new Thread(new Runnable {
+    /*new Thread(new Runnable {
       override def run(): Unit = {
         val group = ToxSingleton.getGroup(groupNumber)
         if (ToxSingleton.tox.getGroupNumberPeers(groupNumber) != group.getPeerCount) {
@@ -31,6 +31,6 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
         db.updateContactOnline(group.key, online = true)
         db.updateContactStatusMessage(group.key, group.topic)
       }
-    }).start()
+    }).start() */
   }
 }

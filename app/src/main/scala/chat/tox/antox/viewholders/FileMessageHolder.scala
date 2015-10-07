@@ -14,6 +14,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
+import chat.tox.antox.wrapper.FriendKey
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -80,16 +81,17 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     val accept = fileButtons.findViewById(R.id.file_accept_button)
     val reject = fileButtons.findViewById(R.id.file_reject_button)
 
+    val key = msg.key.asInstanceOf[FriendKey]
     accept.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        State.transfers.acceptFile(msg.key, msg.messageId, context)
+        State.transfers.acceptFile(key, msg.messageId, context)
       }
     })
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        State.transfers.rejectFile(msg.key, msg.messageId, context)
+        State.transfers.rejectFile(key, msg.messageId, context)
       }
     })
     fileButtons.setVisibility(View.VISIBLE)

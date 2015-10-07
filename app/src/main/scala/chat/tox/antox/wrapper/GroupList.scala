@@ -3,7 +3,7 @@ package chat.tox.antox.wrapper
 import java.util
 import java.util.Locale
 
-import chat.tox.antox.utils.{AntoxLog, UiUtils}
+import chat.tox.antox.utils.{GroupKey, AntoxLog, UiUtils}
 
 import scala.collection.JavaConversions._
 
@@ -68,14 +68,14 @@ class GroupList {
   }
 
   def addGroupIfNotExists(group: Group): Unit = {
-    groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber).headOption match {
-      case Some(f) => return
+    groups.find(existingGroup => existingGroup.groupNumber == group.groupNumber) match {
+      case Some(f) =>
       case None =>
         this.groups.add(group)
     }
   }
 
-  def removeGroup(groupNumber: Int) {
-    groups.remove(groups.find(group => group.groupNumber == groupNumber).get)
+  def removeGroup(groupKey: GroupKey) {
+    groups.remove(groups.find(group => group.key == groupKey).get)
   }
 }

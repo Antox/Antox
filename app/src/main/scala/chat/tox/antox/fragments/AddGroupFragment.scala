@@ -12,7 +12,7 @@ import android.widget.{Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{AntoxLog, Constants, UiUtils}
+import chat.tox.antox.utils.{GroupKey, AntoxLog, Constants, UiUtils}
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.tox4j.exceptions.ToxException
 
@@ -74,7 +74,7 @@ class AddGroupFragment extends Fragment with InputableID {
 
   private def checkAndSend(rawGroupKey: String, originalUsername: String): Boolean = {
       if (ToxKey.isKeyValid(rawGroupKey)) {
-        val key = new ToxKey(rawGroupKey)
+        val key = new GroupKey(rawGroupKey)
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = State.db

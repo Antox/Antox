@@ -142,8 +142,8 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
         .setItems(items,
           new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, index: Int) {
-              val key = parentItem.key
               if (parentItem.viewType == ContactItemType.FRIEND) {
+                val key = parentItem.key.asInstanceOf[FriendKey]
                 index match {
                   case 0 =>
                     val profile = new Intent(getActivity, classOf[FriendProfileActivity])
@@ -158,6 +158,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
               }
 
               if (parentItem.viewType == ContactItemType.GROUP) {
+                val key = parentItem.key.asInstanceOf[GroupKey]
                 index match {
                   case 0 =>
                     val db = State.db
@@ -180,8 +181,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
     }
   }
 
-  def showDeleteFriendDialog(context: Context, fkey: ToxKey) {
-    val key = fkey
+  def showDeleteFriendDialog(context: Context, friendKey: FriendKey) {
     val delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend, null)
     val deleteLogsCheckboxView = delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox).asInstanceOf[CheckBox]
     new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
@@ -192,18 +192,15 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
             Observable[Boolean](subscriber => {
               val db = State.db
               if (deleteLogsCheckboxView.isChecked) {
-                db.deleteChatLogs(key)
+                db.deleteChatLogs(friendKey)
               }
-              db.deleteContact(key)
-              val mFriend = ToxSingleton.getAntoxFriend(key)
-              mFriend.foreach(friend => {
-                try {
-                  ToxSingleton.tox.deleteFriend(friend.getFriendNumber)
-                  ToxSingleton.save()
-                } catch {
-                  case e: ToxException[_] =>
-                }
-              })
+              db.deleteContact(friendKey)
+              try {
+                ToxSingleton.tox.deleteFriend(friendKey)
+                ToxSingleton.save()
+              } catch {
+                case e: ToxException[_] =>
+              }
               subscriber.onCompleted()
             }).subscribeOn(IOScheduler()).subscribe()
           }
@@ -217,15 +214,14 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
       .show()
   }
 
-  def exportChat(context: Context, fkey: ToxKey) {
-    val key = fkey
+  def exportChat(context: Context, friendKey: FriendKey) {
     val fileDialog = new FileDialog(this.getActivity, Environment.getExternalStorageDirectory, true)
     fileDialog.addDirectoryListener(new DirectorySelectedListener {
       override def directorySelected(directory: File): Unit = {
         try {
           val db = State.db
-          val messageList: Seq[Message] = db.getMessageList(Some(key))
-          val exportPath = directory.getPath + "/" + ToxSingleton.getAntoxFriend(key).get.name + "-" + UiUtils.trimId(key) + "-log.txt"
+          val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
+          val exportPath = directory.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
           val log = new PrintWriter(new FileOutputStream(exportPath, false))
 
           messageList.foreach(message => {
@@ -247,8 +243,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
     fileDialog.showDialog()
   }
 
-  def showDeleteChatDialog(context: Context, fkey: ToxKey) {
-    val key = fkey
+  def showDeleteChatDialog(context: Context, key: ToxKey) {
     new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
       .setMessage(getResources.getString(R.string.friend_action_delete_chat_confirmation))
       .setPositiveButton(getResources.getString(R.string.button_yes),

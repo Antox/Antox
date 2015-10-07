@@ -29,7 +29,7 @@ case class Message(id: Int,
       if (isMine) {
         ToxSingleton.tox.getName
       } else {
-        ToxSingleton.getAntoxFriend(key).get.name
+        senderName
       }
 
     val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)

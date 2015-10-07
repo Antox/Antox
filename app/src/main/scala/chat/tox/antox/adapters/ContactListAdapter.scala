@@ -15,7 +15,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.ToxKey
+import chat.tox.antox.wrapper.{FriendKey, ToxKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
 
@@ -156,15 +156,15 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
 
     if (`type` == ContactItemType.FRIEND_REQUEST) {
-      createFriendRequestClickHandlers(item.key, acceptButton, rejectButton)
+      createFriendRequestClickHandlers(item.key.asInstanceOf[FriendKey], acceptButton, rejectButton)
     } else if (`type` == ContactItemType.GROUP_INVITE) {
-      createGroupInviteClickHandlers(item.key, acceptButton, rejectButton)
+      createGroupInviteClickHandlers(item.key.asInstanceOf[GroupKey], acceptButton, rejectButton)
     }
 
     newConvertView
   }
 
-  def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createFriendRequestClickHandlers(key: FriendKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         AntoxLog.debug("Accepting Friend: " + key, AntoxLog.CLICK_TAG)
@@ -190,7 +190,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
   }
 
-  def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createGroupInviteClickHandlers(groupKey: GroupKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
         AntoxLog.debug("Joining Group: " + groupKey, AntoxLog.CLICK_TAG)

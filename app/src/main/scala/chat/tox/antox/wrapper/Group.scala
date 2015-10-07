@@ -1,32 +1,22 @@
 package chat.tox.antox.wrapper
 
 import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.GroupKey
 
 import scala.collection.JavaConversions._
 
-class Group(val key: ToxKey,
+class Group(val key: GroupKey,
             val groupNumber: Int,
             private var _name: String,
             var alias: String,
             var topic: String,
-            val peers: PeerList) extends Contact {
+            val peers: PeerList) {
 
   var connected = false
 
-
-  override def sendAction(action: String): Int = {
-    ToxSingleton.tox.sendGroupAction(groupNumber, action)
-    0 //groupchats don't support receipts yet
-  }
-
-  override def sendMessage(message: String): Int = {
-    ToxSingleton.tox.sendGroupMessage(groupNumber, message)
-    0 //groupchats don't support receipts yet
-  }
-
   def addPeer(tox: ToxCore, peerNumber: Int): Unit = {
-    val peerKey = tox.getGroupPeerPublicKey(groupNumber, peerNumber)
-    var peerName = tox.getGroupPeerName(groupNumber, peerNumber)
+    val peerKey = tox.getGroupPeerPublicKey(key, peerNumber)
+    var peerName = tox.getGroupPeerName(key, peerNumber)
     if (peerName == null) peerName = ""
     this.peers.addGroupPeer(new GroupPeer(peerKey, peerName, ignored = false))
     printPeerList()
@@ -48,7 +38,7 @@ class Group(val key: ToxKey,
   }
 
   def leave(partMessage: String): Unit = {
-    ToxSingleton.tox.deleteGroup(groupNumber, partMessage)
+    ToxSingleton.tox.deleteGroup(key, partMessage)
   }
 
   override def toString: String = name

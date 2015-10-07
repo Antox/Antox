@@ -8,6 +8,7 @@ import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.data.AntoxDB.DatabaseHelper
+import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ContactType.ContactType
@@ -15,7 +16,7 @@ import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{ToxCore, _}
 import com.squareup.sqlbrite.SqlBrite
-import im.tox.tox4j.core.enums.ToxUserStatus
+import im.tox.tox4j.core.enums.{ToxMessageType, ToxUserStatus}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 
@@ -33,7 +34,7 @@ object AntoxDB {
 
     var CREATE_TABLE_CONTACTS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_CONTACTS ($COLUMN_NAME_KEY text primary key,
-         |$COLUMN_NAME_PROFILE_NAME text,
+         |$COLUMN_NAME_NAME text,
          |$COLUMN_NAME_STATUS text,
          |$COLUMN_NAME_NOTE text,
          |$COLUMN_NAME_ALIAS text,
@@ -112,15 +113,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   def synchroniseWithTox(tox: ToxCore): Unit = {
-    for (friendNumber <- tox.getFriendList) {
-      val friendKey = tox.getFriendKey(friendNumber)
+    for (friendKey <- tox.getFriendList) {
       if (!doesContactExist(friendKey)) {
         addFriend(friendKey, "", "", "")
       }
     }
 
-    for (groupNumber <- tox.getGroupList) {
-      val groupKey = tox.getGroupKey(groupNumber)
+    for (groupKey <- tox.getGroupList) {
       if (!doesContactExist(groupKey)) {
         addGroup(groupKey, "", "")
       }
@@ -136,7 +135,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_STATUS, "0")
     values.put(COLUMN_NAME_NOTE, statusMessage)
-    values.put(COLUMN_NAME_PROFILE_NAME, username)
+    values.put(COLUMN_NAME_NAME, username)
     values.put(COLUMN_NAME_ISONLINE, false)
     values.put(COLUMN_NAME_ALIAS, alias)
     values.put(COLUMN_NAME_ISBLOCKED, false)
@@ -148,12 +147,12 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     mDb.insert(TABLE_CONTACTS, values)
   }
 
-  def addFriend(key: ToxKey, name: String, alias: String, statusMessage: String): Unit = {
+  def addFriend(key: FriendKey, name: String, alias: String, statusMessage: String): Unit = {
     AntoxLog.debug(s"Adding friend $key to database", AntoxDB.TAG)
     addContact(key, name, alias, statusMessage, ContactType.FRIEND)
   }
 
-  def addGroup(key: ToxKey, name: String, topic: String): Unit = {
+  def addGroup(key: GroupKey, name: String, topic: String): Unit = {
     AntoxLog.debug(s"Adding group $key to database", AntoxDB.TAG)
     addContact(key, name, "", topic, ContactType.GROUP)
   }
@@ -215,7 +214,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
                  hasBeenReceived: Boolean,
                  hasBeenRead: Boolean,
                  successfullySent: Boolean,
-                 `type`: MessageType) {
+                 `type`: ToxMessageType) {
 
     val values = new ContentValues()
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
@@ -226,7 +225,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, hasBeenReceived)
     values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfullySent)
-    values.put(COLUMN_NAME_TYPE, `type`.id: java.lang.Integer)
+    values.put(COLUMN_NAME_TYPE, MessageType.fromToxMessageType(`type`).id: java.lang.Integer)
     values.put(COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
     mDb.insert(TABLE_MESSAGES, values)
   }
@@ -245,7 +244,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxKey(cursor.getString(0))
+          val key = new ToxPublicKey(cursor.getString(0))
           val count = cursor.getInt(1).intValue
           map.put(key, count)
         } while (cursor.moveToNext())
@@ -348,6 +347,34 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     }
   }
 
+  private def keyFromString(key: String): ToxKey = {
+    val contactTypeQuery =
+      s"""SELECT $COLUMN_NAME_CONTACT_TYPE
+         |FROM $TABLE_CONTACTS
+         |WHERE $COLUMN_NAME_KEY = '$key'""".stripMargin
+
+    val cursor = mDb.query(contactTypeQuery)
+
+    if (cursor.moveToFirst()) {
+      ContactType(cursor.getInt(COLUMN_NAME_CONTACT_TYPE)) match {
+        case ContactType.FRIEND =>
+          FriendKey(key)
+        case ContactType.GROUP =>
+          GroupKey(key)
+        case ContactType.PEER =>
+          PeerKey(key)
+        case _ =>
+          ToxPublicKey(key)
+      }
+    } else {
+      if (ToxSingleton.tox.getSelfKey.key == key) {
+        SelfKey(key)
+      } else {
+        ToxPublicKey(key)
+      }
+    }
+  }
+
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
     val messageList = new ArrayBuffer[Message]()
     if (cursor.moveToFirst()) {
@@ -355,18 +382,18 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
         val id = cursor.getInt(COLUMN_NAME_ID)
         val time = Timestamp.valueOf(cursor.getString(COLUMN_NAME_TIMESTAMP))
         val messageId = cursor.getInt(COLUMN_NAME_MESSAGE_ID)
-        val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
-        val senderKey = new ToxKey(cursor.getString(COLUMN_NAME_SENDER_KEY))
+        val senderKey = keyFromString(cursor.getString(COLUMN_NAME_SENDER_KEY))
         val senderName = cursor.getString(COLUMN_NAME_SENDER_NAME)
         val message = cursor.getString(COLUMN_NAME_MESSAGE)
         val received = cursor.getBoolean(COLUMN_NAME_HAS_BEEN_RECEIVED)
         val read = cursor.getBoolean(COLUMN_NAME_HAS_BEEN_READ)
         val sent = cursor.getBoolean(COLUMN_NAME_SUCCESSFULLY_SENT)
         val size = cursor.getInt(COLUMN_NAME_SIZE)
-        val `type` = cursor.getInt(COLUMN_NAME_TYPE)
+        val `type` = MessageType(cursor.getInt(COLUMN_NAME_TYPE))
+        val key = keyFromString(cursor.getString(COLUMN_NAME_KEY))
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
         messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
-          time, size, MessageType(`type`), fileKind)
+          time, size, `type`, fileKind)
       } while (cursor.moveToNext())
     }
     cursor.close()
@@ -396,7 +423,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val friendRequests = new ArrayBuffer[FriendRequest]()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val key = new ToxPublicKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
           val message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE))
           friendRequests += new FriendRequest(key, message)
         } while (cursor.moveToNext())
@@ -414,7 +441,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val groupInvites = new ArrayBuffer[GroupInvite]()
       if (cursor.moveToFirst()) {
         do {
-          val groupKey = new ToxKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val groupKey = new GroupKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
           val inviter = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_GROUP_INVITER))
           val data = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_NAME_GROUP_DATA))
           groupInvites += new GroupInvite(groupKey, inviter, data)
@@ -467,7 +494,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     AntoxLog.debug(s"Deleted message: $id", AntoxDB.TAG)
   }
 
-  def friendList: Observable[Seq[FriendInfo]] = {
+  private val friendList: Observable[Seq[FriendInfo]] = {
     val selectQuery =
       s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_CONTACT_TYPE == ${ContactType.FRIEND.id}"
 
@@ -485,7 +512,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     })
   }
 
-  val groupList: Observable[Seq[GroupInfo]] = {
+  private val groupList: Observable[Seq[GroupInfo]] = {
     val selectQuery =
       s"""SELECT *
          |FROM $TABLE_CONTACTS
@@ -589,7 +616,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   def updateContactName(key: ToxKey, newName: String): Unit =
-    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_PROFILE_NAME, newName)
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_NAME, newName)
 
   def updateContactStatusMessage(key: ToxKey, newMessage: String): Unit =
     updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_NOTE, newMessage)
@@ -600,8 +627,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   def updateContactOnline(key: ToxKey, online: Boolean): Unit =
     updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_ISONLINE, online)
 
-  def updateFriendAvatar(key: ToxKey, avatar: String): Unit =
-    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_AVATAR, avatar)
+  def updateFriendAvatar(key: ToxKey, avatar: Option[String]): Unit =
+    updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_AVATAR, avatar.getOrElse(""))
 
   def setAllFriendReceivedAvatar(receivedAvatar: Boolean): Unit = {
     val values = new ContentValues()
@@ -618,34 +645,6 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   def updateContactUnsentMessage(key: ToxKey, unsentMessage: String): Unit =
     updateColumnWithKey(TABLE_CONTACTS, key, COLUMN_NAME_UNSENT_MESSAGE, unsentMessage)
 
-  def getContactDetails(key: ToxKey): Array[String] = {
-    var details = Array[String](null, null, null)
-    val selectQuery = s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY ='$key'"
-
-    val cursor = mDb.query(selectQuery)
-    if (cursor.moveToFirst()) {
-      do {
-        var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
-        val note = cursor.getString(COLUMN_NAME_NOTE)
-        val alias = cursor.getString(COLUMN_NAME_ALIAS)
-        if (name == null) name = ""
-        if (name == "") name = UiUtils.trimId(key)
-        details = Array(name, alias, note)
-      } while (cursor.moveToNext())
-    }
-    cursor.close()
-    details
-  }
-
-  def getContactNameOrAlias(key: ToxKey): String = {
-    val contactDetails = getContactDetails(key)
-    if (contactDetails(1) == "") contactDetails(0) else contactDetails(1)
-  }
-
-  def getContactStatusMessage(key: ToxKey): String = {
-    getContactInfo(key).statusMessage
-  }
-
   def getContactUnsentMessage(key: ToxKey): String = {
     val query = s"SELECT $COLUMN_NAME_UNSENT_MESSAGE FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
 
@@ -659,26 +658,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     unsentMessage
   }
 
-  def getContactInfo(key: ToxKey): ContactInfo = {
-    val query =
-      s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
-
-    val cursor = mDb.query(query)
-    var contactInfo: ContactInfo = null
-    if (cursor.moveToFirst()) {
-      contactInfo = ContactType(cursor.getInt(COLUMN_NAME_CONTACT_TYPE)) match {
-        case ContactType.FRIEND | ContactType.NONE =>
-          getFriendInfo(key)
-        case ContactType.GROUP =>
-          getGroupInfo(key)
-      }
-    }
-    cursor.close()
-
-    contactInfo
-  }
-
-  def getFriendInfo(key: ToxKey): FriendInfo = {
+  def getFriendInfo(key: FriendKey): FriendInfo = {
     val query =
       s"SELECT * FROM $TABLE_CONTACTS WHERE $COLUMN_NAME_KEY = '$key'"
 
@@ -707,8 +687,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   private def getFriendInfoFromCursor(cursor: Cursor): FriendInfo = {
-    var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
-    val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
+    var name = cursor.getString(COLUMN_NAME_NAME)
+    val key = new FriendKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val statusMessage = cursor.getString(COLUMN_NAME_NOTE)
     var alias = cursor.getString(COLUMN_NAME_ALIAS)
@@ -723,12 +703,12 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     if (name == "") name = UiUtils.trimId(key)
     val file = AVATAR.getAvatarFile(avatar, ctx)
 
-    new FriendInfo(online, name, status, statusMessage, key, file, receievedAvatar, blocked, ignored, favorite, alias)
+    new FriendInfo(online, name, alias, status, statusMessage, key, file, receievedAvatar, blocked, ignored, favorite)
   }
 
   private def getGroupInfoFromCursor(cursor: Cursor): GroupInfo = {
-    var name = cursor.getString(COLUMN_NAME_PROFILE_NAME)
-    val key = new ToxKey(cursor.getString(COLUMN_NAME_KEY))
+    var name = cursor.getString(COLUMN_NAME_NAME)
+    val key = new GroupKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val topic = cursor.getString(COLUMN_NAME_NOTE)
     var alias = cursor.getString(COLUMN_NAME_ALIAS)
@@ -743,7 +723,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     if (name == "") name = UiUtils.trimId(key)
     val file = AVATAR.getAvatarFile(avatar, ctx)
 
-    new GroupInfo(key, connected, name, topic, blocked, ignored, favorite, alias)
+    new GroupInfo(key, connected, name, alias, topic, blocked, ignored, favorite)
   }
 
   def updateAlias(alias: String, key: ToxKey) {

@@ -9,7 +9,7 @@ object DatabaseConstants {
 
   val TRUE = 1
 
-  val DATABASE_VERSION = 15
+  val DATABASE_VERSION = 16
 
   val USER_DATABASE_VERSION = 5
 
@@ -35,9 +35,9 @@ object DatabaseConstants {
 
   val COLUMN_NAME_MESSAGE = "message"
 
-  val COLUMN_NAME_NAME = "name"
-
   val COLUMN_NAME_PROFILE_NAME = "username"
+
+  val COLUMN_NAME_NAME = "name"
 
   val COLUMN_NAME_TOXME_DOMAIN = "domain"
 

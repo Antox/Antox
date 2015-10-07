@@ -1,11 +1,12 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.wrapper.FriendInfo
 import im.tox.tox4j.core.callbacks.FriendLosslessPacketCallback
 
-class AntoxOnFriendLosslessPacketCallback(ctx: Context) extends FriendLosslessPacketCallback[Unit] {
+class AntoxOnFriendLosslessPacketCallback(ctx: Context) {
 
-  override def friendLosslessPacket(friendNumber: Int, data: Array[Byte])(state: Unit): Unit = {
+  def friendLosslessPacket(friendInfo: FriendInfo, data: Array[Byte])(state: Unit): Unit = {
     //Do nothing
   }
 }

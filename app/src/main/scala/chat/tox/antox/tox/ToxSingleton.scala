@@ -9,7 +9,7 @@ import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.util.Log
 import chat.tox.antox.R
-import chat.tox.antox.callbacks.CallbackListener
+import chat.tox.antox.callbacks.ToxCallbackListener
 import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
@@ -30,11 +30,7 @@ object ToxSingleton {
 
   var toxAv: ToxAvImpl[Unit] = _
 
-  private var antoxFriendList: AntoxFriendList = _
-
   private var groupList: GroupList = _
-
-  var mNotificationManager: NotificationManager = _
 
   var dataFile: ToxDataFile = _
 
@@ -44,38 +40,10 @@ object ToxSingleton {
 
   var isInited: Boolean = false
 
-  var activeKey: String = _
-
-  var chatActive: Boolean = _
-
   var dhtNodes: Array[DhtNode] = Array()
 
   def interval: Int = {
     Math.min(State.transfers.interval, tox.interval)
-  }
-
-  def getAntoxFriendList: AntoxFriendList = antoxFriendList
-
-  def getAntoxFriend(key: ToxKey): Option[Friend] = {
-    try {
-      antoxFriendList.getByKey(key)
-    } catch {
-      case e: Exception => {
-        e.printStackTrace()
-        None
-      }
-    }
-  }
-
-  def getAntoxFriend(friendNumber: Int): Option[Friend] = {
-    try {
-      antoxFriendList.getByFriendNumber(friendNumber)
-    } catch {
-      case e: Exception => {
-        e.printStackTrace()
-        None
-      }
-    }
   }
 
   def getGroupList: GroupList = groupList
@@ -97,17 +65,6 @@ object ToxSingleton {
   def exportDataFile(dest: File): Unit = {
     dataFile.exportFile(dest)
     ToxSingleton.save()
-  }
-
-  def clearUselessNotifications(key: ToxKey) {
-    val mFriend = getAntoxFriend(key)
-     mFriend.foreach(friend => {
-       try {
-         if (mNotificationManager != null) mNotificationManager.cancel(friend.getFriendNumber)
-       } catch {
-         case e: Exception => e.printStackTrace()
-       }
-     })
   }
 
   def updateDhtNodes(ctx: Context) {
@@ -157,7 +114,7 @@ object ToxSingleton {
           jsonObject.getString("owner"),
           jsonObject.getString("ipv6"),
           jsonObject.getString("ipv4"),
-          new ToxKey(jsonObject.getString("pubkey")),
+          new ToxPublicKey(jsonObject.getString("pubkey")),
           jsonObject.getInt("port"))
       }
       dhtNodes
@@ -188,25 +145,11 @@ object ToxSingleton {
     !(wifiOnly && !mWifi.isConnected)
   }
 
-  def populateAntoxLists(db: AntoxDB): Unit = {
-    for (friendNumber <- tox.getFriendList) {
-      antoxFriendList.addFriendIfNotExists(friendNumber)
-      antoxFriendList.getByFriendNumber(friendNumber).get.key = tox.getFriendKey(friendNumber)
-    }
-
-    for (groupNumber <- tox.getGroupList) {
-      val groupKey = tox.getGroupKey(groupNumber)
-      val groupInfo = db.getGroupInfo(groupKey)
-      groupList.addGroupIfNotExists(new Group(groupKey, groupNumber, groupInfo.name, groupInfo.alias, groupInfo.topic, new PeerList()))
-    }
-  }
-
   def initTox(ctx: Context) {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     val userDb = State.userDb(ctx)
 
-    antoxFriendList = new AntoxFriendList()
     groupList = new GroupList()
 
     qrFile = ctx.getFileStreamPath("userkey_qr.png")
@@ -219,7 +162,7 @@ object ToxSingleton {
       saveData = dataFile.loadAsSaveType())
 
     try {
-      tox = new ToxCore(antoxFriendList, groupList, options)
+      tox = new ToxCore(groupList, options)
       if (!dataFile.doesFileExist()) dataFile.saveFile(tox.getSaveData)
       val editor = preferences.edit()
       editor.putString("tox_id", tox.getAddress.toString)
@@ -236,24 +179,7 @@ object ToxSingleton {
     db.clearFileNumbers()
     db.setAllOffline()
 
-    db.friendList.first.subscribe(friends => {
-      for (friend <- friends) {
-        try {
-          antoxFriendList.updateFromFriend(friend)
-        } catch {
-          case e: Exception =>
-            try {
-              tox.addFriendNoRequest(friend.key)
-            } catch {
-              case e: Exception =>
-                Log.d("ToxSingleton", "this should not happen (error adding friend on init)")
-            }
-        }
-      }
-    })
-
     db.synchroniseWithTox(tox)
-    populateAntoxLists(db)
 
     registerCallbacks(ctx)
 
@@ -274,7 +200,7 @@ object ToxSingleton {
 
 
   def registerCallbacks(ctx: Context): Unit = {
-    tox.callback(new CallbackListener(ctx))
+    tox.callback(new ToxCallbackListener(ctx))
   }
 
   def save(): Unit = {

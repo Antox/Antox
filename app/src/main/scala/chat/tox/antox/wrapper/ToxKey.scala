@@ -9,13 +9,12 @@ object ToxKey {
     !(key.length != MAX_KEY_LENGTH || key.matches("[[:xdigit:]]"))
 }
 
-case class ToxKey(key: String) {
+trait ToxKey {
+  def key: String
+
   if (!ToxKey.isKeyValid(key)) {
     throw new IllegalArgumentException(s"key must be $ToxKey.MAX_KEY_LENGTH hex chars long")
   }
-
-  def this(bytes: Array[Byte]) =
-    this(Hex.bytesToHexString(bytes))
 
   def bytes: Array[Byte] = Hex.hexStringToBytes(key)
 

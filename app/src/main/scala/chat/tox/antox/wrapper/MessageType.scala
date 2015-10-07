@@ -15,12 +15,26 @@ object MessageType extends Enumeration {
   val transferValues = Set(FILE_TRANSFER)
 
   def fromToxMessageType(messageType: ToxMessageType): MessageType = {
-    if (messageType == ToxMessageType.ACTION) {
-      ACTION
-    } else if (messageType == ToxMessageType.NORMAL) {
-      MESSAGE
-    } else {
-      NONE
+    messageType match {
+      case ToxMessageType.ACTION =>
+        ACTION
+      case ToxMessageType.NORMAL =>
+        MESSAGE
+      case _ =>
+        NONE
+    }
+  }
+
+  def toToxMessageType(messageType: MessageType): ToxMessageType = {
+    messageType match {
+      case MessageType.ACTION | MessageType.GROUP_ACTION =>
+        ToxMessageType.ACTION
+
+      case MessageType.MESSAGE | MessageType.GROUP_MESSAGE =>
+        ToxMessageType.NORMAL
+
+      case _ =>
+        throw new Exception("Invalid message type for conversion to ToxMessageType.")
     }
   }
 }

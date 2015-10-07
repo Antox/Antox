@@ -44,7 +44,7 @@ case class ToxAddress(address: String) {
     this(Hex.bytesToHexString(bytes))
 
   def bytes: Array[Byte] = Hex.hexStringToBytes(address)
-  def key: ToxKey = new ToxKey(address.substring(0, ToxKey.MAX_KEY_LENGTH))
+  def key: FriendKey = new FriendKey(address.substring(0, ToxKey.MAX_KEY_LENGTH))
 
   override def toString: String = address
 }

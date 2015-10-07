@@ -18,21 +18,24 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
-import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants, IconColor}
-import chat.tox.antox.wrapper.{FileKind, FriendInfo, ToxKey, UserStatus}
+import chat.tox.antox.utils.StringExtensions.RichString
+import chat.tox.antox.utils._
+import chat.tox.antox.wrapper.MessageType.MessageType
+import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
+import im.tox.tox4j.core.enums.ToxMessageType
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
-class ChatActivity extends GenericChatActivity {
+class ChatActivity extends GenericChatActivity[FriendKey] {
 
   val photoPathSaveKey = "PHOTO_PATH"
   var photoPath: Option[String] = None
 
+  override def getKey(key: String): FriendKey = new FriendKey(key)
+
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
-    val extras: Bundle = getIntent.getExtras
-    activeKey = new ToxKey(extras.getString("key"))
     val thisActivity = this
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
@@ -47,12 +50,11 @@ class ChatActivity extends GenericChatActivity {
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.online) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        val friendInfo = State.db.getFriendInfo(activeKey)
+        if (!friendInfo.online) {
+          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+          return
+        }
 
         val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
         val fileDialog = new FileDialog(thisActivity, mPath, false)
@@ -68,12 +70,11 @@ class ChatActivity extends GenericChatActivity {
 
     cameraButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.online) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        val friendInfo = State.db.getFriendInfo(activeKey)
+        if (!friendInfo.online) {
+          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+          return
+        }
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
         val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
@@ -94,12 +95,11 @@ class ChatActivity extends GenericChatActivity {
 
     imageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        ToxSingleton.getAntoxFriend(activeKey).foreach(friend => {
-          if (!friend.online) {
-            Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
-            return
-          }
-        })
+        val friendInfo = State.db.getFriendInfo(activeKey)
+        if (!friendInfo.online) {
+          Toast.makeText(thisActivity, getResources.getString(R.string.chat_ft_failed_friend_offline), Toast.LENGTH_SHORT).show()
+          return
+        }
 
         val intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, Constants.IMAGE_RESULT)
@@ -118,12 +118,14 @@ class ChatActivity extends GenericChatActivity {
     super.onRestoreInstanceState(savedInstanceState)
 
     val rawPhotoPath = savedInstanceState.getString(photoPathSaveKey)
-    photoPath = if (rawPhotoPath == "") None else Some(rawPhotoPath)
+    photoPath = rawPhotoPath.toOption
   }
 
   override def onResume(): Unit = {
     super.onResume()
-    ToxSingleton.clearUselessNotifications(activeKey)
+    //clear notifications that have already been seen
+    AntoxNotificationManager.clearMessageNotification(activeKey)
+
     titleSub = State.db.friendInfoList
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
@@ -200,19 +202,16 @@ class ChatActivity extends GenericChatActivity {
     super.onPause()
   }
 
-  override def sendMessage(message: String, isAction: Boolean, context: Context): Unit = {
-    MessageHelper.sendMessage(this, activeKey, message, isAction, None)
+  override def sendMessage(message: String, messageType: ToxMessageType, context: Context): Unit = {
+    MessageHelper.sendMessage(this, activeKey, message, messageType, None)
   }
 
   override def setTyping(typing: Boolean): Unit = {
-    val mFriend = ToxSingleton.getAntoxFriend(activeKey)
-    mFriend.foreach(friend => {
-      try {
-        ToxSingleton.tox.setTyping(friend.getFriendNumber, typing)
-      } catch {
-        case te: ToxException[_] =>
-        case e: Exception =>
-      }
-    })
+    try {
+      ToxSingleton.tox.setTyping(activeKey, typing)
+    } catch {
+      case te: ToxException[_] =>
+      case e: Exception =>
+    }
   }
 }
