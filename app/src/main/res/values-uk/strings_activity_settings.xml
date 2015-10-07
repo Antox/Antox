@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Налаштування</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Профіль</string>
+  <string name="pref_title_nickname">Ім’я</string>
+  <string name="pref_default_nickname">Користувач Antox</string>
+  <string name="pref_default_password">Пароль не задано</string>
+  <string name="pref_title_status">Статус</string>
+  <string-array name="pref_status_list_titles">
+    <item>В мережі</item>
+    <item>Відійшов</item>
+    <item>Не в мережі</item>
+  </string-array>
+  <string name="pref_title_status_message">Статус</string>
+  <string name="pref_default_status_message">Всім привіт! Я користуюся Antox\'ом!</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Апріорі Tox ID</string>
+  <string name="pref_title_logging_enabled">Зберігати історію чатів</string>
+  <string name="pref_title_theme_color">Змінити тему</string>
+  <string name="pref_title_avatar">Аватар</string>
+  <string name="pref_title_account_name">Ім\'я</string>
+  <string name="pref_title_export">Експортувати профіль</string>
+  <string name="pref_title_delete">Видалити аккаунт</string>
+  <string name="pref_title_logout">Вийти</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Сповіщення</string>
+  <string name="pref_title_enable_notifications">Включити сповіщення</string>
+  <string name="pref_title_new_message_notifications">Повідомляти про повідомлення</string>
+  <string name="pref_title_new_friend_notifications">Повідомлення про додавання в друзі</string>
+  <!--Other-->
+  <string name="pref_header_other">Инші налаштування</string>
+  <string name="pref_title_connection_status_messages">Повідомлення дій</string>
+  <string name="pref_title_wifi_only">Тільки через Wi-Fi</string>
+  <string name="pref_title_language">Мова</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Скопіювати Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Використовувати UDP</string>
+  <string name="pref_advanced">Розширені налаштування</string>
+  <string name="pref_nospam">Змінити Tox ID</string>
+  <string name="pref_autostart">Запускати Antox при завантаженні</string>
+</resources>

@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_friend_profile">Profil Kenalan</string>
+  <string name="title_activity_profile_settings">Aturan profil</string>
+  <!--Navigation / Action Bar-->
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Anda mesti isi nama profil</string>
+  <string name="login_login">Daftar Masuk</string>
+  <string name="login_account_hint">Nama Profil</string>
+  <string name="login_create_account_text">Cipta Profil Tox</string>
+  <string name="login_bad_login">Nama profil tidak dikenali</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Nama Profil</string>
+  <string name="create_register">Daftar</string>
+  <string name="create_register_incog">Daftar Secara Tersembunyi</string>
+  <string name="create_skip">Benarkan sesiapa untuk menambah anda sebagai kenalan menggunakan nama profil anda</string>
+  <string name="create_must_fill_in">Anda mesti isi kesemua tempat kosong</string>
+  <string name="create_bad_profile_name">Nama profil tidak boleh mengandungi tanda palang atau ruang atau kosong</string>
+  <string name="create_profile_exists">Nama profil ini telah ada</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">Tiada perbualan aktif. Mulakan perbualan dengan memilih kenalan dari tetingkap kiri.</string>
+  <string name="main_recent_no">Tiada perbualan terdahulu</string>
+  <string name="main_no_internet">Tiada Kesambungan Internet</string>
+  <string name="main_not_connected">Tiada kesambungan internet ditemui. Tanpa kesambungan internet, akses fungsi akan terbatas melainkan anda menggunakan Antox hanya didalam lingkungan LAN</string>
+  <string name="search_all_contacts">Cari semua kenalan</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Hantar mesej</string>
+  <string name="chat_file_transfer">Pemindahan fail</string>
+  <!--Add Pane Fragment-->
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">Tox ID kenalan anda</string>
+  <string name="addfriend_friend_message">Hantar mesej bersama dengan permintaan anda</string>
+  <string name="addfriend_button">Tambah Kenalan</string>
+  <string name="addfriend_friend_added">Kenalan Telah Ditambah</string>
+  <string name="addfriend_friend_exists">Kenalan telah ada</string>
+  <string name="scanqr_button">Imbas kod QR</string>
+  <string name="invalid_friend_ID">Tox ID tidak sah</string>
+  <string name="addfriend_nick_hint">Tetapkan nama panggilan untuk kenalan anda</string>
+  <string name="addfriend_optional_title">Pilihan Tambahan</string>
+  <string name="dialog_pin">Masukkan pin kenalan anda</string>
+  <string name="addfriend_invalid_pin">Pin tidak sah</string>
+  <string name="addfriend_own_key">Anda tidak boleh menambah diri anda sendiri</string>
+  <string name="addfriend_friend_pin_title">Masukkan Pin Kenalan</string>
+  <string name="addfriend_friend_pin_text">Masukkan Pin Kenalan</string>
+  <string name="addfriend_default_message">Hai! Sila terima permintaan saya untuk menambah anda sebagai kenalan</string>
+  <!--Add Group Fragment-->
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Nama panggilan</string>
+  <string name="friend_profile_key">Tox ID</string>
+  <string name="friend_profile_note">Status</string>
+  <string name="friend_profile_button">Kemaskini</string>
+  <string name="friend_profile_updated">Profil telah dikemaskini</string>
+  <string name="friend_profile_copied">Tox ID Telah Disalin</string>
+  <!--Group Profile Activity-->
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">Profail %1$s</string>
+  <string name="friendrequest_accept">Terima</string>
+  <string name="friendrequest_reject">Bantah</string>
+  <string name="friend_request">Permintaan Baru Untuk Menambah Sebagai Kenalan</string>
+  <!--Group invite fragment-->
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profil</string>
+  <string name="friend_action_delete">Buang Kenalan</string>
+  <string name="friend_action_delete_chat">Padam Mesej-mesej Terdahulu</string>
+  <string name="friend_action_block">Sekat</string>
+  <string name="contacts_actions_on">Aksi aktif</string>
+  <string name="contacts_delimiter_requests">Permintaan</string>
+  <string name="contacts_delimiter_friends">Kenalan</string>
+  <string name="contacts_delimiter_offline">Tidak tersambung</string>
+  <string name="contacts_delimiter_online">Tersambung</string>
+  <string name="contacts_resend_friend_request">Hantar Kembali Permintaan Untuk Menambah Sebagai Kenalan</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Anda pasti untuk buang kenalan ini?</string>
+  <!--Export Chat Logs Toast-->
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Anda pasti untuk padamkan mesej-mesej terdahulu?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Dengan menyekat pengguna ini anda akan buangkan pengguna tersebut dari senarai kenalan anda dan anda juga tidak akan menerima sebarang permintaan dari pengguna tersebut untuk menambahkan anda sebagai kenalannya pada masa akan datang.\n\nTeruskan?</string>
+  <!--Reset ToxID Dialog-->
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <!--Group Chat Delete-->
+  <!--Color Picker Dialog-->
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Lampirkan gambar</string>
+  <string name="attachment_file">Lampirkan fail</string>
+  <string name="attachment_takephoto">Ambil gambar</string>
+  <string name="message_copy">Salin mesej</string>
+  <string name="message_delete">Padam mesej</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Terdahulu</string>
+  <string name="titles_contacts">Kenalan</string>
+  <string name="titles_settings">Aturan</string>
+  <!--Misc-->
+  <string name="button_confirm">Pasti</string>
+  <string name="button_cancel">Batal</string>
+  <string name="button_yes">Ya</string>
+  <string name="button_no">Tidak</string>
+  <string name="button_ok">Baiklah</string>
+  <string name="dialog_tox_id">Salin Tox ID ke memori</string>
+  <string name="share_with">Kongsi dengan</string>
+  <string name="connection_has">telah</string>
+  <string name="connection_online">tersambung</string>
+  <string name="connection_offline">tidak tersambung</string>
+  <string name="title_activity_create_account">Cipta Aktiviti Akaun</string>
+  <string name="action_settings">Aturan</string>
+  <!--Avatar Dialog-->
+  <!--File transfer-->
+  <!--QR-->
+  <string name="qr_default_title">Pasang aplikasi pengimbas kod QR?</string>
+  <string name="qr_default_message">Aplikasi ini memerlukan aplikasi pengimbas kod QR. Anda mahu pasang sekarang?</string>
+  <string name="qr_button_yes">Ya</string>
+  <string name="qr_button_no">Tidak</string>
+  <!--Notifications-->
+  <!--nav bar-->
+  <string name="drawer_open">Buka tetingkap navigasi</string>
+  <string name="drawer_close">Tutup tetingkap navigasi</string>
+  <string name="open_source_license">Lesen sumber terbuka</string>
+  <string name="ver">Versi</string>
+  <string name="about">Tentang</string>
+  <string name="about_antox_1">Dengan kebangkitan program pemantauan oleh pihak kerajaan, Tox menyediakan aplikasi yang amat mudah yang membolehkan anda berhubung dengan rakan dan keluarga tanpa bimbang perbualan atau percakap terdedah kepada pihak yang memantau.</string>
+  <string name="about_antox_2">Apa Yang Sedang Berfungsi:</string>
+</resources>

@@ -49,45 +49,65 @@
     <string name="pref_title_wifi_only">Wi-Fi Only</string>
     <string name="pref_title_language">Language</string>
     <string-array name="pref_language_list_titles" translatable="false">
+        <item>العربية</item>
         <item>Български</item>
         <item>Català</item>
         <item>čeština</item>
-        <item>English</item>
         <item>Deutsch</item>
+        <item>English</item>
+        <item>ελληνικά</item>
         <item>Español</item>
+        <item>Suomi</item>
+        <item>فارسی</item>
         <item>Français</item>
+        <item>Magyar</item>
         <item>Hrvatski</item>
         <item>Italiano</item>
         <item>日本語</item>
+        <item>بهاس ملايو</item>
+        <item>Norsk bokmål</item>
         <item>Nederlands</item>
         <item>Polski</item>
-        <item>Svenska</item>
-        <item>Türkçe</item>
+        <item>Português (BR)</item>
+        <item>Português (PT)</item>
         <item>Русский</item>
+        <item>Slovenský</item>
+        <item>Shqip</item>
+        <item>Svenska</item>
         <item>Српски</item>
+        <item>Türkçe</item>
         <item>Український</item>
-        <item>Português</item>
         <item>简体中文</item>
     </string-array>
     <string-array name="pref_language_list_values" translatable="false">
+        <item>ar</item>
         <item>bg</item>
         <item>ca</item>
         <item>cs</item>
-        <item>en</item>
         <item>de</item>
+        <item>en</item>
+        <item>el</item>
         <item>es</item>
+        <item>fa</item>
+        <item>fi</item>
         <item>fr</item>
+        <item>hu</item>
         <item>hr</item>
         <item>it</item>
         <item>ja</item>
+        <item>ms</item>
+        <item>nb</item>
         <item>nl</item>
         <item>pl</item>
+        <item>pt_BR</item>
+        <item>pt_PT</item>
+        <item>ru</item>
+        <item>sk</item>
+        <item>sq</item>
+        <item>sr</item>
         <item>sv</item>
         <item>tr</item>
-        <item>ru</item>
-        <item>sr</item>
         <item>uk</item>
-        <item>pt</item>
         <item>zh_CN</item>
     </string-array>
 

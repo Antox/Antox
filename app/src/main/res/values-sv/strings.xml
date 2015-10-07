@@ -1,10 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--Activity titles-->
-  <string name="title_activity_add">Lägg Till Vän</string>
   <string name="title_activity_friend_profile">Väns Profil</string>
   <!--Navigation / Action Bar-->
-  <string name="add_contact">Lägg Till Vän</string>
   <!--Login Activity-->
   <string name="login_must_fill_in">Du måste fylla i ett profilnamn</string>
   <string name="login_login">Logga in</string>
@@ -13,7 +11,6 @@
   <string name="login_bad_login">Profilnamnet kändes inte igen</string>
   <!--Create Account Activity-->
   <string name="create_name_hint">Profilnamn</string>
-  <string name="create_text">Slogan Här</string>
   <string name="create_register">Registrera</string>
   <string name="create_register_incog">Registrera Inkognito</string>
   <string name="create_skip">Tillåt vem som helst att lägga till dig via ditt profilnamn</string>
@@ -27,7 +24,8 @@
   <!--Chat Activity-->
   <string name="chat_enter_message">Skicka ett meddelande</string>
   <string name="chat_file_transfer">Filöverföring</string>
-  <!--Add Friend Activity-->
+  <!--Add Pane Fragment-->
+  <!--Add Friend Fragment-->
   <string name="addfriend_friend_key">Din väns Tox ID</string>
   <string name="addfriend_friend_message">Skicka ett meddelande med din förfrågan</string>
   <string name="addfriend_button">Lägg Till Vän</string>
@@ -43,6 +41,7 @@
   <string name="addfriend_friend_pin_title">Skriv In Din Väns Pin</string>
   <string name="addfriend_friend_pin_text">Skriv In Din Väns Pin</string>
   <string name="addfriend_default_message">Hej! Snälla acceptera min vänförfrågan</string>
+  <!--Add Group Fragment-->
   <!--Friend Profile Activity-->
   <string name="friend_profile_nick">Smeknamn</string>
   <string name="friend_profile_key">Tox ID</string>
@@ -50,11 +49,13 @@
   <string name="friend_profile_button">Uppdatera</string>
   <string name="friend_profile_updated">Profilen har uppdaterats</string>
   <string name="friend_profile_copied">Tox ID Kopierat</string>
+  <!--Group Profile Activity-->
   <!--Friend request fragment-->
   <string name="friend_profile_title">%1$ss Profil</string>
   <string name="friendrequest_accept">Acceptera</string>
   <string name="friendrequest_reject">Avvisa</string>
   <string name="friend_request">Ny Vänförfrågan</string>
+  <!--Group invite fragment-->
   <!--Contacts Fragment-->
   <string name="friend_action_profile">Profil</string>
   <string name="friend_action_delete">Ta bort Vän</string>
@@ -68,10 +69,16 @@
   <string name="contacts_resend_friend_request">Skicka om Vänförfrågan</string>
   <!--Delete Friend Dialog-->
   <string name="friend_action_delete_friend_confirmation">Är du säker på att du vill ta bort den här kontakten?</string>
+  <!--Export Chat Logs Toast-->
   <!--Delete Chat Logs Dialog-->
   <string name="friend_action_delete_chat_confirmation">Är du säker på att du vill ta bort chatloggarna?</string>
   <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Att blockera den här användaren kommer ta bort dem från din kontaktlista och du kommer inte längre se vänförfrågningar från dem.\n\nÄr du säker på att du vill fortsätta?</string>
+  <!--Reset ToxID Dialog-->
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <!--Group Chat Delete-->
+  <!--Color Picker Dialog-->
   <!--Chat Fragment-->
   <string name="attachment_photo">Bifoga bild</string>
   <string name="attachment_file">Bifoga Fil</string>
@@ -93,12 +100,14 @@
   <string name="connection_has">har</string>
   <string name="connection_online">loggat in</string>
   <string name="connection_offline">loggat ut</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
   <string name="action_settings">Inställningar</string>
+  <!--Avatar Dialog-->
+  <!--File transfer-->
   <!--QR-->
   <string name="qr_default_title">Installera Barcode Scanner?</string>
   <string name="qr_default_message">Den här applicationen kräver Barcode Scanner. Vill du installera det?</string>
   <string name="qr_button_yes">Ja</string>
   <string name="qr_button_no">Nej</string>
+  <!--Notifications-->
   <!--nav bar-->
 </resources>

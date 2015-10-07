@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Beállítások</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Név</string>
+  <string name="pref_default_nickname">Antox felhasználó</string>
+  <string name="pref_default_password">Nincs beállítva jelszó</string>
+  <string name="pref_title_status">Állapot</string>
+  <string-array name="pref_status_list_titles">
+    <item>Elérhető</item>
+    <item>Távol</item>
+    <item>Elfoglalt</item>
+  </string-array>
+  <string name="pref_title_status_message">Állapot üzenet</string>
+  <string name="pref_default_status_message">Üdv! Antoxot használok</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Alapértelmezett Tox ID - Ezt nem kellene látnia</string>
+  <string name="pref_title_logging_enabled">Chat előzmény megtartása kijelentkezéskor</string>
+  <string name="pref_title_avatar">Avatarkép</string>
+  <string name="pref_title_account_name">Profilnév</string>
+  <string name="pref_title_export">Profil exportálása</string>
+  <string name="pref_title_logout">Kijelentkezés</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Értesítések</string>
+  <string name="pref_title_enable_notifications">Értesítések engedélyezése</string>
+  <string name="pref_title_new_message_notifications">Üzenet értesítések</string>
+  <string name="pref_title_new_friend_notifications">Partnerkérelem értesítések</string>
+  <!--Other-->
+  <string name="pref_header_other">Egyéb</string>
+  <string name="pref_title_connection_status_messages">Műveleti üzenetek</string>
+  <string name="pref_title_wifi_only">Csak Wi-Fi</string>
+  <string name="pref_title_language">Nyelv</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Tox ID másolása</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">UDP engedélyezése</string>
+  <string name="pref_advanced">Továbbiak</string>
+  <string name="pref_nospam">Tox ID visszaállítása</string>
+  <string name="pref_autostart">Antox indítása rendszerinduláskor</string>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Konfigurimi</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Emri</string>
+  <string name="pref_default_nickname">Përdorues i Antox-it</string>
+  <string name="pref_title_status">Statusi</string>
+  <string-array name="pref_status_list_titles">
+    <item>Në linjë</item>
+    <item>Jo i pranishëm</item>
+    <item>I zënë</item>
+  </string-array>
+  <string name="pref_title_status_message">Mesazhi i Statusit</string>
+  <string name="pref_default_status_message">Hej! Unë po përdor Antox-in</string>
+  <string name="pref_title_tox_id">ID Tox</string>
+  <string name="pref_default_tox_id">ID Tox e parazgjedhur - S\'duhet ta shihni këtë</string>
+  <string name="pref_title_account_name">Emri i Profilit</string>
+  <string name="pref_title_logout">Dilni</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Njoftime</string>
+  <string name="pref_title_enable_notifications">Mundësoni njoftimet</string>
+  <string name="pref_title_new_message_notifications">Njoftimet e mesazheve</string>
+  <string name="pref_title_new_friend_notifications">Njoftimet e kërkesës së mikut</string>
+  <!--Other-->
+  <string name="pref_header_other">Tjetër</string>
+  <string name="pref_title_wifi_only">Vetëm Wi-Fi</string>
+  <string name="pref_title_language">Gjuha</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Kopjojeni ID Tox</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Mundësoni UDP</string>
+  <string name="pref_advanced">I përparuar</string>
+</resources>
