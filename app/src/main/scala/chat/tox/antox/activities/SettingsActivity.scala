@@ -137,6 +137,14 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         AntoxNotificationManager.removePersistentNotification()
       }
     }
+    if(key == "notifications_enable_notifications"){
+      val on = sharedPreferences.getBoolean("notifications_enable_notifications",true)
+      val persist = sharedPreferences.getBoolean("notifications_persistent",false)
+      if(persist){
+        if(on) AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+        else AntoxNotificationManager.removePersistentNotification()
+      }
+    }
 
   }
 

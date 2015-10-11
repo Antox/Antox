@@ -14,7 +14,6 @@ import chat.tox.antox.wrapper.{UserInfo, ToxKey}
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.Subscription
-import scala.util.Random
 
 object AntoxNotificationManager {
 
@@ -34,6 +33,9 @@ object AntoxNotificationManager {
   def generateNotificationId(key: ToxKey): Int = key.hashCode()
 
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String): Unit = {
+
+    Log.d(AntoxNotificationManager.getClass.getSimpleName, s"Creating message notification, $name, $content")
+
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     if (shouldNotify(preferences, "notifications_new_message")) {
@@ -63,6 +65,8 @@ object AntoxNotificationManager {
   }
 
   def createRequestNotification(contentText: Option[String], context: Context): Unit = {
+    Log.d(AntoxNotificationManager.getClass.getSimpleName, s"Creating request notification")
+
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     if (shouldNotify(preferences, "notifications_friend_request")) {
@@ -110,9 +114,16 @@ object AntoxNotificationManager {
         ctx.getString(R.string.status_busy)
     }
 
+    val resultIntent = new Intent(ctx, classOf[MainActivity])
+    val stackBuilder = TaskStackBuilder.create(ctx)
+    stackBuilder.addParentStack(classOf[MainActivity])
+    stackBuilder.addNextIntent(resultIntent)
+    val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+
     persistBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
       .setContentTitle(ctx.getString(R.string.app_name))
       .setContentText(status)
+      .setContentIntent(resultPendingIntent)
     val notif = persistBuilder.build()
     notif.flags = Notification.FLAG_ONGOING_EVENT
     mNotificationManager.foreach(_.notify(persistID,notif))
@@ -142,7 +153,7 @@ object AntoxNotificationManager {
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-    if(preferences.getBoolean("notifications_persistent",false)){
+    if(persistOn){
 
       val status = if(toxConnection == ToxConnection.NONE ||
         ToxSingleton.tox == null) ctx.getString(R.string.status_offline)
