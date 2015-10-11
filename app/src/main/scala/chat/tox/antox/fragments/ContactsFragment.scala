@@ -34,7 +34,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.nonEmpty) {
       for (f <- sortedFriendsList) {
-        val friend = new LeftPaneItem(f.key, f.avatar, f.getAliasOrName, f.statusMessage,
+        val friend = new LeftPaneItem(ContactItemType.FRIEND, f.key, f.avatar, f.getAliasOrName, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
           f.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()))
         leftPaneAdapter.addItem(friend)

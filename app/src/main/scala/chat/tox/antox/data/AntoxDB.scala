@@ -423,7 +423,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val friendRequests = new ArrayBuffer[FriendRequest]()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxPublicKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val key = new FriendKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
           val message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE))
           friendRequests += new FriendRequest(key, message)
         } while (cursor.moveToNext())
