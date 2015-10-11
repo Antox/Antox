@@ -11,6 +11,12 @@
 
         <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
         <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="notifications_enable_notifications"
+            android:key="notifications_persistent"
+            android:title="@string/pref_title_persistent_notification" />
+        <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+        <CheckBoxPreference
             android:defaultValue="true"
             android:dependency="notifications_enable_notifications"
             android:key="notifications_new_message"
