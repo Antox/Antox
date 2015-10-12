@@ -29,14 +29,13 @@ object MessageHelper {
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
       if (!chatActive) {
-        val unreadCount = db.getUnreadCounts(friendInfo.key)
+        //val unreadCount = db.getUnreadCounts(friendInfo.key)
         val notificationContent =
-          if (unreadCount > 1) {
-            ctx.getResources.getString(R.string.unread_count, unreadCount.toString)
-          } else {
+          //if (unreadCount > 1) {
+          //  ctx.getResources.getString(R.string.unread_count, unreadCount.toString)
+          //} else {
             message
-          }
-
+          //}  TODO fix unread count
         AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, notificationContent)
       }
     }

@@ -2,6 +2,8 @@
 <resources>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="pref_unsupported">Your device does not support this option</string>
+
     <!-- Profile -->
     <string name="pref_header_profile">Profile</string>
 
@@ -43,11 +45,21 @@
     <string name="pref_title_new_message_notifications">Message notifications</string>
     <string name="pref_title_new_friend_notifications">Friend request notifications</string>
     <string name="pref_title_persistent_notification">Show persistent notification</string>
+    <string name="pref_title_notification_vibrate">Vibrate</string>
+    <string name="pref_title_notification_sound">Play sound</string>
+    <string name="pref_title_notification_light">Pulse light</string>
+
+    <string name="pref_description_notification_vibrate">Vibrate</string>
+    <string name="pref_description_notification_sound">Play sound</string>
+
+
+    <!-- Network -->
+    <string name="pref_header_network">Network</string>
+    <string name="pref_title_connection_status_messages">Action Messages</string>
+    <string name="pref_title_wifi_only">Wi-Fi Only</string>
 
     <!-- Other -->
     <string name="pref_header_other">Other</string>
-    <string name="pref_title_connection_status_messages">Action Messages</string>
-    <string name="pref_title_wifi_only">Wi-Fi Only</string>
     <string name="pref_title_language">Language</string>
     <string-array name="pref_language_list_titles" translatable="false">
         <item>العربية</item>

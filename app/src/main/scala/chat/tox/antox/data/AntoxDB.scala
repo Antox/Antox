@@ -255,8 +255,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     })
   }
 
-  def getUnreadCounts: Map[ToxKey, Int] =
+  def getUnreadCounts: Map[ToxKey, Int] = {
     unreadCounts.toBlocking.first
+  }
 
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
     var id = -1
@@ -313,6 +314,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       cursor.close()
       messages
     })
+
   }
 
   def messageVisible(message: Message): Boolean =
