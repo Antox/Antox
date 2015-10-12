@@ -244,7 +244,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxPublicKey(cursor.getString(0))
+          val key = keyFromString(cursor.getString(0))
           val count = cursor.getInt(1).intValue
           map.put(key, count)
         } while (cursor.moveToNext())
@@ -253,6 +253,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       cursor.close()
       map.toMap
     })
+
+
   }
 
   def getUnreadCounts: Map[ToxKey, Int] = {
