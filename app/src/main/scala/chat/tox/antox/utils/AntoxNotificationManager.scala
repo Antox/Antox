@@ -33,7 +33,7 @@ object AntoxNotificationManager {
 
   def generateNotificationId(key: ToxKey): Int = key.hashCode()
 
-  def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String): Unit = {
+  def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String, count: Int = 0): Unit = {
 
     AntoxLog.debug( s"Creating message notification, $name, $content")
 
@@ -64,6 +64,13 @@ object AntoxNotificationManager {
           mBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
         }
       }
+
+      if(count > 0){
+        val countStr: String = if(count < 1000) s"$count"
+        else "999+"
+        mBuilder.setContentInfo(countStr)
+      }
+      else mBuilder.setContentInfo("")
 
       val resultIntent = new Intent(ctx, intentClass)
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
