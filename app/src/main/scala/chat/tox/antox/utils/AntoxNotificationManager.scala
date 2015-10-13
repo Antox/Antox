@@ -3,6 +3,7 @@ package chat.tox.antox.utils
 import android.app.{NotificationManager, PendingIntent, Notification}
 import android.content.{SharedPreferences, Intent, Context}
 import android.graphics._
+import android.os.Build
 import android.preference.PreferenceManager
 import android.support.v4.app.{TaskStackBuilder, NotificationCompat}
 import android.util.Log
@@ -24,7 +25,6 @@ object AntoxNotificationManager {
   private var persistBuilder: NotificationCompat.Builder = _
   private var statusSubscription: Subscription = _
   var persistOn = false
-
 
   def checkPreference(preferences: SharedPreferences, notificationPreference: String): Boolean = {
     preferences.getBoolean("notifications_enable_notifications", true) && preferences.getBoolean(notificationPreference, true)
@@ -159,10 +159,12 @@ object AntoxNotificationManager {
     stackBuilder.addNextIntent(resultIntent)
     val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-    persistBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
+    persistBuilder = new NotificationCompat.Builder(ctx)
+      .setSmallIcon(R.drawable.ic_actionbar)
       .setContentTitle(ctx.getString(R.string.app_name))
       .setContentText(status)
       .setContentIntent(resultPendingIntent)
+      .setShowWhen(false)
     val notif = persistBuilder.build()
     notif.flags = Notification.FLAG_ONGOING_EVENT
     mNotificationManager.foreach(_.notify(persistID,notif))
