@@ -18,8 +18,6 @@ import scala.util.Try
 
 object MessageHelper {
 
-
-
   def handleMessage(ctx: Context, friendInfo: FriendInfo, message: String, messageType: ToxMessageType): Unit = {
     val db = State.db
 

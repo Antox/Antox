@@ -58,7 +58,6 @@ object State {
     if(preferences.getBoolean("notifications_persistent", false)){
       AntoxNotificationManager.createPersistentNotification(context)
     }
-    Log.d(State.getClass.getSimpleName, "Use persistent notification: " + preferences.getBoolean("notifications_persistent", false))
   }
 
   def logout(activity: Activity): Unit = {

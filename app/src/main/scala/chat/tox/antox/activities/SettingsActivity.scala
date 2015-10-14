@@ -129,8 +129,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       startActivity(intent)
     }
     if(key == "notifications_persistent") {
-      val on = sharedPreferences.getBoolean("notifications_persistent",false)
-      if(on){
+      if(sharedPreferences.getBoolean("notifications_persistent",false)){
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
       }
       else{
@@ -138,12 +137,10 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     }
     if(key == "notifications_enable_notifications"){
-      val on = sharedPreferences.getBoolean("notifications_enable_notifications",true)
-      val persist = sharedPreferences.getBoolean("notifications_persistent",false)
-      if(persist){
-        if(on) AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+      if(sharedPreferences.getBoolean("notifications_persistent",false))
+        if(sharedPreferences.getBoolean("notifications_enable_notifications",true))
+          AntoxNotificationManager.createPersistentNotification(getApplicationContext)
         else AntoxNotificationManager.removePersistentNotification()
-      }
     }
 
   }
