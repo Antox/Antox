@@ -12,6 +12,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
+import chat.tox.antox.utils.AntoxNotificationManager
 
 import scala.collection.JavaConversions._
 
@@ -50,6 +51,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     } else if (userDb.loggedIn) {
       val startTox = new Intent(getApplicationContext, classOf[ToxService])
       getApplicationContext.startService(startTox)
+
       val main = new Intent(getApplicationContext, classOf[MainActivity])
       startActivity(main)
       finish()

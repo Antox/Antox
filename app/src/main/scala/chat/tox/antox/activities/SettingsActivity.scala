@@ -1,5 +1,6 @@
 package chat.tox.antox.activities
 
+import android.app.NotificationManager
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceManager}
@@ -10,7 +11,10 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.Options
+import chat.tox.antox.utils.{AntoxNotificationManager, Options}
+import chat.tox.antox.wrapper.UserStatus
+import im.tox.tox4j.core.enums.ToxUserStatus
+import rx.lang.scala.Notification
 
 object SettingsActivity {
 
@@ -124,6 +128,24 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       finish()
       startActivity(intent)
     }
+    if (key == "notifications_persistent") {
+      if (sharedPreferences.getBoolean("notifications_persistent", false) &&
+        sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
+        AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+      }
+      else {
+        AntoxNotificationManager.removePersistentNotification()
+      }
+    }
+    if (key == "notifications_enable_notifications"){
+      if (sharedPreferences.getBoolean("notifications_persistent", false) &&
+        sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
+        AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+      }
+      else {
+        AntoxNotificationManager.removePersistentNotification()
+      }
+    }
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
@@ -140,7 +162,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
 
   def showThemeDialog(): Unit = {
     val currentColor = ThemeManager.primaryColor
-    themeDialog.show(currentColor match{
+    themeDialog.show(currentColor match {
       case -1 => None
       case _ => Some(currentColor)
     })

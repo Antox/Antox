@@ -244,7 +244,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val cursor = query.run()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxPublicKey(cursor.getString(0))
+          val key = keyFromString(cursor.getString(0))
           val count = cursor.getInt(1).intValue
           map.put(key, count)
         } while (cursor.moveToNext())
@@ -253,10 +253,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       cursor.close()
       map.toMap
     })
+
+
   }
 
-  def getUnreadCounts: Map[ToxKey, Int] =
+  def getUnreadCounts: Map[ToxKey, Int] = {
     unreadCounts.toBlocking.first
+  }
 
   def getFileId(key: ToxKey, fileNumber: Int): Int = {
     var id = -1
@@ -312,6 +315,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       cursor.close()
       messages
     })
+
   }
 
   def messageVisible(message: Message): Boolean =
@@ -422,7 +426,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       val friendRequests = new ArrayBuffer[FriendRequest]()
       if (cursor.moveToFirst()) {
         do {
-          val key = new ToxPublicKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
+          val key = new FriendKey(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_KEY)))
           val message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_MESSAGE))
           friendRequests += new FriendRequest(key, message)
         } while (cursor.moveToNext())
@@ -481,8 +485,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   }
 
   def markIncomingMessagesRead(key: ToxKey) {
-    val where = ""
-      //s"$COLUMN_NAME_KEY ='$key' AND ${createSqlEqualsCondition(COLUMN_NAME_TYPE, (MessageType.values -- MessageType.selfValues).map(_.id))}"
+    val where = s"$COLUMN_NAME_KEY ='$key'"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
     AntoxLog.debug("Marked incoming messages as read", AntoxDB.TAG)
   }

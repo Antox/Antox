@@ -227,6 +227,14 @@
     <!-- Notifications -->
     <string name="unread_count">%s Unread Messages</string>
 
+    <!-- User Status -->
+    <string name="status_online">Online</string>
+    <string name="status_away">Away</string>
+    <string name="status_busy">Busy</string>
+    <string name="status_offline">Offline</string>
+
+
+
     <!-- nav bar -->
     <string name="n_settings">Settings</string>
     <string name="n_profile_options">Profile</string>

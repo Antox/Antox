@@ -8,7 +8,7 @@ import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.activities.{ChatActivity, GroupChatActivity, MainActivity}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{GroupKey, AntoxNotificationManager, AntoxLog, Constants}
+import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -30,14 +30,7 @@ object MessageHelper {
 
       if (!chatActive) {
         val unreadCount = db.getUnreadCounts(friendInfo.key)
-        val notificationContent =
-          if (unreadCount > 1) {
-            ctx.getResources.getString(R.string.unread_count, unreadCount.toString)
-          } else {
-            message
-          }
-
-        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, notificationContent)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, message, unreadCount)
       }
     }
   }
