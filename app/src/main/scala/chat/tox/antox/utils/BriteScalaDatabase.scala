@@ -13,7 +13,7 @@ import rx.lang.scala.Observable
 //wrapper to make sqlbrite expose scala observables
 class BriteScalaDatabase(db: BriteDatabase) {
 
-  def beginTransaction(): Unit = db.beginTransaction()
+  def newTransaction(): BriteDatabase.Transaction = db.newTransaction()
 
   def close(): Unit = db.close()
 
@@ -26,9 +26,6 @@ class BriteScalaDatabase(db: BriteDatabase) {
   def delete(table: String, whereClause: String, whereArgs: String*): Int =
     db.delete(table, whereClause, whereArgs: _*)
 
-  def endTransaction(): Unit =
-    db.endTransaction()
-
   def insert(table: String, values: ContentValues): Long = db.insert(table, values)
 
   def insert(table: String, values: ContentValues, conflictAlgorithm: Int): Long =
@@ -40,18 +37,9 @@ class BriteScalaDatabase(db: BriteDatabase) {
   def setLoggingEnabled(enabled: Boolean): Unit =
     db.setLoggingEnabled(enabled)
 
-  def setTransactionSuccessful(): Unit =
-    db.setTransactionSuccessful()
-
   def update(table: String, values: ContentValues, conflictAlgorithm: Int, whereClause: String, whereArgs: String*): Int =
     db.update(table, values, conflictAlgorithm, whereClause, whereArgs: _*)
 
   def update(table: String, values: ContentValues, whereClause: String, whereArgs: String*): Int =
     db.update(table, values, whereClause, whereArgs: _*)
-
-  def yieldIfContendedSafely(): Boolean =
-    db.yieldIfContendedSafely()
-
-  def yieldIfContendedSafely(sleepAmount: Long, sleepUnit: TimeUnit): Boolean =
-    db.yieldIfContendedSafely(sleepAmount, sleepUnit)
 }

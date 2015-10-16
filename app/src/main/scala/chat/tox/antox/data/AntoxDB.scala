@@ -306,7 +306,6 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
          |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
-      val map = scala.collection.mutable.Map.empty[ToxKey, (String, Timestamp)]
       val cursor = query.run()
       val messages = messageListFromCursor(cursor).filter(messageVisible)
 

@@ -84,7 +84,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.6'
     compile 'io.reactivex:rxandroid:0.24.0'
     compile 'io.reactivex:rxscala_2.11:0.25.0'
-    compile 'com.squareup.sqlbrite:sqlbrite:0.2.1'
+    compile 'com.squareup.sqlbrite:sqlbrite:0.4.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
