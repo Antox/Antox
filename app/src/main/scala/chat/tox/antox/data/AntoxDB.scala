@@ -370,7 +370,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
           ToxPublicKey(key)
       }
     } else {
-      if (ToxSingleton.tox.getSelfKey.key == key) {
+      if (selfKey.key == key) {
         SelfKey(key)
       } else {
         ToxPublicKey(key)
