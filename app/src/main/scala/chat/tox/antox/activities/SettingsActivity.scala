@@ -128,21 +128,22 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       finish()
       startActivity(intent)
     }
-    if(key == "notifications_persistent") {
-      if(sharedPreferences.getBoolean("notifications_persistent",false)){
+    if (key == "notifications_persistent") {
+      if (sharedPreferences.getBoolean("notifications_persistent", false)) {
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
       }
-      else{
+      else {
         AntoxNotificationManager.removePersistentNotification()
       }
     }
-    if(key == "notifications_enable_notifications"){
-      if(sharedPreferences.getBoolean("notifications_persistent",false))
-        if(sharedPreferences.getBoolean("notifications_enable_notifications",true))
-          AntoxNotificationManager.createPersistentNotification(getApplicationContext)
-        else AntoxNotificationManager.removePersistentNotification()
+    if (key == "notifications_enable_notifications" &&
+      sharedPreferences.getBoolean("notifications_persistent", false) &&
+      sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
+      AntoxNotificationManager.createPersistentNotification(getApplicationContext)
     }
-
+    else {
+      AntoxNotificationManager.removePersistentNotification()
+    }
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
@@ -159,7 +160,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
 
   def showThemeDialog(): Unit = {
     val currentColor = ThemeManager.primaryColor
-    themeDialog.show(currentColor match{
+    themeDialog.show(currentColor match {
       case -1 => None
       case _ => Some(currentColor)
     })

@@ -34,7 +34,7 @@ object AntoxNotificationManager {
 
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String, count: Int = 0): Unit = {
 
-    AntoxLog.debug( s"Creating message notification, $name, $content")
+    AntoxLog.debug(s"Creating message notification, $name, $content")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
@@ -44,28 +44,20 @@ object AntoxNotificationManager {
         .setContentTitle(name)
         .setContentText(content)
 
-      if(checkPreference(preferences, "notifications_sound") && checkPreference(preferences, "notifications_vibrate")) {
-        mBuilder.setDefaults(Notification.DEFAULT_ALL)
-      }
-      else if(checkPreference(preferences, "notifications_sound"))mBuilder.setDefaults(Notification.DEFAULT_SOUND)
-      else if(checkPreference(preferences, "notifications_vibrate"))mBuilder.setDefaults(Notification.DEFAULT_VIBRATE)
-
-      if(checkPreference(preferences, "notifications_light")){
-        mBuilder.setLights(Color.GREEN, 500, 500)
-      }
+      addAlerts(mBuilder, preferences)
 
       AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
-      if(key.getClass == classOf[FriendKey]){
+      if (key.getClass == classOf[FriendKey]) {
         val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
-        if(friendInfo.avatar.isDefined){
+        if (friendInfo.avatar.isDefined) {
           val bmOptions = new BitmapFactory.Options()
-          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath,bmOptions)
+          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bmOptions)
           mBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
         }
       }
 
-      if(count > 0){
-        val countStr: String = if(count < 1000) s"$count"
+      if (count > 0) {
+        val countStr: String = if (count < 1000) s"$count"
         else "999+"
         mBuilder.setContentInfo(countStr)
       }
@@ -109,15 +101,7 @@ object AntoxNotificationManager {
         .setVibrate(vibratePattern)
         .setAutoCancel(true)
 
-      if(checkPreference(preferences, "notifications_sound") && checkPreference(preferences, "notifications_vibrate")) {
-        mBuilder.setDefaults(Notification.DEFAULT_ALL)
-      }
-      else if(checkPreference(preferences, "notifications_sound"))mBuilder.setDefaults(Notification.DEFAULT_SOUND)
-      else if(checkPreference(preferences, "notifications_vibrate"))mBuilder.setDefaults(Notification.DEFAULT_VIBRATE)
-
-      if(checkPreference(preferences, "notifications_light")){
-        mBuilder.setLights(Color.GREEN, 500, 500)
-      }
+      addAlerts(mBuilder, preferences)
 
       val notification = mBuilder.build()
 
@@ -131,8 +115,8 @@ object AntoxNotificationManager {
     }
   }
 
-  def createPersistentNotification(ctx: Context): Unit ={
-    if(persistBuilder.isDefined) return
+  def createPersistentNotification(ctx: Context) {
+    if (persistBuilder.isDefined) return
 
     AntoxLog.debug("Creating persistent notification")
 
@@ -151,19 +135,19 @@ object AntoxNotificationManager {
     persistBuilder.foreach(builder => {
       val notification = builder.build()
       notification.flags = Notification.FLAG_ONGOING_EVENT
-      mNotificationManager.foreach(_.notify(persistID,notification))
+      mNotificationManager.foreach(_.notify(persistID, notification))
 
       statusSubscription = Some(State.userDb(ctx)
         .activeUserDetailsObservable()
         .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(tuple => {
-          updatePersistentNotification(ctx, tuple._2)
-         }))
+        updatePersistentNotification(ctx, tuple._2)
+      }))
     })
   }
 
-  def removePersistentNotification(): Unit ={
+  def removePersistentNotification() {
 
     AntoxLog.debug("Removing persistent notification")
 
@@ -172,7 +156,7 @@ object AntoxNotificationManager {
     persistBuilder = None
   }
 
-  def updatePersistentNotification(ctx: Context, toxConnection: ToxConnection): Unit ={
+  def updatePersistentNotification(ctx: Context, toxConnection: ToxConnection) {
 
     AntoxLog.debug("Updating persistent notification")
     persistBuilder.foreach(builder => {
@@ -183,9 +167,9 @@ object AntoxNotificationManager {
     })
   }
 
-  private def getStatus(ctx: Context): String ={
-    if(!ToxSingleton.isToxConnected(PreferenceManager.getDefaultSharedPreferences(ctx), ctx) ||
-      ToxSingleton.tox == null){
+  private def getStatus(ctx: Context): String = {
+    if (!ToxSingleton.isToxConnected(PreferenceManager.getDefaultSharedPreferences(ctx), ctx) ||
+      ToxSingleton.tox == null) {
       ctx.getString(R.string.status_offline)
     }
     else ToxSingleton.tox.getStatus match {
@@ -196,6 +180,14 @@ object AntoxNotificationManager {
       case ToxUserStatus.BUSY =>
         ctx.getString(R.string.status_busy)
     }
+  }
+
+  def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
+    var defaults = 0
+    if (checkPreference(preferences, "notifications_sound")) defaults |= Notification.DEFAULT_SOUND
+    if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE
+    if (checkPreference(preferences, "notifications_light")) defaults |= Notification.DEFAULT_LIGHTS
+    if (defaults != 0) builder.setDefaults(defaults)
   }
 
 }
