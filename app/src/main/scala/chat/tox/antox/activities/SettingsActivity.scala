@@ -129,20 +129,22 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       startActivity(intent)
     }
     if (key == "notifications_persistent") {
-      if (sharedPreferences.getBoolean("notifications_persistent", false)) {
+      if (sharedPreferences.getBoolean("notifications_persistent", false) &&
+        sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
       }
       else {
         AntoxNotificationManager.removePersistentNotification()
       }
     }
-    if (key == "notifications_enable_notifications" &&
-      sharedPreferences.getBoolean("notifications_persistent", false) &&
-      sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
-      AntoxNotificationManager.createPersistentNotification(getApplicationContext)
-    }
-    else {
-      AntoxNotificationManager.removePersistentNotification()
+    if (key == "notifications_enable_notifications"){
+      if (sharedPreferences.getBoolean("notifications_persistent", false) &&
+        sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
+        AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+      }
+      else {
+        AntoxNotificationManager.removePersistentNotification()
+      }
     }
   }
 
