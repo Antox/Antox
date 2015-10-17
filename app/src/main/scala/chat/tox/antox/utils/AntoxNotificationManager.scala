@@ -1,21 +1,20 @@
 package chat.tox.antox.utils
 
-import android.app.{NotificationManager, PendingIntent, Notification}
-import android.content.{SharedPreferences, Intent, Context}
+import android.app.{Notification, NotificationManager, PendingIntent}
+import android.content.{Context, Intent, SharedPreferences}
 import android.graphics._
-import android.os.Build
 import android.preference.PreferenceManager
-import android.support.v4.app.{TaskStackBuilder, NotificationCompat}
+import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
 import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, UserInfo, ToxKey}
+import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, ToxKey}
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 object AntoxNotificationManager {
 
@@ -29,18 +28,16 @@ object AntoxNotificationManager {
     preferences.getBoolean("notifications_enable_notifications", true) && preferences.getBoolean(notificationPreference, true)
   }
 
-
   def generateNotificationId(key: ToxKey): Int = key.hashCode()
 
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String, count: Int = 0): Unit = {
-
     AntoxLog.debug(s"Creating message notification, $name, $content")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-
     if (checkPreference(preferences, "notifications_new_message")) {
-      val mBuilder = new NotificationCompat.Builder(ctx).setSmallIcon(R.drawable.ic_actionbar)
+      val mBuilder = new NotificationCompat.Builder(ctx)
+        .setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(name)
         .setContentText(content)
 
@@ -57,11 +54,13 @@ object AntoxNotificationManager {
       }
 
       if (count > 0) {
-        val countStr: String = if (count < 1000) s"$count"
-        else "999+"
+        val countStr: String =
+          if (count < 1000) s"$count" else "999+"
+
         mBuilder.setContentInfo(countStr)
+      } else {
+        mBuilder.setContentInfo("")
       }
-      else mBuilder.setContentInfo("")
 
       val resultIntent = new Intent(ctx, intentClass)
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -132,6 +131,7 @@ object AntoxNotificationManager {
       .setContentText(getStatus(ctx))
       .setContentIntent(resultPendingIntent)
       .setShowWhen(false))
+
     persistBuilder.foreach(builder => {
       val notification = builder.build()
       notification.flags = Notification.FLAG_ONGOING_EVENT
@@ -142,13 +142,12 @@ object AntoxNotificationManager {
         .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(tuple => {
-        updatePersistentNotification(ctx, tuple._2)
-      }))
+          updatePersistentNotification(ctx, tuple._2)
+        }))
     })
   }
 
   def removePersistentNotification() {
-
     AntoxLog.debug("Removing persistent notification")
 
     statusSubscription.foreach(_.unsubscribe())
@@ -157,8 +156,8 @@ object AntoxNotificationManager {
   }
 
   def updatePersistentNotification(ctx: Context, toxConnection: ToxConnection) {
-
     AntoxLog.debug("Updating persistent notification")
+
     persistBuilder.foreach(builder => {
       builder.setContentText(getStatus(ctx))
       val notification = builder.build()
@@ -168,26 +167,28 @@ object AntoxNotificationManager {
   }
 
   private def getStatus(ctx: Context): String = {
-    if (!ToxSingleton.isToxConnected(PreferenceManager.getDefaultSharedPreferences(ctx), ctx) ||
+    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+    if (!ToxSingleton.isToxConnected(preferences, ctx) ||
       ToxSingleton.tox == null) {
       ctx.getString(R.string.status_offline)
-    }
-    else ToxSingleton.tox.getStatus match {
-      case ToxUserStatus.NONE =>
-        ctx.getString(R.string.status_online)
-      case ToxUserStatus.AWAY =>
-        ctx.getString(R.string.status_away)
-      case ToxUserStatus.BUSY =>
-        ctx.getString(R.string.status_busy)
+    } else {
+      ToxSingleton.tox.getStatus match {
+        case ToxUserStatus.NONE =>
+          ctx.getString(R.string.status_online)
+        case ToxUserStatus.AWAY =>
+          ctx.getString(R.string.status_away)
+        case ToxUserStatus.BUSY =>
+          ctx.getString(R.string.status_busy)
+      }
     }
   }
 
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
-    var defaults = 0
+    var defaults = 1
     if (checkPreference(preferences, "notifications_sound")) defaults |= Notification.DEFAULT_SOUND
     if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE
     if (checkPreference(preferences, "notifications_light")) defaults |= Notification.DEFAULT_LIGHTS
-    if (defaults != 0) builder.setDefaults(defaults)
+    if (defaults != 0) builder.setDefaults(Notification.DEFAULT_ALL)
   }
 
 }

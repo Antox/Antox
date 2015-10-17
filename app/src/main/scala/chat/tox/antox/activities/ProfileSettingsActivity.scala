@@ -14,7 +14,7 @@ import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AlertDialog.Builder
 import android.view.{MenuItem, View}
-import android.widget.{TextView, ImageButton, Toast}
+import android.widget.{ImageButton, Toast}
 import chat.tox.QR.{Contents, QRCodeEncode}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ProfileSettingsActivity._
@@ -22,7 +22,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
-import chat.tox.antox.toxme.{ToxMe, ToxData}
+import chat.tox.antox.toxme.{ToxData, ToxMe}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
@@ -227,7 +227,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   def createToxIDDialog() {
-    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
+    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this, R.style.DialogTheme)
     val inflater = ProfileSettingsActivity.this.getLayoutInflater
     val view = inflater.inflate(R.layout.dialog_tox_id, null)
     builder.setView(view)

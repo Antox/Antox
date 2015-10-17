@@ -5,7 +5,7 @@ import java.lang.Iterable
 import android.content.ContentValues
 import android.database.Cursor
 import com.squareup.sqlbrite.BriteDatabase
-import rx.functions.Func1
+import com.squareup.sqlbrite.SqlBrite.Query
 import rx.lang.scala.JavaConversions._
 import rx.lang.scala.Observable
 
@@ -16,15 +16,11 @@ class BriteScalaDatabase(db: BriteDatabase) {
 
   def close(): Unit = db.close()
 
-  def createQuery(table: String, sql: String, args: String*): Observable[Cursor] =
-    db.createQuery(table, sql, args: _*).mapToOne(new Func1[Cursor, Cursor] {
-      override def call(cursor: Cursor): Cursor = cursor
-    })
+  def createQuery(table: String, sql: String, args: String*): Observable[Query] =
+    db.createQuery(table, sql, args: _*).asObservable()
 
-  def createQuery(tables: Iterable[String], sql: String, args: String*): Observable[Cursor] =
-    db.createQuery(tables, sql, args: _*).mapToOne(new Func1[Cursor, Cursor] {
-      override def call(cursor: Cursor): Cursor = cursor
-    })
+  def createQuery(tables: Iterable[String], sql: String, args: String*): Observable[Query] =
+    db.createQuery(tables, sql, args: _*).asObservable()
 
   def delete(table: String, whereClause: String, whereArgs: String*): Int =
     db.delete(table, whereClause, whereArgs: _*)

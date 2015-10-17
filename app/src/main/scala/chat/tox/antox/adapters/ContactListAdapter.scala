@@ -5,7 +5,6 @@ import java.util
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
@@ -123,18 +122,26 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       }
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
-
-      holder.avatar.setImageResource(R.drawable.default_avatar)
-
       holder.imageLoadingSubscription.foreach(_.unsubscribe())
 
       holder.imageLoadingSubscription =
-        item.image
-          .map(img => {
-          BitmapManager
-            .load(img, isAvatar = true)
-            .subscribe(bitmap => holder.avatar.setImageBitmap(bitmap))
-        })
+        item.image match {
+          case Some(img) =>
+            BitmapManager.getFromCache(isAvatar = true, img) match {
+              case Some(bitmap) =>
+                holder.avatar.setImageBitmap(bitmap)
+                None
+
+              case None =>
+                Some(BitmapManager
+                  .load(img, isAvatar = true)
+                  .subscribe(bitmap => holder.avatar.setImageBitmap(bitmap)))
+            }
+
+          case None =>
+            holder.avatar.setImageResource(R.drawable.default_avatar)
+            None
+        }
 
       val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

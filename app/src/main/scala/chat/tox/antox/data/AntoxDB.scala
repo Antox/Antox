@@ -6,14 +6,11 @@ import android.content.{ContentValues, Context}
 import android.database.Cursor
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.data.AntoxDB.DatabaseHelper
-import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ContactType.ContactType
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{ToxCore, _}
 import com.squareup.sqlbrite.SqlBrite
 import im.tox.tox4j.core.enums.{ToxMessageType, ToxUserStatus}
@@ -300,22 +297,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
     mDb.update(TABLE_MESSAGES, values, where)
   }
 
-  val lastMessages: Observable[Seq[Message]] = {
-    val selectQuery =
-      s"""SELECT *
-         |FROM $TABLE_MESSAGES
-         |WHERE _id
-         |IN (SELECT MAX(_id) FROM $TABLE_MESSAGES
-         |GROUP BY $COLUMN_NAME_KEY)""".stripMargin
-
-    mDb.createQuery(TABLE_MESSAGES, selectQuery).map(query => {
-      val cursor = query.run()
-      val messages = messageListFromCursor(cursor).filter(messageVisible)
-
-      cursor.close()
-      messages
-    })
-
+  val lastMessages: Observable[Map[ToxKey, Message]] = {
+    messageListObservable(None).map(_.groupBy(_.key).filter(_._2.nonEmpty).map(i => (i._1, i._2.head)))
   }
 
   def messageVisible(message: Message): Boolean =
@@ -542,7 +525,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       case (fl, lm) =>
         fl.map(f => {
           val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
-          f.copy(lastMessage = lm.find(_.key == f.key), unreadCount = maybeUnreadCount.getOrElse(0))
+          f.copy(lastMessage = lm.get(f.key), unreadCount = maybeUnreadCount.getOrElse(0))
         })
     }
   })
@@ -554,7 +537,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
       case (gl, lm) =>
         gl.map(g => {
           val unreadCount: Option[Int] = uc.get(g.key)
-          g.copy(lastMessage = lm.find(_.key == g.key), unreadCount = unreadCount.getOrElse(0))
+          g.copy(lastMessage = lm.get(g.key), unreadCount = unreadCount.getOrElse(0))
         })
     }
   })

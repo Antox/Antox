@@ -162,6 +162,7 @@ class MainDrawerFragment extends Fragment {
         State.logout(getActivity)
     }
 
+    menuItem.setChecked(false)
     mDrawerLayout.closeDrawer(mNavigationView)
   }
 
