@@ -184,11 +184,11 @@ object AntoxNotificationManager {
   }
 
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
-    var defaults = 1
+    var defaults = 0
     if (checkPreference(preferences, "notifications_sound")) defaults |= Notification.DEFAULT_SOUND
     if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE
     if (checkPreference(preferences, "notifications_light")) defaults |= Notification.DEFAULT_LIGHTS
-    if (defaults != 0) builder.setDefaults(Notification.DEFAULT_ALL)
+    if (defaults != 0) builder.setDefaults(defaults)
   }
 
 }
