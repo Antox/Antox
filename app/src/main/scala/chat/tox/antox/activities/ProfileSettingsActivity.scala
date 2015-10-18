@@ -227,7 +227,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   def createToxIDDialog() {
-    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this, R.style.DialogTheme)
+    val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val inflater = ProfileSettingsActivity.this.getLayoutInflater
     val view = inflater.inflate(R.layout.dialog_tox_id, null)
     builder.setView(view)
