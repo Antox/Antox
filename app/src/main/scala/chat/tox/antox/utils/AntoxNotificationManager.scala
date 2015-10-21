@@ -2,7 +2,7 @@ package chat.tox.antox.utils
 
 import android.app.{Notification, NotificationManager, PendingIntent}
 import android.content.{Context, Intent, SharedPreferences}
-import android.graphics._
+import android.graphics.BitmapFactory
 import android.preference.PreferenceManager
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log

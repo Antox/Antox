@@ -2,12 +2,13 @@ package chat.tox.antox.fragments
 
 import java.util
 
-import android.content.Context
+import android.app.AlertDialog
+import android.content.{DialogInterface, Context}
+import android.content.DialogInterface.OnClickListener
 import android.text.{Editable, TextWatcher}
 import android.widget.EditText
 import chat.tox.antox.R
 import chat.tox.antox.fragments.CreateGroupDialog.CreateGroupListener
-import com.afollestad.materialdialogs.{DialogAction, MaterialDialog}
 
 import scala.collection.JavaConversions._
 
@@ -23,22 +24,18 @@ class CreateGroupDialog (var context: Context) {
   val wrapInScrollView = true
   var nameInput: EditText = null
 
-  private val dialog = new MaterialDialog.Builder(context)
-    .title(R.string.create_group_dialog_message)
-    .customView(R.layout.fragment_create_group, wrapInScrollView)
-    .positiveText(R.string.create_group_dialog_create_group)
-    .negativeText(R.string.create_group_dialog_cancel).callback(
-      new MaterialDialog.ButtonCallback() {
-        override def onPositive(dialog: MaterialDialog): Unit = {
-          fireCreateGroupEvent(nameInput.getText.toString)
-        }
+  private val dialog = new AlertDialog.Builder(context)
+    .setTitle(R.string.create_group_dialog_message)
+    .setView(R.layout.fragment_create_group)
+    .setPositiveButton(R.string.create_group_dialog_create_group, null)
+    .setNegativeButton(R.string.create_group_dialog_cancel, new OnClickListener {
+    override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
+      triggerCreateGroupEvent(nameInput.getText.toString)
+    }
+  }).create()
 
-        override def onNegative(dialog: MaterialDialog): Unit = {}
-      })
-    .build()
-
-  nameInput = dialog.getCustomView.findViewById(R.id.group_name).asInstanceOf[EditText]
-  val positiveAction = dialog.getActionButton(DialogAction.POSITIVE)
+  nameInput = dialog.findViewById(R.id.group_name).asInstanceOf[EditText]
+  val positiveAction = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
   nameInput.addTextChangedListener(new TextWatcher {
     override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int): Unit = {}
@@ -60,7 +57,7 @@ class CreateGroupDialog (var context: Context) {
     createGroupListenerList.add(listener)
   }
 
-  def fireCreateGroupEvent(groupName: String): Unit = {
+  def triggerCreateGroupEvent(groupName: String): Unit = {
     for (listener: CreateGroupDialog.CreateGroupListener <- createGroupListenerList) {
       listener.groupCreationConfimed(groupName)
     }
