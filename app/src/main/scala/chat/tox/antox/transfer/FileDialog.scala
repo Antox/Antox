@@ -7,7 +7,8 @@ import java.util
 import android.app.{Activity, AlertDialog, Dialog}
 import android.content.DialogInterface
 import android.os.Environment
-import android.util.Log
+import android.view.{View, ViewGroup}
+import android.widget.{ArrayAdapter, ImageView, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.transfer.FileDialog.{DirectorySelectedListener, FileSelectedListener}
 import chat.tox.antox.transfer.ListenerList.FireHandler
@@ -15,8 +16,11 @@ import chat.tox.antox.utils.AntoxLog
 import org.scaloid.common.LoggerTag
 
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ArrayBuffer
 
 object FileDialog {
+
+  val PARENT_DIR_TEXT = ".."
 
   trait FileSelectedListener {
 
@@ -25,7 +29,7 @@ object FileDialog {
 
   trait DirectorySelectedListener {
 
-    def directorySelected(directory: File): Unit
+    def directorySelected (directory: File): Unit
   }
 }
 
@@ -33,15 +37,13 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
 
   private val TAG = LoggerTag(getClass.getSimpleName)
 
-  private val PARENT_DIR = ".."
-
-  private var fileList: Array[String] = _
-
   private var currentPath: File = _
 
   private val fileListenerList: ListenerList[FileSelectedListener] = new ListenerList[FileDialog.FileSelectedListener]()
 
   private val dirListenerList: ListenerList[DirectorySelectedListener] = new ListenerList[FileDialog.DirectorySelectedListener]()
+
+  private var fileList: ArrayBuffer[File] = _
 
   private var fileEndsWith: String = _
 
@@ -66,17 +68,16 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
         }
       })
     }
-    builder.setItems(fileList.map(x => x: CharSequence), new DialogInterface.OnClickListener() {
 
+    builder.setAdapter(new FileDialogAdapter(activity, fileList, currentPath), new DialogInterface.OnClickListener() {
       def onClick(dialog: DialogInterface, which: Int) {
         val fileChosen = fileList(which)
-        val chosenFile = getChosenFile(fileChosen)
-        if (chosenFile.isDirectory) {
-          loadFileList(chosenFile)
+        if (fileChosen.isDirectory) {
+          loadFileList(fileChosen)
           dialog.cancel()
           dialog.dismiss()
           showDialog()
-        } else fireFileSelectedEvent(chosenFile)
+        } else fireFileSelectedEvent(fileChosen)
       }
     })
     dialog = builder.show()
@@ -115,31 +116,69 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
 
   private def loadFileList(path: File) {
     this.currentPath = path
-    val r = new util.ArrayList[CharSequence]()
+    val files = new ArrayBuffer[File]()
     if (path.exists()) {
-      if (path.getParentFile != null) r.add(PARENT_DIR)
-      val filter = new FilenameFilter() {
+      //add parent directory to show as '..' at the top of the list
+      if (path.getParentFile != null) files += path.getParentFile
 
+      val filenameFilter = new FilenameFilter() {
         def accept(dir: File, filename: String): Boolean = {
-          var sel = new File(dir, filename)
-          if (!sel.canRead) return false
-          if (selectDirectoryOption) sel.isDirectory else {
-            var endsWith = if (fileEndsWith != null) filename.toLowerCase.endsWith(fileEndsWith) else true
-            endsWith || sel.isDirectory
+          val selection = new File(dir, filename)
+          if (!selection.canRead) return false
+          if (selectDirectoryOption) selection.isDirectory else {
+            val endsWith = if (fileEndsWith != null) filename.toLowerCase.endsWith(fileEndsWith) else true
+            endsWith || selection.isDirectory
           }
         }
       }
-      val fileList1 = path.list(filter)
-      for (file <- fileList1) {
-        r.add(file)
+
+      val filteredFiles = path.listFiles(filenameFilter).sorted
+      for (file <- filteredFiles) {
+        files += file
       }
     }
-    fileList = r.toArray(Array[String]())
-    fileList.map(x => x: CharSequence)
+
+    fileList = files
+  }
+}
+
+class FileDialogAdapter(activity: Activity, fileList: ArrayBuffer[File], currentPath: File)
+  extends ArrayAdapter[File](activity,
+    R.layout.file_list_row,
+    R.id.file_name,
+    fileList.toArray) {
+
+  override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
+    val (resultView, holder) =
+      if (convertView == null) {
+        val view = activity.getLayoutInflater.inflate(R.layout.file_list_row, parent, false)
+
+        val viewHolder = new FileViewHolder(view)
+        view.setTag(viewHolder)
+        (view, viewHolder)
+      } else {
+        (convertView, convertView.getTag.asInstanceOf[FileViewHolder])
+      }
+
+    holder.update(fileList(position), currentPath)
+    resultView
   }
 
-  private def getChosenFile(fileChosen: String): File = {
-    if (fileChosen == PARENT_DIR) currentPath.getParentFile else new File(currentPath, fileChosen)
+  override def getViewTypeCount: Int = 1
+}
+
+class FileViewHolder(view: View) {
+  val fileNameView = view.findViewById(R.id.file_name).asInstanceOf[TextView]
+  val fileImageView = view.findViewById(R.id.file_icon).asInstanceOf[ImageView]
+
+  def update(file: File, currentPath: File): Unit = {
+    val fileName = if (file == currentPath.getParentFile) FileDialog.PARENT_DIR_TEXT else file.getName
+    fileNameView.setText(fileName)
+    fileImageView.setImageResource(
+      if (file.isDirectory)
+        R.drawable.ic_folder_blue_grey_500_48dp
+      else
+        R.drawable.ic_insert_drive_file_grey_800_48dp)
   }
 }
 
@@ -153,7 +192,7 @@ object ListenerList {
 
 class ListenerList[L] {
 
-  private var listenerList: util.List[L] = new util.ArrayList[L]()
+  private val listenerList: util.List[L] = new util.ArrayList[L]()
 
   def add(listener: L) {
     listenerList.add(listener)

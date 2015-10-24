@@ -24,7 +24,7 @@ class CreateGroupDialog (var context: Context) {
   val wrapInScrollView = true
   var nameInput: EditText = null
 
-  private val dialog = new AlertDialog.Builder(context)
+  private val dialog = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
     .setTitle(R.string.create_group_dialog_message)
     .setView(R.layout.fragment_create_group)
     .setPositiveButton(R.string.create_group_dialog_create_group, null)

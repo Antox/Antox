@@ -12,6 +12,7 @@ import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 import scala.collection.mutable
+import scala.util.Try
 
 object BitmapManager {
 
@@ -44,7 +45,7 @@ object BitmapManager {
   }
 
   private def getBitmapFromMemCache(key: ImageKey): Option[Bitmap] = {
-    Option(mMemoryCache.get(key))
+    Try(Option(mMemoryCache.get(key))).toOption.flatten
   }
 
   private def getAvatarFromCache(key: ImageKey): Option[Bitmap] = {
