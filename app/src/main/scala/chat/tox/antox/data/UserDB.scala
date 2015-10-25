@@ -5,7 +5,6 @@ import android.content.{ContentValues, Context}
 import android.database.Cursor
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.data.UserDB.DatabaseHelper
 import chat.tox.antox.toxme.ToxMeName
@@ -142,15 +141,15 @@ class UserDB(ctx: Context) {
   }
 
   def doesUserExist(username: String): Boolean = {
-    val cursor = mDb.query(
-      s"""SELECT count(*)
-         |FROM $TABLE_USERS
-         |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin)
+    val query = s"""SELECT count(*)
+                   |FROM $TABLE_USERS
+                   |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
-    cursor.moveToFirst()
-    val count = cursor.getInt(0)
-    cursor.close()
-    count > 0
+    val exists = mDb.safeQuery(query).use { cursor =>
+      cursor.moveToFirst() && cursor.getInt(0) > 0
+    }
+
+    exists
   }
 
   def deleteActiveUser(): Unit = {
@@ -170,9 +169,10 @@ class UserDB(ctx: Context) {
     val userInfo: Option[UserInfo] =
       if (cursor.moveToFirst()) {
         val domain = cursor.getString(COLUMN_NAME_TOXME_DOMAIN)
+        val toxMeName = new ToxMeName(cursor.getString(COLUMN_NAME_PROFILE_NAME), if (domain.isEmpty) None else Some(domain))
+
         Some(new UserInfo(
-          toxMeName = new ToxMeName(
-            cursor.getString(COLUMN_NAME_PROFILE_NAME), if (domain.isEmpty) None else Some(domain)),
+          toxMeName = toxMeName,
           password = cursor.getString(COLUMN_NAME_PASSWORD),
           nickname = cursor.getString(COLUMN_NAME_NICKNAME),
           status = cursor.getString(COLUMN_NAME_STATUS),
@@ -187,14 +187,15 @@ class UserDB(ctx: Context) {
   }
 
   def getActiveUserDetails: UserInfo =
-    getUserDetails(getActiveUser).get //fail fast (
+    getUserDetails(getActiveUser).get //fail fast
 
   def getUserDetails(username: String): Option[UserInfo] = {
     val query = userDetailsQuery(username)
 
-    val cursor = mDb.query(query)
-    val userInfo = userInfoFromCursor(cursor)
-    cursor.close()
+    val userInfo = mDb.safeQuery(query).use { cursor =>
+      userInfoFromCursor(cursor)
+    }
+
     userInfo
   }
 
@@ -204,10 +205,11 @@ class UserDB(ctx: Context) {
   def userDetailsObservable(username: String): Observable[UserInfo] = {
     val query = userDetailsQuery(username)
 
-    mDb.createQuery(TABLE_USERS, query).map(query => {
-      val cursor = query.run()
-      val userInfo = userInfoFromCursor(cursor)
-      cursor.close()
+    mDb.createQuery(TABLE_USERS, query).map(closedCursor => {
+      val userInfo = closedCursor.use { cursor =>
+        userInfoFromCursor(cursor)
+      }
+
       userInfo
     }).filter(_.isDefined).map(_.get)
   }
@@ -237,23 +239,25 @@ class UserDB(ctx: Context) {
   }
 
   def numUsers(): Int = {
-    val cursor = mDb.query(s"SELECT count(*) FROM $TABLE_USERS")
-    cursor.moveToFirst()
-    val count = cursor.getInt(0)
-    cursor.close()
-    count
+    mDb.safeQuery(s"SELECT count(*) FROM $TABLE_USERS").use { cursor =>
+      cursor.moveToFirst()
+      val count = cursor.getInt(0)
+
+      count
+    }
   }
 
   def getAllProfiles: ArrayBuffer[String] = {
     val profiles = new ArrayBuffer[String]()
     val query = s"SELECT $COLUMN_NAME_PROFILE_NAME FROM $TABLE_USERS"
-    val cursor = mDb.query(query)
-    if (cursor.moveToFirst()) {
-      do {
-        profiles += cursor.getString(0)
-      } while (cursor.moveToNext())
+    mDb.safeQuery(query).use { cursor =>
+      if (cursor.moveToFirst()) {
+        do {
+          profiles += cursor.getString(0)
+        } while (cursor.moveToNext())
+      }
     }
-    cursor.close()
+
     profiles
   }
 }

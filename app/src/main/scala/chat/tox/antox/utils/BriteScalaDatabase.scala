@@ -3,9 +3,8 @@ package chat.tox.antox.utils
 import java.lang.Iterable
 
 import android.content.ContentValues
-import android.database.Cursor
+import chat.tox.antox.data.ClosedCursor
 import com.squareup.sqlbrite.BriteDatabase
-import com.squareup.sqlbrite.SqlBrite.Query
 import rx.lang.scala.JavaConversions._
 import rx.lang.scala.Observable
 
@@ -16,11 +15,15 @@ class BriteScalaDatabase(db: BriteDatabase) {
 
   def close(): Unit = db.close()
 
-  def createQuery(table: String, sql: String, args: String*): Observable[Query] =
-    db.createQuery(table, sql, args: _*).asObservable()
+  def createQuery(table: String, sql: String, args: String*): Observable[ClosedCursor] = {
+    val observable = db.createQuery(table, sql, args: _*).asObservable()
+    toScalaObservable(observable).map(query => ClosedCursor(query.run()))
+  }
 
-  def createQuery(tables: Iterable[String], sql: String, args: String*): Observable[Query] =
-    db.createQuery(tables, sql, args: _*).asObservable()
+  def createQuery(tables: Iterable[String], sql: String, args: String*): Observable[ClosedCursor] = {
+    val observable = db.createQuery(tables, sql, args: _*).asObservable()
+    toScalaObservable(observable).map(query => ClosedCursor(query.run()))
+  }
 
   def delete(table: String, whereClause: String, whereArgs: String*): Int =
     db.delete(table, whereClause, whereArgs: _*)
@@ -30,8 +33,9 @@ class BriteScalaDatabase(db: BriteDatabase) {
   def insert(table: String, values: ContentValues, conflictAlgorithm: Int): Long =
     db.insert(table, values, conflictAlgorithm)
 
-  def query(sql: String, args: String*): Cursor =
-    db.query(sql, args: _*)
+  def safeQuery(sql: String, args: String*): ClosedCursor = {
+    ClosedCursor(db.query(sql, args: _*))
+  }
 
   def setLoggingEnabled(enabled: Boolean): Unit =
     db.setLoggingEnabled(enabled)
