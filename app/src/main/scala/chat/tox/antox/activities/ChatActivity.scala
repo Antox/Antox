@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.{Build, Bundle, Environment}
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
-import android.util.Log
 import android.view.View
 import android.widget._
 import chat.tox.antox.R
@@ -20,7 +19,6 @@ import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.enums.ToxMessageType

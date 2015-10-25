@@ -48,8 +48,8 @@ class AvatarDialog(activity: Activity) {
       resizeAvatar(avatarFile) match {
         case Some(bitmap) =>
           FileUtils.writeBitmap(bitmap, Bitmap.CompressFormat.PNG, 0, avatarFile)
-          State.userDb(activity).updateActiveUserDetail("avatar", name)
           BitmapManager.setAvatarInvalid(avatarFile)
+          State.userDb(activity).updateActiveUserDetail("avatar", name)
 
         case None =>
           Toast.makeText(activity, activity.getResources.getString(R.string.avatar_too_large_error), Toast.LENGTH_SHORT)

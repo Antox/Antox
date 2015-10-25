@@ -16,7 +16,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.BitmapManager
-import chat.tox.antox.wrapper.{FriendKey, ToxKey}
+import chat.tox.antox.wrapper.FriendKey
 import de.hdodenhof.circleimageview.CircleImageView
 
 class FriendProfileActivity extends AppCompatActivity {

@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.test.{AndroidTestCase, RenamingDelegatingContext}
 import chat.tox.antox.data.AntoxDB
 import chat.tox.antox.utils.SelfKey
-import chat.tox.antox.wrapper.{FriendKey, MessageType, ToxKey}
+import chat.tox.antox.wrapper.FriendKey
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.junit.Assert._
 import org.junit.runner.RunWith
@@ -72,7 +72,7 @@ class AntoxDBTest extends AndroidTestCase {
     db.lastMessages
       .subscribe(messages => {
       assertEquals(messages.size, numMessages)
-      assert(messages.exists(_.message == "test"))
+      assert(messages.exists(_._1 == "test"))
       
       number += 1
     })

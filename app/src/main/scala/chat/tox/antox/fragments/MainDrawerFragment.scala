@@ -1,7 +1,6 @@
 package chat.tox.antox.fragments
 
 import android.content.{Intent, SharedPreferences}
-import android.net.Uri
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
@@ -70,8 +69,8 @@ class MainDrawerFragment extends Fragment {
       .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
       .observeOn(AndroidMainThreadScheduler())
       .subscribe((tuple) => {
-      refreshDrawerHeader(tuple._1, tuple._2)
-    })
+        refreshDrawerHeader(tuple._1, tuple._2)
+      })
 
     rootView
   }
@@ -81,15 +80,17 @@ class MainDrawerFragment extends Fragment {
   }
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
-    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+    val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
 
-    val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
-    avatarView.setImageResource(R.drawable.default_avatar)
+    val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
-    avatar.foreach(av => {
-      avatarView.setImageURI(Uri.fromFile(av))
-      BitmapManager.load(av, isAvatar = true).foreach(avatarView.setImageBitmap)
-    })
+    mAvatar match {
+      case Some(avatar) =>
+        BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+      case None =>
+        avatarView.setImageResource(R.drawable.default_avatar)
+    }
+
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
     nameView.setText(userInfo.nickname)
