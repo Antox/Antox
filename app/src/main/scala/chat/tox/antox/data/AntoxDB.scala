@@ -319,8 +319,12 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
   private def getMessageQuery(key: Option[ToxKey]): String = {
     key match {
       case Some(toxKey) =>
-        s"""SELECT *
-           |FROM $TABLE_MESSAGES
+        s"""SELECT c.*, receiver.$COLUMN_NAME_CONTACT_TYPE as receiver_contact_type, sender.$COLUMN_NAME_CONTACT_TYPE as sender
+           |FROM $TABLE_MESSAGES AS m
+           |LEFT JOIN $TABLE_CONTACTS AS receiver
+           |ON receiver.$COLUMN_NAME_KEY = m.$COLUMN_NAME_KEY
+           |LEFT JOIN $TABLE_CONTACTS AS sender
+           |ON sender.$COLUMN_NAME_KEY = m.$COLUMN_NAME_SENDER_KEY
            |WHERE $COLUMN_NAME_KEY = '$toxKey'
            |ORDER BY $COLUMN_NAME_TIMESTAMP ASC""".stripMargin
 
@@ -359,7 +363,21 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
 
     contactKey
   }
-
+  private def keyFromContact(Int contact_type, String key) {
+    ContactType c = ContactType(contact_type)
+    val contactKey: ToxKey = null//?????
+    c match {
+      case ContactType.FRIEND =>
+        contactKey = FriendKey(key)
+      case ContactType.GROUP =>
+        contactKey = GroupKey(key)
+      case ContactType.PEER =>
+        contactKey = PeerKey(key)
+      case _ =>
+        contactKey = ToxPublicKey(key)
+    }
+    return contactKey
+  }
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
     val messageList = new ArrayBuffer[Message]()
     if (cursor.moveToFirst()) {
@@ -367,7 +385,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
         val id = cursor.getInt(COLUMN_NAME_ID)
         val time = Timestamp.valueOf(cursor.getString(COLUMN_NAME_TIMESTAMP))
         val messageId = cursor.getInt(COLUMN_NAME_MESSAGE_ID)
-        val senderKey = keyFromString(cursor.getString(COLUMN_NAME_SENDER_KEY))
+        val senderKey = keyFromContact(cursor.getInt('sender_contact_type'), cursor.getString(COLUMN_NAME_SENDER_KEY))
         val senderName = cursor.getString(COLUMN_NAME_SENDER_NAME)
         val message = cursor.getString(COLUMN_NAME_MESSAGE)
         val received = cursor.getBoolean(COLUMN_NAME_HAS_BEEN_RECEIVED)
@@ -375,7 +393,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: ToxKey) {
         val sent = cursor.getBoolean(COLUMN_NAME_SUCCESSFULLY_SENT)
         val size = cursor.getInt(COLUMN_NAME_SIZE)
         val `type` = MessageType(cursor.getInt(COLUMN_NAME_TYPE))
-        val key = keyFromString(cursor.getString(COLUMN_NAME_KEY))
+        val key = keyFromContact(cursor.getInt('receiver_contact_type'), cursor.getString(COLUMN_NAME_KEY))
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
         messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
           time, size, `type`, fileKind)
