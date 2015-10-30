@@ -1,2 +1,2 @@
-include ':app', ':PagerSlidingTabStrip'
-project(':PagerSlidingTabStrip').projectDir = new File('app/libs/PagerSlidingTabStrip')
+include ':antox', ':PagerSlidingTabStrip'
+project(':PagerSlidingTabStrip').projectDir = new File('antox/libs/PagerSlidingTabStrip')
