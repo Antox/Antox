@@ -120,7 +120,8 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
   /** Checks to see if a requestCode of 1 is returned from an activity and proceeds to finish this
       activity. Used by the onClickCreateAccount above **/
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    if (requestCode == 1 && requestCode == Activity.RESULT_OK)
+    if (requestCode == 1 && requestCode == Activity.RESULT_OK) {
       finish()
+    }
   }
 }
