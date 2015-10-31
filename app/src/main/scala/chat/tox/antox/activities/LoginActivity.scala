@@ -29,8 +29,6 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       getWindow.setStatusBarColor(getResources.getColor(R.color.black))
     }
 
-
-
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -39,8 +37,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val userDb = State.userDb(this)
 
-    // if the user is starting the app for the first
-    // time, go directly to the register account screen
+    // If there are no users stored in the DB then start CreateAccount Activity
     if (userDb.numUsers() == 0) {
       val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
       createAccount.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -49,13 +46,14 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       startActivity(createAccount)
       finish()
     } else if (userDb.loggedIn) {
+      // Else If the user is already logged in then start the Tox Service and the MainActivity
       val startTox = new Intent(getApplicationContext, classOf[ToxService])
       getApplicationContext.startService(startTox)
-
       val main = new Intent(getApplicationContext, classOf[MainActivity])
       startActivity(main)
       finish()
     } else {
+      // Else show UI elements to allow user to login
       val profiles = userDb.getAllProfiles
       val profileSpinner = findViewById(R.id.login_account_name).asInstanceOf[Spinner]
       val adapter = new ArrayAdapter[String](this, android.R.layout.simple_spinner_dropdown_item, profiles)
@@ -66,6 +64,8 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     }
   }
 
+  /** Used by the profileSpinner to change the colour of the selected profile text otherwise
+      it is white text on a white background **/
   def onItemSelected(parent: AdapterView[_], view: View, pos: Int, id: Long) {
     profileSelected = parent.getItemAtPosition(pos).toString
 
@@ -78,8 +78,12 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
   def onNothingSelected(parent: AdapterView[_]) {
   }
 
+  /** Used by the Login ui button to attempt to login. If successful it starts the ToxService
+      and MainActivity before closing this activity. Otherwise it shows errors in the form of
+      toasts to the user **/
   def onClickLogin(view: View) {
     val account = profileSelected
+    // If the user hasn't selected a profile to login with then show an error via a toast
     if (account == "") {
       val context = getApplicationContext
       val text = getString(R.string.login_must_fill_in)
@@ -106,17 +110,17 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     }
   }
 
+  /** Used by the Create Account ui button to start the CreateAccountActivity **/
   def onClickCreateAccount(view: View) {
     val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
     startActivityForResult(createAccount, 1)
     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
   }
 
+  /** Checks to see if a requestCode of 1 is returned from an activity and proceeds to finish this
+      activity. Used by the onClickCreateAccount above **/
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-    if (requestCode == 1) {
-      if (resultCode == Activity.RESULT_OK) {
-        finish()
-      }
-    }
+    if (requestCode == 1 && requestCode == Activity.RESULT_OK)
+      finish()
   }
 }
