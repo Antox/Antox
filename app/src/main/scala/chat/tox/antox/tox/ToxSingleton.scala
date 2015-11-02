@@ -36,7 +36,7 @@ object ToxSingleton {
 
   var qrFile: File = _
 
-  var typingMap: util.HashMap[ToxKey, Boolean] = new util.HashMap[ToxKey, Boolean]()
+  var typingMap: util.HashMap[ContactKey, Boolean] = new util.HashMap[ContactKey, Boolean]()
 
   var isInited: Boolean = false
 
@@ -50,16 +50,12 @@ object ToxSingleton {
 
   def getGroup(groupNumber: Int): Group = getGroupList.getGroup(groupNumber)
 
-  def getGroup(groupKey: ToxKey): Group = getGroupList.getGroup(groupKey)
+  def getGroup(groupKey: GroupKey): Group = getGroupList.getGroup(groupKey)
 
   def getGroupPeer(groupNumber: Int, peerNumber: Int): GroupPeer = getGroupList.getPeer(groupNumber, peerNumber)
 
-  def changeActiveKey(key: ToxKey) {
-    Reactive.activeKey.onNext(Some(key))
-  }
-
-  def clearActiveKey() {
-    Reactive.activeKey.onNext(None)
+  def changeActiveKey(key: ContactKey) {
+    State.activeKey.onNext(Some(key))
   }
 
   def exportDataFile(dest: File): Unit = {

@@ -1,3 +1,3 @@
 package chat.tox.antox.wrapper
 
-class GroupInvite(val groupKey: ToxKey, val inviter: String, val data: Array[Byte])
+class GroupInvite(val groupKey: ContactKey, val inviter: String, val data: Array[Byte])

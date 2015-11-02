@@ -49,11 +49,11 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     db.updateContactOnline(friendInfo.key, online)
 
     if (online) {
-      MessageHelper.sendUnsentMessages(ctx)
+      MessageHelper.sendUnsentMessages(friendInfo.key, ctx)
       State.transfers.updateSelfAvatar(ctx)
     } else {
       ToxSingleton.typingMap.put(friendInfo.key, false)
-      Reactive.typing.onNext(true)
+      State.typing.onNext(true)
     }
 
   }

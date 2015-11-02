@@ -38,7 +38,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
 
   protected var contactChangeSub: Subscription = _
 
-  protected var activeKey: ToxKey = _
+  protected var activeKey: ContactKey = _
 
   def this(showSearch: Boolean, showFab: Boolean) {
     this()
@@ -243,7 +243,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
     fileDialog.showDialog()
   }
 
-  def showDeleteChatDialog(context: Context, key: ToxKey) {
+  def showDeleteChatDialog(context: Context, key: ContactKey) {
     new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
       .setMessage(getResources.getString(R.string.friend_action_delete_chat_confirmation))
       .setPositiveButton(getResources.getString(R.string.button_yes),

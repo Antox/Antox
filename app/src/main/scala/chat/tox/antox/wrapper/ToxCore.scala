@@ -90,7 +90,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
   }
 
   def addFriendNoRequest(key: ToxKey): Int = {
-    val friendNumber = tox.addFriendNorequest(Hex.hexStringToBytes(key.toString))
+    val friendNumber = tox.addFriendNorequest(key.bytes)
      friendNumber
   }
 

@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.test.{AndroidTestCase, RenamingDelegatingContext}
 import chat.tox.antox.data.AntoxDB
 import chat.tox.antox.utils.SelfKey
-import chat.tox.antox.wrapper.FriendKey
+import chat.tox.antox.wrapper.{ToxKey, FriendInfo, FriendKey}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.junit.Assert._
 import org.junit.runner.RunWith
@@ -33,16 +33,16 @@ class AntoxDBTest extends AndroidTestCase {
     super.tearDown()
   }
 
-  val selfKey = new SelfKey("11BB3CCDD46346EAA76FF935F1CB31CDC11C56803F1077745124A1C7C63F7E6C8B286B415682")
+  val selfKey = new SelfKey("11BB3CCDD46346EAA76FF935F1CB31CDC11C56803F1077745124A1C7C63F7E67")
 
-  val key = new FriendKey("828435142ACE09E8677427E6180BFB27E38FB589A3B84C24976AE49F80A69C68")
+  val friendKey = new FriendKey("828435142ACE09E8677427E6180BFB27E38FB589A3B84C24976AE49F80A69C68")
   val name = "Steve Appleseed"
   val alias = "Steve"
   val statusMessage = "This is my status"
 
   @Test
   def testAddFriend(): Unit = {
-    db.addFriend(key, name, alias, statusMessage)
+    db.addFriend(friendKey, name, alias, statusMessage)
 
     db.friendInfoList.subscribe(friendList => {
       assert(friendList.size == 1)
@@ -50,34 +50,31 @@ class AntoxDBTest extends AndroidTestCase {
       assert(friendList.exists(_.alias equals alias))
       assert(friendList.exists(_.getAliasOrName equals alias))
       assert(friendList.exists(_.statusMessage equals statusMessage))
-      assert(friendList.exists(_.key equals key))
+      assert(friendList.exists(_.key equals friendKey))
     })
   }
 
   @Test
   def testLastMessages(): Unit = {
-    db.addFriend(key, name, alias, statusMessage)
+    db.addFriend(friendKey, name, alias, statusMessage)
 
-    val numChanges = 5
-    var number = 0
-    db.messageListObservable(Some(key))
-      .subscribe(messages => {
-      assertEquals(messages, ArrayBuffer.empty)
-      number += 1
-    })
+    def addMessage(text: String, from: ToxKey): Unit = {
+      db.addMessage(friendKey, from, name, text, hasBeenReceived = false, hasBeenRead = false, successfullySent = true, ToxMessageType.NORMAL)
+    }
+    assertEquals(db.lastMessages.toBlocking.first.get(friendKey), None)
+    assertEquals(db.lastMessages.toBlocking.first.get(friendKey), None)
 
-    val numMessages = 1
-    db.addMessage(-1, key, selfKey, "asdf", "test", hasBeenReceived = false, hasBeenRead = false, successfullySent = true, ToxMessageType.NORMAL)
+    addMessage("How are you?", friendKey)
+    addMessage("Hi, Friend", selfKey)
+    val lastSelfMessage: String = "Hello?"
+    addMessage(lastSelfMessage, selfKey)
 
-    db.lastMessages
-      .subscribe(messages => {
-      assertEquals(messages.size, numMessages)
-      assert(messages.exists(_._1 == "test"))
-      
-      number += 1
-    })
+    assertEquals(db.lastMessages.toBlocking.first(friendKey).message, lastSelfMessage)
 
-    assertEquals(number, numChanges)
+    val lastFriendMessage: String = "Hello"
+    addMessage(lastFriendMessage, friendKey)
+
+    assertEquals(db.lastMessages.toBlocking.first(friendKey).message, lastFriendMessage)
   }
 
 }

@@ -10,7 +10,7 @@ import chat.tox.antox.wrapper.MessageType.MessageType
 
 case class Message(id: Int,
                    messageId: Int,
-                   key: ToxKey,
+                   key: ContactKey,
                    senderKey: ToxKey,
                    senderName: String,
                    message: String,

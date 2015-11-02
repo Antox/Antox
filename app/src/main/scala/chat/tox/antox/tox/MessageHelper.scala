@@ -25,7 +25,7 @@ object MessageHelper {
 
     if (!db.isContactBlocked(friendInfo.key)) {
       val chatActive = State.isChatActive(friendInfo.key)
-      db.addMessage(-1, friendInfo.key, friendInfo.key, friendInfo.getAliasOrName, message, hasBeenReceived = true,
+      db.addMessage(friendInfo.key, friendInfo.key, friendInfo.getAliasOrName, message, hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
       if (!chatActive) {
@@ -40,7 +40,7 @@ object MessageHelper {
 
     val chatActive = State.isChatActive(groupInfo.key)
 
-    db.addMessage(-1, groupInfo.key, peerInfo.key, peerInfo.name, message, hasBeenReceived = true,
+    db.addMessage(groupInfo.key, peerInfo.key, peerInfo.name, message, hasBeenReceived = true,
       hasBeenRead = chatActive, successfullySent = true, messageType)
 
     if (!chatActive) {
@@ -59,11 +59,11 @@ object MessageHelper {
         case Some(id) =>
           mDbId match {
             case Some(dbId) => db.updateUnsentMessage(id, dbId)
-            case None => db.addMessage(id, friendKey, senderKey, senderName,
+            case None => db.addMessage(friendKey, senderKey, senderName,
               splitMsg, hasBeenReceived =
-                false, hasBeenRead = false, successfullySent = true, messageType)
+                false, hasBeenRead = false, successfullySent = true, messageType, messageId = id)
           }
-        case None => db.addMessage(-1, friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
+        case None => db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
           hasBeenRead = false, successfullySent = false, messageType)
       }
     }
@@ -84,7 +84,7 @@ object MessageHelper {
       val senderName = ToxSingleton.tox.getName
       mDbId match {
         case Some(dbId) => db.updateUnsentMessage(0, dbId)
-        case None => db.addMessage(0, groupKey, senderKey, senderName,
+        case None => db.addMessage(groupKey, senderKey, senderName,
           splitMsg, hasBeenReceived =
             true, hasBeenRead = true, successfullySent = true, messageType)
       }
@@ -116,23 +116,18 @@ object MessageHelper {
     result.toArray
   }
 
-  def sendUnsentMessages(ctx: Context) {
+  def sendUnsentMessages(contactKey: ContactKey, ctx: Context) {
     val db = State.db
-    val unsentMessageList = db.getUnsentMessageList
+    val unsentMessageList = db.getUnsentMessageList(contactKey)
+
     for (unsentMessage <- unsentMessageList) {
-        unsentMessage.key match {
+        contactKey match {
           case key: FriendKey =>
-            val friendInfo = db.getFriendInfo(key)
-            if (friendInfo.online) {
-              sendMessage(ctx, key, unsentMessage.message,
-                MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-            }
+            sendMessage(ctx, key, unsentMessage.message,
+              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
           case key: GroupKey =>
-            val groupInfo = db.getGroupInfo(key)
-            if (groupInfo.online) {
-              sendGroupMessage(ctx, key, unsentMessage.message,
-                MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-            }
+            sendGroupMessage(ctx, key, unsentMessage.message,
+              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
         }
     }
   }

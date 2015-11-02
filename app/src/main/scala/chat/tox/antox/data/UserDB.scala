@@ -145,7 +145,7 @@ class UserDB(ctx: Context) {
                    |FROM $TABLE_USERS
                    |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
-    val exists = mDb.safeQuery(query).use { cursor =>
+    val exists = mDb.query(query).use { cursor =>
       cursor.moveToFirst() && cursor.getInt(0) > 0
     }
 
@@ -192,7 +192,7 @@ class UserDB(ctx: Context) {
   def getUserDetails(username: String): Option[UserInfo] = {
     val query = userDetailsQuery(username)
 
-    val userInfo = mDb.safeQuery(query).use { cursor =>
+    val userInfo = mDb.query(query).use { cursor =>
       userInfoFromCursor(cursor)
     }
 
@@ -239,7 +239,7 @@ class UserDB(ctx: Context) {
   }
 
   def numUsers(): Int = {
-    mDb.safeQuery(s"SELECT count(*) FROM $TABLE_USERS").use { cursor =>
+    mDb.query(s"SELECT count(*) FROM $TABLE_USERS").use { cursor =>
       cursor.moveToFirst()
       val count = cursor.getInt(0)
 
@@ -250,7 +250,7 @@ class UserDB(ctx: Context) {
   def getAllProfiles: ArrayBuffer[String] = {
     val profiles = new ArrayBuffer[String]()
     val query = s"SELECT $COLUMN_NAME_PROFILE_NAME FROM $TABLE_USERS"
-    mDb.safeQuery(query).use { cursor =>
+    mDb.query(query).use { cursor =>
       if (cursor.moveToFirst()) {
         do {
           profiles += cursor.getString(0)

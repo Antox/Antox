@@ -16,10 +16,9 @@ import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.Reactive
 import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.MessageType._
-import chat.tox.antox.wrapper.{Message, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, Message, ToxKey}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
@@ -28,19 +27,19 @@ import rx.lang.scala.{Observable, Subscription}
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
 
-abstract class GenericChatActivity[KeyType <: ToxKey] extends AppCompatActivity {
+abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActivity {
 
   //var ARG_CONTACT_NUMBER: String = "contact_number"
-  var adapter: ChatMessagesAdapter = null
-  var messageBox: EditText = null
-  var isTypingBox: TextView = null
-  var statusTextBox: TextView = null
-  var chatListView: RecyclerView = null
-  var displayNameView: TextView = null
-  var statusIconView: View = null
-  var avatarActionView: View = null
-  var messagesSub: Subscription = null
-  var titleSub: Subscription = null
+  var adapter: ChatMessagesAdapter = _
+  var messageBox: EditText = _
+  var isTypingBox: TextView = _
+  var statusTextBox: TextView = _
+  var chatListView: RecyclerView = _
+  var displayNameView: TextView = _
+  var statusIconView: View = _
+  var avatarActionView: View = _
+  var messagesSub: Subscription = _
+  var titleSub: Subscription = _
   var activeKey: KeyType = _
   var scrolling: Boolean = false
   val layoutManager = new LinearLayoutManager(this)
@@ -131,8 +130,8 @@ abstract class GenericChatActivity[KeyType <: ToxKey] extends AppCompatActivity 
 
   override def onResume(): Unit = {
     super.onResume()
-    Reactive.activeKey.onNext(Some(activeKey))
-    Reactive.chatActive.onNext(true)
+    State.activeKey.onNext(Some(activeKey))
+    State.chatActive.onNext(true)
     val db = State.db
     db.markIncomingMessagesRead(activeKey)
     messagesSub = getActiveMessageObservable
@@ -203,7 +202,7 @@ abstract class GenericChatActivity[KeyType <: ToxKey] extends AppCompatActivity 
 
   override def onPause(): Unit = {
     super.onPause()
-    Reactive.chatActive.onNext(false)
+    State.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
   }

@@ -9,14 +9,21 @@ import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.transfer.FileTransferManager
 import chat.tox.antox.utils.AntoxNotificationManager
-import chat.tox.antox.wrapper.ToxKey
+import chat.tox.antox.wrapper.{ContactKey, ToxKey}
+import rx.lang.scala.subjects.BehaviorSubject
 
 import scala.collection.JavaConversions._
 
 object State {
 
   private var _chatActive: Boolean = false
-  private var _activeKey: Option[ToxKey] = None
+  private var _activeKey: Option[ContactKey] = None
+
+  val chatActive = BehaviorSubject[Boolean](false)
+  val chatActiveSubscription = chatActive.subscribe(x => State.setChatActive(x))
+  val activeKey = BehaviorSubject[Option[ContactKey]](None)
+  val activeKeySubscription = activeKey.subscribe(x => State.setActiveKey(x))
+  val typing = BehaviorSubject[Boolean](false)
 
   val transfers: FileTransferManager = new FileTransferManager()
   val calls: CallManager = new CallManager()
@@ -35,19 +42,15 @@ object State {
     }
   }
 
-  def chatActive: Boolean = _chatActive
-
-  def isChatActive(chatKey: ToxKey): Boolean = {
-    State.chatActive && State.activeKey.contains(chatKey)
+  def isChatActive(chatKey: ContactKey): Boolean = {
+    _chatActive && _activeKey.contains(chatKey)
   }
 
   def setChatActive(b: Boolean): Unit = {
     _chatActive = b
   }
 
-  def activeKey: Option[ToxKey] = _activeKey
-
-  def setActiveKey(k: Option[ToxKey]): Unit = {
+  private def setActiveKey(k: Option[ContactKey]): Unit = {
     require(k != null)
     _activeKey = k
   }

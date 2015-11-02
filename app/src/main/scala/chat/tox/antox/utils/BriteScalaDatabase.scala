@@ -33,7 +33,7 @@ class BriteScalaDatabase(db: BriteDatabase) {
   def insert(table: String, values: ContentValues, conflictAlgorithm: Int): Long =
     db.insert(table, values, conflictAlgorithm)
 
-  def safeQuery(sql: String, args: String*): ClosedCursor = {
+  def query(sql: String, args: String*): ClosedCursor = {
     ClosedCursor(db.query(sql, args: _*))
   }
 

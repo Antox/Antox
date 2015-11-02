@@ -20,3 +20,5 @@ trait ToxKey {
 
   override def toString: String = key
 }
+
+trait ContactKey extends ToxKey

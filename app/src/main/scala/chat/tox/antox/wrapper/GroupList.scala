@@ -20,7 +20,7 @@ class GroupList {
     groups.find(group => group.groupNumber == groupNumber).get
   }
 
-  def getGroup(key: ToxKey): Group = {
+  def getGroup(key: ContactKey): Group = {
     groups.find(group => group.key == key).get
   }
 

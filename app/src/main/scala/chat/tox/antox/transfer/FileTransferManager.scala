@@ -10,7 +10,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.{FriendKey, FileKind, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, FriendKey, FileKind, ToxKey}
 import im.tox.tox4j.core.enums.ToxFileControl
 import org.scaloid.common.LoggerTag
 
@@ -18,7 +18,7 @@ class FileTransferManager extends Intervals {
   private val TAG = LoggerTag(getClass.getSimpleName)
 
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
-  private var _keyAndFileNumberToId: Map[(ToxKey, Integer), Long] = Map[(ToxKey, Integer), Long]()
+  private var _keyAndFileNumberToId: Map[(ContactKey, Integer), Long] = Map[(ContactKey, Integer), Long]()
 
   def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.IN_PROGRESS)
 
@@ -45,7 +45,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def remove(key: ToxKey, fileNumber: Integer): Unit = {
+  def remove(key: ContactKey, fileNumber: Integer): Unit = {
     val mId = _keyAndFileNumberToId.get(key, fileNumber)
     mId match {
       case Some(id) => this.remove(id)
@@ -57,8 +57,8 @@ class FileTransferManager extends Intervals {
     _transfers.get(id)
   }
 
-  def get(toxKey: ToxKey, fileNumber: Integer): Option[FileTransfer] = {
-    val mId = _keyAndFileNumberToId.get(toxKey, fileNumber)
+  def get(contactKey: ContactKey, fileNumber: Integer): Option[FileTransfer] = {
+    val mId = _keyAndFileNumberToId.get(contactKey, fileNumber)
     mId match {
       case Some(key) => this.get(key)
       case None => None
@@ -111,7 +111,7 @@ class FileTransferManager extends Intervals {
    * (i.e. in [[chat.tox.antox.callbacks.AntoxOnFileRecvCallback]]
    * This will not start the file transfer until it is accepted using [[acceptFile]]
    *
-   * @param key ToxKey of the friend sending the file.
+   * @param key ContactKey of the friend sending the file.
    * @param senderName Name of the friend sending the file.
    * @param fileNumber File number
    * @param fileName Name of the file to be received.
@@ -122,7 +122,7 @@ class FileTransferManager extends Intervals {
    * @param replaceExisting Whether or not to replace an existing file with the same name.
    * @param context Android context
    */
-  def fileIncomingRequest(key: ToxKey,
+  def fileIncomingRequest(key: ContactKey,
                           senderName: String,
                           hasBeenRead: Boolean,
                           fileNumber: Int,
@@ -194,7 +194,7 @@ class FileTransferManager extends Intervals {
   def rejectFile(friendKey: FriendKey, fileNumber: Int, context: Context): Unit =
     fileAcceptOrReject(friendKey, fileNumber, context, accept = false)
 
-  def receiveFileData(key: ToxKey,
+  def receiveFileData(key: ContactKey,
                       fileNumber: Int,
                       data: Array[Byte],
                       context: Context) {
@@ -217,7 +217,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def fileFinished(key: ToxKey, fileNumber: Integer, context: Context) {
+  def fileFinished(key: ContactKey, fileNumber: Integer, context: Context) {
     AntoxLog.debug("fileFinished", TAG)
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
@@ -240,7 +240,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def cancelFile(key: ToxKey, fileNumber: Int, context: Context) {
+  def cancelFile(key: ContactKey, fileNumber: Int, context: Context) {
     AntoxLog.debug("cancelFile", TAG)
     val db = State.db
     State.transfers.remove(key, fileNumber)
@@ -255,7 +255,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def fileTransferStarted(key: ToxKey, fileNumber: Integer, ctx: Context) {
+  def fileTransferStarted(key: ContactKey, fileNumber: Integer, ctx: Context) {
     AntoxLog.debug("fileTransferStarted", TAG)
     State.db.fileTransferStarted(key, fileNumber)
   }
@@ -269,7 +269,7 @@ class FileTransferManager extends Intervals {
     }
   }
 
-  def onSelfAvatarSendFinished(sentTo: ToxKey, context: Context): Unit = {
+  def onSelfAvatarSendFinished(sentTo: ContactKey, context: Context): Unit = {
     val db = State.db
     db.updateContactReceivedAvatar(sentTo, receivedAvatar = true)
     updateSelfAvatar(context)

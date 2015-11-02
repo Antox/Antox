@@ -18,9 +18,9 @@ import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {
 
-  var _groupKey: ToxKey = _
+  var groupKey: GroupKey = _
 
-  var _originalUsername: String = ""
+  var originalUsername: String = ""
 
   var context: Context = _
 
@@ -30,7 +30,7 @@ class AddGroupFragment extends Fragment with InputableID {
 
   var toast: Toast = _
 
-  var groupKey: EditText = _
+  var groupKeyView: EditText = _
 
   var groupAlias: EditText = _
 
@@ -43,7 +43,7 @@ class AddGroupFragment extends Fragment with InputableID {
     context = getActivity.getApplicationContext
 
     text = getString(R.string.addgroup_group_added)
-    groupKey = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
+    groupKeyView = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
     groupAlias = rootView.findViewById(R.id.addgroup_groupAlias).asInstanceOf[EditText]
 
     rootView.findViewById(R.id.add_group_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
@@ -81,7 +81,7 @@ class AddGroupFragment extends Fragment with InputableID {
         if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.joinGroup(key)
-            AntoxLog.debug("joined group : " + groupKey)
+            AntoxLog.debug("joined group : " + groupKeyView)
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()
@@ -102,9 +102,9 @@ class AddGroupFragment extends Fragment with InputableID {
   }
 
   def addGroup(view: View) {
-    if (groupKey.length == 64) {
+    if (groupKeyView.length == 64) {
       // Attempt to use ID as a Group ID
-      val result = checkAndSend(groupKey.getText.toString, _originalUsername)
+      val result = checkAndSend(groupKeyView.getText.toString, originalUsername)
       if (result) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)

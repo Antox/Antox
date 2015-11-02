@@ -16,18 +16,18 @@ class AntoxOnFileRecvControlCallback(private var ctx: Context) {
       AntoxLog.debug("control type: " + control.name())
       val mTransfer = State.transfers.get(friendInfo.key, fileNumber)
       mTransfer match {
-        case Some(t) =>
-          (control, t.status) match {
+        case Some(transfer) =>
+          (control, transfer.status) match {
             case (ToxFileControl.RESUME, FileStatus.REQUEST_SENT) =>
-              State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)
+              State.transfers.fileTransferStarted(transfer.key, transfer.fileNumber, ctx)
             case (ToxFileControl.RESUME, FileStatus.PAUSED) =>
-              State.transfers.fileTransferStarted(t.key, t.fileNumber, ctx)
+              State.transfers.fileTransferStarted(transfer.key, transfer.fileNumber, ctx)
             case (ToxFileControl.PAUSE, _) =>
-              State.transfers.pauseFile(t.id, ctx)
+              State.transfers.pauseFile(transfer.id, ctx)
             case (ToxFileControl.CANCEL, _) =>
-              State.transfers.cancelFile(t.key, t.fileNumber, ctx)
+              State.transfers.cancelFile(transfer.key, transfer.fileNumber, ctx)
             case _ =>
-              AntoxLog.debug("not matched: " + control + ", " + t.status)
+              AntoxLog.debug("not matched: " + control + ", " + transfer.status)
 
           }
         case None => AntoxLog.debug("Transfer not found")

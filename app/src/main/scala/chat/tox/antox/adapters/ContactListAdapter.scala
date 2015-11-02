@@ -14,7 +14,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.{FriendKey, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, FriendKey, ToxKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
 
@@ -75,7 +75,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
   override def getItem(position: Int): LeftPaneItem = mData.get(position)
 
-  def getKey(position: Int): ToxKey = getItem(position).key
+  def getKey(position: Int): ContactKey = getItem(position).key
 
   override def getItemId(position: Int): Long = position
 
