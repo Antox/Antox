@@ -108,16 +108,20 @@ object AntoxNotificationManager {
 
       addAlerts(notificationBuilder, preferences)
 
-      val notification = notificationBuilder.build()
-
       contentText.foreach(text => notificationBuilder.setContentText(text))
 
-      val targetIntent = new Intent(context, classOf[MainActivity])
-      val contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+      val resultIntent = new Intent(context, classOf[MainActivity])
+      resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+      val contentIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
       notificationBuilder.setContentIntent(contentIntent)
-      mNotificationManager.foreach(_.notify(generateNotificationId(key), notification))
+
+      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
     }
+  }
+
+  def clearRequestNotification(key: ToxKey): Unit = {
+    mNotificationManager.foreach(_.cancel(generateNotificationId(key)))
   }
 
   def createPersistentNotification(ctx: Context) {

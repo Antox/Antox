@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
-import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
@@ -16,7 +15,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.toxme.ToxMe
-import chat.tox.antox.utils.{UiUtils, Constants}
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.ToxCoreConstants
 import im.tox.tox4j.exceptions.ToxException
@@ -115,6 +114,10 @@ class AddFriendFragment extends Fragment with InputableID {
             case e: ToxException[_] => e.printStackTrace()
           }
           db.addFriend(key, originalUsername, alias, "Friend Request Sent")
+
+          //prevent already-added friend from having an existing friend request
+          db.deleteFriendRequest(key)
+          AntoxNotificationManager.clearRequestNotification(key)
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addfriend_friend_exists), Toast.LENGTH_SHORT)
           toast.show()

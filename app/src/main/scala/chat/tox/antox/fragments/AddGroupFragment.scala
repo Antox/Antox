@@ -5,14 +5,13 @@ import android.content.{Context, Intent}
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{GroupKey, AntoxLog, Constants, UiUtils}
+import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.tox4j.exceptions.ToxException
 
@@ -87,6 +86,10 @@ class AddGroupFragment extends Fragment with InputableID {
             case e: ToxException[_] => e.printStackTrace()
           }
           db.addGroup(key, UiUtils.trimId(key), topic = "")
+
+          //prevent already-added group from having an existing group invite
+          db.deleteGroupInvite(key)
+          AntoxNotificationManager.clearRequestNotification(key)
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
           toast.show()

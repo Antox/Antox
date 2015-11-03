@@ -178,7 +178,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
         val db = State.db
         db.addFriend(key, "", "", context.getResources.getString(R.string.friend_accepted_default_status))
+
         db.deleteFriendRequest(key)
+        AntoxNotificationManager.clearRequestNotification(key)
         try {
           ToxSingleton.tox.addFriendNoRequest(key)
           ToxSingleton.save()
@@ -215,6 +217,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
         db.addGroup(groupKey, UiUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
+        AntoxNotificationManager.clearRequestNotification(groupKey)
       }
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
