@@ -269,7 +269,8 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         view.getContext.startActivity(Intent.createChooser(shareIntent, getResources.getString(R.string.share_with)))
       }
     })
-    builder.create().show()
+    val dialog = builder.create()
+    dialog.show()
   }
 
   def createCopyToClipboardDialog(prefKey: String, dialogPositiveString: String, dialogNeutralString: String): Unit = {
