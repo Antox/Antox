@@ -3,16 +3,13 @@ package chat.tox.antox.data
 import android.app.Activity
 import android.content.{Context, Intent}
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.activities.LoginActivity
 import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.transfer.FileTransferManager
 import chat.tox.antox.utils.AntoxNotificationManager
-import chat.tox.antox.wrapper.{ContactKey, ToxKey}
+import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.subjects.BehaviorSubject
-
-import scala.collection.JavaConversions._
 
 object State {
 
@@ -64,11 +61,13 @@ object State {
   }
 
   def logout(activity: Activity): Unit = {
-
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext)
     if(preferences.getBoolean("notifications_persistent", false)){
       AntoxNotificationManager.removePersistentNotification()
     }
+
+    //clear notifications as they are now invalid after logging out
+    AntoxNotificationManager.clearAllNotifications()
 
     if (!userDb(activity).getActiveUserDetails.loggingEnabled) {
       db.friendInfoList.toBlocking.first.foreach(f => db.deleteChatLogs(f.key))

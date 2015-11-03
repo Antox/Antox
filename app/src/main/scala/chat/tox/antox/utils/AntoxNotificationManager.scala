@@ -28,7 +28,13 @@ object AntoxNotificationManager {
     preferences.getBoolean("notifications_enable_notifications", true) && preferences.getBoolean(notificationPreference, true)
   }
 
-  def generateNotificationId(key: ToxKey): Int = key.hashCode()
+  def generateNotificationId(key: ToxKey): Int = {
+    key.hashCode()
+  }
+
+  def clearAllNotifications(): Unit = {
+    mNotificationManager.foreach(_.cancelAll())
+  }
 
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String, count: Int = 0): Unit = {
     AntoxLog.debug(s"Creating message notification, $name, $content")
@@ -36,12 +42,12 @@ object AntoxNotificationManager {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     if (checkPreference(preferences, "notifications_new_message")) {
-      val mBuilder = new NotificationCompat.Builder(ctx)
+      val notificationBuilder = new NotificationCompat.Builder(ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(name)
         .setContentText(content)
 
-      addAlerts(mBuilder, preferences)
+      addAlerts(notificationBuilder, preferences)
 
       AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
       if (key.getClass == classOf[FriendKey]) {
@@ -49,7 +55,7 @@ object AntoxNotificationManager {
         if (friendInfo.avatar.isDefined) {
           val bmOptions = new BitmapFactory.Options()
           val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bmOptions)
-          mBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
+          notificationBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
         }
       }
 
@@ -57,9 +63,9 @@ object AntoxNotificationManager {
         val countStr: String =
           if (count < 1000) s"$count" else "999+"
 
-        mBuilder.setContentInfo(countStr)
+        notificationBuilder.setContentInfo(countStr)
       } else {
-        mBuilder.setContentInfo("")
+        notificationBuilder.setContentInfo("")
       }
 
       val resultIntent = new Intent(ctx, intentClass)
@@ -73,16 +79,16 @@ object AntoxNotificationManager {
       stackBuilder.addNextIntent(resultIntent)
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-      mBuilder.setContentIntent(resultPendingIntent)
-      mNotificationManager.foreach(_.notify(generateNotificationId(key), mBuilder.build()))
+      notificationBuilder.setContentIntent(resultPendingIntent)
+      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
     }
   }
 
-  def clearMessageNotification(key: ToxKey) {
+  def clearMessageNotification(key: ToxKey): Unit = {
     mNotificationManager.foreach(_.cancel(generateNotificationId(key)))
   }
 
-  def createRequestNotification(contentText: Option[String], context: Context): Unit = {
+  def createRequestNotification(key: ToxKey, contentText: Option[String], context: Context): Unit = {
     Log.d(AntoxNotificationManager.getClass.getSimpleName, s"Creating request notification")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -94,23 +100,23 @@ object AntoxNotificationManager {
         vibratePattern(1) = 0
       }
 
-      val mBuilder = new NotificationCompat.Builder(context)
+      val notificationBuilder = new NotificationCompat.Builder(context)
         .setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(context.getString(R.string.friend_request))
         .setVibrate(vibratePattern)
         .setAutoCancel(true)
 
-      addAlerts(mBuilder, preferences)
+      addAlerts(notificationBuilder, preferences)
 
-      val notification = mBuilder.build()
+      val notification = notificationBuilder.build()
 
-      contentText.foreach(text => mBuilder.setContentText(text))
+      contentText.foreach(text => notificationBuilder.setContentText(text))
 
       val targetIntent = new Intent(context, classOf[MainActivity])
       val contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-      mBuilder.setContentIntent(contentIntent)
-      mNotificationManager.foreach(_.notify(0, notification))
+      notificationBuilder.setContentIntent(contentIntent)
+      mNotificationManager.foreach(_.notify(generateNotificationId(key), notification))
     }
   }
 
