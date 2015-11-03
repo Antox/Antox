@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
-import android.util.Log
 import android.view.{Menu, MenuInflater, View}
 import android.widget._
 import chat.tox.antox.R
@@ -17,11 +16,10 @@ import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.{AntoxLog, Constants}
-import chat.tox.antox.wrapper.MessageType._
-import chat.tox.antox.wrapper.{ContactKey, Message, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import rx.lang.scala.schedulers.{IOScheduler, AndroidMainThreadScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.collection.JavaConversions._
@@ -46,6 +44,9 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
+  val defaultMessagePageSize = 50
+  var numMessagesShown = defaultMessagePageSize
+
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
@@ -63,7 +64,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
-      new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList)))
+      new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShown))))
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -82,6 +83,12 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     chatListView.setItemAnimator(new LandingAnimator())
     chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
+
+      override def onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int): Unit = {
+        if (!recyclerView.canScrollVertically(-1)) {
+          onScrolledToTop()
+        }
+      }
 
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
         adapter.setScrolling(!(newState == RecyclerView.SCROLL_STATE_IDLE))
@@ -132,14 +139,17 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     super.onResume()
     State.activeKey.onNext(Some(activeKey))
     State.chatActive.onNext(true)
+
     val db = State.db
     db.markIncomingMessagesRead(activeKey)
-    messagesSub = getActiveMessageObservable
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(messageList => {
-      AntoxLog.debug("Messages updated")
-      updateChat(messageList)
-    })
+
+    messagesSub =
+      getActiveMessagesUpdatedObservable
+        .observeOn(AndroidMainThreadScheduler())
+        .subscribe(_ => {
+          AntoxLog.debug("Messages updated")
+          updateChat(getActiveMessageList(numMessagesShown))
+        })
   }
 
   def updateChat(messageList: Seq[Message]): Unit = {
@@ -152,7 +162,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
-      chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
+      //chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
     AntoxLog.debug("changing chat list cursor")
   }
@@ -170,6 +180,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     }
 
     Some(msg)
+  }
+
+  private def onScrolledToTop(): Unit = {
+    numMessagesShown += defaultMessagePageSize
+    Observable[Seq[Message]](subscriber => {
+      subscriber.onNext(getActiveMessageList(numMessagesShown))
+      subscriber.onCompleted()
+    }).subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(updateChat(_))
   }
 
   private def onSendMessage() {
@@ -190,14 +210,14 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     })
   }
 
-  def getActiveMessageObservable: Observable[ArrayBuffer[Message]] = {
+  def getActiveMessagesUpdatedObservable: Observable[Int] = {
     val db = State.db
-    db.messageListObservable(Some(activeKey))
+    db.messageListUpdatedObservable(Some(activeKey))
   }
 
-  def getActiveMessageList: ArrayBuffer[Message] = {
+  def getActiveMessageList(takeLast: Int): ArrayBuffer[Message] = {
     val db = State.db
-    db.getMessageList(Some(activeKey))
+    db.getMessageList(Some(activeKey), takeLast = takeLast)
   }
 
   override def onPause(): Unit = {

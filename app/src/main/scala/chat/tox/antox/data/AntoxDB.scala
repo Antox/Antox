@@ -340,16 +340,44 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     }
   }
 
+  /**
+   * Observable called whenever [[TABLE_MESSAGES]] is updated.
+   *
+   * @return the number of messages caught by the query.
+   */
+  def messageListUpdatedObservable(key: Option[ContactKey]): Observable[Int] = {
+    val whereKey = if (key.isDefined) {
+      s"WHERE $COLUMN_NAME_KEY = '${key.get}'"
+    } else "WHERE TRUE"
+
+    val query =
+      s"""SELECT COUNT(*) FROM $TABLE_MESSAGES
+        |$whereKey
+      """.stripMargin
+
+    mDb.createQuery(TABLE_MESSAGES, query).map { closedCursor =>
+      closedCursor.use { cursor =>
+        cursor.moveToFirst()
+        cursor.getInt(0)
+      }
+    }
+  }
+
   def messageListObservable(key: Option[ContactKey]): Observable[ArrayBuffer[Message]] = {
     val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(_.use(messageListFromCursor))
   }
 
-  def getMessageList(key: Option[ContactKey]): ArrayBuffer[Message] = {
+  def getMessageList(key: Option[ContactKey], takeLast: Int = -1): ArrayBuffer[Message] = {
     val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
 
-    mDb.query(selectQuery).use(messageListFromCursor)
+    val messageList = mDb.query(selectQuery).use(messageListFromCursor)
+
+    val messageListSizeDifference = messageList.size - takeLast
+    val sliceStart = if (messageListSizeDifference < 0) 0 else messageListSizeDifference
+
+    messageList.slice(sliceStart, messageList.size)
   }
 
   private def getMessageQuery(key: Option[ContactKey], orderBy: RowOrder, limit: Int = -1): String = {
@@ -367,21 +395,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
         s"WHERE $TABLE_MESSAGES.$COLUMN_NAME_KEY = '${key.get}'"
       } else s"WHERE $TRUE"
 
-    val resultsLimit =
-      if (limit >= 0) {
-        s"LIMIT $limit"
-      } else {
-        ""
-      }
-
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
     s"""SELECT $selection
        |FROM $TABLE_MESSAGES
        |$joins
        |$whereKey
        |AND $sqlMessageVisible
-       |$order
-       |$resultsLimit""".stripMargin
+       |$order""".stripMargin
   }
 
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
