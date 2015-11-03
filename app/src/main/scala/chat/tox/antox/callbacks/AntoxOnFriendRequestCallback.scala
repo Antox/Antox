@@ -18,6 +18,6 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendReque
     }
 
     AntoxLog.debug("New Friend Request")
-    AntoxNotificationManager.createRequestNotification(Some(new String(message, "UTF-8")), ctx)
+    AntoxNotificationManager.createRequestNotification(key, Some(new String(message, "UTF-8")), ctx)
   }
 }

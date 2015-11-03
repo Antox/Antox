@@ -22,6 +22,6 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
     db.addGroupInvite(key, inviterInfo.name, inviteData)
 
     AntoxLog.debug("New Group Invite")
-    AntoxNotificationManager.createRequestNotification(None, ctx)
+    AntoxNotificationManager.createRequestNotification(key, None, ctx)
   }
 }

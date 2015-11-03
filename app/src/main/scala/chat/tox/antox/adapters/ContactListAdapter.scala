@@ -14,7 +14,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.{ContactKey, FriendKey, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
 
@@ -44,23 +44,23 @@ object ContactListAdapter {
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
-  private val mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
+  private val originalData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private var mData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
+  private var data: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private val mInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
+  private val layoutInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
 
-  var mFilter: Filter = _
+  var filter: Filter = _
 
   def addItem(item: LeftPaneItem) {
-    mData.add(item)
-    mDataOriginal.add(item)
+    data.add(item)
+    originalData.add(item)
     notifyDataSetChanged()
   }
 
   def insert(index: Int, item: LeftPaneItem): Unit = {
-    mData.insert(index, item)
-    mDataOriginal.insert(index, item)
+    data.insert(index, item)
+    originalData.insert(index, item)
     notifyDataSetChanged()
   }
 
@@ -71,9 +71,9 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
   override def getViewTypeCount: Int = ContactItemType.values.size
 
-  override def getCount: Int = mData.size
+  override def getCount: Int = data.size
 
-  override def getItem(position: Int): LeftPaneItem = mData.get(position)
+  override def getItem(position: Int): LeftPaneItem = data.get(position)
 
   def getKey(position: Int): ContactKey = getItem(position).key
 
@@ -87,12 +87,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder = new ViewHolder()
       `type` match {
         case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
-          newConvertView = mInflater.inflate(R.layout.friendrequest_list_item, null)
+          newConvertView = layoutInflater.inflate(R.layout.friendrequest_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.request_key).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.request_message).asInstanceOf[TextView]
 
         case ContactItemType.FRIEND | ContactItemType.GROUP =>
-          newConvertView = mInflater.inflate(R.layout.contact_list_item, null)
+          newConvertView = layoutInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
@@ -227,23 +227,23 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   }
 
   override def getFilter: Filter = {
-    if (mFilter == null) {
-      mFilter = new Filter() {
+    if (filter == null) {
+      filter = new Filter() {
 
         protected override def performFiltering(constraint: CharSequence): FilterResults = {
           val filterResults = new FilterResults()
-          if (mDataOriginal != null) {
+          if (originalData != null) {
             if (constraint == "" || constraint == null) {
-              filterResults.values = mDataOriginal
-              filterResults.count = mDataOriginal.size
+              filterResults.values = originalData
+              filterResults.count = originalData.size
             } else {
-              mData = mDataOriginal
+              data = originalData
               val tempList1 = new util.ArrayList[LeftPaneItem]()
               val tempList2 = new util.ArrayList[LeftPaneItem]()
-              val length = mData.size
+              val length = data.size
               var i = 0
               while (i < length) {
-                val item = mData.get(i)
+                val item = data.get(i)
                 if (item.first.toUpperCase.startsWith(constraint.toString.toUpperCase)) tempList1.add(item) else if (item.first.toLowerCase.contains(constraint.toString.toLowerCase)) tempList2.add(item)
                 i += 1
               }
@@ -256,7 +256,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         }
 
         protected override def publishResults(contraint: CharSequence, results: FilterResults) {
-          mData = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
+          data = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
           if (results.count > 0) {
             notifyDataSetChanged()
           } else {
@@ -265,6 +265,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         }
       }
     }
-    mFilter
+    filter
   }
 }

@@ -19,14 +19,14 @@ object BitmapManager {
   private final case class ImageKey(key: String) extends AnyVal
 
   // Use a LRU Cache for storing inlined bitmap images in chats
-  private var mMemoryCache: LruCache[ImageKey, Bitmap] = _
+  private var memoryCache: LruCache[ImageKey, Bitmap] = _
 
   // Use a separate hashmap for avatars as they are all needed most of the time
-  private val mAvatarCache = new mutable.HashMap[ImageKey, Bitmap]
+  private val avatarCache = new mutable.HashMap[ImageKey, Bitmap]
 
   // Hashmap used for storing whether a cached avatar is valid or needs to be updated because a contact
   // has updated their avatar - contacts' avatars are stored under the name of their public key
-  private val mAvatarValid= new mutable.HashMap[ImageKey, Boolean]()
+  private val avatarValid = new mutable.HashMap[ImageKey, Boolean]()
 
   private val TAG = LoggerTag(getClass.getSimpleName)
 
@@ -45,34 +45,34 @@ object BitmapManager {
   }
 
   private def getBitmapFromMemCache(key: ImageKey): Option[Bitmap] = {
-    Try(Option(mMemoryCache.get(key))).toOption.flatten
+    Try(Option(memoryCache.get(key))).toOption.flatten
   }
 
   private def getAvatarFromCache(key: ImageKey): Option[Bitmap] = {
     if (isAvatarValid(key)) {
-      mAvatarCache.get(key)
+      avatarCache.get(key)
     } else {
       None
     }
   }
 
   private def isAvatarValid(key: ImageKey): Boolean = {
-    mAvatarValid.getOrElse(key, false)
+    avatarValid.getOrElse(key, false)
   }
 
   private def addBitmapToMemoryCache(key: ImageKey, bitmap: Bitmap) {
-    if (mMemoryCache != null && getBitmapFromMemCache(key).isEmpty) {
-      mMemoryCache.put(key, bitmap)
+    if (memoryCache != null && getBitmapFromMemCache(key).isEmpty) {
+      memoryCache.put(key, bitmap)
     }
   }
 
   private def addAvatarToCache(key: ImageKey, bitmap: Bitmap) {
-    mAvatarCache.put(key, bitmap) // will overwrite any previous value for key
-    mAvatarValid.put(key, true)
+    avatarCache.put(key, bitmap) // will overwrite any previous value for key
+    avatarValid.put(key, true)
   }
 
   def setAvatarInvalid(file: File) {
-    mAvatarValid.put(getImageKey(file), false)
+    avatarValid.put(getImageKey(file), false)
   }
 
   def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
@@ -201,7 +201,7 @@ class BitmapManager {
   val maxMemory = (Runtime.getRuntime.maxMemory() / 1024).toInt
   val cacheSize = maxMemory / 8
 
-  mMemoryCache = new LruCache[ImageKey, Bitmap](cacheSize) {
+  memoryCache = new LruCache[ImageKey, Bitmap](cacheSize) {
     // Measure size in KB instead of number of items
     protected override def sizeOf(key: ImageKey, bitmap: Bitmap): Int =
       bitmap.getSizeInBytes.asInstanceOf[Int] / 1024

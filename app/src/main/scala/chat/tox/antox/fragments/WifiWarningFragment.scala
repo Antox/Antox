@@ -14,7 +14,7 @@ import chat.tox.antox.utils.{ConnectionManager, ConnectionTypeChangeListener}
 
 class WifiWarningFragment extends Fragment {
 
-  var mWifiWarningBar: Button = _
+  private var wifiWarningBar: Button = _
 
   private var preferencesListener: SharedPreferences.OnSharedPreferenceChangeListener = _
 
@@ -22,8 +22,8 @@ class WifiWarningFragment extends Fragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val rootView = inflater.inflate(R.layout.fragment_wifi_warning, container, false)
-    mWifiWarningBar = rootView.findViewById(R.id.wifi_only_warning).asInstanceOf[Button]
-    mWifiWarningBar.setOnClickListener(new OnClickListener {
+    wifiWarningBar = rootView.findViewById(R.id.wifi_only_warning).asInstanceOf[Button]
+    wifiWarningBar.setOnClickListener(new OnClickListener {
       override def onClick(v: View): Unit = {
         onClickWifiOnlyWarning(v)
       }

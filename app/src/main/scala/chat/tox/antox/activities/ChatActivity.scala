@@ -54,8 +54,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
           return
         }
 
-        val mPath = new File(Environment.getExternalStorageDirectory + "//DIR//")
-        val fileDialog = new FileDialog(thisActivity, mPath, false)
+        val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
+        val fileDialog = new FileDialog(thisActivity, path, false)
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
           def fileSelected(file: File) {
             State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
@@ -132,11 +132,11 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     })
   }
 
-  private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
+  private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {
     val thisActivity = this
     val key = activeKey
-    val mFriend: Option[FriendInfo] = fi
-      .find(f => f.key == key)
+    val mFriend: Option[FriendInfo] = friendInfoList.find(f => f.key == key)
+
     mFriend match {
       case Some(friend) =>
         thisActivity.setDisplayName(friend.getAliasOrName)
@@ -154,6 +154,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
           thisActivity.statusIconView.setBackgroundDrawable(thisActivity.getResources
             .getDrawable(IconColor.iconDrawable(friend.online, UserStatus.getToxUserStatusFromString(friend.status))))
         }
+
       case None =>
         thisActivity.setDisplayName("")
     }

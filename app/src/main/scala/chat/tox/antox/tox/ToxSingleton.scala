@@ -3,11 +3,9 @@ package chat.tox.antox.tox
 import java.io._
 import java.util
 
-import android.app.NotificationManager
 import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.callbacks.ToxCallbackListener
 import chat.tox.antox.data.{AntoxDB, State}
@@ -136,9 +134,9 @@ object ToxSingleton {
   def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
     val wifiOnly = preferences.getBoolean("wifi_only", true)
-    val mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+    val wifiInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
-    !(wifiOnly && !mWifi.isConnected)
+    !(wifiOnly && !wifiInfo.isConnected)
   }
 
   def initTox(ctx: Context) {

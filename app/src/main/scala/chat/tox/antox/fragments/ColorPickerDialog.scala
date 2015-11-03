@@ -23,12 +23,12 @@ object ColorPickerDialog {
 
 class ColorPickerDialog(activity: Activity, callback: ColorPickerDialog.Callback) {
 
-  private var mColors: Array[Int] = _
+  private var colors: Array[Int] = _
 
   def onClickColor(v: View) {
     if (v.getTag != null) {
       val index: Integer = v.getTag.asInstanceOf[Integer]
-      callback.onColorSelection(index, mColors(index), ThemeManager.darkenColor(mColors(index)))
+      callback.onColorSelection(index, colors(index), ThemeManager.darkenColor(colors(index)))
       close()
     }
   }
@@ -48,11 +48,11 @@ class ColorPickerDialog(activity: Activity, callback: ColorPickerDialog.Callback
     val view = inflator.inflate(R.layout.dialog_color_chooser, null)
 
     val rawColorArray: TypedArray = activity.getResources.obtainTypedArray(R.array.theme_colors)
-    mColors = new Array[Int](rawColorArray.length).indices.map(i => rawColorArray.getColor(i, 0)).toArray
+    colors = new Array[Int](rawColorArray.length).indices.map(i => rawColorArray.getColor(i, 0)).toArray
     rawColorArray.recycle()
 
     val list: GridView = view.findViewById(R.id.color_grid).asInstanceOf[GridView]
-    list.setAdapter(new ColorCircleAdapter(activity, mColors, preselect))
+    list.setAdapter(new ColorCircleAdapter(activity, colors, preselect))
 
     mDialog = Some(new AlertDialog.Builder(activity, R.style.AppCompatAlertDialogStyle)
       .setView(view).setTitle(R.string.dialog_color_picker_title).create())
@@ -76,7 +76,7 @@ class ColorPickerDialog(activity: Activity, callback: ColorPickerDialog.Callback
 
     override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
       val child = activity.getLayoutInflater.inflate(R.layout.color_circle, parent, false).asInstanceOf[FrameLayout]
-      val color = mColors(position)
+      val color = colors(position)
 
       child.setTag(position)
       child.setOnClickListener(new OnClickListener {
