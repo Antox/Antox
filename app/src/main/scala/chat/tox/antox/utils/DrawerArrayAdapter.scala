@@ -7,12 +7,12 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{ArrayAdapter, ImageView, TextView}
 import chat.tox.antox.R
 
-class DrawerArrayAdapter(context: Context, resourceId: Int, items: util.List[DrawerItem])
-  extends ArrayAdapter[DrawerItem](context, resourceId, items) {
+class DrawerArrayAdapter(context: Context, resourceId: Int, initialItems: util.List[DrawerItem])
+  extends ArrayAdapter[DrawerItem](context, resourceId, initialItems) {
 
-  private var mItems: util.List[DrawerItem] = items
+  private val items: util.List[DrawerItem] = initialItems
 
-  def getList: util.List[DrawerItem] = mItems
+  def getList: util.List[DrawerItem] = items
 
   override def getView(position: Int, convertView: View, parent: ViewGroup): View = {
     var holder: ViewHolder = null

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Asetukset</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profiili</string>
+  <string name="pref_title_nickname">Nimi</string>
+  <string name="pref_default_nickname">Antox-käyttäjä</string>
+  <string name="pref_title_status">Tila</string>
+  <string-array name="pref_status_list_titles">
+    <item>Online</item>
+    <item>Poissa</item>
+    <item>Kiireinen</item>
+  </string-array>
+  <string name="pref_title_status_message">Tilaviesti</string>
+  <string name="pref_default_status_message">Hei! Käytän Antoxia</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_default_tox_id">Oletus Tox ID - Sinun ei pitäisi nähdä tätä</string>
+  <string name="pref_title_logging_enabled">Säilytä keskustelut uloskirjautuessa</string>
+  <string name="pref_title_theme_color">Vaihda teeman väriä</string>
+  <string name="pref_title_avatar">Avatar</string>
+  <string name="pref_title_account_name">Profiilin nimi</string>
+  <string name="pref_title_export">Vie profiili</string>
+  <string name="pref_title_delete">Poista käyttäjätili</string>
+  <string name="pref_title_logout">Kirjaudu ulos</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Ilmoitukset</string>
+  <string name="pref_title_enable_notifications">Sall ilmoitukset</string>
+  <string name="pref_title_new_message_notifications">Ilmoitukset viesteistä</string>
+  <string name="pref_title_new_friend_notifications">Ilmoitukset ystäväpyynnöistä</string>
+  <!--Other-->
+  <string name="pref_header_other">Muut</string>
+  <string name="pref_title_wifi_only">Vain Wi-Fi</string>
+  <string name="pref_title_language">Kieli</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Kopioi Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Käytä UDP:tä</string>
+  <string name="pref_advanced">Lisäasetukset</string>
+  <string name="pref_nospam">Resetoi Tox ID</string>
+  <string name="pref_autostart">Käynnistä Antox laitteen käynnistyessä</string>
+</resources>

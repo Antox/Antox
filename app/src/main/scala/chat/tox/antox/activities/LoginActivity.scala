@@ -5,12 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
+import android.support.v4.content.IntentCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
+import chat.tox.antox.utils.AntoxNotificationManager
 
 import scala.collection.JavaConversions._
 
@@ -41,11 +43,15 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     // time, go directly to the register account screen
     if (userDb.numUsers() == 0) {
       val createAccount = new Intent(getApplicationContext, classOf[CreateAccountActivity])
+      createAccount.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+        Intent.FLAG_ACTIVITY_CLEAR_TOP |
+        IntentCompat.FLAG_ACTIVITY_CLEAR_TASK)
       startActivity(createAccount)
       finish()
     } else if (userDb.loggedIn) {
       val startTox = new Intent(getApplicationContext, classOf[ToxService])
       getApplicationContext.startService(startTox)
+
       val main = new Intent(getApplicationContext, classOf[MainActivity])
       startActivity(main)
       finish()

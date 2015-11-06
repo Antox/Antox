@@ -5,22 +5,21 @@ import android.content.{Context, Intent}
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
 import android.view.View.OnClickListener
 import android.view._
 import android.widget.{Button, EditText, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{Constants, UiUtils}
+import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
 import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {
 
-  var _groupKey: ToxKey = _
+  var groupKey: GroupKey = _
 
-  var _originalUsername: String = ""
+  var originalUsername: String = ""
 
   var context: Context = _
 
@@ -30,7 +29,7 @@ class AddGroupFragment extends Fragment with InputableID {
 
   var toast: Toast = _
 
-  var groupKey: EditText = _
+  var groupKeyView: EditText = _
 
   var groupAlias: EditText = _
 
@@ -43,7 +42,7 @@ class AddGroupFragment extends Fragment with InputableID {
     context = getActivity.getApplicationContext
 
     text = getString(R.string.addgroup_group_added)
-    groupKey = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
+    groupKeyView = rootView.findViewById(R.id.addgroup_key).asInstanceOf[EditText]
     groupAlias = rootView.findViewById(R.id.addgroup_groupAlias).asInstanceOf[EditText]
 
     rootView.findViewById(R.id.add_group_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
@@ -74,20 +73,23 @@ class AddGroupFragment extends Fragment with InputableID {
 
   private def checkAndSend(rawGroupKey: String, originalUsername: String): Boolean = {
       if (ToxKey.isKeyValid(rawGroupKey)) {
-        val key = new ToxKey(rawGroupKey)
+        val key = new GroupKey(rawGroupKey)
         val alias = groupAlias.getText.toString //TODO: group aliases
 
         val db = State.db
         if (!db.doesContactExist(key)) {
           try {
             ToxSingleton.tox.joinGroup(key)
-            println("joined group : " + groupKey)
+            AntoxLog.debug("joined group : " + groupKeyView)
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()
           }
-          Log.d("AddGroupKey", "Adding group to database")
           db.addGroup(key, UiUtils.trimId(key), topic = "")
+
+          //prevent already-added group from having an existing group invite
+          db.deleteGroupInvite(key)
+          AntoxNotificationManager.clearRequestNotification(key)
         } else {
           toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
           toast.show()
@@ -97,16 +99,15 @@ class AddGroupFragment extends Fragment with InputableID {
         toast.show()
         true
       } else {
-        println("not validated")
         showToastInvalidID()
         false
       }
   }
 
   def addGroup(view: View) {
-    if (groupKey.length == 64) {
+    if (groupKeyView.length == 64) {
       // Attempt to use ID as a Group ID
-      val result = checkAndSend(groupKey.getText.toString, _originalUsername)
+      val result = checkAndSend(groupKeyView.getText.toString, originalUsername)
       if (result) {
         val update = new Intent(Constants.BROADCAST_ACTION)
         update.putExtra("action", Constants.UPDATE)
@@ -116,7 +117,6 @@ class AddGroupFragment extends Fragment with InputableID {
         getActivity.finish()
       }
     } else {
-      println("length is not 64")
       showToastInvalidID()
     }
   }

@@ -1,32 +1,42 @@
 package chat.tox.antox.utils
 
 import java.io.{File, FileInputStream, FileNotFoundException, InputStream}
-import java.util.concurrent.{LinkedBlockingQueue, ThreadPoolExecutor, TimeUnit}
 
 import android.graphics.BitmapFactory.{Options => BitmapOptions}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.support.v4.util.LruCache
-import android.util.Log
-import android.widget.ImageView
 import chat.tox.antox.utils.BitmapManager._
 import chat.tox.antox.wrapper.BitmapUtils.RichBitmap
 import org.scaloid.common._
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 object BitmapManager {
+
+  private final case class ImageKey(key: String) extends AnyVal
+
   // Use a LRU Cache for storing inlined bitmap images in chats
-  private var mMemoryCache: LruCache[String, Bitmap] = _
+  private var memoryCache: LruCache[ImageKey, Bitmap] = _
 
   // Use a separate hashmap for avatars as they are all needed most of the time
-  private val mAvatarCache: mutable.HashMap[String, Bitmap] = new mutable.HashMap[String, Bitmap]
+  private val avatarCache = new mutable.HashMap[ImageKey, Bitmap]
 
   // Hashmap used for storing whether a cached avatar is valid or needs to be updated because a contact
-  // has updated their avatar - contact's avatars are stored under the name of their public key
-  private val mAvatarValid: mutable.HashMap[String, Boolean] = new mutable.HashMap[String, Boolean]()
+  // has updated their avatar - contacts' avatars are stored under the name of their public key
+  private val avatarValid = new mutable.HashMap[ImageKey, Boolean]()
 
-  private def getFromCache(isAvatar: Boolean, key: String): Option[Bitmap] = {
+  private val TAG = LoggerTag(getClass.getSimpleName)
+
+  private def getImageKey(file: File): ImageKey = ImageKey(file.getPath + file.getName)
+
+  def getFromCache(isAvatar: Boolean, file: File): Option[Bitmap] = {
+    getFromCache(isAvatar, getImageKey(file))
+  }
+
+  private def getFromCache(isAvatar: Boolean, key: ImageKey): Option[Bitmap] = {
     if (isAvatar) {
       getAvatarFromCache(key)
     } else {
@@ -34,41 +44,38 @@ object BitmapManager {
     }
   }
 
-  private def getBitmapFromMemCache(key: String): Option[Bitmap] = {
-    Option(mMemoryCache.get(key))
+  private def getBitmapFromMemCache(key: ImageKey): Option[Bitmap] = {
+    Try(Option(memoryCache.get(key))).toOption.flatten
   }
 
-  private def getAvatarFromCache(key: String): Option[Bitmap] = {
-    isAvatarValid(key) match {
-      case Some(true) =>
-        mAvatarCache.get(key)
-
-      case None | Some(false) =>
-        None
+  private def getAvatarFromCache(key: ImageKey): Option[Bitmap] = {
+    if (isAvatarValid(key)) {
+      avatarCache.get(key)
+    } else {
+      None
     }
   }
 
-  private def isAvatarValid(key: String): Option[Boolean] = {
-    mAvatarValid.get(key)
+  private def isAvatarValid(key: ImageKey): Boolean = {
+    avatarValid.getOrElse(key, false)
   }
 
-  private def addBitmapToMemoryCache(key: String, bitmap: Bitmap) {
-    if (mMemoryCache != null && getBitmapFromMemCache(key).isEmpty) {
-      mMemoryCache.put(key, bitmap)
+  private def addBitmapToMemoryCache(key: ImageKey, bitmap: Bitmap) {
+    if (memoryCache != null && getBitmapFromMemCache(key).isEmpty) {
+      memoryCache.put(key, bitmap)
     }
   }
 
-  private def addAvatarToCache(key: String, bitmap: Bitmap) {
-    mAvatarCache.put(key, bitmap) // will overwrite any previous value for key
-    mAvatarValid.put(key, true)
+  private def addAvatarToCache(key: ImageKey, bitmap: Bitmap) {
+    avatarCache.put(key, bitmap) // will overwrite any previous value for key
+    avatarValid.put(key, true)
   }
 
   def setAvatarInvalid(file: File) {
-    val key = file.getPath + file.getName
-    mAvatarValid.put(key, false)
+    avatarValid.put(getImageKey(file), false)
   }
 
-  private def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
+  def calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int): Int = {
     val width = options.outWidth
     var inSampleSize = 1
 
@@ -78,6 +85,7 @@ object BitmapManager {
         inSampleSize *= 2
       }
     }
+    AntoxLog.debug("Using a sample size of " + inSampleSize, TAG)
 
     inSampleSize
   }
@@ -98,7 +106,7 @@ object BitmapManager {
    */
   private def getBytesFromStream(inputStream: InputStream): Array[Byte] = {
     var byteArr = Array.ofDim[Byte](0)
-    val buffer = Array.ofDim[Byte](2^10)
+    val buffer = Array.ofDim[Byte](2 ^ 10)
     var len: Int = 0
     var count = 0
 
@@ -128,7 +136,7 @@ object BitmapManager {
    * Will load the bitmap from file, decode it and then return a potentially downsampled bitmap
    * ready to be displayed
    */
-  private def decodeBitmap(file: File, imageKey: String, isAvatar: Boolean): Bitmap = {
+  private def decodeBitmap(file: File, imageKey: ImageKey, isAvatar: Boolean): Bitmap = {
     var fis: FileInputStream = null
 
     try {
@@ -138,7 +146,7 @@ object BitmapManager {
       // Get the bytes from the image file
       val byteArr = getBytesFromStream(fis)
 
-      val options = new BitmapOptions()
+      val options = new BitmapFactory.Options()
 
       if (!decodeAndCheck(byteArr, options)) {
         return null
@@ -159,7 +167,7 @@ object BitmapManager {
       bitmap
     } catch {
       case e: FileNotFoundException =>
-        Log.d("BitMapManager", "File not found when trying to be used for FileInputStream")
+        AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)
         e.printStackTrace()
         null
     } finally {
@@ -169,31 +177,23 @@ object BitmapManager {
     }
   }
 
-  // Execution context needed for Futures
-  // For why this is needed, see http://blog.scaloid.org/2013/11/using-scalaconcurrentfuture-in-android.html
-  implicit val exec = {
-    val poolSize = 100
-    val poolTimeout = 1000
-    ExecutionContext.fromExecutor(
-    new ThreadPoolExecutor(poolSize, poolSize, poolTimeout, TimeUnit.SECONDS, new LinkedBlockingQueue[Runnable])
-  )}
+  def load(file: File, isAvatar: Boolean): Observable[Bitmap] = {
+    val imageKey = getImageKey(file)
+    AntoxLog.debug(imageKey.toString, TAG)
 
-  def load(file: File, imageView: ImageView, isAvatar: Boolean) {
-      val imageKey = file.getPath + file.getName
-
-      getFromCache(isAvatar, imageKey) match {
+    Observable[Bitmap](sub => {
+      sub.onNext(getFromCache(isAvatar, imageKey) match {
         case Some(bitmap) =>
-          imageView.setImageBitmap(bitmap)
+          AntoxLog.debug("Loading Bitmap image from cache", TAG)
+          bitmap
 
         case None =>
-          Future {
-            val bitmap = decodeBitmap(file, imageKey, isAvatar)
-
-            if (bitmap != null) {
-              runOnUiThread(imageView.setImageBitmap(bitmap))
-            }
-          }
-      }
+          AntoxLog.debug("Decoding Bitmap image", TAG)
+          decodeBitmap(file, imageKey, isAvatar)
+      })
+      sub.onCompleted()
+    }).subscribeOn(IOScheduler())
+      .observeOn(AndroidMainThreadScheduler())
   }
 }
 
@@ -201,9 +201,9 @@ class BitmapManager {
   val maxMemory = (Runtime.getRuntime.maxMemory() / 1024).toInt
   val cacheSize = maxMemory / 8
 
-  mMemoryCache = new LruCache[String, Bitmap](cacheSize) {
+  memoryCache = new LruCache[ImageKey, Bitmap](cacheSize) {
     // Measure size in KB instead of number of items
-    protected override def sizeOf(key: String, bitmap: Bitmap): Int =
+    protected override def sizeOf(key: ImageKey, bitmap: Bitmap): Int =
       bitmap.getSizeInBytes.asInstanceOf[Int] / 1024
   }
 }

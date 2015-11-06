@@ -7,19 +7,19 @@ import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.UiUtils
+import chat.tox.antox.utils.{GroupKey, UiUtils}
 import chat.tox.antox.wrapper.ToxKey
 
 class GroupProfileActivity extends AppCompatActivity {
 
   var groupName: String = null
 
-  var groupKey: ToxKey = _
+  var groupKey: GroupKey = _
 
   override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_group_profile)
-    groupKey = new ToxKey(getIntent.getStringExtra("key"))
+    groupKey = new GroupKey(getIntent.getStringExtra("key"))
 
     ThemeManager.applyTheme(this, getSupportActionBar)
 

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/message_row_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white_absolute"
+    android:gravity="end|right"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_small">
+
+    <LinearLayout
+        android:id="@+id/message_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/received_triangle"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/conversation_item_received_triangle_shape"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/message_text_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/conversation_item_sent_shape"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_tiny">
+
+            <ImageView
+                android:id="@+id/message_sent_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="Image"
+                android:maxHeight="200dp"
+                android:maxWidth="200dp"
+                android:padding="@dimen/padding_small"
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_file_transfer"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_smallish"/>
+
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:linksClickable="true"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_smallish"/>
+
+            <TextView
+                android:id="@+id/file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_small"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/file_transfer_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="50"/>
+
+                <TextView
+                    android:id="@+id/file_transfer_progress_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:text="@string/file_finished"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_smallish"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/image_loading"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/file_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <ImageView
+                    android:id="@+id/file_reject_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:contentDescription="Send Button"
+                    android:padding="@dimen/padding_small"
+                    android:src="@drawable/ic_action_cancel"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/grey_darker"/>
+
+                <ImageView
+                    android:id="@+id/file_accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:adjustViewBounds="false"
+                    android:contentDescription="Send Button"
+                    android:padding="@dimen/padding_small"
+                    android:src="@drawable/ic_action_tick"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sent_triangle"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/conversation_item_sent_triangle_shape"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/message_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
+        android:paddingStart="@dimen/padding"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_tiny"/>
+
+</LinearLayout>

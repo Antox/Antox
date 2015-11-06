@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Activity titles-->
+  <string name="title_activity_add">Pridať kontakt</string>
+  <string name="title_activity_friend_profile">Profil priateľa</string>
+  <string name="title_activity_group_profile">Info o skupine</string>
+  <string name="title_activity_profile_settings">Možnosti profilu</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_contact">Pridať kontakt</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Musíte vyplňiť názov profilu</string>
+  <string name="login_login">Login</string>
+  <string name="login_account_hint">Názov profilu</string>
+  <string name="login_create_account_text">Vytvoriť Tox profil</string>
+  <string name="login_bad_login">Názov profilu nebol rozpoznaný</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Názov profilu</string>
+  <string name="create_text">Bezpečné posielanie správ pre každého.</string>
+  <string name="create_register">Registrovať</string>
+  <string name="create_register_incog">Registrovať inkognito</string>
+  <string name="create_import_profile">Importovať profil</string>
+  <string name="create_skip">Umožniť každému pridať si vás na základe vášho názvu profilu.</string>
+  <string name="create_must_fill_in">Musíte vyplniť všetky polia.</string>
+  <string name="create_bad_profile_name">Názov profilu nemôže obsahovať medzery alebo lomky alebo byť prázdny</string>
+  <string name="create_profile_exists">Meno tohto profilu už existuje</string>
+  <string name="import_profile_invalid_file">Vybraný súbor nie je platný tox profil</string>
+  <string name="create_account_exists">Toto meno sa už používa</string>
+  <string name="create_account_internal_error">Interná chyba programu Antox. Prosím reštartujte a skúste znovu</string>
+  <string name="create_account_reached_registration_limit">Môžte zaregistrovať najviac 13 účtov za hodinu. Tento limit ste dosiahli.</string>
+  <string name="create_account_unknown_error">Neznáma chyba registrácie, prosím skúste znovu neskôr.</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">Nie je aktívny chat. Začnite nejaký výberom priateľa z panelu naľavo.</string>
+  <string name="main_recent_no">Žiadne nedávne konverzácie</string>
+  <string name="main_no_internet">Bez pripojenia na internet</string>
+  <string name="main_not_connected">Nebolo zistené spojenie na internet. Bez pripojenia na internet máte limitovanú
+funkcionalitu pokiaľ Antox nepoužívate len na LAN sieti.</string>
+  <string name="main_mobile_disabled">V súčastnosti Offline ak je zapnutý mód iba cez Wi-Fi. Dotykom otvoríte nastavenia.</string>
+  <string name="search_all_contacts">Hľadať všetky kontakty</string>
+  <string name="main_group_coming_soon">Bude čoskoro...</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Poslať správu</string>
+  <string name="chat_file_transfer">Prenos súborov</string>
+  <string name="chat_message_too_long">Táto správa je dlhá a nemôže byť odoslaná</string>
+  <string name="chat_ft_failed_friend_offline">Odoslanie zlyhalo - nemožno poslať priateľovi, ktorý je offline</string>
+  <!--Add Pane Fragment-->
+  <string name="addpane_friend_label">Priateľ</string>
+  <string name="addpane_group_label">Skupina</string>
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">Tox ID vášho priateľa</string>
+  <!--Add Group Fragment-->
+  <!--Friend Profile Activity-->
+  <!--Group Profile Activity-->
+  <!--Friend request fragment-->
+  <!--Group invite fragment-->
+  <!--Contacts Fragment-->
+  <!--Delete Friend Dialog-->
+  <!--Export Chat Logs Toast-->
+  <!--Delete Chat Logs Dialog-->
+  <!--Block Friend Dialog-->
+  <!--Reset ToxID Dialog-->
+  <!--Delete Account Dialog-->
+  <!--Create Group Dialog-->
+  <!--Group Chat Delete-->
+  <!--Color Picker Dialog-->
+  <!--Chat Fragment-->
+  <!--Left Pane Fragment-->
+  <!--Misc-->
+  <!--Avatar Dialog-->
+  <!--File transfer-->
+  <!--QR-->
+  <!--Notifications-->
+  <!--nav bar-->
+  <string name="about_antox_2">Čo v súčasnosti funguje:</string>
+  <string name="title_activity_call">Aktivita hovoru</string>
+  <string name="end_call">Ukončiť hovor</string>
+  <string name="mute_call">Stlmiť zvuk</string>
+  <string name="mute_mic">Stlmiť mikrofón</string>
+  <string name="profile_info_description">Získať info o používateľovi</string>
+</resources>

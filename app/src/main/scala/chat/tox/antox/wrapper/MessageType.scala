@@ -6,25 +6,35 @@ import im.tox.tox4j.core.enums.ToxMessageType
 object MessageType extends Enumeration {
   type MessageType = Value
   val NONE = Value("0")
-  val OWN = Value("1")
-  val FRIEND = Value("2")
-  val FILE_TRANSFER = Value("3")
-  val FILE_TRANSFER_FRIEND = Value("4")
-  val ACTION = Value("5")
-  val GROUP_OWN = Value("6")
-  val GROUP_PEER = Value("7")
-  val GROUP_ACTION = Value("8")
+  val MESSAGE = Value("1")
+  val FILE_TRANSFER = Value("2")
+  val ACTION = Value("3")
+  val GROUP_MESSAGE = Value("4")
+  val GROUP_ACTION = Value("5")
 
-  val selfValues = Set(OWN, FILE_TRANSFER, GROUP_PEER, GROUP_ACTION)
-  val transferValues = Set(FILE_TRANSFER, FILE_TRANSFER_FRIEND)
+  val transferValues = Set(FILE_TRANSFER)
 
   def fromToxMessageType(messageType: ToxMessageType): MessageType = {
-    if (messageType == ToxMessageType.ACTION) {
-      ACTION
-    } else if (messageType == ToxMessageType.NORMAL) {
-      FRIEND
-    } else {
-      NONE
+    messageType match {
+      case ToxMessageType.ACTION =>
+        ACTION
+      case ToxMessageType.NORMAL =>
+        MESSAGE
+      case _ =>
+        NONE
+    }
+  }
+
+  def toToxMessageType(messageType: MessageType): ToxMessageType = {
+    messageType match {
+      case MessageType.ACTION | MessageType.GROUP_ACTION =>
+        ToxMessageType.ACTION
+
+      case MessageType.MESSAGE | MessageType.GROUP_MESSAGE =>
+        ToxMessageType.NORMAL
+
+      case _ =>
+        throw new Exception("Invalid message type for conversion to ToxMessageType.")
     }
   }
 }

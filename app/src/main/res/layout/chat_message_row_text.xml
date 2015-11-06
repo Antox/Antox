@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/message_row_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white_absolute"
+    android:gravity="end|right"
+    android:orientation="vertical"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:id="@+id/message_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/received_triangle"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/conversation_item_received_triangle_shape"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/message_text_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/conversation_item_sent_shape"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_file_transfer"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_smallish"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web|phone|email"
+                android:linksClickable="true"
+                android:padding="@dimen/padding_small"
+                android:text="Message Body: This is some long sample text"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_smallish"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sent_triangle"
+            android:layout_width="12dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/conversation_item_sent_triangle_shape"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/message_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
+        android:paddingStart="@dimen/padding"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_tiny"/>
+
+</LinearLayout>

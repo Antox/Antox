@@ -59,13 +59,15 @@ class MainActivity extends AppCompatActivity {
     }
 
     // Give ToxSingleton an instance of notification manager for use in displaying notifications from callbacks
-    ToxSingleton.mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+    AntoxNotificationManager.mNotificationManager =
+      Some(getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
+
+    if(preferences.getBoolean("notifications_persistent", false)){
+      AntoxNotificationManager.createPersistentNotification(getApplicationContext)
+    }
 
     // Initialise the bitmap manager for storing bitmaps in a cache
     new BitmapManager()
-
-    val db = State.db
-    db.clearFileNumbers()
 
     // Removes the drop shadow from the actionbar as it overlaps the tabs
     getSupportActionBar.setElevation(0)
@@ -87,7 +89,6 @@ class MainActivity extends AppCompatActivity {
 
   override def onPause() {
     super.onPause()
-    ToxSingleton.chatActive = false
   }
 
   override def onDestroy() {
@@ -134,9 +135,10 @@ class MainActivity extends AppCompatActivity {
     if (id == android.R.id.home) {
       val drawer = getSupportFragmentManager.findFragmentById(R.id.drawer).asInstanceOf[MainDrawerFragment]
       drawer.openDrawer()
-      return true
+      true
+    } else {
+      super.onOptionsItemSelected(item)
     }
-    super.onOptionsItemSelected(item)
   }
 
   private def selectLanguage() {

@@ -36,7 +36,8 @@
     <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
-    <string name="create_account_invalid_domain">Invalid toxdns domain supplied.</string>
+    <string name="create_account_invalid_domain">Invalid toxme domain supplied.</string>
+    <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
@@ -127,6 +128,10 @@
     <string name="contacts_delimiter_offline">Offline</string>
     <string name="contacts_delimiter_online">Online</string>
     <string name="contacts_resend_friend_request">Resend Friend Request</string>
+    <string name="friend_sent_image">%s sent an image.</string>
+    <string name="friend_sent_file">%s sent a file.</string>
+    <string name="you_sent_image">You sent an image.</string>
+    <string name="you_sent_file">You sent a file.</string>
 
     <!-- Delete Friend Dialog -->
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
@@ -150,6 +155,14 @@
     <string name="reset_tox_id_dialog_cancel">Cancel</string>
     <string name="tox_id_reset">Your Tox ID has been reset</string>
 
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_dialog_message">This will permanently delete this Antox user and remove you from any ToxMe service tied to your account</string>
+    <string name="delete_account_dialog_title">Confirm Antox Account Deletion</string>
+    <string name="delete_account_dialog_confirm">Delete Account</string>
+    <string name="delete_account_dialog_cancel">Cancel</string>
+    <string name="delete_account_successful">Account was successfully deleted</string>
+    <string name="delete_account_error">An error occurred while deleting your Antox accont</string>
+
     <!-- Create Group Dialog -->
     <string name="create_group_dialog_message">Create a new Group Chat</string>
     <string name="create_group_dialog_create_group">Create Group</string>
@@ -168,6 +181,7 @@
     <string name="attachment_takephoto">Take photo</string>
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>
+    <string name="file_delete">Delete file</string>
 
     <!-- Left Pane Fragment -->
     <string name="titles_recent">Recent</string>
@@ -181,6 +195,8 @@
     <string name="button_no">No</string>
     <string name="button_ok">OK</string>
     <string name="dialog_tox_id">Copy Tox ID to clipboard</string>
+    <string name="dialog_toxme">Copy to clipboard</string>
+    <string name="dialog_password">Copy to clipboard</string>
     <string name="share_with">Share with</string>
     <string name="connection_has">has</string>
     <string name="connection_online">come online</string>
@@ -223,6 +239,14 @@
 
     <!-- Notifications -->
     <string name="unread_count">%s Unread Messages</string>
+
+    <!-- User Status -->
+    <string name="status_online">Online</string>
+    <string name="status_away">Away</string>
+    <string name="status_busy">Busy</string>
+    <string name="status_offline">Offline</string>
+
+
 
     <!-- nav bar -->
     <string name="n_settings">Settings</string>

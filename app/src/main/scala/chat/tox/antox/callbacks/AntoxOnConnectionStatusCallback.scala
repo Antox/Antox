@@ -5,15 +5,11 @@ import android.preference.PreferenceManager
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
 import chat.tox.antox.utils.{ConnectionManager, ConnectionTypeChangeListener}
+import chat.tox.antox.wrapper.FriendInfo
 import im.tox.tox4j.core.callbacks.FriendConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
 
 import scala.collection.JavaConversions._
-
-object AntoxOnConnectionStatusCallback {
-
-  private val TAG = "chat.tox.antox.TAG"
-}
 
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback[Unit] {
 
@@ -22,8 +18,8 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
   def setAllStatusNone(): Unit = {
     if (!ToxSingleton.isToxConnected(preferences, ctx)) {
-      for (friend <- ToxSingleton.getAntoxFriendList.all) {
-        friendConnectionStatus(friend.getFriendNumber, ToxConnection.NONE)(Unit)
+      for (friendInfo  <- State.db.friendInfoList.toBlocking.first) {
+        friendConnectionStatus(friendInfo, ToxConnection.NONE)(Unit)
       }
     }
   }
@@ -46,21 +42,18 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
   preferences.registerOnSharedPreferenceChangeListener(preferencesListener)
 
-
-  override def friendConnectionStatus(friendNumber: Int, connectionStatus: ToxConnection)(state: Unit): Unit = {
+  def friendConnectionStatus(friendInfo: FriendInfo, connectionStatus: ToxConnection)(state: Unit): Unit = {
     val online = connectionStatus != ToxConnection.NONE
 
     val db = State.db
-    val friendKey = ToxSingleton.getAntoxFriend(friendNumber).get.getKey
-    db.updateContactOnline(friendKey, online)
-    ToxSingleton.getAntoxFriend(friendNumber).get.setOnline(online)
+    db.updateContactOnline(friendInfo.key, online)
 
     if (online) {
-      MessageHelper.sendUnsentMessages(ctx)
+      MessageHelper.sendUnsentMessages(friendInfo.key, ctx)
       State.transfers.updateSelfAvatar(ctx)
     } else {
-      ToxSingleton.typingMap.put(friendKey, false)
-      Reactive.typing.onNext(true)
+      ToxSingleton.typingMap.put(friendInfo.key, false)
+      State.typing.onNext(true)
     }
 
   }

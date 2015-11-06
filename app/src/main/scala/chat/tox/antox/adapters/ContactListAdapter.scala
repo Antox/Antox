@@ -5,7 +5,6 @@ import java.util
 import android.app.Activity
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
@@ -15,8 +14,9 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.ToxKey
+import chat.tox.antox.wrapper.{ContactKey, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
+import rx.lang.scala.Subscription
 
 import scala.collection.JavaConversions._
 
@@ -37,28 +37,30 @@ object ContactListAdapter {
     var countText: TextView = _
 
     var timeText: TextView = _
+
+    var imageLoadingSubscription: Option[Subscription] = None
   }
 }
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {
 
-  private val mDataOriginal: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
+  private val originalData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private var mData: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
+  private var data: util.ArrayList[LeftPaneItem] = new util.ArrayList[LeftPaneItem]()
 
-  private val mInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
+  private val layoutInflater: LayoutInflater = context.asInstanceOf[Activity].getLayoutInflater
 
-  var mFilter: Filter = _
+  var filter: Filter = _
 
   def addItem(item: LeftPaneItem) {
-    mData.add(item)
-    mDataOriginal.add(item)
+    data.add(item)
+    originalData.add(item)
     notifyDataSetChanged()
   }
 
   def insert(index: Int, item: LeftPaneItem): Unit = {
-    mData.insert(index, item)
-    mDataOriginal.insert(index, item)
+    data.insert(index, item)
+    originalData.insert(index, item)
     notifyDataSetChanged()
   }
 
@@ -69,11 +71,11 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
   override def getViewTypeCount: Int = ContactItemType.values.size
 
-  override def getCount: Int = mData.size
+  override def getCount: Int = data.size
 
-  override def getItem(position: Int): LeftPaneItem = mData.get(position)
+  override def getItem(position: Int): LeftPaneItem = data.get(position)
 
-  def getKey(position: Int): ToxKey = getItem(position).key
+  def getKey(position: Int): ContactKey = getItem(position).key
 
   override def getItemId(position: Int): Long = position
 
@@ -85,12 +87,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder = new ViewHolder()
       `type` match {
         case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
-          newConvertView = mInflater.inflate(R.layout.friendrequest_list_item, null)
+          newConvertView = layoutInflater.inflate(R.layout.friendrequest_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.request_key).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.request_message).asInstanceOf[TextView]
 
         case ContactItemType.FRIEND | ContactItemType.GROUP =>
-          newConvertView = mInflater.inflate(R.layout.contact_list_item, null)
+          newConvertView = layoutInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
@@ -120,11 +122,26 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       }
       holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
 
-      if (item.image.isDefined && item.image.get.exists()) {
-        BitmapManager.load(item.image.get, holder.avatar, isAvatar = true)
-      } else {
-        holder.avatar.setImageResource(R.color.grey_light)
-      }
+      holder.imageLoadingSubscription.foreach(_.unsubscribe())
+
+      holder.imageLoadingSubscription =
+        item.image match {
+          case Some(img) =>
+            BitmapManager.getFromCache(isAvatar = true, img) match {
+              case Some(bitmap) =>
+                holder.avatar.setImageBitmap(bitmap)
+                None
+
+              case None =>
+                Some(BitmapManager
+                  .load(img, isAvatar = true)
+                  .subscribe(bitmap => holder.avatar.setImageBitmap(bitmap)))
+            }
+
+          case None =>
+            holder.avatar.setImageResource(R.drawable.default_avatar)
+            None
+        }
 
       val drawable = context.getResources.getDrawable(IconColor.iconDrawable(item.isOnline, item.status))
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -146,21 +163,24 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     val rejectButton = newConvertView.findViewById(R.id.reject).asInstanceOf[ImageView]
 
     if (`type` == ContactItemType.FRIEND_REQUEST) {
-      createFriendRequestClickHandlers(item.key, acceptButton, rejectButton)
+      createFriendRequestClickHandlers(item.key.asInstanceOf[FriendKey], acceptButton, rejectButton)
     } else if (`type` == ContactItemType.GROUP_INVITE) {
-      createGroupInviteClickHandlers(item.key, acceptButton, rejectButton)
+      createGroupInviteClickHandlers(item.key.asInstanceOf[GroupKey], acceptButton, rejectButton)
     }
 
     newConvertView
   }
 
-  def createFriendRequestClickHandlers(key: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createFriendRequestClickHandlers(key: FriendKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Accepting Friend: " + key)
+        AntoxLog.debug("Accepting Friend: " + key, AntoxLog.CLICK_TAG)
+
         val db = State.db
         db.addFriend(key, "", "", context.getResources.getString(R.string.friend_accepted_default_status))
+
         db.deleteFriendRequest(key)
+        AntoxNotificationManager.clearRequestNotification(key)
         try {
           ToxSingleton.tox.addFriendNoRequest(key)
           ToxSingleton.save()
@@ -171,17 +191,18 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Rejecting Friend: " + key)
+        AntoxLog.debug("Rejecting Friend: " + key, AntoxLog.CLICK_TAG)
+
         val db = State.db
         db.deleteFriendRequest(key)
       }
     })
   }
 
-  def createGroupInviteClickHandlers(groupKey: ToxKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
+  def createGroupInviteClickHandlers(groupKey: GroupKey, acceptButton: ImageView, rejectButton: ImageView): Unit = {
     acceptButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        AntoxLog.debug("Joining Group: " + groupKey, AntoxLog.CLICK_TAG)
         val db = State.db
 
         db.groupInvites.first.subscribe(invites => {
@@ -196,11 +217,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
         db.addGroup(groupKey, UiUtils.trimId(groupKey), "")
         db.deleteGroupInvite(groupKey)
+        AntoxNotificationManager.clearRequestNotification(groupKey)
       }
     })
     rejectButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        Log.d("OnClick", "Joining Group: " + groupKey)
+        AntoxLog.debug("Joining Group: " + groupKey, AntoxLog.CLICK_TAG)
         val db = State.db
         db.deleteGroupInvite(groupKey)
       }
@@ -208,23 +230,23 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
   }
 
   override def getFilter: Filter = {
-    if (mFilter == null) {
-      mFilter = new Filter() {
+    if (filter == null) {
+      filter = new Filter() {
 
         protected override def performFiltering(constraint: CharSequence): FilterResults = {
           val filterResults = new FilterResults()
-          if (mDataOriginal != null) {
+          if (originalData != null) {
             if (constraint == "" || constraint == null) {
-              filterResults.values = mDataOriginal
-              filterResults.count = mDataOriginal.size
+              filterResults.values = originalData
+              filterResults.count = originalData.size
             } else {
-              mData = mDataOriginal
+              data = originalData
               val tempList1 = new util.ArrayList[LeftPaneItem]()
               val tempList2 = new util.ArrayList[LeftPaneItem]()
-              val length = mData.size
+              val length = data.size
               var i = 0
               while (i < length) {
-                val item = mData.get(i)
+                val item = data.get(i)
                 if (item.first.toUpperCase.startsWith(constraint.toString.toUpperCase)) tempList1.add(item) else if (item.first.toLowerCase.contains(constraint.toString.toLowerCase)) tempList2.add(item)
                 i += 1
               }
@@ -237,7 +259,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         }
 
         protected override def publishResults(contraint: CharSequence, results: FilterResults) {
-          mData = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
+          data = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
           if (results.count > 0) {
             notifyDataSetChanged()
           } else {
@@ -246,6 +268,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
         }
       }
     }
-    mFilter
+    filter
   }
 }

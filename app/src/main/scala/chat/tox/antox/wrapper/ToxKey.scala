@@ -6,18 +6,19 @@ object ToxKey {
   val MAX_KEY_LENGTH = 64
 
   def isKeyValid(key: String): Boolean =
-    !(key.length != MAX_KEY_LENGTH || key.matches("[[:xdigit:]]"))
+    key.length == MAX_KEY_LENGTH && key.matches("^[0-9A-F]+$")
 }
 
-case class ToxKey(key: String) {
-  if (!ToxKey.isKeyValid(key)) {
-    throw new IllegalArgumentException(s"key must be $ToxKey.MAX_KEY_LENGTH hex chars long")
-  }
+trait ToxKey {
+  def key: String
 
-  def this(bytes: Array[Byte]) =
-    this(Hex.bytesToHexString(bytes))
+  if (!ToxKey.isKeyValid(key)) {
+    throw new IllegalArgumentException(s"key must be ${ToxKey.MAX_KEY_LENGTH} hex chars long")
+  }
 
   def bytes: Array[Byte] = Hex.hexStringToBytes(key)
 
   override def toString: String = key
 }
+
+trait ContactKey extends ToxKey

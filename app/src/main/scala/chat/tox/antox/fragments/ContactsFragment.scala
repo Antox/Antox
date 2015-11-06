@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter
-import chat.tox.antox.utils.LeftPaneItem
+import chat.tox.antox.utils.{TimestampUtils, LeftPaneItem}
 import chat.tox.antox.wrapper.{FriendInfo, FriendRequest, GroupInfo, GroupInvite}
 import im.tox.tox4j.core.enums.ToxUserStatus
 
@@ -34,9 +34,9 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.nonEmpty) {
       for (f <- sortedFriendsList) {
-        val friend = new LeftPaneItem(f.key, f.avatar, f.getAliasOrName, f.statusMessage,
+        val friend = new LeftPaneItem(ContactItemType.FRIEND, f.key, f.avatar, f.getAliasOrName, f.statusMessage,
           f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
-          f.lastMessageTimestamp)
+          f.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()))
         leftPaneAdapter.addItem(friend)
       }
     }
@@ -62,10 +62,10 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
 
   def updateGroupList(leftPaneAdapter: ContactListAdapter, groups: Seq[GroupInfo]): Unit = {
     val sortedGroupList = groups.sortWith(compareNames).sortWith(compareFavorite)
-    if (groups.nonEmpty) {
-      for (group <- groups) {
+    if (sortedGroupList.nonEmpty) {
+      for (group <- sortedGroupList) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.getAliasOrName, group.topic,
-          group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessageTimestamp)
+          group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()))
         leftPaneAdapter.addItem(groupPane)
       }
     }

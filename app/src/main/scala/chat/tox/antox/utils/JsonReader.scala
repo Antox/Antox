@@ -29,7 +29,7 @@ object JsonReader {
       jsonText
     } catch {
       case e: Exception => {
-        Log.e("", "JsonReader readJsonFromUrl error: " + e)
+        AntoxLog.errorException("JsonReader readJsonFromUrl error", e)
         ""
       }
     } finally {
@@ -45,7 +45,7 @@ object JsonReader {
       new JSONObject(jsonText)
     } catch {
       case e: Exception => {
-        Log.e("", "JsonReader readJsonFromFile error: " + e)
+        AntoxLog.errorException("JsonReader readJsonFromFile error", e)
         new JSONObject()
       }
     }

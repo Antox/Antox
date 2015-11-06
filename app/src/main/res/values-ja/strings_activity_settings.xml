@@ -5,6 +5,8 @@
   <string name="pref_header_profile">プロファイル</string>
   <string name="pref_title_nickname">ユーザー名</string>
   <string name="pref_default_nickname">Antox ユーザー</string>
+  <string name="pref_title_password">ToxMeのパスワード</string>
+  <string name="pref_default_password">パスワードがありません</string>
   <string name="pref_title_status">ステータス</string>
   <string-array name="pref_status_list_titles">
     <item>オンライン</item>
@@ -15,7 +17,14 @@
   <string name="pref_default_status_message">やあ！Antoxより</string>
   <string name="pref_title_tox_id">Tox ID</string>
   <string name="pref_default_tox_id">デフォルトTox ID - このメッセージは表示されないはずです</string>
+  <string name="pref_title_toxme">ToxMeのアドレス</string>
+  <string name="pref_default_toxme">このプロファイルはシークレットモードで</string>
+  <string name="pref_title_logging_enabled">ログアウト後チャットの履歴を保存</string>
+  <string name="pref_title_theme_color">テーマの色を変更します</string>
+  <string name="pref_title_avatar">アバター</string>
   <string name="pref_title_account_name">プロファイル名</string>
+  <string name="pref_title_export">パスワードを輸出</string>
+  <string name="pref_title_delete">アカウントを削除</string>
   <string name="pref_title_logout">ログアウト</string>
   <!--Notifications-->
   <string name="pref_header_notifications">通知</string>
@@ -24,7 +33,7 @@
   <string name="pref_title_new_friend_notifications">フレンドリクエスト通知</string>
   <!--Other-->
   <string name="pref_header_other">その他</string>
-  <string name="pref_title_connection_status_messages">オンライン/オフライン メッセージ</string>
+  <string name="pref_title_connection_status_messages">アクションメッセージ</string>
   <string name="pref_title_wifi_only">Wi-Fi接続時のみ</string>
   <string name="pref_title_language">言語</string>
   <!--Menu strings-->
@@ -32,5 +41,6 @@
   <!--Advanced strings-->
   <string name="pref_udp">UDPを有効にする</string>
   <string name="pref_advanced">詳細設定</string>
-  <string name="pref_nospam">新しいNospamを生成</string>
+  <string name="pref_nospam">Tox IDをリセット</string>
+  <string name="pref_autostart">ブートにAntoxを開始</string>
 </resources>

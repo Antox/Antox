@@ -1,7 +1,6 @@
 package chat.tox.antox.fragments
 
 import android.content.{Intent, SharedPreferences}
-import android.net.Uri
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
@@ -65,31 +64,33 @@ class MainDrawerFragment extends Fragment {
 
     drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
 
-    userDetailsSubscription = State.userDb(getActivity)
-      .activeUserDetailsObservable()
-      .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe((tuple) => {
-      refreshDrawerHeader(tuple._1, tuple._2)
-    })
-
     rootView
   }
 
   override def onResume(): Unit = {
     super.onResume()
+
+    userDetailsSubscription = State.userDb(getActivity)
+      .activeUserDetailsObservable()
+      .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe((tuple) => {
+        refreshDrawerHeader(tuple._1, tuple._2)
+      })
   }
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
-    val avatarView = getView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+    val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
 
-    val avatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
-    avatarView.setImageResource(R.color.grey_light)
+    val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
-    avatar.foreach(av => {
-      avatarView.setImageURI(Uri.fromFile(av))
-      BitmapManager.load(av, avatarView, isAvatar = true)
-    })
+    mAvatar match {
+      case Some(avatar) =>
+        BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+      case None =>
+        avatarView.setImageResource(R.drawable.default_avatar)
+    }
+
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
     nameView.setText(userInfo.nickname)
@@ -162,16 +163,17 @@ class MainDrawerFragment extends Fragment {
         State.logout(getActivity)
     }
 
+    menuItem.setChecked(false)
     mDrawerLayout.closeDrawer(mNavigationView)
   }
 
   override def onPause(): Unit = {
     super.onPause()
+
+    userDetailsSubscription.unsubscribe()
   }
 
   override def onDestroy(): Unit = {
     super.onDestroy()
-
-    userDetailsSubscription.unsubscribe()
   }
 }

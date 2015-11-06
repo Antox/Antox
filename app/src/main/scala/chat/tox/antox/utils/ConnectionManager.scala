@@ -28,14 +28,18 @@ object ConnectionManager {
                                      .asInstanceOf[ConnectivityManager]
     connectivityManager.getActiveNetworkInfo.getType
   }
+
+  def isNetworkAvailable(context: Context): Boolean = {
+    val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
+    val networkInfo = connMgr.getActiveNetworkInfo
+
+    networkInfo != null && networkInfo.isConnected
+  }
 }
 
 class ConnectionManager extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent) {
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val networkInfo = connectivityManager.getActiveNetworkInfo
-
-    if (networkInfo != null && networkInfo.isConnected) {
+    if (ConnectionManager.isNetworkAvailable(context)) {
       val connectionType = ConnectionManager.getConnctionType(context)
       if (ConnectionManager.lastConnectionType.isEmpty || connectionType != ConnectionManager.lastConnectionType.get) {
         for (listener <- ConnectionManager.listenerList) {

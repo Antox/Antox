@@ -6,4 +6,5 @@ object ContactType extends Enumeration {
   val NONE = Value(0)
   val FRIEND = Value(1)
   val GROUP = Value(2)
+  val PEER = Value(3)
 }

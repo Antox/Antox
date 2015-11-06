@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="title_activity_settings">Innstillinger</string>
+  <!--Profile-->
+  <string name="pref_header_profile">Profil</string>
+  <string name="pref_title_nickname">Navn</string>
+  <string name="pref_default_nickname">Antox bruker</string>
+  <string name="pref_title_status">Status</string>
+  <string-array name="pref_status_list_titles">
+    <item>Online</item>
+    <item>Ikke til stede</item>
+    <item>Opptatt</item>
+  </string-array>
+  <string name="pref_title_status_message">Statusmelding</string>
+  <string name="pref_default_status_message">Hei! Jeg bruker Antox</string>
+  <string name="pref_title_tox_id">Tox ID</string>
+  <string name="pref_title_account_name">Profil Navn</string>
+  <string name="pref_title_logout">Log ut</string>
+  <!--Notifications-->
+  <string name="pref_header_notifications">Varslinger</string>
+  <string name="pref_title_enable_notifications">Slå på varsler</string>
+  <string name="pref_title_new_message_notifications">Meldings varsler</string>
+  <string name="pref_title_new_friend_notifications">Ny venn varsel</string>
+  <!--Other-->
+  <string name="pref_header_other">Annet</string>
+  <string name="pref_title_wifi_only">Bare Wi-Fi</string>
+  <string name="pref_title_language">Språk</string>
+  <!--Menu strings-->
+  <string name="copy_tox_id">Kopier Tox ID</string>
+  <!--Advanced strings-->
+  <string name="pref_udp">Bruk UDP</string>
+  <string name="pref_advanced">Avansert </string>
+</resources>

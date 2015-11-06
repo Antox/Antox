@@ -4,7 +4,7 @@ import java.io.File
 import java.sql.Timestamp
 
 trait ContactInfo {
-  def key: ToxKey
+  def key: ContactKey
   def name: String
   def avatar: Option[File]
   def online: Boolean
@@ -14,8 +14,7 @@ trait ContactInfo {
   def blocked: Boolean
   def ignored: Boolean
   def favorite: Boolean
-  def lastMessage: String
-  def lastMessageTimestamp: Timestamp
+  def lastMessage: Option[Message]
   def unreadCount: Int
   def alias: String
 

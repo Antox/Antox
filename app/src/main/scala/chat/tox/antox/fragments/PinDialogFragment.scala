@@ -20,13 +20,13 @@ object PinDialogFragment {
 
 class PinDialogFragment extends DialogFragment {
 
-  var mListener: PinDialogListener = _
+  var listener: PinDialogListener = _
 
   var pin: EditText = _
 
   override def onAttach(activity: Activity) {
     super.onAttach(activity)
-    mListener = activity.asInstanceOf[PinDialogListener]
+    listener = activity.asInstanceOf[PinDialogListener]
   }
 
   override def onCreateDialog(savedInstanceState: Bundle): Dialog = {
@@ -39,19 +39,19 @@ class PinDialogFragment extends DialogFragment {
       .setPositiveButton(getResources.getString(R.string.button_confirm), new DialogInterface.OnClickListener() {
 
         def onClick(dialog: DialogInterface, id: Int) {
-          mListener.onDialogPositiveClick(PinDialogFragment.this, pin.getText.toString)
+          listener.onDialogPositiveClick(PinDialogFragment.this, pin.getText.toString)
         }
       })
       .setNegativeButton(getResources.getString(R.string.button_cancel), new DialogInterface.OnClickListener() {
 
         def onClick(dialog: DialogInterface, id: Int) {
-          mListener.onDialogNegativeClick(PinDialogFragment.this)
+          listener.onDialogNegativeClick(PinDialogFragment.this)
         }
       })
     builder.create()
   }
 
   override def onCancel(dialog: DialogInterface) {
-    mListener.onDialogNegativeClick(PinDialogFragment.this)
+    listener.onDialogNegativeClick(PinDialogFragment.this)
   }
 }

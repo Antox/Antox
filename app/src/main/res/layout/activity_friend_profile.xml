@@ -17,46 +17,32 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            android:src="@color/grey_light" />
+            android:src="@drawable/default_avatar"/>
 
-        <com.shamanland.fab.FloatingActionButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/favorite_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:clickable="true"
             android:onClick="onClickFavorite"
-            />
+            android:src="@drawable/ic_star_black_24dp"
+            app:borderWidth="0dp"/>
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <EditText
+        android:id="@+id/friendAlias"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:gravity="center_horizontal">
-
-        <EditText
-            android:inputType="text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/friend_profile_nick"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:id="@+id/friendAlias"
-            android:layout_marginLeft="39dp"
-
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/editNameImage"
-            android:layout_width="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingTop="7dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_mode_edit_black_24dp" />
-
-    </LinearLayout>
+        android:inputType="text"
+        android:text="subliun"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
@@ -70,7 +56,6 @@
         android:textColor="#a0a2a2"
         android:typeface="serif"
         android:textSize="16sp" />
-
 
 
 </LinearLayout>

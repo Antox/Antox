@@ -4,12 +4,12 @@ import android.content.Context
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.AntoxLog
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override
   def groupSelfJoin(groupNumber: Int): Unit = {
-    println("got self join callback")
-    new Thread(new Runnable {
+    /*new Thread(new Runnable {
       override def run(): Unit = {
         val group = ToxSingleton.getGroup(groupNumber)
         if (ToxSingleton.tox.getGroupNumberPeers(groupNumber) != group.getPeerCount) {
@@ -21,7 +21,7 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
           }
         }
         group.name = ToxSingleton.tox.getGroupName(groupNumber)
-        println("set name to " + group.name)
+        AntoxLog.debug("set group name to " + group.name)
         group.topic = ToxSingleton.tox.getGroupTopic(groupNumber)
         group.connected = true
 
@@ -31,6 +31,6 @@ class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSel
         db.updateContactOnline(group.key, online = true)
         db.updateContactStatusMessage(group.key, group.topic)
       }
-    }).start()
+    }).start() */
   }
 }

@@ -19,17 +19,21 @@ class AboutActivity extends AppCompatActivity {
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 
-    val tw = findViewById(R.id.version_text).asInstanceOf[TextView]
-    val tw10 = findViewById(R.id.source_link).asInstanceOf[TextView]
+    val versionTextView = findViewById(R.id.version_text).asInstanceOf[TextView]
+    val sourceURLTextView = findViewById(R.id.source_link).asInstanceOf[TextView]
+    
+    // Make the source URL a clickable link
     val pattern = Pattern.compile("https://github.com/subliun/Antox")
-    Linkify.addLinks(tw10, pattern, "")
+    Linkify.addLinks(sourceURLTextView, pattern, "")
+    
+    // Fetch the app version and set it in the versionTextView, falling back to a blank version if unable to
     var version = "-.-.-"
     try {
       version = getPackageManager.getPackageInfo(getPackageName, 0).versionName
     } catch {
       case e: PackageManager.NameNotFoundException => e.printStackTrace()
     }
-    tw.setText(getString(R.string.ver) + " " + version)
+    versionTextView.setText(getString(R.string.ver) + " " + version)
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {

@@ -9,7 +9,7 @@ import android.view.{MenuInflater, View, ViewGroup}
 
 abstract class BetterPreferenceActivity extends PreferenceActivity with SharedPreferences.OnSharedPreferenceChangeListener {
 
-  private var mDelegate: AppCompatDelegate = _
+  private var compatDelegate: AppCompatDelegate = _
 
   override protected def onPostCreate(savedInstanceState: Bundle) {
     super.onPostCreate(savedInstanceState)
@@ -74,10 +74,10 @@ abstract class BetterPreferenceActivity extends PreferenceActivity with SharedPr
   }
 
   def getDelegate: AppCompatDelegate = {
-    if (mDelegate == null) {
-      mDelegate = AppCompatDelegate.create(this, null)
+    if (compatDelegate == null) {
+      compatDelegate = AppCompatDelegate.create(this, null)
     }
 
-    mDelegate
+    compatDelegate
   }
 }

@@ -7,11 +7,11 @@
     android:background="?attr/colorPrimaryDark">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar"
+        android:id="@+id/drawer_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:src="@color/grey_light" />
+        android:src="@drawable/default_avatar"/>
 
     <TextView
         android:id="@+id/status"
@@ -19,8 +19,8 @@
         android:layout_height="20dp"
         android:background="@color/green"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/avatar"
-        android:layout_alignEnd="@+id/avatar" />
+        android:layout_alignRight="@+id/drawer_avatar"
+        android:layout_alignEnd="@+id/drawer_avatar" />
 
     <TextView
         android:id="@+id/name"
@@ -31,9 +31,9 @@
         android:textSize="@dimen/text_medium"
         android:singleLine="true"
         android:ellipsize="end"
-        android:layout_alignTop="@+id/avatar"
-        android:layout_toRightOf="@+id/avatar"
-        android:layout_toEndOf="@+id/avatar"
+        android:layout_alignTop="@+id/drawer_avatar"
+        android:layout_toRightOf="@+id/drawer_avatar"
+        android:layout_toEndOf="@+id/drawer_avatar"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="15dp"/>
 
