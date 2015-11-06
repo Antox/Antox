@@ -64,6 +64,12 @@ class MainDrawerFragment extends Fragment {
 
     drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
 
+    rootView
+  }
+
+  override def onResume(): Unit = {
+    super.onResume()
+
     userDetailsSubscription = State.userDb(getActivity)
       .activeUserDetailsObservable()
       .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
@@ -71,12 +77,6 @@ class MainDrawerFragment extends Fragment {
       .subscribe((tuple) => {
         refreshDrawerHeader(tuple._1, tuple._2)
       })
-
-    rootView
-  }
-
-  override def onResume(): Unit = {
-    super.onResume()
   }
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
@@ -169,11 +169,11 @@ class MainDrawerFragment extends Fragment {
 
   override def onPause(): Unit = {
     super.onPause()
+
+    userDetailsSubscription.unsubscribe()
   }
 
   override def onDestroy(): Unit = {
     super.onDestroy()
-
-    userDetailsSubscription.unsubscribe()
   }
 }
