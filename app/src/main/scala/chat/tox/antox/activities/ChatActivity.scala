@@ -13,6 +13,7 @@ import android.support.v4.content.CursorLoader
 import android.view.View
 import android.widget._
 import chat.tox.antox.R
+import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
@@ -194,11 +195,15 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   def onClickInfo(v: View): Unit = {}
 
   def onClickVoiceCall(v: View): Unit = {
-    if (!ToxSingleton.getAntoxFriend(activeKey).get.online) return
+    if (!State.db.getFriendInfo(activeKey).online) return
 
     val callActivity = new Intent(this, classOf[CallActivity])
+    val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
+    State.callManager.add(call)
+
     // Add avatar and nickname as extras
-    callActivity.putExtra("key", activeKey.toString)
+    callActivity.putExtra("key", call.contactKey.toString)
+    callActivity.putExtra("call_number", call.callNumber.number)
     startActivity(callActivity)
   }
 

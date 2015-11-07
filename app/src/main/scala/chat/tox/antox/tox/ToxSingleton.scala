@@ -7,15 +7,13 @@ import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import chat.tox.antox.R
-import chat.tox.antox.callbacks.ToxCallbackListener
-import chat.tox.antox.callbacks.{ToxavCallbackListener, ToxCallbackListener}
+import chat.tox.antox.callbacks.{ToxCallbackListener, ToxavCallbackListener}
 import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.tox4j.core.enums.ToxUserStatus
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
-import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
@@ -27,7 +25,7 @@ object ToxSingleton {
 
   var tox: ToxCore = _
 
-  var toxAv: ToxAvImpl[Unit] = _
+  var toxAv: ToxAv = _
 
   private var groupList: GroupList = _
 
@@ -170,7 +168,7 @@ object ToxSingleton {
     val db = State.db
 
     //toxAv = new ToxAvImpl(tox.getTox)
-    toxAv = new ToxAvImpl[Unit](tox.getTox)
+    toxAv = new ToxAv(tox.getTox)
 
     db.clearFileNumbers()
     db.setAllOffline()

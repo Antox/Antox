@@ -1,33 +1,28 @@
 package chat.tox.antox.av
 
-import android.util.Log
 import chat.tox.antox.utils.AntoxLog
+import chat.tox.antox.wrapper.CallNumber
+
+import scala.collection.mutable
 
 class CallManager {
-  private var _calls: Map[Integer, Call] = Map[Integer, Call]()
+  private var calls: mutable.Map[CallNumber, Call] = mutable.Map[CallNumber, Call]()
 
   def add(c: Call): Unit = {
     AntoxLog.debug("Adding call")
-    _calls = _calls + (c.id -> c)
+    calls += (c.callNumber -> c)
   }
 
-  def get(id: Integer): Option[Call] = {
-    _calls.get(id)
+  def get(callNumber: CallNumber): Option[Call] = {
+    calls.get(callNumber)
   }
 
-  def remove(id: Integer): Unit = {
+  def remove(callNumber: CallNumber): Unit = {
     AntoxLog.debug("Removing call")
-    val mCall = this.get(id)
-    mCall match {
-      case Some(c) => 
-        c.subscription.unsubscribe()
-        c.playAudio.cleanUp()
-        _calls = _calls - id
-      case None =>
-    }
+    calls.remove(callNumber)
   }
 
   def removeAll(): Unit = {
-    _calls.foreach { case (k, call) => call.subscription.unsubscribe() }
+    calls.foreach { case (key, call) => call.end(false) }
   }
 }

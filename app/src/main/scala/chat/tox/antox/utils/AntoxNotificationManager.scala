@@ -16,6 +16,8 @@ import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
+import scala.util.Random
+
 object AntoxNotificationManager {
 
   var mNotificationManager: Option[NotificationManager] = None
@@ -53,8 +55,8 @@ object AntoxNotificationManager {
       if (key.getClass == classOf[FriendKey]) {
         val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
         if (friendInfo.avatar.isDefined) {
-          val bmOptions = new BitmapFactory.Options()
-          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bmOptions)
+          val bitmapOptions = new BitmapFactory.Options()
+          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bitmapOptions)
           notificationBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
         }
       }
@@ -80,7 +82,7 @@ object AntoxNotificationManager {
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
-      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
+      mNotificationManager.foreach(_.notify(new Random().nextInt(), notificationBuilder.build()))
     }
   }
 

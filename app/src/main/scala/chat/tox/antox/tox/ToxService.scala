@@ -5,7 +5,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.utils.AntoxLog
 
 class ToxService extends Service() {
@@ -24,6 +23,7 @@ class ToxService extends Service() {
 
     keepRunning = true
     val thisService = this
+
     val start = new Runnable() {
 
       override def run() {
@@ -38,7 +38,8 @@ class ToxService extends Service() {
           } else {
             try {
               ToxSingleton.tox.iterate()
-              Thread.sleep(ToxSingleton.interval)
+              ToxSingleton.toxAv.iterate()
+              Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
             } catch {
               case e: Exception =>
             }
@@ -46,15 +47,6 @@ class ToxService extends Service() {
         }
       }
     }
-
-    new Thread(new Runnable {
-      override def run(): Unit = {
-        while (keepRunning) {
-          ToxSingleton.toxAv.iterate()
-          Thread.sleep(5)
-        }
-      }
-    }).start()
 
     serviceThread = new Thread(start)
     serviceThread.start()

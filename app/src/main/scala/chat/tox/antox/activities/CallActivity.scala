@@ -1,13 +1,12 @@
 package chat.tox.antox.activities
 
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.{TimeZone, Date}
 
 import android.app.Activity
 import android.content.{Context, IntentFilter}
-import android.media.{AudioManager, MediaPlayer}
+import android.media.{AudioManager, MediaPlayer, RingtoneManager}
 import android.os.{Build, Bundle, PowerManager, Vibrator}
-import android.provider.Settings
 import android.util.TypedValue
 import android.view.View.OnClickListener
 import android.view.{View, WindowManager}
@@ -15,9 +14,8 @@ import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
-import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{BitmapManager, RxAndroid}
-import chat.tox.antox.wrapper.{FriendInfo, ToxKey}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager, RxAndroid}
+import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.av.enums.ToxavFriendCallState
 import rx.lang.scala.Observable
@@ -25,11 +23,12 @@ import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class CallActivity extends Activity {
 
   var call: Call = _
-  var activeKey: ToxKey = _
+  var activeKey: ContactKey = _
 
   var answerCallButton: View = _
   var endCallButton: View = _
@@ -56,7 +55,7 @@ class CallActivity extends Activity {
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
 
-    var flags: Int =
+    var windowFlags: Int =
       // set this flag so this activity will stay in front of the keyguard
       WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
       WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
@@ -65,10 +64,10 @@ class CallActivity extends Activity {
 
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+      windowFlags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
     }
 
-    getWindow.addFlags(flags)
+    getWindow.addFlags(windowFlags)
 
     setContentView(R.layout.activity_call)
     setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
@@ -80,12 +79,12 @@ class CallActivity extends Activity {
     if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
       maybeWakeLock = Some(powerManager.newWakeLock(
         PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-        "im.tox.antox.CallActivity"))
+        AntoxLog.DEFAULT_TAG.toString))
     }
 
-    activeKey = new ToxKey(getIntent.getStringExtra("key"))
-    val friend = ToxSingleton.getAntoxFriend(activeKey).get
-    call = friend.call
+    activeKey = new FriendKey(getIntent.getStringExtra("key"))
+    val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
+    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException())
 
     avatarView = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
     nameView = findViewById(R.id.friend_name).asInstanceOf[TextView]
@@ -124,18 +123,17 @@ class CallActivity extends Activity {
       override def onClick(view: View) = {
         call.end()
 
-        endCall()
+        onCallEnded()
       }
     })
 
     durationView = findViewById(R.id.duration).asInstanceOf[TextView]
 
-    callNotification = new OngoingCallNotification(this, friend, call)
-    callNotification.updateName("LET US TEST THIS")
-    callNotification.show()
+    callNotification = new OngoingCallNotification(this, activeKey, call)
 
-    ringtone = new MediaPlayer()
-    ringtone.setDataSource(this, Settings.System.DEFAULT_RINGTONE_URI)
+    val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+    ringtone = MediaPlayer.create(getApplicationContext, notification)
+
     audioManager = getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
     if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
       ringtone.setAudioStreamType(AudioManager.STREAM_RING)
@@ -168,7 +166,7 @@ class CallActivity extends Activity {
       call.friendStateSubject
         .subscribe(callState => {
         if (callState.contains(ToxavFriendCallState.FINISHED)) {
-          endCall()
+          onCallEnded()
         }
       })
 
@@ -208,12 +206,15 @@ class CallActivity extends Activity {
 
     // updates duration timer every second
     val durationFormat = new SimpleDateFormat("hh:mm:ss")
+    durationFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+
     compositeSubscription +=
       Observable.interval(1 seconds)
         .subscribeOn(IOScheduler())
         .observeOn(AndroidMainThreadScheduler())
         .map(_ => call.duration)
         .subscribe(duration => {
+          println(s"duration is $duration")
         durationView.setText(durationFormat.format(new Date(duration)))
       })
   }
@@ -228,8 +229,11 @@ class CallActivity extends Activity {
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
-          BitmapManager.load(avatar, avatarView, isAvatar = true)
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
+
+        callNotification.updateName("LET US TEST THIS")
+        callNotification.show()
       }
       case None =>
         nameView.setText("")
@@ -279,7 +283,7 @@ class CallActivity extends Activity {
   }
 
   // Called when the call ends (both by the user and by friend)
-  def endCall(): Unit = {
+  def onCallEnded(): Unit = {
     finish()
   }
 
@@ -296,6 +300,7 @@ class CallActivity extends Activity {
   override def onDestroy(): Unit = {
     super.onDestroy()
 
+    callNotification.cancel()
     compositeSubscription.unsubscribe()
     vibrator.cancel()
     ringtone.stop()

@@ -4,15 +4,14 @@ import android.app.{Notification, PendingIntent}
 import android.content.{Context, Intent}
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import chat.tox.antox.R
-import chat.tox.antox.activities.{MainActivity, CallActivity}
-import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.Constants
-import chat.tox.antox.wrapper.Friend
+import chat.tox.antox.activities.{CallActivity, MainActivity}
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants}
+import chat.tox.antox.wrapper.ContactKey
 
-class OngoingCallNotification(context: Context, friend: Friend, call: Call) {
+class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Call) {
 
   //ensure that this id is not the same as is used for messages
-  val id: Long = friend.key.hashCode() + 1
+  val id: Long = contactKey.hashCode() + 1
 
   val builder = new NotificationCompat.Builder(context)
     .setSmallIcon(R.drawable.ic_actionbar)
@@ -29,7 +28,7 @@ class OngoingCallNotification(context: Context, friend: Friend, call: Call) {
     val resultIntent = new Intent(context, activity)
     resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
     resultIntent.setAction(action)
-    resultIntent.putExtra("key", friend.key)
+    resultIntent.putExtra("key", contactKey.toString)
 
     if (addParentStack) {
       val stackBuilder = TaskStackBuilder.create(context)
@@ -47,10 +46,10 @@ class OngoingCallNotification(context: Context, friend: Friend, call: Call) {
   }
 
   def show(): Unit = {
-    ToxSingleton.mNotificationManager.notify(id.asInstanceOf[Int], builder.build())
+    AntoxNotificationManager.mNotificationManager.foreach(_.notify(id.asInstanceOf[Int], builder.build()))
   }
 
-  def delete(): Unit = {
-    ToxSingleton.mNotificationManager.cancel(id.asInstanceOf[Int])
+  def cancel(): Unit = {
+    AntoxNotificationManager.mNotificationManager.foreach(_.cancel(id.asInstanceOf[Int]))
   }
 }

@@ -2,11 +2,12 @@ package chat.tox.antox.av
 
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.AudioCapture
+import chat.tox.antox.wrapper.{ContactKey, CallNumber}
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.subjects.BehaviorSubject
 
-class Call(val friendNumber: Int) {
+class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
   private var friendState: Set[ToxavFriendCallState] = Set()
   val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](friendState)
@@ -39,14 +40,14 @@ class Call(val friendNumber: Int) {
   })
 
   def startCall(audioBitRate: Int, videoBitRate: Int): Unit = {
-    ToxSingleton.toxAv.call(friendNumber, audioBitRate, videoBitRate)
+    ToxSingleton.toxAv.call(callNumber.number, audioBitRate, videoBitRate)
     selfState = selfState.copy(audioBitRate = audioBitRate, videoBitRate = videoBitRate)
     incoming = false
     ringing.onNext(true)
   }
 
   def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
-    ToxSingleton.toxAv.answer(friendNumber, selfState.audioBitRate, selfState.videoBitRate)
+    ToxSingleton.toxAv.answer(callNumber.number, selfState.audioBitRate, selfState.videoBitRate)
     callStarted(selfState.audioBitRate, selfState.videoBitRate)
     ringing.onNext(false)
   }
@@ -73,9 +74,9 @@ class Call(val friendNumber: Int) {
           val start = System.nanoTime()
           if (selfState.sendingAudio) {
             try {
-           //   ToxSingleton.toxAv.audioSendFrame(friendNumber,
-           //     audioCapture.readAudio(frameSize, channels),
-           //     frameSize, channels, sampleRate)
+              ToxSingleton.toxAv.audioSendFrame(callNumber.number,
+                audioCapture.readAudio(frameSize, channels),
+                frameSize, channels, sampleRate)
             } catch {
               case e: ToxException[_] =>
                 end(error = true)
@@ -87,9 +88,9 @@ class Call(val friendNumber: Int) {
             Thread.sleep(audioLength - (timeTaken / 10^6))
         }
       }
-    })//.start()
+    }).start()
 
-    //audioPlayer.start()
+    audioPlayer.start()
   }
 
   def onAudioFrame(pcm: Array[Short], channels: Int, sampleRate: Int): Unit = {
@@ -98,12 +99,13 @@ class Call(val friendNumber: Int) {
 
   def muteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = true)
-    ToxSingleton.toxAv.setAudioBitRate(friendNumber, 0, force = true)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber.number, 0)
     audioCapture.stop()
   }
 
   def unmuteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = false)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber.number, selfState.audioBitRate)
     audioCapture.start()
   }
 
@@ -117,32 +119,29 @@ class Call(val friendNumber: Int) {
   }
 
   def muteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.MUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.MUTE_AUDIO)
   }
 
   def unmuteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.UNMUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.UNMUTE_AUDIO)
   }
 
   def hideFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.HIDE_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.HIDE_VIDEO)
   }
 
   def showFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.SHOW_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.SHOW_VIDEO)
   }
 
   def end(error: Boolean = false): Unit = {
     // only send a call control if the call wasn't ended unexpectedly
     if (!error) {
-      ToxSingleton.toxAv.callControl(friendNumber, ToxavCallControl.CANCEL)
+      ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.CANCEL)
     }
 
     audioCapture.stop()
     cleanUp()
-
-    friendState = Set()
-    selfState = SelfCallState.DEFAULT
   }
 
   private def cleanUp(): Unit = {

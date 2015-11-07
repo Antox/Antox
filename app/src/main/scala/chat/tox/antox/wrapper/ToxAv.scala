@@ -1,11 +1,10 @@
 package chat.tox.antox.wrapper
 
-import chat.tox.antox.av.Call
-import chat.tox.antox.tox.{ToxSingleton, Intervals}
+import chat.tox.antox.tox.Intervals
 import im.tox.tox4j.av.callbacks._
+import im.tox.tox4j.av.enums.ToxavCallControl
+import im.tox.tox4j.av.exceptions.ToxavCallControlException
 import im.tox.tox4j.impl.jni.{ToxAvImpl, ToxCoreImpl}
-
-import scala.collection.JavaConversions._
 
 class ToxAv(core: ToxCoreImpl[Unit]) extends Intervals {
 
@@ -13,13 +12,12 @@ class ToxAv(core: ToxCoreImpl[Unit]) extends Intervals {
 
   def close(): Unit = toxAv.close()
 
-  def iterate(): Unit = toxAv.iterate()
+  def iterate(): Unit = toxAv.iterate(Unit)
 
   override def interval: Int = toxAv.iterationInterval / 4
 
-  def activeCall: Option[Call] = ToxSingleton.getAntoxFriendList.all.find(p => p.call.active).map(_.call)
-
-  def onHoldCall: Option[Call] = ToxSingleton.getAntoxFriendList.all.find(p => p.call.onHold).map(_.call)
+  @throws[ToxavCallControlException]
+  def callControl(friendNumber: Int, control: ToxavCallControl): Unit = toxAv.callControl(friendNumber, control)
 
   def answer(friendNumber: Int, audioBitRate: Int, videoBitRate: Int): Unit =
     toxAv.answer(friendNumber, audioBitRate, videoBitRate)
@@ -37,9 +35,9 @@ class ToxAv(core: ToxCoreImpl[Unit]) extends Intervals {
                      u: Array[Byte], v: Array[Byte]): Unit =
     toxAv.videoSendFrame(friendNumber, width, height, y, u, v)
 
-  def audioBitRateSet(friendNumber: Int, bitRate: Int, force: Boolean): Unit =
-    toxAv.setAudioBitRate(friendNumber, bitRate, force)
+  def setAudioBitRate(friendNumber: Int, bitRate: Int): Unit =
+    toxAv.setBitRate(friendNumber, bitRate, -1)
 
-  def videoBitRateSet(friendNumber: Int, bitRate: Int, force: Boolean): Unit =
-    toxAv.setVideoBitRate(friendNumber, bitRate, force)
+  def setVideoBitRate(friendNumber: Int, bitRate: Int): Unit =
+    toxAv.setBitRate(friendNumber, -1, bitRate)
 }

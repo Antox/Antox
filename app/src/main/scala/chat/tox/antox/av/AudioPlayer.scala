@@ -2,15 +2,16 @@ package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioManager, AudioTrack}
 import android.util.Log
-import org.apache.commons.collections4.queue.CircularFifoQueue
 
-class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 8) extends AudioDevice(_sampleRate, _channels) {
+import scala.collection.mutable
+
+class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 20) extends AudioDevice(_sampleRate, _channels) {
 
   var active = false
   var dirty = true
 
   private var mAudioTrack: Option[AudioTrack] = None
-  private val audioBuffer = new CircularFifoQueue[(Array[Short], Int, Int)](bufferSize)
+  private val audioBuffer = new mutable.Queue[(Array[Short], Int, Int)]
 
   def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
@@ -32,14 +33,14 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 8) extends
   }
 
   def bufferAudioFrame(data: Array[Short], channels: Int, sampleRate: Int): Unit = {
-    audioBuffer.add(data, channels, sampleRate)
+    audioBuffer.enqueue((data, channels, sampleRate))
   }
 
   //returns the duration in milliseconds of the playback
   def playAudioFrame(): Int = {
-    if (audioBuffer.peek() != null) {
+    if (audioBuffer.length > 3) {
       //update sample rate and channels if they've changed
-      val (data, newChannels, newSampleRate) = audioBuffer.poll()
+      val (data, newChannels, newSampleRate) = audioBuffer.dequeue()
       if (channels != newChannels) {
         channels = newChannels
       }

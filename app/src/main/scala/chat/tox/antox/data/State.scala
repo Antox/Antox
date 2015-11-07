@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import chat.tox.antox.activities.LoginActivity
+import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.transfer.FileTransferManager
 import chat.tox.antox.utils.AntoxNotificationManager
@@ -25,6 +26,7 @@ object State {
 
   var db: AntoxDB = _
   private var _userDb: Option[UserDB] = None
+  val callManager = new CallManager()
 
   def userDb(context: Context): UserDB = {
     _userDb match {

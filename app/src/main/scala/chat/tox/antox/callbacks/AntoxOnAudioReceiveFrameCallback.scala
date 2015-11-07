@@ -1,14 +1,15 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import im.tox.tox4j.av.callbacks.AudioReceiveFrameCallback
+import chat.tox.antox.data.State
+import chat.tox.antox.wrapper.CallNumber
 
-class AntoxOnAudioReceiveFrameCallback(private var ctx: Context) extends AudioReceiveFrameCallback[Unit] {
+class AntoxOnAudioReceiveFrameCallback(private var ctx: Context) {
 
   var lastReceivedFrame: Long = 0
-  override def audioReceiveFrame(friendNumber: Int, pcm: Array[Short], channels: Int, sampleRate: Int)(state: Unit): Unit = {
+  def audioReceiveFrame(callNumber: CallNumber, pcm: Array[Short], channels: Int, sampleRate: Int)(state: Unit): Unit = {
     println("Time since last frame " + (System.currentTimeMillis() - lastReceivedFrame))
     lastReceivedFrame = System.currentTimeMillis()
-    //ToxSingleton.getAntoxFriend(friendNumber).get.call.onAudioFrame(pcm, channels, sampleRate)
+    //State.callManager.get(callNumber).foreach(_.onAudioFrame(pcm, channels, sampleRate))
   }
 }

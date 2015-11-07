@@ -2,14 +2,14 @@ package chat.tox.antox.activities
 
 import java.util
 
-import android.content.{Context, Intent, SharedPreferences}
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
-import android.view.{Menu, MenuInflater, View}
+import android.view.{MenuItem, View}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
@@ -19,7 +19,7 @@ import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.{ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import rx.lang.scala.schedulers.{IOScheduler, AndroidMainThreadScheduler}
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
 import scala.collection.JavaConversions._
@@ -51,6 +51,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
     setContentView(R.layout.activity_chat)
+
     val actionBar = getSupportActionBar
     val avatarView = getLayoutInflater.inflate(R.layout.avatar_actionview, null)
     actionBar.setCustomView(avatarView)
