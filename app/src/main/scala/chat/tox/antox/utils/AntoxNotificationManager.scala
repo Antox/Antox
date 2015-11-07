@@ -82,7 +82,7 @@ object AntoxNotificationManager {
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
-      mNotificationManager.foreach(_.notify(new Random().nextInt(), notificationBuilder.build()))
+      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
     }
   }
 
