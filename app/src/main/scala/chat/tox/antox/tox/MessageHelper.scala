@@ -12,16 +12,19 @@ import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
+import org.scaloid.common.LoggerTag
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
 object MessageHelper {
 
+  val TAG = LoggerTag("MessageHelper")
+
   def handleMessage(ctx: Context, friendInfo: FriendInfo, message: String, messageType: ToxMessageType): Unit = {
     val db = State.db
 
-    AntoxLog.debug(s"Message from: friend id: ${friendInfo.key} activeKey: ${State.activeKey} chatActive: ${State.chatActive}")
+    AntoxLog.debug(s"Message from: friend id: ${friendInfo.key} activeKey: ${State.activeKey} chatActive: ${State.chatActive}", TAG)
 
     if (!db.isContactBlocked(friendInfo.key)) {
       val chatActive = State.isChatActive(friendInfo.key)
@@ -119,6 +122,8 @@ object MessageHelper {
   def sendUnsentMessages(contactKey: ContactKey, ctx: Context) {
     val db = State.db
     val unsentMessageList = db.getUnsentMessageList(contactKey)
+
+    AntoxLog.debug(s"Sending ${unsentMessageList.length} unsent messages.", TAG)
 
     for (unsentMessage <- unsentMessageList) {
         contactKey match {
