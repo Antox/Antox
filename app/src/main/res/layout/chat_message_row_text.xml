@@ -13,10 +13,12 @@
         android:id="@+id/message_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:weightSum="1"
         android:orientation="horizontal">
 
         <View
             android:id="@+id/received_triangle"
+            android:layout_weight="0.1"
             android:layout_width="12dp"
             android:layout_height="15dp"
             android:layout_marginTop="6dp"
@@ -28,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/conversation_item_sent_shape"
+            android:layout_weight="0.9"
             android:orientation="vertical">
 
             <TextView
@@ -47,14 +50,15 @@
                 android:autoLink="web|phone|email"
                 android:linksClickable="true"
                 android:padding="@dimen/padding_small"
-                android:text="Message Body: This is some long sample text"
-                android:textColor="@android:color/black"
+                android:text="Message Body: This is some long long long sample text"
+                android:textColor="@android:color/white"
                 android:textSize="@dimen/text_smallish"/>
 
         </LinearLayout>
 
         <View
             android:id="@+id/sent_triangle"
+            android:layout_weight="0.1"
             android:layout_width="12dp"
             android:layout_height="15dp"
             android:layout_marginTop="6dp"

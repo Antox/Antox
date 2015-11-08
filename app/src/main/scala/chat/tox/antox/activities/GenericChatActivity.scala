@@ -160,7 +160,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
-      //chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
+      chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
     AntoxLog.debug("changing chat list cursor")
   }
