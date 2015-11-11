@@ -93,10 +93,10 @@ class MainDrawerFragment extends Fragment {
 
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    nameView.setText(userInfo.nickname)
+    nameView.setText(new String(userInfo.nickname.value))
 
     val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    statusMessageView.setText(userInfo.statusMessage)
+    statusMessageView.setText(new String(userInfo.statusMessage.value))
 
     updateNavigationHeaderStatus(connectionStatus)
   }

@@ -11,6 +11,8 @@ import chat.tox.antox.callbacks.ToxCallbackListener
 import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
+import im.tox.core.network.Port
+import im.tox.tox4j.core.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
@@ -108,8 +110,8 @@ object ToxSingleton {
           jsonObject.getString("owner"),
           jsonObject.getString("ipv6"),
           jsonObject.getString("ipv4"),
-          new ToxPublicKey(jsonObject.getString("pubkey")),
-          jsonObject.getInt("port"))
+          ToxPublicKey.unsafeFromByteArray(jsonObject.getString("pubkey").getBytes),
+          Port.unsafeFromInt(jsonObject.getInt("port")))
       }
       dhtNodes
     }).subscribeOn(IOScheduler())

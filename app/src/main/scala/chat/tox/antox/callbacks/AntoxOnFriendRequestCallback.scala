@@ -1,23 +1,22 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import android.util.Log
 import chat.tox.antox.data.State
-import chat.tox.antox.tox.MessageHelper
-import chat.tox.antox.utils.{AntoxNotificationManager, AntoxLog}
-import chat.tox.antox.wrapper.{FriendKey, ToxKey}
+import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager}
+import chat.tox.antox.wrapper.FriendKey
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
+import im.tox.tox4j.core.{ToxFriendRequestMessage, ToxPublicKey}
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback[Unit] {
 
-  override def friendRequest(keyBytes: Array[Byte], timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
+  override def friendRequest(publicKey: ToxPublicKey, timeDelta: Int, message: ToxFriendRequestMessage)(state: Unit): Unit = {
     val db = State.db
-    val key = new FriendKey(keyBytes)
+    val key = new FriendKey(publicKey.value)
     if (!db.isContactBlocked(key)){
-      db.addFriendRequest(key, new String(message, "UTF-8"))
+      db.addFriendRequest(key, new String(message.value))
     }
 
     AntoxLog.debug("New Friend Request")
-    AntoxNotificationManager.createRequestNotification(key, Some(new String(message, "UTF-8")), ctx)
+    AntoxNotificationManager.createRequestNotification(key, Some(new String(message.value)), ctx)
   }
 }

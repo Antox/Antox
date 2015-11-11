@@ -27,6 +27,7 @@ import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
 import com.google.zxing.{BarcodeFormat, WriterException}
+import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
@@ -349,7 +350,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setName(name)
+          ToxSingleton.tox.setName(ToxNickname.unsafeFromByteArray(name.getBytes))
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
@@ -372,7 +373,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "status_message" =>
         val statusMessage = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setStatusMessage(sharedPreferences.getString(statusMessage, ""))
+          ToxSingleton.tox.setStatusMessage(ToxStatusMessage.unsafeFromByteArray(sharedPreferences.getString(statusMessage, "").getBytes))
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }

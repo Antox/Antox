@@ -12,6 +12,7 @@ import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, ToxKey}
+import im.tox.tox4j.core.ToxNickname
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
@@ -36,7 +37,7 @@ object AntoxNotificationManager {
     mNotificationManager.foreach(_.cancelAll())
   }
 
-  def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: String, content: String, count: Int = 0): Unit = {
+  def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: ToxNickname, content: String, count: Int = 0): Unit = {
     AntoxLog.debug(s"Creating message notification, $name, $content")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -44,7 +45,7 @@ object AntoxNotificationManager {
     if (checkPreference(preferences, "notifications_new_message")) {
       val notificationBuilder = new NotificationCompat.Builder(ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
-        .setContentTitle(name)
+        .setContentTitle(new String(name.value))
         .setContentText(content)
 
       addAlerts(notificationBuilder, preferences)
@@ -72,7 +73,7 @@ object AntoxNotificationManager {
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
       resultIntent.putExtra("key", key.toString)
-      resultIntent.putExtra("name", name)
+      resultIntent.putExtra("name", new String(name.value))
 
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])

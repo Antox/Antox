@@ -5,13 +5,13 @@ import java.io.File
 import android.content.Context
 import android.os.Environment
 import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.{ContactKey, FriendKey, FileKind, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, FileKind, FriendKey}
 import im.tox.tox4j.core.enums.ToxFileControl
+import im.tox.tox4j.core.{ToxFileId, ToxFilename, ToxNickname}
 import org.scaloid.common.LoggerTag
 
 class FileTransferManager extends Intervals {
@@ -66,7 +66,7 @@ class FileTransferManager extends Intervals {
   }
 
 
-  def sendFileSendRequest(path: String, key: FriendKey, fileKind: FileKind, fileId: String, context: Context): Unit = {
+  def sendFileSendRequest(path: String, key: FriendKey, fileKind: FileKind, fileId: ToxFileId, context: Context): Unit = {
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
@@ -79,7 +79,7 @@ class FileTransferManager extends Intervals {
     val mFileNumber: Option[Int] = try {
       AntoxLog.debug("Creating tox file sender", TAG)
 
-      ToxSingleton.tox.fileSend(key, fileKind.kindId, file.length(), fileId, fileName) match {
+      ToxSingleton.tox.fileSend(key, fileKind.kindId, file.length(), fileId, ToxFilename.unsafeFromByteArray(fileName.getBytes)) match {
         case -1 => None
         case x => Some(x)
       }
@@ -98,7 +98,7 @@ class FileTransferManager extends Intervals {
   }
 
   def sendFileDeleteRequest(key: FriendKey, fileKind: FileKind, context: Context): Unit = {
-      ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, null, "")
+      ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, ToxFileId.empty, ToxFilename.unsafeFromByteArray("".getBytes))
       if (fileKind == FileKind.AVATAR) {
         onSelfAvatarSendFinished(key, context)
       }
@@ -123,7 +123,7 @@ class FileTransferManager extends Intervals {
    * @param context Android context
    */
   def fileIncomingRequest(key: ContactKey,
-                          senderName: String,
+                          senderName: ToxNickname,
                           hasBeenRead: Boolean,
                           fileNumber: Int,
                           fileName: String,
@@ -283,7 +283,13 @@ class FileTransferManager extends Intervals {
       case Some(friend) =>
         AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
           case Some(file) =>
-            sendFileSendRequest(file.getPath, friend.key, AVATAR, fileId = ToxSingleton.tox.hash(file).orNull, context = context)
+            sendFileSendRequest(file.getPath, friend.key, AVATAR,
+              fileId =
+                ToxSingleton.tox.hash(file)
+                .map(_.getBytes)
+                .map(ToxFileId.unsafeFromByteArray)
+                .getOrElse(ToxFileId.empty),
+              context = context)
           case None =>
             sendFileDeleteRequest(friend.key, AVATAR, context)
         }

@@ -2,15 +2,15 @@ package chat.tox.antox.wrapper
 
 import java.io.File
 
-import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
+import chat.tox.antox.tox.{IntervalLevels, Intervals}
 import chat.tox.antox.utils._
+import im.tox.core.network.Port
+import im.tox.tox4j.core._
 import im.tox.tox4j.core.callbacks._
 import im.tox.tox4j.core.enums._
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.{ToxCoreImpl, ToxCryptoImpl}
-
-import scala.collection.JavaConversions._
 
 class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
@@ -28,16 +28,16 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def getSaveData: Array[Byte] = tox.getSavedata
 
-  def bootstrap(address: String, port: Int, publicKey: ToxPublicKey): Unit = {
-    tox.bootstrap(address, port, publicKey.bytes)
-    tox.addTcpRelay(address, port, publicKey.bytes)
+  def bootstrap(address: String, port: Port, publicKey: ToxPublicKey): Unit = {
+    tox.bootstrap(address, port, publicKey)
+    tox.addTcpRelay(address, port, publicKey)
   }
 
-  def getUdpPort: Int = tox.getUdpPort
+  def getUdpPort: Port = tox.getUdpPort
 
-  def getTcpPort: Int = tox.getTcpPort
+  def getTcpPort: Port = tox.getTcpPort
 
-  def getDhtId: Array[Byte] = tox.getDhtId
+  def getDhtId: ToxPublicKey = tox.getDhtId
 
   def iterationInterval(): Int = tox.iterationInterval
 
@@ -45,18 +45,18 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   override def interval: Int = IntervalLevels.AWAKE.id
 
-  def getSelfKey: SelfKey = new SelfKey(tox.getPublicKey)
+  def getSelfKey: SelfKey = new SelfKey(tox.getPublicKey.value)
 
-  def getSecretKey: Array[Byte] = tox.getSecretKey
+  def getSecretKey: ToxSecretKey = tox.getSecretKey
 
   def setNospam(nospam: Int): Unit = tox.setNospam(nospam)
 
   def getNospam: Int = tox.getNospam
 
-  def getAddress: ToxAddress = new ToxAddress(tox.getAddress)
+  def getAddress: ToxAddress = new ToxAddress(tox.getAddress.value)
 
-  def setName(name: String): Unit = {
-    tox.setName(name.getBytes)
+  def setName(name: ToxNickname): Unit = {
+    tox.setName(name)
     for (groupNumber <- getGroupList) {
       try {
         //FIXME setGroupSelfName(groupNumber, name)
@@ -67,7 +67,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
     }
   }
 
-  def getName: String = new String(tox.getName, "UTF-8")
+  def getName: ToxNickname = tox.getName
 
   def getSelfConnectionStatus: ToxConnection = selfConnectionStatus
 
@@ -76,21 +76,21 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
     this.selfConnectionStatus = selfConnectionStatus
   }
 
-  def setStatusMessage(message: String): Unit = tox.setStatusMessage(message.getBytes)
+  def setStatusMessage(message: ToxStatusMessage): Unit = tox.setStatusMessage(message)
 
-  def getStatusMessage: String = new String(tox.getStatusMessage, "UTF-8")
+  def getStatusMessage: ToxStatusMessage = tox.getStatusMessage
 
   def setStatus(status: ToxUserStatus): Unit = tox.setStatus(status)
 
   def getStatus: ToxUserStatus = tox.getStatus
 
-  def addFriend(address: ToxAddress, message: String): Int = {
-    val friendNumber = tox.addFriend(address.bytes, message.getBytes)
+  def addFriend(address: ToxAddress, message: ToxFriendRequestMessage): Int = {
+    val friendNumber = tox.addFriend(ToxFriendAddress.unsafeFromByteArray(address.bytes), message)
    friendNumber
   }
 
   def addFriendNoRequest(key: ToxKey): Int = {
-    val friendNumber = tox.addFriendNorequest(key.bytes)
+    val friendNumber = tox.addFriendNorequest(ToxPublicKey.unsafeFromByteArray(key.bytes))
      friendNumber
   }
 
@@ -98,9 +98,9 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
      tox.deleteFriend(getFriendNumber(friendKey))
   }
 
-  def getFriendNumber(key: FriendKey): Int = tox.friendByPublicKey(key.bytes)
+  def getFriendNumber(key: FriendKey): Int = tox.friendByPublicKey(ToxPublicKey.unsafeFromByteArray(key.bytes))
 
-  def getFriendKey(friendNumber: Int): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber))
+  def getFriendKey(friendNumber: Int): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).value)
 
   def friendExists(friendKey: FriendKey): Boolean = tox.friendExists(getFriendNumber(friendKey))
 
@@ -108,8 +108,8 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def setTyping(friendKey: FriendKey, typing: Boolean): Unit = tox.setTyping(getFriendNumber(friendKey), typing)
 
-  def friendSendMessage(friendKey: FriendKey, message: String, messageType: ToxMessageType): Int =
-    tox.friendSendMessage(getFriendNumber(friendKey), messageType, 0, message.getBytes)
+  def friendSendMessage(friendKey: FriendKey, message: ToxFriendMessage, messageType: ToxMessageType): Int =
+    tox.friendSendMessage(getFriendNumber(friendKey), messageType, 0, message)
 
   def hash(bytes: Array[Byte]): Array[Byte] = ToxCryptoImpl.hash(bytes)
 
@@ -119,15 +119,14 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def fileControl(friendKey: FriendKey, fileNumber: Int, control: ToxFileControl): Unit = tox.fileControl(getFriendNumber(friendKey), fileNumber, control)
 
-  def fileSend(friendKey: FriendKey, kind: Int, fileSize: Long, fileId: String, filename: String): Int = {
-    val fileIdBytes = Option(fileId).map(_.getBytes).orNull
-    tox.fileSend(getFriendNumber(friendKey), kind, fileSize, fileIdBytes, filename.getBytes)
+  def fileSend(friendKey: FriendKey, kind: Int, fileSize: Long, fileId: ToxFileId, filename: ToxFilename): Int = {
+    tox.fileSend(getFriendNumber(friendKey), kind, fileSize, fileId, filename)
   }
 
   def fileSendChunk(friendKey: FriendKey, fileNumber: Int, position: Long, data: Array[Byte]): Unit =
     tox.fileSendChunk(getFriendNumber(friendKey), fileNumber, position, data)
 
-  def fileGetFileId(friendKey: FriendKey, fileNumber: Int): Array[Byte] = tox.getFileFileId(getFriendNumber(friendKey), fileNumber)
+  def fileGetFileId(friendKey: FriendKey, fileNumber: Int): ToxFileId = tox.getFileFileId(getFriendNumber(friendKey), fileNumber)
 
   def callback(handler: ToxEventListener[Unit]): Unit = tox.callback(handler)
 
