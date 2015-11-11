@@ -1,8 +1,5 @@
 package chat.tox.antox.activities
 
-import java.text.SimpleDateFormat
-import java.util.{TimeZone, Date}
-
 import android.app.Activity
 import android.content.{Context, IntentFilter}
 import android.media.{AudioManager, MediaPlayer, RingtoneManager}
@@ -14,7 +11,7 @@ import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{AntoxLog, BitmapManager, RxAndroid}
+import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.av.enums.ToxavFriendCallState
@@ -205,9 +202,6 @@ class CallActivity extends Activity {
       })
 
     // updates duration timer every second
-    val durationFormat = new SimpleDateFormat("kk:mm:ss")
-    durationFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
-
     compositeSubscription +=
       Observable.interval(1 seconds)
         .subscribeOn(IOScheduler())
@@ -215,7 +209,7 @@ class CallActivity extends Activity {
         .map(_ => call.duration)
         .subscribe(duration => {
           println(s"duration is $duration")
-        durationView.setText(durationFormat.format(new Date(duration)))
+        durationView.setText(TimestampUtils.formatDuration(duration.toInt / 1000))
       })
   }
 
@@ -225,14 +219,14 @@ class CallActivity extends Activity {
 
     mFriend match {
       case Some(friend) => {
-        nameView.setText(friend.getAliasOrName)
+        nameView.setText(friend.getDisplayName)
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
-        callNotification.updateName(friend.getAliasOrName)
+        callNotification.updateName(friend.getDisplayName)
         callNotification.show()
       }
       case None =>

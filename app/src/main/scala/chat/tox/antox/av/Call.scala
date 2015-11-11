@@ -16,7 +16,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private var selfState = SelfCallState.DEFAULT
 
   //only for outgoing audio
-  private val samplingRate = SamplingRate.Rate16k //in Hz
+  private val samplingRate = SamplingRate.Rate48k //in Hz
   private val audioLength = AudioLength.Length20 //in microseconds
   private val channels = AudioChannels.Stereo
 

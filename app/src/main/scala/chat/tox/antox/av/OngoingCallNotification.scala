@@ -19,6 +19,7 @@ class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Ca
     .addAction(R.drawable.ic_call_end_white_36dp,
       context.getResources.getString(R.string.end_call),
       createPendingIntent(Constants.END_CALL, classOf[NotificationHandlerActivity], addParentStack = false))
+    .setContentText(context.getResources.getString(R.string.call_ongoing))
     .setDefaults(Notification.DEFAULT_ALL)
 
 
@@ -42,8 +43,7 @@ class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Ca
   }
 
   def updateName(name: String): Unit = {
-    builder.setContentText(name)
-    builder.setSubText(name)
+    builder.setContentTitle(name)
   }
 
   def show(): Unit = {

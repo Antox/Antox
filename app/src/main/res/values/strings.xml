@@ -221,6 +221,7 @@
 
     <!-- Call Activity -->
     <string name="call_incoming">Incoming Call</string>
+    <string name="call_ongoing">Call Ongoing</string>
     <string name="call_ringing">Ringing</string>
     <string name="call_duration">Call Duration</string>
     <string name="call_notification_header">Incoming Call</string>

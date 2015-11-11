@@ -59,9 +59,13 @@ object TimestampUtils {
     }
   }
 
+  def formatDuration(durationInSeconds: Long): String = {
+    "%d:%02d:%02d".format(durationInSeconds / 3600, (durationInSeconds % 3600) / 60, durationInSeconds % 60)
+  }
+
   /**
    * Returns an empty (all fields in constructor set to 0) timstamp.
-   * DO NOT MODIFY THE TIMESTAMP
+   * DO NOT MODIFY THE TIMESTAMP (seriously don't)
    *
    * @return an empty timestamp
    */
