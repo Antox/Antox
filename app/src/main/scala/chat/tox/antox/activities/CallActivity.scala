@@ -205,7 +205,7 @@ class CallActivity extends Activity {
       })
 
     // updates duration timer every second
-    val durationFormat = new SimpleDateFormat("hh:mm:ss")
+    val durationFormat = new SimpleDateFormat("kk:mm:ss")
     durationFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
 
     compositeSubscription +=
@@ -232,7 +232,7 @@ class CallActivity extends Activity {
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
-        callNotification.updateName("LET US TEST THIS")
+        callNotification.updateName(friend.getAliasOrName)
         callNotification.show()
       }
       case None =>
@@ -244,16 +244,21 @@ class CallActivity extends Activity {
     // vibrate and ring on incoming call
     ringtone.start()
     vibrator.vibrate(vibrationPattern, 0)
+
+    durationView.setVisibility(View.GONE)
   }
 
   def setupOutgoing(): Unit = {
     hideAnswerButton()
+    durationView.setVisibility(View.GONE)
   }
 
   def setupActive(): Unit = {
     vibrator.cancel()
     ringtone.stop()
     hideAnswerButton()
+
+    durationView.setVisibility(View.VISIBLE)
 
     maybeWakeLock.foreach(wakeLock => {
       if (!wakeLock.isHeld) {
