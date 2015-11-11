@@ -203,7 +203,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
     // Add avatar and nickname as extras
     callActivity.putExtra("key", call.contactKey.toString)
-    callActivity.putExtra("call_number", call.callNumber.number)
+    callActivity.putExtra("call_number", call.callNumber.value)
     startActivity(callActivity)
   }
 

@@ -5,12 +5,15 @@ import chat.tox.antox.activities.CallActivity
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.CallNumber
 
 class AntoxOnCallCallback(private var ctx: Context) {
 
   def call(callNumber: CallNumber, audioEnabled: Boolean, videoEnabled: Boolean)(state: Unit): Unit = {
-    State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(callNumber.number)))
+    AntoxLog.debug("New call from " + callNumber)
+
+    State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(callNumber.value)))
     State.callManager.get(callNumber).foreach { call =>
       call.onIncoming(audioEnabled, videoEnabled)
 
@@ -19,7 +22,7 @@ class AntoxOnCallCallback(private var ctx: Context) {
           val callActivity = new Intent(ctx, classOf[CallActivity])
 
           callActivity.putExtra("key", call.contactKey.toString)
-          callActivity.putExtra("call_number", call.callNumber.number)
+          callActivity.putExtra("call_number", call.callNumber.value)
           callActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
           ctx.startActivity(callActivity)
         }

@@ -29,6 +29,7 @@ class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Ca
     resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
     resultIntent.setAction(action)
     resultIntent.putExtra("key", contactKey.toString)
+    resultIntent.putExtra("call_number", call.callNumber.value)
 
     if (addParentStack) {
       val stackBuilder = TaskStackBuilder.create(context)

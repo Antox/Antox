@@ -2,6 +2,7 @@ package chat.tox.antox.callbacks
 
 import android.content.Context
 import chat.tox.antox.wrapper.CallNumber
+import im.tox.tox4j.av.{SamplingRate, AudioChannels}
 import im.tox.tox4j.av.callbacks.ToxAvEventListener
 import im.tox.tox4j.av.enums.ToxavFriendCallState
 
@@ -19,7 +20,7 @@ class ToxavCallbackListener(ctx: Context) extends ToxAvEventListener[Unit] {
     callStateCallback.callState(CallNumber(friendNumber), callState)(Unit)
   }
 
-  override def audioReceiveFrame(friendNumber: Int, pcm: Array[Short], channels: Int, samplingRate : Int)(state: Unit): Unit = {
+  override def audioReceiveFrame(friendNumber: Int, pcm: Array[Short], channels: AudioChannels, samplingRate : SamplingRate)(state: Unit): Unit = {
     audioReceiveFrameCallback.audioReceiveFrame(CallNumber(friendNumber), pcm, channels, samplingRate)(Unit)
   }
 }

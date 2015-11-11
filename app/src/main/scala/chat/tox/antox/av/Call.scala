@@ -1,8 +1,9 @@
 package chat.tox.antox.av
 
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.AudioCapture
-import chat.tox.antox.wrapper.{ContactKey, CallNumber}
+import chat.tox.antox.utils.{AntoxLog, AudioCapture}
+import chat.tox.antox.wrapper.{CallNumber, ContactKey}
+import im.tox.tox4j.av._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.subjects.BehaviorSubject
@@ -15,9 +16,9 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private var selfState = SelfCallState.DEFAULT
 
   //only for outgoing audio
-  private val sampleRate = 48000 //in Hz
-  private val audioLength = 20 //in ms
-  private val channels = 2
+  private val samplingRate = SamplingRate.Rate16k //in Hz
+  private val audioLength = AudioLength.Length20 //in microseconds
+  private val channels = AudioChannels.Stereo
 
   val ringing = BehaviorSubject[Boolean](false)
   var incoming = false
@@ -28,10 +29,10 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   def active: Boolean = !friendState.contains(ToxavFriendCallState.FINISHED)
   def onHold: Boolean = friendState.isEmpty
 
-  val audioCapture: AudioCapture = new AudioCapture(sampleRate, channels)
-  val audioPlayer = new AudioPlayer(sampleRate, channels)
+  val audioCapture: AudioCapture = new AudioCapture(samplingRate.value, channels.value)
+  val audioPlayer = new AudioPlayer(samplingRate.value, channels.value)
 
-  private def frameSize = (sampleRate * audioLength) / 1000
+  private def frameSize = SampleCount(audioLength, samplingRate)
 
   friendStateSubject.subscribe(_ => {
     if (active) {
@@ -39,73 +40,89 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     }
   })
 
-  def startCall(audioBitRate: Int, videoBitRate: Int): Unit = {
-    ToxSingleton.toxAv.call(callNumber.number, audioBitRate, videoBitRate)
+  def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
+  
+  def startCall(audioBitRate: BitRate, videoBitRate: BitRate): Unit = {
+    ToxSingleton.toxAv.call(callNumber.value, audioBitRate, videoBitRate)
     selfState = selfState.copy(audioBitRate = audioBitRate, videoBitRate = videoBitRate)
     incoming = false
     ringing.onNext(true)
   }
 
   def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
-    ToxSingleton.toxAv.answer(callNumber.number, selfState.audioBitRate, selfState.videoBitRate)
+    logCallEvent(s"answered receiving audio:$receivingAudio and video:$receivingVideo")
+
+    ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
     callStarted(selfState.audioBitRate, selfState.videoBitRate)
     ringing.onNext(false)
   }
 
   def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
+    logCallEvent(s"incoming receiving audio:$receivingAudio and video:$receivingVideo")
+
     incoming = true
     ringing.onNext(true)
     selfState = selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo)
   }
 
   def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {
+    logCallEvent(s"friend call state updated to $state")
+
     friendState = state
     friendStateSubject.onNext(friendState)
   }
 
-  private def callStarted(audioBitRate: Int, videoBitRate: Int): Unit = {
+  private def callStarted(audioBitRate: BitRate, videoBitRate: BitRate): Unit = {
     startTime = System.currentTimeMillis()
 
+    logCallEvent(event = s"started with audio bitrate $audioBitRate and video bitrate $videoBitRate")
+    
     new Thread(new Runnable {
       override def run(): Unit = {
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO)
+
+        logCallEvent(s"audio encoded thread started")
+
         audioCapture.start()
 
         while (active) {
-          val start = System.nanoTime()
+          val start = System.currentTimeMillis()
           if (selfState.sendingAudio) {
             try {
-              ToxSingleton.toxAv.audioSendFrame(callNumber.number,
-                audioCapture.readAudio(frameSize, channels),
-                frameSize, channels, sampleRate)
+              ToxSingleton.toxAv.audioSendFrame(callNumber.value,
+                audioCapture.readAudio(frameSize.value, channels.value),
+                frameSize, channels, samplingRate)
             } catch {
               case e: ToxException[_] =>
                 end(error = true)
             }
           }
 
-          val timeTaken = System.nanoTime() - start
-          if (timeTaken < audioLength)
-            Thread.sleep(audioLength - (timeTaken / 10^6))
+          val timeTaken = System.currentTimeMillis() - start
+          if (timeTaken < audioLength.value / 1000)
+            Thread.sleep((audioLength.value / 1000) - timeTaken)
         }
+
+        logCallEvent(s"audio encoded thread stopped")
       }
-    }).start()
+    }, "AudioSendThread").start()
 
     audioPlayer.start()
   }
 
-  def onAudioFrame(pcm: Array[Short], channels: Int, sampleRate: Int): Unit = {
-    audioPlayer.bufferAudioFrame(pcm, channels, sampleRate)
+  def onAudioFrame(pcm: Array[Short], channels: AudioChannels, samplingRate: SamplingRate): Unit = {
+    audioPlayer.bufferAudioFrame(pcm, channels.value, samplingRate.value)
   }
 
   def muteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = true)
-    ToxSingleton.toxAv.setAudioBitRate(callNumber.number, 0)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber.value, BitRate.Disabled)
     audioCapture.stop()
   }
 
   def unmuteSelfAudio(): Unit = {
     selfState = selfState.copy(audioMuted = false)
-    ToxSingleton.toxAv.setAudioBitRate(callNumber.number, selfState.audioBitRate)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber.value, selfState.audioBitRate)
     audioCapture.start()
   }
 
@@ -119,25 +136,28 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   }
 
   def muteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.MUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.MUTE_AUDIO)
   }
 
   def unmuteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.UNMUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.UNMUTE_AUDIO)
   }
 
   def hideFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.HIDE_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.HIDE_VIDEO)
   }
 
   def showFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.SHOW_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.SHOW_VIDEO)
   }
 
   def end(error: Boolean = false): Unit = {
+    logCallEvent(s"ended error:$error")
     // only send a call control if the call wasn't ended unexpectedly
     if (!error) {
-      ToxSingleton.toxAv.callControl(callNumber.number, ToxavCallControl.CANCEL)
+      ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL)
+    } else {
+      updateFriendState(Set(ToxavFriendCallState.FINISHED))
     }
 
     audioCapture.stop()

@@ -23,6 +23,6 @@ class CallManager {
   }
 
   def removeAll(): Unit = {
-    calls.foreach { case (key, call) => call.end(false) }
+    calls.foreach { tuple => remove(tuple._1) }
   }
 }

@@ -1,13 +1,13 @@
 package chat.tox.antox.utils
 
 import android.media.{AudioFormat, AudioRecord}
-import android.util.Log
 import chat.tox.antox.av.AudioDevice
 import chat.tox.antox.exceptions.AvDeviceNotFoundException
+import org.scaloid.common.LoggerTag
 
 class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sampleRate, _channels) {
 
-  val TAG = "im.tox.antox.utils.CaptureAudio"
+  val TAG = LoggerTag(getClass.getSimpleName)
 
   var active: Boolean = false
   var dirty = true
@@ -17,6 +17,8 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
   def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
+
+    AntoxLog.debug("AudioCapture recreated.", TAG)
 
     mAudioRecord = findAudioRecord(sampleRate, channels)
     mAudioRecord match {
@@ -28,6 +30,8 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
   }
 
   def start(): Unit = {
+    AntoxLog.debug("AudioCapture started.", TAG)
+
     recreate()
 
     active = true
@@ -43,11 +47,15 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
     }
 
     val audio = Array.ofDim[Short](frames * channels)
-    mAudioRecord.foreach(ar => ar.read(audio, 0, frames * channels))
+    mAudioRecord.foreach(ar => {
+      ar.read(audio, 0, audio.length)
+    })
+
     audio
   }
 
   def stop(): Unit = {
+    AntoxLog.debug("AudioCapture stopped.", TAG)
     mAudioRecord.foreach(audioRecord => {
       if (audioRecord.getState == AudioRecord.STATE_INITIALIZED && active) {
         audioRecord.stop()
@@ -73,13 +81,11 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
           AudioFormat.CHANNEL_IN_STEREO
         }
 
-      Log.d("CaptureAudio", "Attempting rate " + sampleRate + "Hz, bits: " + audioFormat +
-        ", channel: " +
-        channels)
+      AntoxLog.debug(s"Attempting rate $sampleRate Hz, bits: $audioFormat, channel: $channels", TAG)
+
       val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
       if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
-        val recorder = new AudioRecord(0, sampleRate, channelConfig, audioFormat,
-          bufferSize)
+        val recorder = new AudioRecord(0, sampleRate, channelConfig, audioFormat, bufferSize * 10)
         if (recorder.getState == AudioRecord.STATE_INITIALIZED) {
           bufferSizeBytes = bufferSize
           return Some(recorder)

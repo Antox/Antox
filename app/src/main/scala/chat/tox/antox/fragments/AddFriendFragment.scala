@@ -59,7 +59,7 @@ class AddFriendFragment extends Fragment with InputableID {
     friendMessage = rootView.findViewById(R.id.addfriend_message).asInstanceOf[EditText]
     friendAlias = rootView.findViewById(R.id.addfriend_friendAlias).asInstanceOf[EditText]
 
-    friendMessage.setFilters(Array[InputFilter](new LengthFilter(ToxCoreConstants.MAX_FRIEND_REQUEST_LENGTH)))
+    friendMessage.setFilters(Array[InputFilter](new LengthFilter(ToxCoreConstants.MaxFriendRequestLength)))
 
     rootView.findViewById(R.id.add_friend_button).asInstanceOf[Button].setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {

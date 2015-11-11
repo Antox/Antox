@@ -10,6 +10,8 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 20) extend
   var active = false
   var dirty = true
 
+  val minBufferLength: Int = 3 // in audio frames
+
   private var mAudioTrack: Option[AudioTrack] = None
   private val audioBuffer = new mutable.Queue[(Array[Short], Int, Int)]
 
@@ -38,7 +40,7 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 20) extend
 
   //returns the duration in milliseconds of the playback
   def playAudioFrame(): Int = {
-    if (audioBuffer.length > 3) {
+    if (audioBuffer.length > minBufferLength) {
       //update sample rate and channels if they've changed
       val (data, newChannels, newSampleRate) = audioBuffer.dequeue()
       if (channels != newChannels) {

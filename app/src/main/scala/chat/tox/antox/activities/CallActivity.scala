@@ -84,7 +84,7 @@ class CallActivity extends Activity {
 
     activeKey = new FriendKey(getIntent.getStringExtra("key"))
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
-    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException())
+    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
 
     avatarView = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
     nameView = findViewById(R.id.friend_name).asInstanceOf[TextView]
