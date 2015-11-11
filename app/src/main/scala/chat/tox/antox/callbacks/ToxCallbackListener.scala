@@ -3,6 +3,7 @@ package chat.tox.antox.callbacks
 import android.content.Context
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
+import im.tox.tox4j.core._
 import im.tox.tox4j.core.callbacks.ToxEventListener
 import im.tox.tox4j.core.enums.{ToxConnection, ToxFileControl, ToxMessageType, ToxUserStatus}
 
@@ -42,7 +43,7 @@ class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {
     connectionStatusCallback.friendConnectionStatus(friendInfo, connectionStatus)(Unit)
   }
 
-  override def friendLosslessPacket(friendNumber: Int, data: Array[Byte])(state: Unit): Unit = {
+  override def friendLosslessPacket(friendNumber: Int, data: ToxLosslessPacket)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))
     friendLosslessPacketCallback.friendLosslessPacket(friendInfo, data)(Unit)
   }
@@ -57,7 +58,7 @@ class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {
     fileChunkRequestCallback.fileChunkRequest(friendInfo, fileNumber, position, length)(Unit)
   }
 
-  override def friendStatusMessage(friendNumber: Int, message: Array[Byte])(state: Unit): Unit = {
+  override def friendStatusMessage(friendNumber: Int, message: ToxStatusMessage)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))
     statusMessageCallback.friendStatusMessage(friendInfo, message)(Unit)
   }
@@ -67,12 +68,12 @@ class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {
     userStatusCallback.friendStatus(friendInfo, status)(Unit)
   }
 
-  override def friendMessage(friendNumber: Int, messageType: ToxMessageType, timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
+  override def friendMessage(friendNumber: Int, messageType: ToxMessageType, timeDelta: Int, message: ToxFriendMessage)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))
     messageCallback.friendMessage(friendInfo, messageType, timeDelta, message)(Unit)
   }
 
-  override def fileRecv(friendNumber: Int, fileNumber: Int, kind: Int, fileSize: Long, filename: Array[Byte])(state: Unit): Unit = {
+  override def fileRecv(friendNumber: Int, fileNumber: Int, kind: Int, fileSize: Long, filename: ToxFilename)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))
     fileRecvCallback.fileRecv(friendInfo, fileNumber, kind, fileSize, filename)(Unit)
   }
@@ -81,12 +82,12 @@ class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {
     selfConnectionStatusCallback.selfConnectionStatus(connectionStatus)(Unit)
   }
 
-  override def friendName(friendNumber: Int, name: Array[Byte])(state: Unit): Unit = {
+  override def friendName(friendNumber: Int, name: ToxNickname)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))
     nameChangeCallback.friendName(friendInfo, name)(Unit)
   }
 
-  override def friendRequest(publicKey: Array[Byte], timeDelta: Int, message: Array[Byte])(state: Unit): Unit = {
+  override def friendRequest(publicKey: ToxPublicKey, timeDelta: Int, message: ToxFriendRequestMessage)(state: Unit): Unit = {
     friendRequestCallback.friendRequest(publicKey, timeDelta, message)(Unit)
   }
 

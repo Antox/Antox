@@ -6,6 +6,7 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.{FriendInfo, FileKind}
 import chat.tox.antox.wrapper.FileKind.AVATAR
+import im.tox.tox4j.core.ToxFilename
 import im.tox.tox4j.core.callbacks.FileRecvCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
@@ -14,14 +15,14 @@ class AntoxOnFileRecvCallback(ctx: Context) {
                         fileNumber: Int,
                         toxFileKind: Int,
                         fileSize: Long,
-                        filename: Array[Byte])(state: Unit): Unit = {
+                        filename: ToxFilename)(state: Unit): Unit = {
     val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
 
     val name =
       if (kind == FileKind.AVATAR) {
         friendInfo.key.toString
       } else {
-        new String(filename)
+        filename.toString
       }
 
     if (kind == FileKind.AVATAR) {

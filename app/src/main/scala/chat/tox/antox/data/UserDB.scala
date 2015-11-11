@@ -12,6 +12,7 @@ import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
+import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 
@@ -98,10 +99,10 @@ class UserDB(ctx: Context) {
 
     val editor = preferences.edit()
     val activeUserDetails = getActiveUserDetails
-    editor.putString("nickname", activeUserDetails.nickname)
+    editor.putString("nickname", new String(activeUserDetails.nickname.value))
     editor.putString("password", activeUserDetails.password)
     editor.putString("status", activeUserDetails.status)
-    editor.putString("status_message", activeUserDetails.statusMessage)
+    editor.putString("status_message", new String(activeUserDetails.statusMessage.value))
     editor.putString("avatar", activeUserDetails.avatarName)
     editor.putBoolean("logging_enabled", activeUserDetails.loggingEnabled)
     activeUserDetails.toxMeName.domain match {
@@ -174,9 +175,9 @@ class UserDB(ctx: Context) {
         Some(new UserInfo(
           toxMeName = toxMeName,
           password = cursor.getString(COLUMN_NAME_PASSWORD),
-          nickname = cursor.getString(COLUMN_NAME_NICKNAME),
+          nickname = ToxNickname.unsafeFromByteArray(cursor.getString(COLUMN_NAME_NICKNAME).getBytes),
           status = cursor.getString(COLUMN_NAME_STATUS),
-          statusMessage = cursor.getString(COLUMN_NAME_STATUS_MESSAGE),
+          statusMessage = ToxStatusMessage.unsafeFromByteArray(cursor.getString(COLUMN_NAME_STATUS_MESSAGE).getBytes),
           loggingEnabled = cursor.getBoolean(COLUMN_NAME_LOGGING_ENABLED),
           avatarName = cursor.getString(COLUMN_NAME_AVATAR)))
       } else {

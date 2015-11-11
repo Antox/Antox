@@ -17,7 +17,7 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.toxme.ToxMe
 import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
 import chat.tox.antox.wrapper.ToxAddress
-import im.tox.tox4j.core.ToxCoreConstants
+import im.tox.tox4j.core.{ToxFriendRequestMessage, ToxCoreConstants}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -108,7 +108,7 @@ class AddFriendFragment extends Fragment with InputableID {
         val db = State.db
         if (!db.doesContactExist(key)) {
           try {
-            ToxSingleton.tox.addFriend(address, message)
+            ToxSingleton.tox.addFriend(address, ToxFriendRequestMessage.unsafeFromByteArray(message.getBytes))
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()

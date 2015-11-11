@@ -7,7 +7,6 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.utils.GroupKey
-import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -38,7 +37,7 @@ class GroupChatActivity extends GenericChatActivity[GroupKey] {
       .subscribe(groupInfo => {
       val id = activeKey
       val mGroup: Option[GroupInfo] = groupInfo.find(groupInfo => groupInfo.key == id)
-      thisActivity.setDisplayName(mGroup.map(_.getAliasOrName).getOrElse(""))
+      thisActivity.setDisplayName(mGroup.map(_.getDisplayName).getOrElse(""))
     })
   }
 

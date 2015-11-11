@@ -9,16 +9,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.{Build, Bundle, Environment}
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{Button, EditText, ProgressBar, Toast}
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService}
-import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.toxme.ToxMe.PrivacyLevel
-import chat.tox.antox.toxme.{ToxMeError, ToxMeName, ToxMe, ToxData}
+import chat.tox.antox.toxme.ToxMeError.ToxMeError
+import chat.tox.antox.toxme.{ToxData, ToxMe, ToxMeError, ToxMeName}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ToxAddress
@@ -102,7 +101,7 @@ class CreateAccountActivity extends AppCompatActivity {
     val tox = new ToxCoreImpl(toxOptions)
     val toxDataFile = new ToxDataFile(this, accountName)
     toxDataFile.saveFile(tox.getSavedata)
-    toxData.address = new ToxAddress(tox.getAddress)
+    toxData.address = new ToxAddress(tox.getAddress.value)
     toxData.fileBytes = toxDataFile.loadFile()
     toxData
   }
@@ -117,7 +116,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
     try {
       val tox = new ToxCoreImpl(toxOptions)
-      toxData.address = new ToxAddress(tox.getAddress)
+      toxData.address = new ToxAddress(tox.getAddress.value)
       toxData.fileBytes = toxDataFile.loadFile()
 
       Option(toxData)

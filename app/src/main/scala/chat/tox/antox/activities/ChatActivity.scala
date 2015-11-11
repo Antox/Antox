@@ -22,6 +22,7 @@ import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
+import im.tox.tox4j.core.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -59,7 +60,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val fileDialog = new FileDialog(thisActivity, path, false)
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
           def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, null, thisActivity)
+            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
           }
         })
         fileDialog.showDialog()
@@ -140,7 +141,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
     mFriend match {
       case Some(friend) =>
-        thisActivity.setDisplayName(friend.getAliasOrName)
+        thisActivity.setDisplayName(friend.getDisplayName)
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
@@ -176,7 +177,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
             val fileNameIndex = cursor.getColumnIndexOrThrow(filePathColumn(1))
             val fileName = cursor.getString(fileNameIndex)
             try {
-              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, null, this)
+              State.transfers.sendFileSendRequest(filePath, this.activeKey, FileKind.DATA, ToxFileId.empty, this)
             } catch {
               case e: Exception => e.printStackTrace()
             }
@@ -184,7 +185,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
       }
       if (requestCode == Constants.PHOTO_RESULT) {
-          photoPath.foreach(path => State.transfers.sendFileSendRequest(path, this.activeKey, FileKind.DATA, null, this))
+          photoPath.foreach(path => State.transfers.sendFileSendRequest(path, this.activeKey, FileKind.DATA, ToxFileId.empty, this))
           photoPath = None
       }
     } else {

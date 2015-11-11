@@ -1,11 +1,13 @@
 package chat.tox.antox.wrapper
 
 import java.io.File
-import java.sql.Timestamp
+
+import chat.tox.antox.utils.UiUtils
+import im.tox.tox4j.core.ToxNickname
 
 trait ContactInfo {
   def key: ContactKey
-  def name: String
+  def name: ToxNickname
   def avatar: Option[File]
   def online: Boolean
   def status: String
@@ -16,12 +18,14 @@ trait ContactInfo {
   def favorite: Boolean
   def lastMessage: Option[Message]
   def unreadCount: Int
-  def alias: String
+  def alias: Option[ToxNickname]
 
   /**
-  Returns 'alias' if it has been set, otherwise returns 'name'.
-    */
-  def getAliasOrName: String = {
-    if (alias != "") alias else name
+   * Returns 'alias' if it has been set, otherwise returns 'name'.
+   * If name is empty returns a segment of ID.
+   */
+  def getDisplayName: String = {
+    val nameOrAlias = new String(alias.getOrElse(name).value)
+    if (nameOrAlias.isEmpty) UiUtils.trimId(key) else nameOrAlias
   }
 }

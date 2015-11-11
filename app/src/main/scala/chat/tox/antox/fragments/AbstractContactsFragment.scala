@@ -263,7 +263,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def compareNames(a: ContactInfo, b: ContactInfo): Boolean = {
-    Collator.getInstance().compare(a.getAliasOrName.toLowerCase, b.getAliasOrName.toLowerCase) < 0
+    Collator.getInstance().compare(a.getDisplayName.toLowerCase, b.getDisplayName.toLowerCase) < 0
   }
 
   def compareOnline(a: FriendInfo, b: FriendInfo): Boolean = {

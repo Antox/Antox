@@ -1,17 +1,12 @@
 package chat.tox.antox.tox
 
-import android.app.{Notification, PendingIntent}
-import android.content.{Context, Intent}
-import android.preference.PreferenceManager
-import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
-import android.util.Log
-import chat.tox.antox.R
-import chat.tox.antox.activities.{ChatActivity, GroupChatActivity, MainActivity}
+import android.content.Context
+import chat.tox.antox.activities.{ChatActivity, GroupChatActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
+import im.tox.tox4j.core.{ToxFriendMessage, ToxNickname}
 import org.scaloid.common.LoggerTag
 
 import scala.collection.mutable.ArrayBuffer
@@ -21,19 +16,19 @@ object MessageHelper {
 
   val TAG = LoggerTag("MessageHelper")
 
-  def handleMessage(ctx: Context, friendInfo: FriendInfo, message: String, messageType: ToxMessageType): Unit = {
+  def handleMessage(ctx: Context, friendInfo: FriendInfo, message: ToxFriendMessage, messageType: ToxMessageType): Unit = {
     val db = State.db
 
     AntoxLog.debug(s"Message from: friend id: ${friendInfo.key} activeKey: ${State.activeKey} chatActive: ${State.chatActive}", TAG)
 
     if (!db.isContactBlocked(friendInfo.key)) {
       val chatActive = State.isChatActive(friendInfo.key)
-      db.addMessage(friendInfo.key, friendInfo.key, friendInfo.getAliasOrName, message, hasBeenReceived = true,
+      db.addMessage(friendInfo.key, friendInfo.key, ToxNickname.unsafeFromByteArray(friendInfo.getDisplayName.getBytes), new String(message.value), hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
       if (!chatActive) {
         val unreadCount = db.getUnreadCounts(friendInfo.key)
-        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, message, unreadCount)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, new String(message.value), unreadCount)
       }
     }
   }
@@ -54,7 +49,7 @@ object MessageHelper {
   def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Int]): Unit = {
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
-      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, msg, messageType)).toOption
+      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromByteArray(msg.getBytes), messageType)).toOption
 
       val senderName = ToxSingleton.tox.getName
       val senderKey = ToxSingleton.tox.getSelfKey
@@ -63,8 +58,7 @@ object MessageHelper {
           mDbId match {
             case Some(dbId) => db.updateUnsentMessage(id, dbId)
             case None => db.addMessage(friendKey, senderKey, senderName,
-              splitMsg, hasBeenReceived =
-                false, hasBeenRead = false, successfullySent = true, messageType, messageId = id)
+              splitMsg, hasBeenReceived = false, hasBeenRead = false, successfullySent = true, messageType, messageId = id)
           }
         case None => db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
           hasBeenRead = false, successfullySent = false, messageType)

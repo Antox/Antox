@@ -1,10 +1,9 @@
 package chat.tox.antox.wrapper
 
 import chat.tox.antox.utils.PeerKey
+import im.tox.tox4j.core.ToxNickname
 
 class GroupPeer(var key: PeerKey,
-                var name: String,
+                var name: ToxNickname,
                 var ignored: Boolean) {
-
-  override def toString: String = name
 }

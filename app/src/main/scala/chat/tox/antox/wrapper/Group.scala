@@ -18,7 +18,7 @@ class Group(val key: GroupKey,
     val peerKey = tox.getGroupPeerPublicKey(key, peerNumber)
     var peerName = tox.getGroupPeerName(key, peerNumber)
     if (peerName == null) peerName = ""
-    this.peers.addGroupPeer(new GroupPeer(peerKey, peerName, ignored = false))
+//    this.peers.addGroupPeer(new GroupPeer(peerKey, peerName, ignored = false))
     printPeerList()
   }
 

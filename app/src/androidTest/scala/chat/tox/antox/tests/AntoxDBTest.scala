@@ -5,13 +5,12 @@ import android.support.test.runner.AndroidJUnit4
 import android.test.{AndroidTestCase, RenamingDelegatingContext}
 import chat.tox.antox.data.AntoxDB
 import chat.tox.antox.utils.SelfKey
-import chat.tox.antox.wrapper.{ToxKey, FriendInfo, FriendKey}
+import chat.tox.antox.wrapper.{FriendKey, ToxKey}
+import im.tox.tox4j.core.ToxNickname
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.junit.Assert._
 import org.junit.runner.RunWith
 import org.junit.{After, Before, Test}
-
-import scala.collection.mutable.ArrayBuffer
 
 @RunWith(classOf[AndroidJUnit4])
 class AntoxDBTest extends AndroidTestCase {
@@ -36,19 +35,19 @@ class AntoxDBTest extends AndroidTestCase {
   val selfKey = new SelfKey("11BB3CCDD46346EAA76FF935F1CB31CDC11C56803F1077745124A1C7C63F7E67")
 
   val friendKey = new FriendKey("828435142ACE09E8677427E6180BFB27E38FB589A3B84C24976AE49F80A69C68")
-  val name = "Steve Appleseed"
+  val name = ToxNickname.unsafeFromByteArray("Steve Appleseed".getBytes)
   val alias = "Steve"
   val statusMessage = "This is my status"
 
   @Test
   def testAddFriend(): Unit = {
-    db.addFriend(friendKey, name, alias, statusMessage)
+    db.addFriend(friendKey, new String(name.value), alias, statusMessage)
 
     db.friendInfoList.subscribe(friendList => {
       assert(friendList.size == 1)
       assert(friendList.exists(_.name equals name))
       assert(friendList.exists(_.alias equals alias))
-      assert(friendList.exists(_.getAliasOrName equals alias))
+      assert(friendList.exists(_.getDisplayName equals alias))
       assert(friendList.exists(_.statusMessage equals statusMessage))
       assert(friendList.exists(_.key equals friendKey))
     })
@@ -56,7 +55,7 @@ class AntoxDBTest extends AndroidTestCase {
 
   @Test
   def testLastMessages(): Unit = {
-    db.addFriend(friendKey, name, alias, statusMessage)
+    db.addFriend(friendKey, new String(name.value), alias, statusMessage)
 
     def addMessage(text: String, from: ToxKey): Unit = {
       db.addMessage(friendKey, from, name, text, hasBeenReceived = false, hasBeenRead = false, successfullySent = true, ToxMessageType.NORMAL)
