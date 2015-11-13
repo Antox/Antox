@@ -41,8 +41,6 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 
-    this.findViewById(R.id.info).setVisibility(View.GONE)
-
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
     val attachmentButton = this.findViewById(R.id.attachment_button)
     val cameraButton = this.findViewById(R.id.camera_button)
@@ -145,7 +143,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
-          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
@@ -193,14 +191,15 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     }
   }
 
-  def onClickInfo(v: View): Unit = {}
+  override def onClickInfo(): Unit = {}
 
-  def onClickVoiceCall(v: View): Unit = {
+  override def onClickVoiceCall(): Unit = {
     if (!State.db.getFriendInfo(activeKey).online) return
 
     val callActivity = new Intent(this, classOf[CallActivity])
     val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
     State.callManager.add(call)
+    call.startCall(sendingAudio = true, sendingVideo = false)
 
     // Add avatar and nickname as extras
     callActivity.putExtra("key", call.contactKey.toString)
@@ -208,9 +207,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  def onClickVideoCall(v: View): Unit = {
-    //do nothing
-  }
+  override def onClickVideoCall(): Unit = {}
 
   override def onPause(): Unit = {
     super.onPause()

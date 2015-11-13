@@ -42,9 +42,12 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
   def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
   
-  def startCall(audioBitRate: BitRate, videoBitRate: BitRate): Unit = {
-    ToxSingleton.toxAv.call(callNumber.value, audioBitRate, videoBitRate)
-    selfState = selfState.copy(audioBitRate = audioBitRate, videoBitRate = videoBitRate)
+  def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
+    ToxSingleton.toxAv.call(
+      callNumber.value,
+      if (sendingAudio) selfState.audioBitRate else BitRate.Disabled,
+      if (sendingVideo) selfState.videoBitRate else BitRate.Disabled)
+
     incoming = false
     ringing.onNext(true)
   }

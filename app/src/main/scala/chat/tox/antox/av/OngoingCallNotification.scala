@@ -18,8 +18,10 @@ class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Ca
     .setOngoing(true)
     .addAction(R.drawable.ic_call_end_white_36dp,
       context.getResources.getString(R.string.end_call),
-      createPendingIntent(Constants.END_CALL, classOf[NotificationHandlerActivity], addParentStack = false))
+      createPendingIntent(Constants.END_CALL, classOf[NotificationHandlerActivity], addParentStack = false)) // end call intent for button press
     .setContentText(context.getResources.getString(R.string.call_ongoing))
+    .setUsesChronometer(true) // call timer in top right corner
+    .setWhen(call.startTime)
     .setDefaults(Notification.DEFAULT_ALL)
 
 

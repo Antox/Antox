@@ -46,7 +46,7 @@ class ToxMeTest extends AndroidTestCase {
     val toxData = new ToxData
     val toxOptions = new ToxOptions(Options.ipv6Enabled, Options.udpEnabled)
     val tox = new ToxCoreImpl(toxOptions)
-    toxData.address = new ToxAddress(tox.getAddress)
+    toxData.address = new ToxAddress(tox.getAddress.value)
     toxData.fileBytes = tox.getSavedata
 
     toxData

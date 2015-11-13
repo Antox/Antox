@@ -62,5 +62,17 @@ class GroupChatActivity extends GenericChatActivity[GroupKey] {
   override def setTyping(typing: Boolean): Unit = {
     // not yet implemented in toxcore
   }
+
+  override def onClickInfo(): Unit = {
+    //TODO add a group profile activity
+  }
+
+  override def onClickVideoCall(): Unit = {
+    // not yet implemented in toxav
+  }
+
+  override def onClickVoiceCall(): Unit = {
+    // not yet implemented in toxav
+  }
 }
 

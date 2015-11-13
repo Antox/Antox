@@ -1,13 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:antox="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/callButton"
-        android:title="@string/call_friend"
-        antox:showAsAction="ifRoom"
+        android:id="@+id/voice_call_button"
         android:icon="@drawable/ic_action_call"
-        />
+        android:title="@string/call_friend"
+        antox:showAsAction="ifRoom" />
     <item
-        android:id="@+id/laksdjf"
-        android:title="asdlfk"
-        android:icon="@layout/avatar_actionview"/>
+        android:id="@+id/video_call_button"
+        android:icon="@drawable/ic_action_video"
+        android:title="@string/video_call_friend"
+        antox:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/info"
+        android:icon="@drawable/ic_info"
+        android:title="@string/info"
+        antox:showAsAction="ifRoom" />
 </menu>

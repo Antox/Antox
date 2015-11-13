@@ -69,12 +69,15 @@
         </activity>
         <activity
             android:name=".activities.ChatActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/AntoxTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
-        <activity android:name="chat.tox.antox.activities.GroupChatActivity" >
+        <activity
+            android:name="chat.tox.antox.activities.GroupChatActivity"
+            android:theme="@style/AntoxTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />

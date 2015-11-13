@@ -65,7 +65,6 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
   }
 
   def cleanUp(): Unit = {
-    stop()
     mAudioRecord.foreach(_.release())
   }
 

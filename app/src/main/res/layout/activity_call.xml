@@ -10,7 +10,7 @@
     tools:context="chat.tox.antox.CallActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar"
+        android:id="@+id/call_avatar"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@color/grey_light"
@@ -29,19 +29,34 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:textStyle="bold"
-        android:layout_below="@+id/avatar"
+        android:layout_below="@+id/call_avatar"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/duration"
-        android:text="23:59:59"
-        android:textSize="@dimen/text_smallish"
-        android:singleLine="true"
-        android:paddingTop="8dp"
         android:layout_below="@+id/friend_name"
-        android:layout_centerHorizontal="true" />
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/call_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_smallish"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+
+        <Chronometer
+            android:id="@+id/call_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23:59:59"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_smallish" />
+    </FrameLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,50 +67,56 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/mic_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_mic_black_36dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/background_circle"/>
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_mic_off_black_36dp"
             android:visibility="gone"
-            android:id="@+id/mic_off" />
+            android:id="@+id/mic_off"
+            android:background="@drawable/background_circle"/>
 
-        <ImageView
+        <ImageButton
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_volume_up_black_36dp"
-            android:id="@+id/speaker_on" />
+            android:id="@+id/speaker_on"
+            android:background="@drawable/background_circle"/>
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_volume_off_black_36dp"
             android:id="@+id/speaker_off"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="@drawable/background_circle" />
 
-        <ImageView
+        <ImageButton
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_videocam_black_36dp"
             android:id="@+id/video_on"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="@drawable/background_circle" />
 
-        <ImageView
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_videocam_off_black_36dp"
-            android:id="@+id/video_off"/>
+            android:id="@+id/video_off"
+            android:background="@drawable/background_circle"/>
     </LinearLayout>
 
     <LinearLayout

@@ -7,7 +7,7 @@ import android.os.{Build, Bundle, PowerManager, Vibrator}
 import android.util.TypedValue
 import android.view.View.OnClickListener
 import android.view.{View, WindowManager}
-import android.widget.{LinearLayout, TextView}
+import android.widget.{ImageButton, Chronometer, LinearLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
@@ -19,7 +19,6 @@ import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
 
-import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class CallActivity extends Activity {
@@ -31,9 +30,12 @@ class CallActivity extends Activity {
   var endCallButton: View = _
   val callButtonSize = 72 // in dp
 
+  var allToggleButtons: List[ImageButton] = _
+
   var nameView: TextView = _
   var avatarView: CircleImageView = _
-  var durationView: TextView = _
+  var durationView: Chronometer = _
+  var callStateView: TextView = _
 
   var vibrator: Vibrator = _
   val vibrationPattern = Array[Long](0, 1000, 1000)
@@ -83,16 +85,18 @@ class CallActivity extends Activity {
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
     call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
 
-    avatarView = findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+    avatarView = findViewById(R.id.call_avatar).asInstanceOf[CircleImageView]
     nameView = findViewById(R.id.friend_name).asInstanceOf[TextView]
 
     /* Set up the speaker/mic buttons */
-    val micOff = findViewById(R.id.mic_off)
-    val micOn = findViewById(R.id.mic_on)
-    val speakerOn = findViewById(R.id.speaker_on)
-    val speakerOff = findViewById(R.id.speaker_off)
-    val videoOn = findViewById(R.id.video_on)
-    val videoOff = findViewById(R.id.video_off)
+    val micOn = findViewById(R.id.mic_on).asInstanceOf[ImageButton]
+    val micOff = findViewById(R.id.mic_off).asInstanceOf[ImageButton]
+    val speakerOn = findViewById(R.id.speaker_on).asInstanceOf[ImageButton]
+    val speakerOff = findViewById(R.id.speaker_off).asInstanceOf[ImageButton]
+    val videoOn = findViewById(R.id.video_on).asInstanceOf[ImageButton]
+    val videoOff = findViewById(R.id.video_off).asInstanceOf[ImageButton]
+
+    allToggleButtons = List(micOn, micOff, speakerOn, speakerOff, videoOn, videoOff)
 
     setupOnClickToggle(micOn, micOff, call.muteSelfAudio)
     setupOnClickToggle(micOff, micOn, call.unmuteSelfAudio)
@@ -102,6 +106,8 @@ class CallActivity extends Activity {
 
     setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
     setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
+
+    allToggleButtons.foreach(_.setEnabled(false))
 
     /* Set up the answer and av buttons */
     answerCallButton = findViewById(R.id.answer_call_circle)
@@ -124,7 +130,8 @@ class CallActivity extends Activity {
       }
     })
 
-    durationView = findViewById(R.id.duration).asInstanceOf[TextView]
+    durationView = findViewById(R.id.call_duration).asInstanceOf[Chronometer]
+    callStateView = findViewById(R.id.call_state_text).asInstanceOf[TextView]
 
     callNotification = new OngoingCallNotification(this, activeKey, call)
 
@@ -201,16 +208,16 @@ class CallActivity extends Activity {
         updateDisplayedState(fi)
       })
 
-    // updates duration timer every second
-    compositeSubscription +=
-      Observable.interval(1 seconds)
-        .subscribeOn(IOScheduler())
-        .observeOn(AndroidMainThreadScheduler())
-        .map(_ => call.duration)
-        .subscribe(duration => {
-          println(s"duration is $duration")
-        durationView.setText(TimestampUtils.formatDuration(duration.toInt / 1000))
-      })
+//    // updates duration timer every second
+//    compositeSubscription +=
+//      Observable.interval(1 seconds)
+//        .subscribeOn(IOScheduler())
+//        .observeOn(AndroidMainThreadScheduler())
+//        .map(_ => call.duration)
+//        .subscribe(duration => {
+//          println(s"duration is $duration")
+//        durationView.setText(TimestampUtils.formatDuration(duration.toInt / 1000))
+//      })
   }
 
   private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
@@ -239,11 +246,16 @@ class CallActivity extends Activity {
     ringtone.start()
     vibrator.vibrate(vibrationPattern, 0)
 
+    callStateView.setVisibility(View.VISIBLE)
+    callStateView.setText(R.string.call_incoming)
     durationView.setVisibility(View.GONE)
   }
 
   def setupOutgoing(): Unit = {
     hideAnswerButton()
+
+    callStateView.setVisibility(View.VISIBLE)
+    callStateView.setText(R.string.call_ringing)
     durationView.setVisibility(View.GONE)
   }
 
@@ -252,13 +264,12 @@ class CallActivity extends Activity {
     ringtone.stop()
     hideAnswerButton()
 
-    durationView.setVisibility(View.VISIBLE)
+    allToggleButtons.foreach(_.setEnabled(true))
 
-    maybeWakeLock.foreach(wakeLock => {
-      if (!wakeLock.isHeld) {
-        wakeLock.acquire()
-      }
-    })
+    callStateView.setVisibility(View.GONE)
+    durationView.setVisibility(View.VISIBLE)
+    durationView.setBase(call.startTime)
+    durationView.start()
   }
 
   def hideAnswerButton(): Unit = {
@@ -283,7 +294,20 @@ class CallActivity extends Activity {
 
   // Called when the call ends (both by the user and by friend)
   def onCallEnded(): Unit = {
+    durationView.stop()
+
     finish()
+  }
+
+
+  override def onResume(): Unit = {
+    super.onResume()
+
+    maybeWakeLock.foreach(wakeLock => {
+      if (!wakeLock.isHeld) {
+        wakeLock.acquire()
+      }
+    })
   }
 
   override def onPause(): Unit = {

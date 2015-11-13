@@ -15,6 +15,9 @@
         <item name="actionBarTabStyle">@style/ActionBarTabs</item>
     </style>
 
+    <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    </style>
+
     <!-- ActionBar styles -->
     <style name="AntoxTheme.ActionBar"
         parent="@style/Theme.AppCompat.NoActionBar">

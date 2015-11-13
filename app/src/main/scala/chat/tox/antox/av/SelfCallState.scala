@@ -4,6 +4,7 @@ import im.tox.tox4j.av.BitRate
 import im.tox.tox4j.av.enums.ToxavFriendCallState
 
 object SelfCallState {
+  // these bitrates act as the default bitrates
   val DEFAULT = SelfCallState(BitRate.unsafeFromInt(42), BitRate.Disabled, audioMuted = false, videoHidden = false, receivingAudio = false, receivingVideo = false)
 
   def fromToxCallState(state: Set[ToxavFriendCallState], callState: SelfCallState): SelfCallState = {

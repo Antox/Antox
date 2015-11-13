@@ -3,27 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/avatarContainer"
-        android:layout_marginRight="@dimen/margin_small"
-        android:layout_centerVertical="true"
-        android:layout_width="40dp"
-        android:layout_marginLeft="5dp"
-        android:layout_height="40dp">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/default_avatar"
-            />
-        <TextView
-            android:id="@+id/icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/circle_online"/>
-    </RelativeLayout>
+
     
     <LinearLayout
         android:layout_width="wrap_content"
@@ -64,15 +44,5 @@
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/displayName"
-        android:layout_width="200dp"
-        android:textSize="18sp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/avatarContainer"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:textColor="@color/white"
-        android:gravity="left|center"
-        android:text="Display name"
-        />
+
 </RelativeLayout>

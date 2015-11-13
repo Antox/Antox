@@ -4,13 +4,13 @@ import java.util
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.app.{ActionBar, AppCompatActivity}
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.support.v7.widget.{LinearLayoutManager, RecyclerView}
+import android.support.v7.widget.{LinearLayoutManager, RecyclerView, Toolbar}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
-import android.view.{MenuItem, View}
-import android.widget._
+import android.view.{Menu, MenuItem, View}
+import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
@@ -52,15 +52,23 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
     setContentView(R.layout.activity_chat)
 
-    val actionBar = getSupportActionBar
-    val avatarView = getLayoutInflater.inflate(R.layout.avatar_actionview, null)
-    actionBar.setCustomView(avatarView)
-    actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
+    val thisActivity = this
+
+    val toolbar = findViewById(R.id.chat_toolbar).asInstanceOf[Toolbar]
+    toolbar.inflateMenu(R.menu.chat_menu)
+    toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+    toolbar.setNavigationOnClickListener(new View.OnClickListener {
+      override def onClick(v: View): Unit = {
+        thisActivity.finish()
+      }
+    })
+    setSupportActionBar(toolbar)
+
     ThemeManager.applyTheme(this, getSupportActionBar)
+    getSupportActionBar.setDisplayShowTitleEnabled(false)
 
     val extras: Bundle = getIntent.getExtras
     activeKey = getKey(extras.getString("key"))
-    val thisActivity = this
     AntoxLog.debug("key = " + activeKey)
 
     val db = State.db
@@ -97,8 +105,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     })
 
-    val b = this.findViewById(R.id.send_message_button)
-    b.setOnClickListener(new View.OnClickListener() {
+    val sendMessageButton = this.findViewById(R.id.send_message_button)
+    sendMessageButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
         onSendMessage()
 
@@ -125,8 +133,31 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   }
 
+  override def onCreateOptionsMenu(menu: Menu): Boolean = {
+    getMenuInflater.inflate(R.menu.chat_menu, menu)
+
+    true
+  }
+
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     super.onOptionsItemSelected(item)
+
+    item.getItemId match {
+      case R.id.voice_call_button =>
+        onClickVoiceCall()
+        true
+
+      case R.id.video_call_button =>
+        onClickVideoCall()
+        true
+
+      case R.id.info =>
+        onClickInfo()
+        true
+
+      case _ =>
+        false
+    }
   }
 
   def setDisplayName(name: String): Unit = {
@@ -231,4 +262,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   def sendMessage(message: String, messageType: ToxMessageType, context: Context): Unit
 
   def setTyping(typing: Boolean): Unit
+
+  def onClickVoiceCall(): Unit
+  def onClickVideoCall(): Unit
+  def onClickInfo(): Unit
 }
