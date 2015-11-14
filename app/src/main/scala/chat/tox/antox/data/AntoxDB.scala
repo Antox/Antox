@@ -371,15 +371,30 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(_.use(messageListFromCursor))
   }
 
+  /**
+   * Gets list of messages (including file transfers) limited by takeLast within conversation 'key' if key is Some,
+   * otherwise returns a list of all messages.
+   *
+   * @param key the conversation key for which the messages should be queried
+   * @param takeLast the number of messages to return, starting from from the end of the query.
+   *                 e.g. if `takeLast = 2` and the total list of messages is `List("a", "b", "c")`,
+   *                 the result of this function would be `List("b", "c")` </code>.
+   *                 If this value is less than 0, as it is by default, there will be no limit on the number of messages returned.
+   * @return a list of messages constrained by the parameters.
+   */
   def getMessageList(key: Option[ContactKey], takeLast: Int = -1): ArrayBuffer[Message] = {
     val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
 
     val messageList = mDb.query(selectQuery).use(messageListFromCursor)
 
-    val messageListSizeDifference = messageList.size - takeLast
-    val sliceStart = if (messageListSizeDifference < 0) 0 else messageListSizeDifference
+    if (takeLast >= 0) {
+      val messageListSizeDifference = messageList.size - takeLast
+      val sliceStart = if (messageListSizeDifference < 0) 0 else messageListSizeDifference
 
-    messageList.slice(sliceStart, messageList.size)
+      messageList.slice(sliceStart, messageList.size)
+    } else {
+      messageList
+    }
   }
 
   private def getMessageQuery(key: Option[ContactKey], orderBy: RowOrder, limit: Int = -1): String = {
@@ -489,7 +504,12 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   def getUnsentMessageList(contactKey: ContactKey): Array[Message] = {
-    val messageList = getMessageList(Some(contactKey)).filterNot(_.sent).filterNot(_.isFileTransfer).filter(_.senderKey == selfKey)
+    val messageList =
+      getMessageList(Some(contactKey))
+        .filterNot(_.sent)
+        .filterNot(_.isFileTransfer)
+        .filter(_.senderKey == selfKey)
+
     messageList.toArray
   }
 
