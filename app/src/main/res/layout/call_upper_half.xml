@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/call_avatar"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/login_bg"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/friend_name"
+        android:text="Subli Une"
+        android:textStyle="bold"
+        android:textColor="@color/grey_darkest"
+        android:singleLine="true"
+        android:textSize="@dimen/text_largest"
+        android:paddingTop="16dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_below="@+id/call_avatar"
+        android:layout_centerHorizontal="true" />
+
+    <FrameLayout
+        android:id="@+id/call_state_text_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friend_name"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="8dp"
+        android:singleLine="true">
+
+        <TextView
+            android:id="@+id/call_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/call_incoming_voice"
+            android:textSize="@dimen/text_medium"
+            android:visibility="gone"/>
+
+        <Chronometer
+            android:id="@+id/call_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="23:59:59"
+            android:textSize="@dimen/text_smallish" />
+    </FrameLayout>
+</merge>

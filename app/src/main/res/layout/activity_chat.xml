@@ -14,9 +14,9 @@
 
         <LinearLayout
             android:id="@+id/avatarActionView"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:id="@+id/avatarContainer"
@@ -45,8 +45,8 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="@dimen/padding_small"
                 android:gravity="left|center"
+                android:paddingLeft="@dimen/padding_small"
                 android:text="Display name"
                 android:textColor="@color/white"
                 android:textSize="18sp" />

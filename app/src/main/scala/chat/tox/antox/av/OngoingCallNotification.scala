@@ -1,6 +1,6 @@
 package chat.tox.antox.av
 
-import android.app.{Notification, PendingIntent}
+import android.app.PendingIntent
 import android.content.{Context, Intent}
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import chat.tox.antox.R
@@ -22,8 +22,9 @@ class OngoingCallNotification(context: Context, contactKey: ContactKey, call: Ca
     .setContentText(context.getResources.getString(R.string.call_ongoing))
     .setUsesChronometer(true) // call timer in top right corner
     .setWhen(call.startTime)
-    .setDefaults(Notification.DEFAULT_ALL)
+    .setSound(null)
 
+  AntoxNotificationManager.addAvatarToNotification(builder, contactKey)
 
   builder.setContentIntent(createPendingIntent(Constants.SWITCH_TO_CALL, classOf[CallActivity], addParentStack = true))
 

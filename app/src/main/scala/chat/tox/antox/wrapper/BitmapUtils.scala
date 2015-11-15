@@ -1,9 +1,6 @@
 package chat.tox.antox.wrapper
 
-import android.content.Context
-import android.graphics.PorterDuff.Mode
 import android.graphics._
-import android.graphics.Bitmap.Config
 import android.media.ThumbnailUtils
 
 object BitmapUtils {
@@ -14,10 +11,10 @@ object BitmapUtils {
     }
   }
 
-  def getCroppedBitmap(bitmap: Bitmap): Bitmap = {
+  def getCroppedBitmap(bitmap: Bitmap, recycle: Boolean = true): Bitmap = {
     val min = math.min(bitmap.getWidth,bitmap.getHeight)
     val output = ThumbnailUtils.extractThumbnail(bitmap,min,min)
-    bitmap.recycle()
+    if (recycle) bitmap.recycle()
     output
   }
 }

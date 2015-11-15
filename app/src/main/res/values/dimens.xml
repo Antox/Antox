@@ -13,6 +13,8 @@
     <dimen name="text_smallish">16sp</dimen>
     <dimen name="text_medium">18sp</dimen>
     <dimen name="text_large">22sp</dimen>
+    <dimen name="text_larger">26sp</dimen>
+    <dimen name="text_largest">30sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 

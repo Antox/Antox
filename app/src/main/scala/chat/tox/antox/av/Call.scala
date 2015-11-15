@@ -26,19 +26,20 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   var startTime: Long = 0
   def duration: Long = System.currentTimeMillis() - startTime //in milliseconds
 
-  def active: Boolean = !friendState.contains(ToxavFriendCallState.FINISHED)
+  /**
+   * Describes a state in which the call is not FINISHED or ERROR.
+   * When the call is on hold or ringing (not yet answered) this will return true.
+   */
+  def active: Boolean = {
+    !friendState.contains(ToxavFriendCallState.FINISHED) && !friendState.contains(ToxavFriendCallState.ERROR)
+  }
+
   def onHold: Boolean = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture(samplingRate.value, channels.value)
   val audioPlayer = new AudioPlayer(samplingRate.value, channels.value)
 
   private def frameSize = SampleCount(audioLength, samplingRate)
-
-  friendStateSubject.subscribe(_ => {
-    if (active) {
-      ringing.onNext(false)
-    }
-  })
 
   def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
   
@@ -56,7 +57,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     logCallEvent(s"answered receiving audio:$receivingAudio and video:$receivingVideo")
 
     ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
-    callStarted(selfState.audioBitRate, selfState.videoBitRate)
+    callStarted()
     ringing.onNext(false)
   }
 
@@ -71,14 +72,19 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {
     logCallEvent(s"friend call state updated to $state")
 
+    if (friendState.isEmpty && state.nonEmpty && !incoming) {
+      callStarted()
+      ringing.onNext(false)
+    }
+
     friendState = state
     friendStateSubject.onNext(friendState)
   }
 
-  private def callStarted(audioBitRate: BitRate, videoBitRate: BitRate): Unit = {
+  private def callStarted(): Unit = {
     startTime = System.currentTimeMillis()
 
-    logCallEvent(event = s"started with audio bitrate $audioBitRate and video bitrate $videoBitRate")
+    logCallEvent(event = s"started at time $startTime")
     
     new Thread(new Runnable {
       override def run(): Unit = {

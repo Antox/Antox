@@ -234,6 +234,11 @@
     <string name="call_mute_speaker">Mute speaker</string>
     <string name="call_unmute_speaker">Unmute speaker</string>
 
+    <!-- Incoming Call Activity -->
+    <string name="call_incoming_video">Incoming video call…</string>
+    <string name="call_incoming_voice">Incoming voice call…</string>
+    <string name="call_incoming_reply_with_message">Reply</string>
+
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>
     <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>

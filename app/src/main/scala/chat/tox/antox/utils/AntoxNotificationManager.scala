@@ -17,8 +17,6 @@ import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
-import scala.util.Random
-
 object AntoxNotificationManager {
 
   var mNotificationManager: Option[NotificationManager] = None
@@ -39,6 +37,18 @@ object AntoxNotificationManager {
     mNotificationManager.foreach(_.cancelAll())
   }
 
+  def addAvatarToNotification(builder: NotificationCompat.Builder, key: ToxKey): Unit = {
+    AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
+    if (key.getClass == classOf[FriendKey]) {
+      val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
+      if (friendInfo.avatar.isDefined) {
+        val bitmapOptions = new BitmapFactory.Options()
+        val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bitmapOptions)
+        builder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap, recycle = false))
+      }
+    }
+  }
+
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: ToxNickname, content: String, count: Int = 0): Unit = {
     AntoxLog.debug(s"Creating message notification, $name, $content")
 
@@ -52,15 +62,7 @@ object AntoxNotificationManager {
 
       addAlerts(notificationBuilder, preferences)
 
-      AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
-      if (key.getClass == classOf[FriendKey]) {
-        val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
-        if (friendInfo.avatar.isDefined) {
-          val bitmapOptions = new BitmapFactory.Options()
-          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bitmapOptions)
-          notificationBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
-        }
-      }
+      addAvatarToNotification(notificationBuilder, key)
 
       if (count > 0) {
         val countStr: String =
