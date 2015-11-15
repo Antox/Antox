@@ -15,7 +15,7 @@ import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.utils.{AntoxLog, Constants}
+import chat.tox.antox.utils.{ClickLocation, AntoxLog, Constants}
 import chat.tox.antox.wrapper.{ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -28,6 +28,7 @@ import scala.collection.mutable.ArrayBuffer
 abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActivity {
 
   //var ARG_CONTACT_NUMBER: String = "contact_number"
+  var toolbar: Toolbar = _
   var adapter: ChatMessagesAdapter = _
   var messageBox: EditText = _
   var isTypingBox: TextView = _
@@ -54,7 +55,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     val thisActivity = this
 
-    val toolbar = findViewById(R.id.chat_toolbar).asInstanceOf[Toolbar]
+    toolbar = findViewById(R.id.chat_toolbar).asInstanceOf[Toolbar]
     toolbar.inflateMenu(R.menu.chat_menu)
     toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
     toolbar.setNavigationOnClickListener(new View.OnClickListener {
@@ -142,17 +143,21 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     super.onOptionsItemSelected(item)
 
+    val rawLocation = Array.ofDim[Int](2)
+    Option(toolbar.findViewById(item.getItemId))foreach(_.getLocationOnScreen(rawLocation))
+    val clickLocation = ClickLocation(rawLocation(0), rawLocation(1))
+
     item.getItemId match {
       case R.id.voice_call_button =>
-        onClickVoiceCall()
+        onClickVoiceCall(clickLocation)
         true
 
       case R.id.video_call_button =>
-        onClickVideoCall()
+        onClickVideoCall(clickLocation)
         true
 
       case R.id.info =>
-        onClickInfo()
+        onClickInfo(clickLocation)
         true
 
       case _ =>
@@ -263,7 +268,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   def setTyping(typing: Boolean): Unit
 
-  def onClickVoiceCall(): Unit
-  def onClickVideoCall(): Unit
-  def onClickInfo(): Unit
+  def onClickVoiceCall(clickLocation: ClickLocation): Unit
+  def onClickVideoCall(clickLocation: ClickLocation): Unit
+  def onClickInfo(clickLocation: ClickLocation): Unit
 }

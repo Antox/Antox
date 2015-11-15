@@ -110,7 +110,8 @@
         <activity
             android:name=".activities.CallActivity"
             android:label="@string/title_activity_friend_profile"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/Theme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="im.tox.antox.activities.MainActivity" />

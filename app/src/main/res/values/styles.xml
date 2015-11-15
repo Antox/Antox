@@ -18,6 +18,12 @@
     <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
     </style>
 
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
     <!-- ActionBar styles -->
     <style name="AntoxTheme.ActionBar"
         parent="@style/Theme.AppCompat.NoActionBar">

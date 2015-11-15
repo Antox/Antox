@@ -1,7 +1,7 @@
 package chat.tox.antox.fragments
 
 import android.media.AudioManager
-import android.os.{SystemClock, Bundle}
+import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{Chronometer, ImageButton}
@@ -48,12 +48,6 @@ class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFr
 
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
-    rootView
-  }
-
-  override def onViewCreated(view: View, savedInstanceState: Bundle): Unit = {
-    super.onViewCreated(view, savedInstanceState)
-
     compositeSubscription +=
       State.db.friendInfoList
         .subscribeOn(IOScheduler())
@@ -76,6 +70,8 @@ class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFr
           setupActive()
         }
       })
+
+    rootView
   }
 
   private def setupOnClickToggle(clickView: View, shownView: View, action: () => Unit): Unit = {

@@ -191,9 +191,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     }
   }
 
-  override def onClickInfo(): Unit = {}
+  override def onClickInfo(clickLocation: ClickLocation): Unit = {}
 
-  override def onClickVoiceCall(): Unit = {
+  override def onClickVoiceCall(clickLocation: ClickLocation): Unit = {
     if (!State.db.getFriendInfo(activeKey).online) return
 
     val callActivity = new Intent(this, classOf[CallActivity])
@@ -201,13 +201,13 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     State.callManager.add(call)
     call.startCall(sendingAudio = true, sendingVideo = false)
 
-    // Add avatar and nickname as extras
     callActivity.putExtra("key", call.contactKey.toString)
     callActivity.putExtra("call_number", call.callNumber.value)
+    callActivity.putExtra("click_location", clickLocation)
     startActivity(callActivity)
   }
 
-  override def onClickVideoCall(): Unit = {}
+  override def onClickVideoCall(clickLocation: ClickLocation): Unit = {}
 
   override def onPause(): Unit = {
     super.onPause()
