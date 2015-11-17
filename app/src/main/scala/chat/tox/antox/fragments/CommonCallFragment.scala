@@ -70,12 +70,6 @@ abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout:
       }
     })
 
-    rootView
-  }
-
-  override def onViewCreated(view: View, savedInstanceState: Bundle): Unit = {
-    super.onViewCreated(view, savedInstanceState)
-
     compositeSubscription +=
       call.friendStateSubject
         .subscribe(callState => {
@@ -92,6 +86,8 @@ abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout:
         .subscribe(fi => {
           updateDisplayedState(fi)
         })
+
+    rootView
   }
 
   // Called when the call ends (both by the user and by friend)
