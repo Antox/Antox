@@ -108,7 +108,7 @@ class AddFriendFragment extends Fragment with InputableID {
         val db = State.db
         if (!db.doesContactExist(key)) {
           try {
-            ToxSingleton.tox.addFriend(address, ToxFriendRequestMessage.unsafeFromByteArray(message.getBytes))
+            ToxSingleton.tox.addFriend(address, ToxFriendRequestMessage.unsafeFromValue(message.getBytes))
             ToxSingleton.save()
           } catch {
             case e: ToxException[_] => e.printStackTrace()

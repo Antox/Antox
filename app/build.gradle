@@ -75,6 +75,7 @@ dependencies {
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
     compile 'org.scalaz:scalaz-core_2.11:7.2.0-M1'
+    compile 'org.scodec:scodec-core_2.11:1.8.2'
 
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'

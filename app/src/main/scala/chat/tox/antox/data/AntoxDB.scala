@@ -733,11 +733,11 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   private def getFriendInfoFromCursor(cursor: Cursor): FriendInfo = {
-    val name = ToxNickname.unsafeFromByteArray(cursor.getString(COLUMN_NAME_NAME).getBytes)
+    val name = ToxNickname.unsafeFromValue(cursor.getString(COLUMN_NAME_NAME).getBytes)
     val key = new FriendKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val statusMessage = cursor.getString(COLUMN_NAME_NOTE)
-    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromByteArray)
+    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromValue)
     val online = cursor.getBoolean(COLUMN_NAME_ISONLINE)
     val blocked = cursor.getBoolean(COLUMN_NAME_ISBLOCKED)
     val avatar = cursor.getString(COLUMN_NAME_AVATAR)
@@ -751,11 +751,11 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   private def getGroupInfoFromCursor(cursor: Cursor): GroupInfo = {
-    val name = ToxNickname.unsafeFromByteArray(cursor.getString(COLUMN_NAME_NAME).getBytes)
+    val name = ToxNickname.unsafeFromValue(cursor.getString(COLUMN_NAME_NAME).getBytes)
     val key = new GroupKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val topic = cursor.getString(COLUMN_NAME_NOTE)
-    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromByteArray)
+    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromValue)
     val connected = cursor.getBoolean(COLUMN_NAME_ISONLINE)
     val blocked = cursor.getBoolean(COLUMN_NAME_ISBLOCKED)
     val avatar = cursor.getString(COLUMN_NAME_AVATAR)

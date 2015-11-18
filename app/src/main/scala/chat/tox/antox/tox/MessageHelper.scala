@@ -23,7 +23,7 @@ object MessageHelper {
 
     if (!db.isContactBlocked(friendInfo.key)) {
       val chatActive = State.isChatActive(friendInfo.key)
-      db.addMessage(friendInfo.key, friendInfo.key, ToxNickname.unsafeFromByteArray(friendInfo.getDisplayName.getBytes), new String(message.value), hasBeenReceived = true,
+      db.addMessage(friendInfo.key, friendInfo.key, ToxNickname.unsafeFromValue(friendInfo.getDisplayName.getBytes), new String(message.value), hasBeenReceived = true,
         hasBeenRead = chatActive, successfullySent = true, messageType)
 
       if (!chatActive) {
@@ -49,7 +49,7 @@ object MessageHelper {
   def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Int]): Unit = {
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
-      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromByteArray(msg.getBytes), messageType)).toOption
+      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromValue(msg.getBytes), messageType)).toOption
 
       val senderName = ToxSingleton.tox.getName
       val senderKey = ToxSingleton.tox.getSelfKey

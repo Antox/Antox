@@ -175,9 +175,9 @@ class UserDB(ctx: Context) {
         Some(new UserInfo(
           toxMeName = toxMeName,
           password = cursor.getString(COLUMN_NAME_PASSWORD),
-          nickname = ToxNickname.unsafeFromByteArray(cursor.getString(COLUMN_NAME_NICKNAME).getBytes),
+          nickname = ToxNickname.unsafeFromValue(cursor.getString(COLUMN_NAME_NICKNAME).getBytes),
           status = cursor.getString(COLUMN_NAME_STATUS),
-          statusMessage = ToxStatusMessage.unsafeFromByteArray(cursor.getString(COLUMN_NAME_STATUS_MESSAGE).getBytes),
+          statusMessage = ToxStatusMessage.unsafeFromValue(cursor.getString(COLUMN_NAME_STATUS_MESSAGE).getBytes),
           loggingEnabled = cursor.getBoolean(COLUMN_NAME_LOGGING_ENABLED),
           avatarName = cursor.getString(COLUMN_NAME_AVATAR)))
       } else {

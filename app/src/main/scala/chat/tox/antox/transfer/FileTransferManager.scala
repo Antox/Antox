@@ -79,7 +79,7 @@ class FileTransferManager extends Intervals {
     val mFileNumber: Option[Int] = try {
       AntoxLog.debug("Creating tox file sender", TAG)
 
-      ToxSingleton.tox.fileSend(key, fileKind.kindId, file.length(), fileId, ToxFilename.unsafeFromByteArray(fileName.getBytes)) match {
+      ToxSingleton.tox.fileSend(key, fileKind.kindId, file.length(), fileId, ToxFilename.unsafeFromValue(fileName.getBytes)) match {
         case -1 => None
         case x => Some(x)
       }
@@ -98,7 +98,7 @@ class FileTransferManager extends Intervals {
   }
 
   def sendFileDeleteRequest(key: FriendKey, fileKind: FileKind, context: Context): Unit = {
-      ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, ToxFileId.empty, ToxFilename.unsafeFromByteArray("".getBytes))
+      ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, ToxFileId.empty, ToxFilename.unsafeFromValue("".getBytes))
       if (fileKind == FileKind.AVATAR) {
         onSelfAvatarSendFinished(key, context)
       }
@@ -287,7 +287,7 @@ class FileTransferManager extends Intervals {
               fileId =
                 ToxSingleton.tox.hash(file)
                 .map(_.getBytes)
-                .map(ToxFileId.unsafeFromByteArray)
+                .map(ToxFileId.unsafeFromValue)
                 .getOrElse(ToxFileId.empty),
               context = context)
           case None =>
