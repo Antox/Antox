@@ -108,8 +108,8 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
           }
 
           val timeTaken = System.currentTimeMillis() - start
-          if (timeTaken < audioLength.value / 1000)
-            Thread.sleep((audioLength.value / 1000) - timeTaken)
+          if (timeTaken < audioLength.toMicros / 1000)
+            Thread.sleep((audioLength.toMicros / 1000) - timeTaken)
         }
 
         logCallEvent(s"audio encoded thread stopped")

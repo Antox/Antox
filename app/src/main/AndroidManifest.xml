@@ -7,7 +7,7 @@
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="21"
+        android:targetSdkVersion="22"
         tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview" />
 
     <uses-permission android:name="android.permission.INTERNET" />
