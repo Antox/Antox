@@ -9,6 +9,7 @@ import android.preference.PreferenceManager
 import chat.tox.antox.data.AntoxDB.DatabaseHelper
 import chat.tox.antox.utils.DatabaseConstants.RowOrder.RowOrder
 import chat.tox.antox.utils.DatabaseConstants._
+import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ContactType.ContactType
 import chat.tox.antox.wrapper.FileKind.AVATAR
@@ -737,7 +738,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     val key = new FriendKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val statusMessage = cursor.getString(COLUMN_NAME_NOTE)
-    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromValue)
+
+    val alias =
+      Option(cursor.getString(COLUMN_NAME_ALIAS))
+      .flatMap(_.toOption)
+      .map(_.getBytes)
+      .map(ToxNickname.unsafeFromValue)
+
     val online = cursor.getBoolean(COLUMN_NAME_ISONLINE)
     val blocked = cursor.getBoolean(COLUMN_NAME_ISBLOCKED)
     val avatar = cursor.getString(COLUMN_NAME_AVATAR)
@@ -755,7 +762,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     val key = new GroupKey(cursor.getString(COLUMN_NAME_KEY))
     val status = cursor.getString(COLUMN_NAME_STATUS)
     val topic = cursor.getString(COLUMN_NAME_NOTE)
-    val alias = Option(cursor.getString(COLUMN_NAME_ALIAS)).map(_.getBytes).map(ToxNickname.unsafeFromValue)
+
+    val alias =
+      Option(cursor.getString(COLUMN_NAME_ALIAS))
+        .flatMap(_.toOption)
+        .map(_.getBytes)
+        .map(ToxNickname.unsafeFromValue)
+
     val connected = cursor.getBoolean(COLUMN_NAME_ISONLINE)
     val blocked = cursor.getBoolean(COLUMN_NAME_ISBLOCKED)
     val avatar = cursor.getString(COLUMN_NAME_AVATAR)

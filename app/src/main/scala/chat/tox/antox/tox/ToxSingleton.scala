@@ -110,7 +110,7 @@ object ToxSingleton {
           jsonObject.getString("owner"),
           jsonObject.getString("ipv6"),
           jsonObject.getString("ipv4"),
-          ToxPublicKey.unsafeFromValue(jsonObject.getString("pubkey").getBytes),
+          ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("pubkey"))),
           Port.unsafeFromInt(jsonObject.getInt("port")))
       }
       dhtNodes
