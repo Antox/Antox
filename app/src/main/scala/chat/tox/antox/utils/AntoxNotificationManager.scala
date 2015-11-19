@@ -37,6 +37,18 @@ object AntoxNotificationManager {
     mNotificationManager.foreach(_.cancelAll())
   }
 
+  def addAvatarToNotification(builder: NotificationCompat.Builder, key: ToxKey): Unit = {
+    AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
+    if (key.getClass == classOf[FriendKey]) {
+      val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
+      if (friendInfo.avatar.isDefined) {
+        val bitmapOptions = new BitmapFactory.Options()
+        val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bitmapOptions)
+        builder.setLargeIcon(BitmapUtils.getCircleBitmap(BitmapUtils.getCroppedBitmap(bitmap, recycle = false)))
+      }
+    }
+  }
+
   def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: ToxNickname, content: String, count: Int = 0): Unit = {
     AntoxLog.debug(s"Creating message notification, $name, $content")
 
@@ -50,15 +62,7 @@ object AntoxNotificationManager {
 
       addAlerts(notificationBuilder, preferences)
 
-      AntoxLog.debug("Key class: " + key.getClass.getSimpleName)
-      if (key.getClass == classOf[FriendKey]) {
-        val friendInfo = State.db.getFriendInfo(key.asInstanceOf[FriendKey])
-        if (friendInfo.avatar.isDefined) {
-          val bmOptions = new BitmapFactory.Options()
-          val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bmOptions)
-          notificationBuilder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap))
-        }
-      }
+      addAvatarToNotification(notificationBuilder, key)
 
       if (count > 0) {
         val countStr: String =
@@ -70,7 +74,6 @@ object AntoxNotificationManager {
       }
 
       val resultIntent = new Intent(ctx, intentClass)
-      resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
       resultIntent.putExtra("key", key.toString)
       resultIntent.putExtra("name", new String(name.value))
@@ -81,7 +84,9 @@ object AntoxNotificationManager {
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
-      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
+
+      val mNotificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+      mNotificationManager.notify(generateNotificationId(key), notificationBuilder.build())
     }
   }
 
@@ -197,7 +202,7 @@ object AntoxNotificationManager {
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
     var defaults = 0
     if (checkPreference(preferences, "notifications_sound")) defaults |= Notification.DEFAULT_SOUND
-    if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE
+    if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE else builder.setVibrate(Array(0L))
     if (checkPreference(preferences, "notifications_light")) defaults |= Notification.DEFAULT_LIGHTS
     if (defaults != 0) builder.setDefaults(defaults)
   }
