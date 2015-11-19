@@ -15,6 +15,8 @@ import com.balysv.materialripple.MaterialRippleLayout
 
 class LeftPaneFragment extends Fragment {
 
+  var pager: ViewPager = _
+
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) with CustomTabProvider {
 
     val ICONS: Array[Int] = Array(R.drawable.ic_chat_white_24dp, R.drawable.ic_person_white_24dp)
@@ -60,16 +62,27 @@ class LeftPaneFragment extends Fragment {
     override def getCount: Int = 2
   }
 
+
+  override def onSaveInstanceState(outState: Bundle): Unit = {
+    super.onSaveInstanceState(outState)
+    if (pager != null) outState.putInt("tab_position", pager.getCurrentItem)
+  }
+
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val thisActivity = this.getActivity.asInstanceOf[MainActivity]
     val actionBar = thisActivity.getSupportActionBar
     ThemeManager.applyTheme(thisActivity, actionBar)
 
     val rootView = inflater.inflate(R.layout.fragment_leftpane, container, false)
-    val pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
+    pager = rootView.findViewById(R.id.pager).asInstanceOf[ViewPager]
     val tabs = rootView.findViewById(R.id.pager_tabs).asInstanceOf[PagerSlidingTabStrip]
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
+
+    val defaultViewPagerTab = 1
+    pager.setCurrentItem(Option(savedInstanceState)
+      .map(_.getInt("tab_position", defaultViewPagerTab))
+      .getOrElse(defaultViewPagerTab)) // start on contacts view by default
 
     tabs.setViewPager(pager)
     tabs.setBackgroundColor(ThemeManager.primaryColor)
