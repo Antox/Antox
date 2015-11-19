@@ -85,12 +85,12 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
   def getStatus: ToxUserStatus = tox.getStatus
 
   def addFriend(address: ToxAddress, message: ToxFriendRequestMessage): Int = {
-    val friendNumber = tox.addFriend(ToxFriendAddress.unsafeFromByteArray(address.bytes), message)
+    val friendNumber = tox.addFriend(ToxFriendAddress.unsafeFromValue(address.bytes), message)
    friendNumber
   }
 
   def addFriendNoRequest(key: ToxKey): Int = {
-    val friendNumber = tox.addFriendNorequest(ToxPublicKey.unsafeFromByteArray(key.bytes))
+    val friendNumber = tox.addFriendNorequest(ToxPublicKey.unsafeFromValue(key.bytes))
      friendNumber
   }
 
@@ -98,7 +98,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
      tox.deleteFriend(getFriendNumber(friendKey))
   }
 
-  def getFriendNumber(key: FriendKey): Int = tox.friendByPublicKey(ToxPublicKey.unsafeFromByteArray(key.bytes))
+  def getFriendNumber(key: FriendKey): Int = tox.friendByPublicKey(ToxPublicKey.unsafeFromValue(key.bytes))
 
   def getFriendKey(friendNumber: Int): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).value)
 

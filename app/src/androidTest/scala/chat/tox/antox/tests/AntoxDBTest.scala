@@ -35,7 +35,7 @@ class AntoxDBTest extends AndroidTestCase {
   val selfKey = new SelfKey("11BB3CCDD46346EAA76FF935F1CB31CDC11C56803F1077745124A1C7C63F7E67")
 
   val friendKey = new FriendKey("828435142ACE09E8677427E6180BFB27E38FB589A3B84C24976AE49F80A69C68")
-  val name = ToxNickname.unsafeFromByteArray("Steve Appleseed".getBytes)
+  val name = ToxNickname.unsafeFromValue("Steve Appleseed".getBytes)
   val alias = "Steve"
   val statusMessage = "This is my status"
 

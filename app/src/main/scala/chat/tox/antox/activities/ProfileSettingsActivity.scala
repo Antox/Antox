@@ -350,7 +350,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "nickname" =>
         val name = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setName(ToxNickname.unsafeFromByteArray(name.getBytes))
+          ToxSingleton.tox.setName(ToxNickname.unsafeFromValue(name.getBytes))
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
@@ -373,7 +373,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       case "status_message" =>
         val statusMessage = sharedPreferences.getString(key, "")
         try {
-          ToxSingleton.tox.setStatusMessage(ToxStatusMessage.unsafeFromByteArray(sharedPreferences.getString(statusMessage, "").getBytes))
+          ToxSingleton.tox.setStatusMessage(ToxStatusMessage.unsafeFromValue(sharedPreferences.getString(statusMessage, "").getBytes))
         } catch {
           case e: ToxException[_] => e.printStackTrace()
         }
