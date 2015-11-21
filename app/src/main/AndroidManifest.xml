@@ -55,7 +55,7 @@
             android:name="chat.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AntoxTheme.ActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden">
         </activity>
         <activity
             android:name="chat.tox.antox.activities.LoginActivity"

@@ -44,7 +44,7 @@ object AntoxNotificationManager {
       if (friendInfo.avatar.isDefined) {
         val bitmapOptions = new BitmapFactory.Options()
         val bitmap = BitmapFactory.decodeFile(friendInfo.avatar.get.getAbsolutePath, bitmapOptions)
-        builder.setLargeIcon(BitmapUtils.getCroppedBitmap(bitmap, recycle = false))
+        builder.setLargeIcon(BitmapUtils.getCircleBitmap(BitmapUtils.getCroppedBitmap(bitmap, recycle = false)))
       }
     }
   }
@@ -74,7 +74,6 @@ object AntoxNotificationManager {
       }
 
       val resultIntent = new Intent(ctx, intentClass)
-      resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
       resultIntent.putExtra("key", key.toString)
       resultIntent.putExtra("name", new String(name.value))
@@ -85,7 +84,9 @@ object AntoxNotificationManager {
       val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
-      mNotificationManager.foreach(_.notify(generateNotificationId(key), notificationBuilder.build()))
+
+      val mNotificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+      mNotificationManager.notify(generateNotificationId(key), notificationBuilder.build())
     }
   }
 
@@ -201,7 +202,7 @@ object AntoxNotificationManager {
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
     var defaults = 0
     if (checkPreference(preferences, "notifications_sound")) defaults |= Notification.DEFAULT_SOUND
-    if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE
+    if (checkPreference(preferences, "notifications_vibrate")) defaults |= Notification.DEFAULT_VIBRATE else builder.setVibrate(Array(0L))
     if (checkPreference(preferences, "notifications_light")) defaults |= Notification.DEFAULT_LIGHTS
     if (defaults != 0) builder.setDefaults(defaults)
   }
