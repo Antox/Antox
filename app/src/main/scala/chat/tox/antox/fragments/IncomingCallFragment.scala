@@ -1,7 +1,7 @@
 package chat.tox.antox.fragments
 
 import android.content.Context
-import android.media.{RingtoneManager, AudioManager, MediaPlayer}
+import android.media.{AudioManager, MediaPlayer, RingtoneManager}
 import android.os.{Bundle, Vibrator}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
@@ -10,7 +10,22 @@ import chat.tox.antox.av.Call
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.ContactKey
 
-class IncomingCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFragment(call, activeKey, R.layout.fragment_incoming_call) {
+object IncomingCallFragment {
+
+  def newInstance(call: Call, activeKey: ContactKey): IncomingCallFragment = {
+    val incomingCallFragment = new IncomingCallFragment()
+
+    val bundle = new Bundle()
+    bundle.putInt(CommonCallFragment.EXTRA_CALL_NUMBER, call.callNumber.value)
+    bundle.putString(CommonCallFragment.EXTRA_ACTIVE_KEY, activeKey.toString)
+    bundle.putInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT, R.layout.fragment_incoming_call)
+    incomingCallFragment.setArguments(bundle)
+
+    incomingCallFragment
+  }
+}
+
+class IncomingCallFragment extends CommonCallFragment {
 
   var vibrator: Vibrator = _
   val vibrationPattern = Array[Long](0, 1000, 1000) //wait 0ms vibrate 1000ms off 1000ms
@@ -18,6 +33,8 @@ class IncomingCallFragment(call: Call, activeKey: ContactKey) extends CommonCall
   var audioManager: AudioManager = _
 
   var answerCallButton: View = _
+
+  var maybeRingtone: Option[MediaPlayer] = None
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -30,11 +47,18 @@ class IncomingCallFragment(call: Call, activeKey: ContactKey) extends CommonCall
     val maybeRingtoneUri = Option(RingtoneManager.getActualDefaultRingtoneUri(getActivity, RingtoneManager.TYPE_RINGTONE))
 
     maybeRingtoneUri.foreach(ringtoneUri => {
-      val ringtone = new MediaPlayer()
-      ringtone.setDataSource(getActivity, ringtoneUri)
-      ringtone.setAudioStreamType(AudioManager.STREAM_RING)
-      ringtone.setLooping(true)
-      ringtone.prepare()
+      val ringtone =
+        try {
+          val tempRingtone = new MediaPlayer()
+          tempRingtone.setDataSource(getActivity, ringtoneUri)
+          tempRingtone.setAudioStreamType(AudioManager.STREAM_RING)
+          tempRingtone.setLooping(true)
+          tempRingtone.prepare()
+          tempRingtone
+        } catch {
+          case e: Exception =>
+            MediaPlayer.create(getActivity, R.raw.incoming_call)
+        }
       maybeRingtone = Some(ringtone)
     })
   }
@@ -66,6 +90,6 @@ class IncomingCallFragment(call: Call, activeKey: ContactKey) extends CommonCall
   override def onDestroy(): Unit = {
     super.onDestroy()
     vibrator.cancel()
-    maybeRingtone.foreach(_.stop())
+    maybeRingtone.foreach(_.release())
   }
 }

@@ -7,7 +7,6 @@ import chat.tox.antox.utils.Constants
 class NotificationHandlerActivity extends Activity {
 
   val callReceiver = new BroadcastReceiver() {
-
     override def onReceive(context: Context, intent: Intent) {
       val actionName = intent.getAction
       println("we got close")
@@ -18,5 +17,5 @@ class NotificationHandlerActivity extends Activity {
     }
   }
 
-  registerReceiver(callReceiver, new IntentFilter("call_method"))
+  registerReceiver(callReceiver, new IntentFilter(Constants.END_CALL))
 }

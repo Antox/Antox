@@ -1,5 +1,7 @@
 package chat.tox.antox.av
 
+import java.util.concurrent.TimeUnit
+
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{AntoxLog, AudioCapture}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey}
@@ -7,6 +9,8 @@ import im.tox.tox4j.av._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.subjects.BehaviorSubject
+
+import scala.concurrent.duration.Duration
 
 class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
@@ -20,6 +24,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private val audioLength = AudioLength.Length20 //in microseconds
   private val channels = AudioChannels.Stereo
 
+  val defaultRingTime = Duration(30, TimeUnit.SECONDS)
   val ringing = BehaviorSubject[Boolean](false)
   var incoming = false
 
@@ -31,7 +36,11 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
    * When the call is on hold or ringing (not yet answered) this will return true.
    */
   def active: Boolean = {
-    !friendState.contains(ToxavFriendCallState.FINISHED) && !friendState.contains(ToxavFriendCallState.ERROR)
+    isActive(friendState)
+  }
+
+  def isActive(state: Set[ToxavFriendCallState]): Boolean = {
+    !state.contains(ToxavFriendCallState.FINISHED) && !state.contains(ToxavFriendCallState.ERROR)
   }
 
   def onHold: Boolean = friendState.isEmpty
@@ -44,10 +53,13 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
   
   def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
+    logCallEvent(s"started sending audio:$sendingAudio and video:$sendingVideo")
     ToxSingleton.toxAv.call(
       callNumber.value,
       if (sendingAudio) selfState.audioBitRate else BitRate.Disabled,
       if (sendingVideo) selfState.videoBitRate else BitRate.Disabled)
+
+    endAfterTime(defaultRingTime)
 
     incoming = false
     ringing.onNext(true)
@@ -64,15 +76,27 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
     logCallEvent(s"incoming receiving audio:$receivingAudio and video:$receivingVideo")
 
+    endAfterTime(defaultRingTime)
+
     incoming = true
     ringing.onNext(true)
     selfState = selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo)
+  }
+  
+  def endAfterTime(ringTime: Duration): Unit = {
+    //end the call after `ringTime`
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        Thread.sleep(ringTime.toMillis)
+        if (active && ringing.getValue) end(false)
+      }
+    }).start()
   }
 
   def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {
     logCallEvent(s"friend call state updated to $state")
 
-    if (friendState.isEmpty && state.nonEmpty && !incoming) {
+    if (friendState.isEmpty && isActive(state) && !incoming) {
       callStarted()
       ringing.onNext(false)
     }
@@ -108,8 +132,8 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
           }
 
           val timeTaken = System.currentTimeMillis() - start
-          if (timeTaken < audioLength.toMicros / 1000)
-            Thread.sleep((audioLength.toMicros / 1000) - timeTaken)
+          if (timeTaken < audioLength.value.toMillis)
+            Thread.sleep(audioLength.value.toMillis - timeTaken)
         }
 
         logCallEvent(s"audio encoded thread stopped")
@@ -165,9 +189,9 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     // only send a call control if the call wasn't ended unexpectedly
     if (!error) {
       ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL)
-    } else {
-      updateFriendState(Set(ToxavFriendCallState.FINISHED))
     }
+
+    updateFriendState(Set(ToxavFriendCallState.FINISHED))
 
     audioCapture.stop()
     cleanUp()

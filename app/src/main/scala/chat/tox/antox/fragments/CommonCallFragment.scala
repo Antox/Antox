@@ -1,6 +1,7 @@
 package chat.tox.antox.fragments
 
-import android.media.MediaPlayer
+import android.media.{AudioManager, MediaPlayer}
+import android.media.MediaPlayer.OnCompletionListener
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View.OnClickListener
@@ -9,13 +10,23 @@ import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.BitmapManager
-import chat.tox.antox.wrapper.{ContactKey, FriendInfo}
+import chat.tox.antox.utils.{MediaUtils, BitmapManager}
+import chat.tox.antox.wrapper.{FriendKey, CallNumber, ContactKey, FriendInfo}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
 
-abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout: Int) extends Fragment {
+object CommonCallFragment {
+  val EXTRA_CALL_NUMBER = "call_number"
+  val EXTRA_ACTIVE_KEY = "active_key"
+  val EXTRA_FRAGMENT_LAYOUT = "fragment_layout"
+}
+
+abstract class CommonCallFragment extends Fragment {
+
+  var call: Call = _
+  var activeKey: ContactKey = _
+  var callLayout: Int = _
 
   var callStateView: TextView = _
   var nameView: TextView = _
@@ -24,13 +35,20 @@ abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout:
   var endCallButton: View = _
 
   var maybeCallNotification: Option[OngoingCallNotification] = None
-
-  var maybeRingtone: Option[MediaPlayer] = None
+  var callEndedSound: MediaPlayer = _
 
   val compositeSubscription = CompositeSubscription()
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
+
+    call =
+      State.callManager.get(CallNumber(getArguments.getInt(CommonCallFragment.EXTRA_CALL_NUMBER)))
+        .getOrElse(throw new IllegalStateException("Call fragment extras must be valid."))
+    activeKey = FriendKey(getArguments.getString(CommonCallFragment.EXTRA_ACTIVE_KEY))
+    callLayout = getArguments.getInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT)
+
+    callEndedSound = MediaUtils.setupSound(getActivity, R.raw.end_call, AudioManager.STREAM_VOICE_CALL, looping = false)
   }
 
   private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
@@ -65,8 +83,7 @@ abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout:
     endCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
         call.end()
-
-        onCallEnded()
+        endCallButton.setEnabled(false) //don't let the user press end call more than once
       }
     })
 
@@ -93,6 +110,13 @@ abstract class CommonCallFragment(call: Call, activeKey: ContactKey, callLayout:
   // Called when the call ends (both by the user and by friend)
   def onCallEnded(): Unit = {
     getActivity.finish()
+
+    callEndedSound.start()
+    callEndedSound.setOnCompletionListener(new OnCompletionListener {
+      override def onCompletion(mediaPlayer: MediaPlayer): Unit = {
+        callEndedSound.release()
+      }
+    })
   }
 
   override def onDestroy(): Unit = {

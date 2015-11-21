@@ -5,7 +5,6 @@ import java.util.Locale
 import android.app.{AlertDialog, NotificationManager}
 import android.content.res.Configuration
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
-import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
@@ -13,10 +12,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import chat.tox.antox.R
-import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils._
 
 class MainActivity extends AppCompatActivity {
@@ -43,9 +40,6 @@ class MainActivity extends AppCompatActivity {
     getSupportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
-
-    // The app will control the voice call audio level
-    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL)
 
     // Fix for Android 4.1.x
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&

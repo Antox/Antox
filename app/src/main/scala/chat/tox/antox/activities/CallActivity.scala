@@ -1,10 +1,11 @@
 package chat.tox.antox.activities
 
-import android.content.Context
+import android.content.{Intent, Context}
+import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.os.{Build, Bundle, PowerManager}
 import android.support.v4.app.FragmentActivity
-import android.view.{ViewAnimationUtils, View, ViewTreeObserver, WindowManager}
+import android.view.{View, ViewAnimationUtils, ViewTreeObserver, WindowManager}
 import android.widget.FrameLayout
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
@@ -48,6 +49,13 @@ class CallActivity extends FragmentActivity {
 
     setContentView(R.layout.activity_call)
 
+
+    activeKey = new FriendKey(getIntent.getStringExtra("key"))
+    val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
+    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
+
+    setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[ClickLocation])
 
     rootLayout = findViewById(R.id.call_fragment_container).asInstanceOf[FrameLayout]
@@ -76,10 +84,6 @@ class CallActivity extends FragmentActivity {
         AntoxLog.DEFAULT_TAG.toString))
     }
 
-    activeKey = new FriendKey(getIntent.getStringExtra("key"))
-    val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
-    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
-
     registerSubscriptions()
   }
 
@@ -103,22 +107,28 @@ class CallActivity extends FragmentActivity {
       call.ringing.distinctUntilChanged.subscribe(ringing => {
         if (ringing && call.incoming) {
           val fragmentTransaction = getSupportFragmentManager.beginTransaction()
-          fragmentTransaction.add(R.id.call_fragment_container, new IncomingCallFragment(call, activeKey))
+          fragmentTransaction.add(R.id.call_fragment_container, IncomingCallFragment.newInstance(call, activeKey))
           fragmentTransaction.commit()
         } else {
           val fragmentTransaction = getSupportFragmentManager.beginTransaction()
-          fragmentTransaction.replace(R.id.call_fragment_container, new ActiveCallFragment(call, activeKey))
+          fragmentTransaction.replace(R.id.call_fragment_container, ActiveCallFragment.newInstance(call, activeKey))
           fragmentTransaction.commit()
         }
       })
   }
 
   def setupOnHold(): Unit = {
-    //NA TODO
+    //N/A TODO
   }
 
   def hideViewOnHold(): Unit = {
-    //NA TODO
+    //N/A TODO
+  }
+
+
+  override def onNewIntent(intent: Intent): Unit = {
+    super.onNewIntent(intent)
+    call.end()
   }
 
   override def onResume(): Unit = {

@@ -109,8 +109,8 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     /**
      * Write the queue out using a custom routine.
      *
-     * @param out  the output stream
-     * @throws IOException if an I/O error occurs while writing to the output stream
+     * @param out  the incoming_call stream
+     * @throws IOException if an I/O error occurs while writing to the incoming_call stream
      */
     private void writeObject(final ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
@@ -124,7 +124,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      * Read the queue in using a custom routine.
      *
      * @param in  the input stream
-     * @throws IOException if an I/O error occurs while writing to the output stream
+     * @throws IOException if an I/O error occurs while writing to the incoming_call stream
      * @throws ClassNotFoundException if the class of a serialized object can not be found
      */
     @SuppressWarnings("unchecked")

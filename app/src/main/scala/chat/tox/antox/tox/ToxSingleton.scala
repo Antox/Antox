@@ -189,8 +189,8 @@ object ToxSingleton {
       tox.setStatus(newStatus)
     } catch {
       case e: ToxException[_] =>
-    } finally {
     }
+
     updateDhtNodes(ctx)
   }
 

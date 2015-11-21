@@ -9,7 +9,6 @@ class AntoxOnAudioReceiveFrameCallback(private var ctx: Context) {
 
   var lastReceivedFrame: Long = 0
   def audioReceiveFrame(callNumber: CallNumber, pcm: Array[Short], channels: AudioChannels, samplingRate: SamplingRate)(state: Unit): Unit = {
-    println("Time since last frame " + (System.currentTimeMillis() - lastReceivedFrame))
     lastReceivedFrame = System.currentTimeMillis()
     State.callManager.get(callNumber).foreach(_.onAudioFrame(pcm, channels, samplingRate))
   }

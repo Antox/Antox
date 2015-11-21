@@ -1,6 +1,7 @@
 package chat.tox.antox.fragments
 
-import android.media.AudioManager
+import android.media.MediaPlayer.OnPreparedListener
+import android.media.{AudioManager, MediaPlayer}
 import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
@@ -8,13 +9,30 @@ import android.widget.{Chronometer, ImageButton}
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
+import chat.tox.antox.utils.MediaUtils
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
-class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFragment(call, activeKey, R.layout.fragment_call) {
+object ActiveCallFragment {
+  def newInstance(call: Call, activeKey: ContactKey): ActiveCallFragment = {
+    val activeCallFragment = new ActiveCallFragment()
+
+    val bundle = new Bundle()
+    bundle.putInt(CommonCallFragment.EXTRA_CALL_NUMBER, call.callNumber.value)
+    bundle.putString(CommonCallFragment.EXTRA_ACTIVE_KEY, activeKey.toString)
+    bundle.putInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT, R.layout.fragment_call)
+    activeCallFragment.setArguments(bundle)
+
+    activeCallFragment
+  }
+}
+
+class ActiveCallFragment extends CommonCallFragment {
 
   var durationView: Chronometer = _
   var allToggleButtons: List[ImageButton] = _
+
+  var ringbackToneSound: MediaPlayer = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -24,7 +42,9 @@ class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFr
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val rootView = super.onCreateView(inflater, container, savedInstanceState)
-    
+
+    ringbackToneSound = MediaUtils.setupSound(getActivity, R.raw.ringback_tone, AudioManager.STREAM_VOICE_CALL, looping = true)
+
     /* Set up the speaker/mic buttons */
     val micOn = rootView.findViewById(R.id.mic_on).asInstanceOf[ImageButton]
     val micOff = rootView.findViewById(R.id.mic_off).asInstanceOf[ImageButton]
@@ -88,13 +108,20 @@ class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFr
   }
 
   def setupOutgoing(): Unit = {
+    ringbackToneSound.setLooping(true)
+    ringbackToneSound.setOnPreparedListener(new OnPreparedListener {
+      override def onPrepared(mp: MediaPlayer): Unit = {
+        ringbackToneSound.start()
+      }
+    })
+
     callStateView.setVisibility(View.VISIBLE)
     callStateView.setText(R.string.call_ringing)
     durationView.setVisibility(View.GONE)
   }
 
   def setupActive(): Unit = {
-    maybeRingtone.foreach(_.stop())
+    ringbackToneSound.stop()
 
     maybeCallNotification = Some(new OngoingCallNotification(getActivity, activeKey, call))
 
@@ -109,6 +136,8 @@ class ActiveCallFragment(call: Call, activeKey: ContactKey) extends CommonCallFr
 
   override def onDestroy(): Unit = {
     super.onDestroy()
+
     durationView.stop()
+    ringbackToneSound.release()
   }
 }
