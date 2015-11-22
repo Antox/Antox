@@ -49,7 +49,6 @@ class CallActivity extends FragmentActivity {
 
     setContentView(R.layout.activity_call)
 
-
     activeKey = new FriendKey(getIntent.getStringExtra("key"))
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
     call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))

@@ -5,7 +5,7 @@
         android:id="@+id/call_avatar"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:src="@drawable/login_bg"
+        android:src="@drawable/default_avatar"
         android:layout_marginTop="60dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/friend_name"
-        android:text="Subli Une"
+        android:text=""
         android:textStyle="bold"
         android:textColor="@color/grey_darkest"
         android:singleLine="true"

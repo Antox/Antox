@@ -1,7 +1,7 @@
 package chat.tox.antox.fragments
 
-import android.media.{AudioManager, MediaPlayer}
 import android.media.MediaPlayer.OnCompletionListener
+import android.media.{AudioManager, MediaPlayer}
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View.OnClickListener
@@ -10,10 +10,9 @@ import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{MediaUtils, BitmapManager}
-import chat.tox.antox.wrapper.{FriendKey, CallNumber, ContactKey, FriendInfo}
+import chat.tox.antox.utils.{BitmapManager, MediaUtils}
+import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 object CommonCallFragment {
@@ -60,7 +59,8 @@ abstract class CommonCallFragment extends Fragment {
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
-          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+          val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
+          avatarView.setImageBitmap(bitmap)
         })
 
       case None =>
@@ -98,8 +98,6 @@ abstract class CommonCallFragment extends Fragment {
     // update displayed friend info on change
     compositeSubscription +=
       State.db.friendInfoList
-        .subscribeOn(IOScheduler())
-        .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
           updateDisplayedState(fi)
         })

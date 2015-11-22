@@ -11,7 +11,6 @@ import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.MediaUtils
 import chat.tox.antox.wrapper.ContactKey
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 object ActiveCallFragment {
   def newInstance(call: Call, activeKey: ContactKey): ActiveCallFragment = {
@@ -70,9 +69,8 @@ class ActiveCallFragment extends CommonCallFragment {
 
     compositeSubscription +=
       State.db.friendInfoList
-        .subscribeOn(IOScheduler())
-        .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
+          println("SUBSCRIPTION TRIGGERED")
           for {
             friend <- fi.find(f => f.key == activeKey)
             callNotification <- maybeCallNotification
@@ -81,6 +79,8 @@ class ActiveCallFragment extends CommonCallFragment {
             callNotification.show()
           }
         })
+
+    println("GOT TO POST COMPOSITE SUBSCRIPTION ADD THING")
 
     compositeSubscription +=
       call.ringing.distinctUntilChanged.subscribe(ringing => {

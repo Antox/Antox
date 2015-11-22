@@ -91,8 +91,7 @@ object BitmapManager {
   }
 
   /**
-   * Will decode the byte Array and proceed to return the bitmap or null if the byte array
-   * could not be decoded
+   * Will decode the byte Array and proceed to return true if the bitmap is valid.
    */
   def decodeAndCheck(byteArr: Array[Byte], options: BitmapOptions): Boolean = {
     options.inJustDecodeBounds = true
@@ -178,22 +177,27 @@ object BitmapManager {
   }
 
   def load(file: File, isAvatar: Boolean): Observable[Bitmap] = {
-    val imageKey = getImageKey(file)
-    AntoxLog.debug(imageKey.toString, TAG)
-
     Observable[Bitmap](sub => {
-      sub.onNext(getFromCache(isAvatar, imageKey) match {
-        case Some(bitmap) =>
-          AntoxLog.debug("Loading Bitmap image from cache", TAG)
-          bitmap
+      sub.onNext(loadBlocking(file, isAvatar))
 
-        case None =>
-          AntoxLog.debug("Decoding Bitmap image", TAG)
-          decodeBitmap(file, imageKey, isAvatar)
-      })
       sub.onCompleted()
     }).subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
+  }
+
+  def loadBlocking(file: File, isAvatar: Boolean): Bitmap = {
+    val imageKey = getImageKey(file)
+    AntoxLog.debug(imageKey.toString, TAG)
+
+    getFromCache(isAvatar, imageKey) match {
+      case Some(bitmap) =>
+        AntoxLog.debug("Loading Bitmap image from cache", TAG)
+        bitmap
+
+      case None =>
+        AntoxLog.debug("Decoding Bitmap image", TAG)
+        decodeBitmap(file, imageKey, isAvatar)
+    }
   }
 }
 

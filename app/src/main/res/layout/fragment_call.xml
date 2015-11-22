@@ -74,19 +74,7 @@
             android:background="@drawable/background_circle"/>
     </LinearLayout>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/end_call_circle"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_call_end_white_36dp"
-        app:backgroundTint="@color/red"
-        android:scaleType="fitXY"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"/>
-
-    <!--    <com.balysv.materialripple.MaterialRippleLayout
+    <com.balysv.materialripple.MaterialRippleLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -97,6 +85,7 @@
                 android:id="@+id/end_call_frame"
                 android:layout_width="72dp"
                 android:layout_height="72dp">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/end_call_circle"
                     android:layout_width="match_parent"
@@ -109,6 +98,5 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_call_end_white_36dp" />
             </FrameLayout>
-    </com.balysv.materialripple.MaterialRippleLayout> -->
-
+    </com.balysv.materialripple.MaterialRippleLayout>
 </RelativeLayout>
