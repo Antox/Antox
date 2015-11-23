@@ -1,90 +1,95 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
     android:background="@color/white"
     android:gravity="center_horizontal"
-    android:layout_gravity="center_horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="chat.tox.antox.CallActivity">
 
-    <include layout="@layout/call_upper_half"/>
+    <include layout="@layout/call_upper_half" />
 
     <LinearLayout
+        android:id="@+id/call_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:id="@+id/call_button_container"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:weightSum="2">
 
         <FrameLayout
             android:id="@+id/end_call_frame"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/end_call_circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@color/red"/>
+                android:src="@color/red" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_call_end_white_36dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:src="@drawable/ic_call_end_white_36dp" />
         </FrameLayout>
 
         <FrameLayout
             android:id="@+id/answer_call_frame"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="14dp">
+            android:layout_marginBottom="14dp"
+            android:layout_weight="1">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/answer_call_circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@color/green"/>
+                android:src="@color/green" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_call_white_36dp"/>
+                android:src="@drawable/ic_call_white_36dp" />
         </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/incoming_call_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/call_button_container"
         android:layout_centerHorizontal="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:orientation="vertical"
         android:paddingBottom="15dp">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_send"
             android:layout_gravity="center"
-            android:tint="#000000"
+            android:adjustViewBounds="true"
             android:cropToPadding="false"
-            android:adjustViewBounds="true" />
+            android:src="@drawable/ic_send"
+            android:tint="#000000" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="true"
             android:layout_gravity="center"
-            android:textSize="@dimen/text_smallish"
+            android:allowUndo="false"
             android:text="@string/call_incoming_reply_with_message"
-            android:allowUndo="false" />
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_smallish" />
     </LinearLayout>
 </RelativeLayout>

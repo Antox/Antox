@@ -11,13 +11,15 @@ import chat.tox.antox.R
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.{ActiveCallFragment, IncomingCallFragment}
+import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import im.tox.tox4j.core.enums.ToxMessageType
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 import scala.language.postfixOps
 
-class CallActivity extends FragmentActivity {
+class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   var call: Call = _
   var activeKey: ContactKey = _
@@ -124,6 +126,21 @@ class CallActivity extends FragmentActivity {
     //N/A TODO
   }
 
+  override def onCallReplySelected(maybeReply: Option[String]): Unit = {
+    maybeReply match {
+      case Some(reply) =>
+        //FIXME when group calls are implemented
+        MessageHelper.sendMessage(this, activeKey.asInstanceOf[FriendKey], reply, ToxMessageType.NORMAL, None)
+
+      case None =>
+        val intent = new Intent(this, classOf[ChatActivity])
+        intent.setAction(Constants.SWITCH_TO_FRIEND)
+        intent.putExtra("key", activeKey.toString)
+        startActivity(intent)
+    }
+
+    call.end()
+  }
 
   override def onNewIntent(intent: Intent): Unit = {
     super.onNewIntent(intent)

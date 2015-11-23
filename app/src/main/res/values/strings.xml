@@ -190,6 +190,10 @@
     <string name="titles_contacts">Contacts</string>
     <string name="titles_settings">Settings</string>
 
+    <!-- Edit Call Replies -->
+    <string name="title_activity_edit_call_replies">Edit quick call replies</string>
+    <string name="edit_call_reply_title">Edit quick reply</string>
+
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
     <string name="button_cancel">Cancel</string>
@@ -238,6 +242,14 @@
     <string name="call_incoming_video">Incoming video call…</string>
     <string name="call_incoming_voice">Incoming voice call…</string>
     <string name="call_incoming_reply_with_message">Reply</string>
+    <string name="call_incoming_reply_dialog_title">Reply with message</string>
+    <string name="call_incoming_reply_dialog_custom">Custom…</string>
+    <string-array name="call_incoming_reply_message_choices">
+        <item>Can\'t talk now. What\'s up?</item>
+        <item>I\'ll call you right back.</item>
+        <item>I\'ll call you later.</item>
+        <item>I\'m on my way.</item>
+    </string-array>
 
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>

@@ -1,6 +1,5 @@
 package chat.tox.antox.activities
 
-import android.app.NotificationManager
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceManager}
@@ -12,9 +11,6 @@ import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.utils.{AntoxNotificationManager, Options}
-import chat.tox.antox.wrapper.UserStatus
-import im.tox.tox4j.core.enums.ToxUserStatus
-import rx.lang.scala.Notification
 
 object SettingsActivity {
 
@@ -83,6 +79,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     }
 
     findPreference("theme_color").setOnPreferenceClickListener(this)
+    findPreference("call_replies").setOnPreferenceClickListener(this)
     bindPreferenceSummaryToValue(findPreference("locale"))
   }
 
@@ -156,7 +153,14 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   }
 
   override def onPreferenceClick(preference: Preference): Boolean = {
-    showThemeDialog()
+    preference.getKey match {
+      case "theme_color" =>
+        showThemeDialog()
+      case "call_replies" =>
+        launchCallRepliesActivity()
+      case _ => //do nothing
+    }
+
     true
   }
 
@@ -166,5 +170,10 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       case -1 => None
       case _ => Some(currentColor)
     })
+  }
+
+  def launchCallRepliesActivity(): Unit = {
+    val intent = new Intent(this, classOf[EditCallRepliesActivity])
+    startActivity(intent)
   }
 }

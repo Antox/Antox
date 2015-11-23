@@ -5,7 +5,9 @@ import android.media.{AudioManager, MediaPlayer, RingtoneManager}
 import android.os.{Bundle, Vibrator}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
+import android.widget.LinearLayout
 import chat.tox.antox.R
+import chat.tox.antox.activities.CallReplyDialog
 import chat.tox.antox.av.Call
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.ContactKey
@@ -74,6 +76,14 @@ class IncomingCallFragment extends CommonCallFragment {
     answerCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
         call.answerCall(receivingAudio = true, receivingVideo = false)
+      }
+    })
+
+    val replyButton = rootView.findViewById(R.id.incoming_call_reply).asInstanceOf[LinearLayout]
+    replyButton.setOnClickListener(new OnClickListener {
+      override def onClick(v: View): Unit = {
+        val callReplyDialogTag = "call_reply_dialog"
+        new CallReplyDialog().show(getFragmentManager, callReplyDialogTag)
       }
     })
 

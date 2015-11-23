@@ -196,6 +196,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def onClickVoiceCall(clickLocation: ClickLocation): Unit = {
     if (!State.db.getFriendInfo(activeKey).online) return
 
+    //TODO HANDLE CALL BEING ACTIVE ALREADY (other contact, this contact, etc)
     val callActivity = new Intent(this, classOf[CallActivity])
     val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
     State.callManager.add(call)

@@ -52,6 +52,8 @@
     <string name="pref_description_notification_vibrate">Vibrate</string>
     <string name="pref_description_notification_sound">Play sound</string>
 
+    <!-- Calls -->
+    <string name="pref_header_calls">Calls</string>
 
     <!-- Network -->
     <string name="pref_header_network">Network</string>

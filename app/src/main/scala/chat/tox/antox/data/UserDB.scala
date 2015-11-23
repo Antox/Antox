@@ -10,7 +10,7 @@ import chat.tox.antox.data.UserDB.DatabaseHelper
 import chat.tox.antox.toxme.ToxMeName
 import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
-import chat.tox.antox.wrapper.{ToxAddress, UserInfo}
+import chat.tox.antox.wrapper.{CallReply, ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
 import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
 import org.scaloid.common.LoggerTag
@@ -37,9 +37,15 @@ object UserDB {
          |$COLUMN_NAME_LOGGING_ENABLED boolean,
          |$COLUMN_NAME_TOXME_DOMAIN text);""".stripMargin
 
+    private val CREATE_TABLE_CALL_REPLIES: String =
+      s"""CREATE TABLE IF NOT EXISTS $TABLE_CALL_REPLIES ( _id integer primary key ,
+         |$COLUMN_NAME_PROFILE_NAME text,
+         |$COLUMN_NAME_CALL_REPLY text,
+         |FOREIGN KEY($COLUMN_NAME_PROFILE_NAME) REFERENCES $TABLE_USERS($COLUMN_NAME_PROFILE_NAME))""".stripMargin
 
     override def onCreate(db: SQLiteDatabase) {
       db.execSQL(CREATE_TABLE_USERS)
+      db.execSQL(CREATE_TABLE_CALL_REPLIES)
     }
 
     override def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
@@ -57,6 +63,8 @@ object UserDB {
           case 4 =>
             db.execSQL(s"ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_NAME_TOXME_DOMAIN text")
             db.execSQL(s"UPDATE $TABLE_USERS SET $COLUMN_NAME_TOXME_DOMAIN = 'toxme.io' ")
+          case 5 =>
+            db.execSQL(CREATE_TABLE_CALL_REPLIES)
           case _ =>
         }
       }
@@ -134,11 +142,23 @@ class UserDB(ctx: Context) {
     values.put(COLUMN_NAME_TOXME_DOMAIN, toxMeName.domain.getOrElse(""))
     mDb.insert(TABLE_USERS, values)
 
+    addDefaultCallReplies(toxMeName.username)
+
     val editor = preferences.edit()
     editor.putString("tox_id", toxId.toString)
     editor.putBoolean("logging_enabled", true)
     editor.putBoolean("autostart", true)
     editor.commit()
+  }
+
+  def addDefaultCallReplies(profileName: String): Unit = {
+    val values = new ContentValues()
+    for (reply <- ctx.getResources.getStringArray(R.array.call_incoming_reply_message_choices)) {
+      values.put(COLUMN_NAME_PROFILE_NAME, profileName)
+      values.put(COLUMN_NAME_CALL_REPLY, reply)
+      mDb.insert(TABLE_CALL_REPLIES, values)
+      values.clear()
+    }
   }
 
   def doesUserExist(username: String): Boolean = {
@@ -237,6 +257,33 @@ class UserDB(ctx: Context) {
   def updateUserDetail(username: String, detail: String, newDetail: Boolean) {
     val whereClause = s"$COLUMN_NAME_PROFILE_NAME='$username'"
     mDb.update(TABLE_USERS, contentValue(detail, if (newDetail) TRUE else FALSE), whereClause)
+  }
+
+  def getActiveUserCallRepliesObservable: Observable[ArrayBuffer[CallReply]] = {
+    val query = s"SELECT * FROM $TABLE_CALL_REPLIES WHERE $COLUMN_NAME_PROFILE_NAME='$getActiveUser'"
+    mDb.createQuery(TABLE_CALL_REPLIES, query).map(_.use { cursor =>
+      val callReplies = new ArrayBuffer[CallReply]()
+
+      if (cursor.moveToFirst()) {
+        do {
+            callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), cursor.getString(COLUMN_NAME_CALL_REPLY))
+        } while (cursor.moveToNext())
+      }
+
+      callReplies
+    })
+  }
+
+  def getActiveUserCallReplies: ArrayBuffer[CallReply] = {
+    getActiveUserCallRepliesObservable.toBlocking.first
+  }
+
+  def updateActiveUserCallReply(callReply: CallReply): Unit = {
+    val values = new ContentValues()
+    values.put(COLUMN_NAME_CALL_REPLY, callReply.reply)
+
+    val where = s"$COLUMN_NAME_ID = ${callReply.id} AND $COLUMN_NAME_PROFILE_NAME='$getActiveUser'"
+    mDb.update(TABLE_CALL_REPLIES, values, where)
   }
 
   def numUsers(): Int = {

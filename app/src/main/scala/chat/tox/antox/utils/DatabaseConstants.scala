@@ -3,8 +3,6 @@ package chat.tox.antox.utils
 import android.content.ContentValues
 import android.database.Cursor
 
-import scala.util.Try
-
 object DatabaseConstants {
 
   object RowOrder extends Enumeration {
@@ -19,7 +17,7 @@ object DatabaseConstants {
 
   val DATABASE_VERSION = 16
 
-  val USER_DATABASE_VERSION = 5
+  val USER_DATABASE_VERSION = 6
 
   /**
    * Table used for storing all contacts and contact-related information, including friends and groups (may store group peers in the future).
@@ -50,6 +48,8 @@ object DatabaseConstants {
    */
   val TABLE_USERS = "users"
 
+  val TABLE_CALL_REPLIES = "call_replies"
+
   val COLUMN_NAME_KEY = "tox_key"
 
   /**
@@ -70,6 +70,8 @@ object DatabaseConstants {
   val COLUMN_NAME_NAME = "name"
 
   val COLUMN_NAME_TOXME_DOMAIN = "domain"
+
+  val COLUMN_NAME_CALL_REPLY = "call_reply"
 
   /**
    * ToxMe password for this profile.

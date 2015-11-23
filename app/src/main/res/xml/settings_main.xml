@@ -15,6 +15,7 @@
             android:dependency="notifications_enable_notifications"
             android:key="notifications_persistent"
             android:title="@string/pref_title_persistent_notification" />
+
         <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
         <CheckBoxPreference
             android:defaultValue="true"
@@ -63,6 +64,12 @@
             android:key="enable_udp"
             android:title="@string/pref_udp" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_calls">
+        <Preference
+            android:key="call_replies"
+            android:title="@string/title_activity_edit_call_replies"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">

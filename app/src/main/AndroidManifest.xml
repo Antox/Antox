@@ -147,6 +147,9 @@
         <activity
             android:name="chat.tox.antox.activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name="chat.tox.antox.activities.EditCallRepliesActivity"
+            android:label="@string/title_activity_edit_call_replies"/>
     </application>
 
 </manifest>
