@@ -69,6 +69,9 @@ object State {
     //clear notifications as they are now invalid after logging out
     AntoxNotificationManager.clearAllNotifications()
 
+    //remove and end all calls
+    callManager.removeAndEndAll()
+
     if (!userDb(activity).getActiveUserDetails.loggingEnabled) {
       db.friendInfoList.toBlocking.first.foreach(f => db.deleteChatLogs(f.key))
     }

@@ -1,5 +1,6 @@
 package chat.tox.antox.fragments
 
+import android.content.Intent
 import android.media.MediaPlayer.OnPreparedListener
 import android.media.{AudioManager, MediaPlayer}
 import android.os.{Bundle, SystemClock}
@@ -7,9 +8,10 @@ import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{Chronometer, ImageButton}
 import chat.tox.antox.R
+import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av.{Call, OngoingCallNotification}
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.MediaUtils
+import chat.tox.antox.utils.{Constants, MediaUtils}
 import chat.tox.antox.wrapper.ContactKey
 
 object ActiveCallFragment {
@@ -65,12 +67,23 @@ class ActiveCallFragment extends CommonCallFragment {
 
     allToggleButtons.foreach(_.setEnabled(false))
 
+    val returnToChat = rootView.findViewById(R.id.return_to_chat).asInstanceOf[ImageButton]
+    returnToChat.setOnClickListener(new OnClickListener {
+      override def onClick(v: View): Unit = {
+        val intent = new Intent(getActivity, classOf[ChatActivity])
+        intent.setAction(Constants.SWITCH_TO_FRIEND)
+        intent.putExtra("key", activeKey.toString)
+        startActivity(intent)
+
+        getActivity.finish()
+      }
+    })
+
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     compositeSubscription +=
       State.db.friendInfoList
         .subscribe(fi => {
-          println("SUBSCRIPTION TRIGGERED")
           for {
             friend <- fi.find(f => f.key == activeKey)
             callNotification <- maybeCallNotification
@@ -79,8 +92,6 @@ class ActiveCallFragment extends CommonCallFragment {
             callNotification.show()
           }
         })
-
-    println("GOT TO POST COMPOSITE SUBSCRIPTION ADD THING")
 
     compositeSubscription +=
       call.ringing.distinctUntilChanged.subscribe(ringing => {

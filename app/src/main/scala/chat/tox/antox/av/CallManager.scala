@@ -22,7 +22,10 @@ class CallManager {
     calls.remove(callNumber)
   }
 
-  def removeAll(): Unit = {
-    calls.foreach { tuple => remove(tuple._1) }
+  def removeAndEndAll(): Unit = {
+    calls.foreach { case (callNumber, call) =>
+      if (call.active) call.end(false)
+      remove(callNumber)
+    }
   }
 }

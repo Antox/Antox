@@ -50,8 +50,8 @@ abstract class CommonCallFragment extends Fragment {
     callEndedSound = MediaUtils.setupSound(getActivity, R.raw.end_call, AudioManager.STREAM_VOICE_CALL, looping = false)
   }
 
-  private def updateDisplayedState(fi: Seq[FriendInfo]): Unit = {
-    val mFriend: Option[FriendInfo] = fi.find(f => f.key == activeKey)
+  private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {
+    val mFriend: Option[FriendInfo] = friendInfoList.find(f => f.key == activeKey)
 
     mFriend match {
       case Some(friend) =>
