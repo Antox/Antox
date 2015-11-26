@@ -69,7 +69,7 @@
     <PreferenceCategory android:title="@string/pref_header_calls">
         <Preference
             android:key="call_replies"
-            android:title="@string/title_activity_edit_call_replies"/>
+            android:title="@string/title_pref_edit_call_replies"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">
