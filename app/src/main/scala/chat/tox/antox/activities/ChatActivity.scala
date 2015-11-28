@@ -246,8 +246,15 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def onClickVoiceCall(clickLocation: Location): Unit = {
     if (!State.db.getFriendInfo(activeKey).online) return
 
-    //TODO HANDLE CALL BEING ACTIVE ALREADY (other contact, this contact, etc)
-    startCallActivity(clickLocation)
+    State.callManager.activeCallObservable.foreach(activeCalls => {
+      //end any calls are already active before starting a new call
+      for (call <- activeCalls
+           if call.contactKey != activeKey) {
+        call.end()
+      }
+
+      startCallActivity(clickLocation)
+    })
   }
 
   override def onClickVideoCall(clickLocation: Location): Unit = {}
