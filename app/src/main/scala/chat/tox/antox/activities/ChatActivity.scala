@@ -12,6 +12,7 @@ import android.os.{SystemClock, Build, Bundle, Environment}
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
@@ -21,6 +22,7 @@ import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.StringExtensions.RichString
+import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
@@ -84,11 +86,11 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
+        val imageName = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
 
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
-          val file = File.createTempFile(image_name, ".jpg", storageDir)
+          val file = File.createTempFile(imageName, ".jpg", storageDir)
           val imageUri = Uri.fromFile(file)
           cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
           photoPath = Some(file.getAbsolutePath)
@@ -150,7 +152,14 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
             activeCallBarView.setVisibility(View.VISIBLE)
             activeCallBarView.animate().translationY(activeCallBarView.getHeight)
             activeCallBar.startChronometer(SystemClock.elapsedRealtime() - call.duration)
+
+            activeCallBarView.setOnClickListener(new OnClickListener {
+              override def onClick(v: View): Unit = {
+                startCallActivity(v.getLocationOnScreen())
+              }
+            })
           case None =>
+            activeCallBarView.setOnClickListener(null)
             activeCallBarView.animate().translationY(0).setListener(new AnimatorListenerAdapter {
               override def onAnimationEnd(animation: Animator): Unit = {
                 super.onAnimationEnd(animation)
@@ -220,12 +229,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     }
   }
 
-  override def onClickInfo(clickLocation: ClickLocation): Unit = {}
-
-  override def onClickVoiceCall(clickLocation: ClickLocation): Unit = {
-    if (!State.db.getFriendInfo(activeKey).online) return
-
-    //TODO HANDLE CALL BEING ACTIVE ALREADY (other contact, this contact, etc)
+  def startCallActivity(clickLocation: Location): Unit = {
     val callActivity = new Intent(this, classOf[CallActivity])
     val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
     State.callManager.add(call)
@@ -237,7 +241,16 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  override def onClickVideoCall(clickLocation: ClickLocation): Unit = {}
+  override def onClickInfo(clickLocation: Location): Unit = {}
+
+  override def onClickVoiceCall(clickLocation: Location): Unit = {
+    if (!State.db.getFriendInfo(activeKey).online) return
+
+    //TODO HANDLE CALL BEING ACTIVE ALREADY (other contact, this contact, etc)
+    startCallActivity(clickLocation)
+  }
+
+  override def onClickVideoCall(clickLocation: Location): Unit = {}
 
   override def onPause(): Unit = {
     super.onPause()

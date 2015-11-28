@@ -15,7 +15,8 @@ import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.utils.{ClickLocation, AntoxLog, Constants}
+import chat.tox.antox.utils.ViewExtensions.RichView
+import chat.tox.antox.utils.{Location, AntoxLog, Constants}
 import chat.tox.antox.wrapper.{ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -143,9 +144,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     super.onOptionsItemSelected(item)
 
-    val rawLocation = Array.ofDim[Int](2)
-    Option(toolbar.findViewById(item.getItemId))foreach(_.getLocationOnScreen(rawLocation))
-    val clickLocation = ClickLocation(rawLocation(0), rawLocation(1))
+    val maybeItemView = Option(toolbar.findViewById(item.getItemId))
+    val clickLocation = maybeItemView.map(_.getLocationOnScreen()).getOrElse(Location.Origin)
 
     item.getItemId match {
       case R.id.voice_call_button =>
@@ -268,7 +268,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   def setTyping(typing: Boolean): Unit
 
-  def onClickVoiceCall(clickLocation: ClickLocation): Unit
-  def onClickVideoCall(clickLocation: ClickLocation): Unit
-  def onClickInfo(clickLocation: ClickLocation): Unit
+  def onClickVoiceCall(clickLocation: Location): Unit
+  def onClickVideoCall(clickLocation: Location): Unit
+  def onClickInfo(clickLocation: Location): Unit
 }

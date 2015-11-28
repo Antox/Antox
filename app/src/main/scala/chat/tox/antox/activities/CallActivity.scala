@@ -57,7 +57,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-    val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[ClickLocation])
+    val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
     rootLayout = findViewById(R.id.call_fragment_container).asInstanceOf[FrameLayout]
     if (savedInstanceState == null) {
@@ -88,7 +88,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     registerSubscriptions()
   }
 
-  def circularRevealActivity(maybeClickLocation: Option[ClickLocation]): Unit =  {
+  def circularRevealActivity(maybeClickLocation: Option[Location]): Unit =  {
     val cx = maybeClickLocation.map(_.x).getOrElse(rootLayout.getWidth / 2)
     val cy = maybeClickLocation.map(_.y).getOrElse(rootLayout.getHeight / 2)
 

@@ -184,10 +184,10 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def showDeleteFriendDialog(context: Context, friendKey: FriendKey) {
-    val delete_friend_dialog = View.inflate(context, R.layout.dialog_delete_friend, null)
-    val deleteLogsCheckboxView = delete_friend_dialog.findViewById(R.id.deleteChatLogsCheckBox).asInstanceOf[CheckBox]
+    val deleteFriendDialog = View.inflate(context, R.layout.dialog_delete_friend, null)
+    val deleteLogsCheckboxView = deleteFriendDialog.findViewById(R.id.deleteChatLogsCheckBox).asInstanceOf[CheckBox]
     new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle)
-      .setView(delete_friend_dialog).setCancelable(false)
+      .setView(deleteFriendDialog).setCancelable(false)
       .setPositiveButton(R.string.button_yes,
         new DialogInterface.OnClickListener() {
           def onClick(dialog: DialogInterface, id: Int) {
