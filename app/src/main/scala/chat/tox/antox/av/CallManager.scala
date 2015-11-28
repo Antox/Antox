@@ -2,28 +2,34 @@ package chat.tox.antox.av
 
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.CallNumber
-
-import scala.collection.mutable
+import rx.lang.scala.subjects.BehaviorSubject
 
 class CallManager {
-  private var calls: mutable.Map[CallNumber, Call] = mutable.Map[CallNumber, Call]()
+  private val calls = BehaviorSubject[Map[CallNumber, Call]](Map.empty[CallNumber, Call])
+
+  val activeCallObservable = calls.map(_.values.filter(_.active))
 
   def add(c: Call): Unit = {
     AntoxLog.debug("Adding call")
-    calls += (c.callNumber -> c)
+    calls.onNext(calls.getValue + (c.callNumber -> c))
+    c.callStateObservable.subscribe { _ =>
+      if(!c.active) {
+        remove(c.callNumber)
+      }
+    }
   }
 
   def get(callNumber: CallNumber): Option[Call] = {
-    calls.get(callNumber)
+    calls.getValue.get(callNumber)
   }
 
-  def remove(callNumber: CallNumber): Unit = {
+  private def remove(callNumber: CallNumber): Unit = {
     AntoxLog.debug("Removing call")
-    calls.remove(callNumber)
+    calls.onNext(calls.getValue - callNumber)
   }
 
   def removeAndEndAll(): Unit = {
-    calls.foreach { case (callNumber, call) =>
+    calls.getValue.foreach { case (callNumber, call) =>
       if (call.active) call.end(false)
       remove(callNumber)
     }

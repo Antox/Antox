@@ -88,8 +88,8 @@ abstract class CommonCallFragment extends Fragment {
     })
 
     compositeSubscription +=
-      call.friendStateSubject
-        .subscribe(callState => {
+      call.callStateObservable
+        .subscribe(_ => {
           if (!call.active) {
             onCallEnded()
           }

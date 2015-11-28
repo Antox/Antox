@@ -14,10 +14,14 @@ import scala.concurrent.duration.Duration
 
 class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
-  private var friendState: Set[ToxavFriendCallState] = Set()
-  val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](friendState)
+  private val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](Set.empty[ToxavFriendCallState])
+  private def friendState: Set[ToxavFriendCallState] = friendStateSubject.getValue
 
-  private var selfState = SelfCallState.DEFAULT
+  private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
+  private def selfState = selfStateSubject.getValue
+
+  //monitors both friend and self state, but does not expose them
+  val callStateObservable = friendStateSubject.merge(selfStateSubject).map(_ => Unit)
 
   //only for outgoing audio
   private val samplingRate = SamplingRate.Rate48k //in Hz
@@ -36,7 +40,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
    * When the call is on hold or ringing (not yet answered) this will return true.
    */
   def active: Boolean = {
-    isActive(friendState)
+    isActive(friendState) && !selfState.ended
   }
 
   def isActive(state: Set[ToxavFriendCallState]): Boolean = {
@@ -80,7 +84,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
     incoming = true
     ringing.onNext(true)
-    selfState = selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo)
+    selfStateSubject.onNext(selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo))
   }
   
   def endAfterTime(ringTime: Duration): Unit = {
@@ -101,7 +105,6 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
       ringing.onNext(false)
     }
 
-    friendState = state
     friendStateSubject.onNext(friendState)
   }
 
@@ -148,23 +151,23 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   }
 
   def muteSelfAudio(): Unit = {
-    selfState = selfState.copy(audioMuted = true)
+    selfStateSubject.onNext(selfState.copy(audioMuted = true))
     ToxSingleton.toxAv.setAudioBitRate(callNumber.value, BitRate.Disabled)
     audioCapture.stop()
   }
 
   def unmuteSelfAudio(): Unit = {
-    selfState = selfState.copy(audioMuted = false)
+    selfStateSubject.onNext(selfState.copy(audioMuted = false))
     ToxSingleton.toxAv.setAudioBitRate(callNumber.value, selfState.audioBitRate)
     audioCapture.start()
   }
 
   def hideSelfVideo(): Unit = {
-    selfState = selfState.copy(videoHidden = true)
+    selfStateSubject.onNext(selfState.copy(videoHidden = true))
   }
 
   def showSelfVideo(): Unit = {
-    selfState = selfState.copy(videoHidden = false)
+    selfStateSubject.onNext(selfState.copy(videoHidden = false))
     //TODO
   }
 
@@ -186,13 +189,17 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
   def end(error: Boolean = false): Unit = {
     logCallEvent(s"ended error:$error")
+
     // only send a call control if the call wasn't ended unexpectedly
     if (!error) {
       ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL)
     }
 
-    updateFriendState(Set(ToxavFriendCallState.FINISHED))
+    selfStateSubject.onNext(selfState.copy(ended = true))
+    onCallEnded()
+  }
 
+  def onCallEnded(): Unit = {
     audioCapture.stop()
     cleanUp()
   }

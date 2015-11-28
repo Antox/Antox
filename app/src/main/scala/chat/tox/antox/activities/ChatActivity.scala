@@ -4,10 +4,11 @@ import java.io.{File, IOException}
 import java.text.SimpleDateFormat
 import java.util.Date
 
+import android.animation.{Animator, AnimatorListenerAdapter}
 import android.app.Activity
 import android.content.{Context, Intent}
 import android.net.Uri
-import android.os.{Build, Bundle, Environment}
+import android.os.{SystemClock, Build, Bundle, Environment}
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import android.view.View
@@ -15,6 +16,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
+import chat.tox.antox.fragments.ActiveCallBarFragment
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
@@ -25,12 +27,16 @@ import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
 import im.tox.tox4j.exceptions.ToxException
+import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 
 class ChatActivity extends GenericChatActivity[FriendKey] {
 
   val photoPathSaveKey = "PHOTO_PATH"
   var photoPath: Option[String] = None
+
+  var activeCallBar: ActiveCallBarFragment = _
+  var activeCallSubscription: Option[Subscription] = None
 
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
@@ -42,9 +48,12 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     ThemeManager.applyTheme(this, getSupportActionBar)
 
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
-    val attachmentButton = this.findViewById(R.id.attachment_button)
-    val cameraButton = this.findViewById(R.id.camera_button)
-    val imageButton = this.findViewById(R.id.image_button)
+    val attachmentButton = findViewById(R.id.attachment_button)
+    val cameraButton = findViewById(R.id.camera_button)
+    val imageButton = findViewById(R.id.image_button)
+
+    activeCallBar = getSupportFragmentManager.findFragmentById(R.id.active_call_bar).asInstanceOf[ActiveCallBarFragment]
+    activeCallBar.getView.setVisibility(View.GONE)
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
@@ -130,6 +139,26 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
       .subscribe(fi => {
       updateDisplayedState(fi)
     })
+
+    activeCallSubscription =
+      Some(State.callManager.activeCallObservable.subscribe(activeCalls => {
+        val activeCallBarView = activeCallBar.getView
+        val activeCall = activeCalls.find(_.contactKey == activeKey)
+
+        activeCall match {
+          case Some(call) =>
+            activeCallBarView.setVisibility(View.VISIBLE)
+            activeCallBarView.animate().translationY(activeCallBarView.getHeight)
+            activeCallBar.startChronometer(SystemClock.elapsedRealtime() - call.duration)
+          case None =>
+            activeCallBarView.animate().translationY(0).setListener(new AnimatorListenerAdapter {
+              override def onAnimationEnd(animation: Animator): Unit = {
+                super.onAnimationEnd(animation)
+                activeCallBarView.setVisibility(View.GONE)
+              }
+            })
+        }
+      }))
   }
 
   private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {
@@ -212,6 +241,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
   override def onPause(): Unit = {
     super.onPause()
+
+    activeCallSubscription.foreach(_.unsubscribe())
   }
 
   override def sendMessage(message: String, messageType: ToxMessageType, context: Context): Unit = {

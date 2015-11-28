@@ -7,7 +7,7 @@ import android.os.IBinder
 import android.preference.PreferenceManager
 import chat.tox.antox.utils.AntoxLog
 
-class ToxService extends Service() {
+class ToxService extends Service {
 
   private var serviceThread: Thread = _
 

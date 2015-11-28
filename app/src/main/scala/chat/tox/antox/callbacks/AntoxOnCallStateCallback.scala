@@ -18,10 +18,6 @@ class AntoxOnCallStateCallback(private var ctx: Context) {
     val call = State.callManager.get(callNumber)
     val state = collectionState.toSet
     call.foreach(_.updateFriendState(state))
-
-    if (collectionState.contains(ToxavFriendCallState.FINISHED)) {
-      State.callManager.remove(callNumber)
-    }
   }
 
 }

@@ -140,6 +140,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     }
 
     call.end()
+    finish()
   }
 
   override def onNewIntent(intent: Intent): Unit = {

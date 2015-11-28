@@ -26,6 +26,8 @@ import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
+import scala.util.Try
+
 abstract class AbstractContactsFragment extends Fragment with OnItemClickListener with OnItemLongClickListener {
 
   var showSearch: Boolean = _
@@ -36,7 +38,7 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
 
   protected var leftPaneAdapter: ContactListAdapter = _
 
-  protected var contactChangeSub: Subscription = _
+  protected var contactChangeSub: Option[Subscription] = None
 
   protected var activeKey: ContactKey = _
 
@@ -52,14 +54,14 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   override def onResume() {
     super.onResume()
     val db = State.db
-    contactChangeSub = db.contactListElements
+    contactChangeSub = Try(db.contactListElements
       .observeOn(AndroidMainThreadScheduler())
-      .subscribe(updateContacts(_))
+      .subscribe(updateContacts(_))).toOption
   }
 
   override def onPause() {
     super.onPause()
-    contactChangeSub.unsubscribe()
+    contactChangeSub.foreach(_.unsubscribe())
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {

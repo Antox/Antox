@@ -5,7 +5,7 @@ import im.tox.tox4j.av.enums.ToxavFriendCallState
 
 object SelfCallState {
   // these bitrates act as the default bitrates
-  val DEFAULT = SelfCallState(BitRate.unsafeFromInt(42), BitRate.Disabled, audioMuted = false, videoHidden = false, receivingAudio = false, receivingVideo = false)
+  val DEFAULT = SelfCallState(BitRate.unsafeFromInt(42), BitRate.Disabled, audioMuted = false, videoHidden = false, receivingAudio = false, receivingVideo = false, ended = false)
 
   def fromToxCallState(state: Set[ToxavFriendCallState], callState: SelfCallState): SelfCallState = {
     callState.copy(receivingAudio = state.contains(ToxavFriendCallState.SENDING_A),
@@ -15,7 +15,7 @@ object SelfCallState {
 
 case class SelfCallState(audioBitRate: BitRate, videoBitRate: BitRate,
                      audioMuted: Boolean, videoHidden: Boolean,
-                     receivingAudio: Boolean, receivingVideo: Boolean) {
+                     receivingAudio: Boolean, receivingVideo: Boolean, ended: Boolean) {
 
   def sendingAudio = audioBitRate.value > 0 && !audioMuted
   def sendingVideo = videoBitRate.value > 0 && !videoHidden
