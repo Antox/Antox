@@ -1,13 +1,10 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import android.util.Log
 import chat.tox.antox.data.State
-import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileStatus
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.FriendInfo
-import im.tox.tox4j.core.callbacks.FileRecvControlCallback
 import im.tox.tox4j.core.enums.ToxFileControl
 
 class AntoxOnFileRecvControlCallback(private var ctx: Context) {

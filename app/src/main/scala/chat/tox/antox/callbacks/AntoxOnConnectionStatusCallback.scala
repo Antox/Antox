@@ -3,13 +3,11 @@ package chat.tox.antox.callbacks
 import android.content.{Context, SharedPreferences}
 import android.preference.PreferenceManager
 import chat.tox.antox.data.State
-import chat.tox.antox.tox.{MessageHelper, Reactive, ToxSingleton}
+import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.utils.{ConnectionManager, ConnectionTypeChangeListener}
 import chat.tox.antox.wrapper.FriendInfo
 import im.tox.tox4j.core.callbacks.FriendConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
-
-import scala.collection.JavaConversions._
 
 class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendConnectionStatusCallback[Unit] {
 

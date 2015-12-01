@@ -3,8 +3,6 @@ package chat.tox.antox.tox
 import java.io._
 
 import android.content.Context
-import android.preference.PreferenceManager
-import android.util.Log
 import chat.tox.antox.utils.{AntoxLog, FileUtils}
 import im.tox.tox4j.core.options.SaveDataOptions
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave

@@ -27,7 +27,7 @@ import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
 import com.google.zxing.{BarcodeFormat, WriterException}
-import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
+import im.tox.tox4j.core.data.{ToxStatusMessage, ToxNickname}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {

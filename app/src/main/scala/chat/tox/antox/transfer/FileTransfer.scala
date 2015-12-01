@@ -3,7 +3,7 @@ package chat.tox.antox.transfer
 import java.io.{BufferedInputStream, BufferedOutputStream, File, FileInputStream, FileOutputStream}
 
 import chat.tox.antox.transfer.FileStatus.FileStatus
-import chat.tox.antox.wrapper.{ContactKey, FileKind, ToxKey}
+import chat.tox.antox.wrapper.{ContactKey, FileKind}
 
 class FileTransfer(val key: ContactKey,
   val file: File,

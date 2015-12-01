@@ -12,7 +12,7 @@ import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, ToxKey}
-import im.tox.tox4j.core.ToxNickname
+import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler

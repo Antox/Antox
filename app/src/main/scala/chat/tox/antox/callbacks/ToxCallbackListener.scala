@@ -3,8 +3,8 @@ package chat.tox.antox.callbacks
 import android.content.Context
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import im.tox.tox4j.core._
 import im.tox.tox4j.core.callbacks.ToxEventListener
+import im.tox.tox4j.core.data._
 import im.tox.tox4j.core.enums.{ToxConnection, ToxFileControl, ToxMessageType, ToxUserStatus}
 
 class ToxCallbackListener(ctx: Context) extends ToxEventListener[Unit] {

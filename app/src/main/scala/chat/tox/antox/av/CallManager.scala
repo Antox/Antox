@@ -1,6 +1,5 @@
 package chat.tox.antox.av
 
-import android.util.Log
 import chat.tox.antox.utils.AntoxLog
 
 class CallManager {

@@ -5,7 +5,7 @@ import java.sql.Timestamp
 
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.fragments.ContactItemType.ContactItemType
-import chat.tox.antox.wrapper.{ContactKey, ToxKey}
+import chat.tox.antox.wrapper.ContactKey
 import im.tox.tox4j.core.enums.ToxUserStatus
 
 class LeftPaneItem(

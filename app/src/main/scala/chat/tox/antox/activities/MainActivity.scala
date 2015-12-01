@@ -16,7 +16,6 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils._
 
 class MainActivity extends AppCompatActivity {

@@ -1,7 +1,6 @@
 package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioManager, AudioTrack}
-import android.util.Log
 import chat.tox.antox.utils.AntoxLog
 import org.scaloid.common.LoggerTag
 

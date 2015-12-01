@@ -3,7 +3,7 @@ package chat.tox.antox.wrapper
 import java.io.File
 
 import chat.tox.antox.utils.UiUtils
-import im.tox.tox4j.core.ToxNickname
+import im.tox.tox4j.core.data.ToxNickname
 
 trait ContactInfo {
   def key: ContactKey

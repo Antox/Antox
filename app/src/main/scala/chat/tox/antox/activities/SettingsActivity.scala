@@ -1,6 +1,5 @@
 package chat.tox.antox.activities
 
-import android.app.NotificationManager
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceManager}
@@ -12,9 +11,6 @@ import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.utils.{AntoxNotificationManager, Options}
-import chat.tox.antox.wrapper.UserStatus
-import im.tox.tox4j.core.enums.ToxUserStatus
-import rx.lang.scala.Notification
 
 object SettingsActivity {
 

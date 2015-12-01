@@ -4,10 +4,9 @@ import android.content.Context
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.Constants
-import chat.tox.antox.wrapper.{FriendInfo, FileKind}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import im.tox.tox4j.core.ToxFilename
-import im.tox.tox4j.core.callbacks.FileRecvCallback
+import chat.tox.antox.wrapper.{FileKind, FriendInfo}
+import im.tox.tox4j.core.data.ToxFilename
 import im.tox.tox4j.core.enums.ToxFileControl
 
 class AntoxOnFileRecvCallback(ctx: Context) {

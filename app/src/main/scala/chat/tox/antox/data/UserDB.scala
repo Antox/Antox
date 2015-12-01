@@ -12,7 +12,7 @@ import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
-import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
+import im.tox.tox4j.core.data.{ToxStatusMessage, ToxNickname}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 

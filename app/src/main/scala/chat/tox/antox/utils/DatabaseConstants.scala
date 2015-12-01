@@ -3,8 +3,6 @@ package chat.tox.antox.utils
 import android.content.ContentValues
 import android.database.Cursor
 
-import scala.util.Try
-
 object DatabaseConstants {
 
   object RowOrder extends Enumeration {

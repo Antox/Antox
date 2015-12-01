@@ -3,7 +3,7 @@ package chat.tox.antox.wrapper
 import java.util
 import java.util.Locale
 
-import chat.tox.antox.utils.{GroupKey, AntoxLog, UiUtils}
+import chat.tox.antox.utils.{AntoxLog, GroupKey, UiUtils}
 
 import scala.collection.JavaConversions._
 

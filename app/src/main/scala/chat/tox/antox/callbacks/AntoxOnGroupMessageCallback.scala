@@ -1,9 +1,9 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
+import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.utils.AntoxLog
-import chat.tox.antox.wrapper.{GroupPeer, GroupInfo, MessageType}
+import chat.tox.antox.wrapper.{GroupInfo, GroupPeer}
 import im.tox.tox4j.core.enums.ToxMessageType
 
 class AntoxOnGroupMessageCallback(private var ctx: Context) /* extends GroupMessageCallback */ {
