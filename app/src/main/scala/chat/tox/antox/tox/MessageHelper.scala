@@ -5,8 +5,8 @@ import chat.tox.antox.activities.{ChatActivity, GroupChatActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import im.tox.tox4j.core.data.{ToxNickname, ToxFriendMessage}
 import im.tox.tox4j.core.enums.ToxMessageType
-import im.tox.tox4j.core.{ToxFriendMessage, ToxNickname}
 import org.scaloid.common.LoggerTag
 
 import scala.collection.mutable.ArrayBuffer

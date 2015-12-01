@@ -5,8 +5,8 @@ import java.io.File
 import chat.tox.antox.tox.{IntervalLevels, Intervals}
 import chat.tox.antox.utils._
 import im.tox.core.network.Port
-import im.tox.tox4j.core._
 import im.tox.tox4j.core.callbacks._
+import im.tox.tox4j.core.data._
 import im.tox.tox4j.core.enums._
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException

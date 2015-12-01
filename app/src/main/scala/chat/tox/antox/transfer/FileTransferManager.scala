@@ -10,8 +10,8 @@ import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{ContactKey, FileKind, FriendKey}
+import im.tox.tox4j.core.data.{ToxFileId, ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
-import im.tox.tox4j.core.{ToxFileId, ToxFilename, ToxNickname}
 import org.scaloid.common.LoggerTag
 
 class FileTransferManager extends Intervals {

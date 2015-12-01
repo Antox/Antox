@@ -1,10 +1,6 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import chat.tox.antox.R
-import chat.tox.antox.data.State
-import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.AntoxLog
 
 class AntoxOnGroupSelfJoinCallback(private var ctx: Context) /* extends GroupSelfJoinCallback */ {
   //override

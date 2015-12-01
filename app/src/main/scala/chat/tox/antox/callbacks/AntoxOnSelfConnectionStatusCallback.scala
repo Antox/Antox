@@ -7,8 +7,6 @@ import im.tox.tox4j.core.callbacks.SelfConnectionStatusCallback
 import im.tox.tox4j.core.enums.ToxConnection
 import rx.lang.scala.subjects.BehaviorSubject
 
-import scala.collection.mutable.ArrayBuffer
-
 object AntoxOnSelfConnectionStatusCallback {
   val connectionStatusSubject = BehaviorSubject(ToxConnection.NONE)
 }

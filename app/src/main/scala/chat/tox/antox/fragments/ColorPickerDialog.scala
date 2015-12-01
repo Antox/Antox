@@ -3,8 +3,8 @@ package chat.tox.antox.fragments
 import android.app.Activity
 import android.content.Context
 import android.content.res.{ColorStateList, TypedArray}
-import android.graphics.drawable.{Drawable, RippleDrawable, ShapeDrawable, StateListDrawable}
 import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.{Drawable, RippleDrawable, ShapeDrawable, StateListDrawable}
 import android.os.Build
 import android.support.v7.app.AlertDialog
 import android.view.View.OnClickListener

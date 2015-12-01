@@ -31,8 +31,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import chat.tox.QR.Contents;
-
 public final class QRCodeEncode {
     private static final int WHITE = 0xFFFFFFFF;
     private static final int BLACK = 0xFF000000;

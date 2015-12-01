@@ -2,7 +2,7 @@ package chat.tox.antox.wrapper
 
 import java.io.File
 
-import im.tox.tox4j.core.ToxNickname
+import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.ToxUserStatus
 
 case class FriendInfo(

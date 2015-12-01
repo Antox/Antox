@@ -1,7 +1,6 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import android.util.Log
 
 class AntoxOnVideoDataCallback(private var ctx: Context) {
 

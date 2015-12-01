@@ -1,7 +1,7 @@
 package chat.tox.antox.wrapper
 
 import im.tox.core.network.Port
-import im.tox.tox4j.core.ToxPublicKey
+import im.tox.tox4j.core.data.ToxPublicKey
 
 class DhtNode(
   val owner: String,

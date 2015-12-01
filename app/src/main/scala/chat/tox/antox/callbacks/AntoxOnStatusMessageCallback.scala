@@ -3,7 +3,7 @@ package chat.tox.antox.callbacks
 import android.content.Context
 import chat.tox.antox.data.State
 import chat.tox.antox.wrapper.FriendInfo
-import im.tox.tox4j.core.ToxStatusMessage
+import im.tox.tox4j.core.data.ToxStatusMessage
 
 class AntoxOnStatusMessageCallback(private var ctx: Context) {
 

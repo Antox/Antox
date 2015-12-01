@@ -3,8 +3,8 @@ package chat.tox.antox.fragments
 import java.util
 
 import android.app.AlertDialog
-import android.content.{DialogInterface, Context}
 import android.content.DialogInterface.OnClickListener
+import android.content.{Context, DialogInterface}
 import android.text.{Editable, TextWatcher}
 import android.widget.EditText
 import chat.tox.antox.R

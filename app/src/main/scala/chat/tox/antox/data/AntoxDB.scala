@@ -15,7 +15,7 @@ import chat.tox.antox.wrapper.ContactType.ContactType
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{ToxCore, _}
 import com.squareup.sqlbrite.SqlBrite
-import im.tox.tox4j.core.{ToxNickname, ToxStatusMessage}
+import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import im.tox.tox4j.core.enums.{ToxMessageType, ToxUserStatus}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable

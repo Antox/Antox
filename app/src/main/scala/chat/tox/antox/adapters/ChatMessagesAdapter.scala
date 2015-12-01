@@ -8,7 +8,7 @@ import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
-import chat.tox.antox.utils.{FileUtils, Constants}
+import chat.tox.antox.utils.{Constants, FileUtils}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 

@@ -1,7 +1,6 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import chat.tox.antox.tox.ToxSingleton
 
 class AntoxOnGroupPeerlistUpdateCallback(private var ctx: Context) /* extends GroupPeerlistUpdateCallback */ {
   //override

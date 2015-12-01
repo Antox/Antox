@@ -1,7 +1,6 @@
 package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioRecord}
-import android.util.Log
 import chat.tox.antox.utils.AntoxLog
 import rx.lang.scala.Observable
 

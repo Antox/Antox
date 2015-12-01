@@ -4,7 +4,6 @@ import java.io.{BufferedReader, File, InputStreamReader, Reader}
 import java.net.URL
 import java.nio.charset.Charset
 
-import android.util.Log
 import org.json.JSONObject
 
 import scala.io.Source

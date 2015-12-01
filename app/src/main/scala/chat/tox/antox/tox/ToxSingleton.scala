@@ -12,7 +12,7 @@ import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.core.network.Port
-import im.tox.tox4j.core.ToxPublicKey
+import im.tox.tox4j.core.data.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
 import im.tox.tox4j.core.options.ToxOptions
 import im.tox.tox4j.exceptions.ToxException

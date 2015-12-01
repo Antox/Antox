@@ -1,8 +1,8 @@
 package chat.tox.antox.toxme
 
-import android.util.{Base64, Log}
-import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
+import android.util.Base64
 import chat.tox.antox.toxme.ToxMe.PrivacyLevel.PrivacyLevel
+import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.utils.AntoxLog
 import com.squareup.okhttp.Request.Builder

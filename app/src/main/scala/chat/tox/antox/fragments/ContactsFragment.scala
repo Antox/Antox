@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter
-import chat.tox.antox.utils.{TimestampUtils, LeftPaneItem}
+import chat.tox.antox.utils.{LeftPaneItem, TimestampUtils}
 import chat.tox.antox.wrapper.{FriendInfo, FriendRequest, GroupInfo, GroupInvite}
 import im.tox.tox4j.core.enums.ToxUserStatus
 

@@ -26,7 +26,7 @@ import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.tox4j.core.ToxFileId
+import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.Subscription

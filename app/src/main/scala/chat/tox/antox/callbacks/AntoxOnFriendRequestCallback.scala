@@ -5,7 +5,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager}
 import chat.tox.antox.wrapper.FriendKey
 import im.tox.tox4j.core.callbacks.FriendRequestCallback
-import im.tox.tox4j.core.{ToxFriendRequestMessage, ToxPublicKey}
+import im.tox.tox4j.core.data.{ToxFriendRequestMessage, ToxPublicKey}
 
 class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendRequestCallback[Unit] {
 
