@@ -72,6 +72,7 @@ class ActiveCallFragment extends CommonCallFragment {
       override def onClick(v: View): Unit = {
         val intent = new Intent(getActivity, classOf[ChatActivity])
         intent.setAction(Constants.SWITCH_TO_FRIEND)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY) //stop chats from stacking up
         intent.putExtra("key", activeKey.toString)
         startActivity(intent)
 
@@ -94,7 +95,7 @@ class ActiveCallFragment extends CommonCallFragment {
         })
 
     compositeSubscription +=
-      call.ringing.distinctUntilChanged.subscribe(ringing => {
+      call.ringingSubject.distinctUntilChanged.subscribe(ringing => {
         if (ringing) {
           setupOutgoing()
         } else {

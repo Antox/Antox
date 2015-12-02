@@ -105,7 +105,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   private def registerSubscriptions(): Unit = {
     compositeSubscription +=
-      call.ringing.distinctUntilChanged.subscribe(ringing => {
+      call.ringingSubject.distinctUntilChanged.subscribe(ringing => {
         if (ringing && call.incoming) {
           val fragmentTransaction = getSupportFragmentManager.beginTransaction()
           fragmentTransaction.add(R.id.call_fragment_container, IncomingCallFragment.newInstance(call, activeKey))

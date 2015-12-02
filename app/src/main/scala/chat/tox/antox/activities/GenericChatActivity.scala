@@ -145,7 +145,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     super.onOptionsItemSelected(item)
 
     val maybeItemView = Option(toolbar.findViewById(item.getItemId))
-    val clickLocation = maybeItemView.map(_.getLocationOnScreen()).getOrElse(Location.Origin)
+    val clickLocation = maybeItemView.map(_.getCenterLocationOnScreen()).getOrElse(Location.Origin)
 
     item.getItemId match {
       case R.id.voice_call_button =>

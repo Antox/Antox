@@ -4,11 +4,10 @@ import java.io.{File, IOException}
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import android.animation.{Animator, AnimatorListenerAdapter}
 import android.app.Activity
 import android.content.{Context, Intent}
 import android.net.Uri
-import android.os.{SystemClock, Build, Bundle, Environment}
+import android.os.{Build, Bundle, Environment, SystemClock}
 import android.provider.MediaStore
 import android.support.v4.content.CursorLoader
 import android.view.View
@@ -17,7 +16,6 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
-import chat.tox.antox.fragments.ActiveCallBarFragment
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
 import chat.tox.antox.transfer.FileDialog
@@ -37,7 +35,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   val photoPathSaveKey = "PHOTO_PATH"
   var photoPath: Option[String] = None
 
-  var activeCallBar: ActiveCallBarFragment = _
+  var activeCallBarView: RelativeLayout = _
+  var activeCallBarClickable: RelativeLayout = _
+  var activeCallBarClickSubscription: Option[Subscription] = None
   var activeCallSubscription: Option[Subscription] = None
 
   override def getKey(key: String): FriendKey = new FriendKey(key)
@@ -54,8 +54,10 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     val cameraButton = findViewById(R.id.camera_button)
     val imageButton = findViewById(R.id.image_button)
 
-    activeCallBar = getSupportFragmentManager.findFragmentById(R.id.active_call_bar).asInstanceOf[ActiveCallBarFragment]
-    activeCallBar.getView.setVisibility(View.GONE)
+    activeCallBarView = findViewById(R.id.call_bar_wrap).asInstanceOf[RelativeLayout]
+    activeCallBarView.setVisibility(View.GONE)
+
+    activeCallBarClickable = findViewById(R.id.call_bar_clickable).asInstanceOf[RelativeLayout]
 
     attachmentButton.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
@@ -143,29 +145,27 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     })
 
     activeCallSubscription =
-      Some(State.callManager.activeCallObservable.subscribe(activeCalls => {
-        val activeCallBarView = activeCallBar.getView
-        val activeCall = activeCalls.find(_.contactKey == activeKey)
+      Some(State.callManager.activeCallObservable.observeOn(AndroidMainThreadScheduler()).subscribe(activeCalls => {
+        val activeAssociatedCall = activeCalls.find(_.contactKey == activeKey)
 
-        activeCall match {
-          case Some(call) =>
+        // if there's an active call associated with this contact, show the call bar otherwise hide it
+        activeAssociatedCall match {
+
+          // check that the call is not ringing to prevent the bar appearing too early
+          case Some(call) if !call.ringing =>
             activeCallBarView.setVisibility(View.VISIBLE)
-            activeCallBarView.animate().translationY(activeCallBarView.getHeight)
-            activeCallBar.startChronometer(SystemClock.elapsedRealtime() - call.duration)
-
-            activeCallBarView.setOnClickListener(new OnClickListener {
+            activeCallBarClickable.setOnClickListener(new OnClickListener {
               override def onClick(v: View): Unit = {
-                startCallActivity(v.getLocationOnScreen())
+                startCallActivity(call, v.getCenterLocationOnScreen())
               }
             })
-          case None =>
-            activeCallBarView.setOnClickListener(null)
-            activeCallBarView.animate().translationY(0).setListener(new AnimatorListenerAdapter {
-              override def onAnimationEnd(animation: Animator): Unit = {
-                super.onAnimationEnd(animation)
-                activeCallBarView.setVisibility(View.GONE)
-              }
-            })
+            val chronometer = findViewById(R.id.call_bar_chronometer).asInstanceOf[Chronometer]
+            chronometer.setBase(SystemClock.elapsedRealtime() - call.duration)
+            chronometer.start()
+
+          case _ =>
+            activeCallBarClickable.setOnClickListener(null)
+            activeCallBarView.setVisibility(View.GONE)
         }
       }))
   }
@@ -229,12 +229,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     }
   }
 
-  def startCallActivity(clickLocation: Location): Unit = {
+  def startCallActivity(call: Call, clickLocation: Location): Unit = {
     val callActivity = new Intent(this, classOf[CallActivity])
-    val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
-    State.callManager.add(call)
-    call.startCall(sendingAudio = true, sendingVideo = false)
-
     callActivity.putExtra("key", call.contactKey.toString)
     callActivity.putExtra("call_number", call.callNumber.value)
     callActivity.putExtra("click_location", clickLocation)
@@ -243,18 +239,32 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
   override def onClickInfo(clickLocation: Location): Unit = {}
 
-  override def onClickVoiceCall(clickLocation: Location): Unit = {
+  def onClickCall(video: Boolean, clickLocation: Location): Unit = {
     if (!State.db.getFriendInfo(activeKey).online) return
 
-    State.callManager.activeCallObservable.foreach(activeCalls => {
-      //end any calls are already active before starting a new call
-      for (call <- activeCalls
-           if call.contactKey != activeKey) {
-        call.end()
-      }
+    val activeCalls = State.callManager.calls.filter(_.active)
 
-      startCallActivity(clickLocation)
-    })
+    //end all calls that are active that do not belong to this activity
+    activeCalls.filterNot(_.contactKey == activeKey).foreach(_.end())
+
+    val associatedActiveCall = activeCalls.find(_.active)
+    associatedActiveCall match {
+      case Some(call) =>
+        //an active call already exists, resume its activity
+        startCallActivity(call, clickLocation)
+
+      case None =>
+        //an active call does not exist, start a new call and start a corresponding activity
+        val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
+        State.callManager.add(call)
+        call.startCall(sendingAudio = true, sendingVideo = video)
+
+        startCallActivity(call, clickLocation)
+    }
+  }
+
+  override def onClickVoiceCall(clickLocation: Location): Unit = {
+    onClickCall(video = false, clickLocation)
   }
 
   override def onClickVideoCall(clickLocation: Location): Unit = {}

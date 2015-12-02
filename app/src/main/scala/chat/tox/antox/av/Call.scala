@@ -29,7 +29,8 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private val channels = AudioChannels.Stereo
 
   val defaultRingTime = Duration(30, TimeUnit.SECONDS)
-  val ringing = BehaviorSubject[Boolean](false)
+  val ringingSubject = BehaviorSubject[Boolean](false)
+  def ringing = ringingSubject.getValue
   var incoming = false
 
   var startTime: Long = 0
@@ -66,7 +67,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     endAfterTime(defaultRingTime)
 
     incoming = false
-    ringing.onNext(true)
+    ringingSubject.onNext(true)
   }
 
   def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
@@ -74,7 +75,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
     ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
     callStarted()
-    ringing.onNext(false)
+    ringingSubject.onNext(false)
   }
 
   def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
@@ -83,7 +84,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     endAfterTime(defaultRingTime)
 
     incoming = true
-    ringing.onNext(true)
+    ringingSubject.onNext(true)
     selfStateSubject.onNext(selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo))
   }
   
@@ -92,7 +93,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     new Thread(new Runnable {
       override def run(): Unit = {
         Thread.sleep(ringTime.toMillis)
-        if (active && ringing.getValue) end(false)
+        if (active && ringingSubject.getValue) end(false)
       }
     }).start()
   }
@@ -102,7 +103,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
     if (friendState.isEmpty && isActive(state) && !incoming) {
       callStarted()
-      ringing.onNext(false)
+      ringingSubject.onNext(false)
     }
 
     friendStateSubject.onNext(friendState)

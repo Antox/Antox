@@ -55,12 +55,7 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <fragment android:name="chat.tox.antox.fragments.ActiveCallBarFragment"
-        android:id="@+id/active_call_bar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:visibility="gone"
-        tools:layout="@layout/fragment_active_call_bar" />
+    <include layout="@layout/active_call_bar"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_messages"
