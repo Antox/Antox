@@ -8,7 +8,7 @@ import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.TextView
 import chat.tox.antox.R
-import chat.tox.antox.av.{Call, OngoingCallNotification}
+import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.{BitmapManager, MediaUtils}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
@@ -33,7 +33,6 @@ abstract class CommonCallFragment extends Fragment {
 
   var endCallButton: View = _
 
-  var maybeCallNotification: Option[OngoingCallNotification] = None
   var callEndedSound: MediaPlayer = _
 
   val compositeSubscription = CompositeSubscription()
@@ -120,6 +119,5 @@ abstract class CommonCallFragment extends Fragment {
   override def onDestroy(): Unit = {
     super.onDestroy()
     compositeSubscription.unsubscribe()
-    maybeCallNotification.foreach(_.cancel())
   }
 }

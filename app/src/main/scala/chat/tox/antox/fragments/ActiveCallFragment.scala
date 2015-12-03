@@ -9,8 +9,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{Chronometer, ImageButton}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
-import chat.tox.antox.av.{Call, OngoingCallNotification}
-import chat.tox.antox.data.State
+import chat.tox.antox.av.Call
 import chat.tox.antox.utils.{Constants, MediaUtils}
 import chat.tox.antox.wrapper.ContactKey
 
@@ -83,18 +82,6 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     compositeSubscription +=
-      State.db.friendInfoList
-        .subscribe(fi => {
-          for {
-            friend <- fi.find(f => f.key == activeKey)
-            callNotification <- maybeCallNotification
-          } yield {
-            callNotification.updateName(friend.getDisplayName)
-            callNotification.show()
-          }
-        })
-
-    compositeSubscription +=
       call.ringingSubject.distinctUntilChanged.subscribe(ringing => {
         if (ringing) {
           setupOutgoing()
@@ -134,8 +121,6 @@ class ActiveCallFragment extends CommonCallFragment {
 
   def setupActive(): Unit = {
     ringbackToneSound.stop()
-
-    maybeCallNotification = Some(new OngoingCallNotification(getActivity, activeKey, call))
 
     allToggleButtons.foreach(_.setEnabled(true))
 
