@@ -25,6 +25,7 @@ import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
 import chat.tox.antox.toxme.{ToxData, ToxMe}
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
+import chat.tox.antox.utils.AntoxNotificationManager
 import chat.tox.antox.wrapper.UserStatus
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.tox4j.core.{ToxStatusMessage, ToxNickname}
@@ -142,28 +143,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
 
         builder.setPositiveButton(R.string.delete_account_dialog_confirm, new OnClickListener {
           override def onClick(dialog: DialogInterface, which: Int): Unit = {
-
-            val userDb = State.userDb(getApplicationContext)
-            val userInfo = userDb.getActiveUserDetails
-            val dataFile = new ToxDataFile(getApplicationContext, userInfo.profileName)
-            val toxData = new ToxData
-            toxData.fileBytes = dataFile.loadFile()
-            toxData.address = ToxSingleton.tox.getAddress
-            val toxMeName = userInfo.toxMeName
-            if (toxMeName.domain.isDefined) {
-              val observable = ToxMe.deleteAccount(toxMeName, toxData)
-              observable.subscribe()
-            }
-            userDb.deleteActiveUser()
-            val startTox = new Intent(getApplicationContext, classOf[ToxService])
-            stopService(startTox)
-            val loginIntent = new Intent(ProfileSettingsActivity.this, classOf[LoginActivity])
-            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-              Intent.FLAG_ACTIVITY_CLEAR_TOP |
-              IntentCompat.FLAG_ACTIVITY_CLEAR_TASK)
-            startActivity(loginIntent)
-            finish()
-
+            State.deleteActiveAccount(thisActivity)
           }
         })
 
