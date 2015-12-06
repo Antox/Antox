@@ -159,7 +159,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
       case MessageType.MESSAGE | MessageType.GROUP_MESSAGE => TEXT
       case MessageType.ACTION | MessageType.GROUP_ACTION => ACTION
       case MessageType.FILE_TRANSFER => FILE
-      case MessageType.CALL_INFO => CALL_INFO
+      case MessageType.CALL_EVENT => CALL_INFO
     }
   }
 

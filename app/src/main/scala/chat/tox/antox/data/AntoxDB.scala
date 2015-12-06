@@ -278,7 +278,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
       hasBeenRead = hasBeenRead,
       successfullySent = true,
       size = 0,
-      messageType = MessageType.CALL_INFO,
+      messageType = MessageType.CALL_EVENT,
       callEventKind = kind
     )
   }

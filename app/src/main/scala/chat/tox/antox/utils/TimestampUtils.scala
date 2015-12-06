@@ -60,7 +60,11 @@ object TimestampUtils {
   }
 
   def formatDuration(durationInSeconds: Long): String = {
-    "%d:%02d:%02d".format(durationInSeconds / 3600, (durationInSeconds % 3600) / 60, durationInSeconds % 60)
+    if (durationInSeconds >= 3600) {
+      "%d:%02d:%02d".format(durationInSeconds / 3600, (durationInSeconds % 3600) / 60, durationInSeconds % 60)
+    } else {
+      "%02d:%02d".format((durationInSeconds % 3600) / 60, durationInSeconds % 60)
+    }
   }
 
   /**

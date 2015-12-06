@@ -129,8 +129,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       if (sharedPreferences.getBoolean("notifications_persistent", false) &&
         sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
-      }
-      else {
+      } else {
         AntoxNotificationManager.removePersistentNotification()
       }
     }
@@ -138,8 +137,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       if (sharedPreferences.getBoolean("notifications_persistent", false) &&
         sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
-      }
-      else {
+      } else {
         AntoxNotificationManager.removePersistentNotification()
       }
     }

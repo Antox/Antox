@@ -4,6 +4,7 @@ import java.util
 
 import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView, Toolbar}
@@ -17,7 +18,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils.{Location, AntoxLog, Constants}
-import chat.tox.antox.wrapper.{ContactKey, Message}
+import chat.tox.antox.wrapper.{MessageType, ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -190,7 +191,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     //FIXME make this more efficient
     adapter.removeAll()
 
-    for (message <- messageList) {
+    for (message <- filterMessageList(messageList)) {
       adapter.add(message)
     }
 
@@ -199,6 +200,14 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
     AntoxLog.debug("changing chat list cursor")
+  }
+  
+  def filterMessageList(messageList: Seq[Message]): Seq[Message] = {
+    val showCallEvents = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("call_event_logging", true)
+
+    if (!showCallEvents) {
+      messageList.filterNot(_.`type` == MessageType.CALL_EVENT)
+    } else messageList
   }
 
   def validateMessageBox(): Option[String] = {

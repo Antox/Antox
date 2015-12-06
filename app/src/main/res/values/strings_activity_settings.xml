@@ -54,6 +54,7 @@
 
     <!-- Calls -->
     <string name="pref_header_calls">Calls</string>
+    <string name="pref_title_enable_call_event_logging">Call event logging</string>
 
     <!-- Network -->
     <string name="pref_header_network">Network</string>
