@@ -16,6 +16,7 @@ import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
+import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils.{Location, AntoxLog, Constants}
 import chat.tox.antox.wrapper.{MessageType, ContactKey, Message}
@@ -211,18 +212,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   }
 
   def validateMessageBox(): Option[String] = {
-    if (messageBox.getText != null && messageBox.getText.toString.length() == 0) {
-      return None
-    }
-
-    var msg: String = null
-    if (messageBox.getText != null) {
-      msg = messageBox.getText.toString
-    } else {
-      msg = ""
-    }
-
-    Some(msg)
+    messageBox.getText.toString.toOption
   }
 
   private def onScrolledToTop(): Unit = {
