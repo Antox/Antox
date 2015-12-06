@@ -38,6 +38,8 @@ object ContactListAdapter {
 
     var timeText: TextView = _
 
+    var statusImage: ImageView = _
+
     var imageLoadingSubscription: Option[Subscription] = None
   }
 }

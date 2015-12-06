@@ -87,11 +87,9 @@ abstract class CommonCallFragment extends Fragment {
     })
 
     compositeSubscription +=
-      call.callStateObservable
+      call.callEndedObservable
         .subscribe(_ => {
-          if (!call.active) {
-            onCallEnded()
-          }
+          onCallEnded()
         })
 
     // update displayed friend info on change

@@ -13,6 +13,7 @@ import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.ContactType.ContactType
 import chat.tox.antox.wrapper.FileKind.AVATAR
+import chat.tox.antox.wrapper.MessageType.MessageType
 import chat.tox.antox.wrapper.{ToxCore, _}
 import com.squareup.sqlbrite.SqlBrite
 import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
@@ -54,7 +55,7 @@ object AntoxDB {
          |$COLUMN_NAME_MESSAGE_ID integer,
          |$COLUMN_NAME_KEY text,
          |$COLUMN_NAME_SENDER_KEY text,
-         |$COLUMN_NAME_SENDER_NAME text,
+         |$COLUMN_NAME_SENDER_NAME text ,
          |$COLUMN_NAME_MESSAGE text,
          |$COLUMN_NAME_HAS_BEEN_RECEIVED boolean,
          |$COLUMN_NAME_HAS_BEEN_READ boolean,
@@ -62,6 +63,7 @@ object AntoxDB {
          |$COLUMN_NAME_SIZE integer,
          |$COLUMN_NAME_TYPE int,
          |$COLUMN_NAME_FILE_KIND int,
+         |$COLUMN_NAME_CALL_EVENT_KIND int,
          |FOREIGN KEY($COLUMN_NAME_KEY) REFERENCES $TABLE_CONTACTS($COLUMN_NAME_KEY))""".stripMargin
 
     val CREATE_TABLE_FRIEND_REQUESTS: String =
@@ -157,29 +159,58 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     addContact(key, name, "", topic, ContactType.GROUP)
   }
 
-  def addFileTransfer(key: ContactKey,
-                      senderKey: ToxKey,
-                      senderName: ToxNickname,
-                      path: String,
-                      hasBeenRead: Boolean,
-                      fileNumber: Int,
-                      fileKind: Int,
-                      size: Int): Long = {
+  def addToMessagesTable(messageId: Int,
+                         key: ContactKey,
+                         senderKey: ToxKey,
+                         senderName: ToxNickname,
+                         message: String,
+                         hasBeenReceived: Boolean,
+                         hasBeenRead: Boolean,
+                         successfullySent: Boolean,
+                         size: Int,
+                         messageType: MessageType,
+                         fileKind: FileKind = FileKind.INVALID,
+                         callEventKind: CallEventKind = CallEventKind.Invalid): Long = {
 
     val values = new ContentValues()
+    values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
     values.put(COLUMN_NAME_KEY, key.toString)
     values.put(COLUMN_NAME_SENDER_KEY, senderKey.toString)
     values.put(COLUMN_NAME_SENDER_NAME, new String(senderName.value))
-    values.put(COLUMN_NAME_MESSAGE, path)
-    values.put(COLUMN_NAME_MESSAGE_ID, fileNumber: java.lang.Integer)
-    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, false)
+    values.put(COLUMN_NAME_MESSAGE, message)
+    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, hasBeenReceived)
     values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
-    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, false)
-    values.put(COLUMN_NAME_TYPE, MessageType.FILE_TRANSFER.id: java.lang.Integer)
-    values.put(COLUMN_NAME_FILE_KIND, fileKind: java.lang.Integer)
+    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfullySent)
     values.put(COLUMN_NAME_SIZE, size: java.lang.Integer)
+    values.put(COLUMN_NAME_TYPE, messageType.id: java.lang.Integer)
+    values.put(COLUMN_NAME_FILE_KIND, fileKind.kindId: java.lang.Integer)
+    values.put(COLUMN_NAME_CALL_EVENT_KIND, callEventKind.kindId: java.lang.Integer)
     val id = mDb.insert(TABLE_MESSAGES, values)
     id
+  }
+
+  def addFileTransfer(fileNumber: Int, 
+                      key: ContactKey,
+                      senderKey: ToxKey, 
+                      senderName: ToxNickname, 
+                      path: String, 
+                      hasBeenRead: Boolean, 
+                      size: Int, 
+                      fileKind: FileKind): Long = {
+
+    addToMessagesTable(
+      fileNumber,
+      key,
+      senderKey,
+      senderName,
+      path,
+      hasBeenReceived = false,
+      hasBeenRead = hasBeenRead,
+      successfullySent = false,
+      size,
+      MessageType.FILE_TRANSFER,
+      fileKind = fileKind
+    )
   }
 
   def fileTransferStarted(key: ContactKey, fileNumber: Int) {
@@ -213,21 +244,43 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
                  hasBeenReceived: Boolean,
                  hasBeenRead: Boolean,
                  successfullySent: Boolean,
-                 `type`: ToxMessageType,
-                 messageId: Int = -1) {
+                 messageType: ToxMessageType,
+                 messageId: Int = -1): Long = {
 
-    val values = new ContentValues()
-    values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
-    values.put(COLUMN_NAME_KEY, key.toString)
-    values.put(COLUMN_NAME_SENDER_KEY, senderKey.toString)
-    values.put(COLUMN_NAME_SENDER_NAME, new String(senderName.value))
-    values.put(COLUMN_NAME_MESSAGE, message)
-    values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, hasBeenReceived)
-    values.put(COLUMN_NAME_HAS_BEEN_READ, hasBeenRead)
-    values.put(COLUMN_NAME_SUCCESSFULLY_SENT, successfullySent)
-    values.put(COLUMN_NAME_TYPE, MessageType.fromToxMessageType(`type`).id: java.lang.Integer)
-    values.put(COLUMN_NAME_FILE_KIND, -1.asInstanceOf[java.lang.Integer])
-    mDb.insert(TABLE_MESSAGES, values)
+
+    addToMessagesTable(
+      messageId,
+      key,
+      senderKey,
+      senderName,
+      message,
+      hasBeenReceived,
+      hasBeenRead,
+      successfullySent,
+      size = 0,
+      MessageType.fromToxMessageType(messageType)
+    )
+  }
+
+  def addCallEventMessage(key: ContactKey,
+                         senderKey: ToxKey,
+                         senderName: ToxNickname,
+                         message: String,
+                         hasBeenRead: Boolean,
+                         kind: CallEventKind): Unit = {
+    addToMessagesTable(
+      messageId = -1,
+      key,
+      senderKey,
+      senderName,
+      message,
+      hasBeenReceived = true,
+      hasBeenRead = hasBeenRead,
+      successfullySent = true,
+      size = 0,
+      messageType = MessageType.CALL_INFO,
+      callEventKind = kind
+    )
   }
 
   def contactKeyFromContactType(key: String, contactType: ContactType): ContactKey = {
@@ -439,8 +492,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
         val messageType = MessageType(cursor.getInt(COLUMN_NAME_TYPE))
         val key = contactKeyFromContactType(cursor.getString(COLUMN_NAME_KEY), ContactType(cursor.getInt(COLUMN_NAME_CONVERSATION_CONTACT_TYPE)))
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
+        val callEventKind = CallEventKind.values.find(_.kindId == cursor.getInt(COLUMN_NAME_CALL_EVENT_KIND)).getOrElse(CallEventKind.Invalid)
         messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
-          timestamp, size, messageType, fileKind)
+          timestamp, size, messageType, fileKind, callEventKind)
       } while (cursor.moveToNext())
     }
     messageList

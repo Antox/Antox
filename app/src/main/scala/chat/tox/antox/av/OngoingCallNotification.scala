@@ -22,7 +22,7 @@ class OngoingCallNotification(context: Context, contact: ContactInfo, call: Call
     .setContentText(context.getResources.getString(R.string.call_ongoing))
     .setContentTitle(contact.getDisplayName)
     .setUsesChronometer(true) // call timer in top right corner
-    .setWhen(call.startTime)
+    .setWhen(call.startTime.toMillis)
     .setSound(null)
 
   AntoxNotificationManager.addAvatarToNotification(builder, contact.key)

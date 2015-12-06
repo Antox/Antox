@@ -160,7 +160,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
               }
             })
             val chronometer = findViewById(R.id.call_bar_chronometer).asInstanceOf[Chronometer]
-            chronometer.setBase(SystemClock.elapsedRealtime() - call.duration)
+            chronometer.setBase(SystemClock.elapsedRealtime() - call.duration.toMillis)
             chronometer.start()
 
           case _ =>

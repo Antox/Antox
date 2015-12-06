@@ -92,7 +92,7 @@ class FileTransferManager extends Intervals {
     mFileNumber.foreach(fileNumber => {
       val db = State.db
       AntoxLog.debug("adding File Transfer", TAG)
-      val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, fileNumber, fileKind.kindId, file.length.toInt)
+      val id = db.addFileTransfer(fileNumber, key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, file.length.toInt, fileKind)
       State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUEST_SENT, id, fileKind))
     })
   }
@@ -158,7 +158,7 @@ class FileTransferManager extends Intervals {
     }
 
     val db = State.db
-    val id = db.addFileTransfer(key, key, senderName, fileN, hasBeenRead, fileNumber, fileKind.kindId, fileSize.toInt)
+    val id = db.addFileTransfer(fileNumber, key, key, senderName, fileN, hasBeenRead, fileSize.toInt, fileKind)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUEST_SENT, id, fileKind))
   }
 

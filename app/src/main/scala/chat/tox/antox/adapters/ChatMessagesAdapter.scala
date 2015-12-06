@@ -19,6 +19,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   private val TEXT = 1
   private val ACTION = 2
   private val FILE = 3
+  private val CALL_INFO = 4
 
   private var scrolling: Boolean = false
 
@@ -70,6 +71,11 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
       case ACTION =>
         val actionHolder = holder.asInstanceOf[ActionMessageHolder]
         actionHolder.setText(msg.senderName, msg.message)
+
+      case CALL_INFO =>
+        val callEventHolder = holder.asInstanceOf[CallEventMessageHolder]
+        callEventHolder.setText(msg.message)
+        callEventHolder.setPrefixedIcon(msg.callEventKind.imageRes)
 
       case FILE =>
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
@@ -140,6 +146,9 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
         new FileMessageHolder(v)
 
+      case CALL_INFO =>
+        val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
+        new CallEventMessageHolder(v)
     }
   }
 
@@ -150,6 +159,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
       case MessageType.MESSAGE | MessageType.GROUP_MESSAGE => TEXT
       case MessageType.ACTION | MessageType.GROUP_ACTION => ACTION
       case MessageType.FILE_TRANSFER => FILE
+      case MessageType.CALL_INFO => CALL_INFO
     }
   }
 

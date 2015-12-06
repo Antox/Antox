@@ -96,7 +96,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         }
 
       case _ =>
-      //do nothing
+        //do nothing
     }
 
     false

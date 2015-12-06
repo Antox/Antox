@@ -10,13 +10,11 @@ class CallManager {
   def calls: Seq[Call] = callsSubject.getValue.values.toSeq
   val activeCallObservable = callsSubject.map(_.values.filter(_.active))
 
-  def add(c: Call): Unit = {
+  def add(call: Call): Unit = {
     AntoxLog.debug("Adding call")
-    callsSubject.onNext(callsSubject.getValue + (c.callNumber -> c))
-    c.callStateObservable.subscribe { _ =>
-      if(!c.active) {
-        remove(c.callNumber)
-      }
+    callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
+    call.callEndedObservable.subscribe { _ =>
+      remove(call.callNumber)
     }
   }
 
@@ -31,7 +29,7 @@ class CallManager {
 
   def removeAndEndAll(): Unit = {
     callsSubject.getValue.foreach { case (callNumber, call) =>
-      if (call.active) call.end(false)
+      if (call.active) call.end()
       remove(callNumber)
     }
   }

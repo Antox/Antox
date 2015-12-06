@@ -15,7 +15,7 @@ object DatabaseConstants {
 
   val TRUE = 1
 
-  val DATABASE_VERSION = 16
+  val DATABASE_VERSION = 17
 
   val USER_DATABASE_VERSION = 6
 
@@ -118,6 +118,8 @@ object DatabaseConstants {
    * File kind of a message. [[chat.tox.antox.wrapper.FileKind.INVALID]] if the message is not a file.
    */
   val COLUMN_NAME_FILE_KIND = "file_kind"
+
+  val COLUMN_NAME_CALL_EVENT_KIND = "call_info_kind"
 
   val COLUMN_NAME_ISONLINE = "isonline"
 

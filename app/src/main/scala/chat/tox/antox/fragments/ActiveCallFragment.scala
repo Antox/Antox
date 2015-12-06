@@ -82,7 +82,7 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     compositeSubscription +=
-      call.ringingSubject.distinctUntilChanged.subscribe(ringing => {
+      call.ringingObservable.distinctUntilChanged.subscribe(ringing => {
         if (ringing) {
           setupOutgoing()
         } else {
@@ -127,7 +127,7 @@ class ActiveCallFragment extends CommonCallFragment {
     callStateView.setVisibility(View.GONE)
 
     durationView.setVisibility(View.VISIBLE)
-    durationView.setBase(SystemClock.elapsedRealtime() - call.duration)
+    durationView.setBase(SystemClock.elapsedRealtime() - call.duration.toMillis)
     durationView.start()
   }
 

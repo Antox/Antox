@@ -4,6 +4,7 @@ import java.sql.Timestamp
 
 import android.content.Context
 import chat.tox.antox.R
+import chat.tox.antox.data.CallEventKind
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{FileUtils, TimestampUtils}
 import chat.tox.antox.wrapper.MessageType.MessageType
@@ -20,7 +21,8 @@ case class Message(id: Int,
                    timestamp: Timestamp,
                    size: Int,
                    `type`: MessageType,
-                   fileKind: FileKind) {
+                   fileKind: FileKind,
+                   callEventKind: CallEventKind) {
 
   def logFormat(): Option[String] = {
     if (this.isFileTransfer) return None

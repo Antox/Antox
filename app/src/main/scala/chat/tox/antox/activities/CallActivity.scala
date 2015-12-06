@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity
 import android.view.{View, ViewAnimationUtils, ViewTreeObserver, WindowManager}
 import android.widget.FrameLayout
 import chat.tox.antox.R
-import chat.tox.antox.av.Call
+import chat.tox.antox.av.{CallEventLogger, Call}
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.{ActiveCallFragment, IncomingCallFragment}
 import chat.tox.antox.tox.MessageHelper
@@ -23,6 +23,8 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   var call: Call = _
   var activeKey: ContactKey = _
+
+  var callEventLogger: CallEventLogger = _
 
   private var powerManager: PowerManager = _
   private var maybeWakeLock: Option[PowerManager#WakeLock] = None
@@ -56,6 +58,9 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
 
     setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
+    callEventLogger = CallEventLogger(call, this)
+    callEventLogger.startLogging()
 
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
@@ -105,7 +110,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   private def registerSubscriptions(): Unit = {
     compositeSubscription +=
-      call.ringingSubject.distinctUntilChanged.subscribe(ringing => {
+      call.ringingObservable.distinctUntilChanged.subscribe(ringing => {
         if (ringing && call.incoming) {
           val fragmentTransaction = getSupportFragmentManager.beginTransaction()
           fragmentTransaction.add(R.id.call_fragment_container, IncomingCallFragment.newInstance(call, activeKey))
@@ -171,6 +176,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
   override def onDestroy(): Unit = {
     super.onDestroy()
 
+    callEventLogger.stopLogging()
     compositeSubscription.unsubscribe()
   }
 }

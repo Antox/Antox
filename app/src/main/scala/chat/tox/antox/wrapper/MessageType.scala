@@ -11,6 +11,7 @@ object MessageType extends Enumeration {
   val ACTION = Value("3")
   val GROUP_MESSAGE = Value("4")
   val GROUP_ACTION = Value("5")
+  val CALL_INFO = Value("6")
 
   val transferValues = Set(FILE_TRANSFER)
 

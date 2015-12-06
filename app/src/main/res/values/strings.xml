@@ -239,6 +239,15 @@
     <string name="call_mute_speaker">Mute speaker</string>
     <string name="call_unmute_speaker">Unmute speaker</string>
 
+    <!-- Call Events -->
+    <string name="call_event_incoming">Incoming call</string>
+    <string name="call_event_outgoing">Outgoing call</string>
+    <string name="call_event_rejected">Call rejected</string>
+    <string name="call_event_unanswered">Call unanswered</string>
+    <string name="call_event_missed">Call missed</string>
+    <string name="call_event_answered">Call started</string>
+    <string name="call_event_ended">Call ended</string>
+
     <!-- Incoming Call Activity -->
     <string name="call_incoming_video">Incoming video call…</string>
     <string name="call_incoming_voice">Incoming voice call…</string>
@@ -297,5 +306,6 @@
     <string name="mute_call">Mute</string>
     <string name="mute_mic">Mute Mic</string>
     <string name="profile_info_description">Get User Info</string>
+    <string name="empty"> </string>
 
 </resources>
