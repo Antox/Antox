@@ -5,18 +5,18 @@ import android.content.{Context, Intent}
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import chat.tox.antox.R
 import chat.tox.antox.activities.{CallActivity, MainActivity}
-import chat.tox.antox.utils.{AntoxNotificationManager, Constants}
+import chat.tox.antox.utils.{NotificationOffsets, AntoxNotificationManager, Constants}
 import chat.tox.antox.wrapper.ContactInfo
 
 class OngoingCallNotification(context: Context, contact: ContactInfo, call: Call) {
 
   //ensure that this id is not the same as is used for messages
-  val id: Int = contact.key.hashCode() + 1
+  val id: Int = contact.key.hashCode() + NotificationOffsets.NOTIFICATION_OFFSET_ONGOING_CALL
 
   val builder = new NotificationCompat.Builder(context)
     .setSmallIcon(R.drawable.ic_actionbar)
     .setOngoing(true)
-    .addAction(R.drawable.ic_call_end_white_36dp,
+    .addAction(R.drawable.ic_call_end_white_24dp,
       context.getResources.getString(R.string.end_call),
       createPendingIntent(Constants.END_CALL, classOf[CallActivity], addParentStack = false)) // end call intent for button press
     .setContentText(context.getResources.getString(R.string.call_ongoing))

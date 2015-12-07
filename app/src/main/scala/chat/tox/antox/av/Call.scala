@@ -38,7 +38,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private val audioLength = AudioLength.Length20 //in microseconds
   private val channels = AudioChannels.Stereo
 
-  val defaultRingTime = Duration(30, TimeUnit.SECONDS)
+  val defaultRingTime = Duration(5, TimeUnit.SECONDS)
 
   // ringing by default (call should only be created if it is ringing)
   private val ringingSubject = BehaviorSubject[Boolean](true)
@@ -158,7 +158,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
                 frameSize, channels, samplingRate)
             } catch {
               case e: ToxException[_] =>
-                if (!active) end(reason = CallEndReason.Error)
+                if (active) end(reason = CallEndReason.Error)
             }
           }
 

@@ -4,18 +4,23 @@ import android.app.{Notification, NotificationManager, PendingIntent}
 import android.content.{Context, Intent, SharedPreferences}
 import android.graphics.BitmapFactory
 import android.preference.PreferenceManager
+import android.support.v4.app.NotificationCompat.Builder
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import android.util.Log
 import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
+import chat.tox.antox.av.MissedCallNotification
 import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
-import chat.tox.antox.data.State
+import chat.tox.antox.data.{CallEventKind, AntoxDB, State}
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, ToxKey}
+import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import chat.tox.antox.utils.TimestampUtils._
+
+import scala.Predef
 
 object AntoxNotificationManager {
 
@@ -55,7 +60,7 @@ object AntoxNotificationManager {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     if (checkPreference(preferences, "notifications_new_message")) {
-      val notificationBuilder = new NotificationCompat.Builder(ctx)
+      val notificationBuilder = new Builder(ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
         .setContentTitle(new String(name.value))
         .setContentText(content)
@@ -73,14 +78,7 @@ object AntoxNotificationManager {
         notificationBuilder.setContentInfo("")
       }
 
-      val resultIntent = new Intent(ctx, intentClass)
-      resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
-      resultIntent.putExtra("key", key.toString)
-
-      val stackBuilder = TaskStackBuilder.create(ctx)
-      stackBuilder.addParentStack(classOf[MainActivity])
-      stackBuilder.addNextIntent(resultIntent)
-      val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+      val resultPendingIntent: PendingIntent = createChatIntent(ctx, Constants.SWITCH_TO_FRIEND, intentClass, key)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
 
@@ -89,8 +87,71 @@ object AntoxNotificationManager {
     }
   }
 
+  def createChatIntent(ctx: Context, action: String, intentClass: Class[_], key: ToxKey): PendingIntent = {
+    val resultIntent = new Intent(ctx, intentClass)
+    resultIntent.setAction(action)
+    resultIntent.putExtra("key", key.toString)
+
+    val stackBuilder = TaskStackBuilder.create(ctx)
+    stackBuilder.addParentStack(classOf[MainActivity])
+    stackBuilder.addNextIntent(resultIntent)
+    val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+    resultPendingIntent
+  }
+
   def clearMessageNotification(key: ToxKey): Unit = {
     mNotificationManager.foreach(_.cancel(generateNotificationId(key)))
+  }
+
+  var callMonitorSubscription: Option[Subscription] = None
+
+  def startMonitoringCalls(context: Context, db: AntoxDB): Unit = {
+    try {
+      callMonitorSubscription = Some(db.messageListObservable(None)
+        .map(_.filter(message => message.callEventKind == CallEventKind.Missed)) //only missed calls
+        .map(_.filterNot(_.read)) // if the missed call has been seen it is not relevant
+        .map(_.groupBy(_.key))
+        .map(missedCallMap => missedCallMap.map(tuple => {
+          val contactKey = tuple._1
+          val missedCallEvents = tuple._2
+
+          //a missed call is only relevant if a call has not been made to the same contact after the missed call
+          def isRelevant(missedCallEvent: Message): Boolean = {
+            val outgoingCallList = db.getMessageList(Some(contactKey)).filter(_.callEventKind == CallEventKind.Outgoing)
+            if (outgoingCallList.nonEmpty) {
+              val latestOutgoingTime = outgoingCallList.map(_.timestamp).max
+              missedCallEvent.timestamp.after(latestOutgoingTime)
+            } else true
+          }
+
+          val relevantMissedCallEvents = missedCallEvents.filter(isRelevant)
+
+          (contactKey, relevantMissedCallEvents)
+        }))
+        .subscribe(missedCallMap => {
+          for (key <- missedCallMap.keys) {
+            val messageList = missedCallMap(key)
+            val id = MissedCallNotification.id(key)
+
+            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
+
+            // if there are no missed calls, hide the notification
+            if (messageList.isEmpty) {
+              mNotificationManager.cancel(id)
+            } else {
+              val notification = new MissedCallNotification(context, db.getFriendInfo(key.asInstanceOf[FriendKey]), messageList)
+              mNotificationManager.notify(id, notification.build())
+            }
+          }
+        }))
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+  }
+
+  def stopMonitoringCalls(): Unit = {
+    callMonitorSubscription.foreach(_.unsubscribe())
   }
 
   def createRequestNotification(key: ToxKey, contentText: Option[String], context: Context): Unit = {

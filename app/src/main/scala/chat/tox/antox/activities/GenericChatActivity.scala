@@ -75,6 +75,12 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     activeKey = getKey(extras.getString("key"))
     AntoxLog.debug("key = " + activeKey)
 
+    if (getIntent.getAction == Constants.START_CALL) {
+      onClickVoiceCall(Location.Origin)
+      finish()
+      return
+    }
+    
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
       new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShown))))

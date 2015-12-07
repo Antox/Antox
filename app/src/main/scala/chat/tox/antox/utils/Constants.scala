@@ -2,7 +2,7 @@ package chat.tox.antox.utils
 
 object Constants {
 
-  val START_TOX = "chat.tox.antox.START_TOX"
+  val START_TOX = s"chat.tox.antox.START_TOX"
 
   val STOP_TOX = "chat.tox.antox.STOP_TOX"
 
@@ -15,6 +15,8 @@ object Constants {
   val SWITCH_TO_CALL = "chat.tox.antox.SWITCH_TO_CALL"
 
   val UPDATE = "chat.tox.antox.UPDATE"
+
+  val START_CALL = "chat.tox.antox.START_CALL"
 
   val DOWNLOAD_DIRECTORY = "Tox Received Files"
 

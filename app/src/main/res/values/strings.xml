@@ -247,6 +247,7 @@
     <string name="call_event_missed">Call missed</string>
     <string name="call_event_answered">Call started</string>
     <string name="call_event_ended">Call ended</string>
+    <string name="call_event_cancelled">Call cancelled</string>
 
     <!-- Incoming Call Activity -->
     <string name="call_incoming_video">Incoming video call…</string>
@@ -260,6 +261,11 @@
         <item>I\'ll call you later.</item>
         <item>I\'m on my way.</item>
     </string-array>
+
+    <!-- Missed Call Notification -->
+    <string name="call_missed_title">Missed call</string>
+    <string name="call_missed_call_back">Call</string>
+    <string name="call_missed_reply">Reply</string>
 
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>

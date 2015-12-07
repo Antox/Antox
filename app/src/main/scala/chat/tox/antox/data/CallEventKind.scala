@@ -18,6 +18,7 @@ object CallEventKind {
   case object Missed     extends CallEventKind (4, R.drawable.ic_phone_missed_black_18dp, R.string.call_event_missed)
   case object Answered   extends CallEventKind (5, R.drawable.ic_call_black_18dp, R.string.call_event_answered)
   case object Ended      extends CallEventKind (6, R.drawable.ic_call_end_black_18dp, R.string.call_event_ended)
+  case object Cancelled  extends CallEventKind (7, R.drawable.ic_call_end_black_18dp, R.string.call_event_cancelled)
 
   val values: Set[CallEventKind] =
     Set(
@@ -28,6 +29,7 @@ object CallEventKind {
       Unanswered,
       Missed,
       Answered,
-      Ended
+      Ended,
+      Cancelled
     )
 }

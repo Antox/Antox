@@ -15,6 +15,12 @@ object TimestampUtils {
   val startOfTime = new Time(Time.getCurrentTimezone)
   startOfTime.set(0)
 
+  implicit def ordering[T <: Timestamp]: Ordering[T] = new Ordering[T] {
+    override def compare(x: T, y: T): Int = {
+      x.compareTo(y)
+    }
+  }
+
   def prettyTimestamp(t: Timestamp, isChat: Boolean): String = {
     val cal = Calendar.getInstance
     cal.setTime(t)
