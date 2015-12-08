@@ -1,7 +1,7 @@
 package chat.tox.antox.av
 
 import chat.tox.antox.utils.AntoxLog
-import chat.tox.antox.wrapper.CallNumber
+import chat.tox.antox.wrapper.{ContactKey, CallNumber}
 import rx.lang.scala.subjects.BehaviorSubject
 
 class CallManager {
@@ -19,7 +19,11 @@ class CallManager {
   }
 
   def get(callNumber: CallNumber): Option[Call] = {
-    callsSubject.getValue.get(callNumber)
+    calls.find(_.callNumber == callNumber)
+  }
+
+  def get(callKey: ContactKey): Option[Call] = {
+    calls.find(_.contactKey == callKey)
   }
 
   private def remove(callNumber: CallNumber): Unit = {

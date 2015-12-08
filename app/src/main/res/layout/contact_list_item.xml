@@ -50,22 +50,39 @@
                     android:textColor="@color/black"
                     android:layout_width="0dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textSize="19sp"/>
-                <TextView
-                    android:id="@+id/last_message_timestamp"
-                    android:duplicateParentState="true"
-                    android:text="10:00 PM"
-                    android:textSize="@dimen/text_small"
-                    android:textColor="@color/grey_dark"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
+                    android:textSize="19sp" />
+
+                <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp">
+
+                    <TextView
+                        android:id="@+id/last_message_timestamp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:gravity="center_vertical"
+                        android:text="10:00 PM"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_small" />
+
+                    <Chronometer
+                        android:id="@+id/contact_item_chronometer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="@dimen/text_small"
+                        android:visibility="gone"/>
+                </FrameLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:duplicateParentState="true"
                 android:orientation="horizontal"
@@ -74,9 +91,10 @@
                 android:layout_weight="0.5">
 
                 <ImageView
-                    android:id="@+id/status_image"
+                    android:id="@+id/second_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tint="@color/grey_dark"
                     android:layout_marginRight="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:layout_gravity="center_vertical"
@@ -95,6 +113,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_marginRight="10dp"
                     android:textSize="15sp"/>
+
                 <ImageView
                     android:id="@+id/star"
                     android:layout_width="25dp"
@@ -102,6 +121,7 @@
                     android:background="@drawable/ic_star_amber_400_24dp"
                     android:layout_marginRight="@dimen/margin_small"
                     android:layout_gravity="center_vertical" />
+
                 <TextView
                     android:id="@+id/unread_messages_count"
                     android:layout_gravity="center_vertical"

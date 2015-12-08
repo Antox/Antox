@@ -17,6 +17,7 @@ import rx.lang.scala.subjects.BehaviorSubject
 import rx.lang.scala.JavaConversions._
 
 import scala.concurrent.duration.Duration
+import scala.util.Try
 
 class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
@@ -69,8 +70,6 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private def frameSize = SampleCount(audioLength, samplingRate)
 
   def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
-
-
 
   def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
     logCallEvent(s"started sending audio:$sendingAudio and video:$sendingVideo")
@@ -128,9 +127,13 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     logCallEvent(s"friend call state updated to $state")
 
     val answered: Boolean = friendState.isEmpty && isActive(state) && !incoming
+    val ended: Boolean = !isActive(state)
+
     if (answered) {
       callStarted()
       ringingSubject.onNext(false)
+    } else if (ended) {
+      end()
     }
 
     friendStateSubject.onNext(friendState)
@@ -158,7 +161,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
                 frameSize, channels, samplingRate)
             } catch {
               case e: ToxException[_] =>
-                if (active) end(reason = CallEndReason.Error)
+                //if (active) end(reason = CallEndReason.Error)
             }
           }
 
@@ -222,7 +225,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
     // only send a call control if the call wasn't ended unexpectedly
     if (reason != CallEndReason.Error) {
-      ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL)
+      Try(ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL))
     }
 
     selfStateSubject.onNext(selfState.copy(ended = true))
@@ -233,7 +236,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     onCallEnded()
   }
 
-  def onCallEnded(): Unit = {
+  private def onCallEnded(): Unit = {
     audioCapture.stop()
     cleanUp()
   }

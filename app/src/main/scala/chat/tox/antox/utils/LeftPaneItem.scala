@@ -18,9 +18,10 @@ class LeftPaneItem(
   val status: ToxUserStatus,
   val favorite: Boolean,
   val count: Int,
-  val timestamp: Timestamp) {
+  val timestamp: Timestamp, // if call is active this is start time
+  val activeCall: Boolean) {
 
   def this(viewType: ContactItemType, key: ContactKey, message: String) =
-    this(viewType, key, None, key.toString, message, None, false, null, false, 0, null)
+    this(viewType, key, None, key.toString, message, None, false, null, false, 0, null, false)
 
 }

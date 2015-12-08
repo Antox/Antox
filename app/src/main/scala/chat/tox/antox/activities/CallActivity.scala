@@ -57,6 +57,11 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
     call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
 
+    if (getIntent.getAction == Constants.END_CALL) {
+      call.end()
+      finish()
+    }
+
     setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     callEventLogger = CallEventLogger(call, this)
@@ -150,7 +155,9 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   override def onNewIntent(intent: Intent): Unit = {
     super.onNewIntent(intent)
-    call.end()
+    if (intent.getAction == Constants.END_CALL) {
+      call.end()
+    }
   }
 
   override def onResume(): Unit = {

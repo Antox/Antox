@@ -1,8 +1,5 @@
 package chat.tox.antox.av
 
-import java.net
-import java.net.CacheRequest
-
 import android.content.Context
 import chat.tox.antox.data.{State, CallEventKind}
 import chat.tox.antox.tox.ToxSingleton
@@ -54,19 +51,19 @@ case class CallEventLogger(call: Call, context: Context) {
     subscriptions +=
       call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(reason => {
         import CallEndReason._
-
-        if (call.ringing) {
-          addCallEvent(CallEventKind.Cancelled)
-        } else {
-          reason match {
-            case Normal | Error =>
-              val duration = TimestampUtils.formatDuration(call.duration.toSeconds)
+        reason match {
+          case Normal | Error =>
+            val duration = TimestampUtils.formatDuration(call.duration.toSeconds)
+            if (call.ringing) {
+              addCallEvent(CallEventKind.Cancelled)
+            } else {
               addCallEvent(CallEventKind.Ended, s" ($duration)")
-            case Missed =>
-              addCallEvent(CallEventKind.Missed)
-            case Unanswered =>
-              addCallEvent(CallEventKind.Unanswered)
-          }
+            }
+
+          case Missed =>
+            addCallEvent(CallEventKind.Missed)
+          case Unanswered =>
+            addCallEvent(CallEventKind.Unanswered)
         }
       })
   }

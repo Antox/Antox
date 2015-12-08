@@ -52,7 +52,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
     } else {
       ToxSingleton.typingMap.put(friendInfo.key, false)
       State.typing.onNext(true)
-      State.callManager.calls.find(_.contactKey == friendInfo.key).filter(_.active).foreach(_.end())
+      State.callManager.get(friendInfo.key).filter(_.active).foreach(_.end())
     }
 
   }

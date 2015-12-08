@@ -4,10 +4,10 @@ import java.util
 
 import android.app.Activity
 import android.content.Context
-import android.os.Build
+import android.os.{SystemClock, Build}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
-import android.widget.{BaseAdapter, Filter, Filterable, ImageView, TextView}
+import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter._
 import chat.tox.antox.data.State
@@ -28,6 +28,8 @@ object ContactListAdapter {
 
     var secondText: TextView = _
 
+    var secondImage: ImageView = _
+
     var icon: TextView = _
 
     var favorite: ImageView = _
@@ -38,7 +40,7 @@ object ContactListAdapter {
 
     var timeText: TextView = _
 
-    var statusImage: ImageView = _
+    var chronometer: Chronometer = _
 
     var imageLoadingSubscription: Option[Subscription] = None
   }
@@ -97,11 +99,13 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           newConvertView = layoutInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
+          holder.secondImage = newConvertView.findViewById(R.id.second_image).asInstanceOf[ImageView]
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
           holder.favorite = newConvertView.findViewById(R.id.star).asInstanceOf[ImageView]
           holder.avatar = newConvertView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
           holder.countText = newConvertView.findViewById(R.id.unread_messages_count).asInstanceOf[TextView]
           holder.timeText = newConvertView.findViewById(R.id.last_message_timestamp).asInstanceOf[TextView]
+          holder.chronometer = newConvertView.findViewById(R.id.contact_item_chronometer).asInstanceOf[Chronometer]
       }
       newConvertView.setTag(holder)
     } else {
@@ -113,6 +117,15 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
     if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
 
+    item.secondImage match {
+      case Some(imageRes) =>
+        holder.secondImage.setVisibility(View.VISIBLE)
+        holder.secondImage.setImageResource(imageRes)
+
+      case None =>
+        holder.secondImage.setVisibility(View.GONE)
+    }
+
     if (`type` == ContactItemType.FRIEND || `type` == ContactItemType.GROUP) {
       if (item.count > 0) {
         holder.countText.setVisibility(View.VISIBLE)
@@ -122,7 +135,15 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       } else {
         holder.countText.setVisibility(View.GONE)
       }
-      holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
+
+      if (item.activeCall) {
+        holder.timeText.setVisibility(View.GONE)
+        holder.chronometer.setVisibility(View.VISIBLE)
+        holder.chronometer.setBase(SystemClock.elapsedRealtime() - item.timestamp.getTime)
+        holder.chronometer.start()
+      } else {
+        holder.timeText.setText(TimestampUtils.prettyTimestamp(item.timestamp, isChat = false))
+      }
 
       holder.imageLoadingSubscription.foreach(_.unsubscribe())
 

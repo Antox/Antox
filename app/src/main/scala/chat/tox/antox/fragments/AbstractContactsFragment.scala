@@ -16,7 +16,8 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.activities.{ChatActivity, FriendProfileActivity, GroupChatActivity}
 import chat.tox.antox.adapters.ContactListAdapter
-import chat.tox.antox.data.State
+import chat.tox.antox.av.Call
+import chat.tox.antox.data.{CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
@@ -49,14 +50,15 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
-    Seq[GroupInvite], Seq[GroupInfo])): Unit
+    Seq[GroupInvite], Seq[GroupInfo]), activeCalls: Iterable[Call]): Unit
 
   override def onResume() {
     super.onResume()
     val db = State.db
     contactChangeSub = Try(db.contactListElements
+      .combineLatest(State.callManager.activeCallObservable)
       .observeOn(AndroidMainThreadScheduler())
-      .subscribe(updateContacts(_))).toOption
+      .subscribe(tuple => updateContacts(tuple._1, tuple._2))).toOption
   }
 
   override def onPause() {
@@ -101,6 +103,10 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
     rootView.findViewById(R.id.center_text).setVisibility(View.GONE)
 
     rootView
+  }
+
+  def getSecondImage(contact: ContactInfo): Option[Int] = {
+    contact.lastMessage.map(_.callEventKind).filterNot(_ == CallEventKind.Invalid).map(_.imageRes)
   }
 
   override def onItemClick(parent: AdapterView[_], view: View, position: Int, id: Long) {

@@ -1,17 +1,21 @@
 package chat.tox.antox.fragments
 
+import java.sql.Timestamp
+
 import android.os.Bundle
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter
+import chat.tox.antox.av.Call
+import chat.tox.antox.data.{State, CallEventKind}
 import chat.tox.antox.utils.{LeftPaneItem, TimestampUtils}
-import chat.tox.antox.wrapper.{FriendInfo, FriendRequest, GroupInfo, GroupInvite}
+import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxUserStatus
 
 class ContactsFragment extends AbstractContactsFragment(showSearch = true, showFab = true) {
 
   override def updateContacts(contactInfoTuple: (Seq[FriendInfo], Seq[FriendRequest],
-    Seq[GroupInvite], Seq[GroupInfo])) {
+    Seq[GroupInvite], Seq[GroupInfo]), activeCalls: Iterable[Call]) {
     contactInfoTuple match {
       case (friendsList, friendRequests, groupInvites, groupList) =>
         leftPaneAdapter = new ContactListAdapter(getActivity)
@@ -33,11 +37,12 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
   def updateFriendsList(leftPaneAdapter: ContactListAdapter, friendsList: Seq[FriendInfo]): Unit = {
     val sortedFriendsList = friendsList.sortWith(compareNames).sortWith(compareOnline).sortWith(compareFavorite)
     if (sortedFriendsList.nonEmpty) {
-      for (f <- sortedFriendsList) {
-        val friend = new LeftPaneItem(ContactItemType.FRIEND, f.key, f.avatar, f.getDisplayName, f.statusMessage,
-          None, f.online, f.getFriendStatusAsToxUserStatus, f.favorite, f.unreadCount,
-          f.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()))
-        leftPaneAdapter.addItem(friend)
+      for (friend <- sortedFriendsList) {
+
+        val friendPane = new LeftPaneItem(ContactItemType.FRIEND, friend.key, friend.avatar, friend.getDisplayName, friend.statusMessage,
+          None, friend.online, friend.getFriendStatusAsToxUserStatus, friend.favorite, friend.unreadCount,
+          friend.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()), false)
+        leftPaneAdapter.addItem(friendPane)
       }
     }
   }
@@ -65,7 +70,7 @@ class ContactsFragment extends AbstractContactsFragment(showSearch = true, showF
     if (sortedGroupList.nonEmpty) {
       for (group <- sortedGroupList) {
         val groupPane: LeftPaneItem = new LeftPaneItem(ContactItemType.GROUP, group.key, group.avatar, group.getDisplayName, group.topic,
-          None, group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()))
+          None, group.online, ToxUserStatus.NONE, group.favorite, group.unreadCount, group.lastMessage.map(_.timestamp).getOrElse(TimestampUtils.emptyTimestamp()), false)
         leftPaneAdapter.addItem(groupPane)
       }
     }
