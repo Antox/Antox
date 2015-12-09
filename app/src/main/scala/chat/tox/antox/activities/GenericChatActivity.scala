@@ -2,7 +2,7 @@ package chat.tox.antox.activities
 
 import java.util
 
-import android.content.Context
+import android.content.{Intent, Context}
 import android.os.Bundle
 import android.support.v7.app.{ActionBar, AppCompatActivity}
 import android.support.v7.widget.RecyclerView.OnScrollListener
@@ -42,6 +42,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   var scrolling: Boolean = false
   val layoutManager = new LinearLayoutManager(this)
 
+  var fromNotifications: Boolean = false
+
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
   val defaultMessagePageSize = 50
@@ -59,6 +61,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     val extras: Bundle = getIntent.getExtras
     activeKey = getKey(extras.getString("key"))
+    fromNotifications = extras.getBoolean("notification", false)
     val thisActivity = this
     AntoxLog.debug("key = " + activeKey)
 
@@ -225,6 +228,15 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     State.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
     messagesSub.unsubscribe()
+  }
+
+  override def onBackPressed(): Unit = {
+    if(fromNotifications) {
+      val main = new Intent(this, classOf[MainActivity])
+      main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
+      startActivity(main)
+    }
+    else super.onBackPressed()
   }
 
   //Abstract Methods

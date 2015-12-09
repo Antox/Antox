@@ -77,6 +77,7 @@ object AntoxNotificationManager {
       resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
       resultIntent.putExtra("key", key.toString)
       resultIntent.putExtra("name", new String(name.value))
+      resultIntent.putExtra("notification", true)
 
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])
