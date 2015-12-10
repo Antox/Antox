@@ -66,8 +66,6 @@ object State {
       AntoxNotificationManager.removePersistentNotification()
     }
 
-    AntoxNotificationManager.stopMonitoringCalls()
-
     //clear notifications as they are now invalid after logging out
     AntoxNotificationManager.clearAllNotifications()
 

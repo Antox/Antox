@@ -255,7 +255,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
       case None =>
         //an active call does not exist, start a new call and start a corresponding activity
-        val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey)
+        val call = new Call(CallNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey, incoming = false)
         State.callManager.add(call)
         call.startCall(sendingAudio = true, sendingVideo = video)
 

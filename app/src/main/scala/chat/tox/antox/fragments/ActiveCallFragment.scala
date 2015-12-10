@@ -1,8 +1,7 @@
 package chat.tox.antox.fragments
 
 import android.content.Intent
-import android.media.MediaPlayer.OnPreparedListener
-import android.media.{AudioManager, MediaPlayer}
+import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
@@ -10,7 +9,7 @@ import android.widget.{Chronometer, ImageButton}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av.Call
-import chat.tox.antox.utils.{Constants, MediaUtils}
+import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.ContactKey
 
 object ActiveCallFragment {
@@ -32,8 +31,6 @@ class ActiveCallFragment extends CommonCallFragment {
   var durationView: Chronometer = _
   var allToggleButtons: List[ImageButton] = _
 
-  var ringbackToneSound: MediaPlayer = _
-
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
 
@@ -43,23 +40,28 @@ class ActiveCallFragment extends CommonCallFragment {
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val rootView = super.onCreateView(inflater, container, savedInstanceState)
 
-    ringbackToneSound = MediaUtils.setupSound(getActivity, R.raw.ringback_tone, AudioManager.STREAM_VOICE_CALL, looping = true)
-
     /* Set up the speaker/mic buttons */
     val micOn = rootView.findViewById(R.id.mic_on).asInstanceOf[ImageButton]
     val micOff = rootView.findViewById(R.id.mic_off).asInstanceOf[ImageButton]
     val speakerOn = rootView.findViewById(R.id.speaker_on).asInstanceOf[ImageButton]
     val speakerOff = rootView.findViewById(R.id.speaker_off).asInstanceOf[ImageButton]
+    val loudspeakerOn = rootView.findViewById(R.id.speaker_loudspeaker).asInstanceOf[ImageButton]
     val videoOn = rootView.findViewById(R.id.video_on).asInstanceOf[ImageButton]
     val videoOff = rootView.findViewById(R.id.video_off).asInstanceOf[ImageButton]
 
-    allToggleButtons = List(micOn, micOff, speakerOn, speakerOff, videoOn, videoOff)
+    allToggleButtons = List(micOn, micOff, speakerOn, speakerOff, loudspeakerOn, videoOn, videoOff)
 
     setupOnClickToggle(micOn, micOff, call.muteSelfAudio)
     setupOnClickToggle(micOff, micOn, call.unmuteSelfAudio)
 
-    setupOnClickToggle(speakerOn, speakerOff, call.muteFriendAudio)
-    setupOnClickToggle(speakerOff, speakerOn, call.unmuteFriendAudio)
+    setupOnClickToggle(loudspeakerOn, speakerOff, call.muteFriendAudio)
+    setupOnClickToggle(speakerOff, speakerOn, () => {
+      audioManager.setSpeakerphoneOn(false)
+      call.unmuteFriendAudio()
+    })
+    setupOnClickToggle(speakerOn, loudspeakerOn, () => {
+      audioManager.setSpeakerphoneOn(true)
+    })
 
     setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
     setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
@@ -107,21 +109,12 @@ class ActiveCallFragment extends CommonCallFragment {
   }
 
   def setupOutgoing(): Unit = {
-    ringbackToneSound.setLooping(true)
-    ringbackToneSound.setOnPreparedListener(new OnPreparedListener {
-      override def onPrepared(mp: MediaPlayer): Unit = {
-        ringbackToneSound.start()
-      }
-    })
-
     callStateView.setVisibility(View.VISIBLE)
     callStateView.setText(R.string.call_ringing)
     durationView.setVisibility(View.GONE)
   }
 
   def setupActive(): Unit = {
-    ringbackToneSound.stop()
-
     allToggleButtons.foreach(_.setEnabled(true))
 
     callStateView.setVisibility(View.GONE)
@@ -135,6 +128,5 @@ class ActiveCallFragment extends CommonCallFragment {
     super.onDestroy()
 
     durationView.stop()
-    ringbackToneSound.release()
   }
 }

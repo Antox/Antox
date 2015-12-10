@@ -101,3 +101,12 @@ dependencies {
     androidTestCompile 'com.android.support.test:rules:0.4'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }
+
+tasks.withType(ScalaCompile) {
+    // If you want to use scala compile daemon
+    scalaCompileOptions.useCompileDaemon = true
+    // Suppress deprecation warnings
+    scalaCompileOptions.deprecation = false
+    // Additional parameters
+    scalaCompileOptions.additionalParameters = ["-Xexperimental"]
+}

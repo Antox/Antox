@@ -3,23 +3,21 @@ package chat.tox.antox.av
 import java.util.concurrent.TimeUnit
 
 import chat.tox.antox.av.CallEndReason.CallEndReason
-import chat.tox.antox.data.{CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{AntoxLog, AudioCapture}
-import chat.tox.antox.wrapper.{FriendKey, CallNumber, ContactKey}
+import chat.tox.antox.wrapper.{CallNumber, ContactKey}
 import im.tox.tox4j.av._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
-import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.exceptions.ToxException
-import rx.lang.scala.{Observable, Subject}
-import rx.lang.scala.subjects.BehaviorSubject
-
 import rx.lang.scala.JavaConversions._
+import rx.lang.scala.subjects.BehaviorSubject
+import rx.lang.scala.{Observable, Subject}
 
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration.Duration
 import scala.util.Try
 
-class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
+final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: Boolean) {
 
   private val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](Set.empty[ToxavFriendCallState])
   private def friendState: Set[ToxavFriendCallState] = friendStateSubject.getValue
@@ -39,16 +37,20 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   private val audioLength = AudioLength.Length20 //in microseconds
   private val channels = AudioChannels.Stereo
 
-  val defaultRingTime = Duration(5, TimeUnit.SECONDS)
+  val defaultRingTime = Duration(30, TimeUnit.SECONDS)
 
   // ringing by default (call should only be created if it is ringing)
   private val ringingSubject = BehaviorSubject[Boolean](true)
   def ringingObservable: Observable[Boolean] = ringingSubject.asJavaObservable
   def ringing = ringingSubject.getValue
-  var incoming = false
 
   var startTime: Duration = Duration(0, TimeUnit.MILLISECONDS)
   def duration: Duration = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS) - startTime //in milliseconds
+
+  val callEnhancements: ArrayBuffer[CallEnhancement] = new ArrayBuffer()
+
+  // make sure the call ends eventually if it's still ringing
+  endAfterTime(defaultRingTime)
 
   /**
    * Describes a state in which the call is not FINISHED or ERROR.
@@ -58,7 +60,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
     isActive(friendState) && !selfState.ended
   }
 
-  def isActive(state: Set[ToxavFriendCallState]): Boolean = {
+  private def isActive(state: Set[ToxavFriendCallState]): Boolean = {
     !state.contains(ToxavFriendCallState.FINISHED) && !state.contains(ToxavFriendCallState.ERROR)
   }
 
@@ -69,7 +71,7 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
 
   private def frameSize = SampleCount(audioLength, samplingRate)
 
-  def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
+  private def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
 
   def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
     logCallEvent(s"started sending audio:$sendingAudio and video:$sendingVideo")
@@ -79,9 +81,6 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
       if (sendingVideo) selfState.videoBitRate else BitRate.Disabled)
 
     endAfterTime(defaultRingTime)
-
-    incoming = false
-    ringingSubject.onNext(true)
   }
 
   def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
@@ -95,19 +94,15 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
     logCallEvent(s"incoming receiving audio:$receivingAudio and video:$receivingVideo")
 
-    endAfterTime(defaultRingTime)
-
-    incoming = true
-    ringingSubject.onNext(true)
     selfStateSubject.onNext(selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo))
   }
   
-  def endAfterTime(ringTime: Duration): Unit = {
+  private def endAfterTime(ringTime: Duration): Unit = {
     //end the call after `ringTime`
     new Thread(new Runnable {
       override def run(): Unit = {
         Thread.sleep(ringTime.toMillis)
-        if (active && ringingSubject.getValue) {
+        if (active && ringing) {
           val reason =
             if (incoming) {
               // call was missed
@@ -219,8 +214,6 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   }
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
-    assert(active)
-
     logCallEvent(s"ended reason:$reason")
 
     // only send a call control if the call wasn't ended unexpectedly
@@ -237,6 +230,8 @@ class Call(val callNumber: CallNumber, val contactKey: ContactKey) {
   }
 
   private def onCallEnded(): Unit = {
+    callEnhancements.foreach(_.onRemove())
+
     audioCapture.stop()
     cleanUp()
   }

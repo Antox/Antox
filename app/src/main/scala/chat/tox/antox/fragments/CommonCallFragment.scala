@@ -1,5 +1,6 @@
 package chat.tox.antox.fragments
 
+import android.content.Context
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.{AudioManager, MediaPlayer}
 import android.os.Bundle
@@ -37,6 +38,8 @@ abstract class CommonCallFragment extends Fragment {
 
   val compositeSubscription = CompositeSubscription()
 
+  var audioManager: AudioManager = _
+
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
 
@@ -45,6 +48,8 @@ abstract class CommonCallFragment extends Fragment {
         .getOrElse(throw new IllegalStateException("Call fragment extras must be valid."))
     activeKey = FriendKey(getArguments.getString(CommonCallFragment.EXTRA_ACTIVE_KEY))
     callLayout = getArguments.getInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT)
+
+    audioManager = getActivity.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
 
     callEndedSound = MediaUtils.setupSound(getActivity, R.raw.end_call, AudioManager.STREAM_VOICE_CALL, looping = false)
   }
@@ -88,7 +93,7 @@ abstract class CommonCallFragment extends Fragment {
 
     compositeSubscription +=
       call.callEndedObservable.subscribe(_ => {
-        getActivity.finish()
+        onCallEnded()
       })
 
     // update displayed friend info on change

@@ -48,6 +48,15 @@
             android:src="@drawable/ic_volume_up_black_36dp" />
 
         <ImageButton
+            android:id="@+id/speaker_loudspeaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/background_circle"
+            android:src="@drawable/ic_speaker_phone_black_36dp"
+            android:visibility="gone" />
+
+        <ImageButton
             android:id="@+id/speaker_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

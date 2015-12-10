@@ -9,15 +9,47 @@ import im.tox.tox4j.core.data.ToxNickname
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.subscriptions.CompositeSubscription
 
-case class CallEventLogger(call: Call, context: Context) {
+class CallEventLogger(call: Call, context: Context) extends CallEnhancement {
   var subscriptions: CompositeSubscription = CompositeSubscription()
 
+  subscriptions +=
+    call.ringingObservable.observeOn(AndroidMainThreadScheduler()).subscribe(ringing => {
+      if (ringing) {
+        if (call.incoming) {
+          addCallEvent(CallEventKind.Incoming)
+        } else {
+          addCallEvent(CallEventKind.Outgoing)
+        }
+      } else {
+        addCallEvent(CallEventKind.Answered)
+      }
+    })
+
+  subscriptions +=
+    call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(reason => {
+      import CallEndReason._
+      reason match {
+        case Normal | Error =>
+          val duration = TimestampUtils.formatDuration(call.duration.toSeconds)
+          if (call.ringing) {
+            addCallEvent(CallEventKind.Cancelled)
+          } else {
+            addCallEvent(CallEventKind.Ended, s" ($duration)")
+          }
+
+        case Missed =>
+          addCallEvent(CallEventKind.Missed)
+        case Unanswered =>
+          addCallEvent(CallEventKind.Unanswered)
+      }
+    })
+
   /**
-   * Log a call event to the db.
-   *
-   * @param callEventKind kind of call event
-   * @param extraInfo string appended to the standard call event message
-   */
+    * Log a call event to the db.
+    *
+    * @param callEventKind kind of call event
+    * @param extraInfo string appended to the standard call event message
+    */
   def addCallEvent(callEventKind: CallEventKind, extraInfo: String = ""): Unit = {
     val (senderKey, senderName) =
       if (call.incoming) {
@@ -34,41 +66,14 @@ case class CallEventLogger(call: Call, context: Context) {
     State.db.addCallEventMessage(call.contactKey, senderKey, senderName, message, State.isChatActive(call.contactKey), callEventKind)
   }
 
-  def startLogging(): Unit = {
-    subscriptions +=
-      call.ringingObservable.observeOn(AndroidMainThreadScheduler()).subscribe(ringing => {
-        if (ringing) {
-          if (call.incoming) {
-            addCallEvent(CallEventKind.Incoming)
-          } else {
-            addCallEvent(CallEventKind.Outgoing)
-          }
-        } else {
-          addCallEvent(CallEventKind.Answered)
-        }
-      })
-
-    subscriptions +=
-      call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(reason => {
-        import CallEndReason._
-        reason match {
-          case Normal | Error =>
-            val duration = TimestampUtils.formatDuration(call.duration.toSeconds)
-            if (call.ringing) {
-              addCallEvent(CallEventKind.Cancelled)
-            } else {
-              addCallEvent(CallEventKind.Ended, s" ($duration)")
-            }
-
-          case Missed =>
-            addCallEvent(CallEventKind.Missed)
-          case Unanswered =>
-            addCallEvent(CallEventKind.Unanswered)
-        }
-      })
+  private def stopLogging(): Unit = {
+    subscriptions.unsubscribe()
   }
 
-  def stopLogging(): Unit = {
-    subscriptions.unsubscribe()
+  /**
+    * Called when the call ends.
+    */
+  override def onRemove(): Unit = {
+    stopLogging()
   }
 }

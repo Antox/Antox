@@ -27,8 +27,8 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 20) extend
       }
 
     val bufferSize = sampleRate * channels * 2
-    mAudioTrack = Some(new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate, channelConfig,
-      AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM)) //TODO: change this back to a phone call
+    mAudioTrack = Some(new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate, channelConfig,
+      AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM))
     mAudioTrack.foreach(_.play())
     dirty = false
     println("recreating audio whatever")

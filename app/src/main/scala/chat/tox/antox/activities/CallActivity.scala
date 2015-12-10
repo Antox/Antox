@@ -1,14 +1,14 @@
 package chat.tox.antox.activities
 
-import android.content.{Intent, Context}
 import android.content.pm.ActivityInfo
+import android.content.{Context, Intent}
 import android.media.AudioManager
 import android.os.{Build, Bundle, PowerManager}
 import android.support.v4.app.FragmentActivity
 import android.view.{View, ViewAnimationUtils, ViewTreeObserver, WindowManager}
 import android.widget.FrameLayout
 import chat.tox.antox.R
-import chat.tox.antox.av.{CallEventLogger, Call}
+import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.{ActiveCallFragment, IncomingCallFragment}
 import chat.tox.antox.tox.MessageHelper
@@ -23,8 +23,6 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   var call: Call = _
   var activeKey: ContactKey = _
-
-  var callEventLogger: CallEventLogger = _
 
   private var powerManager: PowerManager = _
   private var maybeWakeLock: Option[PowerManager#WakeLock] = None
@@ -63,9 +61,6 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     }
 
     setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
-    callEventLogger = CallEventLogger(call, this)
-    callEventLogger.startLogging()
 
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
@@ -183,7 +178,6 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
   override def onDestroy(): Unit = {
     super.onDestroy()
 
-    callEventLogger.stopLogging()
     compositeSubscription.unsubscribe()
   }
 }

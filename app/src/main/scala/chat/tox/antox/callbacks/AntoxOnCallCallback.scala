@@ -14,7 +14,7 @@ class AntoxOnCallCallback(private var ctx: Context) {
     AntoxLog.debug("New call from " + callNumber)
 
     try {
-      State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(callNumber.value)))
+      State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(callNumber.value), incoming = true))
       State.callManager.get(callNumber).foreach { call =>
         call.onIncoming(audioEnabled, videoEnabled)
 

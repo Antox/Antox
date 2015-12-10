@@ -169,8 +169,6 @@ object ToxSingleton {
     State.db = new AntoxDB(ctx, userDb.getActiveUser, tox.getSelfKey)
     val db = State.db
 
-    AntoxNotificationManager.startMonitoringCalls(ctx, db)
-
     toxAv = new ToxAv(tox.getTox)
 
     db.clearFileNumbers()

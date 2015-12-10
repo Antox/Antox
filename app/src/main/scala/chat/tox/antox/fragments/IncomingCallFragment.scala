@@ -1,7 +1,7 @@
 package chat.tox.antox.fragments
 
 import android.content.Context
-import android.media.{AudioManager, MediaPlayer, RingtoneManager}
+import android.media.AudioManager
 import android.os.{Bundle, Vibrator}
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
@@ -32,37 +32,13 @@ class IncomingCallFragment extends CommonCallFragment {
   var vibrator: Vibrator = _
   val vibrationPattern = Array[Long](0, 1000, 1000) //wait 0ms vibrate 1000ms off 1000ms
 
-  var audioManager: AudioManager = _
-
   var answerCallButton: View = _
-
-  var maybeRingtone: Option[MediaPlayer] = None
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
 
-    audioManager = getActivity.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-
     vibrator = getActivity.getSystemService(Context.VIBRATOR_SERVICE).asInstanceOf[Vibrator]
     vibrator.vibrate(vibrationPattern, 0)
-
-    val maybeRingtoneUri = Option(RingtoneManager.getActualDefaultRingtoneUri(getActivity, RingtoneManager.TYPE_RINGTONE))
-
-    maybeRingtoneUri.foreach(ringtoneUri => {
-      val ringtone =
-        try {
-          val tempRingtone = new MediaPlayer()
-          tempRingtone.setDataSource(getActivity, ringtoneUri)
-          tempRingtone.setAudioStreamType(AudioManager.STREAM_RING)
-          tempRingtone.setLooping(true)
-          tempRingtone.prepare()
-          tempRingtone
-        } catch {
-          case e: Exception =>
-            MediaPlayer.create(getActivity, R.raw.incoming_call)
-        }
-      maybeRingtone = Some(ringtone)
-    })
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
@@ -88,7 +64,6 @@ class IncomingCallFragment extends CommonCallFragment {
     })
 
     // vibrate and ring on incoming call
-    maybeRingtone.foreach(_.start())
     AntoxLog.debug("Audio stream volume " + audioManager.getStreamVolume(AudioManager.STREAM_RING))
 
     callStateView.setVisibility(View.VISIBLE)
@@ -100,6 +75,5 @@ class IncomingCallFragment extends CommonCallFragment {
   override def onDestroy(): Unit = {
     super.onDestroy()
     vibrator.cancel()
-    maybeRingtone.foreach(_.release())
   }
 }

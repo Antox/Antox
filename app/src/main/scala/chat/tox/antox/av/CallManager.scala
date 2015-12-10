@@ -1,8 +1,11 @@
 package chat.tox.antox.av
 
 import chat.tox.antox.utils.AntoxLog
-import chat.tox.antox.wrapper.{ContactKey, CallNumber}
+import chat.tox.antox.wrapper.{CallNumber, ContactKey}
+import rx.lang.scala.{Observable, Subject}
 import rx.lang.scala.subjects.BehaviorSubject
+
+import rx.lang.scala.JavaConversions._
 
 class CallManager {
   private val callsSubject = BehaviorSubject[Map[CallNumber, Call]](Map.empty[CallNumber, Call])
@@ -10,8 +13,13 @@ class CallManager {
   def calls: Seq[Call] = callsSubject.getValue.values.toSeq
   val activeCallObservable = callsSubject.map(_.values.filter(_.active))
 
+  private val callAddedSubject = Subject[Call]()
+  val callAddedObservable: Observable[Call] = callAddedSubject.asJavaObservable
+
   def add(call: Call): Unit = {
     AntoxLog.debug("Adding call")
+    callAddedSubject.onNext(call)
+
     callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
     call.callEndedObservable.subscribe { _ =>
       remove(call.callNumber)
