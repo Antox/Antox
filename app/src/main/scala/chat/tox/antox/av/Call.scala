@@ -230,8 +230,6 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   }
 
   private def onCallEnded(): Unit = {
-    callEnhancements.foreach(_.onRemove())
-
     audioCapture.stop()
     cleanUp()
   }

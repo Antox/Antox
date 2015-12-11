@@ -1,9 +1,9 @@
 package chat.tox.antox.av
 
-trait CallEnhancement {
+import rx.lang.scala.subscriptions.CompositeSubscription
 
-  /**
-    * Called when the call ends.
-    */
-  def onRemove(): Unit
+trait CallEnhancement {
+  def call: Call
+
+  val subscriptions: CompositeSubscription = CompositeSubscription()
 }

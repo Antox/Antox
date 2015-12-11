@@ -1,17 +1,14 @@
 package chat.tox.antox.av
 
 import android.content.Context
-import chat.tox.antox.data.{State, CallEventKind}
+import chat.tox.antox.data.{CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.TimestampUtils
 import chat.tox.antox.wrapper.FriendKey
 import im.tox.tox4j.core.data.ToxNickname
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-import rx.lang.scala.subscriptions.CompositeSubscription
 
-class CallEventLogger(call: Call, context: Context) extends CallEnhancement {
-  var subscriptions: CompositeSubscription = CompositeSubscription()
-
+class CallEventLogger(val call: Call, val context: Context) extends CallEnhancement {
   subscriptions +=
     call.ringingObservable.observeOn(AndroidMainThreadScheduler()).subscribe(ringing => {
       if (ringing) {
@@ -42,6 +39,8 @@ class CallEventLogger(call: Call, context: Context) extends CallEnhancement {
         case Unanswered =>
           addCallEvent(CallEventKind.Unanswered)
       }
+
+      stopLogging()
     })
 
   /**
@@ -68,12 +67,5 @@ class CallEventLogger(call: Call, context: Context) extends CallEnhancement {
 
   private def stopLogging(): Unit = {
     subscriptions.unsubscribe()
-  }
-
-  /**
-    * Called when the call ends.
-    */
-  override def onRemove(): Unit = {
-    stopLogging()
   }
 }

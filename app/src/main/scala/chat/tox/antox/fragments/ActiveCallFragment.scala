@@ -29,7 +29,7 @@ object ActiveCallFragment {
 class ActiveCallFragment extends CommonCallFragment {
 
   var durationView: Chronometer = _
-  var allToggleButtons: List[ImageButton] = _
+  var allButtons: List[ImageButton] = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -49,7 +49,10 @@ class ActiveCallFragment extends CommonCallFragment {
     val videoOn = rootView.findViewById(R.id.video_on).asInstanceOf[ImageButton]
     val videoOff = rootView.findViewById(R.id.video_off).asInstanceOf[ImageButton]
 
-    allToggleButtons = List(micOn, micOff, speakerOn, speakerOff, loudspeakerOn, videoOn, videoOff)
+    val returnToChat = rootView.findViewById(R.id.return_to_chat).asInstanceOf[ImageButton]
+
+    allButtons = List(micOn, micOff, speakerOn, speakerOff, loudspeakerOn, videoOn, videoOff, returnToChat)
+    allButtons.foreach(_.setEnabled(false))
 
     setupOnClickToggle(micOn, micOff, call.muteSelfAudio)
     setupOnClickToggle(micOff, micOn, call.unmuteSelfAudio)
@@ -66,9 +69,6 @@ class ActiveCallFragment extends CommonCallFragment {
     setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
     setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
 
-    allToggleButtons.foreach(_.setEnabled(false))
-
-    val returnToChat = rootView.findViewById(R.id.return_to_chat).asInstanceOf[ImageButton]
     returnToChat.setOnClickListener(new OnClickListener {
       override def onClick(v: View): Unit = {
         val intent = new Intent(getActivity, classOf[ChatActivity])
@@ -115,7 +115,7 @@ class ActiveCallFragment extends CommonCallFragment {
   }
 
   def setupActive(): Unit = {
-    allToggleButtons.foreach(_.setEnabled(true))
+    allButtons.foreach(_.setEnabled(true))
 
     callStateView.setVisibility(View.GONE)
 

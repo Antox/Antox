@@ -5,12 +5,11 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.media.{AudioManager, MediaPlayer, RingtoneManager}
 import chat.tox.antox.R
 import chat.tox.antox.utils.MediaUtils
-import rx.lang.scala.subscriptions.CompositeSubscription
 
 /**
   * Attach to a call and add sounds for the appropriate call events.
   */
-class CallSounds(call: Call, context: Context) extends CallEnhancement {
+class CallSounds(val call: Call, val context: Context) extends CallEnhancement {
 
   val ended = MediaUtils.setupSound(context, R.raw.end_call, AudioManager.STREAM_VOICE_CALL, looping = false)
   val ringback: MediaPlayer = MediaUtils.setupSound(context, R.raw.ringback_tone, AudioManager.STREAM_VOICE_CALL, looping = true)
@@ -35,12 +34,6 @@ class CallSounds(call: Call, context: Context) extends CallEnhancement {
   }
 
   // Add subscriptions for call events mapping to sounds
-  val subscriptions: CompositeSubscription = CompositeSubscription()
-
-  subscriptions +=
-    call.callEndedObservable.subscribe(_ => {
-      ended.start()
-    })
 
   subscriptions +=
     call.ringingObservable.distinctUntilChanged.subscribe(ringing => {
@@ -59,17 +52,13 @@ class CallSounds(call: Call, context: Context) extends CallEnhancement {
       }
     })
 
-  private def release(): Unit = {
-    subscriptions.unsubscribe()
+  subscriptions +=
+    call.callEndedObservable.subscribe(_ => {
+      ended.start()
+      onEnd()
+    })
 
-    ringback.release()
-    maybeRingtone.foreach(_.release())
-  }
-
-  /**
-    * Called when the call ends.
-    */
-  override def onRemove(): Unit = {
+  private def onEnd(): Unit = {
     ended.start()
     ended.setOnCompletionListener(new OnCompletionListener {
       override def onCompletion(mp: MediaPlayer): Unit = {
@@ -79,4 +68,12 @@ class CallSounds(call: Call, context: Context) extends CallEnhancement {
 
     release()
   }
+
+  private def release(): Unit = {
+    subscriptions.unsubscribe()
+
+    ringback.release()
+    maybeRingtone.foreach(_.release())
+  }
+
 }

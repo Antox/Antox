@@ -267,7 +267,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     onClickCall(video = false, clickLocation)
   }
 
-  override def onClickVideoCall(clickLocation: Location): Unit = {}
+  override def onClickVideoCall(clickLocation: Location): Unit = {
+    onClickCall(video = true, clickLocation)
+  }
 
   override def onPause(): Unit = {
     super.onPause()

@@ -22,7 +22,7 @@ class CallService(toxService: ToxService) {
         call.callEnhancements ++= Seq(
           new CallEventLogger(call, toxService),
           new CallSounds(call, toxService),
-          new AudioStateManager(audioManager)
+          new AudioStateManager(call, audioManager)
         )
       }))
 

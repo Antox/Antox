@@ -1,7 +1,7 @@
 package chat.tox.antox.utils
 
 import android.media.{AudioFormat, AudioRecord}
-import chat.tox.antox.av.AudioDevice
+import chat.tox.antox.av.{AudioDevice, CallAudioEffects}
 import chat.tox.antox.exceptions.AvDeviceNotFoundException
 import org.scaloid.common.LoggerTag
 
@@ -14,6 +14,9 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
   var bufferSizeBytes: Int = _
   var mAudioRecord: Option[AudioRecord] = None
+  var callAudioEffects: Option[CallAudioEffects] = None
+
+  val VOICE_COMMUNICATION: Int = 7 // audio source
 
   def recreate(): Unit = {
     require(channels <= 2 && channels > 0, "channels must be either 1 or 2")
@@ -66,6 +69,7 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
   def cleanUp(): Unit = {
     mAudioRecord.foreach(_.release())
+    callAudioEffects.foreach(_.cleanUp())
   }
 
   private def findAudioRecord(sampleRate: Int, channels: Int): Option[AudioRecord] = {
@@ -84,9 +88,15 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
       val bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
       if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
-        val recorder = new AudioRecord(0, sampleRate, channelConfig, audioFormat, bufferSize * 10)
+
+        val recorder = new AudioRecord(VOICE_COMMUNICATION, sampleRate, channelConfig, audioFormat, bufferSize * 10)
         if (recorder.getState == AudioRecord.STATE_INITIALIZED) {
           bufferSizeBytes = bufferSize
+
+          callAudioEffects.foreach(_.cleanUp())
+          callAudioEffects = Some(new CallAudioEffects(recorder))
+          callAudioEffects.foreach(_.enable())
+
           return Some(recorder)
         }
       }
