@@ -4,11 +4,11 @@ import android.content.Intent
 import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
-import android.view.{LayoutInflater, View, ViewGroup}
+import android.view.{SurfaceView, LayoutInflater, View, ViewGroup}
 import android.widget.{Chronometer, ImageButton}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
-import chat.tox.antox.av.Call
+import chat.tox.antox.av.{VideoDisplay, Call}
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.ContactKey
 
@@ -30,6 +30,9 @@ class ActiveCallFragment extends CommonCallFragment {
 
   var durationView: Chronometer = _
   var allButtons: List[ImageButton] = _
+
+  var videoSurface: SurfaceView = _
+  var videoDisplay: Option[VideoDisplay] = None
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -83,6 +86,9 @@ class ActiveCallFragment extends CommonCallFragment {
 
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
+    videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[SurfaceView]
+    videoDisplay = Some(new VideoDisplay(call, videoSurface))
+
     compositeSubscription +=
       call.ringingObservable.distinctUntilChanged.subscribe(ringing => {
         if (ringing) {
@@ -127,6 +133,7 @@ class ActiveCallFragment extends CommonCallFragment {
   override def onDestroy(): Unit = {
     super.onDestroy()
 
+    videoDisplay.foreach(_.destroy())
     durationView.stop()
   }
 }

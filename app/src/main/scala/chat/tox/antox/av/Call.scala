@@ -34,7 +34,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   //only for outgoing audio
   private val samplingRate = SamplingRate.Rate48k //in Hz
-  private val audioLength = AudioLength.Length20 //in microseconds
+  private val audioLength = AudioLength.Length20 //in milliseconds
   private val channels = AudioChannels.Stereo
 
   val defaultRingTime = Duration(30, TimeUnit.SECONDS)
@@ -49,16 +49,11 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   val callEnhancements: ArrayBuffer[CallEnhancement] = new ArrayBuffer()
 
-  // make sure the call ends eventually if it's still ringing
-  endAfterTime(defaultRingTime)
-
   /**
    * Describes a state in which the call is not FINISHED or ERROR.
    * When the call is on hold or ringing (not yet answered) this will return true.
    */
-  def active: Boolean = {
-    isActive(friendState) && !selfState.ended
-  }
+  def active: Boolean = isActive(friendState) && !selfState.ended
 
   private def isActive(state: Set[ToxavFriendCallState]): Boolean = {
     !state.contains(ToxavFriendCallState.FINISHED) && !state.contains(ToxavFriendCallState.ERROR)
@@ -69,9 +64,15 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   val audioCapture: AudioCapture = new AudioCapture(samplingRate.value, channels.value)
   val audioPlayer = new AudioPlayer(samplingRate.value, channels.value)
 
+  private val videoFrameSubject = Subject[VideoFrame]()
+  def videoFrameObservable: Observable[VideoFrame] = videoFrameSubject.asJavaObservable
+
   private def frameSize = SampleCount(audioLength, samplingRate)
 
   private def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")
+
+  // make sure the call ends eventually if it's still ringing
+  endAfterTime(defaultRingTime)
 
   def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
     logCallEvent(s"started sending audio:$sendingAudio and video:$sendingVideo")
@@ -174,6 +175,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   def onAudioFrame(pcm: Array[Short], channels: AudioChannels, samplingRate: SamplingRate): Unit = {
     audioPlayer.bufferAudioFrame(pcm, channels.value, samplingRate.value)
+  }
+
+  def onVideoFrame(videoFrame: VideoFrame): Unit = {
+    videoFrameSubject.onNext(videoFrame)
   }
 
   def muteSelfAudio(): Unit = {

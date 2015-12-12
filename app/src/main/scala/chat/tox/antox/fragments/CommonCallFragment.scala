@@ -24,6 +24,9 @@ object CommonCallFragment {
 
 abstract class CommonCallFragment extends Fragment {
 
+  create a new fragment that inherits from this
+  for video, hide what is appropriate to hide, make it switch in activity (merge the observable)
+
   var call: Call = _
   var activeKey: ContactKey = _
   var callLayout: Int = _
@@ -33,8 +36,6 @@ abstract class CommonCallFragment extends Fragment {
   var avatarView: CircleImageView = _
 
   var endCallButton: View = _
-
-  var callEndedSound: MediaPlayer = _
 
   val compositeSubscription = CompositeSubscription()
 
@@ -50,8 +51,6 @@ abstract class CommonCallFragment extends Fragment {
     callLayout = getArguments.getInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT)
 
     audioManager = getActivity.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
-
-    callEndedSound = MediaUtils.setupSound(getActivity, R.raw.end_call, AudioManager.STREAM_VOICE_CALL, looping = false)
   }
 
   private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {
@@ -109,13 +108,6 @@ abstract class CommonCallFragment extends Fragment {
   // Called when the call ends (both by the user and by friend)
   def onCallEnded(): Unit = {
     getActivity.finish()
-
-    callEndedSound.start()
-    callEndedSound.setOnCompletionListener(new OnCompletionListener {
-      override def onCompletion(mediaPlayer: MediaPlayer): Unit = {
-        callEndedSound.release()
-      }
-    })
   }
 
   override def onDestroy(): Unit = {
