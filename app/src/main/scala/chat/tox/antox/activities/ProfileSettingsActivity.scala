@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
-import android.support.v4.content.IntentCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AlertDialog.Builder
 import android.view.{MenuItem, View}
@@ -21,14 +20,12 @@ import chat.tox.antox.activities.ProfileSettingsActivity._
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
-import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
-import chat.tox.antox.toxme.{ToxData, ToxMe}
+import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
-import chat.tox.antox.utils.AntoxNotificationManager
 import chat.tox.antox.wrapper.UserStatus
 import com.google.zxing.{BarcodeFormat, WriterException}
-import im.tox.tox4j.core.data.{ToxStatusMessage, ToxNickname}
+import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
@@ -281,12 +278,12 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   def onExportDataFileSelected(dest: File): Unit = {
     try {
       ToxSingleton.exportDataFile(dest)
-      Toast.makeText(getApplicationContext, "Exported data file to " + dest.getPath, Toast.LENGTH_LONG)
+      Toast.makeText(getApplicationContext, getResources.getString(R.string.export_success, dest.getPath), Toast.LENGTH_LONG)
         .show()
     } catch {
       case e: Exception =>
         e.printStackTrace()
-        Toast.makeText(getApplicationContext, "Error: Could not export data file.", Toast.LENGTH_LONG).show()
+        Toast.makeText(getApplicationContext, R.string.export_failed, Toast.LENGTH_LONG).show()
     }
   }
 
