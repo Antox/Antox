@@ -20,8 +20,6 @@ import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import chat.tox.antox.utils.TimestampUtils._
 
-import scala.Predef
-
 object AntoxNotificationManager {
 
   var mNotificationManager: Option[NotificationManager] = None
@@ -91,6 +89,7 @@ object AntoxNotificationManager {
     val resultIntent = new Intent(ctx, intentClass)
     resultIntent.setAction(action)
     resultIntent.putExtra("key", key.toString)
+    resultIntent.putExtra("notification", true)
 
     val stackBuilder = TaskStackBuilder.create(ctx)
     stackBuilder.addParentStack(classOf[MainActivity])
