@@ -233,7 +233,9 @@
     <string name="status_busy">Busy</string>
     <string name="status_offline">Offline</string>
 
-
+    <!-- Export profile -->
+    <string name="export_success">Exported data file to %s</string>
+    <string name="export_failed">Error: Could not export data file.</string>
 
     <!-- nav bar -->
     <string name="n_settings">Settings</string>
