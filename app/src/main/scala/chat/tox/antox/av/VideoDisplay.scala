@@ -50,18 +50,18 @@ class VideoDisplay(call: Call, surfaceView: SurfaceView) {
     if (dirty) recreate()
 
     val holder = surfaceView.getHolder
-    val canvas = holder.lockCanvas()
+    Option(holder.lockCanvas()).foreach(canvas => {
+      bitmap.setPixels(videoFrame.toArgbArray(), 0, videoFrame.width, 0, 0, videoFrame.width, videoFrame.height)
+      val matrix = new Matrix()
+      val currentRect = new RectF(0, 0, videoFrame.width, videoFrame.height)
+      val desiredRect = new RectF(0, 0, canvas.getWidth, canvas.getHeight)
+      matrix.setRectToRect(currentRect, desiredRect, Matrix.ScaleToFit.CENTER)
 
-    bitmap.setPixels(videoFrame.toArgbArray(), 0, videoFrame.width, 0, 0, videoFrame.width, videoFrame.height)
-    val matrix = new Matrix()
-    val currentRect = new RectF(0, 0, videoFrame.width, videoFrame.height)
-    val desiredRect = new RectF(0, 0, canvas.getWidth, canvas.getHeight)
-    matrix.setRectToRect(currentRect, desiredRect, Matrix.ScaleToFit.CENTER)
+      println("rendering to the surface")
+      canvas.drawBitmap(bitmap, matrix, null)
 
-    println("rendering to the surface")
-    canvas.drawBitmap(bitmap, matrix, null)
-
-    holder.unlockCanvasAndPost(canvas)
+      holder.unlockCanvasAndPost(canvas)
+    })
   }
 
   def destroy(): Unit = {

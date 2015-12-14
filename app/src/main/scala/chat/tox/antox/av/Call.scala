@@ -22,11 +22,20 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   private val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](Set.empty[ToxavFriendCallState])
   private def friendState: Set[ToxavFriendCallState] = friendStateSubject.getValue
 
+  // only describes self state
   private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
   private def selfState = selfStateSubject.getValue
 
   //monitors both friend and self state, but does not expose them
   val callStateObservable = friendStateSubject.merge(selfStateSubject).map(_ => Unit)
+
+  // (receivingVideo, sendingVideo)
+  val callVideoObservable =
+    friendStateSubject
+      .combineLatestWith(selfStateSubject)((x, y) => (x, y))
+      .map { case (friendState, selfState) =>
+        (friendState.contains(ToxavFriendCallState.SENDING_V), selfState.sendingVideo)
+      }
 
   private val callEndedSubject = Subject[CallEndReason]()
   // called only once, when the call ends with the reason it ended
@@ -81,42 +90,39 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
       if (sendingAudio) selfState.audioBitRate else BitRate.Disabled,
       if (sendingVideo) selfState.videoBitRate else BitRate.Disabled)
 
-    endAfterTime(defaultRingTime)
+    selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
   }
 
-  def answerCall(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
-    logCallEvent(s"answered receiving audio:$receivingAudio and video:$receivingVideo")
+  def answerCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
+    logCallEvent(s"answered sending audio:$sendingAudio and video:$sendingVideo")
 
     ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
+    selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
+
     callStarted()
     ringingSubject.onNext(false)
   }
 
-  def onIncoming(receivingAudio: Boolean, receivingVideo: Boolean): Unit = {
-    logCallEvent(s"incoming receiving audio:$receivingAudio and video:$receivingVideo")
-
-    selfStateSubject.onNext(selfState.copy(receivingAudio = receivingAudio, receivingVideo = receivingVideo))
+  def onIncoming(audioEnabled: Boolean, videoEnabled: Boolean): Unit = {
+    logCallEvent(s"incoming receiving audio:$audioEnabled and video:$videoEnabled")
   }
-  
+
   private def endAfterTime(ringTime: Duration): Unit = {
     //end the call after `ringTime`
-    new Thread(new Runnable {
-      override def run(): Unit = {
-        Thread.sleep(ringTime.toMillis)
-        if (active && ringing) {
-          val reason =
-            if (incoming) {
-              // call was missed
-              CallEndReason.Missed
-            } else {
-              // call was unanswered
-              CallEndReason.Unanswered
-            }
+    Observable.timer(defaultRingTime).foreach(_ => {
+      if (active && ringing) {
+        val reason =
+          if (incoming) {
+            // call was missed
+            CallEndReason.Missed
+          } else {
+            // call was unanswered
+            CallEndReason.Unanswered
+          }
 
-          end(reason)
-        }
+        end(reason)
       }
-    }).start()
+    })
   }
 
   def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {

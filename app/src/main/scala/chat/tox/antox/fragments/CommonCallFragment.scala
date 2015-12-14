@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.TextView
+import android.widget.{LinearLayout, RelativeLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
@@ -24,13 +24,11 @@ object CommonCallFragment {
 
 abstract class CommonCallFragment extends Fragment {
 
-  create a new fragment that inherits from this
-  for video, hide what is appropriate to hide, make it switch in activity (merge the observable)
-
   var call: Call = _
   var activeKey: ContactKey = _
   var callLayout: Int = _
 
+  var upperCallHalfView: RelativeLayout = _
   var callStateView: TextView = _
   var nameView: TextView = _
   var avatarView: CircleImageView = _
@@ -77,10 +75,11 @@ abstract class CommonCallFragment extends Fragment {
 
     callStateView = rootView.findViewById(R.id.call_state_text).asInstanceOf[TextView]
 
+    upperCallHalfView = rootView.findViewById(R.id.call_upper_half).asInstanceOf[RelativeLayout]
     avatarView = rootView.findViewById(R.id.call_avatar).asInstanceOf[CircleImageView]
     nameView = rootView.findViewById(R.id.friend_name).asInstanceOf[TextView]
 
-    /* Set up the end call and av buttons */
+    // Set up the end call and av buttons
     endCallButton = rootView.findViewById(R.id.end_call_circle)
 
     endCallButton.setOnClickListener(new OnClickListener {

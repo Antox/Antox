@@ -87,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:allowUndo="false"
             android:text="@string/call_incoming_reply_with_message"
             android:textAllCaps="true"
             android:textSize="@dimen/text_smallish" />

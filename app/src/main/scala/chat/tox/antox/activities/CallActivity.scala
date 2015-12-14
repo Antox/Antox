@@ -36,11 +36,11 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     overridePendingTransition(0, 0)
 
     var windowFlags: Int =
-      // set this flag so this activity will stay in front of the keyguard
+    // set this flag so this activity will stay in front of the keyguard
       WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-      WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
-      // Have the WindowManager filter out touch events that are "too fat".
-      WindowManager.LayoutParams.FLAG_IGNORE_CHEEK_PRESSES
+        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+        // Have the WindowManager filter out touch events that are "too fat".
+        WindowManager.LayoutParams.FLAG_IGNORE_CHEEK_PRESSES
 
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -60,7 +60,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
       finish()
     }
 
-    setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
@@ -93,7 +93,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     registerSubscriptions()
   }
 
-  def circularRevealActivity(maybeClickLocation: Option[Location]): Unit =  {
+  def circularRevealActivity(maybeClickLocation: Option[Location]): Unit = {
     val cx = maybeClickLocation.map(_.x).getOrElse(rootLayout.getWidth / 2)
     val cy = maybeClickLocation.map(_.y).getOrElse(rootLayout.getHeight / 2)
 
@@ -106,7 +106,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     // make the view visible and start the animation
     rootLayout.setVisibility(View.VISIBLE)
     circularReveal.start()
-}
+  }
 
   private def registerSubscriptions(): Unit = {
     compositeSubscription +=

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/call_avatar"
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:src="@drawable/default_avatar"
         android:layout_marginTop="60dp"
+        android:src="@drawable/default_avatar"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -18,6 +21,7 @@
         android:textColor="@color/grey_darkest"
         android:singleLine="true"
         android:textSize="@dimen/text_largest"
+        android:text="Jimmy Joe James"
         android:paddingTop="16dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
@@ -49,4 +53,4 @@
             android:text="23:59:59"
             android:textSize="@dimen/text_smallish" />
     </FrameLayout>
-</merge>
+</RelativeLayout>
