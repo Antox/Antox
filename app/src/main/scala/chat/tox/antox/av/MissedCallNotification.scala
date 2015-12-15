@@ -19,8 +19,8 @@ class MissedCallNotification(context: Context, contact: ContactInfo, missedCallM
 
   val numMissedCallString = if(missedCallMessages.length > 1) s" (${missedCallMessages.length})" else ""
 
-  val startCallPendingIntent = createChatIntent(context, Constants.START_CALL, classOf[ChatActivity], contact.key)
-  val replyPendingIntent = createChatIntent(context, Constants.SWITCH_TO_FRIEND, classOf[ChatActivity], contact.key)
+  val startCallPendingIntent = createChatPendingIntent(context, Constants.START_CALL, classOf[ChatActivity], contact.key)
+  val replyPendingIntent = createChatPendingIntent(context, Constants.SWITCH_TO_FRIEND, classOf[ChatActivity], contact.key)
 
   val builder = new NotificationCompat.Builder(context)
     .setSmallIcon(R.drawable.ic_actionbar)

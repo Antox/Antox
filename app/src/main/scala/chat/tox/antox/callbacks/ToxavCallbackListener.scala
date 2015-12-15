@@ -1,6 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.av.YuvVideoFrame
 import chat.tox.antox.wrapper.CallNumber
 import im.tox.tox4j.av.{SamplingRate, AudioChannels}
 import im.tox.tox4j.av.callbacks.ToxAvEventListener
@@ -26,6 +27,6 @@ class ToxavCallbackListener(ctx: Context) extends ToxAvEventListener[Unit] {
   }
 
   override def videoReceiveFrame(friendNumber: Int, width: Int, height: Int, y: Array[Byte], u: Array[Byte], v: Array[Byte], yStride: Int, uStride: Int, vStride: Int)(state: Unit): Unit = {
-    videoReceiveFrameCallback.videoReceiveFrame(CallNumber(friendNumber), width, height, y, u, v, yStride, uStride, vStride)(state)
+    videoReceiveFrameCallback.videoReceiveFrame(CallNumber(friendNumber), YuvVideoFrame(width, height, y, u, v, yStride, uStride, vStride))(state)
   }
 }

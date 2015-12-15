@@ -5,12 +5,10 @@ import android.util.Log
 
 import scala.collection.mutable
 
-class AudioPlayer(_sampleRate: Int, _channels: Int, bufferSize: Int = 20) extends AudioDevice(_sampleRate, _channels) {
+class AudioPlayer(_sampleRate: Int, _channels: Int, minBufferLength: Int) extends AudioDevice(_sampleRate, _channels) {
 
   var active = false
   var dirty = true
-
-  val minBufferLength: Int = 3 // in audio frames
 
   private var mAudioTrack: Option[AudioTrack] = None
   private val audioBuffer = new mutable.Queue[(Array[Short], Int, Int)]

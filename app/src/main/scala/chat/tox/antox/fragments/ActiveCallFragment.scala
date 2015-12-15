@@ -7,16 +7,18 @@ import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
-import android.view.animation.{AccelerateInterpolator, AlphaAnimation}
-import android.view.{SurfaceView, LayoutInflater, View, ViewGroup}
-import android.widget.{FrameLayout, Chronometer, ImageButton}
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.{AccelerateInterpolator, AlphaAnimation, Animation}
+import android.view.{LayoutInflater, SurfaceView, View, ViewGroup}
+import android.widget.{Chronometer, FrameLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
-import chat.tox.antox.av.{VideoDisplay, Call}
+import chat.tox.antox.av.{Call, VideoDisplay}
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.NewThreadScheduler
 
 import scala.concurrent.duration.Duration
 
@@ -44,6 +46,7 @@ class ActiveCallFragment extends CommonCallFragment {
   var videoSurface: SurfaceView = _
   var videoDisplay: Option[VideoDisplay] = None
 
+  var viewsHiddenOnFade: List[View] = _
   val fadeDelay = Duration(5, TimeUnit.SECONDS)
   var lastClickTime = System.currentTimeMillis()
 
@@ -101,21 +104,23 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[SurfaceView]
-    videoDisplay = Some(new VideoDisplay(call, videoSurface))
+    videoDisplay = Some(new VideoDisplay(call.videoFrameObservable, videoSurface, call.videoBufferLength))
+    videoDisplay.foreach(_.start())
 
     compositeSubscription +=
       call.ringingObservable
-        .combineLatest(call.callVideoObservable)
-        .sub { case (ringing, (receivingVideo, sendingVideo)) =>
+        .combineLatest(call.selfStateObservable)
+        .sub { case (ringing, selfState) =>
           if (ringing) {
             setupOutgoing()
           } else {
             setupActive()
           }
 
-          setupVideoUi(receivingVideo, sendingVideo)
+          setupVideoUi(selfState.receivingVideo, selfState.sendingVideo)
         }
 
+    viewsHiddenOnFade = List(buttonsView, upperCallHalfView)
     rootView
   }
 
@@ -156,10 +161,12 @@ class ActiveCallFragment extends CommonCallFragment {
       avatarView.setVisibility(View.GONE)
 
       // fade out when the video view hasn't been clicked in a while
+      startUiFadeTimer()
       videoSurface.setOnClickListener(new OnClickListener {
         override def onClick(v: View): Unit = {
           lastClickTime = System.currentTimeMillis()
-
+          viewsHiddenOnFade.foreach(_.setVisibility(View.VISIBLE))
+          startUiFadeTimer()
         }
       })
     } else if(!videoEnabled) {
@@ -170,28 +177,40 @@ class ActiveCallFragment extends CommonCallFragment {
   }
 
   def startUiFadeTimer(): Unit = {
-    Observable
-      .timer(fadeDelay).flatMap(_ => call.callVideoObservable).foreach(t => {
-      if (!t._1 && !t._2) return // return if video is no longer enabled
+    compositeSubscription +=
+      Observable
+        .timer(fadeDelay)
+        .subscribeOn(NewThreadScheduler())
+        .flatMap(_ => call.callVideoObservable)
+        .sub(video => {
 
-      val timeSinceLastClick = System.currentTimeMillis() - lastClickTime
-      if (call.active && !call.ringing && timeSinceLastClick >= fadeDelay.toMillis) {
-        val fadeOut = new AlphaAnimation(1, 0)
-        fadeOut.setInterpolator(new AccelerateInterpolator())
-        fadeOut.setDuration(1000)
+          val timeSinceLastClick = System.currentTimeMillis() - lastClickTime
+          if (call.active && !call.ringing && timeSinceLastClick >= fadeDelay.toMillis && video) {
+            val fadeOut = new AlphaAnimation(1, 0)
+            fadeOut.setInterpolator(new AccelerateInterpolator())
+            fadeOut.setDuration(1000)
+            fadeOut.setAnimationListener(new AnimationListener {
+              override def onAnimationEnd(animation: Animation): Unit = {
+                viewsHiddenOnFade.foreach(_.setVisibility(View.GONE))
+              }
 
-        List(buttonsView, upperCallHalfView).foreach(view => {
-          view.setAnimation(fadeOut)
-          view.animate()
+              override def onAnimationStart(animation: Animation): Unit = {}
+
+              override def onAnimationRepeat(animation: Animation): Unit = {}
+            })
+
+            viewsHiddenOnFade.foreach(view => {
+              view.setAnimation(fadeOut)
+              view.animate()
+            })
+          }
         })
-      }
-    })
   }
 
   override def onDestroy(): Unit = {
     super.onDestroy()
 
-    videoDisplay.foreach(_.destroy())
+    videoDisplay.foreach(_.stop())
     durationView.stop()
   }
 }

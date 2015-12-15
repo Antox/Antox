@@ -28,7 +28,7 @@ object MessageHelper {
 
       if (!chatActive) {
         val unreadCount = db.getUnreadCounts(friendInfo.key)
-        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo.key, friendInfo.name, new String(message.value), unreadCount)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String(message.value), unreadCount)
       }
     }
   }
@@ -42,7 +42,7 @@ object MessageHelper {
       hasBeenRead = chatActive, successfullySent = true, messageType)
 
     if (!chatActive) {
-      AntoxNotificationManager.createMessageNotification(ctx, classOf[GroupChatActivity], groupInfo.key, groupInfo.name, message)
+      AntoxNotificationManager.createMessageNotification(ctx, classOf[GroupChatActivity], groupInfo, message)
     }
   }
 

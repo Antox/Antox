@@ -11,14 +11,13 @@ import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
 import chat.tox.antox.av.MissedCallNotification
 import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
-import chat.tox.antox.data.{CallEventKind, AntoxDB, State}
+import chat.tox.antox.data.{AntoxDB, CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.utils.TimestampUtils._
 import chat.tox.antox.wrapper._
-import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-import chat.tox.antox.utils.TimestampUtils._
 
 object AntoxNotificationManager {
 
@@ -52,20 +51,20 @@ object AntoxNotificationManager {
     }
   }
 
-  def createMessageNotification(ctx: Context, intentClass: Class[_], key: ToxKey, name: ToxNickname, content: String, count: Int = 0): Unit = {
-    AntoxLog.debug(s"Creating message notification, $name, $content")
+  def createMessageNotification(ctx: Context, intentClass: Class[_], contactInfo: ContactInfo, content: String, count: Int = 0): Unit = {
+    AntoxLog.debug(s"Creating message notification, $contactInfo, $content")
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     if (checkPreference(preferences, "notifications_new_message")) {
       val notificationBuilder = new Builder(ctx)
         .setSmallIcon(R.drawable.ic_actionbar)
-        .setContentTitle(new String(name.value))
+        .setContentTitle(contactInfo.getDisplayName)
         .setContentText(content)
 
       addAlerts(notificationBuilder, preferences)
 
-      addAvatarToNotification(notificationBuilder, key)
+      addAvatarToNotification(notificationBuilder, contactInfo.key)
 
       if (count > 0) {
         val countStr: String =
@@ -76,24 +75,28 @@ object AntoxNotificationManager {
         notificationBuilder.setContentInfo("")
       }
 
-      val resultPendingIntent: PendingIntent = createChatIntent(ctx, Constants.SWITCH_TO_FRIEND, intentClass, key)
+      val resultPendingIntent: PendingIntent = createChatPendingIntent(ctx, Constants.SWITCH_TO_FRIEND, intentClass, contactInfo.key)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
 
       val mNotificationManager = ctx.getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager]
-      mNotificationManager.notify(generateNotificationId(key), notificationBuilder.build())
+      mNotificationManager.notify(generateNotificationId(contactInfo.key), notificationBuilder.build())
     }
   }
 
-  def createChatIntent(ctx: Context, action: String, intentClass: Class[_], key: ToxKey): PendingIntent = {
+  def createChatIntent(ctx: Context, action: String, intentClass: Class[_], key: ToxKey): Intent = {
     val resultIntent = new Intent(ctx, intentClass)
     resultIntent.setAction(action)
     resultIntent.putExtra("key", key.toString)
     resultIntent.putExtra("notification", true)
 
+    resultIntent
+  }
+
+  def createChatPendingIntent(ctx: Context, action: String, intentClass: Class[_], key: ToxKey): PendingIntent = {
     val stackBuilder = TaskStackBuilder.create(ctx)
     stackBuilder.addParentStack(classOf[MainActivity])
-    stackBuilder.addNextIntent(resultIntent)
+    stackBuilder.addNextIntent(createChatIntent(ctx, action, intentClass, key))
     val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
     resultPendingIntent
   }

@@ -1,19 +1,19 @@
 package chat.tox.antox.fragments
 
 import android.content.Context
-import android.media.MediaPlayer.OnCompletionListener
-import android.media.{AudioManager, MediaPlayer}
-import android.os.Bundle
+import android.media.AudioManager
+import android.os.{Bundle, PowerManager}
 import android.support.v4.app.Fragment
 import android.view.View.OnClickListener
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.{LinearLayout, RelativeLayout, TextView}
+import android.widget.{RelativeLayout, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{BitmapManager, MediaUtils}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
+import rx.lang.scala.Subscription
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 object CommonCallFragment {
@@ -39,6 +39,10 @@ abstract class CommonCallFragment extends Fragment {
 
   var audioManager: AudioManager = _
 
+  private var powerManager: PowerManager = _
+  var maybeWakeLock: Option[PowerManager#WakeLock] = None
+  var videoWakeLockSubscription: Option[Subscription] = None
+
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
 
@@ -49,6 +53,14 @@ abstract class CommonCallFragment extends Fragment {
     callLayout = getArguments.getInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT)
 
     audioManager = getActivity.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
+
+    // power manager used to turn off screen when the proximity sensor is triggered
+    powerManager = getActivity.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
+    if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+      maybeWakeLock = Some(powerManager.newWakeLock(
+        PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+        AntoxLog.DEFAULT_TAG.toString))
+    }
   }
 
   private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {
@@ -106,7 +118,39 @@ abstract class CommonCallFragment extends Fragment {
 
   // Called when the call ends (both by the user and by friend)
   def onCallEnded(): Unit = {
+    AntoxLog.debug(s"${this.getClass.getSimpleName} on call ended called")
     getActivity.finish()
+  }
+
+  override def onResume(): Unit = {
+    super.onResume()
+
+    videoWakeLockSubscription =
+      Some(call.callVideoObservable.subscribe(video => {
+        if (video) {
+          maybeWakeLock.foreach(wakeLock => {
+            if (wakeLock.isHeld) {
+              wakeLock.release()
+            }
+          })
+        } else {
+          maybeWakeLock.foreach(wakeLock => {
+            if (!wakeLock.isHeld) {
+              wakeLock.acquire()
+            }
+          })
+        }
+      }))
+  }
+
+  override def onPause(): Unit = {
+    super.onPause()
+    videoWakeLockSubscription.foreach(_.unsubscribe())
+    maybeWakeLock.foreach(wakeLock => {
+      if (wakeLock.isHeld) {
+        wakeLock.release()
+      }
+    })
   }
 
   override def onDestroy(): Unit = {

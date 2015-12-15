@@ -10,6 +10,7 @@ import im.tox.tox4j.av._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.JavaConversions._
+import rx.lang.scala.schedulers.NewThreadScheduler
 import rx.lang.scala.subjects.BehaviorSubject
 import rx.lang.scala.{Observable, Subject}
 
@@ -24,18 +25,14 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   // only describes self state
   private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
+  def selfStateObservable: Observable[SelfCallState] = selfStateSubject.asJavaObservable
   private def selfState = selfStateSubject.getValue
 
   //monitors both friend and self state, but does not expose them
   val callStateObservable = friendStateSubject.merge(selfStateSubject).map(_ => Unit)
 
-  // (receivingVideo, sendingVideo)
-  val callVideoObservable =
-    friendStateSubject
-      .combineLatestWith(selfStateSubject)((x, y) => (x, y))
-      .map { case (friendState, selfState) =>
-        (friendState.contains(ToxavFriendCallState.SENDING_V), selfState.sendingVideo)
-      }
+  // is video enabled in any way
+  val callVideoObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
 
   private val callEndedSubject = Subject[CallEndReason]()
   // called only once, when the call ends with the reason it ended
@@ -45,6 +42,9 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   private val samplingRate = SamplingRate.Rate48k //in Hz
   private val audioLength = AudioLength.Length20 //in milliseconds
   private val channels = AudioChannels.Stereo
+
+  val audioBufferLength = 3 // in frames
+  val videoBufferLength = 3 // in frames
 
   val defaultRingTime = Duration(30, TimeUnit.SECONDS)
 
@@ -71,10 +71,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def onHold: Boolean = friendState.isEmpty
 
   val audioCapture: AudioCapture = new AudioCapture(samplingRate.value, channels.value)
-  val audioPlayer = new AudioPlayer(samplingRate.value, channels.value)
+  val audioPlayer = new AudioPlayer(samplingRate.value, channels.value, audioBufferLength)
 
-  private val videoFrameSubject = Subject[VideoFrame]()
-  def videoFrameObservable: Observable[VideoFrame] = videoFrameSubject.asJavaObservable
+  private val videoFrameSubject = Subject[YuvVideoFrame]()
+  def videoFrameObservable: Observable[YuvVideoFrame] = videoFrameSubject.asJavaObservable
 
   private def frameSize = SampleCount(audioLength, samplingRate)
 
@@ -105,24 +105,29 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   def onIncoming(audioEnabled: Boolean, videoEnabled: Boolean): Unit = {
     logCallEvent(s"incoming receiving audio:$audioEnabled and video:$videoEnabled")
+
+    selfStateSubject.onNext(selfState.copy(receivingAudio = audioEnabled, receivingVideo = videoEnabled))
   }
 
   private def endAfterTime(ringTime: Duration): Unit = {
     //end the call after `ringTime`
-    Observable.timer(defaultRingTime).foreach(_ => {
-      if (active && ringing) {
-        val reason =
-          if (incoming) {
-            // call was missed
-            CallEndReason.Missed
-          } else {
-            // call was unanswered
-            CallEndReason.Unanswered
-          }
+    Observable
+      .timer(defaultRingTime)
+      .subscribeOn(NewThreadScheduler())
+      .foreach(_ => {
+        if (active && ringing) {
+          val reason =
+            if (incoming) {
+              // call was missed
+              CallEndReason.Missed
+            } else {
+              // call was unanswered
+              CallEndReason.Unanswered
+            }
 
-        end(reason)
-      }
-    })
+          end(reason)
+        }
+      })
   }
 
   def updateFriendState(state: Set[ToxavFriendCallState]): Unit = {
@@ -131,11 +136,19 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     val answered: Boolean = friendState.isEmpty && isActive(state) && !incoming
     val ended: Boolean = !isActive(state)
 
+    val newSelfState =
+      selfState.copy(
+        receivingAudio = state.contains(ToxavFriendCallState.SENDING_A),
+        receivingVideo = state.contains(ToxavFriendCallState.SENDING_V)
+      )
+
     if (answered) {
       callStarted()
       ringingSubject.onNext(false)
     } else if (ended) {
       end()
+    } else {
+      if (newSelfState != selfState) selfStateSubject.onNext(newSelfState)
     }
 
     friendStateSubject.onNext(friendState)
@@ -183,7 +196,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     audioPlayer.bufferAudioFrame(pcm, channels.value, samplingRate.value)
   }
 
-  def onVideoFrame(videoFrame: VideoFrame): Unit = {
+  def onVideoFrame(videoFrame: YuvVideoFrame): Unit = {
     videoFrameSubject.onNext(videoFrame)
   }
 

@@ -76,7 +76,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     val extras: Bundle = getIntent.getExtras
     activeKey = getKey(extras.getString("key"))
     fromNotifications = extras.getBoolean("notification", false)
-    val thisActivity = this
 
     AntoxLog.debug("key = " + activeKey)
 

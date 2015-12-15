@@ -1,9 +1,9 @@
 package chat.tox.antox.activities
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.{Context, Intent}
 import android.media.AudioManager
-import android.os.{Build, Bundle, PowerManager}
+import android.os.{Build, Bundle}
 import android.support.v4.app.FragmentActivity
 import android.view.{View, ViewAnimationUtils, ViewTreeObserver, WindowManager}
 import android.widget.FrameLayout
@@ -23,9 +23,6 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   var call: Call = _
   var activeKey: ContactKey = _
-
-  private var powerManager: PowerManager = _
-  private var maybeWakeLock: Option[PowerManager#WakeLock] = None
 
   private val compositeSubscription = CompositeSubscription()
 
@@ -82,14 +79,6 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     setVolumeControlStream(AudioManager.STREAM_RING)
 
-    // power manager used to turn off screen when the proximity sensor is triggered
-    powerManager = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
-      maybeWakeLock = Some(powerManager.newWakeLock(
-        PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-        AntoxLog.DEFAULT_TAG.toString))
-    }
-
     registerSubscriptions()
   }
 
@@ -138,9 +127,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
         MessageHelper.sendMessage(this, activeKey.asInstanceOf[FriendKey], reply, ToxMessageType.NORMAL, None)
 
       case None =>
-        val intent = new Intent(this, classOf[ChatActivity])
-        intent.setAction(Constants.SWITCH_TO_FRIEND)
-        intent.putExtra("key", activeKey.toString)
+        val intent = AntoxNotificationManager.createChatIntent(this, Constants.SWITCH_TO_FRIEND, classOf[ChatActivity], activeKey)
         startActivity(intent)
     }
 
@@ -157,22 +144,10 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   override def onResume(): Unit = {
     super.onResume()
-
-    maybeWakeLock.foreach(wakeLock => {
-      if (!wakeLock.isHeld) {
-        wakeLock.acquire()
-      }
-    })
   }
 
   override def onPause(): Unit = {
     super.onPause()
-
-    maybeWakeLock.foreach(wakeLock => {
-      if (wakeLock.isHeld) {
-        wakeLock.release()
-      }
-    })
   }
 
   override def onDestroy(): Unit = {
