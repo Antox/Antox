@@ -53,6 +53,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def ringingObservable: Observable[Boolean] = ringingSubject.asJavaObservable
   def ringing = ringingSubject.getValue
 
+  var callStarted = false
   var startTime: Duration = Duration(0, TimeUnit.MILLISECONDS)
   def duration: Duration = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS) - startTime //in milliseconds
 
@@ -74,7 +75,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   val audioPlayer = new AudioPlayer(samplingRate.value, channels.value, audioBufferLength)
 
   private val videoFrameSubject = Subject[YuvVideoFrame]()
-  def videoFrameObservable: Observable[YuvVideoFrame] = videoFrameSubject.asJavaObservable
+  def videoFrameObservable: Observable[YuvVideoFrame] = videoFrameSubject.onBackpressureDrop(_ => AntoxLog.debug("Dropped a video frame due to back-pressure."))
 
   private def frameSize = SampleCount(audioLength, samplingRate)
 
@@ -99,7 +100,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
     selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
 
-    callStarted()
+    startCall()
     ringingSubject.onNext(false)
   }
 
@@ -142,8 +143,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
         receivingVideo = state.contains(ToxavFriendCallState.SENDING_V)
       )
 
-    if (answered) {
-      callStarted()
+    if (answered && !callStarted) {
+      startCall()
       ringingSubject.onNext(false)
     } else if (ended) {
       end()
@@ -154,7 +155,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     friendStateSubject.onNext(friendState)
   }
 
-  private def callStarted(): Unit = {
+  private def startCall(): Unit = {
+    assert(!callStarted)
+
+    callStarted = true
     startTime = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
 
     logCallEvent(event = s"started at time $startTime")

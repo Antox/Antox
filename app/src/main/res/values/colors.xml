@@ -7,6 +7,7 @@
     <color name="grey_dark">@android:color/darker_gray</color>
     <color name="grey_darker">#666666</color>
     <color name="grey_darkest">#444444</color>
+    <color name="black_absolute">#000000</color>
     <color name="black">#222222</color>
     <color name="green">#339554</color>
     <color name="green_light">#ff31cb37</color>

@@ -1,19 +1,21 @@
 package chat.tox.antox.av
 
-import android.graphics.{Bitmap, Color, Matrix, RectF}
+import android.graphics.{Bitmap, Matrix, RectF}
 import android.view.SurfaceHolder.Callback
-import android.view.{SurfaceHolder, SurfaceView}
+import android.view.{SurfaceHolder, SurfaceView, View}
+import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
-
-import scala.collection.mutable
 
 class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView: SurfaceView, minBufferLength: Int) {
 
   var active: Boolean = false
+  var visible: Boolean = false
+  var created: Boolean = false
+
   var bitmap: Bitmap = _
 
-  val videoBuffer = new mutable.Queue[YuvVideoFrame]()
+  val videoBuffer = new CircularFifoQueue[YuvVideoFrame](minBufferLength * 4)
 
   var callVideoFrameSubscription: Option[Subscription] = None
 
@@ -22,38 +24,56 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
   var width: Int = 0
   var height: Int = 0
 
+  // arrays are kept for performance reasons
+  def genColorArray = new Array[Int](width * height)
+
+  var r: Array[Int] = _
+  var g: Array[Int] = _
+  var b: Array[Int] = _
+
   def start(): Unit = {
-    callVideoFrameSubscription = Some(videoFrameObservable
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(frame => videoBuffer.enqueue(frame)))
-
-    surfaceView.getHolder.addCallback(new Callback {
-      override def surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int): Unit = {}
-
-      override def surfaceCreated(holder: SurfaceHolder): Unit = {
-        bitmap = Bitmap.createBitmap(surfaceView.getWidth, surfaceView.getHeight, Bitmap.Config.ARGB_8888)
-        bitmap.eraseColor(Color.argb(255, 0, 0, 0))
-      }
-
-      override def surfaceDestroyed(holder: SurfaceHolder): Unit = {}
-    })
-
-    active = true
+    surfaceView.setVisibility(View.VISIBLE)
 
     new Thread(new Runnable {
       override def run(): Unit = {
+        surfaceView.getHolder.addCallback(new Callback {
+          override def surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int): Unit = {}
+
+          override def surfaceCreated(holder: SurfaceHolder): Unit = {
+            created = true
+          }
+
+          override def surfaceDestroyed(holder: SurfaceHolder): Unit = {}
+        })
+
         while (active) {
-          if (videoBuffer.length > minBufferLength) {
-            val frame = videoBuffer.dequeue()
-            processVideoFrame(frame)
+          try {
+            if (videoBuffer.size() > minBufferLength) {
+              val frame = videoBuffer.poll()
+              processVideoFrame(frame)
+            }
+          } catch {
+            case e: Exception =>
+              e.printStackTrace()
           }
         }
       }
+
     }, "VideoDisplayThread").start()
+
+    callVideoFrameSubscription = Some(videoFrameObservable
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe(frame => videoBuffer.add(frame)))
+
+    active = true
   }
 
   def recreate(): Unit = {
     bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+    r = genColorArray
+    g = genColorArray
+    b = genColorArray
 
     dirty = false
   }
@@ -68,11 +88,11 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
 
     if (dirty) recreate()
 
-    val rgbFrame = videoFrame.toRgb()
+    videoFrame.asRgb(r, g, b) // does an in-place conversion using existing arrays
 
     val holder = surfaceView.getHolder
     Option(holder.lockCanvas()).foreach(canvas => {
-      bitmap.setPixels(rgbFrame.toArgbArray, 0, videoFrame.width, 0, 0, videoFrame.width, videoFrame.height)
+      bitmap.setPixels(FormatConversions.RgbToArgbArray(r, g, b), 0, videoFrame.width, 0, 0, videoFrame.width, videoFrame.height)
       val matrix = new Matrix()
       val currentRect = new RectF(0, 0, videoFrame.width, videoFrame.height)
       val desiredRect = new RectF(0, 0, canvas.getWidth, canvas.getHeight)
@@ -87,6 +107,7 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
 
   def stop(): Unit = {
     active = false
+
     callVideoFrameSubscription.foreach(_.unsubscribe())
   }
 }

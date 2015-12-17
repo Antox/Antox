@@ -15,6 +15,7 @@ import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 import scala.language.postfixOps
@@ -99,6 +100,11 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   private def registerSubscriptions(): Unit = {
     compositeSubscription +=
+      call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(_ => {
+        onCallEnded()
+      })
+
+    compositeSubscription +=
       call.ringingObservable.distinctUntilChanged.subscribe(ringing => {
         if (ringing && call.incoming) {
           val fragmentTransaction = getSupportFragmentManager.beginTransaction()
@@ -110,6 +116,12 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
           fragmentTransaction.commit()
         }
       })
+  }
+
+  // Called when the call ends (both by the user and by friend)
+  def onCallEnded(): Unit = {
+    AntoxLog.debug(s"${this.getClass.getSimpleName} on call ended called")
+    finish()
   }
 
   def setupOnHold(): Unit = {

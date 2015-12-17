@@ -1,6 +1,7 @@
 package chat.tox.antox.av
 
 import android.content.Context
+import android.content.res.AssetFileDescriptor
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.{AudioManager, MediaPlayer, RingtoneManager}
 import chat.tox.antox.R
@@ -19,17 +20,23 @@ class CallSounds(val call: Call, val context: Context) extends CallEnhancement {
     val maybeRingtoneUri = Option(RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE))
 
     maybeRingtoneUri.map(ringtoneUri => {
-      try {
-        val tempRingtone = new MediaPlayer()
-        tempRingtone.setDataSource(context, ringtoneUri)
-        tempRingtone.setAudioStreamType(AudioManager.STREAM_RING)
-        tempRingtone.setLooping(true)
-        tempRingtone.prepare()
-        tempRingtone
-      } catch {
-        case e: Exception =>
-          MediaPlayer.create(context, R.raw.incoming_call)
-      }
+      val ringtone =
+        try {
+          val tempRingtone = new MediaPlayer()
+          tempRingtone.setDataSource(context, ringtoneUri)
+          tempRingtone
+        } catch {
+          case e: Exception =>
+            val afd: AssetFileDescriptor = context.getResources.openRawResourceFd(R.raw.incoming_call)
+            val backupRingtone: MediaPlayer = new MediaPlayer()
+            backupRingtone.setDataSource(afd.getFileDescriptor, afd.getStartOffset, afd.getLength)
+            backupRingtone
+        }
+
+      ringtone.setAudioStreamType(AudioManager.STREAM_RING)
+      ringtone.setLooping(true)
+      ringtone.prepare()
+      ringtone
     })
   }
 

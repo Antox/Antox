@@ -101,11 +101,6 @@ abstract class CommonCallFragment extends Fragment {
       }
     })
 
-    compositeSubscription +=
-      call.callEndedObservable.subscribe(_ => {
-        onCallEnded()
-      })
-
     // update displayed friend info on change
     compositeSubscription +=
       State.db.friendInfoList
@@ -114,12 +109,6 @@ abstract class CommonCallFragment extends Fragment {
         })
 
     rootView
-  }
-
-  // Called when the call ends (both by the user and by friend)
-  def onCallEnded(): Unit = {
-    AntoxLog.debug(s"${this.getClass.getSimpleName} on call ended called")
-    getActivity.finish()
   }
 
   override def onResume(): Unit = {
@@ -146,6 +135,7 @@ abstract class CommonCallFragment extends Fragment {
   override def onPause(): Unit = {
     super.onPause()
     videoWakeLockSubscription.foreach(_.unsubscribe())
+
     maybeWakeLock.foreach(wakeLock => {
       if (wakeLock.isHeld) {
         wakeLock.release()
@@ -155,6 +145,7 @@ abstract class CommonCallFragment extends Fragment {
 
   override def onDestroy(): Unit = {
     super.onDestroy()
+
     compositeSubscription.unsubscribe()
   }
 }
