@@ -1,6 +1,6 @@
 package chat.tox.antox.av
 
-import im.tox.tox4j.av.BitRate
+import im.tox.tox4j.av.data.BitRate
 import im.tox.tox4j.av.enums.ToxavFriendCallState
 
 object SelfCallState {

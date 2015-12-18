@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import chat.tox.antox.av.CallService
-import chat.tox.antox.callbacks.ToxCallbackListener
+import chat.tox.antox.callbacks.{ToxavCallbackListener, ToxCallbackListener}
 import chat.tox.antox.utils.AntoxLog
 
 class ToxService extends Service {
@@ -37,6 +37,7 @@ class ToxService extends Service {
         callService.start()
 
         val toxCallbackListener = new ToxCallbackListener(thisService)
+        val toxAvCallbackListener = new ToxavCallbackListener(thisService)
 
         while (keepRunning) {
           if (!ToxSingleton.isToxConnected(preferences, thisService)) {
@@ -47,8 +48,8 @@ class ToxService extends Service {
             }
           } else {
             try {
-              ToxSingleton.tox.iterate()
-              ToxSingleton.toxAv.iterate()
+              ToxSingleton.tox.iterate(toxCallbackListener)
+              ToxSingleton.toxAv.iterate(toxAvCallbackListener)
 
               Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
             } catch {

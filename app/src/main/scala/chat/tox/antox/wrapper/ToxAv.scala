@@ -1,44 +1,43 @@
 package chat.tox.antox.wrapper
 
 import chat.tox.antox.tox.Intervals
-import im.tox.tox4j.av.{SamplingRate, AudioChannels, SampleCount, BitRate}
+import im.tox.tox4j.av.data.{BitRate, SampleCount, SamplingRate, AudioChannels}
 import im.tox.tox4j.av.callbacks._
 import im.tox.tox4j.av.enums.ToxavCallControl
 import im.tox.tox4j.av.exceptions.ToxavCallControlException
+import im.tox.tox4j.core.data.ToxFriendNumber
 import im.tox.tox4j.impl.jni.{ToxAvImpl, ToxCoreImpl}
 
-class ToxAv(core: ToxCoreImpl[Unit]) extends Intervals {
+class ToxAv(core: ToxCoreImpl) extends Intervals {
 
-  val toxAv = new ToxAvImpl[Unit](core)
+  val toxAv = new ToxAvImpl(core)
 
   def close(): Unit = toxAv.close()
 
-  def iterate(): Unit = toxAv.iterate(Unit)
+  def iterate(avEventListener: ToxAvEventListener[Unit]): Unit = toxAv.iterate(avEventListener)(Unit)
 
   override def interval: Int = toxAv.iterationInterval / 4
 
   @throws[ToxavCallControlException]
-  def callControl(friendNumber: Int, control: ToxavCallControl): Unit = toxAv.callControl(friendNumber, control)
+  def callControl(callNumber: CallNumber, control: ToxavCallControl): Unit = toxAv.callControl(ToxFriendNumber.unsafeFromInt(callNumber.value), control)
 
-  def answer(friendNumber: Int, audioBitRate: BitRate, videoBitRate: BitRate): Unit =
-    toxAv.answer(friendNumber, audioBitRate, videoBitRate)
+  def answer(callNumber: CallNumber, audioBitRate: BitRate, videoBitRate: BitRate): Unit =
+    toxAv.answer(ToxFriendNumber.unsafeFromInt(callNumber.value), audioBitRate, videoBitRate)
 
-  def call(friendNumber: Int, audioBitRate: BitRate, videoBitRate: BitRate): Unit =
-    toxAv.call(friendNumber, audioBitRate, videoBitRate)
+  def call(callNumber: CallNumber, audioBitRate: BitRate, videoBitRate: BitRate): Unit =
+    toxAv.call(ToxFriendNumber.unsafeFromInt(callNumber.value), audioBitRate, videoBitRate)
 
-  def callback(handler: ToxAvEventListener[Unit]): Unit = toxAv.callback(handler)
-
-  def audioSendFrame(friendNumber: Int, pcm: Array[Short], sampleCount: SampleCount,
+  def audioSendFrame(callNumber: CallNumber, pcm: Array[Short], sampleCount: SampleCount,
                      channels: AudioChannels, samplingRate: SamplingRate): Unit =
-    toxAv.audioSendFrame(friendNumber, pcm, sampleCount, channels, samplingRate)
+    toxAv.audioSendFrame(ToxFriendNumber.unsafeFromInt(callNumber.value), pcm, sampleCount, channels, samplingRate)
 
-  def videoSendFrame(friendNumber: Int, width: Int, height: Int, y: Array[Byte],
+  def videoSendFrame(callNumber: CallNumber, width: Int, height: Int, y: Array[Byte],
                      u: Array[Byte], v: Array[Byte]): Unit =
-    toxAv.videoSendFrame(friendNumber, width, height, y, u, v)
+    toxAv.videoSendFrame(ToxFriendNumber.unsafeFromInt(callNumber.value), width, height, y, u, v)
 
-  def setAudioBitRate(friendNumber: Int, bitRate: BitRate): Unit =
-    toxAv.setBitRate(friendNumber, bitRate, BitRate.Unchanged)
+  def setAudioBitRate(callNumber: CallNumber, bitRate: BitRate): Unit =
+    toxAv.setBitRate(ToxFriendNumber.unsafeFromInt(callNumber.value), bitRate, BitRate.Unchanged)
 
-  def setVideoBitRate(friendNumber: Int, bitRate: BitRate): Unit =
-    toxAv.setBitRate(friendNumber, BitRate.Unchanged, bitRate)
+  def setVideoBitRate(callNumber: CallNumber, bitRate: BitRate): Unit =
+    toxAv.setBitRate(ToxFriendNumber.unsafeFromInt(callNumber.value), BitRate.Unchanged, bitRate)
 }

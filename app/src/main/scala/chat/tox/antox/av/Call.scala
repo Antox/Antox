@@ -7,6 +7,7 @@ import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{AntoxLog, AudioCapture}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey}
 import im.tox.tox4j.av._
+import im.tox.tox4j.av.data._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.JavaConversions._
@@ -87,7 +88,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def startCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
     logCallEvent(s"started sending audio:$sendingAudio and video:$sendingVideo")
     ToxSingleton.toxAv.call(
-      callNumber.value,
+      callNumber,
       if (sendingAudio) selfState.audioBitRate else BitRate.Disabled,
       if (sendingVideo) selfState.videoBitRate else BitRate.Disabled)
 
@@ -97,7 +98,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def answerCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
     logCallEvent(s"answered sending audio:$sendingAudio and video:$sendingVideo")
 
-    ToxSingleton.toxAv.answer(callNumber.value, selfState.audioBitRate, selfState.videoBitRate)
+    ToxSingleton.toxAv.answer(callNumber, selfState.audioBitRate, selfState.videoBitRate)
     selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
 
     startCall()
@@ -175,7 +176,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
           val start = System.currentTimeMillis()
           if (selfState.sendingAudio) {
             try {
-              ToxSingleton.toxAv.audioSendFrame(callNumber.value,
+              ToxSingleton.toxAv.audioSendFrame(callNumber,
                 audioCapture.readAudio(frameSize.value, channels.value),
                 frameSize, channels, samplingRate)
             } catch {
@@ -206,13 +207,13 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   def muteSelfAudio(): Unit = {
     selfStateSubject.onNext(selfState.copy(audioMuted = true))
-    ToxSingleton.toxAv.setAudioBitRate(callNumber.value, BitRate.Disabled)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber, BitRate.Disabled)
     audioCapture.stop()
   }
 
   def unmuteSelfAudio(): Unit = {
     selfStateSubject.onNext(selfState.copy(audioMuted = false))
-    ToxSingleton.toxAv.setAudioBitRate(callNumber.value, selfState.audioBitRate)
+    ToxSingleton.toxAv.setAudioBitRate(callNumber, selfState.audioBitRate)
     audioCapture.start()
   }
 
@@ -226,19 +227,19 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   }
 
   def muteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.MUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.MUTE_AUDIO)
   }
 
   def unmuteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.UNMUTE_AUDIO)
+    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.UNMUTE_AUDIO)
   }
 
   def hideFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.HIDE_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.HIDE_VIDEO)
   }
 
   def showFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.SHOW_VIDEO)
+    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
   }
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
@@ -246,7 +247,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
     // only send a call control if the call wasn't ended unexpectedly
     if (reason != CallEndReason.Error) {
-      Try(ToxSingleton.toxAv.callControl(callNumber.value, ToxavCallControl.CANCEL))
+      Try(ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.CANCEL))
     }
 
     selfStateSubject.onNext(selfState.copy(ended = true))

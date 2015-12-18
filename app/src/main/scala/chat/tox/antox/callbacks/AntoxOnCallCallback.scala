@@ -7,6 +7,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.CallNumber
+import im.tox.tox4j.core.data.ToxFriendNumber
 
 class AntoxOnCallCallback(private var ctx: Context) {
 
@@ -14,7 +15,7 @@ class AntoxOnCallCallback(private var ctx: Context) {
     AntoxLog.debug("New call from " + callNumber)
 
     try {
-      State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(callNumber.value), incoming = true))
+      State.callManager.add(new Call(callNumber, ToxSingleton.tox.getFriendKey(ToxFriendNumber.unsafeFromInt(callNumber.value)), incoming = true))
       State.callManager.get(callNumber).foreach { call =>
         call.onIncoming(audioEnabled, videoEnabled)
 
