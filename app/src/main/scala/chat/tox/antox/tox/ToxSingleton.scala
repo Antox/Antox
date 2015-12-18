@@ -28,7 +28,7 @@ object ToxSingleton {
 
   var tox: ToxCore = _
 
-  var toxAv: ToxAvImpl[Unit] = _
+  var toxAv: ToxAvImpl = _
 
   private var groupList: GroupList = _
 
@@ -177,8 +177,6 @@ object ToxSingleton {
 
     db.synchroniseWithTox(tox)
 
-    registerCallbacks(ctx)
-
     try {
       val details = userDb.getActiveUserDetails
       tox.setName(details.nickname)
@@ -192,11 +190,6 @@ object ToxSingleton {
     } finally {
     }
     updateDhtNodes(ctx)
-  }
-
-
-  def registerCallbacks(ctx: Context): Unit = {
-    tox.callback(new ToxCallbackListener(ctx))
   }
 
   def save(): Unit = {

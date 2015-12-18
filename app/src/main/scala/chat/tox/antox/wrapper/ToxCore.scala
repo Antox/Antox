@@ -14,7 +14,7 @@ import im.tox.tox4j.impl.jni.{ToxCoreImpl, ToxCryptoImpl}
 
 class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
-  val tox = new ToxCoreImpl[Unit](options)
+  val tox = new ToxCoreImpl(options)
 
   var selfConnectionStatus: ToxConnection = ToxConnection.NONE
 
@@ -22,7 +22,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
     this(groupList, new ToxOptions)
   }
 
-  def getTox: ToxCoreImpl[Unit] = tox
+  def getTox: ToxCoreImpl = tox
 
   def close(): Unit = tox.close()
 
@@ -41,7 +41,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def iterationInterval(): Int = tox.iterationInterval
 
-  def iterate(): Unit = tox.iterate(Unit)
+  def iterate(eventListener: ToxCoreEventListener[Unit]): Unit = tox.iterate[Unit](eventListener)(Unit)
 
   override def interval: Int = IntervalLevels.AWAKE.id
 
@@ -84,12 +84,12 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def getStatus: ToxUserStatus = tox.getStatus
 
-  def addFriend(address: ToxAddress, message: ToxFriendRequestMessage): Int = {
+  def addFriend(address: ToxAddress, message: ToxFriendRequestMessage): ToxFriendNumber = {
     val friendNumber = tox.addFriend(ToxFriendAddress.unsafeFromValue(address.bytes), message)
    friendNumber
   }
 
-  def addFriendNoRequest(key: ToxKey): Int = {
+  def addFriendNoRequest(key: ToxKey): ToxFriendNumber = {
     val friendNumber = tox.addFriendNorequest(ToxPublicKey.unsafeFromValue(key.bytes))
      friendNumber
   }
@@ -98,13 +98,13 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
      tox.deleteFriend(getFriendNumber(friendKey))
   }
 
-  def getFriendNumber(key: FriendKey): Int = tox.friendByPublicKey(ToxPublicKey.unsafeFromValue(key.bytes))
+  def getFriendNumber(key: FriendKey): ToxFriendNumber = tox.friendByPublicKey(ToxPublicKey.unsafeFromValue(key.bytes))
 
-  def getFriendKey(friendNumber: Int): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).value)
+  def getFriendKey(friendNumber: ToxFriendNumber): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).value)
 
   def friendExists(friendKey: FriendKey): Boolean = tox.friendExists(getFriendNumber(friendKey))
 
-  def getFriendList: Array[FriendKey] = tox.getFriendList.map(getFriendKey)
+  def getFriendList: Array[FriendKey] = tox.getFriendNumbers.map(getFriendKey)
 
   def setTyping(friendKey: FriendKey, typing: Boolean): Unit = tox.setTyping(getFriendNumber(friendKey), typing)
 
@@ -127,8 +127,6 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
     tox.fileSendChunk(getFriendNumber(friendKey), fileNumber, position, data)
 
   def fileGetFileId(friendKey: FriendKey, fileNumber: Int): ToxFileId = tox.getFileFileId(getFriendNumber(friendKey), fileNumber)
-
-  def callback(handler: ToxEventListener[Unit]): Unit = tox.callback(handler)
 
   //def callbackGroupJoinRejected(callback: GroupJoinRejectedCallback): Unit = tox.callbackGroupJoinRejected(callback)
 
