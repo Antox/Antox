@@ -1,7 +1,6 @@
 package chat.tox.antox.wrapper
 
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.GroupKey
 
 import scala.collection.JavaConversions._
 

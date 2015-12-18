@@ -12,7 +12,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.{ToxAddress, ToxKey}
+import chat.tox.antox.wrapper.{GroupKey, ToxAddress, ToxKey}
 import im.tox.tox4j.exceptions.ToxException
 
 class AddGroupFragment extends Fragment with InputableID {

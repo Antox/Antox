@@ -11,7 +11,7 @@ import chat.tox.antox.activities.MainActivity
 import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.wrapper.{BitmapUtils, FriendKey, ToxKey}
+import chat.tox.antox.wrapper.{FriendKey, BitmapUtils, ToxKey}
 import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}
 import rx.lang.scala.Subscription

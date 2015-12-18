@@ -10,6 +10,7 @@ object ToxKey {
 }
 
 trait ToxKey {
+
   def key: String
 
   if (!ToxKey.isKeyValid(key)) {
@@ -22,3 +23,7 @@ trait ToxKey {
 }
 
 trait ContactKey extends ToxKey
+final case class SelfKey(key: String) extends ToxKey
+final case class FriendKey(key: String) extends ContactKey
+final case class GroupKey(key: String) extends ContactKey
+final case class PeerKey(key: String) extends ContactKey

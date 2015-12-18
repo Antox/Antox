@@ -14,7 +14,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.{ContactKey, FriendKey}
+import chat.tox.antox.wrapper.{GroupKey, FriendKey, ContactKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
 
