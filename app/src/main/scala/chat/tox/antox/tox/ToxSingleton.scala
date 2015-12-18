@@ -176,8 +176,6 @@ object ToxSingleton {
 
     db.synchroniseWithTox(tox)
 
-    registerCallbacks(ctx)
-
     try {
       val details = userDb.getActiveUserDetails
       tox.setName(details.nickname)
@@ -191,12 +189,6 @@ object ToxSingleton {
     }
 
     updateDhtNodes(ctx)
-  }
-
-
-  def registerCallbacks(ctx: Context): Unit = {
-    tox.callback(new ToxCallbackListener(ctx))
-    toxAv.callback(new ToxavCallbackListener(ctx))
   }
 
   def save(): Unit = {
