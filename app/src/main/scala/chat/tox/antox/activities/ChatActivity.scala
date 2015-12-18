@@ -198,10 +198,6 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
   def onClickInfo(v: View): Unit = {}
 
-  override def onPause(): Unit = {
-    super.onPause()
-  }
-
   override def sendMessage(message: String, messageType: ToxMessageType, context: Context): Unit = {
     MessageHelper.sendMessage(this, activeKey, message, messageType, None)
   }
