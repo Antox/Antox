@@ -7,6 +7,8 @@ import chat.tox.antox.data.AntoxDB
 import chat.tox.antox.utils.SelfKey
 import chat.tox.antox.wrapper.{FriendKey, ToxKey}
 import im.tox.tox4j.core.data.ToxNickname
+import chat.tox.antox.wrapper.{SelfKey, ToxKey}
+import im.tox.tox4j.core.ToxNickname
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.junit.Assert._
 import org.junit.runner.RunWith

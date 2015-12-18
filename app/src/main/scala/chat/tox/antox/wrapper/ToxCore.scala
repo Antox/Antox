@@ -45,7 +45,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   override def interval: Int = IntervalLevels.AWAKE.id
 
-  def getSelfKey: SelfKey = new SelfKey(tox.getPublicKey.value)
+  def getSelfKey: SelfKey = new SelfKey(tox.getPublicKey.toHexString)
 
   def getSecretKey: ToxSecretKey = tox.getSecretKey
 
@@ -100,7 +100,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def getFriendNumber(key: FriendKey): ToxFriendNumber = tox.friendByPublicKey(ToxPublicKey.unsafeFromValue(key.bytes))
 
-  def getFriendKey(friendNumber: ToxFriendNumber): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).value)
+  def getFriendKey(friendNumber: ToxFriendNumber): FriendKey = new FriendKey(tox.getFriendPublicKey(friendNumber).toHexString)
 
   def friendExists(friendKey: FriendKey): Boolean = tox.friendExists(getFriendNumber(friendKey))
 

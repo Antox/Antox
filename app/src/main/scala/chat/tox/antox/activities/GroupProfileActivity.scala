@@ -7,8 +7,8 @@ import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{GroupKey, UiUtils}
-import chat.tox.antox.wrapper.ToxKey
+import chat.tox.antox.utils.UiUtils
+import chat.tox.antox.wrapper.{GroupKey, ToxKey}
 
 class GroupProfileActivity extends AppCompatActivity {
 

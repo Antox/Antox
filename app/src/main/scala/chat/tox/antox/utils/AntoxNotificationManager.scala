@@ -13,6 +13,8 @@ import chat.tox.antox.av.MissedCallNotification
 import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.data.{AntoxDB, CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.wrapper.{FriendKey, BitmapUtils, ToxKey}
+import im.tox.tox4j.core.data.ToxNickname
 import chat.tox.antox.utils.TimestampUtils._
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.{ToxConnection, ToxUserStatus}

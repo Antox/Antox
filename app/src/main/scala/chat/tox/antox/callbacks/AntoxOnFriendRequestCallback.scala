@@ -11,7 +11,7 @@ class AntoxOnFriendRequestCallback(private var ctx: Context) extends FriendReque
 
   override def friendRequest(publicKey: ToxPublicKey, timeDelta: Int, message: ToxFriendRequestMessage)(state: Unit): Unit = {
     val db = State.db
-    val key = new FriendKey(publicKey.value)
+    val key = new FriendKey(publicKey.toHexString)
     if (!db.isContactBlocked(key)){
       db.addFriendRequest(key, new String(message.value))
     }

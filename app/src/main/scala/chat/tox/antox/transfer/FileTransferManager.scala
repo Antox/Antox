@@ -9,7 +9,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.{ContactKey, FileKind, FriendKey}
+import chat.tox.antox.wrapper.{FriendKey, ContactKey, FileKind}
 import im.tox.tox4j.core.data.{ToxFileId, ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
 import org.scaloid.common.LoggerTag

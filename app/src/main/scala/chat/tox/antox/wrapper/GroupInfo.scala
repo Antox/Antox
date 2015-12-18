@@ -1,6 +1,5 @@
 package chat.tox.antox.wrapper
 
-import chat.tox.antox.utils.GroupKey
 import im.tox.tox4j.core.data.ToxNickname
 
 case class GroupInfo(key: GroupKey,
