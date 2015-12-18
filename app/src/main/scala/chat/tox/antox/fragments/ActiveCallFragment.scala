@@ -43,7 +43,7 @@ class ActiveCallFragment extends CommonCallFragment {
   var buttonsView: View = _
   var allButtons: List[FrameLayout] = _
 
-  var videoSurface: SurfaceView = _
+  var videoSurface: TextureView = _
   var videoDisplay: Option[VideoDisplay] = None
 
   var viewsHiddenOnFade: List[View] = _
@@ -103,7 +103,7 @@ class ActiveCallFragment extends CommonCallFragment {
 
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
-    videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[SurfaceView]
+    videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
     videoDisplay = Some(new VideoDisplay(call.videoFrameObservable, videoSurface, call.videoBufferLength))
 
     compositeSubscription +=

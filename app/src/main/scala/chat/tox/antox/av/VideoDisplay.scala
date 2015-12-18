@@ -1,13 +1,12 @@
 package chat.tox.antox.av
 
 import android.graphics.{Bitmap, Matrix, RectF}
-import android.view.SurfaceHolder.Callback
-import android.view.{SurfaceHolder, SurfaceView, View}
+import android.view.{TextureView, View}
 import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
-class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView: SurfaceView, minBufferLength: Int) {
+class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], videoView: TextureView, minBufferLength: Int) {
 
   var active: Boolean = false
   var visible: Boolean = false
@@ -32,19 +31,10 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
   var b: Array[Int] = _
 
   def start(): Unit = {
-    surfaceView.setVisibility(View.VISIBLE)
+    videoView.setVisibility(View.VISIBLE)
 
     new Thread(new Runnable {
       override def run(): Unit = {
-        surfaceView.getHolder.addCallback(new Callback {
-          override def surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int): Unit = {}
-
-          override def surfaceCreated(holder: SurfaceHolder): Unit = {
-            created = true
-          }
-
-          override def surfaceDestroyed(holder: SurfaceHolder): Unit = {}
-        })
 
         while (active) {
           try {
@@ -90,8 +80,7 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
 
     videoFrame.asRgb(r, g, b) // does an in-place conversion using existing arrays
 
-    val holder = surfaceView.getHolder
-    Option(holder.lockCanvas()).foreach(canvas => {
+    Option(videoView.lockCanvas()).foreach(canvas => {
       bitmap.setPixels(FormatConversions.RgbToArgbArray(r, g, b), 0, videoFrame.width, 0, 0, videoFrame.width, videoFrame.height)
       val matrix = new Matrix()
       val currentRect = new RectF(0, 0, videoFrame.width, videoFrame.height)
@@ -101,7 +90,7 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], surfaceView:
       println("rendering to the surface")
       canvas.drawBitmap(bitmap, matrix, null)
 
-      holder.unlockCanvasAndPost(canvas)
+      videoView.unlockCanvasAndPost(canvas)
     })
   }
 
