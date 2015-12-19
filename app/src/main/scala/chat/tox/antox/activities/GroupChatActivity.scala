@@ -6,7 +6,7 @@ import android.view.View
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.MessageHelper
-import chat.tox.antox.utils.{Location, GroupKey}
+import chat.tox.antox.utils.Location
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}

@@ -61,7 +61,6 @@ class CallSounds(val call: Call, val context: Context) extends CallEnhancement {
 
   subscriptions +=
     call.callEndedObservable.subscribe(_ => {
-      ended.start()
       onEnd()
     })
 

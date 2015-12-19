@@ -30,6 +30,9 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 22
+
+        renderscriptSupportModeEnabled true
+
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
         testApplicationId "chat.tox.antox.tests"
