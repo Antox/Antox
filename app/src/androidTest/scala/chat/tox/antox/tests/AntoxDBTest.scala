@@ -4,8 +4,8 @@ import android.preference.PreferenceManager
 import android.support.test.runner.AndroidJUnit4
 import android.test.{AndroidTestCase, RenamingDelegatingContext}
 import chat.tox.antox.data.AntoxDB
-import chat.tox.antox.wrapper.{SelfKey, ToxKey}
-import im.tox.tox4j.core.ToxNickname
+import chat.tox.antox.wrapper.{FriendKey, SelfKey, ToxKey}
+import im.tox.tox4j.core.data.ToxNickname
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.junit.Assert._
 import org.junit.runner.RunWith
