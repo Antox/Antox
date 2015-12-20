@@ -275,8 +275,9 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       val main = new Intent(this, classOf[MainActivity])
       main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
       startActivity(main)
+    } else {
+      super.onBackPressed()
     }
-    else super.onBackPressed()
   }
 
   //Abstract Methods
