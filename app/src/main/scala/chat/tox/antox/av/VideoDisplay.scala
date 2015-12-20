@@ -3,7 +3,7 @@ package chat.tox.antox.av
 import android.content.Context
 import android.graphics._
 import android.renderscript._
-import android.view.{TextureView, View}
+import android.view.{Surface, TextureView, View}
 import chat.tox.antox.ScriptC_yuvToRgb
 import chat.tox.antox.utils.AntoxLog
 import org.apache.commons.collections4.queue.CircularFifoQueue
@@ -111,7 +111,7 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
 
     bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
-    //adjustAspectRatio(width, height)
+    adjustAspectRatio(width, height)
     createScript(surfaceTexture)
 
     dirty = false
@@ -124,7 +124,8 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
     inAllocation = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT)
 
     val rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(height)
-    outAllocation = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_IO_OUTPUT)
+    outAllocation = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_IO_OUTPUT | Allocation.USAGE_SCRIPT)
+    outAllocation.setSurface(new Surface(surfaceTexture))
   }
 
 
@@ -142,22 +143,13 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
 
     val startConversionTime = System.currentTimeMillis()
 
+    val startPackingTime = System.currentTimeMillis()
     videoFrame.pack(packedYuv) // does an in-place conversion using existing arrays
+    AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
+
     inAllocation.copyFrom(packedYuv)
     yuvToRgbScript.forEach_yuvToRgb(inAllocation, outAllocation)
-    outAllocation.copyTo(bitmap)
-
-    Option(textureView.lockCanvas()).foreach(canvas => {
-      val matrix = new Matrix()
-      val currentRect = new RectF(0, 0, videoFrame.width, videoFrame.height)
-      val desiredRect = new RectF(0, 0, canvas.getWidth, canvas.getHeight)
-      matrix.setRectToRect(currentRect, desiredRect, Matrix.ScaleToFit.CENTER)
-
-      println("rendering to the surface old")
-      canvas.drawBitmap(bitmap, matrix, null)
-
-      textureView.unlockCanvasAndPost(canvas)
-    })
+    outAllocation.ioSend()
 
     AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
   }
