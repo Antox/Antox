@@ -31,7 +31,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 22
 
-        renderscriptSupportModeEnabled true
+        renderscriptTargetApi 22
 
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
