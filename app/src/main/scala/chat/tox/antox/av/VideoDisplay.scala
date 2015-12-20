@@ -12,7 +12,7 @@ import rx.lang.scala.{Observable, Subscription}
 
 class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Context, videoView: TextureView, minBufferLength: Int) {
 
-  var renderer: Renderer = _
+  var mRenderer: Option[Renderer] = None
   var bitmap: Bitmap = _
 
   val videoBuffer = new CircularFifoQueue[YuvVideoFrame](minBufferLength * 4)
@@ -23,9 +23,11 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Con
     videoView.setVisibility(View.VISIBLE)
     videoView.setOpaque(false)
 
-    renderer = new Renderer(videoView, context, videoBuffer, minBufferLength)
-    new Thread(renderer, "VideoDisplayThread").start()
-    videoView.setSurfaceTextureListener(renderer)
+    for (renderer <- Option(new Renderer(videoView, context, videoBuffer, minBufferLength))) {
+      new Thread(renderer, "VideoDisplayThread").start()
+      videoView.setSurfaceTextureListener(renderer)
+      mRenderer = Some(renderer)
+    }
 
     callVideoFrameSubscription = Some(videoFrameObservable
       .observeOn(AndroidMainThreadScheduler())
@@ -34,8 +36,7 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Con
 
 
   def stop(): Unit = {
-    renderer.stop()
-
+    mRenderer.foreach(_.stop())
     callVideoFrameSubscription.foreach(_.unsubscribe())
   }
 }
@@ -123,7 +124,7 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
     inAllocation = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT)
 
     val rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(height)
-    outAllocation = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_SHARED)
+    outAllocation = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_IO_OUTPUT)
   }
 
 
