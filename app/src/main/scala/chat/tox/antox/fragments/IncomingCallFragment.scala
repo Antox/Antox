@@ -51,7 +51,7 @@ class IncomingCallFragment extends CommonCallFragment {
 
     answerCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
-        call.answerCall(sendingAudio = true, sendingVideo = false)
+        call.answerCall(sendingAudio = true, sendingVideo = true)
       }
     })
 

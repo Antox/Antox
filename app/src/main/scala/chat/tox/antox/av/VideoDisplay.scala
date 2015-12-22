@@ -1,6 +1,6 @@
 package chat.tox.antox.av
 
-import android.content.Context
+import android.app.Activity
 import android.graphics._
 import android.renderscript._
 import android.view.{Surface, TextureView, View}
@@ -10,7 +10,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
-class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Context, videoView: TextureView, minBufferLength: Int) {
+class VideoDisplay(activity: Activity, videoFrameObservable: Observable[YuvVideoFrame], videoView: TextureView, minBufferLength: Int) {
 
   var mRenderer: Option[Renderer] = None
   var bitmap: Bitmap = _
@@ -23,7 +23,7 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Con
     videoView.setVisibility(View.VISIBLE)
     videoView.setOpaque(false)
 
-    for (renderer <- Option(new Renderer(videoView, context, videoBuffer, minBufferLength))) {
+    for (renderer <- Option(new Renderer(activity, videoView, videoBuffer, minBufferLength))) {
       new Thread(renderer, "VideoDisplayThread").start()
       videoView.setSurfaceTextureListener(renderer)
       mRenderer = Some(renderer)
@@ -31,7 +31,10 @@ class VideoDisplay(videoFrameObservable: Observable[YuvVideoFrame], context: Con
 
     callVideoFrameSubscription = Some(videoFrameObservable
       .observeOn(AndroidMainThreadScheduler())
-      .subscribe(frame => videoBuffer.add(frame)))
+      .subscribe(frame => {
+        AntoxLog.debug(s"got a new frame at ${System.currentTimeMillis()}")
+        videoBuffer.add(frame)
+      }))
   }
 
 
@@ -45,7 +48,10 @@ object Renderer {
   val releaseInCallback = false
 }
 
-class Renderer(textureView: TextureView, context: Context, videoBuffer: CircularFifoQueue[YuvVideoFrame], minBufferLength: Int) extends Runnable with TextureView.SurfaceTextureListener {
+class Renderer(activity: Activity,
+               textureView: TextureView,
+               videoBuffer: CircularFifoQueue[YuvVideoFrame],
+               minBufferLength: Int) extends Runnable with TextureView.SurfaceTextureListener {
 
   val lock = new Object()
   var mSurfaceTexture: Option[SurfaceTexture] = None
@@ -61,7 +67,7 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
 
   var packedYuv: Array[Int] = _
 
-  var rs: RenderScript = RenderScript.create(context, RenderScript.ContextType.DEBUG)
+  var rs: RenderScript = RenderScript.create(activity, RenderScript.ContextType.DEBUG)
   var inAllocation: Allocation = _
   var outAllocation: Allocation = _
   var yuvToRgbScript: ScriptC_yuvToRgb = _
@@ -175,10 +181,15 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
     val yoff: Int = (viewHeight - newHeight) / 2
     AntoxLog.debug(s"video=$videoWidth x $videoHeight view=$viewWidth x $viewHeight newView=$newWidth x $newHeight off=$xoff,$yoff")
     val txform: android.graphics.Matrix = new android.graphics.Matrix
-    textureView.getTransform(txform)
-    txform.setScale(newWidth.toFloat / viewWidth, newHeight.toFloat / viewHeight)
-    txform.postTranslate(xoff, yoff)
-    textureView.setTransform(txform)
+
+    activity.runOnUiThread(new Runnable {
+      override def run(): Unit = {
+        textureView.getTransform(txform)
+        txform.setScale(newWidth.toFloat / viewWidth, newHeight.toFloat / viewHeight)
+        txform.postTranslate(xoff, yoff)
+        textureView.setTransform(txform)
+      }
+    })
   }
 
   def stop(): Unit = {
@@ -186,7 +197,7 @@ class Renderer(textureView: TextureView, context: Context, videoBuffer: Circular
   }
 
   override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-
+    adjustAspectRatio(this.width, this.height)
   }
 
   override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit = {

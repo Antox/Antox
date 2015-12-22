@@ -6,8 +6,9 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import chat.tox.antox.av.CallService
-import chat.tox.antox.callbacks.{ToxavCallbackListener, ToxCallbackListener}
+import chat.tox.antox.callbacks.{ToxCallbackListener, ToxavCallbackListener}
 import chat.tox.antox.utils.AntoxLog
+import im.tox.tox4j.impl.jni.ToxJniLog
 
 class ToxService extends Service {
 
@@ -39,6 +40,7 @@ class ToxService extends Service {
         val toxCallbackListener = new ToxCallbackListener(thisService)
         val toxAvCallbackListener = new ToxavCallbackListener(thisService)
 
+        var ticks = 0
         while (keepRunning) {
           if (!ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
@@ -51,7 +53,12 @@ class ToxService extends Service {
               ToxSingleton.tox.iterate(toxCallbackListener)
               ToxSingleton.toxAv.iterate(toxAvCallbackListener)
 
+              if (ticks % 100 == 0) {
+                println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
+              }
+
               Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              ticks += 1
             } catch {
               case e: Exception =>
             }

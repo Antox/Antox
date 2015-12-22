@@ -4,9 +4,8 @@ import java.util.concurrent.TimeUnit
 
 import chat.tox.antox.av.CallEndReason.CallEndReason
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{AntoxLog, AudioCapture}
+import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.{CallNumber, ContactKey}
-import im.tox.tox4j.av._
 import im.tox.tox4j.av.data._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
@@ -99,6 +98,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     logCallEvent(s"answered sending audio:$sendingAudio and video:$sendingVideo")
 
     ToxSingleton.toxAv.answer(callNumber, selfState.audioBitRate, selfState.videoBitRate)
+    showFriendVideo()
     selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
 
     startCall()
@@ -111,8 +111,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     selfStateSubject.onNext(selfState.copy(receivingAudio = audioEnabled, receivingVideo = videoEnabled))
   }
 
+  //end the call after `ringTime`
   private def endAfterTime(ringTime: Duration): Unit = {
-    //end the call after `ringTime`
     Observable
       .timer(defaultRingTime)
       .subscribeOn(NewThreadScheduler())

@@ -1,8 +1,8 @@
-package chat.tox.antox.utils
+package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioRecord}
-import chat.tox.antox.av.{AudioDevice, CallAudioEffects}
 import chat.tox.antox.exceptions.AvDeviceNotFoundException
+import chat.tox.antox.utils.AntoxLog
 import org.scaloid.common.LoggerTag
 
 class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sampleRate, _channels) {

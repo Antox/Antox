@@ -104,7 +104,7 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
-    videoDisplay = Some(new VideoDisplay(call.videoFrameObservable, getActivity, videoSurface, call.videoBufferLength))
+    videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
 
     compositeSubscription +=
       call.ringingObservable

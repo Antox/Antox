@@ -51,7 +51,12 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     activeKey = new FriendKey(getIntent.getStringExtra("key"))
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
-    call = State.callManager.get(callNumber).getOrElse(throw new IllegalStateException("Call number is required."))
+    call =
+      State.callManager.get(callNumber).getOrElse({
+        AntoxLog.debug(s"Ending call which has an invalid call number $callNumber")
+        finish()
+        return
+      })
 
     if (getIntent.getAction == Constants.END_CALL) {
       call.end()

@@ -27,7 +27,16 @@ class ToxavCallbackListener(ctx: Context) extends ToxAvEventListener[Unit] {
     audioReceiveFrameCallback.audioReceiveFrame(CallNumber.fromFriendNumber(friendNumber), pcm, channels, samplingRate)(Unit)
   }
 
+  override def videoFrameCachedYUV(height: Height, yStride: Int, uStride: Int, vStride: Int): Option[(Array[Byte], Array[Byte], Array[Byte])] = {
+    videoReceiveFrameCallback.videoFrameCachedYUV(height, yStride, uStride, vStride)
+  }
+
   override def videoReceiveFrame(friendNumber: ToxFriendNumber, width: Width, height: Height, y: Array[Byte], u: Array[Byte], v: Array[Byte], yStride: Int, uStride: Int, vStride: Int)(state: Unit): Unit = {
-    videoReceiveFrameCallback.videoReceiveFrame(CallNumber.fromFriendNumber(friendNumber), YuvVideoFrame(width.value, height.value, y, u, v, yStride, uStride, vStride))(state)
+    try {
+      videoReceiveFrameCallback.videoReceiveFrame(CallNumber.fromFriendNumber(friendNumber), YuvVideoFrame(width.value, height.value, y, u, v, yStride, uStride, vStride))(state)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
   }
 }
