@@ -12,6 +12,7 @@ import chat.tox.antox.av.Call
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.{ActiveCallFragment, IncomingCallFragment}
 import chat.tox.antox.tox.MessageHelper
+import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -63,7 +64,16 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
       finish()
     }
 
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    compositeSubscription +=
+      call.videoEnabledObservable
+        .combineLatest(call.ringingObservable)
+        .sub { case (videoEnabled, ringing) =>
+          if (!ringing && videoEnabled) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+          } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+          }
+        }
 
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
@@ -105,7 +115,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
   private def registerSubscriptions(): Unit = {
     compositeSubscription +=
-      call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(_ => {
+      call.endedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(_ => {
         onCallEnded()
       })
 

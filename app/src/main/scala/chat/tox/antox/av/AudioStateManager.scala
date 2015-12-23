@@ -17,7 +17,7 @@ class AudioStateManager(val call: Call, val audioManager: AudioManager) extends 
     }
   })
 
-  subscriptions += call.callEndedObservable.subscribe(_ => {
+  subscriptions += call.endedObservable.subscribe(_ => {
     restoreAudioState()
     subscriptions.unsubscribe()
   })

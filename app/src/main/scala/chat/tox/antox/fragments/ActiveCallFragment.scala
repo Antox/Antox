@@ -3,7 +3,6 @@ package chat.tox.antox.fragments
 import java.util.concurrent.TimeUnit
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
 import android.view.View.OnClickListener
@@ -38,6 +37,7 @@ object ActiveCallFragment {
 
 class ActiveCallFragment extends CommonCallFragment {
 
+  var backgroundView: View = _
   var durationView: Chronometer = _
 
   var buttonsView: View = _
@@ -58,6 +58,8 @@ class ActiveCallFragment extends CommonCallFragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     val rootView = super.onCreateView(inflater, container, savedInstanceState)
+
+    backgroundView = rootView.findViewById(R.id.call_background)
 
     /* Set up the speaker/mic buttons */
     buttonsView = rootView.findViewById(R.id.call_buttons)
@@ -157,7 +159,8 @@ class ActiveCallFragment extends CommonCallFragment {
   def setupVideoUi(receivingVideo: Boolean, sendingVideo: Boolean): Unit = {
     val videoEnabled: Boolean = receivingVideo || sendingVideo
     if (videoEnabled) {
-      getActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER)
+      backgroundView.setBackgroundColor(getResources.getColor(R.color.black_absolute))
+
       avatarView.setVisibility(View.GONE)
       nameView.setTextColor(getActivity.getResources.getColor(R.color.white))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.white))
@@ -177,8 +180,8 @@ class ActiveCallFragment extends CommonCallFragment {
           startUiFadeTimer()
         }
       })
-    } else if(!videoEnabled) {
-      getActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+    } else if (!videoEnabled) {
+      backgroundView.setBackgroundColor(getResources.getColor(R.color.white))
       avatarView.setVisibility(View.VISIBLE)
 
       videoDisplay.foreach(_.stop())
@@ -192,7 +195,7 @@ class ActiveCallFragment extends CommonCallFragment {
       Observable
         .timer(fadeDelay)
         .subscribeOn(NewThreadScheduler())
-        .flatMap(_ => call.callVideoObservable)
+        .flatMap(_ => call.videoEnabledObservable)
         .sub(video => {
           val timeSinceLastClick = System.currentTimeMillis() - lastClickTime
           if (call.active && !call.ringing && timeSinceLastClick >= fadeDelay.toMillis && video) {

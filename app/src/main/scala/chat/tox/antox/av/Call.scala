@@ -28,15 +28,12 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def selfStateObservable: Observable[SelfCallState] = selfStateSubject.asJavaObservable
   private def selfState = selfStateSubject.getValue
 
-  //monitors both friend and self state, but does not expose them
-  val callStateObservable = friendStateSubject.merge(selfStateSubject).map(_ => Unit)
-
   // is video enabled in any way
-  val callVideoObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
+  val videoEnabledObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
 
-  private val callEndedSubject = Subject[CallEndReason]()
+  private val endedSubject = Subject[CallEndReason]()
   // called only once, when the call ends with the reason it ended
-  def callEndedObservable: Observable[CallEndReason] = callEndedSubject.asJavaObservable
+  def endedObservable: Observable[CallEndReason] = endedSubject.asJavaObservable
 
   //only for outgoing audio
   private val samplingRate = SamplingRate.Rate48k //in Hz
@@ -53,11 +50,11 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   def ringingObservable: Observable[Boolean] = ringingSubject.asJavaObservable
   def ringing = ringingSubject.getValue
 
-  var callStarted = false
+  var started = false
   var startTime: Duration = Duration(0, TimeUnit.MILLISECONDS)
   def duration: Duration = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS) - startTime //in milliseconds
 
-  val callEnhancements: ArrayBuffer[CallEnhancement] = new ArrayBuffer()
+  val enhancements: ArrayBuffer[CallEnhancement] = new ArrayBuffer()
 
   /**
    * Describes a state in which the call is not FINISHED or ERROR.
@@ -144,7 +141,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
         receivingVideo = state.contains(ToxavFriendCallState.SENDING_V)
       )
 
-    if (answered && !callStarted) {
+    if (answered && !started) {
       startCall()
       ringingSubject.onNext(false)
     } else if (ended) {
@@ -157,9 +154,9 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   }
 
   private def startCall(): Unit = {
-    assert(!callStarted)
+    assert(!started)
 
-    callStarted = true
+    started = true
     startTime = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
 
     logCallEvent(event = s"started at time $startTime")
@@ -252,8 +249,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
     selfStateSubject.onNext(selfState.copy(ended = true))
 
-    callEndedSubject.onNext(reason)
-    callEndedSubject.onCompleted()
+    endedSubject.onNext(reason)
+    endedSubject.onCompleted()
 
     onCallEnded()
   }

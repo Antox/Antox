@@ -6,7 +6,7 @@ object ToxAddress {
   val MAX_ADDRESS_LENGTH = 76
 
   def isAddressValid(address: String): Boolean = {
-    if(address.length != MAX_ADDRESS_LENGTH || !address.matches("^[0-9A-F]+$")) {
+    if (address.length != MAX_ADDRESS_LENGTH || !address.matches("^[0-9A-F]+$")) {
       return false
     }
 

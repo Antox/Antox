@@ -21,7 +21,7 @@ class CallManager {
     callAddedSubject.onNext(call)
 
     callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
-    call.callEndedObservable.subscribe { _ =>
+    call.endedObservable.subscribe { _ =>
       remove(call.callNumber)
     }
   }

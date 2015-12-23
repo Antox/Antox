@@ -39,8 +39,8 @@ class VideoDisplay(activity: Activity, videoFrameObservable: Observable[YuvVideo
 
 
   def stop(): Unit = {
-    mRenderer.foreach(_.stop())
     callVideoFrameSubscription.foreach(_.unsubscribe())
+    mRenderer.foreach(_.stop())
   }
 }
 
@@ -68,14 +68,22 @@ class Renderer(activity: Activity,
   var packedYuv: Array[Int] = _
 
   var rs: RenderScript = RenderScript.create(activity, RenderScript.ContextType.DEBUG)
-  var inAllocation: Allocation = _
+  var emptyAllocation: Allocation = _
+  var yAllocation: Allocation = _
+  var uAllocation: Allocation = _
+  var vAllocation: Allocation = _
+
   var outAllocation: Allocation = _
   var yuvToRgbScript: ScriptC_yuvToRgb = _
 
   var bitmap: Bitmap = _
 
+  var framesRendered: Long = 0
+  var lastFrameTime: Long = 0
+
   override def run(): Unit = {
     active = true
+    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_DISPLAY)
 
     lock synchronized {
       while (active && mSurfaceTexture.isEmpty) {
@@ -112,30 +120,52 @@ class Renderer(activity: Activity,
 
   }
 
-  def recreate(surfaceTexture: SurfaceTexture): Unit = {
+  def recreate(surfaceTexture: SurfaceTexture, yStride: Int, uStride: Int, vStride: Int): Unit = {
     packedYuv = genColorArray
 
     bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
     adjustAspectRatio(width, height)
-    createScript(surfaceTexture)
+    createScript(surfaceTexture, yStride, uStride, vStride)
 
     dirty = false
   }
 
-  def createScript(surfaceTexture: SurfaceTexture): Unit = {
+  def createScript(surfaceTexture: SurfaceTexture, yStride: Int, uStride: Int, vStride: Int): Unit = {
     yuvToRgbScript = new ScriptC_yuvToRgb(rs)
 
-    val yuvType = new Type.Builder(rs, Element.U32(rs)).setX(width).setY(height)
-    inAllocation = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT)
+    val emptyType = new Type.Builder(rs, Element.U8(rs)).setX(width).setY(height)
+    val yPlaneType = new Type.Builder(rs, Element.U8(rs)).setX(Math.max(width, Math.abs(yStride)) * height)
+    val uPlaneType = new Type.Builder(rs, Element.U8(rs)).setX(Math.max(width / 2, Math.abs(uStride)) * (height / 2))
+    val vPlaneType = new Type.Builder(rs, Element.U8(rs)).setX(Math.max(width / 2, Math.abs(vStride)) * (height / 2))
+
+    emptyAllocation = Allocation.createTyped(rs, emptyType.create(), Allocation.USAGE_SCRIPT)
+    yAllocation = Allocation.createTyped(rs, yPlaneType.create(), Allocation.USAGE_SCRIPT)
+    uAllocation = Allocation.createTyped(rs, uPlaneType.create(), Allocation.USAGE_SCRIPT)
+    vAllocation = Allocation.createTyped(rs, vPlaneType.create(), Allocation.USAGE_SCRIPT)
+
+    yuvToRgbScript.set_y_stride(yStride)
+    yuvToRgbScript.set_u_stride(uStride)
+    yuvToRgbScript.set_v_stride(vStride)
+    yuvToRgbScript.set_y_data(yAllocation)
+    yuvToRgbScript.set_u_data(uAllocation)
+    yuvToRgbScript.set_v_data(vAllocation)
 
     val rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(height)
     outAllocation = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_IO_OUTPUT | Allocation.USAGE_SCRIPT)
     outAllocation.setSurface(new Surface(surfaceTexture))
   }
 
+  def printFps(): Unit = {
+    if (System.currentTimeMillis() - lastFrameTime >= 1000) {
+      lastFrameTime = System.currentTimeMillis()
+      println(s"current fps $framesRendered")
+      framesRendered = 0
+    }
+  }
 
   def renderVideoFrame(surfaceTexture: SurfaceTexture, videoFrame: YuvVideoFrame): Unit = {
+    val startRecreateTime = System.currentTimeMillis()
     if (videoFrame.width != width || videoFrame.height != height) {
       width = videoFrame.width
       height = videoFrame.height
@@ -143,21 +173,28 @@ class Renderer(activity: Activity,
       dirty = true
     }
 
-    if (dirty) recreate(surfaceTexture)
+
+    if (dirty) recreate(surfaceTexture, videoFrame.yStride, videoFrame.uStride, videoFrame.vStride)
+
+    println(s"recreation took ${System.currentTimeMillis() - startRecreateTime}")
 
     println("rendering to the surface")
+    printFps()
 
     val startConversionTime = System.currentTimeMillis()
 
     val startPackingTime = System.currentTimeMillis()
-    videoFrame.pack(packedYuv) // does an in-place conversion using existing arrays
+    yAllocation.copyFrom(videoFrame.y)
+    uAllocation.copyFrom(videoFrame.u)
+    vAllocation.copyFrom(videoFrame.v)
     AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
 
-    inAllocation.copyFrom(packedYuv)
-    yuvToRgbScript.forEach_yuvToRgb(inAllocation, outAllocation)
+    yuvToRgbScript.forEach_yuvToRgb(emptyAllocation, outAllocation)
     outAllocation.ioSend()
 
     AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
+
+    framesRendered += 1
   }
 
   /**
@@ -193,6 +230,8 @@ class Renderer(activity: Activity,
   }
 
   def stop(): Unit = {
+    println("renderer stopped")
+    videoBuffer.clear()
     active = false
   }
 
@@ -215,6 +254,6 @@ class Renderer(activity: Activity,
       active = false
     }
 
-    Renderer.releaseInCallback
+    false
   }
 }

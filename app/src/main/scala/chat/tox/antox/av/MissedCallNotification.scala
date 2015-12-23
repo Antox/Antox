@@ -1,14 +1,14 @@
 package chat.tox.antox.av
 
-import android.app.{Notification, PendingIntent}
-import android.content.{Context, Intent}
-import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
+import android.app.Notification
+import android.content.Context
+import android.support.v4.app.NotificationCompat
 import chat.tox.antox.R
-import chat.tox.antox.activities.{ChatActivity, CallActivity, MainActivity}
+import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.utils.AntoxNotificationManager._
-import chat.tox.antox.utils.{NotificationOffsets, AntoxNotificationManager, Constants}
-import chat.tox.antox.wrapper.{ToxKey, Message, ContactInfo}
 import chat.tox.antox.utils.TimestampUtils._
+import chat.tox.antox.utils.{Constants, NotificationOffsets}
+import chat.tox.antox.wrapper.{ContactInfo, Message, ToxKey}
 
 object MissedCallNotification {
   //ensure that this id is not the same as is used for messages
@@ -17,7 +17,7 @@ object MissedCallNotification {
 
 class MissedCallNotification(context: Context, contact: ContactInfo, missedCallMessages: Seq[Message]) {
 
-  val numMissedCallString = if(missedCallMessages.length > 1) s" (${missedCallMessages.length})" else ""
+  val numMissedCallString = if (missedCallMessages.length > 1) s" (${missedCallMessages.length})" else ""
 
   val startCallPendingIntent = createChatPendingIntent(context, Constants.START_CALL, classOf[ChatActivity], contact.key)
   val replyPendingIntent = createChatPendingIntent(context, Constants.SWITCH_TO_FRIEND, classOf[ChatActivity], contact.key)

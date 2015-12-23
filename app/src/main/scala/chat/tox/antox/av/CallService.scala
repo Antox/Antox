@@ -19,7 +19,7 @@ class CallService(toxService: ToxService) {
 
     callAddedSubscription =
       Some(State.callManager.callAddedObservable.subscribe(call => {
-        call.callEnhancements ++= Seq(
+        call.enhancements ++= Seq(
           new CallEventLogger(call, toxService),
           new CallSounds(call, toxService),
           new AudioStateManager(call, audioManager)

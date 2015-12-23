@@ -78,7 +78,7 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
 
       //currently only support up to 2 channels
       val channelConfig =
-        if(channels == 1) {
+        if (channels == 1) {
           AudioFormat.CHANNEL_IN_MONO
         } else {
           AudioFormat.CHANNEL_IN_STEREO

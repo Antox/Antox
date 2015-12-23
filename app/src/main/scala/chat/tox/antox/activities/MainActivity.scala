@@ -56,7 +56,7 @@ class MainActivity extends AppCompatActivity {
     AntoxNotificationManager.mNotificationManager =
       Some(getSystemService(Context.NOTIFICATION_SERVICE).asInstanceOf[NotificationManager])
 
-    if(preferences.getBoolean("notifications_persistent", false)){
+    if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.createPersistentNotification(getApplicationContext)
     }
 

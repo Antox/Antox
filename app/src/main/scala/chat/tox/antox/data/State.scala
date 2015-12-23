@@ -4,10 +4,10 @@ import android.app.Activity
 import android.content.{Context, Intent}
 import android.preference.PreferenceManager
 import android.support.v4.content.IntentCompat
-import chat.tox.antox.activities.{ProfileSettingsActivity, LoginActivity}
+import chat.tox.antox.activities.LoginActivity
 import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
-import chat.tox.antox.toxme.{ToxMe, ToxData}
+import chat.tox.antox.toxme.{ToxData, ToxMe}
 import chat.tox.antox.transfer.FileTransferManager
 import chat.tox.antox.utils.AntoxNotificationManager
 import chat.tox.antox.wrapper.ContactKey
@@ -57,14 +57,14 @@ object State {
   def login(name: String, context: Context): Unit = {
     userDb(context).login(name)
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    if(preferences.getBoolean("notifications_persistent", false)){
+    if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.createPersistentNotification(context)
     }
   }
 
   def logout(activity: Activity): Unit = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext)
-    if(preferences.getBoolean("notifications_persistent", false)){
+    if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
 

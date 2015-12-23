@@ -48,7 +48,12 @@ abstract class CommonCallFragment extends Fragment {
 
     call =
       State.callManager.get(CallNumber(getArguments.getInt(CommonCallFragment.EXTRA_CALL_NUMBER)))
-        .getOrElse(throw new IllegalStateException("Call fragment extras must be valid."))
+        .getOrElse({
+          AntoxLog.debug(s"Ending call which has an invalid call number")
+          getActivity.finish()
+          return
+        })
+
     activeKey = FriendKey(getArguments.getString(CommonCallFragment.EXTRA_ACTIVE_KEY))
     callLayout = getArguments.getInt(CommonCallFragment.EXTRA_FRAGMENT_LAYOUT)
 
@@ -115,7 +120,7 @@ abstract class CommonCallFragment extends Fragment {
     super.onResume()
 
     videoWakeLockSubscription =
-      Some(call.callVideoObservable.subscribe(video => {
+      Some(call.videoEnabledObservable.subscribe(video => {
         if (video) {
           maybeWakeLock.foreach(wakeLock => {
             if (wakeLock.isHeld) {

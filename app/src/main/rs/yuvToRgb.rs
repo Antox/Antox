@@ -17,6 +17,13 @@
 #pragma rs java_package_name(chat.tox.antox)
 #pragma rs_fp_relaxed
 
+uint y_stride;
+uint u_stride;
+uint v_stride;
+rs_allocation y_data;
+rs_allocation u_data;
+rs_allocation v_data;
+
 static int CLIP(int X) { return ((X) > 255 ? 255 : (X) < 0 ? 0 : X); }
 
 // RGB -> YUV
@@ -33,11 +40,11 @@ static int YUV2R(int Y, int U, int V) { return CLIP((298 * C(Y)              + 4
 static int YUV2G(int Y, int U, int V) { return CLIP((298 * C(Y) - 100 * D(U) - 208 * E(V) + 128) >> 8); }
 static int YUV2B(int Y, int U, int V) { return CLIP((298 * C(Y) + 516 * D(U)              + 128) >> 8); }
 
-uchar4 __attribute__((kernel)) yuvToRgb(uint32_t pixel, uint32_t x, uint32_t y) {
+uchar4 __attribute__((kernel)) yuvToRgb(uchar ignored, uint32_t x, uint32_t y) {
 
-    uchar yx = (pixel >> 24);
-    uchar ux = (pixel >> 16);
-    uchar vx = (pixel >> 8);
+    uchar yx = rsGetElementAt_uchar(y_data, (y * y_stride) + x);
+    uchar ux = rsGetElementAt_uchar(u_data, ((y / 2) * u_stride) + (x / 2));
+    uchar vx = rsGetElementAt_uchar(v_data, ((y / 2) * v_stride) + (x / 2));
 
     int4 rgb;
     rgb.r = YUV2R(yx, ux, vx);

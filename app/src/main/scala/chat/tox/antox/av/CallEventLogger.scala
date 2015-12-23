@@ -23,7 +23,7 @@ class CallEventLogger(val call: Call, val context: Context) extends CallEnhancem
     })
 
   subscriptions +=
-    call.callEndedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(reason => {
+    call.endedObservable.observeOn(AndroidMainThreadScheduler()).subscribe(reason => {
       import CallEndReason._
       reason match {
         case Normal | Error =>

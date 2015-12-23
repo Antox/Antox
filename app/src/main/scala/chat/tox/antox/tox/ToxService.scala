@@ -61,6 +61,7 @@ class ToxService extends Service {
               ticks += 1
             } catch {
               case e: Exception =>
+                e.printStackTrace()
             }
           }
         }

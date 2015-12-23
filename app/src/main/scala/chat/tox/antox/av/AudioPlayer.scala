@@ -18,7 +18,7 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, minBufferLength: Int) extend
 
     //currently only support 2 channels
     val channelConfig =
-      if(channels == 1) {
+      if (channels == 1) {
         AudioFormat.CHANNEL_OUT_MONO
       } else {
         AudioFormat.CHANNEL_OUT_STEREO
