@@ -74,6 +74,9 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   private val videoFrameSubject = Subject[YuvVideoFrame]()
   def videoFrameObservable: Observable[YuvVideoFrame] = videoFrameSubject.onBackpressureDrop(_ => AntoxLog.debug("Dropped a video frame due to back-pressure."))
 
+  // default value, not checked based on device capabilities
+  var cameraFacing = CameraFacing.Front
+
   private def frameSize = SampleCount(audioLength, samplingRate)
 
   private def logCallEvent(event: String): Unit = AntoxLog.debug(s"Call $callNumber belonging to $contactKey $event")

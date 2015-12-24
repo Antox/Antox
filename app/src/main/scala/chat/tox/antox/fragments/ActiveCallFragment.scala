@@ -3,8 +3,10 @@ package chat.tox.antox.fragments
 import java.util.concurrent.TimeUnit
 
 import android.content.Intent
+import android.hardware.Camera
 import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
+import android.util.DisplayMetrics
 import android.view.View.OnClickListener
 import android.view._
 import android.view.animation.Animation.AnimationListener
@@ -12,7 +14,7 @@ import android.view.animation.{AccelerateInterpolator, AlphaAnimation, Animation
 import android.widget.{Chronometer, FrameLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
-import chat.tox.antox.av.{Call, VideoDisplay}
+import chat.tox.antox.av._
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.wrapper.ContactKey
@@ -45,6 +47,7 @@ class ActiveCallFragment extends CommonCallFragment {
 
   var videoSurface: TextureView = _
   var videoDisplay: Option[VideoDisplay] = None
+  var cameraDisplay: Option[CameraDisplay] = None
 
   var viewsHiddenOnFade: List[View] = _
   val fadeDelay = Duration(4, TimeUnit.SECONDS)
@@ -88,8 +91,11 @@ class ActiveCallFragment extends CommonCallFragment {
       audioManager.setSpeakerphoneOn(true)
     })
 
-    setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
-    setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
+    // don't let the user enable video if the device doesn't have a camera
+    if (CameraUtils.deviceHasCamera(getActivity)) {
+      setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
+      setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
+    }
 
     returnToChat.setOnClickListener(new OnClickListener {
       override def onClick(v: View): Unit = {
@@ -106,8 +112,12 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
-    videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
+    val cameraPreviewSurface = rootView.findViewById(R.id.camera_preview_surface).asInstanceOf[TextureView]
+    scaleSurfaceRelativeToScreen(cameraPreviewSurface, 0.3f)
 
+    videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
+    cameraDisplay = Some(new CameraDisplay(getActivity, cameraPreviewSurface))
+    
     compositeSubscription +=
       call.ringingObservable
         .combineLatest(call.selfStateObservable)
@@ -125,6 +135,23 @@ class ActiveCallFragment extends CommonCallFragment {
 
     viewsHiddenOnFade = List(buttonsView, upperCallHalfView)
     rootView
+  }
+
+  /**
+   * Scales a [[TextureView]] to a size relative to that of the screen.
+   *
+   * @param textureView [[TextureView]] to be scaled
+   * @param scale amount to multiply the width and height of the screen by to get the new size
+   */
+  private def scaleSurfaceRelativeToScreen(textureView: TextureView, scale: Float): Unit = {
+    val layoutParams = textureView.getLayoutParams
+    val metrics = new DisplayMetrics()
+    getActivity.getWindowManager.getDefaultDisplay.getMetrics(metrics)
+
+    layoutParams.width = (metrics.widthPixels * scale).toInt
+    layoutParams.height = (metrics.heightPixels * scale).toInt
+
+    textureView.setLayoutParams(layoutParams)
   }
 
   private def setupOnClickToggle(clickView: View, shownView: View, action: () => Unit): Unit = {
@@ -188,6 +215,18 @@ class ActiveCallFragment extends CommonCallFragment {
       nameView.setTextColor(getActivity.getResources.getColor(R.color.grey_darkest))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.black))
     }
+
+    if (sendingVideo) {
+      // get preferred camera or default camera (there will always be some camera or sendingVideo would be false)
+      val camera = CameraUtils.getCameraInstance(call.cameraFacing)
+        .getOrElse(CameraUtils.getCameraInstance(CameraFacing.Back).get)
+
+      CameraUtils.setCameraDisplayOrientation(getActivity, camera)
+
+      cameraDisplay.foreach(_.start(camera))
+    } else {
+      cameraDisplay.foreach(_.stop())
+    }
   }
 
   def startUiFadeTimer(): Unit = {
@@ -224,6 +263,7 @@ class ActiveCallFragment extends CommonCallFragment {
     super.onDestroy()
 
     videoDisplay.foreach(_.stop())
+    cameraDisplay.foreach(_.stop())
     durationView.stop()
   }
 }

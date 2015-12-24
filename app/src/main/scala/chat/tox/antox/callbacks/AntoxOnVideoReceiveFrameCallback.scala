@@ -9,6 +9,8 @@ import im.tox.tox4j.av.data.{Width, Height}
 
 class AntoxOnVideoReceiveFrameCallback(private var ctx: Context) {
 
+  val logging = false
+
   var width: Option[Width] = None
   var height: Option[Height] = None
   var y: Array[Byte] = _
@@ -16,7 +18,6 @@ class AntoxOnVideoReceiveFrameCallback(private var ctx: Context) {
   var v: Array[Byte] = _
 
   def videoFrameCachedYUV(height: Height, yStride: Int, uStride: Int, vStride: Int): Option[(Array[Byte], Array[Byte], Array[Byte])] = {
-    println(s"videoFrameCachedYUV called at ${System.currentTimeMillis()}")
     val width: Width = Width.unsafeFromInt(0)
 
     if (!this.height.contains(height) || !this.width.contains(width)) {
@@ -34,7 +35,7 @@ class AntoxOnVideoReceiveFrameCallback(private var ctx: Context) {
   }
 
   def videoReceiveFrame(callNumber: CallNumber, frame: YuvVideoFrame)(state: Unit): Unit = {
-    AntoxLog.debug(s"video frame received at ${System.currentTimeMillis()} for $callNumber dimensions(${frame.width}, ${frame.height}) yuv: ${frame.y.length} ${frame.u.length} ${frame.v.length}")
+    if(logging) AntoxLog.debug(s"video frame received at ${System.currentTimeMillis()} for $callNumber dimensions(${frame.width}, ${frame.height}) yuv: ${frame.y.length} ${frame.u.length} ${frame.v.length}")
 
     State.callManager.get(callNumber).foreach(_.onVideoFrame(frame))
   }

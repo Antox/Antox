@@ -5,17 +5,19 @@ import android.graphics._
 import android.renderscript._
 import android.view.{Surface, TextureView, View}
 import chat.tox.antox.ScriptC_yuvToRgb
-import chat.tox.antox.utils.AntoxLog
+import chat.tox.antox.utils.{UiUtils, AntoxLog}
 import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
 class VideoDisplay(activity: Activity, videoFrameObservable: Observable[YuvVideoFrame], videoView: TextureView, minBufferLength: Int) {
 
+  val logging = false
+
   var mRenderer: Option[Renderer] = None
   var bitmap: Bitmap = _
 
-  val videoBuffer = new CircularFifoQueue[YuvVideoFrame](minBufferLength * 4)
+  val videoBuffer = new CircularFifoQueue[YuvVideoFrame](minBufferLength * 2)
 
   var callVideoFrameSubscription: Option[Subscription] = None
 
@@ -32,7 +34,7 @@ class VideoDisplay(activity: Activity, videoFrameObservable: Observable[YuvVideo
     callVideoFrameSubscription = Some(videoFrameObservable
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(frame => {
-        AntoxLog.debug(s"got a new frame at ${System.currentTimeMillis()}")
+        if(logging) AntoxLog.debug(s"got a new frame at ${System.currentTimeMillis()}")
         videoBuffer.add(frame)
       }))
   }
@@ -52,6 +54,8 @@ class Renderer(activity: Activity,
                textureView: TextureView,
                videoBuffer: CircularFifoQueue[YuvVideoFrame],
                minBufferLength: Int) extends Runnable with TextureView.SurfaceTextureListener {
+
+  val logging = false
 
   val lock = new Object()
   var mSurfaceTexture: Option[SurfaceTexture] = None
@@ -95,11 +99,11 @@ class Renderer(activity: Activity,
       }
     }
 
-    AntoxLog.debug("Got surface texture.")
+    if(logging) AntoxLog.debug("Got surface texture.")
 
     for (surfaceTexture <- mSurfaceTexture) {
 
-      AntoxLog.debug("Initialised window surface.")
+      if(logging) AntoxLog.debug("Initialised window surface.")
 
       while (active) {
         try {
@@ -115,7 +119,7 @@ class Renderer(activity: Activity,
 
       surfaceTexture.release()
 
-      AntoxLog.debug("Renderer thread exiting.")
+      if(logging) AntoxLog.debug("Renderer thread exiting.")
     }
 
   }
@@ -125,7 +129,7 @@ class Renderer(activity: Activity,
 
     bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
-    adjustAspectRatio(width, height)
+    UiUtils.adjustAspectRatio(activity, textureView, width, height)
     createScript(surfaceTexture, yStride, uStride, vStride)
 
     dirty = false
@@ -159,7 +163,7 @@ class Renderer(activity: Activity,
   def printFps(): Unit = {
     if (System.currentTimeMillis() - lastFrameTime >= 1000) {
       lastFrameTime = System.currentTimeMillis()
-      println(s"current fps $framesRendered")
+      if(logging) println(s"current fps $framesRendered")
       framesRendered = 0
     }
   }
@@ -176,9 +180,10 @@ class Renderer(activity: Activity,
 
     if (dirty) recreate(surfaceTexture, videoFrame.yStride, videoFrame.uStride, videoFrame.vStride)
 
-    println(s"recreation took ${System.currentTimeMillis() - startRecreateTime}")
+    if(logging) println(s"recreation took ${System.currentTimeMillis() - startRecreateTime}")
 
-    println("rendering to the surface")
+    if(logging) println("rendering to the surface")
+
     printFps()
 
     val startConversionTime = System.currentTimeMillis()
@@ -187,56 +192,24 @@ class Renderer(activity: Activity,
     yAllocation.copyFrom(videoFrame.y)
     uAllocation.copyFrom(videoFrame.u)
     vAllocation.copyFrom(videoFrame.v)
-    AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
+    if(logging) AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
 
     yuvToRgbScript.forEach_yuvToRgb(emptyAllocation, outAllocation)
     outAllocation.ioSend()
 
-    AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
+    if(logging) AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
 
     framesRendered += 1
   }
 
-  /**
-   * Sets the TextureView transform to preserve the aspect ratio of the video.
-   */
-  private def adjustAspectRatio(videoWidth: Int, videoHeight: Int) {
-    val viewWidth: Int = textureView.getWidth
-    val viewHeight: Int = textureView.getHeight
-    val aspectRatio: Double = videoHeight.toDouble / videoWidth
-    var newWidth: Int = 0
-    var newHeight: Int = 0
-    if (viewHeight > (viewWidth * aspectRatio).toInt) {
-      newWidth = viewWidth
-      newHeight = (viewWidth * aspectRatio).toInt
-    }
-    else {
-      newWidth = (viewHeight / aspectRatio).toInt
-      newHeight = viewHeight
-    }
-    val xoff: Int = (viewWidth - newWidth) / 2
-    val yoff: Int = (viewHeight - newHeight) / 2
-    AntoxLog.debug(s"video=$videoWidth x $videoHeight view=$viewWidth x $viewHeight newView=$newWidth x $newHeight off=$xoff,$yoff")
-    val txform: android.graphics.Matrix = new android.graphics.Matrix
-
-    activity.runOnUiThread(new Runnable {
-      override def run(): Unit = {
-        textureView.getTransform(txform)
-        txform.setScale(newWidth.toFloat / viewWidth, newHeight.toFloat / viewHeight)
-        txform.postTranslate(xoff, yoff)
-        textureView.setTransform(txform)
-      }
-    })
-  }
-
   def stop(): Unit = {
-    println("renderer stopped")
+    if(logging) println("renderer stopped")
     videoBuffer.clear()
     active = false
   }
 
   override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-    adjustAspectRatio(this.width, this.height)
+    UiUtils.adjustAspectRatio(activity, textureView, this.width, this.height)
   }
 
   override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit = {

@@ -14,7 +14,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.av.Call
+import chat.tox.antox.av.{CameraUtils, Call}
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
@@ -269,7 +269,10 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   }
 
   override def onClickVideoCall(clickLocation: Location): Unit = {
-    onClickCall(video = true, clickLocation)
+    // don't send video if the device doesn't have a camera
+    val sendingVideo = CameraUtils.deviceHasCamera(this)
+
+    onClickCall(video = sendingVideo, clickLocation)
   }
 
   override def onPause(): Unit = {

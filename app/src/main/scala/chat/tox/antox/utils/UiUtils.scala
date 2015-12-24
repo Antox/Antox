@@ -2,7 +2,9 @@ package chat.tox.antox.utils
 
 import java.util.Random
 
-import android.graphics.Color
+import android.app.Activity
+import android.graphics.{Matrix, Color}
+import android.view.TextureView
 import chat.tox.antox.wrapper.ToxKey
 
 object UiUtils {
@@ -26,5 +28,37 @@ object UiUtils {
     val goldenRatio = 0.618033988749895
     val hue: Double = (new Random(hash).nextFloat() + goldenRatio) % 1
     Color.HSVToColor(Array(hue.asInstanceOf[Float] * 360, 0.5f, 0.7f))
+  }
+
+  /**
+   * Sets the TextureView transform to preserve the aspect ratio of the video.
+   */
+  def adjustAspectRatio(activity: Activity, textureView: TextureView, videoWidth: Int, videoHeight: Int) {
+    val viewWidth: Int = textureView.getWidth
+    val viewHeight: Int = textureView.getHeight
+    val aspectRatio: Double = videoHeight.toDouble / videoWidth
+    var newWidth: Int = 0
+    var newHeight: Int = 0
+    if (viewHeight > (viewWidth * aspectRatio).toInt) {
+      newWidth = viewWidth
+      newHeight = (viewWidth * aspectRatio).toInt
+    }
+    else {
+      newWidth = (viewHeight / aspectRatio).toInt
+      newHeight = viewHeight
+    }
+    val xoff: Int = (viewWidth - newWidth) / 2
+    val yoff: Int = (viewHeight - newHeight) / 2
+
+    val txform: Matrix = new Matrix()
+
+    activity.runOnUiThread(new Runnable {
+      override def run(): Unit = {
+        textureView.getTransform(txform)
+        txform.setScale(newWidth.toFloat / viewWidth, newHeight.toFloat / viewHeight)
+        txform.postTranslate(xoff, yoff)
+        textureView.setTransform(txform)
+      }
+    })
   }
 }
