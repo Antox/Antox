@@ -24,7 +24,10 @@ object CameraUtils {
   }
 
   def setCameraDisplayOrientation(activity: Activity, camera: AntoxCamera): Unit = {
-    val cameraInfo = getCameraInfo(camera.id)
+    camera.setDisplayOrientation(getCameraRotation(activity, camera))
+  }
+
+  def getCameraRotation(activity: Activity, antoxCamera: AntoxCamera, hack: Boolean = false /* TODO FIXME :-/ */): Int = {
     val rotation = activity.getWindowManager.getDefaultDisplay.getRotation
 
     val degrees = rotation match {
@@ -34,15 +37,14 @@ object CameraUtils {
       case Surface.ROTATION_270 => 270
     }
 
-    val result =
-      if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-        (360 - ((cameraInfo.orientation + degrees) % 360)) % 360; // compensate the mirror
-      } else {
-        // back-facing
-        (cameraInfo.orientation - degrees + 360) % 360
-      }
+    val cameraInfo = antoxCamera.getInfo
 
-    camera.setDisplayOrientation(result)
+    if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+      ((360 - ((cameraInfo.orientation + degrees) % 360)) % 360) + (if (hack && (degrees == Surface.ROTATION_0 || degrees == Surface.ROTATION_180)) 180 else 0); // compensate the mirror
+    } else {
+      // back-facing
+      (cameraInfo.orientation - degrees + 360) % 360
+    }
   }
 
   def getCameraInfo(cameraId: Int): CameraInfo = {

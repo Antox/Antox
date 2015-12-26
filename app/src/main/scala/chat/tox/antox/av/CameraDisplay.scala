@@ -8,6 +8,7 @@ import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import chat.tox.antox.utils.{UiUtils, AntoxLog}
+import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.JavaConversions._
 import rx.lang.scala.{Observable, Subject}
 import scala.collection.JavaConversions._
@@ -16,8 +17,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
 
   private var maybeCamera: Option[AntoxCamera] = None
 
-  private val frameSubject: Subject[YuvVideoFrame] = Subject[YuvVideoFrame]()
-  val frameObservable: Observable[YuvVideoFrame] = frameSubject.asJavaObservable
+  val queueSize = 5
+  val frameBuffer: CircularFifoQueue[NV21Frame] = new CircularFifoQueue[NV21Frame](queueSize)
 
   private var active: Boolean = false
 
@@ -32,21 +33,31 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
     setParameters(camera)
     adjustToOptimalDisplaySize(camera)
 
-    val previewCallback = new PreviewCallback {
-      override def onPreviewFrame(data: Array[Byte], camera: Camera): Unit = {
-        //AntoxLog.debug("got a camera preview frame")
-        // frameSubject.onNext()
-      }
-    }
-
-    //camera.addCallbackBuffer()
-    camera.setPreviewCallback(previewCallback)
     recreate(camera, texture)
   }
 
   def recreate(camera: AntoxCamera, texture: SurfaceTexture): Unit = {
     try {
       camera.setPreviewTexture(texture)
+      val antoxCamera = camera
+      val previewCallback = new PreviewCallback {
+        override def onPreviewFrame(data: Array[Byte], camera: Camera): Unit = {
+          try {
+            val previewSize = camera.getParameters.getPreviewSize
+
+            val rotation = CameraUtils.getCameraRotation(activity, antoxCamera, hack = true)
+            val frame = NV21Frame(previewSize.width, previewSize.height, data, rotation)
+
+            frameBuffer.add(frame)
+          } catch {
+            case e: Exception =>
+              e.printStackTrace()
+          }
+        }
+      }
+
+      //camera.addCallbackBuffer()
+      camera.setPreviewCallback(previewCallback)
       camera.startPreview()
     } catch {
       case e: Exception =>
@@ -97,7 +108,6 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
 
     val newParameters = camera.getParameters
     newParameters.setPreviewSize(closestSize.width, closestSize.height)
-
     camera.setParameters(newParameters)
   }
 

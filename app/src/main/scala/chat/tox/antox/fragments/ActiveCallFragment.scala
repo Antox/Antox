@@ -19,7 +19,7 @@ import chat.tox.antox.utils.Constants
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.NewThreadScheduler
+import rx.lang.scala.schedulers.{ComputationScheduler, IOScheduler, NewThreadScheduler}
 
 import scala.concurrent.duration.Duration
 
@@ -47,7 +47,7 @@ class ActiveCallFragment extends CommonCallFragment {
 
   var videoSurface: TextureView = _
   var videoDisplay: Option[VideoDisplay] = None
-  var cameraDisplay: Option[CameraDisplay] = None
+  var maybeCameraDisplay: Option[CameraDisplay] = None
 
   var viewsHiddenOnFade: List[View] = _
   val fadeDelay = Duration(4, TimeUnit.SECONDS)
@@ -116,8 +116,11 @@ class ActiveCallFragment extends CommonCallFragment {
     scaleSurfaceRelativeToScreen(cameraPreviewSurface, 0.3f)
 
     videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
-    cameraDisplay = Some(new CameraDisplay(getActivity, cameraPreviewSurface))
-    
+    val cameraDisplay = new CameraDisplay(getActivity, cameraPreviewSurface)
+    maybeCameraDisplay = Some(cameraDisplay)
+
+    call.cameraFrameBuffer = maybeCameraDisplay.map(_.frameBuffer)
+
     compositeSubscription +=
       call.ringingObservable
         .combineLatest(call.selfStateObservable)
@@ -212,6 +215,8 @@ class ActiveCallFragment extends CommonCallFragment {
       avatarView.setVisibility(View.VISIBLE)
 
       videoDisplay.foreach(_.stop())
+      call.cameraFrameBuffer = None
+
       nameView.setTextColor(getActivity.getResources.getColor(R.color.grey_darkest))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.black))
     }
@@ -223,9 +228,9 @@ class ActiveCallFragment extends CommonCallFragment {
 
       CameraUtils.setCameraDisplayOrientation(getActivity, camera)
 
-      cameraDisplay.foreach(_.start(camera))
+      maybeCameraDisplay.foreach(_.start(camera))
     } else {
-      cameraDisplay.foreach(_.stop())
+      maybeCameraDisplay.foreach(_.stop())
     }
   }
 
@@ -263,7 +268,9 @@ class ActiveCallFragment extends CommonCallFragment {
     super.onDestroy()
 
     videoDisplay.foreach(_.stop())
-    cameraDisplay.foreach(_.stop())
+    maybeCameraDisplay.foreach(_.stop())
+    call.cameraFrameBuffer = None
+
     durationView.stop()
   }
 }

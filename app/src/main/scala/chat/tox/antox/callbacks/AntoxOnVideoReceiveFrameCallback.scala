@@ -1,7 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import chat.tox.antox.av.YuvVideoFrame
+import chat.tox.antox.av.{StridedYuvFrame, YuvFrame}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.CallNumber
@@ -30,12 +30,14 @@ class AntoxOnVideoReceiveFrameCallback(private var ctx: Context) {
       this.height = Some(height)
     }
 
-    //Some(y, u, v)
-    None
+    Some(y, u, v)
   }
 
-  def videoReceiveFrame(callNumber: CallNumber, frame: YuvVideoFrame)(state: Unit): Unit = {
-    if(logging) AntoxLog.debug(s"video frame received at ${System.currentTimeMillis()} for $callNumber dimensions(${frame.width}, ${frame.height}) yuv: ${frame.y.length} ${frame.u.length} ${frame.v.length}")
+  def videoReceiveFrame(callNumber: CallNumber, frame: StridedYuvFrame)(state: Unit): Unit = {
+    if(logging) AntoxLog.debug(
+      s"""video frame received at ${System.currentTimeMillis()} for
+         |$callNumber dimensions(${frame.yuvData.width}, ${frame.yuvData.height})
+         |yuv: ${frame.yuvData.y.length} ${frame.yuvData.u.length} ${frame.yuvData.v.length}""".stripMargin)
 
     State.callManager.get(callNumber).foreach(_.onVideoFrame(frame))
   }

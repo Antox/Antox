@@ -10,14 +10,14 @@ import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
 
-class VideoDisplay(activity: Activity, videoFrameObservable: Observable[YuvVideoFrame], videoView: TextureView, minBufferLength: Int) {
+class VideoDisplay(activity: Activity, videoFrameObservable: Observable[StridedYuvFrame], videoView: TextureView, minBufferLength: Int) {
 
   val logging = false
 
   var mRenderer: Option[Renderer] = None
   var bitmap: Bitmap = _
 
-  val videoBuffer = new CircularFifoQueue[YuvVideoFrame](minBufferLength * 2)
+  val videoBuffer = new CircularFifoQueue[StridedYuvFrame](minBufferLength * 2)
 
   var callVideoFrameSubscription: Option[Subscription] = None
 
@@ -52,7 +52,7 @@ object Renderer {
 
 class Renderer(activity: Activity,
                textureView: TextureView,
-               videoBuffer: CircularFifoQueue[YuvVideoFrame],
+               videoBuffer: CircularFifoQueue[StridedYuvFrame],
                minBufferLength: Int) extends Runnable with TextureView.SurfaceTextureListener {
 
   val logging = false
@@ -168,11 +168,11 @@ class Renderer(activity: Activity,
     }
   }
 
-  def renderVideoFrame(surfaceTexture: SurfaceTexture, videoFrame: YuvVideoFrame): Unit = {
+  def renderVideoFrame(surfaceTexture: SurfaceTexture, videoFrame: StridedYuvFrame): Unit = {
     val startRecreateTime = System.currentTimeMillis()
-    if (videoFrame.width != width || videoFrame.height != height) {
-      width = videoFrame.width
-      height = videoFrame.height
+    if (videoFrame.yuvData.width != width || videoFrame.yuvData.height != height) {
+      width = videoFrame.yuvData.width
+      height = videoFrame.yuvData.height
 
       dirty = true
     }
@@ -189,9 +189,9 @@ class Renderer(activity: Activity,
     val startConversionTime = System.currentTimeMillis()
 
     val startPackingTime = System.currentTimeMillis()
-    yAllocation.copyFrom(videoFrame.y)
-    uAllocation.copyFrom(videoFrame.u)
-    vAllocation.copyFrom(videoFrame.v)
+    yAllocation.copyFrom(videoFrame.yuvData.y)
+    uAllocation.copyFrom(videoFrame.yuvData.u)
+    vAllocation.copyFrom(videoFrame.yuvData.v)
     if(logging) AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
 
     yuvToRgbScript.forEach_yuvToRgb(emptyAllocation, outAllocation)

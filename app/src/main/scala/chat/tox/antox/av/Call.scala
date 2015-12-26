@@ -9,6 +9,7 @@ import chat.tox.antox.wrapper.{CallNumber, ContactKey}
 import im.tox.tox4j.av.data._
 import im.tox.tox4j.av.enums.{ToxavCallControl, ToxavFriendCallState}
 import im.tox.tox4j.exceptions.ToxException
+import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.JavaConversions._
 import rx.lang.scala.schedulers.NewThreadScheduler
 import rx.lang.scala.subjects.BehaviorSubject
@@ -71,8 +72,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   val audioCapture: AudioCapture = new AudioCapture(samplingRate.value, channels.value)
   val audioPlayer = new AudioPlayer(samplingRate.value, channels.value, audioBufferLength)
 
-  private val videoFrameSubject = Subject[YuvVideoFrame]()
-  def videoFrameObservable: Observable[YuvVideoFrame] = videoFrameSubject.onBackpressureDrop(_ => AntoxLog.debug("Dropped a video frame due to back-pressure."))
+  private val videoFrameSubject = Subject[StridedYuvFrame]()
+  def videoFrameObservable: Observable[StridedYuvFrame] = videoFrameSubject.onBackpressureDrop(_ => AntoxLog.debug("Dropped a video frame due to back-pressure."))
+
+  var cameraFrameBuffer: Option[CircularFifoQueue[NV21Frame]] = None
 
   // default value, not checked based on device capabilities
   var cameraFacing = CameraFacing.Front
@@ -168,7 +171,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
       override def run(): Unit = {
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO)
 
-        logCallEvent(s"audio send thread started")
+        logCallEvent("audio send thread started")
 
         audioCapture.start()
 
@@ -181,7 +184,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
                 frameSize, channels, samplingRate)
             } catch {
               case e: ToxException[_] =>
-                //if (active) end(reason = CallEndReason.Error)
+                AntoxLog.debug("Ignoring audio send frame exception.")
             }
           }
 
@@ -190,9 +193,35 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
             Thread.sleep(audioLength.value.toMillis - timeTaken)
         }
 
-        logCallEvent(s"audio send thread stopped")
+        logCallEvent("audio send thread stopped")
       }
     }, "AudioSendThread").start()
+
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        logCallEvent("video send thread started ")
+
+        while (active) {
+          if (cameraFrameBuffer.isEmpty) Thread.sleep(100)
+
+          val maybeCameraFrame = cameraFrameBuffer.flatMap(buffer => Option(buffer.poll()))
+          maybeCameraFrame.foreach(cameraFrame => {
+            if (active && selfState.sendingVideo && !ringing) {
+              val startSendTime = System.currentTimeMillis()
+              val yuvFrame = FormatConversions.nv21toYuv420(cameraFrame)
+              try {
+                ToxSingleton.toxAv.videoSendFrame(callNumber, yuvFrame.width, yuvFrame.height, yuvFrame.y, yuvFrame.u, yuvFrame.v)
+              } catch {
+                case e: ToxException[_] =>
+                  AntoxLog.debug("Ignoring video send frame exception.")
+              }
+              println(s"sending frame took ${System.currentTimeMillis() - startSendTime}")
+            }
+          })
+        }
+
+      }
+    }, "VideoSendThread").start()
 
     audioPlayer.start()
   }
@@ -201,7 +230,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     audioPlayer.bufferAudioFrame(pcm, channels.value, samplingRate.value)
   }
 
-  def onVideoFrame(videoFrame: YuvVideoFrame): Unit = {
+  def onVideoFrame(videoFrame: StridedYuvFrame): Unit = {
     videoFrameSubject.onNext(videoFrame)
   }
 

@@ -1,7 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
-import chat.tox.antox.av.YuvVideoFrame
+import chat.tox.antox.av.{StridedYuvFrame, YuvFrame}
 import chat.tox.antox.wrapper.CallNumber
 import im.tox.tox4j.av.callbacks.ToxAvEventListener
 import im.tox.tox4j.av.data.{Width, Height, SamplingRate, AudioChannels}
@@ -33,7 +33,7 @@ class ToxavCallbackListener(ctx: Context) extends ToxAvEventListener[Unit] {
 
   override def videoReceiveFrame(friendNumber: ToxFriendNumber, width: Width, height: Height, y: Array[Byte], u: Array[Byte], v: Array[Byte], yStride: Int, uStride: Int, vStride: Int)(state: Unit): Unit = {
     try {
-      videoReceiveFrameCallback.videoReceiveFrame(CallNumber.fromFriendNumber(friendNumber), YuvVideoFrame(width.value, height.value, y, u, v, yStride, uStride, vStride))(state)
+      videoReceiveFrameCallback.videoReceiveFrame(CallNumber.fromFriendNumber(friendNumber), StridedYuvFrame(YuvFrame(width.value, height.value, y, u, v), yStride, uStride, vStride))(state)
     } catch {
       case e: Exception =>
         e.printStackTrace()
