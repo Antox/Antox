@@ -23,7 +23,7 @@
   <string name="pref_title_theme_color">テーマの色を変更します</string>
   <string name="pref_title_avatar">アバター</string>
   <string name="pref_title_account_name">プロファイル名</string>
-  <string name="pref_title_export">パスワードを輸出</string>
+  <string name="pref_title_export">パスワードをエクスポート</string>
   <string name="pref_title_delete">アカウントを削除</string>
   <string name="pref_title_logout">ログアウト</string>
   <!--Notifications-->
@@ -42,5 +42,5 @@
   <string name="pref_udp">UDPを有効にする</string>
   <string name="pref_advanced">詳細設定</string>
   <string name="pref_nospam">Tox IDをリセット</string>
-  <string name="pref_autostart">ブートにAntoxを開始</string>
+  <string name="pref_autostart">Antoxを自動で起動</string>
 </resources>
