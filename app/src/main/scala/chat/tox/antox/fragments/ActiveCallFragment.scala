@@ -18,7 +18,7 @@ import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.utils.UiUtils._
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.NewThreadScheduler
+import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, NewThreadScheduler}
 
 import scala.concurrent.duration.Duration
 
@@ -83,13 +83,16 @@ class ActiveCallFragment extends CommonCallFragment {
     setupOnClickToggle(micOn, call.muteSelfAudio)
     setupOnClickToggle(micOff, call.unmuteSelfAudio)
 
-    setupOnClickToggle(loudspeakerOn, call.muteFriendAudio)
-    setupOnClickToggle(speakerOff, () => {
-      audioManager.setSpeakerphoneOn(false)
-      call.unmuteFriendAudio()
+    setupOnClickToggle(loudspeakerOn, {
+      call.disableLoudspeaker()
+      call.muteFriendAudio
+    })
+    setupOnClickToggle(speakerOff, {
+      call.disableLoudspeaker()
+      call.unmuteFriendAudio
     })
     setupOnClickToggle(speakerOn, () => {
-      audioManager.setSpeakerphoneOn(true)
+      call.enableLoudspeaker()
     })
 
     compositeSubscription +=
@@ -98,6 +101,12 @@ class ActiveCallFragment extends CommonCallFragment {
           toggleViewVisibility(micOff, micOn)
         } else {
           toggleViewVisibility(micOn, micOff)
+        }
+
+        if (selfState.loudspeakerEnabled) {
+          audioManager.setSpeakerphoneOn(true)
+        } else {
+          audioManager.setSpeakerphoneOn(false)
         }
 
         if (selfState.loudspeakerEnabled) {
@@ -127,16 +136,14 @@ class ActiveCallFragment extends CommonCallFragment {
       setupOnClickToggle(videoOff, call.showSelfVideo)
     }
 
-    returnToChat.setOnClickListener(new OnClickListener {
-      override def onClick(v: View): Unit = {
-        val intent = new Intent(getActivity, classOf[ChatActivity])
-        intent.setAction(Constants.SWITCH_TO_FRIEND)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY) //stop chats from stacking up
-        intent.putExtra("key", activeKey.toString)
-        startActivity(intent)
+    setupOnClickToggle(returnToChat, () => {
+      val intent = new Intent(getActivity, classOf[ChatActivity])
+      intent.setAction(Constants.SWITCH_TO_FRIEND)
+      intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY) //stop chats from stacking up
+      intent.putExtra("key", activeKey.toString)
+      startActivity(intent)
 
-        getActivity.finish()
-      }
+      getActivity.finish()
     })
 
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
@@ -186,6 +193,7 @@ class ActiveCallFragment extends CommonCallFragment {
         .combineLatest(call.selfStateObservable)
         .map(t => (t._1, t._2.receivingVideo, t._2.sendingVideo))
         .distinctUntilChanged
+        .observeOn(AndroidMainThreadScheduler())
         .sub { case (ringing, receivingVideo, sendingVideo) =>
           if (call.active) {
             if (ringing) {
@@ -220,7 +228,7 @@ class ActiveCallFragment extends CommonCallFragment {
   private def setupOnClickToggle(clickView: View, action: () => Unit): Unit = {
     clickView.setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {
-        if (!call.active) return
+        if (!call.active || call.ringing) return
 
         action()
       }
@@ -278,9 +286,13 @@ class ActiveCallFragment extends CommonCallFragment {
     }
 
     if (sendingVideo) {
-      // get preferred camera or default camera (there will always be some camera or sendingVideo would be false)
+      // get preferred camera or default camera or exit and disable video on failure
+      // (there will always be some camera or sendingVideo would be false)
       val camera = CameraUtils.getCameraInstance(call.cameraFacing)
-        .getOrElse(CameraUtils.getCameraInstance(CameraFacing.Back).get)
+        .getOrElse(CameraUtils.getCameraInstance(CameraFacing.Back).getOrElse({
+          call.hideSelfVideo()
+          return
+        }))
 
       CameraUtils.setCameraDisplayOrientation(getActivity, camera)
 

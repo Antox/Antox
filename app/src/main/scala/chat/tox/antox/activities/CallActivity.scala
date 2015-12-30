@@ -78,7 +78,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     val clickLocation = Option(getIntent.getExtras.get("click_location").asInstanceOf[Location])
 
     rootLayout = findViewById(R.id.call_fragment_container).asInstanceOf[FrameLayout]
-    if (savedInstanceState == null) {
+    if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       rootLayout.setVisibility(View.INVISIBLE)
 
       val viewTreeObserver = rootLayout.getViewTreeObserver

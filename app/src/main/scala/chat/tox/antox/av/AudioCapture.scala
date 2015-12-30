@@ -1,7 +1,6 @@
 package chat.tox.antox.av
 
 import android.media.{AudioFormat, AudioRecord}
-import chat.tox.antox.exceptions.AvDeviceNotFoundException
 import chat.tox.antox.utils.AntoxLog
 import org.scaloid.common.LoggerTag
 
@@ -26,7 +25,7 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
     mAudioRecord = findAudioRecord(sampleRate, channels)
     mAudioRecord match {
       case Some(audioRecord) => audioRecord.startRecording()
-      case None => throw AvDeviceNotFoundException("Could not get AudioRecord.")
+      case None => AntoxLog.debug("Could not get AudioRecord.")
     }
 
     dirty = false
