@@ -13,7 +13,7 @@ import android.widget.{Chronometer, FrameLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av._
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.utils.UiUtils._
 import chat.tox.antox.wrapper.ContactKey
@@ -147,11 +147,7 @@ class ActiveCallFragment extends CommonCallFragment {
     })
 
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
-
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
-
-    val screenWidth = getScreenWidth(getActivity)
-    val screenHeight = getScreenHeight(getActivity)
 
     val cameraPreviewWrapper = rootView.findViewById(R.id.camera_preview_wrapper).asInstanceOf[FrameLayout]
     cameraPreviewWrapper.setOnTouchListener(new OnTouchListener() {
@@ -200,9 +196,8 @@ class ActiveCallFragment extends CommonCallFragment {
               setupOutgoing()
             } else {
               setupActive()
+              setupVideoUi(receivingVideo, sendingVideo)
             }
-
-            setupVideoUi(receivingVideo, sendingVideo)
           }
         }
 
@@ -260,6 +255,9 @@ class ActiveCallFragment extends CommonCallFragment {
       nameView.setTextColor(getActivity.getResources.getColor(R.color.white))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.white))
 
+      // turn on loudspeaker in a video call
+      if (!audioManager.isWiredHeadsetOn) call.enableLoudspeaker()
+
       videoDisplay.foreach(_.start())
 
       // fade out when the video view hasn't been clicked in a while
@@ -291,6 +289,7 @@ class ActiveCallFragment extends CommonCallFragment {
       val camera = CameraUtils.getCameraInstance(call.cameraFacing)
         .getOrElse(CameraUtils.getCameraInstance(CameraFacing.Back).getOrElse({
           call.hideSelfVideo()
+          AntoxLog.debug("hiding self video because camera could not be accessed")
           return
         }))
 
@@ -301,6 +300,8 @@ class ActiveCallFragment extends CommonCallFragment {
       call.cameraFrameBuffer = maybeCameraDisplay.map(_.frameBuffer)
       maybeCameraDisplay.foreach(_.start(camera))
     } else {
+      AntoxLog.debug("stopping video stuff")
+
       cameraPreviewSurface.setVisibility(View.GONE)
 
       call.cameraFrameBuffer = None

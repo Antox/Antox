@@ -25,12 +25,16 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
   def start(camera: AntoxCamera): Unit = {
     maybeCamera = Some(camera)
 
+    AntoxLog.debug("camera display started")
+
     active = true
 
-    if (previewView.isAvailable && previewView.getSurfaceTextureListener != null) {
+    if (previewView.isAvailable) {
       //if start is called again, artificially trigger this callback
       onSurfaceTextureAvailable(previewView.getSurfaceTexture, previewView.getWidth, previewView.getHeight)
-    } else {
+    }
+
+    if (previewView.getSurfaceTextureListener == null) {
       previewView.setSurfaceTextureListener(this)
     }
   }
@@ -147,6 +151,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
     active = false
 
     maybeCamera.foreach(camera => {
+      AntoxLog.debug("camera display ended")
+
       camera.stopPreview()
       camera.setPreviewCallback(null)
       camera.release()
