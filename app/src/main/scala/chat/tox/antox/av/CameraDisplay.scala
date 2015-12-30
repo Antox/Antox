@@ -7,12 +7,13 @@ import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
+import android.widget.FrameLayout
 import chat.tox.antox.utils.AntoxLog
 import org.apache.commons.collections4.queue.CircularFifoQueue
 
 import scala.collection.JavaConversions._
 
-class CameraDisplay(activity: Activity, previewView: TextureView) extends SurfaceTextureListener {
+class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper: FrameLayout, extraHeight: Int) extends SurfaceTextureListener {
 
   private var maybeCamera: Option[AntoxCamera] = None
 

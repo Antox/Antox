@@ -156,23 +156,18 @@ class ActiveCallFragment extends CommonCallFragment {
         event.getAction match {
           case MotionEvent.ACTION_MOVE | MotionEvent.ACTION_UP =>
 
-            if (event.getRawX + (view.getWidth / 2) > screenWidth) {
-              params.leftMargin = screenWidth - view.getWidth
-            } else if (view.getX - (view.getWidth / 2) < 0) {
-              params.leftMargin = 0
-            } else if (event.getRawY + view.getHeight > screenHeight) {
-              params.topMargin = screenHeight - view.getHeight
-            } else if (view.getY < 0) {
-              params.topMargin = 0
-            } else {
-              params.topMargin = (event.getRawY - view.getHeight).toInt
-              params.leftMargin = (event.getRawX - (view.getWidth / 2)).toInt
-            }
+            val newX = (event.getRawX - (view.getWidth / 2)).toInt
+            val newY = (event.getRawY - view.getHeight).toInt
+
+            params.leftMargin = newX
+            params.topMargin = newY
 
             view.setLayoutParams(params)
 
           case MotionEvent.ACTION_DOWN =>
            view.setLayoutParams(params)
+
+          case _ => // do nothing
         }
 
         true
@@ -183,7 +178,7 @@ class ActiveCallFragment extends CommonCallFragment {
     scaleSurfaceRelativeToScreen(cameraPreviewSurface, 0.3f)
 
     videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
-    val cameraDisplay = new CameraDisplay(getActivity, cameraPreviewSurface)
+    val cameraDisplay = new CameraDisplay(getActivity, cameraPreviewSurface, cameraPreviewWrapper, buttonsView.getHeight)
     maybeCameraDisplay = Some(cameraDisplay)
 
     compositeSubscription +=
