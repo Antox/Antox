@@ -28,7 +28,7 @@ object ContactListAdapter {
 
     var secondText: TextView = _
 
-    var secondImage: ImageView = _
+    var secondImage: Option[ImageView] = None
 
     var icon: TextView = _
 
@@ -99,7 +99,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           newConvertView = layoutInflater.inflate(R.layout.contact_list_item, null)
           holder.firstText = newConvertView.findViewById(R.id.contact_name).asInstanceOf[TextView]
           holder.secondText = newConvertView.findViewById(R.id.contact_status).asInstanceOf[TextView]
-          holder.secondImage = newConvertView.findViewById(R.id.second_image).asInstanceOf[ImageView]
+          holder.secondImage = Option(newConvertView.findViewById(R.id.second_image).asInstanceOf[ImageView])
           holder.icon = newConvertView.findViewById(R.id.icon).asInstanceOf[TextView]
           holder.favorite = newConvertView.findViewById(R.id.star).asInstanceOf[ImageView]
           holder.avatar = newConvertView.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
@@ -117,14 +117,15 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
 
     if (item.second != "") holder.secondText.setText(item.second) else holder.firstText.setGravity(Gravity.CENTER_VERTICAL)
 
-    item.secondImage match {
-      case Some(imageRes) =>
-        holder.secondImage.setVisibility(View.VISIBLE)
-        holder.secondImage.setImageResource(imageRes)
+    holder.secondImage.foreach(secondImage =>
+      item.secondImage match {
+        case Some(imageRes) =>
+          secondImage.setVisibility(View.VISIBLE)
+          secondImage.setImageResource(imageRes)
 
-      case None =>
-        holder.secondImage.setVisibility(View.GONE)
-    }
+        case None =>
+          secondImage.setVisibility(View.GONE)
+      })
 
     if (`type` == ContactItemType.FRIEND || `type` == ContactItemType.GROUP) {
       if (item.count > 0) {
@@ -281,7 +282,7 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
           filterResults
         }
 
-        protected override def publishResults(contraint: CharSequence, results: FilterResults) {
+        protected override def publishResults(constraint: CharSequence, results: FilterResults) {
           data = results.values.asInstanceOf[util.ArrayList[LeftPaneItem]]
           if (results.count > 0) {
             notifyDataSetChanged()

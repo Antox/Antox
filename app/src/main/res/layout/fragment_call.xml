@@ -11,10 +11,15 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <TextureView
-        android:id="@+id/camera_preview_surface"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <FrameLayout
+        android:id="@+id/camera_preview_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextureView
+            android:id="@+id/camera_preview_surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

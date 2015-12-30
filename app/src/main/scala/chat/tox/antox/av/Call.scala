@@ -246,13 +246,20 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     audioCapture.start()
   }
 
+  def enableLoudspeaker(): Unit = {
+    selfStateSubject.onNext(selfState.copy(loudspeakerEnabled = true))
+  }
+
+  def disableLoudspeaker(): Unit = {
+    selfStateSubject.onNext(selfState.copy(loudspeakerEnabled = false))
+  }
+
   def hideSelfVideo(): Unit = {
     selfStateSubject.onNext(selfState.copy(videoHidden = true))
   }
 
   def showSelfVideo(): Unit = {
     selfStateSubject.onNext(selfState.copy(videoHidden = false))
-    //TODO
   }
 
   def muteFriendAudio(): Unit = {

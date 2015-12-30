@@ -7,10 +7,9 @@ import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
-import chat.tox.antox.utils.{UiUtils, AntoxLog}
+import chat.tox.antox.utils.AntoxLog
 import org.apache.commons.collections4.queue.CircularFifoQueue
-import rx.lang.scala.JavaConversions._
-import rx.lang.scala.{Observable, Subject}
+
 import scala.collection.JavaConversions._
 
 class CameraDisplay(activity: Activity, previewView: TextureView) extends SurfaceTextureListener {
@@ -23,20 +22,26 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
   private var active: Boolean = false
 
   def start(camera: AntoxCamera): Unit = {
-    previewView.setSurfaceTextureListener(this)
     maybeCamera = Some(camera)
 
     active = true
+
+    if (previewView.isAvailable && previewView.getSurfaceTextureListener != null) {
+      //if start is called again, artificially trigger this callback
+      onSurfaceTextureAvailable(previewView.getSurfaceTexture, previewView.getWidth, previewView.getHeight)
+    } else {
+      previewView.setSurfaceTextureListener(this)
+    }
   }
 
-  def create(camera: AntoxCamera, texture: SurfaceTexture): Unit = {
+  private def create(camera: AntoxCamera, texture: SurfaceTexture): Unit = {
     setParameters(camera)
     adjustToOptimalDisplaySize(camera)
 
     recreate(camera, texture)
   }
 
-  def recreate(camera: AntoxCamera, texture: SurfaceTexture): Unit = {
+  private def recreate(camera: AntoxCamera, texture: SurfaceTexture): Unit = {
     try {
       camera.setPreviewTexture(texture)
       val antoxCamera = camera
@@ -65,13 +70,13 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
     }
   }
 
-  def setParameters(camera: AntoxCamera): Unit = {
+  private def setParameters(camera: AntoxCamera): Unit = {
     val parameters = camera.getParameters
     parameters.setRecordingHint(true)
     camera.setParameters(parameters)
   }
 
-  def adjustToOptimalDisplaySize(camera: AntoxCamera): Unit = {
+  private def adjustToOptimalDisplaySize(camera: AntoxCamera): Unit = {
     val validPreviewSizes = camera.getParameters.getSupportedPreviewSizes
 
     AntoxLog.debug(s"Valid preview sizes are ${validPreviewSizes.map(size => s"${size.width}, ${size.height}")}")
@@ -144,6 +149,7 @@ class CameraDisplay(activity: Activity, previewView: TextureView) extends Surfac
       camera.stopPreview()
       camera.setPreviewCallback(null)
       camera.release()
+      maybeCamera = None
     })
   }
 }

@@ -3,11 +3,9 @@ package chat.tox.antox.fragments
 import java.util.concurrent.TimeUnit
 
 import android.content.Intent
-import android.hardware.Camera
 import android.media.AudioManager
 import android.os.{Bundle, SystemClock}
-import android.util.DisplayMetrics
-import android.view.View.OnClickListener
+import android.view.View.{OnClickListener, OnTouchListener}
 import android.view._
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.{AccelerateInterpolator, AlphaAnimation, Animation}
@@ -17,9 +15,10 @@ import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av._
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
+import chat.tox.antox.utils.UiUtils._
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{ComputationScheduler, IOScheduler, NewThreadScheduler}
+import rx.lang.scala.schedulers.NewThreadScheduler
 
 import scala.concurrent.duration.Duration
 
@@ -47,6 +46,8 @@ class ActiveCallFragment extends CommonCallFragment {
 
   var videoSurface: TextureView = _
   var videoDisplay: Option[VideoDisplay] = None
+
+  var cameraPreviewSurface: TextureView = _
   var maybeCameraDisplay: Option[CameraDisplay] = None
 
   var viewsHiddenOnFade: List[View] = _
@@ -79,22 +80,51 @@ class ActiveCallFragment extends CommonCallFragment {
     allButtons = List(micOn, micOff, speakerOn, speakerOff, loudspeakerOn, videoOn, videoOff, returnToChat)
     allButtons.foreach(_.setClickable(false))
 
-    setupOnClickToggle(micOn, micOff, call.muteSelfAudio)
-    setupOnClickToggle(micOff, micOn, call.unmuteSelfAudio)
+    setupOnClickToggle(micOn, call.muteSelfAudio)
+    setupOnClickToggle(micOff, call.unmuteSelfAudio)
 
-    setupOnClickToggle(loudspeakerOn, speakerOff, call.muteFriendAudio)
-    setupOnClickToggle(speakerOff, speakerOn, () => {
+    setupOnClickToggle(loudspeakerOn, call.muteFriendAudio)
+    setupOnClickToggle(speakerOff, () => {
       audioManager.setSpeakerphoneOn(false)
       call.unmuteFriendAudio()
     })
-    setupOnClickToggle(speakerOn, loudspeakerOn, () => {
+    setupOnClickToggle(speakerOn, () => {
       audioManager.setSpeakerphoneOn(true)
     })
 
+    compositeSubscription +=
+      call.selfStateObservable.subscribe(selfState => {
+        if (selfState.audioMuted) {
+          toggleViewVisibility(micOff, micOn)
+        } else {
+          toggleViewVisibility(micOn, micOff)
+        }
+
+        if (selfState.loudspeakerEnabled) {
+          toggleViewVisibility(loudspeakerOn, speakerOn, speakerOff)
+        } else if (selfState.receivingAudio) {
+          toggleViewVisibility(speakerOn, speakerOff, loudspeakerOn)
+        } else {
+          toggleViewVisibility(speakerOff, loudspeakerOn, speakerOn)
+        }
+
+        if (selfState.sendingVideo) {
+          toggleViewVisibility(videoOn, videoOff)
+        } else {
+          toggleViewVisibility(videoOff, videoOn)
+        }
+
+        if (selfState.videoHidden) {
+          toggleViewVisibility(videoOff, videoOn)
+        } else {
+          toggleViewVisibility(videoOn, videoOff)
+        }
+      })
+
     // don't let the user enable video if the device doesn't have a camera
     if (CameraUtils.deviceHasCamera(getActivity)) {
-      setupOnClickToggle(videoOn, videoOff, call.hideSelfVideo)
-      setupOnClickToggle(videoOff, videoOn, call.showSelfVideo)
+      setupOnClickToggle(videoOn, call.hideSelfVideo)
+      setupOnClickToggle(videoOff, call.showSelfVideo)
     }
 
     returnToChat.setOnClickListener(new OnClickListener {
@@ -112,19 +142,56 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
 
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
-    val cameraPreviewSurface = rootView.findViewById(R.id.camera_preview_surface).asInstanceOf[TextureView]
+
+    val screenWidth = getScreenWidth(getActivity)
+    val screenHeight = getScreenHeight(getActivity)
+
+    val cameraPreviewWrapper = rootView.findViewById(R.id.camera_preview_wrapper).asInstanceOf[FrameLayout]
+    cameraPreviewWrapper.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+
+        val params = view.getLayoutParams.asInstanceOf[FrameLayout.LayoutParams]
+        if (view.getId != R.id.camera_preview_wrapper) return false
+
+        event.getAction match {
+          case MotionEvent.ACTION_MOVE | MotionEvent.ACTION_UP =>
+
+            if (event.getRawX + (view.getWidth / 2) > screenWidth) {
+              params.leftMargin = screenWidth - view.getWidth
+            } else if (view.getX - (view.getWidth / 2) < 0) {
+              params.leftMargin = 0
+            } else if (event.getRawY + view.getHeight > screenHeight) {
+              params.topMargin = screenHeight - view.getHeight
+            } else if (view.getY < 0) {
+              params.topMargin = 0
+            } else {
+              params.topMargin = (event.getRawY - view.getHeight).toInt
+              params.leftMargin = (event.getRawX - (view.getWidth / 2)).toInt
+            }
+
+            view.setLayoutParams(params)
+
+          case MotionEvent.ACTION_DOWN =>
+           view.setLayoutParams(params)
+        }
+
+        true
+      }
+    })
+
+    cameraPreviewSurface = rootView.findViewById(R.id.camera_preview_surface).asInstanceOf[TextureView]
     scaleSurfaceRelativeToScreen(cameraPreviewSurface, 0.3f)
 
     videoDisplay = Some(new VideoDisplay(getActivity, call.videoFrameObservable, videoSurface, call.videoBufferLength))
     val cameraDisplay = new CameraDisplay(getActivity, cameraPreviewSurface)
     maybeCameraDisplay = Some(cameraDisplay)
 
-    call.cameraFrameBuffer = maybeCameraDisplay.map(_.frameBuffer)
-
     compositeSubscription +=
       call.ringingObservable
         .combineLatest(call.selfStateObservable)
-        .sub { case (ringing, selfState) =>
+        .map(t => (t._1, t._2.receivingVideo, t._2.sendingVideo))
+        .distinctUntilChanged
+        .sub { case (ringing, receivingVideo, sendingVideo) =>
           if (call.active) {
             if (ringing) {
               setupOutgoing()
@@ -132,7 +199,7 @@ class ActiveCallFragment extends CommonCallFragment {
               setupActive()
             }
 
-            setupVideoUi(selfState.receivingVideo, selfState.sendingVideo)
+            setupVideoUi(receivingVideo, sendingVideo)
           }
         }
 
@@ -148,22 +215,17 @@ class ActiveCallFragment extends CommonCallFragment {
    */
   private def scaleSurfaceRelativeToScreen(textureView: TextureView, scale: Float): Unit = {
     val layoutParams = textureView.getLayoutParams
-    val metrics = new DisplayMetrics()
-    getActivity.getWindowManager.getDefaultDisplay.getMetrics(metrics)
 
-    layoutParams.width = (metrics.widthPixels * scale).toInt
-    layoutParams.height = (metrics.heightPixels * scale).toInt
+    layoutParams.width = (getScreenWidth(getActivity) * scale).toInt
+    layoutParams.height = (getScreenHeight(getActivity) * scale).toInt
 
     textureView.setLayoutParams(layoutParams)
   }
 
-  private def setupOnClickToggle(clickView: View, shownView: View, action: () => Unit): Unit = {
+  private def setupOnClickToggle(clickView: View, action: () => Unit): Unit = {
     clickView.setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {
         if (!call.active) return
-
-        clickView.setVisibility(View.GONE)
-        shownView.setVisibility(View.VISIBLE)
 
         action()
       }
@@ -215,7 +277,6 @@ class ActiveCallFragment extends CommonCallFragment {
       avatarView.setVisibility(View.VISIBLE)
 
       videoDisplay.foreach(_.stop())
-      call.cameraFrameBuffer = None
 
       nameView.setTextColor(getActivity.getResources.getColor(R.color.grey_darkest))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.black))
@@ -228,8 +289,14 @@ class ActiveCallFragment extends CommonCallFragment {
 
       CameraUtils.setCameraDisplayOrientation(getActivity, camera)
 
+      cameraPreviewSurface.setVisibility(View.VISIBLE)
+
+      call.cameraFrameBuffer = maybeCameraDisplay.map(_.frameBuffer)
       maybeCameraDisplay.foreach(_.start(camera))
     } else {
+      cameraPreviewSurface.setVisibility(View.GONE)
+
+      call.cameraFrameBuffer = None
       maybeCameraDisplay.foreach(_.stop())
     }
   }

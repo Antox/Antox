@@ -4,7 +4,8 @@ import java.util.Random
 
 import android.app.Activity
 import android.graphics.{Matrix, Color}
-import android.view.TextureView
+import android.util.DisplayMetrics
+import android.view.{View, TextureView}
 import chat.tox.antox.wrapper.ToxKey
 
 object UiUtils {
@@ -28,6 +29,25 @@ object UiUtils {
     val goldenRatio = 0.618033988749895
     val hue: Double = (new Random(hash).nextFloat() + goldenRatio) % 1
     Color.HSVToColor(Array(hue.asInstanceOf[Float] * 360, 0.5f, 0.7f))
+  }
+
+  def toggleViewVisibility(visibleView: View, goneViews: View*): Unit = {
+    visibleView.setVisibility(View.VISIBLE)
+    goneViews.foreach(_.setVisibility(View.GONE))
+  }
+
+  def getScreenWidth(activity: Activity): Int = {
+    val metrics = new DisplayMetrics()
+    activity.getWindowManager.getDefaultDisplay.getMetrics(metrics)
+
+    metrics.widthPixels
+  }
+
+  def getScreenHeight(activity: Activity): Int = {
+    val metrics = new DisplayMetrics()
+    activity.getWindowManager.getDefaultDisplay.getMetrics(metrics)
+
+    metrics.heightPixels
   }
 
   /**
