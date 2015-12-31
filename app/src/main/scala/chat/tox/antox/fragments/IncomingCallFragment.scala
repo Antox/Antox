@@ -51,7 +51,7 @@ class IncomingCallFragment extends CommonCallFragment {
 
     answerCallButton.setOnClickListener(new OnClickListener {
       override def onClick(view: View) = {
-        call.answerCall(sendingAudio = true, sendingVideo = true)
+        call.answerCall()
       }
     })
 
@@ -67,7 +67,12 @@ class IncomingCallFragment extends CommonCallFragment {
     AntoxLog.debug("Audio stream volume " + audioManager.getStreamVolume(AudioManager.STREAM_RING))
 
     callStateView.setVisibility(View.VISIBLE)
-    callStateView.setText(R.string.call_incoming)
+
+    if (call.selfState.receivingVideo) {
+      callStateView.setText(R.string.call_incoming_video)
+    } else {
+      callStateView.setText(R.string.call_incoming_voice)
+    }
 
     rootView
   }

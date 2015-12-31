@@ -27,7 +27,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   // only describes self state
   private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
   def selfStateObservable: Observable[SelfCallState] = selfStateSubject.asJavaObservable
-  private def selfState = selfStateSubject.getValue
+  def selfState = selfStateSubject.getValue
 
   // is video enabled in any way
   val videoEnabledObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
@@ -97,7 +97,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     selfStateSubject.onNext(selfState.copy(audioMuted = !sendingAudio, videoHidden = !sendingVideo))
   }
 
-  def answerCall(sendingAudio: Boolean, sendingVideo: Boolean): Unit = {
+  def answerCall(): Unit = {
+    val sendingAudio: Boolean = true //always send audio
+    val sendingVideo: Boolean = selfState.receivingVideo // only send video if we're receiving it
+
     logCallEvent(s"answered sending audio:$sendingAudio and video:$sendingVideo")
 
     ToxSingleton.toxAv.answer(callNumber, selfState.audioBitRate, selfState.videoBitRate)
