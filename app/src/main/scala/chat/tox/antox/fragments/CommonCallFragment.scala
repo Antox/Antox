@@ -61,10 +61,12 @@ abstract class CommonCallFragment extends Fragment {
 
     // power manager used to turn off screen when the proximity sensor is triggered
     powerManager = getActivity.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
-      maybeWakeLock = Some(powerManager.newWakeLock(
-        PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
-        AntoxLog.DEFAULT_TAG.toString))
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+      if (powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+        maybeWakeLock = Some(powerManager.newWakeLock(
+          PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK,
+          AntoxLog.DEFAULT_TAG.toString))
+      }
     }
   }
 

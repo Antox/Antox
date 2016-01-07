@@ -71,7 +71,7 @@ class Renderer(activity: Activity,
 
   var packedYuv: Array[Int] = _
 
-  var rs: RenderScript = RenderScript.create(activity, RenderScript.ContextType.DEBUG)
+  var rs: RenderScript = _
   var emptyAllocation: Allocation = _
   var yAllocation: Allocation = _
   var uAllocation: Allocation = _
@@ -136,6 +136,12 @@ class Renderer(activity: Activity,
   }
 
   def createScript(surfaceTexture: SurfaceTexture, yStride: Int, uStride: Int, vStride: Int): Unit = {
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      rs = RenderScript.create(activity, RenderScript.ContextType.DEBUG)
+    } else {
+      rs = RenderScript.create(activity)
+    }
+
     yuvToRgbScript = new ScriptC_yuvToRgb(rs)
 
     val emptyType = new Type.Builder(rs, Element.U8(rs)).setX(width).setY(height)
