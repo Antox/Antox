@@ -3,6 +3,7 @@ package chat.tox.antox.av
 import java.util.concurrent.TimeUnit
 
 import chat.tox.antox.av.CallEndReason.CallEndReason
+import chat.tox.antox.av.CameraFacing.CameraFacing
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.{CallNumber, ContactKey}
@@ -78,7 +79,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   var cameraFrameBuffer: Option[CircularFifoQueue[NV21Frame]] = None
 
   // default value, not checked based on device capabilities
-  var cameraFacing = CameraFacing.Front
+  private val cameraFacingSubject = BehaviorSubject[CameraFacing](CameraFacing.Front)
+  def cameraFacingObservable: Observable[CameraFacing] = cameraFacingSubject.asJavaObservable
 
   private def frameSize = SampleCount(audioLength, samplingRate)
 
@@ -279,6 +281,10 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   def showFriendVideo(): Unit = {
     ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
+  }
+
+  def rotateCamera(): Unit = {
+    cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
   }
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {

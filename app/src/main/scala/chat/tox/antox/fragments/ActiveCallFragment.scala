@@ -9,9 +9,10 @@ import android.view.View.{OnClickListener, OnTouchListener}
 import android.view._
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.{AccelerateInterpolator, AlphaAnimation, Animation}
-import android.widget.{Chronometer, FrameLayout}
+import android.widget.{ImageView, Chronometer, FrameLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
+import chat.tox.antox.av.CameraFacing.CameraFacing
 import chat.tox.antox.av._
 import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
@@ -49,6 +50,7 @@ class ActiveCallFragment extends CommonCallFragment {
 
   var cameraPreviewSurface: TextureView = _
   var maybeCameraDisplay: Option[CameraDisplay] = None
+  var cameraSwapView: ImageView = _
 
   var viewsHiddenOnFade: List[View] = _
   val fadeDelay = Duration(4, TimeUnit.SECONDS)
@@ -184,6 +186,35 @@ class ActiveCallFragment extends CommonCallFragment {
     val cameraDisplay = new CameraDisplay(getActivity, cameraPreviewSurface, cameraPreviewWrapper, buttonsView.getHeight)
     maybeCameraDisplay = Some(cameraDisplay)
 
+    cameraSwapView = rootView.findViewById(R.id.swap_camera).asInstanceOf[ImageView]
+    cameraSwapView.setOnClickListener(new OnClickListener {
+      override def onClick(v: View): Unit = {
+        call.rotateCamera()
+      }
+    })
+
+    compositeSubscription +=
+      call.cameraFacingObservable.sub {
+        case CameraFacing.Front =>
+          cameraSwapView.setImageResource(R.drawable.ic_camera_front_white_24dp)
+        case CameraFacing.Back =>
+          cameraSwapView.setImageResource(R.drawable.ic_camera_rear_white_24dp)
+      }
+
+    compositeSubscription +=
+      call.ringingObservable
+        .distinctUntilChanged
+        .observeOn(AndroidMainThreadScheduler())
+        .sub { case (ringing) =>
+          if (call.active) {
+            if (ringing) {
+              setupOutgoing()
+            } else {
+              setupActive()
+            }
+          }
+        }
+
     compositeSubscription +=
       call.ringingObservable
         .combineLatest(call.selfStateObservable)
@@ -191,13 +222,21 @@ class ActiveCallFragment extends CommonCallFragment {
         .distinctUntilChanged
         .observeOn(AndroidMainThreadScheduler())
         .sub { case (ringing, receivingVideo, sendingVideo) =>
-          if (call.active) {
-            if (ringing) {
-              setupOutgoing()
-            } else {
-              setupActive()
-              setupVideoUi(receivingVideo, sendingVideo)
-            }
+          if (call.active && !call.ringing) {
+            setupIncomingVideoUi(receivingVideo, sendingVideo)
+          }
+        }
+
+    compositeSubscription +=
+      call.ringingObservable
+        .combineLatest(call.selfStateObservable)
+        .map(t => (t._1, t._2.sendingVideo))
+        .combineLatestWith(call.cameraFacingObservable)((t, facing) => (t._1, t._2, facing))
+        .distinctUntilChanged
+        .observeOn(AndroidMainThreadScheduler())
+        .sub { case (ringing, sendingVideo, facing) =>
+          if (call.active && !call.ringing) {
+            setupOutgoingVideoUi(sendingVideo, facing)
           }
         }
 
@@ -246,7 +285,7 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView.start()
   }
 
-  def setupVideoUi(receivingVideo: Boolean, sendingVideo: Boolean): Unit = {
+  def setupIncomingVideoUi(receivingVideo: Boolean, sendingVideo: Boolean): Unit = {
     val videoEnabled: Boolean = receivingVideo || sendingVideo
     if (videoEnabled) {
       backgroundView.setBackgroundColor(getResources.getColor(R.color.black_absolute))
@@ -282,11 +321,15 @@ class ActiveCallFragment extends CommonCallFragment {
       nameView.setTextColor(getActivity.getResources.getColor(R.color.grey_darkest))
       durationView.setTextColor(getActivity.getResources.getColor(R.color.black))
     }
+  }
+
+  def setupOutgoingVideoUi(sendingVideo: Boolean, cameraFacing: CameraFacing): Unit = {
+    AntoxLog.debug("stopping some video stuff")
 
     if (sendingVideo) {
       // get preferred camera or default camera or exit and disable video on failure
       // (there will always be some camera or sendingVideo would be false)
-      val camera = CameraUtils.getCameraInstance(call.cameraFacing)
+      val camera = CameraUtils.getCameraInstance(cameraFacing)
         .getOrElse(CameraUtils.getCameraInstance(CameraFacing.Back).getOrElse({
           call.hideSelfVideo()
           AntoxLog.debug("hiding self video because camera could not be accessed")
@@ -302,10 +345,10 @@ class ActiveCallFragment extends CommonCallFragment {
     } else {
       AntoxLog.debug("stopping video stuff")
 
-      cameraPreviewSurface.setVisibility(View.GONE)
-
       call.cameraFrameBuffer = None
       maybeCameraDisplay.foreach(_.stop())
+
+      cameraPreviewSurface.setVisibility(View.GONE)
     }
   }
 
