@@ -297,7 +297,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
-    <string name="license1">Distributed under the GNU GPL v3. Created by Mark Winter, maintained by subliun and others.</string>
+    <string name="license1">Distributed under the GNU GPL v3. Created by Mark Winter.</string>
     <string name="license2">Source code is available at\nhttps://github.com/subliun/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>
