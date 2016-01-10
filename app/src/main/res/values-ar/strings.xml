@@ -199,7 +199,7 @@
   <string name="drawer_close">اغلق درج التصفح</string>
   <string name="open_source_license">ترخيص مفتوح المصدر</string>
   <string name="license1">يوزع تحت ترخيص GNU GPL v3. انشئ من قبل مارك وينتر, محفوظ من قبل subliun و غيره.</string>
-  <string name="license2">شيفرة المصدر موجودة في https://github.com/subliun/Antox</string>
+  <string name="license2">شيفرة المصدر موجودة في https://github.com/Antox/Antox</string>
   <string name="ver">النسخة</string>
   <string name="about">عن</string>
   <string name="about_antox_1">بسبب زيادة برامج المراقبة الحكومبة, Tox يقدم وسيلة سهلة لإستخدام تطبيق يسمح بالتواصل مع الاصدقاء و الأهل بدون مرقبة احد اخر.</string>

@@ -188,7 +188,7 @@ nykyiset yhteystiedot, mutta vanhaa ID:täsi ei voi enää käyttää sinun lis�
   <string name="drawer_close">Sulje navigointivalikko</string>
   <string name="open_source_license">Avoimen lähdekoodin lisenssi</string>
   <string name="license1">Jaetaan GNU GPL v3 -lisenssin alaisena. Luojana Mark Winter, ylläpitäjinä sibliun ja muut.</string>
-  <string name="license2">Lähdekoodi on saatavissa osoitteessa\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Lähdekoodi on saatavissa osoitteessa\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Versio</string>
   <string name="about">Tietoja</string>
   <string name="about_antox_1">Valtioiden seurantaohjelmat lisääntyvät, joten Tox tarjoaa helppokäyttöisen ohjelman, joka yhdistää sinut ystäviesi ja perheesi kanssa ilman, että kukaan pääsee kuuntelemaan.</string>

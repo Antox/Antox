@@ -202,7 +202,7 @@ Sie werden Ihre aktuelle Kontaktliste behalten, aber andere Personen können Sie
   <string name="drawer_close">Navigationsmenü schließen</string>
   <string name="open_source_license">Open-Source-Lizenz</string>
   <string name="license1">Verteilt unter der GNU GPL v3. Erstellt von Mark Winter, verwaltet von subliun und weiteren.</string>
-  <string name="license2">Quellcode ist verfügbar auf\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Quellcode ist verfügbar auf\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Version</string>
   <string name="about">Über</string>
   <string name="about_antox_1">Vor dem Hintergrund sich ausweitender, großflächiger Überwachungsprogramme durch einige Regierungen ist Tox eine leicht zu bedienende Anwendung, die es Ihnen ermöglicht, sich mit Freunden und Nahestehenden zu unterhalten, ohne dass jemand zuhört.</string>

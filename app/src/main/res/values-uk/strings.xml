@@ -196,7 +196,7 @@
   <string name="drawer_close">Закрити меню</string>
   <string name="open_source_license">Ліцензія</string>
   <string name="license1">Це програмне забезпечення розповсюджується під ліцензіею GNU GPL v3. Автор Mark Winter, підтримка subliun та інші.</string>
-  <string name="license2">Похідний код доступний на \nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Похідний код доступний на \nhttps://github.com/Antox/Antox</string>
   <string name="ver">Версія</string>
   <string name="about">Про Antox</string>
   <string name="about_antox_1">Поки уряди багатьох країн по всьому світу впроваджують різноманітні програми спостереження, Tox дозволяє бути на зв’язку зі знайомими та близькими, не боячись підслуховування.</string>

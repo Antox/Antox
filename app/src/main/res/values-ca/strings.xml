@@ -202,7 +202,7 @@ Mentindreu les llistes de contactes actuals però no se vos podrà afegir usant 
   <string name="drawer_close">Tanca el panell de navegació</string>
   <string name="open_source_license">Llicència de codi obert</string>
   <string name="license1">Distribuit baix llicència GNU GPL v3. creada per Mark Winter i mantinguda oer subliun entre d\'altres.</string>
-  <string name="license2">El codi està disponible a\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">El codi està disponible a\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Versió</string>
   <string name="about">Quant a</string>
   <string name="about_antox_1">Amb l\'auge dels programes de vigilància governamental, Tox proveeix d\'una aplicació fàcil d\'utilitzar per connectar-se amb amics i familiars sense que ningú més us escolti.</string>

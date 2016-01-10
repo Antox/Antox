@@ -199,7 +199,7 @@ Será capaz de manter os seus contactos, mas outras pessoas não o poderão adic
   <string name="drawer_close">Fechar painel de navegação</string>
   <string name="open_source_license">Licença open source</string>
   <string name="license1">Distribuído sobe GNU GPL v3. Creado por Mark Winter, mantido por subliun e outros.</string>
-  <string name="license2">Codigo fonte disponivem em\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Codigo fonte disponivem em\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Versão</string>
   <string name="about">Sobre</string>
   <string name="about_antox_1">Com o incremento de programas de monitorização governamental, Tox disponibiliza uma aplicação de uso fácil que possibilita a comunicação entre familiares e amigos de forma privada.</string>

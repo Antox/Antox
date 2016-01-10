@@ -212,7 +212,7 @@
   <string name="drawer_close">Chuidi navigation drawer</string>
   <string name="open_source_license">Licenza</string>
   <string name="license1">Distribuito sotto licenza GNU GPL v3</string>
-  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Codice sorgente disponibile all\'indirizzo\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Versione</string>
   <string name="about">Informazioni</string>
   <string name="about_antox_1">Con l\'aumento dei software governativi di monitoraggio, Tox provvede una semplice applicazione per comunicare con amici e parenti in modo privato.</string>

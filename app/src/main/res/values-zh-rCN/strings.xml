@@ -138,7 +138,7 @@
     <string name="drawer_close">关闭导航界面</string>
     <string name="open_source_license">开源许可协议</string>
     <string name="license1">于GNU GPL v3协议下发行</string>
-    <string name="license2">源码请参见\nhttps://github.com/subliun/Antox</string>
+    <string name="license2">源码请参见\nhttps://github.com/Antox/Antox</string>
     <string name="ver">版本</string>
     <string name="about">关于</string>
     <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
