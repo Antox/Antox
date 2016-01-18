@@ -18,6 +18,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "http://dl.bintray.com/drummer-aidan/maven" }
     maven { url "http://jcenter.bintray.com" }
+    maven { url "https://repository.apache.org/content/repositories/snapshots/" }
 }
 
 apply plugin: "com.android.application"
@@ -76,6 +77,8 @@ dependencies {
     compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.9'
     compile 'org.scalaz:scalaz-core_2.11:7.2.0-M1'
     compile 'org.scodec:scodec-core_2.11:1.8.2'
+
+    compile 'org.apache.commons:commons-imaging:1.0-SNAPSHOT'
 
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'

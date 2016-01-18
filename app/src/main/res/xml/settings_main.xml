@@ -87,6 +87,11 @@
 
         <CheckBoxPreference
             android:defaultValue="true"
+            android:key="strip_exif"
+            android:title="@string/pref_strip_exif" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
             android:key="autostart"
             android:title="@string/pref_autostart" />
     </PreferenceCategory>

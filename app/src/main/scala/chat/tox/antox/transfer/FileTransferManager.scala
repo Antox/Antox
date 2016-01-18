@@ -1,17 +1,21 @@
 package chat.tox.antox.transfer
 
-import java.io.File
+import java.io._
+import java.nio.ByteBuffer
 
 import android.content.Context
+import android.graphics.Bitmap.CompressFormat
+import android.graphics.BitmapFactory
 import android.os.Environment
 import android.preference.PreferenceManager
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
-import chat.tox.antox.utils.{AntoxLog, BitmapManager}
+import chat.tox.antox.utils.{Constants, AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FriendKey, ContactKey, FileKind}
 import im.tox.tox4j.core.data.{ToxFileId, ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter
 import org.scaloid.common.LoggerTag
 
 class FileTransferManager extends Intervals {
@@ -67,19 +71,31 @@ class FileTransferManager extends Intervals {
 
 
   def sendFileSendRequest(path: String, key: FriendKey, fileKind: FileKind, fileId: ToxFileId, context: Context): Unit = {
+    val stripExif = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("strip_exif", true)
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
-    val splitFileName = fileName.span(_ != '.')
-    val extension = splitFileName._2
-    val name = splitFileName._1
-    val nameTruncated = name.slice(0, 64 - 1 - extension.length)
+    val splitFileName = file.getName.split("\\.")
+    val extension = splitFileName(splitFileName.length-1)
     AntoxLog.debug("sendFileSendRequest", TAG)
+
+    val length = if(stripExif && Constants.EXIF_FORMATS.contains(extension.toLowerCase)){
+      val input = new FileInputStream(file)
+      val bFile = new Array[Byte](file.length().toInt)
+      input.read(bFile)
+      input.close()
+      val baos = new ByteArrayOutputStream()
+      val rw = new ExifRewriter()
+      rw.removeExifMetadata(bFile,baos)
+      baos.close()
+      baos.toByteArray.length
+    }
+    else file.length()
 
     val mFileNumber: Option[Int] = try {
       AntoxLog.debug("Creating tox file sender", TAG)
 
-      ToxSingleton.tox.fileSend(key, fileKind.kindId, file.length(), fileId, ToxFilename.unsafeFromValue(fileName.getBytes)) match {
+      ToxSingleton.tox.fileSend(key, fileKind.kindId, length, fileId, ToxFilename.unsafeFromValue(fileName.getBytes)) match {
         case -1 => None
         case x => Some(x)
       }
@@ -92,8 +108,8 @@ class FileTransferManager extends Intervals {
     mFileNumber.foreach(fileNumber => {
       val db = State.db
       AntoxLog.debug("adding File Transfer", TAG)
-      val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, fileNumber, fileKind.kindId, file.length.toInt)
-      State.transfers.add(new FileTransfer(key, file, fileNumber, file.length, 0, true, FileStatus.REQUEST_SENT, id, fileKind))
+      val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, fileNumber, fileKind.kindId, length.toInt)
+      State.transfers.add(new FileTransfer(key, file, fileNumber, length, 0, true, FileStatus.REQUEST_SENT, id, fileKind, stripExif))
     })
   }
 
