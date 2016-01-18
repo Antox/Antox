@@ -1,6 +1,8 @@
 Antox
 =====
 
+### The F-Droid repo has changed. To continue receiving updates for Antox, please add https://pkg.tox.chat/fdroid/repo to your repositories
+
 <img src="http://i.imgur.com/PvY7zCQ.jpg" width="230px" height="400px"/><img src="http://i.imgur.com/Hmnjpv3.png" width="230px" height="400px"/><img src="http://i.imgur.com/jApGiZQ.png" width="230px" height="400px"/>
 
 Antox is an Android 2.3+ client for Tox created by [Mark Winter](https://github.com/Astonex). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
@@ -15,7 +17,7 @@ Antox is an Android 2.3+ client for Tox created by [Mark Winter](https://github.
 
 To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
 
-To install on F-Droid, add https://antox.me/fdroid/repo and search for "Antox".
+To install on F-Droid, add https://pkg.tox.chat/fdroid/repo and search for "Antox".
 
 ###What Is Currently Working
 - One to one messaging
