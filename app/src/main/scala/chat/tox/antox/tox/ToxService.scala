@@ -62,6 +62,7 @@ class ToxService extends Service() {
     serviceThread.interrupt()
     ToxSingleton.save()
     ToxSingleton.isInited = false
+    ToxSingleton.tox.close()
     AntoxLog.debug("onDestroy() called for Tox service")
   }
 }
