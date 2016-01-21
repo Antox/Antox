@@ -119,7 +119,6 @@ object ToxSingleton {
       .subscribe(nodes => {
       dhtNodes = nodes
       AntoxLog.debug("Trying to bootstrap", TAG)
-        Thread.sleep(10000)
       try {
         for (i <- nodes.indices) {
           tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
