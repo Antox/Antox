@@ -1,5 +1,6 @@
 package chat.tox.antox.tests
 
+import java.util.Random
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
 import chat.tox.antox.toxme.ToxMe.{ToxMeResult, PrivacyLevel}
@@ -11,8 +12,6 @@ import im.tox.tox4j.impl.jni.ToxCoreImpl
 import org.junit.Assert._
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import scala.util.Random
 
 @RunWith(classOf[AndroidJUnit4])
 class ToxMeTest extends AndroidTestCase {
@@ -40,7 +39,18 @@ class ToxMeTest extends AndroidTestCase {
     ToxMe.registerAccount(toxMeName, PrivacyLevel.PRIVATE, toxData).toBlocking.first
   }
 
-  def genRandomToxMeName(): ToxMeName = ToxMeName.fromString(Random.alphanumeric.take(10).mkString, useToxMe = true)
+  def genRandomToxMeName(): ToxMeName = {
+    var text = new Array[Char](10)
+    val characters = "abcdefghijklmnopqrstuvwxyz"
+    for (i: Int <- 0 until 10)
+    {
+      val rng = new Random()
+      text(i) = characters.charAt(rng.nextInt(characters.length))
+    }
+    val name = new String(text)
+    ToxMeName.fromString(name, useToxMe = true)
+  }
+
 
   def createToxData(): ToxData = {
     val toxData = new ToxData
