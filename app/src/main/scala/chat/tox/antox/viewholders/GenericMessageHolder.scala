@@ -86,7 +86,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
   }
 
   protected def toggleReceived(): Unit =  {
-    if (msg.received || msg.sent) {
+    if (msg.received) {
       setAlphaCompat(bubble, 1f)
     } else {
       setAlphaCompat(bubble, 0.5f)
