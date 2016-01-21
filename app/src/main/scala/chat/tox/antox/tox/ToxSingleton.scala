@@ -20,7 +20,7 @@ import im.tox.tox4j.impl.jni.ToxAvImpl
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.schedulers.{NewThreadScheduler, AndroidMainThreadScheduler, IOScheduler}
 
 import scala.io.Source
 
@@ -115,10 +115,11 @@ object ToxSingleton {
       }
       dhtNodes
     }).subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
+      .observeOn(NewThreadScheduler())
       .subscribe(nodes => {
       dhtNodes = nodes
       AntoxLog.debug("Trying to bootstrap", TAG)
+        Thread.sleep(10000)
       try {
         for (i <- nodes.indices) {
           tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)

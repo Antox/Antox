@@ -23,7 +23,7 @@ object ConnectionManager {
     listenerList.add(listener)
   }
 
-  def getConnctionType(context: Context): Int = {
+  def getConnectionType(context: Context): Int = {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
                                      .asInstanceOf[ConnectivityManager]
     connectivityManager.getActiveNetworkInfo.getType
@@ -40,14 +40,13 @@ object ConnectionManager {
 class ConnectionManager extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent) {
     if (ConnectionManager.isNetworkAvailable(context)) {
-      val connectionType = ConnectionManager.getConnctionType(context)
+      val connectionType = ConnectionManager.getConnectionType(context)
       if (ConnectionManager.lastConnectionType.isEmpty || connectionType != ConnectionManager.lastConnectionType.get) {
         for (listener <- ConnectionManager.listenerList) {
           listener.connectionTypeChange(connectionType)
         }
         ConnectionManager.lastConnectionType = Some(connectionType)
       }
-
       if (ToxSingleton.dhtNodes.length == 0) {
         ToxSingleton.updateDhtNodes(context)
       }
