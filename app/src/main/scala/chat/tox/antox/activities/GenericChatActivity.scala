@@ -18,7 +18,7 @@ import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.{ContactKey, Message}
 import im.tox.tox4j.core.enums.ToxMessageType
-import jp.wasabeef.recyclerview.animators.LandingAnimator
+import jp.wasabeef.recyclerview.animators.{SlideInLeftAnimator, FadeInAnimator, LandingAnimator}
 import rx.lang.scala.schedulers.{IOScheduler, AndroidMainThreadScheduler}
 import rx.lang.scala.{Observable, Subscription}
 
@@ -41,6 +41,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   var activeKey: KeyType = _
   var scrolling: Boolean = false
   val layoutManager = new LinearLayoutManager(this)
+  val animationTime: Long = 500
 
   var fromNotifications: Boolean = false
 
@@ -84,7 +85,9 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     chatListView = this.findViewById(R.id.chat_messages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
-    chatListView.setItemAnimator(new LandingAnimator())
+    val animator = new LandingAnimator()
+    animator.setAddDuration(animationTime)
+    chatListView.setItemAnimator(animator)
     chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
 
@@ -157,12 +160,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   }
 
   def updateChat(messageList: Seq[Message]): Unit = {
-    //FIXME make this more efficient
-    adapter.removeAll()
-
-    for (message <- messageList) {
-      adapter.add(message)
-    }
+    adapter.updateMessages(messageList, chatListView.getItemAnimator)
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {

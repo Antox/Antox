@@ -8,23 +8,33 @@ import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
-import chat.tox.antox.utils.{Constants, FileUtils}
+import chat.tox.antox.utils.{AntoxLog, Constants, FileUtils}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
+import org.scaloid.common.LoggerTag
 
 import scala.collection.JavaConversions._
 
-class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
+class ChatMessagesAdapter(context: Context, var data: util.ArrayList[Message]) extends RecyclerView.Adapter[GenericMessageHolder] {
 
   private val TEXT = 1
   private val ACTION = 2
   private val FILE = 3
-
+  var animating: Set[Int] = Set()
   private var scrolling: Boolean = false
+
 
   def add(msg: Message) {
     data.add(msg)
-    notifyDataSetChanged()
+    notifyItemInserted(data.length - 1)
+  }
+
+  def addFirst(list: Seq[Message]) {
+    val temp: util.ArrayList[Message] = new util.ArrayList[Message]()
+    temp.addAll(list)
+    temp.addAll(data)
+    data = temp
+
   }
 
   def addAll(list: Seq[Message]) {
@@ -41,6 +51,44 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     data.clear()
     notifyDataSetChanged()
   }
+
+  def updateMessages(list: Seq[Message], animator: RecyclerView.ItemAnimator) {
+    if (list.length == data.length) {
+      for (i <- list.indices) {
+        if (list(i).id != data.get(i).id) {
+          data.add(i, list(i))
+          data.remove(i + 1)
+          notifyItemChanged(i)
+
+        }
+        else if (list(i).received != data.get(i).received) {
+          data.add(i, list(i))
+          data.remove(i + 1)
+          notifyItemChanged(i)
+        }
+      }
+      AntoxLog.debug("Elements refreshed", LoggerTag("ChatMessagesAdapter"))
+      return
+    }
+    val prepended = if (data.nonEmpty) {
+      list.head.id != data.get(0).id
+    } else false
+    if (prepended) {
+      AntoxLog.debug("Elements added to adapter start", LoggerTag("ChatMessagesAdapter"))
+      data.clear()
+      data.addAll(list)
+      notifyDataSetChanged()
+    }
+    else {
+      for (i <- list.indices) {
+        if (data.length - 1 < i) {
+          AntoxLog.debug("Element added to adapter end", LoggerTag("ChatMessagesAdapter"))
+          add(list(i))
+        }
+      }
+    }
+  }
+
 
   def setScrolling(scrolling: Boolean) {
     this.scrolling = scrolling
@@ -114,7 +162,9 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
               new File(f.getAbsolutePath + "/" + msg.message)
             }
 
-          val isImage = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
+          val isImage = (s"^.+?\\.(${
+            FileUtils.imageExtensions.mkString("|")
+          })" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
 
           println("FILE LENGTH is " + file.length())
           if (file.exists() && isImage && file.length > 0) {
