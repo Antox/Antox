@@ -1,6 +1,6 @@
 package chat.tox.antox.viewholders
 
-import android.graphics.drawable.{GradientDrawable, LayerDrawable}
+import android.graphics.drawable.{RotateDrawable, GradientDrawable, LayerDrawable}
 import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.{Gravity, View}
@@ -71,10 +71,19 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     //Set extra padding to the left of the bubble
     bubble.setPadding(48 * density, 0, 0, 0)
     toggleReceived()
+
     val drawable = context.getResources.getDrawable(R.drawable.conversation_item_sent_shape).asInstanceOf[LayerDrawable]
     val shape = drawable.findDrawableByLayerId(R.id.sent_shape).asInstanceOf[GradientDrawable]
     shape.setColor(ThemeManager.primaryColor)
+
+    val drawableTriangle = context.getResources.getDrawable(R.drawable.conversation_item_sent_triangle_shape).asInstanceOf[LayerDrawable]
+    val shapeRotateTriangle = drawableTriangle.findDrawableByLayerId(R.id.sent_triangle_shape).asInstanceOf[RotateDrawable]
+    val shapeTriangle = shapeRotateTriangle.getDrawable.asInstanceOf[GradientDrawable]
+    shapeTriangle.setColor(ThemeManager.primaryColor)
+    shapeRotateTriangle.setDrawable(shapeTriangle)
+
     background.setBackgroundDrawable(drawable)
+    sentTriangle.setBackgroundDrawable(shapeRotateTriangle)
   }
 
   def contactMessage() {
