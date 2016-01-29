@@ -19,7 +19,6 @@
     <style name="AntoxTheme.ActionBar"
         parent="@style/Theme.AppCompat.NoActionBar">
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
         <item name="actionBarStyle">@style/ActionBar</item>
