@@ -53,13 +53,17 @@ class ChatMessagesAdapter(context: Context, var data: util.ArrayList[Message]) e
     notifyDataSetChanged()
   }
 
+  def replace(i: Int, msg: Message): Unit ={
+    data.add(i, msg)
+    data.remove(i + 1)
+    notifyItemChanged(i)
+  }
+
   def updateMessages(list: Seq[Message], animator: RecyclerView.ItemAnimator) {
     if (list.length == data.length) {
       for (i <- list.indices) {
         if (list(i).id != data.get(i).id) {
-          data.add(i, list(i))
-          data.remove(i + 1)
-          notifyItemChanged(i)
+          replace(i, list(i))
 
         }
         else if (list(i).received != data.get(i).received) {
