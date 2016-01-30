@@ -71,7 +71,7 @@ class ToxMeTest extends AndroidTestCase {
     result match {
       case Left(error) =>
         val message = ToxMeError.getDebugDescription(error)
-        fail("Could not register, reason: " + message)
+        fail(s"Could not register, reason: $message (name=$name)")
 
       case Right(password) =>
         assertTrue(password.nonEmpty)
