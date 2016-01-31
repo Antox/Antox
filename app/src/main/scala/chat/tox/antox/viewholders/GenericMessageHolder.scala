@@ -80,7 +80,6 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     val shapeRotateTriangle = drawableTriangle.findDrawableByLayerId(R.id.sent_triangle_shape).asInstanceOf[RotateDrawable]
     val shapeTriangle = shapeRotateTriangle.getDrawable.asInstanceOf[GradientDrawable]
     shapeTriangle.setColor(ThemeManager.primaryColor)
-    shapeRotateTriangle.setDrawable(shapeTriangle)
 
     background.setBackgroundDrawable(drawable)
     sentTriangle.setBackgroundDrawable(shapeRotateTriangle)
