@@ -1,11 +1,13 @@
 package chat.tox.antox.theme
 
-import android.app.Activity
+import android.app.ActivityManager.TaskDescription
+import android.app.{ActivityManager, Activity}
 import android.content.{Context, SharedPreferences}
-import android.graphics.Color
+import android.graphics.{BitmapFactory, Color}
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityManagerCompat
 import android.support.v7.app.ActionBar
 import chat.tox.antox.R
 
@@ -31,10 +33,16 @@ object ThemeManager {
 
   def applyTheme(activity: Activity, actionBar: ActionBar): Unit = {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && actionBar != null) {
+      val info = new ActivityManager.RunningTaskInfo()
+
       actionBar.setBackgroundDrawable(new ColorDrawable(ThemeManager.primaryColor))
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      activity.setTaskDescription(new TaskDescription(activity.getString(R.string.app_name),
+        BitmapFactory.decodeResource(activity.getResources, R.drawable.ic_launcher),
+        primaryColor)
+      )
       activity.getWindow.setStatusBarColor(ThemeManager.primaryColorDark)
     }
   }

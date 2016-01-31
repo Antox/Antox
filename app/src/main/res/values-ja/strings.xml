@@ -196,7 +196,7 @@
   <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
   <string name="open_source_license">オープンソースライセンス</string>
   <string name="license1">GNU GPL v3 の下で配布。Mark Winterによって作成れました、subliunによって維持。</string>
-  <string name="license2">ソースコードは https://github.com/subliun/Antox で利用可能です</string>
+  <string name="license2">ソースコードは https://github.com/Antox/Antox で利用可能です</string>
   <string name="ver">バージョン</string>
   <string name="about">Antoxについて</string>
   <string name="about_antox_1">政府による監視が広がる中、Toxは盗み聞きされずに友達や家族と通信できる、誰にでも使えるアプリを提供します。</string>

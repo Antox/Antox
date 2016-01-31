@@ -42,4 +42,7 @@ object Constants {
 
   val MAX_AVATAR_SIZE = 64 * 1024 //in bytes
 
+  val EXIF_FORMATS = Set("jpg", "jpeg")
+
+
 }

@@ -189,7 +189,7 @@ Sans connexion à internet, les fonctionnalités auxquelles vous avez accès son
   <string name="drawer_close">Fermer le drawer</string>
   <string name="open_source_license">Licence libre</string>
   <string name="license1">Distribué sous GNU GPL v3. Crée par Mark Winter, maintenu par subliun et d\'autres</string>
-  <string name="license2">Le code source est disponible sur\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Le code source est disponible sur\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Version</string>
   <string name="about">À propos</string>
   <string name="about_antox_1">Avec l\'omniprésence des programmes gouvernementaux de surveillance d\'internet, Tox vous procure une une application facile à utiliser qui vous permet de discuter avec vos amis et votre famille sans être écouté par quelqu\'un d\'autre</string>

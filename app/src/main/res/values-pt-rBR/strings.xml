@@ -201,7 +201,7 @@ mantem a atual lista de contatos, mas outras pessoas não serão capazes de adic
   <string name="drawer_close">Fechar gaveta de navegação</string>
   <string name="open_source_license">Licença de código aberto</string>
   <string name="license1">Distribuido sobre GNU GPL v3. Criado por Mark Winter, mantido por subliun e outros.</string>
-  <string name="license2">Código-fonte está disponível em\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Código-fonte está disponível em\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Versão</string>
   <string name="about">Sobre</string>
   <string name="about_antox_1">Com o aumento de programas de monitoração dos governos, o Tox fornece uma aplicação fácil de usar que permite que você se conecte com amigos e familiares sem mais ninguém escutando.</string>
