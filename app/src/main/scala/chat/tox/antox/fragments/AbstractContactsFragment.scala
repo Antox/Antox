@@ -201,6 +201,9 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
               } catch {
                 case e: ToxException[_] =>
               }
+              AntoxNotificationManager.mNotificationManager.foreach(manager => {
+                manager.cancel(AntoxNotificationManager.generateNotificationId(friendKey))
+              })
               subscriber.onCompleted()
             }).subscribeOn(IOScheduler()).subscribe()
           }
@@ -251,6 +254,9 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
           def onClick(dialog: DialogInterface, id: Int) {
             val db = State.db
             db.deleteChatLogs(key)
+            AntoxNotificationManager.mNotificationManager.foreach(manager => {
+              manager.cancel(AntoxNotificationManager.generateNotificationId(key))
+            })
           }
         })
       .setNegativeButton(getResources.getString(R.string.button_no),
