@@ -74,7 +74,7 @@ object AntoxNotificationManager {
       }
 
       val resultIntent = new Intent(ctx, intentClass)
-      resultIntent.setAction(Constants.SWITCH_TO_FRIEND)
+      resultIntent.setAction(key.toString)
       resultIntent.putExtra("key", key.toString)
       resultIntent.putExtra("name", new String(name.value))
       resultIntent.putExtra("notification", true)
@@ -82,7 +82,7 @@ object AntoxNotificationManager {
       val stackBuilder = TaskStackBuilder.create(ctx)
       stackBuilder.addParentStack(classOf[MainActivity])
       stackBuilder.addNextIntent(resultIntent)
-      val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+      val resultPendingIntent = stackBuilder.getPendingIntent(0, 0)
 
       notificationBuilder.setContentIntent(resultPendingIntent)
 
@@ -119,7 +119,7 @@ object AntoxNotificationManager {
 
       val resultIntent = new Intent(context, classOf[MainActivity])
       resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
-      val contentIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+      val contentIntent = PendingIntent.getActivity(context, 0, resultIntent, 0)
 
       notificationBuilder.setContentIntent(contentIntent)
 
@@ -140,7 +140,7 @@ object AntoxNotificationManager {
     val stackBuilder = TaskStackBuilder.create(ctx)
     stackBuilder.addParentStack(classOf[MainActivity])
     stackBuilder.addNextIntent(resultIntent)
-    val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+    val resultPendingIntent = stackBuilder.getPendingIntent(0, 0)
 
     persistBuilder = Some(new NotificationCompat.Builder(ctx)
       .setSmallIcon(R.drawable.ic_actionbar)
