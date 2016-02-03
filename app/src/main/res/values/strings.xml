@@ -18,6 +18,8 @@
     <string name="login_account_hint">Profile Name</string>
     <string name="login_create_account_text">Create Tox Profile</string>
     <string name="login_bad_login">Profile name was not recognised</string>
+    <string name="login_passphrase_incorrect">Password incorrect</string>
+    <string name="login_profile_encrypted">Profile encrypted. Enter password to decrypt:</string>
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Profile Name</string>
@@ -40,6 +42,8 @@
     <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
+
+
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>

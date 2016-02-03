@@ -6,9 +6,11 @@ import java.util.regex.Pattern
 import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.animation.{ArgbEvaluator, ValueAnimator}
 import android.app.Activity
-import android.content.Intent
+import android.content.DialogInterface.OnClickListener
+import android.content.{DialogInterface, Intent}
 import android.os.{Build, Bundle, Environment}
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.{AlertDialog, AppCompatActivity}
+import android.text.InputType
 import android.view.{Menu, MenuItem, View, WindowManager}
 import android.widget.{Button, EditText, ProgressBar, Toast}
 import chat.tox.antox.R
@@ -109,6 +111,7 @@ class CreateAccountActivity extends AppCompatActivity {
   def loadToxData(fileName: String): Option[ToxData] = {
     val toxData = new ToxData
     val toxDataFile = new ToxDataFile(this, fileName)
+
     val toxOptions = new ToxOptions(
       Options.ipv6Enabled,
       Options.udpEnabled,
@@ -118,7 +121,6 @@ class CreateAccountActivity extends AppCompatActivity {
       val tox = new ToxCoreImpl(toxOptions)
       toxData.address = new ToxAddress(tox.getAddress.value)
       toxData.fileBytes = toxDataFile.loadFile()
-
       Option(toxData)
     } catch {
       case error: ToxNewException =>
@@ -237,11 +239,11 @@ class CreateAccountActivity extends AppCompatActivity {
           observable
             .observeOn(AndroidMainThreadScheduler())
             .subscribe(result => {
-            onRegistrationResult(toxMeName, data, result)
-          }, error => {
-            AntoxLog.debug("Unexpected error registering account.")
-            error.printStackTrace()
-          })
+              onRegistrationResult(toxMeName, data, result)
+            }, error => {
+              AntoxLog.debug("Unexpected error registering account.")
+              error.printStackTrace()
+            })
 
         case None =>
           enableRegisterButton()
@@ -325,9 +327,39 @@ class CreateAccountActivity extends AppCompatActivity {
           }
 
         if (validAccountName(accountName)) {
-          val toxDataFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
-          FileUtils.copy(file, toxDataFile)
-          createAccount(accountName, State.userDb(this), shouldCreateDataFile = false, shouldRegister = false)
+          val importedFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
+          FileUtils.copy(file, importedFile)
+          val toxDataFile = new ToxDataFile(this, accountName)
+          if(toxDataFile.isEncrypted){
+            AntoxLog.debug("Profile is encrypted")
+            val builder = new AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.login_profile_encrypted))
+            val input = new EditText(this)
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+            builder.setView(input)
+
+            builder.setPositiveButton(getString(R.string.button_ok), new OnClickListener {
+              override def onClick(dialog: DialogInterface, which: Int): Unit = {
+                try {
+                  toxDataFile.decrypt(input.getText.toString)
+                  createAccount(accountName, State.userDb(getApplicationContext), shouldCreateDataFile = false, shouldRegister = false)
+                }
+                catch {
+                  case e: Exception =>
+                    Toast.makeText(getApplicationContext, getString(R.string.login_passphrase_incorrect), Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                }
+              }
+            })
+
+            builder.setNegativeButton(getString(R.string.button_cancel), new OnClickListener {
+              override def onClick(dialog: DialogInterface, which: Int): Unit = {
+                throw new Exception("No password specified.")
+              }
+            })
+            builder.show()
+          }
+          else createAccount(accountName, State.userDb(this), shouldCreateDataFile = false, shouldRegister = false)
         } else {
           showBadAccountNameError()
         }
