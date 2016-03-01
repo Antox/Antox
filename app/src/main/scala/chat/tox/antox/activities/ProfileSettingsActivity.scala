@@ -4,12 +4,14 @@ import java.io.{File, FileNotFoundException, FileOutputStream, IOException}
 import java.util.Random
 
 import android.content.DialogInterface.OnClickListener
+import android.content.pm.PackageManager
 import android.content.{Context, DialogInterface, Intent, SharedPreferences}
 import android.graphics.{Bitmap, BitmapFactory}
 import android.net.Uri
 import android.os.{Bundle, Environment}
 import android.preference.Preference.OnPreferenceClickListener
 import android.preference.{ListPreference, Preference, PreferenceManager}
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AlertDialog.Builder
 import android.view.{MenuItem, View}
@@ -29,6 +31,9 @@ import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
+
+  val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0
+  var exportDirectory:File = Environment.getExternalStorageDirectory
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
@@ -122,13 +127,28 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
         fileDialog.addDirectoryListener(new DirectorySelectedListener {
           override def directorySelected(directory: File): Unit = {
-            onExportDataFileSelected(directory)
+            exportDirectory = directory
+            val permissionCheck = ContextCompat.checkSelfPermission(thisActivity,
+              android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+              android.support.v4.app.ActivityCompat.requestPermissions(thisActivity,
+                Array(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+
+            }
+            else{
+              onExportDataFileSelected(exportDirectory)
+            }
+
           }
         })
         fileDialog.showDialog()
         true
       }
     })
+
+
 
     val deleteAccount = findPreference("delete")
     deleteAccount.setOnPreferenceClickListener(new OnPreferenceClickListener {
@@ -195,6 +215,18 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
 
   }
 
+  override def onRequestPermissionsResult(requestCode: Int, permissions: Array[String], grantResults: Array[Int]) {
+    if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
+      if (grantResults.length > 0
+        && grantResults(0) == PackageManager.PERMISSION_GRANTED) {
+        {
+          onExportDataFileSelected(exportDirectory)
+        }
+      }
+    }
+  }
+
+
   def bindPreferenceIfExists(preference: Preference): AnyVal = {
     if (PreferenceManager.getDefaultSharedPreferences(preference.getContext)
       .getString(preference.getKey, "").isEmpty) {
@@ -254,16 +286,16 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   def createCopyToClipboardDialog(prefKey: String, dialogPositiveString: String, dialogNeutralString: String): Unit = {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString(prefKey,""))
+    builder.setTitle(pref.getString(prefKey, ""))
     builder.setPositiveButton(dialogPositiveString, null)
     builder.setNeutralButton(dialogNeutralString,
       new DialogInterface.OnClickListener() {
-      def onClick(dialogInterface: DialogInterface, ID: Int) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString(prefKey, ""))
-      }
-    })
+        def onClick(dialogInterface: DialogInterface, ID: Int) {
+          val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+          val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
+          clipboard.setText(sharedPreferences.getString(prefKey, ""))
+        }
+      })
     builder.create().show()
   }
 
