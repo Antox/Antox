@@ -32,7 +32,7 @@ import im.tox.tox4j.exceptions.ToxException
 
 object ProfileSettingsActivity {
 
-  val MY_PERMISSIONS_REQUEST_READ_CONTACTS = 0
+  val MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 0
   var exportDirectory:File = Environment.getExternalStorageDirectory
 
   private val sBindPreferenceSummaryToValueListener: Preference.OnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
@@ -134,7 +134,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
               android.support.v4.app.ActivityCompat.requestPermissions(thisActivity,
                 Array(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                MY_PERMISSIONS_REQUEST_READ_CONTACTS)
+                MY_PERMISSIONS_REQUEST_WRITE_STORAGE)
 
             }
             else{
@@ -216,7 +216,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   }
 
   override def onRequestPermissionsResult(requestCode: Int, permissions: Array[String], grantResults: Array[Int]) {
-    if (requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACTS) {
+    if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_STORAGE) {
       if (grantResults.length > 0
         && grantResults(0) == PackageManager.PERMISSION_GRANTED) {
         {
