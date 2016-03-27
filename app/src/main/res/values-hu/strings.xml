@@ -186,7 +186,7 @@ megtartja a jelenlegi partnerlistáját, de mások nem tudják majd hozzáadni �
   <string name="drawer_open">Navigációs menü megnyitása</string>
   <string name="drawer_close">Navigációs menü bezárása</string>
   <string name="open_source_license">Nyílt forrású licensz</string>
-  <string name="license2">A forráskód elérhető itt:\nhttps://github.com/subliun/Antox</string>
+  <string name="license2">A forráskód elérhető itt:\nhttps://github.com/Antox/Antox</string>
   <string name="ver">Verzió</string>
   <string name="about">Névjegy</string>
   <string name="about_antox_1">A kormányzati ellenőrzőprogramok elterjedése miatt a Toxot úgy alkották meg, hogy könnyen kapcsolatba tudjunk lépni barátainkkal és a családunkkal, anélkül, hogy bárki lehallgathatná.</string>

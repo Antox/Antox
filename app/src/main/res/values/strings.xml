@@ -18,6 +18,8 @@
     <string name="login_account_hint">Profile Name</string>
     <string name="login_create_account_text">Create Tox Profile</string>
     <string name="login_bad_login">Profile name was not recognised</string>
+    <string name="login_passphrase_incorrect">Password incorrect</string>
+    <string name="login_profile_encrypted">Profile encrypted. Enter password to decrypt:</string>
 
     <!-- Create Account Activity -->
     <string name="create_name_hint">Profile Name</string>
@@ -40,6 +42,8 @@
     <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
+
+
 
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
@@ -298,7 +302,7 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
     <string name="license1">Distributed under the GNU GPL v3. Created by Mark Winter.</string>
-    <string name="license2">Source code is available at\nhttps://github.com/subliun/Antox</string>
+    <string name="license2">Source code is available at\nhttps://github.com/Antox/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>
     <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>

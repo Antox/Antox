@@ -201,7 +201,7 @@ požadavky na přidání.\n\nOpravdu si přejete pokračovat?</string>
   <string name="drawer_close">Zavřít záložku navigace</string>
   <string name="open_source_license">Open source licence</string>
   <string name="license1">Šířeno pod GNU GPL v3. Vytvořil Mark Winter, spravuje subliun a další.</string>
-  <string name="license2">Zdrojový kód dostupný na \nhttps://github.com/subliun/Antox</string>
+  <string name="license2">Zdrojový kód dostupný na \nhttps://github.com/Antox/Antox</string>
   <string name="ver">Verze</string>
   <string name="about">O aplikaci</string>
   <string name="about_antox_1">S nástupem vládních monitorovacích programů Tox poskytuje jednoduše použitelnou aplikaci, která vám umožňuje propojení s přáteli a rodinou bez cizího odposlechu.</string>

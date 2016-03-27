@@ -1,12 +1,12 @@
 package chat.tox.antox.viewholders
 
-import android.graphics.PorterDuff
+import android.graphics.drawable.{RotateDrawable, GradientDrawable, LayerDrawable}
 import android.os.Build
 import android.support.v7.widget.RecyclerView
-import android.view.View.{OnClickListener, OnTouchListener}
-import android.view.{MotionEvent, Gravity, View}
+import android.view.{Gravity, View}
 import android.widget.{LinearLayout, TextView}
 import chat.tox.antox.R
+import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.TimestampUtils
 import chat.tox.antox.wrapper.Message
 
@@ -71,7 +71,18 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     //Set extra padding to the left of the bubble
     bubble.setPadding(48 * density, 0, 0, 0)
     toggleReceived()
-    background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_sent_shape))
+
+    val drawable = context.getResources.getDrawable(R.drawable.conversation_item_sent_shape).asInstanceOf[LayerDrawable]
+    val shape = drawable.findDrawableByLayerId(R.id.sent_shape).asInstanceOf[GradientDrawable]
+    shape.setColor(ThemeManager.primaryColor)
+
+    val drawableTriangle = context.getResources.getDrawable(R.drawable.conversation_item_sent_triangle_shape).asInstanceOf[LayerDrawable]
+    val shapeRotateTriangle = drawableTriangle.findDrawableByLayerId(R.id.sent_triangle_shape).asInstanceOf[RotateDrawable]
+    val shapeTriangle = shapeRotateTriangle.getDrawable.asInstanceOf[GradientDrawable]
+    shapeTriangle.setColor(ThemeManager.primaryColor)
+
+    background.setBackgroundDrawable(drawable)
+    sentTriangle.setBackgroundDrawable(shapeRotateTriangle)
   }
 
   def contactMessage() {
@@ -86,7 +97,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
   }
 
   protected def toggleReceived(): Unit =  {
-    if (msg.received || msg.sent) {
+    if (msg.received) {
       setAlphaCompat(bubble, 1f)
     } else {
       setAlphaCompat(bubble, 0.5f)

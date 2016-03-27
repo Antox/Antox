@@ -49,6 +49,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 
+    this.findViewById(R.id.info).setVisibility(View.GONE)
+
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
     val attachmentButton = findViewById(R.id.attachment_button)
     val cameraButton = findViewById(R.id.camera_button)
@@ -88,11 +90,11 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        val imageName = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
+        val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
 
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
-          val file = File.createTempFile(imageName, ".jpg", storageDir)
+          val file = File.createTempFile(image_name, ".jpg", storageDir)
           val imageUri = Uri.fromFile(file)
           cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
           photoPath = Some(file.getAbsolutePath)
@@ -181,9 +183,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
-          val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
-          val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
-          avatarView.setImageBitmap(bitmap)
+          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

@@ -19,7 +19,7 @@ import im.tox.tox4j.exceptions.ToxException
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.schedulers.{NewThreadScheduler, AndroidMainThreadScheduler, IOScheduler}
 
 import scala.io.Source
 
@@ -114,7 +114,7 @@ object ToxSingleton {
       }
       dhtNodes
     }).subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
+      .observeOn(NewThreadScheduler())
       .subscribe(nodes => {
       dhtNodes = nodes
       AntoxLog.debug("Trying to bootstrap", TAG)

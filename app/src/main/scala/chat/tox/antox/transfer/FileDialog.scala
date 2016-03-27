@@ -132,7 +132,11 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
         }
       }
 
-      val filteredFiles = path.listFiles(filenameFilter).sorted
+      val filteredFiles = {
+        val list = path.listFiles(filenameFilter)
+        if(list == null || list.isEmpty) new Array[File](0)
+        else list.sorted
+      }
       for (file <- filteredFiles) {
         files += file
       }
