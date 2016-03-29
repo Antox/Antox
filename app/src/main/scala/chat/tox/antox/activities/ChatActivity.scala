@@ -183,7 +183,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
-          val avatarView = this.findViewById(R.id.avatar).asInstanceOf[CircleImageView]
+          val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
 
