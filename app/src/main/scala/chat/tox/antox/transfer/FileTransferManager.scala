@@ -1,6 +1,6 @@
 package chat.tox.antox.transfer
 
-import java.io.File
+import java.io.{ByteArrayOutputStream, FileInputStream, File}
 
 import android.content.Context
 import android.graphics.Bitmap.CompressFormat
@@ -9,7 +9,7 @@ import android.os.Environment
 import android.preference.PreferenceManager
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
-import chat.tox.antox.utils.{AntoxLog, BitmapManager}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FriendKey, ContactKey, FileKind}
 import im.tox.tox4j.core.data.{ToxFileId, ToxFilename, ToxNickname}
@@ -87,7 +87,7 @@ class FileTransferManager extends Intervals {
       val rw = new ExifRewriter()
       rw.removeExifMetadata(bFile,baos)
       baos.close()
-      baos.toByteArray.length
+      baos.toByteArray.length.toLong
     }
     else file.length()
 
@@ -107,7 +107,7 @@ class FileTransferManager extends Intervals {
     mFileNumber.foreach(fileNumber => {
       val db = State.db
       AntoxLog.debug("adding File Transfer", TAG)
-      val id = db.addFileTransfer(key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, fileNumber, fileKind.kindId, length.toInt)
+      val id = db.addFileTransfer(fileNumber, key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true,  length.toInt, fileKind)
       State.transfers.add(new FileTransfer(key, file, fileNumber, length, 0, true, FileStatus.REQUEST_SENT, id, fileKind, stripExif))
     })
   }
@@ -173,7 +173,7 @@ class FileTransferManager extends Intervals {
     }
 
     val db = State.db
-    val id = db.addFileTransfer(key, key, key, senderName, fileN, hasBeenRead, fileSize.toInt, fileKind)
+    val id = db.addFileTransfer(fileNumber, key, key, senderName, fileN, hasBeenRead, fileSize.toInt, fileKind)
     State.transfers.add(new FileTransfer(key, file, fileNumber, fileSize, 0, false, FileStatus.REQUEST_SENT, id, fileKind))
   }
 
