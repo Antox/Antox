@@ -64,6 +64,10 @@
     <string name="video_call_friend">Video Call</string>
     <string name="info">Info</string>
 
+    <!-- Settings Activity -->
+    <string name="proxy_address_invalid">Please enter a correct hostname or ip-address</string>
+    <string name="proxy_port_invalid">Please enter a correct port number value between 1 and 65535</string>
+
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
     <string name="addpane_group_label">Group</string>

@@ -14,7 +14,7 @@ import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.core.network.Port
 import im.tox.tox4j.core.data.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
-import im.tox.tox4j.core.options.ToxOptions
+import im.tox.tox4j.core.options.{ToxOptions, ProxyOptions}
 import im.tox.tox4j.exceptions.ToxException
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
@@ -140,6 +140,33 @@ object ToxSingleton {
     !(wifiOnly && !wifiInfo.isConnected)
   }
 
+  private def readProxyOptions(preferences: SharedPreferences) : ProxyOptions = {
+    val TAG = LoggerTag("readProxyOptions")
+    AntoxLog.debug("Reading proxy settings", TAG)
+
+    val proxyEnabled = preferences.getBoolean("enable_proxy", Options.proxyEnabled)
+    AntoxLog.debug("Proxy enabled: " + proxyEnabled.toString, TAG)
+    if (!proxyEnabled) {
+      return ProxyOptions.None
+    }
+
+    val proxyAddress = preferences.getString("proxy_address", Options.proxyAddress)
+    AntoxLog.debug("Proxy address: " + proxyAddress, TAG)
+
+    val proxyPort = preferences.getString("proxy_port", Options.proxyPort).toInt
+    AntoxLog.debug("Proxy port: " + proxyPort, TAG)
+
+    val proxyType = preferences.getString("proxy_type", "SOCKS5")
+    AntoxLog.debug("Proxy type: " + proxyType, TAG)
+    proxyType match {
+      case "HTTP" =>
+        return ProxyOptions.Http(proxyAddress, proxyPort)
+      case "SOCKS5" =>
+        AntoxLog.debug("Socks5 proxy type set", TAG)
+        return ProxyOptions.Socks5(proxyAddress, proxyPort)
+    }
+  }
+
   def initTox(ctx: Context) {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
@@ -151,9 +178,11 @@ object ToxSingleton {
     dataFile = new ToxDataFile(ctx, userDb.getActiveUser)
 
     val udpEnabled = preferences.getBoolean("enable_udp", false)
+    val proxyOptions = readProxyOptions(preferences)
     val options = new ToxOptions(
       udpEnabled,
       Options.ipv6Enabled,
+      proxy = proxyOptions,
       saveData = dataFile.loadAsSaveType())
 
     try {
