@@ -142,27 +142,26 @@ object ToxSingleton {
 
   private def readProxyOptions(preferences: SharedPreferences) : ProxyOptions = {
     val TAG = LoggerTag("readProxyOptions")
-    AntoxLog.debug("Reading proxy settings", TAG)
+    AntoxLog.verbose("Reading proxy settings", TAG)
 
     val proxyEnabled = preferences.getBoolean("enable_proxy", Options.proxyEnabled)
-    AntoxLog.debug("Proxy enabled: " + proxyEnabled.toString, TAG)
+    AntoxLog.verbose("Proxy enabled: " + proxyEnabled.toString, TAG)
     if (!proxyEnabled) {
       return ProxyOptions.None
     }
 
     val proxyAddress = preferences.getString("proxy_address", Options.proxyAddress)
-    AntoxLog.debug("Proxy address: " + proxyAddress, TAG)
+    AntoxLog.verbose("Proxy address: " + proxyAddress, TAG)
 
     val proxyPort = preferences.getString("proxy_port", Options.proxyPort).toInt
-    AntoxLog.debug("Proxy port: " + proxyPort, TAG)
+    AntoxLog.verbose("Proxy port: " + proxyPort, TAG)
 
     val proxyType = preferences.getString("proxy_type", "SOCKS5")
-    AntoxLog.debug("Proxy type: " + proxyType, TAG)
+    AntoxLog.verbose("Proxy type: " + proxyType, TAG)
     proxyType match {
       case "HTTP" =>
         return ProxyOptions.Http(proxyAddress, proxyPort)
       case "SOCKS5" =>
-        AntoxLog.debug("Socks5 proxy type set", TAG)
         return ProxyOptions.Socks5(proxyAddress, proxyPort)
     }
   }
