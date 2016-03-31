@@ -4,13 +4,14 @@ import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
 import android.preference.{ListPreference, Preference, PreferenceManager}
 import android.view.MenuItem
+import android.widget.Toast
 import chat.tox.antox.R
 import chat.tox.antox.activities.SettingsActivity._
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{AntoxNotificationManager, Options}
+import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager, Options}
 
 object SettingsActivity {
 
@@ -39,11 +40,14 @@ object SettingsActivity {
   }
 }
 
-class SettingsActivity extends BetterPreferenceActivity with Preference.OnPreferenceClickListener {
+class SettingsActivity extends BetterPreferenceActivity with Preference.OnPreferenceClickListener with Preference.OnPreferenceChangeListener {
 
   private var themeDialog: ColorPickerDialog = _
+  private var thisActivity: SettingsActivity = _
 
   override def onCreate(savedInstanceState: Bundle) {
+    thisActivity = this
+
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
@@ -81,6 +85,8 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     findPreference("theme_color").setOnPreferenceClickListener(this)
     findPreference("call_replies").setOnPreferenceClickListener(this)
     bindPreferenceSummaryToValue(findPreference("locale"))
+    findPreference("proxy_address").setOnPreferenceChangeListener(this)
+    findPreference("proxy_port").setOnPreferenceChangeListener(this)
   }
 
   override def onResume() {
@@ -107,11 +113,15 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   }
 
   override def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    var networkSettingsChanged = false
+    val proxySettings = List("enable_proxy", "proxy_type", "proxy_address", "proxy_port")
     if (key == "enable_udp") {
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
-      val service = new Intent(this, classOf[ToxService])
-      this.stopService(service)
-      this.startService(service)
+      networkSettingsChanged = true
+    }
+    if (proxySettings.contains(key))
+    {
+      networkSettingsChanged = true
     }
     if (key == "wifi_only") {
       if (!ToxSingleton.isToxConnected(sharedPreferences, this)) {
@@ -133,7 +143,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         AntoxNotificationManager.removePersistentNotification()
       }
     }
-    if (key == "notifications_enable_notifications"){
+    if (key == "notifications_enable_notifications") {
       if (sharedPreferences.getBoolean("notifications_persistent", false) &&
         sharedPreferences.getBoolean("notifications_enable_notifications", true)) {
         AntoxNotificationManager.createPersistentNotification(getApplicationContext)
@@ -141,13 +151,19 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         AntoxNotificationManager.removePersistentNotification()
       }
     }
+
+    if (networkSettingsChanged) {
+      AntoxLog.debug("One or more network settings changed. Restarting Tox service")
+      val service = new Intent(this, classOf[ToxService])
+      this.stopService(service)
+      this.startService(service)
+    }
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
     case android.R.id.home =>
       finish()
       true
-
   }
 
   override def onPreferenceClick(preference: Preference): Boolean = {
@@ -173,5 +189,30 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   def launchCallRepliesActivity(): Unit = {
     val intent = new Intent(this, classOf[EditCallRepliesActivity])
     startActivity(intent)
+  }
+
+  override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
+    preference.getKey match {
+      case "proxy_address" =>
+        val proxyAddress = value.toString
+        if (proxyAddress.length > 0) {
+          return true
+        }
+        Toast.makeText(thisActivity, getResources.getString(R.string.proxy_address_invalid), Toast.LENGTH_SHORT).show()
+        return false
+      case "proxy_port" =>
+        try {
+          val proxyPort = Integer.parseInt(value.toString)
+          if (proxyPort > 0 && proxyPort < 65536) {
+            return true
+          }
+        } catch {
+          case e: NumberFormatException => None
+        }
+        Toast.makeText(thisActivity, getResources.getString(R.string.proxy_port_invalid), Toast.LENGTH_SHORT).show()
+        return false
+      case _ =>
+        true
+    }
   }
 }
