@@ -6,4 +6,6 @@ object Options {
   var udpEnabled: Boolean = false
 
   var proxyEnabled: Boolean = false
+  var proxyAddress: String = "127.0.0.1"
+  var proxyPort: String = "9050"
 }
