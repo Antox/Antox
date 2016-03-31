@@ -152,8 +152,8 @@ object ToxSingleton {
 
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val options = new ToxOptions(
-      udpEnabled,
       Options.ipv6Enabled,
+      udpEnabled,
       saveData = dataFile.loadAsSaveType())
 
     try {
