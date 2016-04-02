@@ -166,6 +166,7 @@ object ToxSingleton {
   }
 
   def initTox(ctx: Context) {
+    isInited = true
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
     val userDb = State.userDb(ctx)

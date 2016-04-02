@@ -235,7 +235,7 @@ object AntoxNotificationManager {
     persistBuilder = None
   }
 
-  def updatePersistentNotification(ctx: Context, toxConnection: ToxConnection) {
+  def updatePersistentNotification(ctx: Context, status: ToxConnection) {
     AntoxLog.debug("Updating persistent notification")
 
     persistBuilder.foreach(builder => {
@@ -247,11 +247,9 @@ object AntoxNotificationManager {
   }
 
   private def getStatus(ctx: Context): String = {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-    if (!ToxSingleton.isToxConnected(preferences, ctx) ||
-      ToxSingleton.tox == null) {
-      ctx.getString(R.string.status_offline)
-    } else {
+    if(ToxSingleton.tox == null) return ctx.getString(R.string.status_offline)
+
+    if(ToxSingleton.tox.getSelfConnectionStatus != ToxConnection.NONE) {
       ToxSingleton.tox.getStatus match {
         case ToxUserStatus.NONE =>
           ctx.getString(R.string.status_online)
@@ -261,6 +259,7 @@ object AntoxNotificationManager {
           ctx.getString(R.string.status_busy)
       }
     }
+    else ctx.getString(R.string.status_offline)
   }
 
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
