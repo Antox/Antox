@@ -64,6 +64,33 @@
             android:key="enable_udp"
             android:title="@string/pref_udp" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_proxy"
+            android:title="@string/pref_title_enable_proxy" />
+
+        <ListPreference
+            android:dependency="enable_proxy"
+            android:defaultValue="SOCKS5"
+            android:entries="@array/pref_proxy_type_list_values"
+            android:entryValues="@array/pref_proxy_type_list_values"
+            android:key="proxy_type"
+            android:title="@string/pref_title_proxy_type"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+
+        <EditTextPreference
+            android:dependency="enable_proxy"
+            android:defaultValue="127.0.0.1"
+            android:key="proxy_address"
+            android:title="@string/pref_title_proxy_address" />
+
+        <EditTextPreference
+            android:numeric="decimal"
+            android:dependency="enable_proxy"
+            android:defaultValue="9050"
+            android:key="proxy_port"
+            android:title="@string/pref_title_proxy_port" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_calls">
