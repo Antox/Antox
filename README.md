@@ -1,35 +1,34 @@
 Antox
 =====
 
-### The F-Droid repo has changed. To continue receiving updates for Antox, please add https://pkg.tox.chat/fdroid/repo to your repositories
 
 <img src="http://i.imgur.com/PvY7zCQ.jpg" width="230px" height="400px"/><img src="http://i.imgur.com/Hmnjpv3.png" width="230px" height="400px"/><img src="http://i.imgur.com/jApGiZQ.png" width="230px" height="400px"/>
 
-Antox is an Android 2.3+ client for Tox created by [Mark Winter](https://github.com/Astonex). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
-
+Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.com/Astonex). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
 
 ###Current development
 
-- Adding A/V
-- Improving the design of several features
+- Android 6 (Marshmallow) permission support
+- Bugfixing A/V
 
 ###Getting Antox
 
 To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
 
-To install on F-Droid, add https://pkg.tox.chat/fdroid/repo and search for "Antox".
+To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "Antox".
 
 ###What Is Currently Working
 - One to one messaging
 - File transfers
 - Avatars
+- Partial A/V support
 
 ###Translating Antox
-- You can localize the application via github pull request or using [Transifex](https://www.transifex.com/antox/antox/).
+- You can localize the application via pull request or using [Transifex](https://www.transifex.com/antox/antox/).
 
 ###Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 0.8.1
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 1.4.1
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools.
 - Clone the Antox repo
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
@@ -41,3 +40,5 @@ To install on F-Droid, add https://pkg.tox.chat/fdroid/repo and search for "Anto
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
 
 *This repository resembles but is legally distinct from [astonex/Antox](https://github.com/Astonex/Antox) and the Lollipop Guild.*
+
+
