@@ -178,9 +178,9 @@ object ToxSingleton {
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val proxyOptions = readProxyOptions(preferences)
     val options = new ToxOptions(
-      udpEnabled,
-      Options.ipv6Enabled,
+      ipv6Enabled = Options.ipv6Enabled,
       proxy = proxyOptions,
+      udpEnabled = udpEnabled,
       saveData = dataFile.loadAsSaveType())
 
     try {
