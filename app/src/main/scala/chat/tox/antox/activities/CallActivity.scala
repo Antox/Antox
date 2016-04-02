@@ -182,4 +182,11 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     compositeSubscription.unsubscribe()
   }
+
+  override def onBackPressed(): Unit = {
+    if(call.active && call.ringing){
+      call.end()
+    }
+    super.onBackPressed()
+  }
 }
