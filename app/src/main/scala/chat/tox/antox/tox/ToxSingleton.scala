@@ -7,7 +7,6 @@ import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import chat.tox.antox.R
-import chat.tox.antox.callbacks.{ToxCallbackListener, ToxavCallbackListener}
 import chat.tox.antox.data.{AntoxDB, State}
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper.{ToxCore, _}
@@ -19,7 +18,7 @@ import im.tox.tox4j.exceptions.ToxException
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{NewThreadScheduler, AndroidMainThreadScheduler, IOScheduler}
+import rx.lang.scala.schedulers.{NewThreadScheduler, IOScheduler}
 
 import scala.io.Source
 
@@ -160,9 +159,9 @@ object ToxSingleton {
     AntoxLog.verbose("Proxy type: " + proxyType, TAG)
     proxyType match {
       case "HTTP" =>
-        return ProxyOptions.Http(proxyAddress, proxyPort)
+        ProxyOptions.Http(proxyAddress, proxyPort)
       case "SOCKS5" =>
-        return ProxyOptions.Socks5(proxyAddress, proxyPort)
+        ProxyOptions.Socks5(proxyAddress, proxyPort)
     }
   }
 
