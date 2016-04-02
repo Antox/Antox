@@ -2,6 +2,7 @@ package chat.tox.antox.wrapper
 
 import java.io.File
 
+import chat.tox.antox.callbacks.AntoxOnSelfConnectionStatusCallback
 import chat.tox.antox.tox.{IntervalLevels, Intervals}
 import chat.tox.antox.utils._
 import im.tox.core.network.Port
@@ -24,7 +25,11 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def getTox: ToxCoreImpl = tox
 
-  def close(): Unit = tox.close()
+  def close(): Unit = {
+    selfConnectionStatus = ToxConnection.NONE
+    AntoxOnSelfConnectionStatusCallback.connectionStatusSubject.onNext(selfConnectionStatus)
+    tox.close()
+  }
 
   def getSaveData: Array[Byte] = tox.getSavedata
 
