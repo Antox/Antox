@@ -168,7 +168,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
         onClickVideoCall(clickLocation)
         true
 
-      case R.id.info =>
+      case R.id.user_info =>
         onClickInfo(clickLocation)
         true
 
