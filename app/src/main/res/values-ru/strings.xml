@@ -29,11 +29,11 @@
     <string name="create_profile_exists">Этот профиль уже добавлен</string>
     <string name="import_profile_invalid_file">Выбранный файл не является допустимым tox-профилем </string>
     <string name="create_account_exists">Это имя уже занято</string>
-    <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
-    <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
-    <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
-    <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
-    <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
+    <string name="create_account_internal_error">Внутренняя ошибка Antox. Пожалуйста, перезапустите приложение и попробуйте снова</string>
+    <string name="create_account_reached_registration_limit">Вы можете зарегистрировать только 13 профилей в час. Вы превысили данное ограничение</string>
+    <string name="create_account_unknown_error">Неизвестная ошибка регистрации, пожалуйста, попробуйте снова чуть позже</string>
+    <string name="create_account_kalium_link_error">Невозможно загрузить требуемую библтотеку. Невозможно создать не-инкогнито профили</string>
+    <string name="create_account_encrypted_profile_error">Antox пока не поддерживает зашифрованные профили</string>
     <string name="create_account_load_profile_unknown">Неизвестная ошибка при загрузке профиля</string>
 
     <!-- Main Activity -->
@@ -41,14 +41,14 @@
     <string name="main_recent_no">Нет недавних бесед</string>
     <string name="main_no_internet">Проверьте интернет соединение</string>
     <string name="main_not_connected">Подключение к интернету не было обнаружено. Вы будете иметь ограниченные возможности, если вы используете Antox только в локальной сети</string>
-    <string name="main_mobile_disabled">Currently offline as Wi-Fi only mode is enabled. Touch to open settings. </string>
+    <string name="main_mobile_disabled">Currently offline as Wi-Fi only mode is enabled. Коснитесь, чтобы открыть настройки. </string>
     <string name="search_all_contacts">Поиск контактов</string>
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">Отправьте сообщение</string>
     <string name="chat_file_transfer">Передача файлов</string>
     <string name="chat_message_too_long">Сообщение не может быть отправлено, поскольку оно слишком длинное.</string>
-    <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
+    <string name="chat_ft_failed_friend_offline">Отправка не удалась - не могу отправить файл другу не в сети</string>
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Контакты</string>
@@ -68,17 +68,17 @@
     <string name="addfriend_invalid_pin">Неверный pin</string>
     <string name="addfriend_own_key">Соединение с параллельной вселенной не установлено :-(</string>
     <string name="addfriend_friend_pin_title">Введите pin друга</string>
-    <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
+    <string name="addfriend_friend_pin_text">Введите pin друга</string>
     <string name="addfriend_default_message">Привет! Я хочу внести Вас в свой список контактов</string>
 
     <!-- Add Group Fragment -->
-    <string name="addgroup_group_id">The group\'s ID</string>
-    <string name="addgroup_button">Join Group</string>
-    <string name="addgroup_group_added">Group Joined</string>
-    <string name="addgroup_group_exists">Group already exists</string>
-    <string name="invalid_group_ID">Invalid Group ID</string>
-    <string name="addgroup_alias_hint">Set an alias for this group</string>
-    <string name="addgroup_optional_title">Optional Extras</string>
+    <string name="addgroup_group_id">ID группы</string>
+    <string name="addgroup_button">Присоединиться к группе</string>
+    <string name="addgroup_group_added">Присоединился к группе</string>
+    <string name="addgroup_group_exists">Группа уже существует</string>
+    <string name="invalid_group_ID">Неверный ID группы</string>
+    <string name="addgroup_alias_hint">Установить название данной группы</string>
+    <string name="addgroup_optional_title">Опциональные дополнения</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_nick">Подпись</string>
@@ -100,8 +100,8 @@
     <!-- Group invite fragment -->
     <string name="groupinvite_accept">Принять</string>
     <string name="groupinvite_reject">Отклонить</string>
-    <string name="group_invite">New Group Invite</string>
-    <string name="invited_by">You were invited by </string>
+    <string name="group_invite">Новое приглашение в группу</string>
+    <string name="invited_by">Вы были приглашены </string>
 
     <!-- Contacts Fragment -->
     <string name="friend_action_profile">Профиль</string>
@@ -109,7 +109,7 @@
     <string name="friend_action_export_chat">Архивировать</string>
     <string name="friend_action_delete_chat">Очистить историю сообщений</string>
     <string name="friend_action_block">Заблокировать</string>
-    <string name="group_default_peer_name">Anonymous</string>
+    <string name="group_default_peer_name">Аноним</string>
     <string name="group_action_delete">Покинуть группу</string>
     <string name="contacts_actions_on">Редактировать</string>
     <string name="contacts_delimiter_requests">Запросы</string>
@@ -124,8 +124,8 @@
     <string name="friend_action_delete_friend_confirmation">Вы уверены, что хотите удалить этот контакт?</string>
 
     <!-- Export Chat Logs Toast -->
-    <string name="friend_action_chat_log_exported">Chat log exported to %s</string>
-    <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
+    <string name="friend_action_chat_log_exported">История чата экспортирована в %s</string>
+    <string name="friend_action_chat_log_export_failed">Экспорт истории чата провален. </string>
 
     <!-- Delete Chat Logs Dialog -->
     <string name="friend_action_delete_chat_confirmation">Вы уверены, что хотите удалить историю сообщений?</string>
@@ -134,9 +134,9 @@
     <string name="friend_action_block_friend_confirmation">Если вы заблокируете пользователя, то не сможете больше получать от него сообщения и оповещенияе, он также будет автоматически удален из вашего списка контактов.</string>
 
     <!-- Reset ToxID Dialog -->
-    <string name="reset_tox_id_dialog_message">Resetting your Tox ID changes your ID permanently. You will
-        keep your current contacts list, but other people won\'t be able to add you using your old ID. </string>
-    <string name="reset_tox_id_dialog_title">Spam Protection</string>
+    <string name="reset_tox_id_dialog_message">Сброс вашего Tox ID изменит ваш ID навсегда. Вы сохраните
+         ваш текущий список контактов, но другие люди не смогут добавить вас you используя ваш старый ID. </string>
+    <string name="reset_tox_id_dialog_title">Защита от спама</string>
     <string name="reset_tox_id_dialog_confirm">Сбросить</string>
     <string name="reset_tox_id_dialog_cancel">Отмена</string>
     <string name="tox_id_reset">Публичный Tox ID изменен</string>
@@ -148,7 +148,7 @@
     <string name="create_group_dialog_name_header">Имя группы</string>
 
     <!-- Group Chat Delete -->
-    <string name="group_default_part_message">Goodbye</string>
+    <string name="group_default_part_message">До свидания</string>
 
     <!-- Color Picker Dialog -->
     <string name="dialog_color_picker_title">Изменить тему</string>
@@ -180,14 +180,14 @@
 
     <!-- Avatar Dialog -->
     <string name="dialog_avatar_take_photo">Камера</string>
-    <string name="dialog_avatar_use_file">Галлерея</string>
-    <string name="avatar_too_large_error">Ошибка: Avatar file too large.</string>
-    <string name="no_camera_intent_error">Ошибка: No valid camera application found.</string>
+    <string name="dialog_avatar_use_file">Галерея</string>
+    <string name="avatar_too_large_error">Ошибка: Файл аватара слишком большой.</string>
+    <string name="no_camera_intent_error">Ошибка: Не найдено действительного приложения камеры.</string>
     <string name="dialog_avatar_description">аватар</string>
 
     <!-- File transfer -->
-    <string name="file_finished">Finished</string>
-    <string name="file_failed">Failed</string>
+    <string name="file_finished">Передача файла завершена</string>
+    <string name="file_failed">Провалено</string>
     <string name="file_in_progress">Передача файла</string>
     <string name="file_request_sent">Отправить</string>
     <string name="file_rejected">Отклонить</string>
