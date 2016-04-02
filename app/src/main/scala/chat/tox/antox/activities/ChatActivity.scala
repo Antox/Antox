@@ -294,4 +294,6 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
       case e: Exception =>
     }
   }
+
+
 }

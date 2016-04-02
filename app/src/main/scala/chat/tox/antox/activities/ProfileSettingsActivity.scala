@@ -23,6 +23,7 @@ import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
+import chat.tox.antox.utils.AntoxPermissionManager
 import chat.tox.antox.wrapper.UserStatus
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
@@ -53,7 +54,7 @@ object ProfileSettingsActivity {
   }
 }
 
-class ProfileSettingsActivity extends BetterPreferenceActivity {
+class ProfileSettingsActivity extends BetterPreferenceActivity with AntoxPermissionManager.OnPermissionChangeListener{
 
   private var avatarDialog: AvatarDialog = _
 
@@ -119,14 +120,31 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     val thisActivity = this
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
-        fileDialog.addDirectoryListener(new DirectorySelectedListener {
-          override def directorySelected(directory: File): Unit = {
-            onExportDataFileSelected(directory)
-          }
-        })
-        fileDialog.showDialog()
+        if(!AntoxPermissionManager.hasPermissionStorage(getApplicationContext)){
+          AntoxPermissionManager.requestPermissionStorage(getApplicationContext, thisActivity).subscribe(onNext = onNext =>
+          {
+            if(onNext){
+              val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
+              fileDialog.addDirectoryListener(new DirectorySelectedListener {
+                override def directorySelected(directory: File): Unit = {
+                  onExportDataFileSelected(directory)
+                }
+              })
+              fileDialog.showDialog()
+            }
+          })
+        }
+        else {
+          val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
+          fileDialog.addDirectoryListener(new DirectorySelectedListener {
+            override def directorySelected(directory: File): Unit = {
+              onExportDataFileSelected(directory)
+            }
+          })
+          fileDialog.showDialog()
+        }
         true
+
       }
     })
 
@@ -389,5 +407,6 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       true
 
   }
+
 }
 

@@ -11,7 +11,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager, Options}
+import chat.tox.antox.utils.{AntoxPermissionManager, AntoxLog, AntoxNotificationManager, Options}
 
 object SettingsActivity {
 
@@ -199,7 +199,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
           return true
         }
         Toast.makeText(thisActivity, getResources.getString(R.string.proxy_address_invalid), Toast.LENGTH_SHORT).show()
-        return false
+        false
       case "proxy_port" =>
         try {
           val proxyPort = Integer.parseInt(value.toString)
@@ -210,9 +210,13 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
           case e: NumberFormatException => None
         }
         Toast.makeText(thisActivity, getResources.getString(R.string.proxy_port_invalid), Toast.LENGTH_SHORT).show()
-        return false
+        false
       case _ =>
         true
     }
+  }
+
+  override def onRequestPermissionsResult(requestCode: Int, permissions: Array[String], grantResults: Array[Int]): Unit = {
+    AntoxPermissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 }
