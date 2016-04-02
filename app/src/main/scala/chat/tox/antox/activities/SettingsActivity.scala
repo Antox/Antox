@@ -199,7 +199,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
           return true
         }
         Toast.makeText(thisActivity, getResources.getString(R.string.proxy_address_invalid), Toast.LENGTH_SHORT).show()
-        return false
+        false
       case "proxy_port" =>
         try {
           val proxyPort = Integer.parseInt(value.toString)
@@ -210,7 +210,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
           case e: NumberFormatException => None
         }
         Toast.makeText(thisActivity, getResources.getString(R.string.proxy_port_invalid), Toast.LENGTH_SHORT).show()
-        return false
+        false
       case _ =>
         true
     }
