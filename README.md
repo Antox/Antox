@@ -38,7 +38,7 @@ To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "An
 
 ###Compiling Antox From Source using a gradle wrapper
 - run `./download-dependencies.sh` (requires bash)
-- run `./gradlew build -x link --parallel` this will
+- run `./gradlew build -x lint --parallel` this will
   - invoke `./gradle/wrapper/gradle-wrapper.jar` with java (requires java)
   - download a gradle .zip archive
   - unzip/run (parts of) this archive
