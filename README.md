@@ -36,6 +36,17 @@ To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "An
 - Install the Scala plugin in IntelliJ, restart, and wait for IntelliJ to set itself up
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 
+###Compiling Antox From Source using a gradle wrapper
+- run `./download-dependencies.sh` (requires bash)
+- run `./gradlew build -x link --parallel` this will
+  - invoke `./gradle/wrapper/gradle-wrapper.jar` with java (requires java)
+  - download a gradle .zip archive
+  - unzip/run (parts of) this archive
+  - eventually build antox.apk
+- run this again (maybe, if required)
+- you may now want to install antox using `adb install antox.apk` (requires adb)
+
+###Remarks
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
 
