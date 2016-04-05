@@ -37,7 +37,7 @@ To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "An
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 
 ###Compiling Antox From Source using a gradle wrapper
-- run `./download-dependencies.sh` (requires bash)
+- run `./download-dependencies.sh`
 - run `./gradlew build -x lint --parallel` this will
   - invoke `./gradle/wrapper/gradle-wrapper.jar` with java (requires java)
   - download a gradle .zip archive

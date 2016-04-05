@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 mkdir -p app/src/main/jniLibs/armeabi
 mkdir -p app/src/main/jniLibs/x86
 mkdir -p app/src/main/jniLibs/arm64-v8a
