@@ -1,4 +1,5 @@
 buildscript {
+    System.properties['com.android.build.gradle.overrideVersionCheck'] = 'true' // Fix gradle bug
     repositories {
         mavenCentral()
     }
