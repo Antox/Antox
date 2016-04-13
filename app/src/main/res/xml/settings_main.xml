@@ -97,11 +97,11 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="call_event_logging"
-            android:title="@string/pref_title_enable_call_event_logging"/>
+            android:title="@string/pref_title_enable_call_event_logging" />
 
         <Preference
             android:key="call_replies"
-            android:title="@string/title_pref_edit_call_replies"/>
+            android:title="@string/title_pref_edit_call_replies" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">

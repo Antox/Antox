@@ -9,14 +9,14 @@ import android.view.View.{OnClickListener, OnTouchListener}
 import android.view._
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.{AccelerateInterpolator, AlphaAnimation, Animation}
-import android.widget.{ImageView, Chronometer, FrameLayout}
+import android.widget.{Chronometer, FrameLayout, ImageView}
 import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av.CameraFacing.CameraFacing
 import chat.tox.antox.av._
-import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
 import chat.tox.antox.utils.UiUtils._
+import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, NewThreadScheduler}
@@ -170,7 +170,7 @@ class ActiveCallFragment extends CommonCallFragment {
             view.setLayoutParams(params)
 
           case MotionEvent.ACTION_DOWN =>
-           view.setLayoutParams(params)
+            view.setLayoutParams(params)
 
           case _ => // do nothing
         }
@@ -245,11 +245,11 @@ class ActiveCallFragment extends CommonCallFragment {
   }
 
   /**
-   * Scales a [[TextureView]] to a size relative to that of the screen.
-   *
-   * @param textureView [[TextureView]] to be scaled
-   * @param scale amount to multiply the width and height of the screen by to get the new size
-   */
+    * Scales a [[TextureView]] to a size relative to that of the screen.
+    *
+    * @param textureView [[TextureView]] to be scaled
+    * @param scale       amount to multiply the width and height of the screen by to get the new size
+    */
   private def scaleSurfaceRelativeToScreen(textureView: TextureView, scale: Float): Unit = {
     val layoutParams = textureView.getLayoutParams
 

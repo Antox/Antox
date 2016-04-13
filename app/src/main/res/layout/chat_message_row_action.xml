@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/message_row_layout"
+<LinearLayout android:id="@+id/message_row_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -23,7 +22,7 @@
             android:padding="@dimen/padding_small"
             android:text="Message Body: This is some long sample text"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_medium"/>
+            android:textSize="@dimen/text_medium" />
 
     </LinearLayout>
 
@@ -37,6 +36,6 @@
         android:paddingRight="@dimen/padding"
         android:paddingStart="@dimen/padding"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_tiny"/>
+        android:textSize="@dimen/text_tiny" />
 
 </LinearLayout>

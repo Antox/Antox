@@ -16,12 +16,12 @@
         android:id="@+id/avatar_takephoto"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/dialog_avatar_take_photo"/>
+        android:text="@string/dialog_avatar_take_photo" />
 
     <Button
         android:id="@+id/avatar_pickfile"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/dialog_avatar_use_file"/>
+        android:text="@string/dialog_avatar_use_file" />
 
 </LinearLayout>

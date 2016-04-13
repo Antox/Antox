@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/message_row_layout"
+<LinearLayout android:id="@+id/message_row_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -23,7 +22,7 @@
             android:layout_height="15dp"
             android:layout_marginTop="6dp"
             android:background="@drawable/conversation_item_received_triangle_shape"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/message_text_background"
@@ -41,7 +40,7 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_smallish"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/message_text"
@@ -52,7 +51,7 @@
                 android:padding="@dimen/padding_small"
                 android:text="Message Body: This is some long long long sample text"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_smallish"/>
+                android:textSize="@dimen/text_smallish" />
 
         </LinearLayout>
 
@@ -62,7 +61,7 @@
             android:layout_width="12dp"
             android:layout_height="15dp"
             android:layout_marginTop="6dp"
-            android:background="@drawable/conversation_item_sent_triangle_shape"/>
+            android:background="@drawable/conversation_item_sent_triangle_shape" />
 
     </LinearLayout>
 
@@ -75,6 +74,6 @@
         android:paddingRight="@dimen/padding"
         android:paddingStart="@dimen/padding"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_tiny"/>
+        android:textSize="@dimen/text_tiny" />
 
 </LinearLayout>

@@ -29,8 +29,9 @@ object FileDialog {
 
   trait DirectorySelectedListener {
 
-    def directorySelected (directory: File): Unit
+    def directorySelected(directory: File): Unit
   }
+
 }
 
 class FileDialog(private val activity: Activity, path: File, selectDirectoryOption: Boolean) {
@@ -125,7 +126,8 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
         def accept(dir: File, filename: String): Boolean = {
           val selection = new File(dir, filename)
           if (!selection.canRead) return false
-          if (selectDirectoryOption) selection.isDirectory else {
+          if (selectDirectoryOption) selection.isDirectory
+          else {
             val endsWith = if (fileEndsWith != null) filename.toLowerCase.endsWith(fileEndsWith) else true
             endsWith || selection.isDirectory
           }
@@ -134,7 +136,7 @@ class FileDialog(private val activity: Activity, path: File, selectDirectoryOpti
 
       val filteredFiles = {
         val list = path.listFiles(filenameFilter)
-        if(list == null || list.isEmpty) new Array[File](0)
+        if (list == null || list.isEmpty) new Array[File](0)
         else list.sorted
       }
       for (file <- filteredFiles) {
@@ -192,6 +194,7 @@ object ListenerList {
 
     def fireEvent(listener: L): Unit
   }
+
 }
 
 class ListenerList[L] {

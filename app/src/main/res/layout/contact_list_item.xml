@@ -1,9 +1,8 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
-    android:padding="10dp" >
+    android:padding="10dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -16,11 +15,11 @@
         <RelativeLayout
             android:layout_width="60dp"
             android:layout_height="50dp">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatar"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                />
+                android:layout_height="50dp" />
 
             <TextView
                 android:id="@+id/icon"
@@ -32,18 +31,21 @@
                 android:layout_alignEnd="@+id/avatar" />
 
         </RelativeLayout>
+
         <LinearLayout
             android:duplicateParentState="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:duplicateParentState="true"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5">
+
                 <TextView
                     android:id="@+id/contact_name"
                     android:duplicateParentState="true"
@@ -79,7 +81,7 @@
                         android:gravity="center_vertical"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_small"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -98,7 +100,7 @@
                     android:layout_marginRight="@dimen/margin_small"
                     android:layout_marginLeft="@dimen/margin_small"
                     android:layout_gravity="center_vertical"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/contact_status"
@@ -112,7 +114,7 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:layout_marginRight="10dp"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:id="@+id/star"
@@ -132,7 +134,7 @@
                     android:gravity="center"
                     android:textStyle="bold"
                     android:text="2"
-                    android:background="@drawable/circle_online"/>
+                    android:background="@drawable/circle_online" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

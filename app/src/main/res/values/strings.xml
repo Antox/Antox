@@ -44,7 +44,6 @@
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
 
-
     <!-- Main Activity -->
     <string name="main_no_active_chat">No active chat. Start one by choosing a friend from the pane on the left.</string>
     <string name="main_recent_no">No recent conversations</string>

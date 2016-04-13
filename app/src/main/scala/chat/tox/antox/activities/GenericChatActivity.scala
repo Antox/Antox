@@ -2,7 +2,7 @@ package chat.tox.antox.activities
 
 import java.util
 
-import android.content.{Intent, Context}
+import android.content.{Context, Intent}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -18,8 +18,8 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
-import chat.tox.antox.utils.{Location, AntoxLog, Constants}
-import chat.tox.antox.wrapper.{MessageType, ContactKey, Message}
+import chat.tox.antox.utils.{AntoxLog, Constants, Location}
+import chat.tox.antox.wrapper.{ContactKey, Message, MessageType}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -84,7 +84,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       finish()
       return
     }
-    
+
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
       new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShown))))
@@ -212,7 +212,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     }
     AntoxLog.debug("changing chat list cursor")
   }
-  
+
   def filterMessageList(messageList: Seq[Message]): Seq[Message] = {
     val showCallEvents = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("call_event_logging", true)
 
@@ -288,6 +288,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   def setTyping(typing: Boolean): Unit
 
   def onClickVoiceCall(clickLocation: Location): Unit
+
   def onClickVideoCall(clickLocation: Location): Unit
+
   def onClickInfo(clickLocation: Location): Unit
 }

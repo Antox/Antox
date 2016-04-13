@@ -4,6 +4,5 @@
         android:id="@+id/scanFriend"
         antonx:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_barcode_2"
-        android:title="@string/scanqr_button"
-        />
+        android:title="@string/scanqr_button" />
 </menu>

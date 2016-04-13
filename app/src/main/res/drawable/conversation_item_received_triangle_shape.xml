@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/received_triangle_shape">
         <rotate
             android:fromDegrees="45"
             android:toDegrees="45"
             android:pivotX="110%"
-            android:pivotY="120%" >
-            <shape
-                android:shape="rectangle" >
-                <solid
-                    android:color="@color/grey_light" />
+            android:pivotY="120%">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/grey_light" />
             </shape>
         </rotate>
     </item>

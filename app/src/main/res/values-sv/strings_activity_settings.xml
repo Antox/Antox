@@ -1,34 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Inställningar</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profil</string>
-  <string name="pref_title_nickname">Namn</string>
-  <string name="pref_default_nickname">Antoxanvändare</string>
-  <string name="pref_title_status">Status</string>
-  <string-array name="pref_status_list_titles">
-    <item>Online</item>
-    <item>Borta</item>
-    <item>Upptagen</item>
-  </string-array>
-  <string name="pref_title_status_message">Statusmeddelande</string>
-  <string name="pref_default_status_message">Hey! Jag använder Antox</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
-  <string name="pref_title_account_name">Profilnamn</string>
-  <string name="pref_title_logout">Logga ut</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Aviseringar</string>
-  <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
-  <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
-  <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
-  <!--Other-->
-  <string name="pref_header_other">Annat</string>
-  <string name="pref_title_wifi_only">Endast Wi-Fi</string>
-  <string name="pref_title_language">Språk</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Kopiera Tox ID</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Aktivera UDP</string>
-  <string name="pref_advanced">Avancerat</string>
+    <string name="title_activity_settings">Inställningar</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profil</string>
+    <string name="pref_title_nickname">Namn</string>
+    <string name="pref_default_nickname">Antoxanvändare</string>
+    <string name="pref_title_status">Status</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Borta</item>
+        <item>Upptagen</item>
+    </string-array>
+    <string name="pref_title_status_message">Statusmeddelande</string>
+    <string name="pref_default_status_message">Hey! Jag använder Antox</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
+    <string name="pref_title_account_name">Profilnamn</string>
+    <string name="pref_title_logout">Logga ut</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Aviseringar</string>
+    <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
+    <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
+    <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
+    <!--Other-->
+    <string name="pref_header_other">Annat</string>
+    <string name="pref_title_wifi_only">Endast Wi-Fi</string>
+    <string name="pref_title_language">Språk</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Kopiera Tox ID</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Aktivera UDP</string>
+    <string name="pref_advanced">Avancerat</string>
 </resources>

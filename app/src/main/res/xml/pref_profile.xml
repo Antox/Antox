@@ -63,7 +63,7 @@
         android:defaultValue="@string/pref_default_password"
         android:key="password"
         android:singleLine="true"
-        android:title="@string/pref_title_password"/>
+        android:title="@string/pref_title_password" />
 
     <CheckBoxPreference
         android:defaultValue="true"

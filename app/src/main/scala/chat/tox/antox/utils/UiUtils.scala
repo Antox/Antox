@@ -3,21 +3,22 @@ package chat.tox.antox.utils
 import java.util.Random
 
 import android.app.Activity
-import android.graphics.{Matrix, Color}
+import android.graphics.{Color, Matrix}
 import android.util.DisplayMetrics
-import android.view.{View, TextureView}
+import android.view.{TextureView, View}
 import chat.tox.antox.wrapper.ToxKey
 
 object UiUtils {
 
   val trimedIdLength = 8
+
   //Trims an ID so that it can be displayed to the user
   def trimId(id: ToxKey): String = {
     id.toString.substring(0, trimedIdLength - 1)
   }
 
   def sanitizeAddress(address: String): String = {
-  //remove start-of-file unicode char and spaces
+    //remove start-of-file unicode char and spaces
     address.replaceAll("\uFEFF", "").replace(" ", "")
   }
 
@@ -51,8 +52,8 @@ object UiUtils {
   }
 
   /**
-   * Sets the TextureView transform to preserve the aspect ratio of the video.
-   */
+    * Sets the TextureView transform to preserve the aspect ratio of the video.
+    */
   def adjustAspectRatio(activity: Activity, textureView: TextureView, videoWidth: Int, videoHeight: Int) {
     val viewWidth: Int = textureView.getWidth
     val viewHeight: Int = textureView.getHeight

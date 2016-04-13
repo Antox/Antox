@@ -7,7 +7,6 @@ import android.content._
 import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
-import android.util.Log
 import android.view.View
 import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget._
@@ -112,8 +111,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       progressSub = Observable.interval(500 milliseconds)
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(x => {
-        updateProgressBar()
-      })
+          updateProgressBar()
+        })
     }
 
     imageMessage.setVisibility(View.GONE)

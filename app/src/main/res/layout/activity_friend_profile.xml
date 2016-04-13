@@ -3,60 +3,61 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical">
-
-    <FrameLayout
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_gravity="center_horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_avatar"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:src="@drawable/default_avatar"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/favorite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:onClick="onClickFavorite"
-            android:src="@drawable/ic_star_black_24dp"
-            app:borderWidth="0dp"/>
-
-    </FrameLayout>
-
-    <EditText
-        android:id="@+id/friendAlias"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:inputType="text"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/friend_profile_note"
-        android:id="@+id/friendNoteText"
-        android:textStyle="italic"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:textColor="#a0a2a2"
-        android:typeface="serif"
-        android:textSize="16sp" />
+        android:layout_gravity="center_vertical">
+
+        <FrameLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center_horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_avatar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:src="@drawable/default_avatar" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/favorite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:clickable="true"
+                android:onClick="onClickFavorite"
+                android:src="@drawable/ic_star_black_24dp"
+                app:borderWidth="0dp" />
+
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/friendAlias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/friend_profile_note"
+            android:id="@+id/friendNoteText"
+            android:textStyle="italic"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textColor="#a0a2a2"
+            android:typeface="serif"
+            android:textSize="16sp" />
 
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

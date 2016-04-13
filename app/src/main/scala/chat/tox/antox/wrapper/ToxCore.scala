@@ -66,7 +66,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
       try {
         //FIXME setGroupSelfName(groupNumber, name)
       } catch {
-        case e: ToxException[_]  =>
+        case e: ToxException[_] =>
           AntoxLog.debug("could not set name in group " + groupNumber)
       }
     }
@@ -91,16 +91,16 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def addFriend(address: ToxAddress, message: ToxFriendRequestMessage): ToxFriendNumber = {
     val friendNumber = tox.addFriend(ToxFriendAddress.unsafeFromValue(address.bytes), message)
-   friendNumber
+    friendNumber
   }
 
   def addFriendNoRequest(key: ToxKey): ToxFriendNumber = {
     val friendNumber = tox.addFriendNorequest(ToxPublicKey.unsafeFromValue(key.bytes))
-     friendNumber
+    friendNumber
   }
 
   def deleteFriend(friendKey: FriendKey): Unit = {
-     tox.deleteFriend(getFriendNumber(friendKey))
+    tox.deleteFriend(getFriendNumber(friendKey))
   }
 
   def getFriendNumber(key: FriendKey): ToxFriendNumber = tox.friendByPublicKey(ToxPublicKey.unsafeFromValue(key.bytes))
@@ -203,7 +203,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
   def getGroupPeerName(groupKey: GroupKey, peerNumber: Int): String = {
     //val peerNameBytes = tox.getGroupPeerName(groupNumber, peerNumber)
     //if (peerNameBytes == null) {
-      ""
+    ""
     //} else {
     //  new String(Array.empty[Byte], "UTF-8")
     //}
@@ -211,7 +211,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   def getGroupSelfName(groupKey: GroupKey): String = "" //new String(tox.getGroupSelfName(groupNumber), "UTF-8")
 
-  def setGroupTopic(groupKey: GroupKey, topic: Array[Byte]): Unit = {}//tox.setGroupTopic(groupNumber, topic)
+  def setGroupTopic(groupKey: GroupKey, topic: Array[Byte]): Unit = {} //tox.setGroupTopic(groupNumber, topic)
 
   def getGroupTopic(groupKey: GroupKey): String = "" //new String(tox.getGroupTopic(groupNumber), "UTF-8")
 

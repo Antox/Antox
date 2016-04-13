@@ -72,36 +72,36 @@ class AddGroupFragment extends Fragment with InputableID {
   }
 
   private def checkAndSend(rawGroupKey: String, originalUsername: String): Boolean = {
-      if (ToxKey.isKeyValid(rawGroupKey)) {
-        val key = new GroupKey(rawGroupKey)
-        val alias = groupAlias.getText.toString //TODO: group aliases
+    if (ToxKey.isKeyValid(rawGroupKey)) {
+      val key = new GroupKey(rawGroupKey)
+      val alias = groupAlias.getText.toString //TODO: group aliases
 
-        val db = State.db
-        if (!db.doesContactExist(key)) {
-          try {
-            ToxSingleton.tox.joinGroup(key)
-            AntoxLog.debug("joined group : " + groupKeyView)
-            ToxSingleton.save()
-          } catch {
-            case e: ToxException[_] => e.printStackTrace()
-          }
-          db.addGroup(key, UiUtils.trimId(key), topic = "")
-
-          //prevent already-added group from having an existing group invite
-          db.deleteGroupInvite(key)
-          AntoxNotificationManager.clearRequestNotification(key)
-        } else {
-          toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
-          toast.show()
-          false
+      val db = State.db
+      if (!db.doesContactExist(key)) {
+        try {
+          ToxSingleton.tox.joinGroup(key)
+          AntoxLog.debug("joined group : " + groupKeyView)
+          ToxSingleton.save()
+        } catch {
+          case e: ToxException[_] => e.printStackTrace()
         }
-        toast = Toast.makeText(context, text, duration)
-        toast.show()
-        true
+        db.addGroup(key, UiUtils.trimId(key), topic = "")
+
+        //prevent already-added group from having an existing group invite
+        db.deleteGroupInvite(key)
+        AntoxNotificationManager.clearRequestNotification(key)
       } else {
-        showToastInvalidID()
+        toast = Toast.makeText(context, getResources.getString(R.string.addgroup_group_exists), Toast.LENGTH_SHORT)
+        toast.show()
         false
       }
+      toast = Toast.makeText(context, text, duration)
+      toast.show()
+      true
+    } else {
+      showToastInvalidID()
+      false
+    }
   }
 
   def addGroup(view: View) {

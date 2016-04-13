@@ -6,8 +6,7 @@
     </style>
 
     <!-- the theme applied to the application or activity -->
-    <style name="AntoxTheme"
-        parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="AntoxTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
@@ -15,8 +14,7 @@
         <item name="actionBarTabStyle">@style/ActionBarTabs</item>
     </style>
 
-    <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
-    </style>
+    <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar"></style>
 
     <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
@@ -25,8 +23,7 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="AntoxTheme.ActionBar"
-        parent="@style/Theme.AppCompat.NoActionBar">
+    <style name="AntoxTheme.ActionBar" parent="@style/Theme.AppCompat.NoActionBar">
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
@@ -43,8 +40,7 @@
     </style>
 
     <!-- ActionBar styles -->
-    <style name="ActionBar"
-        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:titleTextStyle">@style/ActionBarTitleText</item>
 
         <!-- Support library compatibility -->
@@ -57,8 +53,7 @@
     </style>
 
     <!-- ActionBar title text -->
-    <style name="ActionBarTitleText"
-        parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+    <style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
         <!-- The textColor property is backward compatible with the Support Library -->
     </style>
@@ -77,7 +72,6 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AntoxTheme">
-    </style>
+    <style name="AppTheme" parent="AntoxTheme"></style>
 
 </resources>

@@ -1,10 +1,7 @@
 package chat.tox.antox.transfer
 
 import java.io._
-import java.nio.ByteBuffer
-import android.graphics.Bitmap.CompressFormat
-import android.graphics.{Bitmap, BitmapFactory}
-import android.media.ExifInterface
+
 import chat.tox.antox.transfer.FileStatus.FileStatus
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.{ContactKey, FileKind}
@@ -87,13 +84,13 @@ class FileTransfer(val key: ContactKey,
           _inputStream = Some(input)
           try {
             val splitFileName = file.getName.split("\\.")
-            val extension = splitFileName(splitFileName.length-1)
-            val bInput = if(stripExifData && Constants.EXIF_FORMATS.contains(extension.toLowerCase)){
+            val extension = splitFileName(splitFileName.length - 1)
+            val bInput = if (stripExifData && Constants.EXIF_FORMATS.contains(extension.toLowerCase)) {
               val bFile = new Array[Byte](file.length().toInt)
               input.read(bFile)
               val baos = new ByteArrayOutputStream()
               val rw = new ExifRewriter()
-              rw.removeExifMetadata(bFile,baos)
+              rw.removeExifMetadata(bFile, baos)
               baos.close()
               new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray))
 

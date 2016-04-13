@@ -1,126 +1,126 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Добави Приятел</string>
-  <string name="title_activity_friend_profile">Профил на Приятеля</string>
-  <string name="title_activity_profile_settings">Настройки на профила</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Добави Приятел</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Трябва да въвдеш име на профила</string>
-  <string name="login_login">Вписване</string>
-  <string name="login_account_hint">Име на профила</string>
-  <string name="login_create_account_text">Създай Тох Профил</string>
-  <string name="login_bad_login">Името на профила не бе познато</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Име на Профила</string>
-  <string name="create_text">Девиз Тук</string>
-  <string name="create_register">Регистрирай се</string>
-  <string name="create_register_incog">Регистрирай се Инкогнито</string>
-  <string name="create_skip">Разреши на всекиго да те добавя използвайки името на профила ти</string>
-  <string name="create_must_fill_in">Трябва да попълниш всички полета</string>
-  <string name="create_bad_profile_name">Името на профила не може да има интервали, наклонени черти или да бъде празно</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Няма скорошни разговори. Започни нов като избереш приятел от полето в ляво.</string>
-  <string name="main_recent_no">Няма скорошни разговори.</string>
-  <string name="main_no_internet">Няма Интернет Връзка</string>
-  <string name="main_not_connected">Не е открита интернет връзка. Без интернет връзка, ще имаш ограничена функционалност освен ако не използваш Antox през LAN</string>
-  <string name="search_all_contacts">Търси всички контакти</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Изпрати съобщение</string>
-  <string name="chat_file_transfer">Трансфер на файл</string>
-  <!--Add Friend Activity-->
-  <string name="addfriend_friend_key">Tox ID на твоя приятел</string>
-  <string name="addfriend_friend_message">Изпрати съобщение с поканата</string>
-  <string name="addfriend_button">Добави Приятел</string>
-  <string name="addfriend_friend_added">Приятелят е добавен</string>
-  <string name="addfriend_friend_exists">Приятелят вече съществува</string>
-  <string name="scanqr_button">Сканирай QR код</string>
-  <string name="invalid_friend_ID">Невалиден Tox ID</string>
-  <string name="addfriend_nick_hint">Задай прякор на своя приятел</string>
-  <string name="addfriend_optional_title">Допълнителни</string>
-  <string name="dialog_pin">Въведи ПИН-а на твоя приятел</string>
-  <string name="addfriend_invalid_pin">Невалиден ПИН</string>
-  <string name="addfriend_own_key">Не може да добавяш себе си</string>
-  <string name="addfriend_friend_pin_title">Въведи ПИН-а на Приятеля</string>
-  <string name="addfriend_friend_pin_text">Въведи ПИН-а на Приятеля</string>
-  <string name="addfriend_default_message">Здравей! Моля, приеми моята покана за приятелство.</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Прякор</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Статус</string>
-  <string name="friend_profile_button">Обнови</string>
-  <string name="friend_profile_updated">Профилът е обновен</string>
-  <string name="friend_profile_copied">Tox ID Копиран</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">Профилът на %1$s</string>
-  <string name="friendrequest_accept">Приеми</string>
-  <string name="friendrequest_reject">Отхвърли</string>
-  <string name="friend_request">Нова Покана за Приятелство</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Профил</string>
-  <string name="friend_action_delete">Премахни Приятел</string>
-  <string name="friend_action_delete_chat">Изтрий Чат Архива</string>
-  <string name="friend_action_block">Блокирай</string>
-  <string name="contacts_actions_on">Действия върху</string>
-  <string name="contacts_delimiter_requests">Покани</string>
-  <string name="contacts_delimiter_friends">Приятели</string>
-  <string name="contacts_delimiter_offline">Отписан</string>
-  <string name="contacts_delimiter_online">На линия</string>
-  <string name="contacts_resend_friend_request">Изпрати Повторна Покана за Приятелство</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Сигурен ли си, че искаш да изтриеш този приятел?</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Сигурен ли си, че искаш да изтриеш чат историята?</string>
-  <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Блокирайки този прятел ще го изтриеш от списъка ти с пряители и повече няма да виждаш покани за приятелство от него/нея.\n\nСигрен ли, че искаш да продължиш?</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Прикачи снимка</string>
-  <string name="attachment_file">Прикачи Файл</string>
-  <string name="attachment_takephoto">Направи снимка</string>
-  <string name="message_copy">Копирай съобщение</string>
-  <string name="message_delete">Изтрий съобщение</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Скорошни</string>
-  <string name="titles_contacts">Контакти</string>
-  <string name="titles_settings">Настройки</string>
-  <!--Misc-->
-  <string name="button_confirm">Потвърди</string>
-  <string name="button_cancel">Откажи</string>
-  <string name="button_yes">Да</string>
-  <string name="button_no">Не</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Копирай Tox ID</string>
-  <string name="share_with">Сподели с</string>
-  <string name="connection_has">се</string>
-  <string name="connection_online">появи на линия</string>
-  <string name="connection_offline">отписа</string>
-  <string name="title_activity_create_account">Създай Акаунт</string>
-  <string name="action_settings">Настройки</string>
-  <!--QR-->
-  <string name="qr_default_title">Инсталирай Баркод Скенер?</string>
-  <string name="qr_default_message">Това приложение се нуждае от баркод скенер. Искаш ли да го инсталираш?</string>
-  <string name="qr_button_yes">Да</string>
-  <string name="qr_button_no">Не</string>
-  <!--nav bar-->
-  <string name="n_settings">НАСТРОЙКИ</string>
-  <string name="n_profile_options">ПРОФИЛ</string>
-  <string name="n_create_group">СЪЗДАЙ ГРУПА</string>
-  <string name="n_add_person">ДОБАВИ ПРИЯТЕЛ</string>
-  <string name="n_about">ЗА ПРОГРАМАТА</string>
-  <string name="n_open_source">OPEN SOURCE ЛИЦЕНЗ</string>
-  <string name="n_logout">ОТПИСВАНЕ</string>
-  <string name="drawer_open">Отвори менюто за навигация</string>
-  <string name="drawer_close">Затвори менюто за навигация</string>
-  <string name="open_source_license">Open source лиценз</string>
-  <string name="license1">Разпространено под GNU GPL v3</string>
-  <string name="license2">Сорс кодът се намира на\nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Версия</string>
-  <string name="about">За Програмата</string>
-  <string name="about_antox_1">С разрастването на правителствените програми за наблюдение, Tox предоставя лесна за употреба програма, която ти позволява да се свързваш с приятели и семейство без никой да те подслушва.</string>
-  <string name="about_antox_2">Какво Работи в Момента:</string>
-  <string name="about_antox_3">-Рудаментален чат - това не вклчва групов чат</string>
-  <string name="about_antox_4">-Трансфер на файлове</string>
-  <string name="about_antox_5">В момента се разработва:</string>
-  <string name="about_antox_6">-Аудио/Видео в Antox</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Добави Приятел</string>
+    <string name="title_activity_friend_profile">Профил на Приятеля</string>
+    <string name="title_activity_profile_settings">Настройки на профила</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Добави Приятел</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Трябва да въвдеш име на профила</string>
+    <string name="login_login">Вписване</string>
+    <string name="login_account_hint">Име на профила</string>
+    <string name="login_create_account_text">Създай Тох Профил</string>
+    <string name="login_bad_login">Името на профила не бе познато</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Име на Профила</string>
+    <string name="create_text">Девиз Тук</string>
+    <string name="create_register">Регистрирай се</string>
+    <string name="create_register_incog">Регистрирай се Инкогнито</string>
+    <string name="create_skip">Разреши на всекиго да те добавя използвайки името на профила ти</string>
+    <string name="create_must_fill_in">Трябва да попълниш всички полета</string>
+    <string name="create_bad_profile_name">Името на профила не може да има интервали, наклонени черти или да бъде празно</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Няма скорошни разговори. Започни нов като избереш приятел от полето в ляво.</string>
+    <string name="main_recent_no">Няма скорошни разговори.</string>
+    <string name="main_no_internet">Няма Интернет Връзка</string>
+    <string name="main_not_connected">Не е открита интернет връзка. Без интернет връзка, ще имаш ограничена функционалност освен ако не използваш Antox през LAN</string>
+    <string name="search_all_contacts">Търси всички контакти</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Изпрати съобщение</string>
+    <string name="chat_file_transfer">Трансфер на файл</string>
+    <!--Add Friend Activity-->
+    <string name="addfriend_friend_key">Tox ID на твоя приятел</string>
+    <string name="addfriend_friend_message">Изпрати съобщение с поканата</string>
+    <string name="addfriend_button">Добави Приятел</string>
+    <string name="addfriend_friend_added">Приятелят е добавен</string>
+    <string name="addfriend_friend_exists">Приятелят вече съществува</string>
+    <string name="scanqr_button">Сканирай QR код</string>
+    <string name="invalid_friend_ID">Невалиден Tox ID</string>
+    <string name="addfriend_nick_hint">Задай прякор на своя приятел</string>
+    <string name="addfriend_optional_title">Допълнителни</string>
+    <string name="dialog_pin">Въведи ПИН-а на твоя приятел</string>
+    <string name="addfriend_invalid_pin">Невалиден ПИН</string>
+    <string name="addfriend_own_key">Не може да добавяш себе си</string>
+    <string name="addfriend_friend_pin_title">Въведи ПИН-а на Приятеля</string>
+    <string name="addfriend_friend_pin_text">Въведи ПИН-а на Приятеля</string>
+    <string name="addfriend_default_message">Здравей! Моля, приеми моята покана за приятелство.</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Прякор</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Статус</string>
+    <string name="friend_profile_button">Обнови</string>
+    <string name="friend_profile_updated">Профилът е обновен</string>
+    <string name="friend_profile_copied">Tox ID Копиран</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">Профилът на %1$s</string>
+    <string name="friendrequest_accept">Приеми</string>
+    <string name="friendrequest_reject">Отхвърли</string>
+    <string name="friend_request">Нова Покана за Приятелство</string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Профил</string>
+    <string name="friend_action_delete">Премахни Приятел</string>
+    <string name="friend_action_delete_chat">Изтрий Чат Архива</string>
+    <string name="friend_action_block">Блокирай</string>
+    <string name="contacts_actions_on">Действия върху</string>
+    <string name="contacts_delimiter_requests">Покани</string>
+    <string name="contacts_delimiter_friends">Приятели</string>
+    <string name="contacts_delimiter_offline">Отписан</string>
+    <string name="contacts_delimiter_online">На линия</string>
+    <string name="contacts_resend_friend_request">Изпрати Повторна Покана за Приятелство</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Сигурен ли си, че искаш да изтриеш този приятел?</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Сигурен ли си, че искаш да изтриеш чат историята?</string>
+    <!--Block Friend Dialog-->
+    <string name="friend_action_block_friend_confirmation">Блокирайки този прятел ще го изтриеш от списъка ти с пряители и повече няма да виждаш покани за приятелство от него/нея.\n\nСигрен ли, че искаш да продължиш?</string>
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Прикачи снимка</string>
+    <string name="attachment_file">Прикачи Файл</string>
+    <string name="attachment_takephoto">Направи снимка</string>
+    <string name="message_copy">Копирай съобщение</string>
+    <string name="message_delete">Изтрий съобщение</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Скорошни</string>
+    <string name="titles_contacts">Контакти</string>
+    <string name="titles_settings">Настройки</string>
+    <!--Misc-->
+    <string name="button_confirm">Потвърди</string>
+    <string name="button_cancel">Откажи</string>
+    <string name="button_yes">Да</string>
+    <string name="button_no">Не</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Копирай Tox ID</string>
+    <string name="share_with">Сподели с</string>
+    <string name="connection_has">се</string>
+    <string name="connection_online">появи на линия</string>
+    <string name="connection_offline">отписа</string>
+    <string name="title_activity_create_account">Създай Акаунт</string>
+    <string name="action_settings">Настройки</string>
+    <!--QR-->
+    <string name="qr_default_title">Инсталирай Баркод Скенер?</string>
+    <string name="qr_default_message">Това приложение се нуждае от баркод скенер. Искаш ли да го инсталираш?</string>
+    <string name="qr_button_yes">Да</string>
+    <string name="qr_button_no">Не</string>
+    <!--nav bar-->
+    <string name="n_settings">НАСТРОЙКИ</string>
+    <string name="n_profile_options">ПРОФИЛ</string>
+    <string name="n_create_group">СЪЗДАЙ ГРУПА</string>
+    <string name="n_add_person">ДОБАВИ ПРИЯТЕЛ</string>
+    <string name="n_about">ЗА ПРОГРАМАТА</string>
+    <string name="n_open_source">OPEN SOURCE ЛИЦЕНЗ</string>
+    <string name="n_logout">ОТПИСВАНЕ</string>
+    <string name="drawer_open">Отвори менюто за навигация</string>
+    <string name="drawer_close">Затвори менюто за навигация</string>
+    <string name="open_source_license">Open source лиценз</string>
+    <string name="license1">Разпространено под GNU GPL v3</string>
+    <string name="license2">Сорс кодът се намира на\nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Версия</string>
+    <string name="about">За Програмата</string>
+    <string name="about_antox_1">С разрастването на правителствените програми за наблюдение, Tox предоставя лесна за употреба програма, която ти позволява да се свързваш с приятели и семейство без никой да те подслушва.</string>
+    <string name="about_antox_2">Какво Работи в Момента:</string>
+    <string name="about_antox_3">-Рудаментален чат - това не вклчва групов чат</string>
+    <string name="about_antox_4">-Трансфер на файлове</string>
+    <string name="about_antox_5">В момента се разработва:</string>
+    <string name="about_antox_6">-Аудио/Видео в Antox</string>
 </resources>

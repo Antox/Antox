@@ -1,6 +1,6 @@
 package chat.tox.antox.viewholders
 
-import android.graphics.drawable.{RotateDrawable, GradientDrawable, LayerDrawable}
+import android.graphics.drawable.{GradientDrawable, LayerDrawable, RotateDrawable}
 import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.view.{Gravity, View}
@@ -96,7 +96,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     background.setBackgroundDrawable(context.getResources.getDrawable(R.drawable.conversation_item_received_shape))
   }
 
-  protected def toggleReceived(): Unit =  {
+  protected def toggleReceived(): Unit = {
     if (msg.received) {
       setAlphaCompat(bubble, 1f)
     } else {

@@ -20,7 +20,7 @@ class AddPaneFragment extends Fragment {
 
     val ICONS: Array[Int] = Array(R.drawable.ic_person_add_white_24dp, R.drawable.ic_group_add_white_24dp)
     val LABELS: Array[String] = Array(getResources.getString(R.string.addpane_friend_label),
-                                      getResources.getString(R.string.addpane_group_label))
+      getResources.getString(R.string.addpane_group_label))
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
       //disable the material ripple layout on pre-honeycomb devices

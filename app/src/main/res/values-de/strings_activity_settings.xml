@@ -1,46 +1,46 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Einstellungen</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profil</string>
-  <string name="pref_title_nickname">Name</string>
-  <string name="pref_default_nickname">Antox-Benutzer</string>
-  <string name="pref_title_password">ToxMe-Passwort</string>
-  <string name="pref_default_password">Ohne Passwort</string>
-  <string name="pref_title_status">Status</string>
-  <string-array name="pref_status_list_titles">
-    <item>Verbunden</item>
-    <item>Abwesend</item>
-    <item>Beschäftigt</item>
-  </string-array>
-  <string name="pref_title_status_message">Statusnachricht</string>
-  <string name="pref_default_status_message">Hallo! Ich benutze Antox.</string>
-  <string name="pref_title_tox_id">Tox-Kennung</string>
-  <string name="pref_default_tox_id">Voreingestellte Tox-Kennung - Sie sollten das nicht sehen</string>
-  <string name="pref_title_toxme">ToxMe-Adresse</string>
-  <string name="pref_default_toxme">Dieses Profil ist derzeit im Inkognito-Modus</string>
-  <string name="pref_title_logging_enabled">Chatverlauf beim Abmelden behalten</string>
-  <string name="pref_title_theme_color">Themafarbe ändern</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Profilname</string>
-  <string name="pref_title_export">Profil exportieren</string>
-  <string name="pref_title_delete">Konto löschen</string>
-  <string name="pref_title_logout">Abmelden</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Benachrichtigungen</string>
-  <string name="pref_title_enable_notifications">Benachrichtigungen aktivieren</string>
-  <string name="pref_title_new_message_notifications">Benachrichtigung bei Nachrichten</string>
-  <string name="pref_title_new_friend_notifications">Benachrichtigung bei Freundschaftsanfragen</string>
-  <!--Other-->
-  <string name="pref_header_other">Andere</string>
-  <string name="pref_title_connection_status_messages">Aktionsnachrichten</string>
-  <string name="pref_title_wifi_only">Nur WLAN</string>
-  <string name="pref_title_language">Sprache</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Tox-Kennung kopieren</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">UDP aktivieren</string>
-  <string name="pref_advanced">Erweitert</string>
-  <string name="pref_nospam">Tox-Kennung zurücksetzen</string>
-  <string name="pref_autostart">Antox beim Hochfahren starten</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profil</string>
+    <string name="pref_title_nickname">Name</string>
+    <string name="pref_default_nickname">Antox-Benutzer</string>
+    <string name="pref_title_password">ToxMe-Passwort</string>
+    <string name="pref_default_password">Ohne Passwort</string>
+    <string name="pref_title_status">Status</string>
+    <string-array name="pref_status_list_titles">
+        <item>Verbunden</item>
+        <item>Abwesend</item>
+        <item>Beschäftigt</item>
+    </string-array>
+    <string name="pref_title_status_message">Statusnachricht</string>
+    <string name="pref_default_status_message">Hallo! Ich benutze Antox.</string>
+    <string name="pref_title_tox_id">Tox-Kennung</string>
+    <string name="pref_default_tox_id">Voreingestellte Tox-Kennung - Sie sollten das nicht sehen</string>
+    <string name="pref_title_toxme">ToxMe-Adresse</string>
+    <string name="pref_default_toxme">Dieses Profil ist derzeit im Inkognito-Modus</string>
+    <string name="pref_title_logging_enabled">Chatverlauf beim Abmelden behalten</string>
+    <string name="pref_title_theme_color">Themafarbe ändern</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Profilname</string>
+    <string name="pref_title_export">Profil exportieren</string>
+    <string name="pref_title_delete">Konto löschen</string>
+    <string name="pref_title_logout">Abmelden</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Benachrichtigungen</string>
+    <string name="pref_title_enable_notifications">Benachrichtigungen aktivieren</string>
+    <string name="pref_title_new_message_notifications">Benachrichtigung bei Nachrichten</string>
+    <string name="pref_title_new_friend_notifications">Benachrichtigung bei Freundschaftsanfragen</string>
+    <!--Other-->
+    <string name="pref_header_other">Andere</string>
+    <string name="pref_title_connection_status_messages">Aktionsnachrichten</string>
+    <string name="pref_title_wifi_only">Nur WLAN</string>
+    <string name="pref_title_language">Sprache</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Tox-Kennung kopieren</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">UDP aktivieren</string>
+    <string name="pref_advanced">Erweitert</string>
+    <string name="pref_nospam">Tox-Kennung zurücksetzen</string>
+    <string name="pref_autostart">Antox beim Hochfahren starten</string>
 </resources>

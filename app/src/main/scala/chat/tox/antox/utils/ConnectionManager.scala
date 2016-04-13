@@ -25,7 +25,7 @@ object ConnectionManager {
 
   def getConnectionType(context: Context): Int = {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-                                     .asInstanceOf[ConnectivityManager]
+      .asInstanceOf[ConnectivityManager]
     connectivityManager.getActiveNetworkInfo.getType
   }
 

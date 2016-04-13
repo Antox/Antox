@@ -1,42 +1,42 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Paramètres</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profil</string>
-  <string name="pref_title_nickname">Pseudonyme</string>
-  <string name="pref_default_nickname">Utilisateur d\'Antox</string>
-  <string name="pref_default_password">Mot de passe non rempli</string>
-  <string name="pref_title_status">Statut</string>
-  <string-array name="pref_status_list_titles">
-    <item>Connecté</item>
-    <item>Absent</item>
-    <item>Occupé</item>
-  </string-array>
-  <string name="pref_title_status_message">Message d\'humeur</string>
-  <string name="pref_default_status_message">Bonjour! J\'utilise Antox</string>
-  <string name="pref_title_tox_id">Identifiant Tox</string>
-  <string name="pref_default_tox_id">Identifiant Tox par défaut - ce champ devrait être caché normalement</string>
-  <string name="pref_title_logging_enabled">Conserver l\'historique des conversations après déconnexion</string>
-  <string name="pref_title_theme_color">Modifier Les Couleurs</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Nom du profil</string>
-  <string name="pref_title_export">Exporter le profil</string>
-  <string name="pref_title_logout">Se déconnecter</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Notifications</string>
-  <string name="pref_title_enable_notifications">Activer les notifications</string>
-  <string name="pref_title_new_message_notifications">Notifications de message</string>
-  <string name="pref_title_new_friend_notifications">Notifications de demandes d\'amis</string>
-  <!--Other-->
-  <string name="pref_header_other">Autres paramètres</string>
-  <string name="pref_title_connection_status_messages">Messages des actions</string>
-  <string name="pref_title_wifi_only">Se connecter exclusivement en Wi-Fi</string>
-  <string name="pref_title_language">Langue</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Copier l\'identifiant Tox</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Activer UDP</string>
-  <string name="pref_advanced">Paramètres Avancés</string>
-  <string name="pref_nospam">Remettre l\'identifiant Tox</string>
-  <string name="pref_autostart">Lancer Antox au démarrage</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profil</string>
+    <string name="pref_title_nickname">Pseudonyme</string>
+    <string name="pref_default_nickname">Utilisateur d\'Antox</string>
+    <string name="pref_default_password">Mot de passe non rempli</string>
+    <string name="pref_title_status">Statut</string>
+    <string-array name="pref_status_list_titles">
+        <item>Connecté</item>
+        <item>Absent</item>
+        <item>Occupé</item>
+    </string-array>
+    <string name="pref_title_status_message">Message d\'humeur</string>
+    <string name="pref_default_status_message">Bonjour! J\'utilise Antox</string>
+    <string name="pref_title_tox_id">Identifiant Tox</string>
+    <string name="pref_default_tox_id">Identifiant Tox par défaut - ce champ devrait être caché normalement</string>
+    <string name="pref_title_logging_enabled">Conserver l\'historique des conversations après déconnexion</string>
+    <string name="pref_title_theme_color">Modifier Les Couleurs</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Nom du profil</string>
+    <string name="pref_title_export">Exporter le profil</string>
+    <string name="pref_title_logout">Se déconnecter</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_title_enable_notifications">Activer les notifications</string>
+    <string name="pref_title_new_message_notifications">Notifications de message</string>
+    <string name="pref_title_new_friend_notifications">Notifications de demandes d\'amis</string>
+    <!--Other-->
+    <string name="pref_header_other">Autres paramètres</string>
+    <string name="pref_title_connection_status_messages">Messages des actions</string>
+    <string name="pref_title_wifi_only">Se connecter exclusivement en Wi-Fi</string>
+    <string name="pref_title_language">Langue</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Copier l\'identifiant Tox</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Activer UDP</string>
+    <string name="pref_advanced">Paramètres Avancés</string>
+    <string name="pref_nospam">Remettre l\'identifiant Tox</string>
+    <string name="pref_autostart">Lancer Antox au démarrage</string>
 </resources>

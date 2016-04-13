@@ -48,11 +48,11 @@ class ToxDataFile(ctx: Context, fileName: String) {
     ToxDataFile.isEncrypted(ctx.getFileStreamPath(fileName))
   }
 
-  def decrypt(pass: String): Unit ={
-    if(isEncrypted){
+  def decrypt(pass: String): Unit = {
+    if (isEncrypted) {
       val data = loadFile()
       val salt = ToxCryptoImpl.getSalt(data)
-      saveFile(ToxCryptoImpl.decrypt(data,ToxCryptoImpl.deriveKeyWithSalt(pass.getBytes, salt)))
+      saveFile(ToxCryptoImpl.decrypt(data, ToxCryptoImpl.deriveKeyWithSalt(pass.getBytes, salt)))
     }
   }
 

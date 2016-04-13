@@ -90,9 +90,9 @@ class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Displays a generic dialog using the strings passed in.
-   * TODO: Should maybe be refactored into separate class and used for other dialogs?
-   */
+    * Displays a generic dialog using the strings passed in.
+    * TODO: Should maybe be refactored into separate class and used for other dialogs?
+    */
   def showAlertDialog(context: Context, title: String, message: String) {
     val alertDialog = new AlertDialog.Builder(context).create()
     alertDialog.setTitle(title)
@@ -107,8 +107,8 @@ class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Checks to see if Wifi or Mobile have a network connection
-   */
+    * Checks to see if Wifi or Mobile have a network connection
+    */
   private def isNetworkConnected: Boolean = {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
     val networkInfo = connectivityManager.getAllNetworkInfo

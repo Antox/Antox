@@ -11,5 +11,5 @@
         android:layout_marginLeft="@dimen/padding"
         android:layout_marginRight="@dimen/padding"
         android:singleLine="true"
-        android:ellipsize="end"/>
+        android:ellipsize="end" />
 </LinearLayout>

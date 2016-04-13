@@ -5,7 +5,7 @@
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ValidFragment" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
-    <issue id="ObsoleteLayoutParam" >
+    <issue id="ObsoleteLayoutParam">
         <ignore path="res/layout/" />
     </issue>
 </lint>

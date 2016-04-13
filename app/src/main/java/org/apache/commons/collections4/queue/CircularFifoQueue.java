@@ -30,30 +30,36 @@ import java.util.Queue;
 /**
  * CircularFifoQueue is a first-in first-out queue with a fixed size that
  * replaces its oldest element if full.
- * <p>
+ * <p/>
  * The removal order of a {@link CircularFifoQueue} is based on the
  * insertion order; elements are removed in the same order in which they
  * were added.  The iteration order is the same as the removal order.
- * <p>
+ * <p/>
  * The {@link #add(Object)}, {@link #remove()}, {@link #peek()}, {@link #poll},
  * {@link #offer(Object)} operations all perform in constant time.
  * All other operations perform in linear time or worse.
- * <p>
+ * <p/>
  * This queue prevents null objects from being added.
  *
- * @since 4.0
  * @version $Id: CircularFifoQueue.html 887892 2013-11-24 13:43:45Z tn $
+ * @since 4.0
  */
 public class CircularFifoQueue<E> extends AbstractCollection<E>
         implements Queue<E>, Serializable {
 
-    /** Serialization version. */
+    /**
+     * Serialization version.
+     */
     private static final long serialVersionUID = -8423413834657610406L;
 
-    /** Underlying storage array. */
+    /**
+     * Underlying storage array.
+     */
     private transient E[] elements;
 
-    /** Array index of first (oldest) queue element. */
+    /**
+     * Array index of first (oldest) queue element.
+     */
     private transient int start = 0;
 
     /**
@@ -65,10 +71,14 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      */
     private transient int end = 0;
 
-    /** Flag to indicate if the queue is currently full. */
+    /**
+     * Flag to indicate if the queue is currently full.
+     */
     private transient boolean full = false;
 
-    /** Capacity of the queue. */
+    /**
+     * Capacity of the queue.
+     */
     private final int maxElements;
 
     /**
@@ -81,8 +91,8 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     /**
      * Constructor that creates a queue with the specified size.
      *
-     * @param size  the size of the queue (cannot be changed)
-     * @throws IllegalArgumentException  if the size is &lt; 1
+     * @param size the size of the queue (cannot be changed)
+     * @throws IllegalArgumentException if the size is &lt; 1
      */
     @SuppressWarnings("unchecked")
     public CircularFifoQueue(final int size) {
@@ -97,7 +107,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      * Constructor that creates a queue from the specified collection.
      * The collection size also sets the queue size.
      *
-     * @param coll  the collection to copy into the queue, may not be null
+     * @param coll the collection to copy into the queue, may not be null
      * @throws NullPointerException if the collection is null
      */
     public CircularFifoQueue(final Collection<? extends E> coll) {
@@ -106,10 +116,11 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     }
 
     //-----------------------------------------------------------------------
+
     /**
      * Write the queue out using a custom routine.
      *
-     * @param out  the incoming_call stream
+     * @param out the incoming_call stream
      * @throws IOException if an I/O error occurs while writing to the incoming_call stream
      */
     private void writeObject(final ObjectOutputStream out) throws IOException {
@@ -123,8 +134,8 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     /**
      * Read the queue in using a custom routine.
      *
-     * @param in  the input stream
-     * @throws IOException if an I/O error occurs while writing to the incoming_call stream
+     * @param in the input stream
+     * @throws IOException            if an I/O error occurs while writing to the incoming_call stream
      * @throws ClassNotFoundException if the class of a serialized object can not be found
      */
     @SuppressWarnings("unchecked")
@@ -145,6 +156,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     }
 
     //-----------------------------------------------------------------------
+
     /**
      * Returns the number of elements stored in the queue.
      *
@@ -177,7 +189,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
 
     /**
      * {@inheritDoc}
-     * <p>
+     * <p/>
      * A {@code CircularFifoQueue} can never be full, thus this returns always
      * {@code false}.
      *
@@ -215,9 +227,9 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      * Adds the given element to this queue. If the queue is full, the least recently added
      * element is discarded so that a new element can be inserted.
      *
-     * @param element  the element to add
+     * @param element the element to add
      * @return true, always
-     * @throws NullPointerException  if the given element is null
+     * @throws NullPointerException if the given element is null
      */
     @Override
     public boolean add(final E element) {
@@ -267,9 +279,9 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
      * Adds the given element to this queue. If the queue is full, the least recently added
      * element is discarded so that a new element can be inserted.
      *
-     * @param element  the element to add
+     * @param element the element to add
      * @return true, always
-     * @throws NullPointerException  if the given element is null
+     * @throws NullPointerException if the given element is null
      */
     public boolean offer(E element) {
         return add(element);
@@ -314,10 +326,11 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     }
 
     //-----------------------------------------------------------------------
+
     /**
      * Increments the internal index.
      *
-     * @param index  the index to increment
+     * @param index the index to increment
      * @return the updated index
      */
     private int increment(int index) {
@@ -331,7 +344,7 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     /**
      * Decrements the internal index.
      *
-     * @param index  the index to decrement
+     * @param index the index to decrement
      * @return the updated index
      */
     private int decrement(int index) {

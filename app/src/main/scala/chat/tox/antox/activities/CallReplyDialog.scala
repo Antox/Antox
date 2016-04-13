@@ -12,9 +12,10 @@ import chat.tox.antox.data.State
 trait CallReplySelectedListener {
 
   /**
-   * Called when a reply is selected.
-   * @param maybeReply the reply string. If this is null, the user intends to use a custom string.
-   */
+    * Called when a reply is selected.
+    *
+    * @param maybeReply the reply string. If this is null, the user intends to use a custom string.
+    */
   def onCallReplySelected(maybeReply: Option[String]): Unit
 }
 

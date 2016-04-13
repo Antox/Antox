@@ -82,8 +82,8 @@ class FriendProfileActivity extends AppCompatActivity {
   }
 
   /**
-   * Override onPause() in order to save any nickname changes
-   */
+    * Override onPause() in order to save any nickname changes
+    */
   override def onPause() {
     super.onPause()
 

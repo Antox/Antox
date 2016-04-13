@@ -184,7 +184,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
   }
 
   override def onBackPressed(): Unit = {
-    if(call.active && call.ringing){
+    if (call.active && call.ringing) {
       call.end()
     }
     super.onBackPressed()

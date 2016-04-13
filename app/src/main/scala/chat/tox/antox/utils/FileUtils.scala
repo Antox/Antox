@@ -11,8 +11,8 @@ object FileUtils {
   val imageExtensions = List("jpg", "jpeg", "gif", "png")
 
   /**
-  * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
-  */
+    * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
+    */
   def getDirectory(path: String, storageType: StorageType, context: Context): File = {
     if (storageType == StorageType.EXTERNAL) {
       new File(path)

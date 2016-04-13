@@ -30,11 +30,11 @@
     <color name="away">@color/orange</color>
     <color name="busy">@color/red</color>
     <color name="offline">@color/grey_dark</color>
-    
+
     <color name="action_bar_background">@color/brand_primary</color>
     <color name="sent_message_background">@color/brand_primary</color>
     <color name="unread_indicator_background">@color/brand_secondary</color>
-    
+
     <color name="fab_normal">@color/brand_secondary</color>
     <color name="fab_pressed">@color/brand_secondary_dark</color>
 

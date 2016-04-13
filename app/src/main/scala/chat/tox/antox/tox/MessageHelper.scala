@@ -5,7 +5,7 @@ import chat.tox.antox.activities.{ChatActivity, GroupChatActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
-import im.tox.tox4j.core.data.{ToxNickname, ToxFriendMessage}
+import im.tox.tox4j.core.data.{ToxFriendMessage, ToxNickname}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.scaloid.common.LoggerTag
 
@@ -120,14 +120,14 @@ object MessageHelper {
     AntoxLog.debug(s"Sending ${unsentMessageList.length} unsent messages.", TAG)
 
     for (unsentMessage <- unsentMessageList) {
-        contactKey match {
-          case key: FriendKey =>
-            sendMessage(ctx, key, unsentMessage.message,
-              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-          case key: GroupKey =>
-            sendGroupMessage(ctx, key, unsentMessage.message,
-              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-        }
+      contactKey match {
+        case key: FriendKey =>
+          sendMessage(ctx, key, unsentMessage.message,
+            MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
+        case key: GroupKey =>
+          sendGroupMessage(ctx, key, unsentMessage.message,
+            MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
+      }
     }
   }
 }

@@ -28,7 +28,7 @@ object ToxMeError extends Enumeration {
     Value(exception.getClass.getSimpleName + ": " + exception.getMessage)
   }
 
-  def getDebugDescription(toxmeError: ToxMeError):String = {
+  def getDebugDescription(toxmeError: ToxMeError): String = {
     toxmeError match {
       case OK => "OK"
       case METHOD_UNSUPPORTED => "Client didn't POST to /api"

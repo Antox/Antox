@@ -8,15 +8,23 @@ import chat.tox.antox.utils.StorageType.StorageType
 import chat.tox.antox.utils.{Constants, FileUtils, StorageType}
 
 trait Enum[A] {
-  trait Value { self: A => }
+
+  trait Value {
+    self: A =>
+  }
+
   val values: List[A]
 }
 
 sealed trait FileKind extends FileKind.Value {
   def kindId: Int
+
   def visible: Boolean
+
   protected def rawStorageDirectory: String
+
   protected def storageType: StorageType
+
   def getStorageDir(context: Context): File = {
     val dir = FileUtils.getDirectory(rawStorageDirectory, storageType, context)
     dir.mkdirs()
@@ -24,13 +32,14 @@ sealed trait FileKind extends FileKind.Value {
   }
 
   def autoAccept: Boolean
+
   def replaceExisting: Boolean
 }
 
 object FileKind extends Enum[FileKind] {
   def fromToxFileKind(toxFileKind: Int): FileKind = {
     for (value <- values) {
-      if (value.kindId == toxFileKind){
+      if (value.kindId == toxFileKind) {
         return value
       }
     }
@@ -51,7 +60,9 @@ object FileKind extends Enum[FileKind] {
     val kindId = 0
     val visible = true
     val rawStorageDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.DOWNLOAD_DIRECTORY).getPath
+
     def storageType: StorageType = StorageType.EXTERNAL
+
     val autoAccept = false
     val replaceExisting = false
   }

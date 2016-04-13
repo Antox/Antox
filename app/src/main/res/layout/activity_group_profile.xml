@@ -17,13 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/white_absolute">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/group_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@drawable/ic_action_add_group"
                 app:border_width="2dp"
-                app:border_color="@color/material_blue_grey_800"/>
+                app:border_color="@color/material_blue_grey_800" />
 
             <LinearLayout
                 android:duplicateParentState="true"
@@ -61,7 +62,7 @@
                     android:ellipsize="end"
                     android:layout_width="wrap_content"
                     android:paddingTop="10dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -76,15 +77,15 @@
             android:textStyle="bold" />
 
         <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/contacts_list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="@color/white_absolute"
-                android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/list_divider"
-                android:dividerHeight="0dp"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="true" />
-        </LinearLayout>
+            android:orientation="vertical"
+            android:id="@+id/contacts_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white_absolute"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true" />
+    </LinearLayout>
 </ScrollView>

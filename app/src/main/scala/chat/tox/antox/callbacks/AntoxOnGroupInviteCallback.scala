@@ -2,8 +2,8 @@ package chat.tox.antox.callbacks
 
 import android.content.Context
 import chat.tox.antox.data.State
-import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager}
-import chat.tox.antox.wrapper.{GroupKey, FriendInfo}
+import chat.tox.antox.utils.AntoxLog
+import chat.tox.antox.wrapper.FriendInfo
 
 object AntoxOnGroupInviteCallback {
 

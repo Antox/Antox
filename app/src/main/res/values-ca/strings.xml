@@ -1,221 +1,221 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Afegeix un contacte</string>
-  <string name="title_activity_friend_profile">Perfil de l\'amic</string>
-  <string name="title_activity_group_profile">Informació del grup</string>
-  <string name="title_activity_profile_settings">Opcions de perfil</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Afegeix un contacte</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Heu d\'escriure un nom de perfil</string>
-  <string name="login_login">Connecta</string>
-  <string name="login_account_hint">Nom del perfil</string>
-  <string name="login_create_account_text">Crea un perfil de Tox</string>
-  <string name="login_bad_login">No s\'ha reconegut el nom de perfil</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Nom del perfil</string>
-  <string name="create_text">La missatgeria segura a l\'abast de tothom</string>
-  <string name="create_register">Registrau-vos</string>
-  <string name="create_registering">Registrant compte</string>
-  <string name="create_register_incog">Registrau-vos d\'icògnit</string>
-  <string name="create_import_profile">Importa el perfil</string>
-  <string name="create_skip">Permetre que qualsevol amb el vostre nom de perfil us afegeixi</string>
-  <string name="create_must_fill_in">Heu d\'omplir tots els camps</string>
-  <string name="create_bad_profile_name">El nom de perfil no pot estar buit o contenir espais ni barres</string>
-  <string name="create_profile_exists">El nom de perfil ja existeix</string>
-  <string name="import_profile_invalid_file">Aquest arxiu no conté cap perfil Tox vàlid</string>
-  <string name="create_account_exists">Aquest nom ja existeix</string>
-  <string name="create_account_internal_error">Error intern de l\'Antox. Reinicieu i torneu a provar-ho</string>
-  <string name="create_account_reached_registration_limit">Només es poden registrar 13 contes per hora i heu arribat a aquest límit</string>
-  <string name="create_account_unknown_error">Error desconegut d\'enregistrament. Torneu a provar-ho més tard</string>
-  <string name="create_account_kalium_link_error">No s\'ha pogut carregar una de les llibreries necessàries. Ni crear els comptes públics</string>
-  <string name="create_account_invalid_domain">Domini toxme invàlid</string>
-  <string name="create_account_connection_error">Ha fallat el registre: No s\'ha pogut connectar a internet.</string>
-  <string name="create_account_encrypted_profile_error">Els perfils encriptats encara no estan suportats a l\'Antox</string>
-  <string name="create_account_load_profile_unknown">S\'ha produït un error desconegut al carregar el perfil</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Cap xat actiu. Inicieu-ne un triant un amic al panell de l\'esquerra</string>
-  <string name="main_recent_no">Cap conversa recent</string>
-  <string name="main_no_internet">Sense connexió a internet</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Afegeix un contacte</string>
+    <string name="title_activity_friend_profile">Perfil de l\'amic</string>
+    <string name="title_activity_group_profile">Informació del grup</string>
+    <string name="title_activity_profile_settings">Opcions de perfil</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Afegeix un contacte</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Heu d\'escriure un nom de perfil</string>
+    <string name="login_login">Connecta</string>
+    <string name="login_account_hint">Nom del perfil</string>
+    <string name="login_create_account_text">Crea un perfil de Tox</string>
+    <string name="login_bad_login">No s\'ha reconegut el nom de perfil</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Nom del perfil</string>
+    <string name="create_text">La missatgeria segura a l\'abast de tothom</string>
+    <string name="create_register">Registrau-vos</string>
+    <string name="create_registering">Registrant compte</string>
+    <string name="create_register_incog">Registrau-vos d\'icògnit</string>
+    <string name="create_import_profile">Importa el perfil</string>
+    <string name="create_skip">Permetre que qualsevol amb el vostre nom de perfil us afegeixi</string>
+    <string name="create_must_fill_in">Heu d\'omplir tots els camps</string>
+    <string name="create_bad_profile_name">El nom de perfil no pot estar buit o contenir espais ni barres</string>
+    <string name="create_profile_exists">El nom de perfil ja existeix</string>
+    <string name="import_profile_invalid_file">Aquest arxiu no conté cap perfil Tox vàlid</string>
+    <string name="create_account_exists">Aquest nom ja existeix</string>
+    <string name="create_account_internal_error">Error intern de l\'Antox. Reinicieu i torneu a provar-ho</string>
+    <string name="create_account_reached_registration_limit">Només es poden registrar 13 contes per hora i heu arribat a aquest límit</string>
+    <string name="create_account_unknown_error">Error desconegut d\'enregistrament. Torneu a provar-ho més tard</string>
+    <string name="create_account_kalium_link_error">No s\'ha pogut carregar una de les llibreries necessàries. Ni crear els comptes públics</string>
+    <string name="create_account_invalid_domain">Domini toxme invàlid</string>
+    <string name="create_account_connection_error">Ha fallat el registre: No s\'ha pogut connectar a internet.</string>
+    <string name="create_account_encrypted_profile_error">Els perfils encriptats encara no estan suportats a l\'Antox</string>
+    <string name="create_account_load_profile_unknown">S\'ha produït un error desconegut al carregar el perfil</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Cap xat actiu. Inicieu-ne un triant un amic al panell de l\'esquerra</string>
+    <string name="main_recent_no">Cap conversa recent</string>
+    <string name="main_no_internet">Sense connexió a internet</string>
   <string name="main_not_connected">No s\'ha detectat cap connexió a internet. Sense una, tindreu la funcionalitat limitada
 excepte que useu Antox amb conexions amb fils exclusivament</string>
-  <string name="main_mobile_disabled">Esteu fora de línia (només per Wi-Fi, activat). Toqueu per obrir la configuració.</string>
-  <string name="search_all_contacts">Cerca a tots els contactes</string>
-  <string name="main_group_coming_soon">Pròximament...</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Envia un missatge</string>
-  <string name="chat_file_transfer">Tranfereix un arxiu</string>
-  <string name="chat_message_too_long">El missatge és massa llarg i no es pot enviar</string>
-  <string name="chat_ft_failed_friend_offline">L\'enviament ha fallat (no es poden enviar arxius a un amic desconnectat)</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_friend_label">Amic</string>
-  <string name="addpane_group_label">Grup</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">L\'identificador Tox del vostre amic</string>
-  <string name="addfriend_friend_message">Envia un missatge amb la sol·licitud</string>
-  <string name="addfriend_button">Afegeix un amic</string>
-  <string name="addfriend_friend_added">Amic afegit</string>
-  <string name="addfriend_friend_exists">L\'amic ja existeix</string>
-  <string name="scanqr_button">Escanejar un codi QR</string>
-  <string name="invalid_friend_ID">Identificador Tox invàlid</string>
-  <string name="addfriend_nick_hint">Introduiu un àlies pel vostre amic</string>
-  <string name="addfriend_optional_title">Extres opcionals</string>
-  <string name="dialog_pin">Escriviu el PIN del vostre amic</string>
-  <string name="addfriend_invalid_pin">PIN invàlid</string>
-  <string name="addfriend_own_key">No vos podeu afegir</string>
-  <string name="addfriend_friend_pin_title">Escriviu el PIN de l\'amic</string>
-  <string name="addfriend_friend_pin_text">Escriviu el PIN de l\'amic</string>
-  <string name="addfriend_default_message">Hola! Accepteu la sol·licitud d\'amistad</string>
-  <!--Add Group Fragment-->
-  <string name="addgroup_group_id">L\'identificador de grup</string>
-  <string name="addgroup_button">Uneix-me al grup</string>
-  <string name="addgroup_group_added">Us heu afegit al grup</string>
-  <string name="addgroup_group_exists">El grup ja existeix</string>
-  <string name="invalid_group_ID">Identificador de grup invàlid</string>
-  <string name="addgroup_alias_hint">Escriviu un àlies per aquest grup</string>
-  <string name="addgroup_optional_title">Extres opcionals</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Àlies</string>
-  <string name="friend_profile_key">Identificador Tox</string>
-  <string name="friend_profile_note">Estat</string>
-  <string name="friend_profile_button">Actualitza</string>
-  <string name="friend_profile_updated">S\'ha actualitzat el perfil </string>
-  <string name="friend_profile_copied">S\'ha copiat l\'identificador Tox</string>
-  <!--Group Profile Activity-->
-  <string name="group_profile_peer_list_head">Participants</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">Perfil de %1$s</string>
-  <string name="friendrequest_accept">Accepta</string>
-  <string name="friendrequest_reject">Rebutja</string>
-  <string name="friend_request">Nova sol·licitud d\'amistat</string>
-  <!--Group invite fragment-->
-  <string name="groupinvite_accept">Accepta</string>
-  <string name="groupinvite_reject">Rebutja</string>
-  <string name="group_invite">Nova invitació de grup</string>
-  <string name="invited_by">Has estat convidat per</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Perfil</string>
-  <string name="friend_action_delete">Elimina l\'amic</string>
-  <string name="friend_action_export_chat">Exporta el registre de xat</string>
-  <string name="friend_action_delete_chat">Elimina els registres de xat</string>
-  <string name="friend_action_block">Bloqueja</string>
-  <string name="friend_accepted_default_status">Amic acceptat</string>
-  <string name="group_default_peer_name">Anònim</string>
-  <string name="group_action_delete">Abandona el grup</string>
-  <string name="contacts_actions_on">Accions per</string>
-  <string name="contacts_delimiter_requests">Peticions</string>
-  <string name="contacts_delimiter_invites">Invitacions de grup</string>
-  <string name="contacts_delimiter_groups">Grups</string>
-  <string name="contacts_delimiter_friends">Amics</string>
-  <string name="contacts_delimiter_offline">Desconnectats</string>
-  <string name="contacts_delimiter_online">Connectats</string>
-  <string name="contacts_resend_friend_request">Torna a enviar la sol·licitud d\'amistat</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Segur que voleu eliminar a aquest amic?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_exported">El registre de xat s\'ha exportat amb èxit a %s</string>
-  <string name="friend_action_chat_log_export_failed">Ha fallta l\'exportació del registre de xat</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Segur que voleu eliminar els registres de xat?</string>
-  <!--Block Friend Dialog-->
+    <string name="main_mobile_disabled">Esteu fora de línia (només per Wi-Fi, activat). Toqueu per obrir la configuració.</string>
+    <string name="search_all_contacts">Cerca a tots els contactes</string>
+    <string name="main_group_coming_soon">Pròximament...</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Envia un missatge</string>
+    <string name="chat_file_transfer">Tranfereix un arxiu</string>
+    <string name="chat_message_too_long">El missatge és massa llarg i no es pot enviar</string>
+    <string name="chat_ft_failed_friend_offline">L\'enviament ha fallat (no es poden enviar arxius a un amic desconnectat)</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_friend_label">Amic</string>
+    <string name="addpane_group_label">Grup</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">L\'identificador Tox del vostre amic</string>
+    <string name="addfriend_friend_message">Envia un missatge amb la sol·licitud</string>
+    <string name="addfriend_button">Afegeix un amic</string>
+    <string name="addfriend_friend_added">Amic afegit</string>
+    <string name="addfriend_friend_exists">L\'amic ja existeix</string>
+    <string name="scanqr_button">Escanejar un codi QR</string>
+    <string name="invalid_friend_ID">Identificador Tox invàlid</string>
+    <string name="addfriend_nick_hint">Introduiu un àlies pel vostre amic</string>
+    <string name="addfriend_optional_title">Extres opcionals</string>
+    <string name="dialog_pin">Escriviu el PIN del vostre amic</string>
+    <string name="addfriend_invalid_pin">PIN invàlid</string>
+    <string name="addfriend_own_key">No vos podeu afegir</string>
+    <string name="addfriend_friend_pin_title">Escriviu el PIN de l\'amic</string>
+    <string name="addfriend_friend_pin_text">Escriviu el PIN de l\'amic</string>
+    <string name="addfriend_default_message">Hola! Accepteu la sol·licitud d\'amistad</string>
+    <!--Add Group Fragment-->
+    <string name="addgroup_group_id">L\'identificador de grup</string>
+    <string name="addgroup_button">Uneix-me al grup</string>
+    <string name="addgroup_group_added">Us heu afegit al grup</string>
+    <string name="addgroup_group_exists">El grup ja existeix</string>
+    <string name="invalid_group_ID">Identificador de grup invàlid</string>
+    <string name="addgroup_alias_hint">Escriviu un àlies per aquest grup</string>
+    <string name="addgroup_optional_title">Extres opcionals</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Àlies</string>
+    <string name="friend_profile_key">Identificador Tox</string>
+    <string name="friend_profile_note">Estat</string>
+    <string name="friend_profile_button">Actualitza</string>
+    <string name="friend_profile_updated">S\'ha actualitzat el perfil </string>
+    <string name="friend_profile_copied">S\'ha copiat l\'identificador Tox</string>
+    <!--Group Profile Activity-->
+    <string name="group_profile_peer_list_head">Participants</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">Perfil de %1$s</string>
+    <string name="friendrequest_accept">Accepta</string>
+    <string name="friendrequest_reject">Rebutja</string>
+    <string name="friend_request">Nova sol·licitud d\'amistat</string>
+    <!--Group invite fragment-->
+    <string name="groupinvite_accept">Accepta</string>
+    <string name="groupinvite_reject">Rebutja</string>
+    <string name="group_invite">Nova invitació de grup</string>
+    <string name="invited_by">Has estat convidat per</string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Perfil</string>
+    <string name="friend_action_delete">Elimina l\'amic</string>
+    <string name="friend_action_export_chat">Exporta el registre de xat</string>
+    <string name="friend_action_delete_chat">Elimina els registres de xat</string>
+    <string name="friend_action_block">Bloqueja</string>
+    <string name="friend_accepted_default_status">Amic acceptat</string>
+    <string name="group_default_peer_name">Anònim</string>
+    <string name="group_action_delete">Abandona el grup</string>
+    <string name="contacts_actions_on">Accions per</string>
+    <string name="contacts_delimiter_requests">Peticions</string>
+    <string name="contacts_delimiter_invites">Invitacions de grup</string>
+    <string name="contacts_delimiter_groups">Grups</string>
+    <string name="contacts_delimiter_friends">Amics</string>
+    <string name="contacts_delimiter_offline">Desconnectats</string>
+    <string name="contacts_delimiter_online">Connectats</string>
+    <string name="contacts_resend_friend_request">Torna a enviar la sol·licitud d\'amistat</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Segur que voleu eliminar a aquest amic?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_exported">El registre de xat s\'ha exportat amb èxit a %s</string>
+    <string name="friend_action_chat_log_export_failed">Ha fallta l\'exportació del registre de xat</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Segur que voleu eliminar els registres de xat?</string>
+    <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Si blocau aquest usuari serà eliminat de la vostra llista d\'amics i no tornareu a
 veure sol·licituds d\'amistat seves.\n\nSegur que voleu continuar?</string>
-  <!--Reset ToxID Dialog-->
+    <!--Reset ToxID Dialog-->
   <string name="reset_tox_id_dialog_message">Reiniciant els canvis al vostre ID de Tox de forma permanent.
 Mentindreu les llistes de contactes actuals però no se vos podrà afegir usant la ID antiga</string>
-  <string name="reset_tox_id_dialog_title">Confirmeu la reinicialització del vostre ID de Tox</string>
-  <string name="reset_tox_id_dialog_confirm">Reinicia ID</string>
-  <string name="reset_tox_id_dialog_cancel">Cancel·la</string>
-  <string name="tox_id_reset">La vostra ID de Tox s\'ha reiniciat</string>
-  <!--Delete Account Dialog-->
-  <string name="delete_account_dialog_message">Això esborrarà el vostre usuari d\'Antox permanentment i us eliminarà de qualsevol servei ToxMe lligat a aquest compte</string>
-  <string name="delete_account_dialog_title">Confirmau que voleu eliminat el compte</string>
-  <string name="delete_account_dialog_confirm">Elimina el compte</string>
-  <string name="delete_account_dialog_cancel">Cancel·la</string>
-  <string name="delete_account_successful">El compte s\'ha eliminat amb èxit</string>
-  <string name="delete_account_error">S\'ha produit un error quan s\'eliminava el compte d\'Antox</string>
-  <!--Create Group Dialog-->
-  <string name="create_group_dialog_message">Crea un nou xat de grup</string>
-  <string name="create_group_dialog_create_group">Crea un grup</string>
-  <string name="create_group_dialog_cancel">Cancel·la</string>
-  <string name="create_group_dialog_name_header">Nom del grup</string>
-  <!--Group Chat Delete-->
-  <string name="group_default_part_message">Adéu</string>
-  <!--Color Picker Dialog-->
-  <string name="dialog_color_picker_title">Seleccionau un color pel tema</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Adjnuta una foto</string>
-  <string name="attachment_file">Adjunta un arxiu</string>
-  <string name="attachment_takephoto">Fes una foto</string>
-  <string name="message_copy">Copia el missatge</string>
-  <string name="message_delete">Elimina el missatge</string>
-  <string name="file_delete">Elimina el fitxer</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Recent</string>
-  <string name="titles_contacts">Contactes</string>
-  <string name="titles_settings">Configuració</string>
-  <!--Misc-->
-  <string name="button_confirm">Confirma</string>
-  <string name="button_cancel">Cancel·la</string>
-  <string name="button_yes">Sí</string>
-  <string name="button_no">No</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Copia la identificació Tox al porta-retalls</string>
-  <string name="dialog_toxme">Copia al porta-retalls</string>
-  <string name="dialog_password">Copia al porta-retalls</string>
-  <string name="share_with">Comparteix amb</string>
-  <string name="connection_has">s\'ha</string>
-  <string name="connection_online">connectat</string>
-  <string name="connection_offline">desconnectat</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Configuració</string>
-  <!--Avatar Dialog-->
-  <string name="dialog_avatar_take_photo">Fes una foto</string>
-  <string name="dialog_avatar_use_file">Usa l\'arxiu</string>
-  <string name="avatar_too_large_error">Error: L\'avatarés massa gran</string>
-  <string name="no_camera_intent_error">Error: No s\'ha trobat cap aplicació vàlida per la càmera</string>
-  <string name="dialog_avatar_description">avatar</string>
-  <!--File transfer-->
-  <string name="file_finished">Finalitzat</string>
-  <string name="file_failed">Error</string>
-  <string name="file_in_progress">En procés</string>
-  <string name="file_request_sent">Sol·licitud enviada</string>
-  <string name="file_rejected">Rebutjat</string>
-  <string name="file_time_remaining">Falten %s segons</string>
-  <!--QR-->
-  <string name="qr_default_title">Voleu instal·lar un lector de codis de barres?</string>
-  <string name="qr_default_message">Aquesta aplicació necessita un lector de codis de barres. En voleu instal·lar un?</string>
-  <string name="qr_button_yes">Sí</string>
-  <string name="qr_button_no">No</string>
-  <!--Notifications-->
-  <string name="unread_count">%s missatges sense llegir</string>
-  <!--nav bar-->
-  <string name="n_settings">Configuració</string>
-  <string name="n_profile_options">Perfil</string>
-  <string name="n_create_group">Crea un grup</string>
-  <string name="n_add_person">Afegeix una persona </string>
-  <string name="n_about">Quant a</string>
-  <string name="n_open_source">Llicència de codi obert</string>
-  <string name="n_logout">Desconnectar</string>
-  <string name="drawer_open">Obre el panell de navegació</string>
-  <string name="drawer_close">Tanca el panell de navegació</string>
-  <string name="open_source_license">Llicència de codi obert</string>
-  <string name="license1">Distribuit baix llicència GNU GPL v3. creada per Mark Winter i mantinguda oer subliun entre d\'altres.</string>
-  <string name="license2">El codi està disponible a\nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Versió</string>
-  <string name="about">Quant a</string>
-  <string name="about_antox_1">Amb l\'auge dels programes de vigilància governamental, Tox proveeix d\'una aplicació fàcil d\'utilitzar per connectar-se amb amics i familiars sense que ningú més us escolti.</string>
-  <string name="about_antox_2">Amb què s\'està fent feina:</string>
-  <string name="about_antox_3">- Missatgeria de persona a persona</string>
-  <string name="about_antox_4">- Notificacions</string>
-  <string name="about_antox_5">- Tranferència de fitxers</string>
-  <string name="about_antox_6">No funciona:</string>
-  <string name="about_antox_7">- Àudio/vídeo</string>
-  <string name="about_antox_8">- Grups</string>
-  <string name="title_activity_call">CallActivity</string>
-  <string name="end_call">Termina la trucada</string>
-  <string name="mute_call">Silencia</string>
-  <string name="mute_mic">Silencia el micròfon</string>
-  <string name="profile_info_description">Veure la informació de l\'usuari</string>
+    <string name="reset_tox_id_dialog_title">Confirmeu la reinicialització del vostre ID de Tox</string>
+    <string name="reset_tox_id_dialog_confirm">Reinicia ID</string>
+    <string name="reset_tox_id_dialog_cancel">Cancel·la</string>
+    <string name="tox_id_reset">La vostra ID de Tox s\'ha reiniciat</string>
+    <!--Delete Account Dialog-->
+    <string name="delete_account_dialog_message">Això esborrarà el vostre usuari d\'Antox permanentment i us eliminarà de qualsevol servei ToxMe lligat a aquest compte</string>
+    <string name="delete_account_dialog_title">Confirmau que voleu eliminat el compte</string>
+    <string name="delete_account_dialog_confirm">Elimina el compte</string>
+    <string name="delete_account_dialog_cancel">Cancel·la</string>
+    <string name="delete_account_successful">El compte s\'ha eliminat amb èxit</string>
+    <string name="delete_account_error">S\'ha produit un error quan s\'eliminava el compte d\'Antox</string>
+    <!--Create Group Dialog-->
+    <string name="create_group_dialog_message">Crea un nou xat de grup</string>
+    <string name="create_group_dialog_create_group">Crea un grup</string>
+    <string name="create_group_dialog_cancel">Cancel·la</string>
+    <string name="create_group_dialog_name_header">Nom del grup</string>
+    <!--Group Chat Delete-->
+    <string name="group_default_part_message">Adéu</string>
+    <!--Color Picker Dialog-->
+    <string name="dialog_color_picker_title">Seleccionau un color pel tema</string>
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Adjnuta una foto</string>
+    <string name="attachment_file">Adjunta un arxiu</string>
+    <string name="attachment_takephoto">Fes una foto</string>
+    <string name="message_copy">Copia el missatge</string>
+    <string name="message_delete">Elimina el missatge</string>
+    <string name="file_delete">Elimina el fitxer</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Recent</string>
+    <string name="titles_contacts">Contactes</string>
+    <string name="titles_settings">Configuració</string>
+    <!--Misc-->
+    <string name="button_confirm">Confirma</string>
+    <string name="button_cancel">Cancel·la</string>
+    <string name="button_yes">Sí</string>
+    <string name="button_no">No</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Copia la identificació Tox al porta-retalls</string>
+    <string name="dialog_toxme">Copia al porta-retalls</string>
+    <string name="dialog_password">Copia al porta-retalls</string>
+    <string name="share_with">Comparteix amb</string>
+    <string name="connection_has">s\'ha</string>
+    <string name="connection_online">connectat</string>
+    <string name="connection_offline">desconnectat</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="action_settings">Configuració</string>
+    <!--Avatar Dialog-->
+    <string name="dialog_avatar_take_photo">Fes una foto</string>
+    <string name="dialog_avatar_use_file">Usa l\'arxiu</string>
+    <string name="avatar_too_large_error">Error: L\'avatarés massa gran</string>
+    <string name="no_camera_intent_error">Error: No s\'ha trobat cap aplicació vàlida per la càmera</string>
+    <string name="dialog_avatar_description">avatar</string>
+    <!--File transfer-->
+    <string name="file_finished">Finalitzat</string>
+    <string name="file_failed">Error</string>
+    <string name="file_in_progress">En procés</string>
+    <string name="file_request_sent">Sol·licitud enviada</string>
+    <string name="file_rejected">Rebutjat</string>
+    <string name="file_time_remaining">Falten %s segons</string>
+    <!--QR-->
+    <string name="qr_default_title">Voleu instal·lar un lector de codis de barres?</string>
+    <string name="qr_default_message">Aquesta aplicació necessita un lector de codis de barres. En voleu instal·lar un?</string>
+    <string name="qr_button_yes">Sí</string>
+    <string name="qr_button_no">No</string>
+    <!--Notifications-->
+    <string name="unread_count">%s missatges sense llegir</string>
+    <!--nav bar-->
+    <string name="n_settings">Configuració</string>
+    <string name="n_profile_options">Perfil</string>
+    <string name="n_create_group">Crea un grup</string>
+    <string name="n_add_person">Afegeix una persona </string>
+    <string name="n_about">Quant a</string>
+    <string name="n_open_source">Llicència de codi obert</string>
+    <string name="n_logout">Desconnectar</string>
+    <string name="drawer_open">Obre el panell de navegació</string>
+    <string name="drawer_close">Tanca el panell de navegació</string>
+    <string name="open_source_license">Llicència de codi obert</string>
+    <string name="license1">Distribuit baix llicència GNU GPL v3. creada per Mark Winter i mantinguda oer subliun entre d\'altres.</string>
+    <string name="license2">El codi està disponible a\nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Versió</string>
+    <string name="about">Quant a</string>
+    <string name="about_antox_1">Amb l\'auge dels programes de vigilància governamental, Tox proveeix d\'una aplicació fàcil d\'utilitzar per connectar-se amb amics i familiars sense que ningú més us escolti.</string>
+    <string name="about_antox_2">Amb què s\'està fent feina:</string>
+    <string name="about_antox_3">- Missatgeria de persona a persona</string>
+    <string name="about_antox_4">- Notificacions</string>
+    <string name="about_antox_5">- Tranferència de fitxers</string>
+    <string name="about_antox_6">No funciona:</string>
+    <string name="about_antox_7">- Àudio/vídeo</string>
+    <string name="about_antox_8">- Grups</string>
+    <string name="title_activity_call">CallActivity</string>
+    <string name="end_call">Termina la trucada</string>
+    <string name="mute_call">Silencia</string>
+    <string name="mute_mic">Silencia el micròfon</string>
+    <string name="profile_info_description">Veure la informació de l\'usuari</string>
 </resources>

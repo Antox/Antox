@@ -4,7 +4,7 @@ import java.util
 
 import android.app.Activity
 import android.content.Context
-import android.os.{SystemClock, Build}
+import android.os.{Build, SystemClock}
 import android.view.{Gravity, LayoutInflater, View, ViewGroup}
 import android.widget.Filter.FilterResults
 import android.widget._
@@ -14,7 +14,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ContactItemType
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.utils.{IconColor, _}
-import chat.tox.antox.wrapper.{GroupKey, FriendKey, ContactKey}
+import chat.tox.antox.wrapper.{ContactKey, FriendKey, GroupKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
 
@@ -44,6 +44,7 @@ object ContactListAdapter {
 
     var imageLoadingSubscription: Option[Subscription] = None
   }
+
 }
 
 class ContactListAdapter(private var context: Context) extends BaseAdapter with Filterable {

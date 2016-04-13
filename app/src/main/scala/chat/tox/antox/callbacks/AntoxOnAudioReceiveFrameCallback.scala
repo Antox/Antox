@@ -3,7 +3,7 @@ package chat.tox.antox.callbacks
 import android.content.Context
 import chat.tox.antox.data.State
 import chat.tox.antox.wrapper.CallNumber
-import im.tox.tox4j.av.data.{SamplingRate, AudioChannels}
+import im.tox.tox4j.av.data.{AudioChannels, SamplingRate}
 
 class AntoxOnAudioReceiveFrameCallback(private var ctx: Context) {
 

@@ -254,16 +254,16 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   def createCopyToClipboardDialog(prefKey: String, dialogPositiveString: String, dialogNeutralString: String): Unit = {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString(prefKey,""))
+    builder.setTitle(pref.getString(prefKey, ""))
     builder.setPositiveButton(dialogPositiveString, null)
     builder.setNeutralButton(dialogNeutralString,
       new DialogInterface.OnClickListener() {
-      def onClick(dialogInterface: DialogInterface, ID: Int) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString(prefKey, ""))
-      }
-    })
+        def onClick(dialogInterface: DialogInterface, ID: Int) {
+          val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+          val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
+          clipboard.setText(sharedPreferences.getString(prefKey, ""))
+        }
+      })
     builder.create().show()
   }
 

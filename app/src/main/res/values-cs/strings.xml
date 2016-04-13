@@ -1,220 +1,220 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Přidat kontakt</string>
-  <string name="title_activity_friend_profile">Profil přítele</string>
-  <string name="title_activity_group_profile">Informace o skupině</string>
-  <string name="title_activity_profile_settings">Možnosti profilu</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Přidat kontakt</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Je třeba vyplnit jméno profilu</string>
-  <string name="login_login">Login</string>
-  <string name="login_account_hint">Jméno profilu</string>
-  <string name="login_create_account_text">Vytvořit profil Tox</string>
-  <string name="login_bad_login">Jméno profilu nebylo rozpoznáno</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Jméno profilu</string>
-  <string name="create_text">Bezpečná komunikace pro každého.</string>
-  <string name="create_register">Registrovat</string>
-  <string name="create_registering">Registrace účtu...</string>
-  <string name="create_register_incog">Inkognito registrace</string>
-  <string name="create_import_profile">Importovat profil</string>
-  <string name="create_skip">Povolit komukoliv přidání za použití vašeho jména profilu</string>
-  <string name="create_must_fill_in">Je nutné vyplnit všechna pole</string>
-  <string name="create_bad_profile_name">Jméno profilu nemůže obsahovat mezery, lomítka nebo být prázdné</string>
-  <string name="create_profile_exists">Toto jméno profilu již existuje</string>
-  <string name="import_profile_invalid_file">Vybraný soubor není platný tox profil</string>
-  <string name="create_account_exists">Toto jméno je již používáno</string>
-  <string name="create_account_internal_error">Vnitřní chyba aplikace Antox. Restartujte ji a zkuste to znovu</string>
-  <string name="create_account_reached_registration_limit">Lze registrovat pouze 13 účtů za hodinu. Dosáhli jste tohoto limitu</string>
-  <string name="create_account_unknown_error">Neznámá chyba registrace, zkuste to prosím znovu později</string>
-  <string name="create_account_kalium_link_error">Nepodařilo se načíst požadovanou knihovnu. Nelze vytvořit non-inkognito účty.</string>
-  <string name="create_account_invalid_domain">Zadána neplatná toxme doména.</string>
-  <string name="create_account_connection_error">Registrace selhala: Nelze se připojit k internetu.</string>
-  <string name="create_account_encrypted_profile_error">Antox ještě nepodporuje šifrované profily</string>
-  <string name="create_account_load_profile_unknown">Neznámá chyba načtení profilu</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Není aktivní žádný chat. Začněte vybráním přítele z nabídky vlevo.</string>
-  <string name="main_recent_no">Žádné nedávné konverzace</string>
-  <string name="main_no_internet">Připojení k internetu nedostupné</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Přidat kontakt</string>
+    <string name="title_activity_friend_profile">Profil přítele</string>
+    <string name="title_activity_group_profile">Informace o skupině</string>
+    <string name="title_activity_profile_settings">Možnosti profilu</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Přidat kontakt</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Je třeba vyplnit jméno profilu</string>
+    <string name="login_login">Login</string>
+    <string name="login_account_hint">Jméno profilu</string>
+    <string name="login_create_account_text">Vytvořit profil Tox</string>
+    <string name="login_bad_login">Jméno profilu nebylo rozpoznáno</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Jméno profilu</string>
+    <string name="create_text">Bezpečná komunikace pro každého.</string>
+    <string name="create_register">Registrovat</string>
+    <string name="create_registering">Registrace účtu...</string>
+    <string name="create_register_incog">Inkognito registrace</string>
+    <string name="create_import_profile">Importovat profil</string>
+    <string name="create_skip">Povolit komukoliv přidání za použití vašeho jména profilu</string>
+    <string name="create_must_fill_in">Je nutné vyplnit všechna pole</string>
+    <string name="create_bad_profile_name">Jméno profilu nemůže obsahovat mezery, lomítka nebo být prázdné</string>
+    <string name="create_profile_exists">Toto jméno profilu již existuje</string>
+    <string name="import_profile_invalid_file">Vybraný soubor není platný tox profil</string>
+    <string name="create_account_exists">Toto jméno je již používáno</string>
+    <string name="create_account_internal_error">Vnitřní chyba aplikace Antox. Restartujte ji a zkuste to znovu</string>
+    <string name="create_account_reached_registration_limit">Lze registrovat pouze 13 účtů za hodinu. Dosáhli jste tohoto limitu</string>
+    <string name="create_account_unknown_error">Neznámá chyba registrace, zkuste to prosím znovu později</string>
+    <string name="create_account_kalium_link_error">Nepodařilo se načíst požadovanou knihovnu. Nelze vytvořit non-inkognito účty.</string>
+    <string name="create_account_invalid_domain">Zadána neplatná toxme doména.</string>
+    <string name="create_account_connection_error">Registrace selhala: Nelze se připojit k internetu.</string>
+    <string name="create_account_encrypted_profile_error">Antox ještě nepodporuje šifrované profily</string>
+    <string name="create_account_load_profile_unknown">Neznámá chyba načtení profilu</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Není aktivní žádný chat. Začněte vybráním přítele z nabídky vlevo.</string>
+    <string name="main_recent_no">Žádné nedávné konverzace</string>
+    <string name="main_no_internet">Připojení k internetu nedostupné</string>
   <string name="main_not_connected">Nebylo detekováno připojení k internetu. Bez připojení budete mít dostupné
 pouze omezené funkce, pokud nepoužíváte Antox pouze pro LAN</string>
-  <string name="main_mobile_disabled">Momentálně bez připojení, je povole pouze Wi-Fi mód. Tapněte pro změnu nastavení.</string>
-  <string name="search_all_contacts">Hledat ve všech kontaktech</string>
-  <string name="main_group_coming_soon">Připravujeme...</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Poslat zprávu</string>
-  <string name="chat_file_transfer">Přenos souboru</string>
-  <string name="chat_message_too_long">Tato zpráva je příliš dlouhá a nelze ji odeslat</string>
-  <string name="chat_ft_failed_friend_offline">Odeslání selhalo - nelze zasílat soubory nepřipojeným přátelům</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_friend_label">Přítel</string>
-  <string name="addpane_group_label">Skupina</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">Tox ID přítele</string>
-  <string name="addfriend_friend_message">Poslat zprávu s požadavkem</string>
-  <string name="addfriend_button">Přidat přítele</string>
-  <string name="addfriend_friend_added">Přítel přidán</string>
-  <string name="addfriend_friend_exists">Kontakt již existuje</string>
-  <string name="scanqr_button">Načíst QR kód</string>
-  <string name="invalid_friend_ID">Neplatné Tox ID</string>
-  <string name="addfriend_nick_hint">Nastavit přezdívku kontaktu</string>
-  <string name="addfriend_optional_title">Dodatečné možnosti</string>
-  <string name="dialog_pin">Vložit pin kontaktu</string>
-  <string name="addfriend_invalid_pin">Neplatný pin</string>
-  <string name="addfriend_own_key">Nelze přidat sebe sama</string>
-  <string name="addfriend_friend_pin_title">Vložit pin kontaktu</string>
-  <string name="addfriend_friend_pin_text">Vložit pin kontaktu</string>
-  <string name="addfriend_default_message">Ahoj! Přijmi prosím moji žádost o přidání</string>
-  <!--Add Group Fragment-->
-  <string name="addgroup_group_id">ID skupiny</string>
-  <string name="addgroup_button">Připojit se ke skupině</string>
-  <string name="addgroup_group_added">Ve skupině</string>
-  <string name="addgroup_group_exists">Skupina již existuje</string>
-  <string name="invalid_group_ID">Neplatné ID skupiny</string>
-  <string name="addgroup_alias_hint">Nastavit alias pro skupinu</string>
-  <string name="addgroup_optional_title">Dodatečné možnosti</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Přezdívka</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Stav</string>
-  <string name="friend_profile_button">Aktualizovat</string>
-  <string name="friend_profile_updated">Profil byl aktualizován</string>
-  <string name="friend_profile_copied">Tox ID zkopírováno</string>
-  <!--Group Profile Activity-->
-  <string name="group_profile_peer_list_head">Účastníci</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">Profil kontaktu %1$s</string>
-  <string name="friendrequest_accept">Přijmout</string>
-  <string name="friendrequest_reject">Zamítnout</string>
-  <string name="friend_request">Nová žádost o přidání</string>
-  <!--Group invite fragment-->
-  <string name="groupinvite_accept">Přijmout</string>
-  <string name="groupinvite_reject">Zamítnout</string>
-  <string name="group_invite">Nová skupinová pozvánka</string>
-  <string name="invited_by">Pozvánka od</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Profil</string>
-  <string name="friend_action_delete">Odstranit kontakt</string>
-  <string name="friend_action_export_chat">Exportovat logy chatu</string>
-  <string name="friend_action_delete_chat">Smazat logy chatu</string>
-  <string name="friend_action_block">Blokovat</string>
-  <string name="friend_accepted_default_status">Přijato přítelem</string>
-  <string name="group_default_peer_name">Anonymní</string>
-  <string name="group_action_delete">Opustit skupinu</string>
-  <string name="contacts_actions_on">Spouštět pro</string>
-  <string name="contacts_delimiter_requests">Požadavky</string>
-  <string name="contacts_delimiter_invites">Skupinové pozvánky</string>
-  <string name="contacts_delimiter_groups">Skupiny</string>
-  <string name="contacts_delimiter_friends">Přátelé</string>
-  <string name="contacts_delimiter_offline">Offline</string>
-  <string name="contacts_delimiter_online">Online</string>
-  <string name="contacts_resend_friend_request">Znovu odeslat žádost o přidání</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Opravdu chcete odstranit tento kontakt?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_exported">Log chatu úspěšně exportován do %s</string>
-  <string name="friend_action_chat_log_export_failed">Export logu chatu selhal.</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Opravdu chcete smazat historii chatů?</string>
-  <!--Block Friend Dialog-->
+    <string name="main_mobile_disabled">Momentálně bez připojení, je povole pouze Wi-Fi mód. Tapněte pro změnu nastavení.</string>
+    <string name="search_all_contacts">Hledat ve všech kontaktech</string>
+    <string name="main_group_coming_soon">Připravujeme...</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Poslat zprávu</string>
+    <string name="chat_file_transfer">Přenos souboru</string>
+    <string name="chat_message_too_long">Tato zpráva je příliš dlouhá a nelze ji odeslat</string>
+    <string name="chat_ft_failed_friend_offline">Odeslání selhalo - nelze zasílat soubory nepřipojeným přátelům</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_friend_label">Přítel</string>
+    <string name="addpane_group_label">Skupina</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">Tox ID přítele</string>
+    <string name="addfriend_friend_message">Poslat zprávu s požadavkem</string>
+    <string name="addfriend_button">Přidat přítele</string>
+    <string name="addfriend_friend_added">Přítel přidán</string>
+    <string name="addfriend_friend_exists">Kontakt již existuje</string>
+    <string name="scanqr_button">Načíst QR kód</string>
+    <string name="invalid_friend_ID">Neplatné Tox ID</string>
+    <string name="addfriend_nick_hint">Nastavit přezdívku kontaktu</string>
+    <string name="addfriend_optional_title">Dodatečné možnosti</string>
+    <string name="dialog_pin">Vložit pin kontaktu</string>
+    <string name="addfriend_invalid_pin">Neplatný pin</string>
+    <string name="addfriend_own_key">Nelze přidat sebe sama</string>
+    <string name="addfriend_friend_pin_title">Vložit pin kontaktu</string>
+    <string name="addfriend_friend_pin_text">Vložit pin kontaktu</string>
+    <string name="addfriend_default_message">Ahoj! Přijmi prosím moji žádost o přidání</string>
+    <!--Add Group Fragment-->
+    <string name="addgroup_group_id">ID skupiny</string>
+    <string name="addgroup_button">Připojit se ke skupině</string>
+    <string name="addgroup_group_added">Ve skupině</string>
+    <string name="addgroup_group_exists">Skupina již existuje</string>
+    <string name="invalid_group_ID">Neplatné ID skupiny</string>
+    <string name="addgroup_alias_hint">Nastavit alias pro skupinu</string>
+    <string name="addgroup_optional_title">Dodatečné možnosti</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Přezdívka</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Stav</string>
+    <string name="friend_profile_button">Aktualizovat</string>
+    <string name="friend_profile_updated">Profil byl aktualizován</string>
+    <string name="friend_profile_copied">Tox ID zkopírováno</string>
+    <!--Group Profile Activity-->
+    <string name="group_profile_peer_list_head">Účastníci</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">Profil kontaktu %1$s</string>
+    <string name="friendrequest_accept">Přijmout</string>
+    <string name="friendrequest_reject">Zamítnout</string>
+    <string name="friend_request">Nová žádost o přidání</string>
+    <!--Group invite fragment-->
+    <string name="groupinvite_accept">Přijmout</string>
+    <string name="groupinvite_reject">Zamítnout</string>
+    <string name="group_invite">Nová skupinová pozvánka</string>
+    <string name="invited_by">Pozvánka od</string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_delete">Odstranit kontakt</string>
+    <string name="friend_action_export_chat">Exportovat logy chatu</string>
+    <string name="friend_action_delete_chat">Smazat logy chatu</string>
+    <string name="friend_action_block">Blokovat</string>
+    <string name="friend_accepted_default_status">Přijato přítelem</string>
+    <string name="group_default_peer_name">Anonymní</string>
+    <string name="group_action_delete">Opustit skupinu</string>
+    <string name="contacts_actions_on">Spouštět pro</string>
+    <string name="contacts_delimiter_requests">Požadavky</string>
+    <string name="contacts_delimiter_invites">Skupinové pozvánky</string>
+    <string name="contacts_delimiter_groups">Skupiny</string>
+    <string name="contacts_delimiter_friends">Přátelé</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Znovu odeslat žádost o přidání</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Opravdu chcete odstranit tento kontakt?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_exported">Log chatu úspěšně exportován do %s</string>
+    <string name="friend_action_chat_log_export_failed">Export logu chatu selhal.</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Opravdu chcete smazat historii chatů?</string>
+    <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Zablokováním tohoto uživatele zmizí jméno ze seznamu kontaktů a nebudou se zobrazovat
 požadavky na přidání.\n\nOpravdu si přejete pokračovat?</string>
-  <!--Reset ToxID Dialog-->
-  <string name="reset_tox_id_dialog_message">Resetování vašeho Tox ID změní vaše ID permanentně. Vaše existující kontakty zůstanou uloženy, ale ostatní lidé si Vás nebudou moci přidat pomocí vašeho starého ID. </string>
-  <string name="reset_tox_id_dialog_title">Potvrdit Tox ID reset</string>
-  <string name="reset_tox_id_dialog_confirm">Resetovat ID</string>
-  <string name="reset_tox_id_dialog_cancel">Zrušit</string>
-  <string name="tox_id_reset">Vaše Tox ID bylo zresetováno</string>
-  <!--Delete Account Dialog-->
-  <string name="delete_account_dialog_message">Tento krok nevratně smaže uživatelský profil Antox a odpojí všechny navázané ToxMe služby propojené k tomuto účtu.</string>
-  <string name="delete_account_dialog_title">Potrvdit smazání účtu Antox</string>
-  <string name="delete_account_dialog_confirm">Smazat účet</string>
-  <string name="delete_account_dialog_cancel">Zrušit</string>
-  <string name="delete_account_successful">Účet byl úspěšně smazán</string>
-  <string name="delete_account_error">Došlo k chybě při mazání účtu Antox</string>
-  <!--Create Group Dialog-->
-  <string name="create_group_dialog_message">Vytvořit nový skupinový chat</string>
-  <string name="create_group_dialog_create_group">Vytvořit skupinu</string>
-  <string name="create_group_dialog_cancel">Zrušit</string>
-  <string name="create_group_dialog_name_header">Jméno skupiny</string>
-  <!--Group Chat Delete-->
-  <string name="group_default_part_message">Nashledanou</string>
-  <!--Color Picker Dialog-->
-  <string name="dialog_color_picker_title">Vybrat barvu vzhledu</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Přiložit fotografii</string>
-  <string name="attachment_file">Přiložit soubor</string>
-  <string name="attachment_takephoto">Vyfotit</string>
-  <string name="message_copy">Zkopírovat zprávu</string>
-  <string name="message_delete">Smazat zprávu</string>
-  <string name="file_delete">Smazat soubor</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Nedávné</string>
-  <string name="titles_contacts">Kontakty</string>
-  <string name="titles_settings">Nastavení</string>
-  <!--Misc-->
-  <string name="button_confirm">Potvrdit</string>
-  <string name="button_cancel">Zrušit</string>
-  <string name="button_yes">Ano</string>
-  <string name="button_no">Ne</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Zkopírovat Tox ID do schránky</string>
-  <string name="dialog_toxme">Zkopírovat do schránky</string>
-  <string name="dialog_password">Zkopírovat do schránky</string>
-  <string name="share_with">Sdílet s</string>
-  <string name="connection_has">je</string>
-  <string name="connection_online">připojen</string>
-  <string name="connection_offline">odpojen</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Nastavení</string>
-  <!--Avatar Dialog-->
-  <string name="dialog_avatar_take_photo">Vyfotit</string>
-  <string name="dialog_avatar_use_file">Použít soubor</string>
-  <string name="avatar_too_large_error">Chyba: Soubor pro avatar je příliš velký</string>
-  <string name="no_camera_intent_error">Chyba: Nebyla nalezena aplikace fotografování</string>
-  <string name="dialog_avatar_description">avatar</string>
-  <!--File transfer-->
-  <string name="file_finished">Ukončeno</string>
-  <string name="file_failed">Selhalo</string>
-  <string name="file_in_progress">Probíhá</string>
-  <string name="file_request_sent">Odeslaný požadavek</string>
-  <string name="file_rejected">Zamítnuto</string>
-  <string name="file_time_remaining">Zbývá %s sekund</string>
-  <!--QR-->
-  <string name="qr_default_title">Instalovat čtečku čárových kódů?</string>
-  <string name="qr_default_message">Tato aplikace vyžaduje čtečku čáovýh kódů. Chcete ji nainstalovat?</string>
-  <string name="qr_button_yes">Ano</string>
-  <string name="qr_button_no">Ne</string>
-  <!--Notifications-->
-  <string name="unread_count">%s nepřečtených zpráv</string>
-  <!--nav bar-->
-  <string name="n_settings">Nastavení</string>
-  <string name="n_profile_options">Profil</string>
-  <string name="n_create_group">Vytvořit skupinu</string>
-  <string name="n_add_person">Přidat osobu</string>
-  <string name="n_about">O aplikaci</string>
-  <string name="n_open_source">Open source licence</string>
-  <string name="n_logout">Odhlásit</string>
-  <string name="drawer_open">Otevřít záložku navigace</string>
-  <string name="drawer_close">Zavřít záložku navigace</string>
-  <string name="open_source_license">Open source licence</string>
-  <string name="license1">Šířeno pod GNU GPL v3. Vytvořil Mark Winter, spravuje subliun a další.</string>
-  <string name="license2">Zdrojový kód dostupný na \nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Verze</string>
-  <string name="about">O aplikaci</string>
-  <string name="about_antox_1">S nástupem vládních monitorovacích programů Tox poskytuje jednoduše použitelnou aplikaci, která vám umožňuje propojení s přáteli a rodinou bez cizího odposlechu.</string>
-  <string name="about_antox_2">Co všechno momentálně funguje:</string>
-  <string name="about_antox_3"> - </string>
-  <string name="about_antox_4">- Upozornění</string>
-  <string name="about_antox_5">- Přenosy souborů</string>
-  <string name="about_antox_6">Nefunkční:</string>
-  <string name="about_antox_7">- Audio/Video</string>
-  <string name="about_antox_8">- Skupiny</string>
-  <string name="title_activity_call">Aktivita volání</string>
-  <string name="end_call">Ukončit hovor</string>
-  <string name="mute_call">Ztlumit</string>
-  <string name="mute_mic">Ztlumit mikrofon</string>
-  <string name="profile_info_description">Zobrazit informace o uživateli</string>
+    <!--Reset ToxID Dialog-->
+    <string name="reset_tox_id_dialog_message">Resetování vašeho Tox ID změní vaše ID permanentně. Vaše existující kontakty zůstanou uloženy, ale ostatní lidé si Vás nebudou moci přidat pomocí vašeho starého ID. </string>
+    <string name="reset_tox_id_dialog_title">Potvrdit Tox ID reset</string>
+    <string name="reset_tox_id_dialog_confirm">Resetovat ID</string>
+    <string name="reset_tox_id_dialog_cancel">Zrušit</string>
+    <string name="tox_id_reset">Vaše Tox ID bylo zresetováno</string>
+    <!--Delete Account Dialog-->
+    <string name="delete_account_dialog_message">Tento krok nevratně smaže uživatelský profil Antox a odpojí všechny navázané ToxMe služby propojené k tomuto účtu.</string>
+    <string name="delete_account_dialog_title">Potrvdit smazání účtu Antox</string>
+    <string name="delete_account_dialog_confirm">Smazat účet</string>
+    <string name="delete_account_dialog_cancel">Zrušit</string>
+    <string name="delete_account_successful">Účet byl úspěšně smazán</string>
+    <string name="delete_account_error">Došlo k chybě při mazání účtu Antox</string>
+    <!--Create Group Dialog-->
+    <string name="create_group_dialog_message">Vytvořit nový skupinový chat</string>
+    <string name="create_group_dialog_create_group">Vytvořit skupinu</string>
+    <string name="create_group_dialog_cancel">Zrušit</string>
+    <string name="create_group_dialog_name_header">Jméno skupiny</string>
+    <!--Group Chat Delete-->
+    <string name="group_default_part_message">Nashledanou</string>
+    <!--Color Picker Dialog-->
+    <string name="dialog_color_picker_title">Vybrat barvu vzhledu</string>
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Přiložit fotografii</string>
+    <string name="attachment_file">Přiložit soubor</string>
+    <string name="attachment_takephoto">Vyfotit</string>
+    <string name="message_copy">Zkopírovat zprávu</string>
+    <string name="message_delete">Smazat zprávu</string>
+    <string name="file_delete">Smazat soubor</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Nedávné</string>
+    <string name="titles_contacts">Kontakty</string>
+    <string name="titles_settings">Nastavení</string>
+    <!--Misc-->
+    <string name="button_confirm">Potvrdit</string>
+    <string name="button_cancel">Zrušit</string>
+    <string name="button_yes">Ano</string>
+    <string name="button_no">Ne</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Zkopírovat Tox ID do schránky</string>
+    <string name="dialog_toxme">Zkopírovat do schránky</string>
+    <string name="dialog_password">Zkopírovat do schránky</string>
+    <string name="share_with">Sdílet s</string>
+    <string name="connection_has">je</string>
+    <string name="connection_online">připojen</string>
+    <string name="connection_offline">odpojen</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="action_settings">Nastavení</string>
+    <!--Avatar Dialog-->
+    <string name="dialog_avatar_take_photo">Vyfotit</string>
+    <string name="dialog_avatar_use_file">Použít soubor</string>
+    <string name="avatar_too_large_error">Chyba: Soubor pro avatar je příliš velký</string>
+    <string name="no_camera_intent_error">Chyba: Nebyla nalezena aplikace fotografování</string>
+    <string name="dialog_avatar_description">avatar</string>
+    <!--File transfer-->
+    <string name="file_finished">Ukončeno</string>
+    <string name="file_failed">Selhalo</string>
+    <string name="file_in_progress">Probíhá</string>
+    <string name="file_request_sent">Odeslaný požadavek</string>
+    <string name="file_rejected">Zamítnuto</string>
+    <string name="file_time_remaining">Zbývá %s sekund</string>
+    <!--QR-->
+    <string name="qr_default_title">Instalovat čtečku čárových kódů?</string>
+    <string name="qr_default_message">Tato aplikace vyžaduje čtečku čáovýh kódů. Chcete ji nainstalovat?</string>
+    <string name="qr_button_yes">Ano</string>
+    <string name="qr_button_no">Ne</string>
+    <!--Notifications-->
+    <string name="unread_count">%s nepřečtených zpráv</string>
+    <!--nav bar-->
+    <string name="n_settings">Nastavení</string>
+    <string name="n_profile_options">Profil</string>
+    <string name="n_create_group">Vytvořit skupinu</string>
+    <string name="n_add_person">Přidat osobu</string>
+    <string name="n_about">O aplikaci</string>
+    <string name="n_open_source">Open source licence</string>
+    <string name="n_logout">Odhlásit</string>
+    <string name="drawer_open">Otevřít záložku navigace</string>
+    <string name="drawer_close">Zavřít záložku navigace</string>
+    <string name="open_source_license">Open source licence</string>
+    <string name="license1">Šířeno pod GNU GPL v3. Vytvořil Mark Winter, spravuje subliun a další.</string>
+    <string name="license2">Zdrojový kód dostupný na \nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Verze</string>
+    <string name="about">O aplikaci</string>
+    <string name="about_antox_1">S nástupem vládních monitorovacích programů Tox poskytuje jednoduše použitelnou aplikaci, která vám umožňuje propojení s přáteli a rodinou bez cizího odposlechu.</string>
+    <string name="about_antox_2">Co všechno momentálně funguje:</string>
+    <string name="about_antox_3"> - </string>
+    <string name="about_antox_4">- Upozornění</string>
+    <string name="about_antox_5">- Přenosy souborů</string>
+    <string name="about_antox_6">Nefunkční:</string>
+    <string name="about_antox_7">- Audio/Video</string>
+    <string name="about_antox_8">- Skupiny</string>
+    <string name="title_activity_call">Aktivita volání</string>
+    <string name="end_call">Ukončit hovor</string>
+    <string name="mute_call">Ztlumit</string>
+    <string name="mute_mic">Ztlumit mikrofon</string>
+    <string name="profile_info_description">Zobrazit informace o uživateli</string>
 </resources>

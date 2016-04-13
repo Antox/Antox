@@ -34,5 +34,6 @@ class DrawerArrayAdapter(context: Context, resourceId: Int, initialItems: util.L
 
     var imageView: ImageView = _
   }
+
 }
 

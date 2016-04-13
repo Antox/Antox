@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="chat.tox.antox"
     android:versionCode="47"
-    android:versionName="0.23" >
+    android:versionName="0.23">
 
-    <uses-sdk
-        tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview" />
+    <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,7 +18,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <supports-screens
         android:anyDensity="true"
@@ -34,7 +35,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/ic_actionbar"
-        android:theme="@style/AntoxTheme" >
+        android:theme="@style/AntoxTheme">
         <service
             android:name="chat.tox.antox.tox.ToxService"
             android:exported="false"
@@ -42,7 +43,7 @@
 
         <receiver android:name="chat.tox.antox.utils.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
@@ -50,13 +51,12 @@
             android:name="chat.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AntoxTheme.ActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden">
-        </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:name="chat.tox.antox.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent" >
+            android:theme="@style/Theme.AppCompat.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -79,7 +79,7 @@
         </activity>
         <activity
             android:name="chat.tox.antox.activities.AddActivity"
-            android:label="@string/title_activity_add" >
+            android:label="@string/title_activity_add">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
@@ -97,7 +97,7 @@
         <activity
             android:name=".activities.FriendProfileActivity"
             android:label="@string/title_activity_friend_profile"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
@@ -115,7 +115,7 @@
         <activity
             android:name="chat.tox.antox.activities.GroupProfileActivity"
             android:label="@string/title_activity_group_profile"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.GroupChatActivity" />
@@ -123,7 +123,7 @@
 
         <receiver
             android:name=".utils.ConnectionManager"
-            android:label="NetworkConnection" >
+            android:label="NetworkConnection">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -144,7 +144,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name="chat.tox.antox.activities.EditCallRepliesActivity"
-            android:label="@string/title_activity_edit_call_replies"/>
+            android:label="@string/title_activity_edit_call_replies" />
     </application>
 
 </manifest>

@@ -25,12 +25,12 @@ object ToxMe {
 
   private def epoch = System.currentTimeMillis() / 1000
 
- /**
-  * Performs a lookup and returns the Tox ID registered to the given toxMeName.
-  *
-  * @param rawToxMeName the ToxMe name to lookup
-  * @return the ID or None if the name is not found or no domain is supplied
-  */
+  /**
+    * Performs a lookup and returns the Tox ID registered to the given toxMeName.
+    *
+    * @param rawToxMeName the ToxMe name to lookup
+    * @return the ID or None if the name is not found or no domain is supplied
+    */
   def lookup(rawToxMeName: String): Observable[Option[String]] = {
     Observable(subscriber => {
       if (rawToxMeName.contains("@")) {
@@ -56,13 +56,13 @@ object ToxMe {
   final case class SearchResult(name: String, bio: String)
 
   /**
-   * Search a ToxMe service for a user
-   *
-   * @param query The query to search for
-   * @param domain The ToxMe api URL
-   * @param page The page number
-   * @return A sequence of SearchResult
-   */
+    * Search a ToxMe service for a user
+    *
+    * @param query  The query to search for
+    * @param domain The ToxMe api URL
+    * @param page   The page number
+    * @return A sequence of SearchResult
+    */
   def search(query: String, domain: String, page: Int = 0): Observable[ToxMeResult[Seq[SearchResult]]] = {
     Observable(subscriber => {
       try {
@@ -73,12 +73,12 @@ object ToxMe {
 
         val response = postJson(json, domain)
         var users = ArrayBuffer[SearchResult]()
-        response match{
+        response match {
           case Left(error) =>
             subscriber.onNext(Left(error))
           case Right(jsonResult) =>
             val results = jsonResult.getJSONArray("users")
-            for(i <- 0 until results.length()) {
+            for (i <- 0 until results.length()) {
               val result = results.getJSONObject(i)
               users += new SearchResult(result.getString("name"), result.getString("bio"))
             }
@@ -93,14 +93,14 @@ object ToxMe {
   }
 
   /**
-   * Performs a https lookup for the given domain to retrieve
-   * the service's public key to be used for encrypted requests.
-   *
-   * If the server does not exist or a network-related error occurs, None is returned.
-   *
-   * @param domain the domain on which to perform the lookup (e.g. toxme.io)
-   * @return the public key of the ToxMe service or None
-   */
+    * Performs a https lookup for the given domain to retrieve
+    * the service's public key to be used for encrypted requests.
+    *
+    * If the server does not exist or a network-related error occurs, None is returned.
+    *
+    * @param domain the domain on which to perform the lookup (e.g. toxme.io)
+    * @return the public key of the ToxMe service or None
+    */
   def lookupPublicKey(domain: String): Option[String] = {
     try {
       val client = new OkHttpClient()
@@ -123,8 +123,8 @@ object ToxMe {
   type ToxMeResult[Success] = Either[ToxMeError, Success]
 
   /**
-   * Different request types for the ToxMe
-   */
+    * Different request types for the ToxMe
+    */
   object RequestAction extends Enumeration {
     type EncryptedRequestAction = Int
     val REGISTRATION = 1
@@ -141,13 +141,13 @@ object ToxMe {
   }
 
   /**
-   * Registers a new account on the specified ToxMe (ToxMeName.domain)
-   *
-   * If the service cannot be contacted, the network is down, or some other error occurs,
-   * the appropriate RegError is returned.
-   *
-   * @return ToxMe request observable that contains password on success, RegError on lookup error
-   */
+    * Registers a new account on the specified ToxMe (ToxMeName.domain)
+    *
+    * If the service cannot be contacted, the network is down, or some other error occurs,
+    * the appropriate RegError is returned.
+    *
+    * @return ToxMe request observable that contains password on success, RegError on lookup error
+    */
   def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[ToxMeResult[Password]] = {
     Observable[ToxMeResult[Password]](subscriber => {
       val json = new JSONObject
@@ -158,20 +158,20 @@ object ToxMe {
       json.put("timestamp", epoch)
       subscriber.onNext(
         makeEncryptedRequest(name, toxData, json, RequestAction.REGISTRATION)
-        .right
-        .map(_.getString("password")))
+          .right
+          .map(_.getString("password")))
       subscriber.onCompleted()
     }).subscribeOn(IOScheduler())
   }
 
   /**
-   * Deletes an account on the specified ToxMe (ToxMeName.domain)
-   *
-   * If the service cannot be contacted, the network is down, or some other error occurs,
-   * the appropriate RegError is returned.
-   *
-   * @return ToxMe request observable that contains a confirmation string on success. RegError on lookup error
-   */
+    * Deletes an account on the specified ToxMe (ToxMeName.domain)
+    *
+    * If the service cannot be contacted, the network is down, or some other error occurs,
+    * the appropriate RegError is returned.
+    *
+    * @return ToxMe request observable that contains a confirmation string on success. RegError on lookup error
+    */
   def deleteAccount(name: ToxMeName, toxData: ToxData): Observable[Option[ToxMeError]] = {
     Observable[Option[ToxMeError]](subscriber => {
       val json = new JSONObject
@@ -179,8 +179,8 @@ object ToxMe {
       json.put("timestamp", epoch)
       subscriber.onNext(
         makeEncryptedRequest(name, toxData, json, RequestAction.DELETION)
-        .left
-        .toOption)
+          .left
+          .toOption)
       subscriber.onCompleted()
     }).subscribeOn(IOScheduler())
   }

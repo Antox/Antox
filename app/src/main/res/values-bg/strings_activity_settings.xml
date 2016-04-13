@@ -1,46 +1,46 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Настройки</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Профил</string>
-  <string name="pref_title_nickname">Име</string>
-  <string name="pref_default_nickname">Antox потребител</string>
-  <string name="pref_title_password">ToxMe парола</string>
-  <string name="pref_default_password">Няма зададена парола</string>
-  <string name="pref_title_status">Статус</string>
-  <string-array name="pref_status_list_titles">
-    <item>На линия</item>
-    <item>Отсъства</item>
-    <item>Зает</item>
-  </string-array>
-  <string name="pref_title_status_message">Статус съобщение</string>
-  <string name="pref_default_status_message">Ей! Аз ползвам Antox</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Default Tox ID - Не би трябвало да го виждате</string>
-  <string name="pref_title_toxme">ToxMe адрес</string>
-  <string name="pref_default_toxme">В момента профилът е в режим инкогнито</string>
-  <string name="pref_title_logging_enabled">Пази чат историята при отписване</string>
-  <string name="pref_title_theme_color">Смени цвета на темата</string>
-  <string name="pref_title_avatar">Аватар</string>
-  <string name="pref_title_account_name">Име на профила</string>
-  <string name="pref_title_export">Износ на профила</string>
-  <string name="pref_title_delete">Изтрий профила</string>
-  <string name="pref_title_logout">Отписване</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Известия</string>
-  <string name="pref_title_enable_notifications">Включи известията за...</string>
-  <string name="pref_title_new_message_notifications">съобщения</string>
-  <string name="pref_title_new_friend_notifications">покани за приятелство</string>
-  <!--Other-->
-  <string name="pref_header_other">Други</string>
-  <string name="pref_title_connection_status_messages">Съобщения за действия</string>
-  <string name="pref_title_wifi_only">Само през Wi-Fi</string>
-  <string name="pref_title_language">Език</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Копирай Tox ID</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Разреши UDP</string>
-  <string name="pref_advanced">Допълнителни</string>
-  <string name="pref_nospam">Изтрий Tox  ID</string>
-  <string name="pref_autostart">Стартирай Антох при рестартиране</string>
+    <string name="title_activity_settings">Настройки</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Профил</string>
+    <string name="pref_title_nickname">Име</string>
+    <string name="pref_default_nickname">Antox потребител</string>
+    <string name="pref_title_password">ToxMe парола</string>
+    <string name="pref_default_password">Няма зададена парола</string>
+    <string name="pref_title_status">Статус</string>
+    <string-array name="pref_status_list_titles">
+        <item>На линия</item>
+        <item>Отсъства</item>
+        <item>Зает</item>
+    </string-array>
+    <string name="pref_title_status_message">Статус съобщение</string>
+    <string name="pref_default_status_message">Ей! Аз ползвам Antox</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Default Tox ID - Не би трябвало да го виждате</string>
+    <string name="pref_title_toxme">ToxMe адрес</string>
+    <string name="pref_default_toxme">В момента профилът е в режим инкогнито</string>
+    <string name="pref_title_logging_enabled">Пази чат историята при отписване</string>
+    <string name="pref_title_theme_color">Смени цвета на темата</string>
+    <string name="pref_title_avatar">Аватар</string>
+    <string name="pref_title_account_name">Име на профила</string>
+    <string name="pref_title_export">Износ на профила</string>
+    <string name="pref_title_delete">Изтрий профила</string>
+    <string name="pref_title_logout">Отписване</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Известия</string>
+    <string name="pref_title_enable_notifications">Включи известията за...</string>
+    <string name="pref_title_new_message_notifications">съобщения</string>
+    <string name="pref_title_new_friend_notifications">покани за приятелство</string>
+    <!--Other-->
+    <string name="pref_header_other">Други</string>
+    <string name="pref_title_connection_status_messages">Съобщения за действия</string>
+    <string name="pref_title_wifi_only">Само през Wi-Fi</string>
+    <string name="pref_title_language">Език</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Копирай Tox ID</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Разреши UDP</string>
+    <string name="pref_advanced">Допълнителни</string>
+    <string name="pref_nospam">Изтрий Tox  ID</string>
+    <string name="pref_autostart">Стартирай Антох при рестартиране</string>
 </resources>

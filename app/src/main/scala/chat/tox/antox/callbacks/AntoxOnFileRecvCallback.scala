@@ -11,10 +11,10 @@ import im.tox.tox4j.core.enums.ToxFileControl
 
 class AntoxOnFileRecvCallback(ctx: Context) {
   def fileRecv(friendInfo: FriendInfo,
-                        fileNumber: Int,
-                        toxFileKind: Int,
-                        fileSize: Long,
-                        filename: ToxFilename)(state: Unit): Unit = {
+               fileNumber: Int,
+               toxFileKind: Int,
+               fileSize: Long,
+               filename: ToxFilename)(state: Unit): Unit = {
     val kind: FileKind = FileKind.fromToxFileKind(toxFileKind)
 
     val name =
@@ -25,7 +25,7 @@ class AntoxOnFileRecvCallback(ctx: Context) {
       }
 
     if (kind == FileKind.AVATAR) {
-      if (fileSize > Constants.MAX_AVATAR_SIZE){
+      if (fileSize > Constants.MAX_AVATAR_SIZE) {
         return
       } else if (fileSize == 0) {
         ToxSingleton.tox.fileControl(friendInfo.key, fileNumber, ToxFileControl.CANCEL)

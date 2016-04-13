@@ -9,14 +9,15 @@ object SelfCallState {
 
   def fromToxCallState(state: Set[ToxavFriendCallState], callState: SelfCallState): SelfCallState = {
     callState.copy(receivingAudio = state.contains(ToxavFriendCallState.SENDING_A),
-                   receivingVideo = state.contains(ToxavFriendCallState.SENDING_V))
+      receivingVideo = state.contains(ToxavFriendCallState.SENDING_V))
   }
 }
 
 case class SelfCallState(audioBitRate: BitRate, videoBitRate: BitRate,
-                     audioMuted: Boolean, loudspeakerEnabled: Boolean, videoHidden: Boolean,
-                     receivingAudio: Boolean, receivingVideo: Boolean, ended: Boolean) {
+                         audioMuted: Boolean, loudspeakerEnabled: Boolean, videoHidden: Boolean,
+                         receivingAudio: Boolean, receivingVideo: Boolean, ended: Boolean) {
 
   def sendingAudio = audioBitRate.value > 0 && !audioMuted
+
   def sendingVideo = videoBitRate.value > 0 && !videoHidden
 }

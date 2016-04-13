@@ -108,7 +108,7 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
       println("couldn't find a nice resolution")
       UiUtils.adjustAspectRatio(activity, previewView, closestSize.width, closestSize.height)
     } else { */
-      // could find a nice resolution (yay), scale the textureview
+    // could find a nice resolution (yay), scale the textureview
     println("could find a nice resolution")
     val layoutParams = previewView.getLayoutParams
     layoutParams.width = if (vertical) closestSize.height else closestSize.width

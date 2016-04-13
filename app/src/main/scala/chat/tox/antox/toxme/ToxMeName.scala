@@ -13,9 +13,9 @@ object ToxMeName {
   }
 }
 
-final case class ToxMeName(username: String, domain: Option[String]){
+final case class ToxMeName(username: String, domain: Option[String]) {
   /**
-   * @return username@domain
-   */
+    * @return username@domain
+    */
   def getFullAddress: String = username + "@" + domain
 }

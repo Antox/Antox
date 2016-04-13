@@ -11,7 +11,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/default_avatar"/>
+        android:src="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/status"
@@ -35,7 +35,7 @@
         android:layout_toRightOf="@+id/drawer_avatar"
         android:layout_toEndOf="@+id/drawer_avatar"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:id="@+id/status_message"
@@ -49,6 +49,6 @@
         android:layout_below="@+id/name"
         android:layout_alignLeft="@+id/name"
         android:layout_alignStart="@+id/name"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp" />
 
 </RelativeLayout>

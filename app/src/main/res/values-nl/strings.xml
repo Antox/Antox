@@ -1,176 +1,176 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Contact toevoegen</string>
-  <string name="title_activity_friend_profile">Vriendenprofiel</string>
-  <string name="title_activity_group_profile">Groepsinformatie</string>
-  <string name="title_activity_profile_settings">Profielopties</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Contact toevoegen</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Je moet een profielnaam invullen</string>
-  <string name="login_login">Log in</string>
-  <string name="login_account_hint">Profielnaam</string>
-  <string name="login_create_account_text">Creeer Tox-profiel</string>
-  <string name="login_bad_login">Profielnaam wordt niet herkend</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Profielnaam</string>
-  <string name="create_text">Veilige berichten voor iedereen.</string>
-  <string name="create_register">Registreer</string>
-  <string name="create_register_incog">Registreer Anoniem</string>
-  <string name="create_import_profile">Profiel importeren</string>
-  <string name="create_skip">Geef iedereen de mogelijkheid je toe te voegen middels je profiel naam</string>
-  <string name="create_must_fill_in">Je moet alle velden invullen</string>
-  <string name="create_bad_profile_name">Profielnaam mag niet leeg zijn of spaties of slashes bevatten</string>
-  <string name="create_profile_exists">Deze profielnaam bestaat al</string>
-  <string name="import_profile_invalid_file">Gekozen bestand is geen geldig Tox profiel</string>
-  <string name="create_account_exists">Naam bestaat al</string>
-  <string name="create_account_internal_error">Interne Antox fout. Herstart en probeer opnieuw</string>
-  <string name="create_account_reached_registration_limit">Je kunt maximaal 13 accounts registreren per uur. Deze limiet is nu bereikt</string>
-  <string name="create_account_unknown_error">Onbekende registratiefout, probeer het later opnieuw</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Geen actieve chat. Begin een chat door links een vriend te kiezen.</string>
-  <string name="main_recent_no">Geen recente conversaties</string>
-  <string name="main_no_internet">Geen internetverbinding</string>
-  <string name="main_not_connected">Geen internetverbinding gedetecteerd. Zonder internetverbinding heb je beperkte functionaliteit, tenzij je Antox voor LAN gebruikt.</string>
-  <string name="main_mobile_disabled">Momenteel offline door actieve Wi-Fi Only modus. Raak aan voor de instellingen.</string>
-  <string name="search_all_contacts">Zoek in contacten</string>
-  <string name="main_group_coming_soon">Binnenkort beschikbaar...</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Verstuur een bericht</string>
-  <string name="chat_file_transfer">Bestandsoverdracht</string>
-  <string name="chat_message_too_long">Dit bericht is te lang en kan niet worden verzonden</string>
-  <string name="chat_ft_failed_friend_offline">Verzenden mislukt - zenden kan alleen naar online vrienden</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_friend_label">Vriend</string>
-  <string name="addpane_group_label">Groep</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">Je vriend\'s Tox ID</string>
-  <string name="addfriend_friend_message">Bericht bij vriendschapsverzoek</string>
-  <string name="addfriend_button">Voeg vriend toe</string>
-  <string name="addfriend_friend_added">Vriend toegevoegd</string>
-  <string name="addfriend_friend_exists">Vriend is reeds toegevoegd</string>
-  <string name="scanqr_button">Scan een QR-code</string>
-  <string name="invalid_friend_ID">Ongeldig Tox ID</string>
-  <string name="addfriend_nick_hint">Stel een alias in voor je vriend</string>
-  <string name="addfriend_optional_title">Optionele extra\'s</string>
-  <string name="dialog_pin">Voer de pin van je vriend in</string>
-  <string name="addfriend_invalid_pin">Ongeldige pin</string>
-  <string name="addfriend_own_key">Je kunt jezelf niet toevoegen</string>
-  <string name="addfriend_friend_pin_title">Voer vriend\'s pin in</string>
-  <string name="addfriend_friend_pin_text">Voer vriend\'s pin in</string>
-  <string name="addfriend_default_message">Hoi! Wil je me toevoegen als vriend</string>
-  <!--Add Group Fragment-->
-  <string name="addgroup_group_id">Het groeps-ID</string>
-  <string name="addgroup_button">Neem deel aan groep</string>
-  <string name="addgroup_group_added">Groep toegevoegd</string>
-  <string name="addgroup_group_exists">Groep bestaat al</string>
-  <string name="invalid_group_ID">Ongeldige groeps-ID</string>
-  <string name="addgroup_alias_hint">Stel groepsalias in</string>
-  <string name="addgroup_optional_title">Optionele extra\'s</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Bijnaam</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Status</string>
-  <string name="friend_profile_button">Update</string>
-  <string name="friend_profile_updated">Het profiel is bijgewerkt</string>
-  <string name="friend_profile_copied">Tox ID gekopieerd</string>
-  <!--Group Profile Activity-->
-  <string name="group_profile_peer_list_head">Deelnemers</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">%1$s\'s Profiel</string>
-  <string name="friendrequest_accept">Accepteren</string>
-  <string name="friendrequest_reject">Weigeren</string>
-  <string name="friend_request">Nieuw vriendschapsverzoek</string>
-  <!--Group invite fragment-->
-  <string name="groupinvite_accept">Accepteren</string>
-  <string name="groupinvite_reject">Weigeren</string>
-  <string name="group_invite">Nieuwe groepsuitnodiging</string>
-  <string name="invited_by">Je bent uitgenodigd door</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Profiel</string>
-  <string name="friend_action_delete">Verwijder vriend</string>
-  <string name="friend_action_export_chat">Exporteer chatgeschiedenis</string>
-  <string name="friend_action_delete_chat">Verwijder chatgeschiedenis</string>
-  <string name="friend_action_block">Blokkeren</string>
-  <string name="group_default_peer_name">Anoniem</string>
-  <string name="group_action_delete">Groep verlaten</string>
-  <string name="contacts_actions_on">Acties aan</string>
-  <string name="contacts_delimiter_requests">Verzoeken</string>
-  <string name="contacts_delimiter_invites">Groepsuitnodigingen</string>
-  <string name="contacts_delimiter_groups">Groepen</string>
-  <string name="contacts_delimiter_friends">Vrienden</string>
-  <string name="contacts_delimiter_offline">Offline</string>
-  <string name="contacts_delimiter_online">Online</string>
-  <string name="contacts_resend_friend_request">Verstuur vriendschapsverzoek opnieuw</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">weet je zeker dat je deze vriend wilt verwijderen?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_exported">Chatgeschiedenis succesvol geëxporteerd naar %s</string>
-  <string name="friend_action_chat_log_export_failed">Export van chatgeschiedenis mislukt.</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Weet je zeker dat je de chatgeschiedenis wilt verwijderen?</string>
-  <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Het blokkeren van deze gebruiker verwijdert hem van je vriendenlijst en blokkeert toekomstige vriendschapsverzoeken.\n\nWeet je zeker dat je verder wilt gaan?</string>
-  <!--Reset ToxID Dialog-->
-  <!--Delete Account Dialog-->
-  <!--Create Group Dialog-->
-  <string name="create_group_dialog_message">Nieuwe groepschat aanmaken</string>
-  <string name="create_group_dialog_create_group">Groep aanmaken</string>
-  <string name="create_group_dialog_cancel">Annuleren</string>
-  <string name="create_group_dialog_name_header">Groepsnaam</string>
-  <!--Group Chat Delete-->
-  <string name="group_default_part_message">Tot ziens</string>
-  <!--Color Picker Dialog-->
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Voeg foto toe</string>
-  <string name="attachment_file">Voeg bestand toe</string>
-  <string name="attachment_takephoto">Neem een foto</string>
-  <string name="message_copy">Kopieer bericht</string>
-  <string name="message_delete">Verwijder bericht</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Recent</string>
-  <string name="titles_contacts">Contacten</string>
-  <string name="titles_settings">Instellingen</string>
-  <!--Misc-->
-  <string name="button_confirm">Bevestigen</string>
-  <string name="button_cancel">Annuleren</string>
-  <string name="button_yes">Ja</string>
-  <string name="button_no">Nee</string>
-  <string name="button_ok">Oke</string>
-  <string name="dialog_tox_id">Kopieer Tox ID naar klembord</string>
-  <string name="share_with">Deel met</string>
-  <string name="connection_has">is</string>
-  <string name="connection_online">online gekomen</string>
-  <string name="connection_offline">offline gegaan</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Instellingen</string>
-  <!--Avatar Dialog-->
-  <!--File transfer-->
-  <string name="file_finished">Afgerond</string>
-  <string name="file_failed">Niet gelukt</string>
-  <string name="file_in_progress">Bezig</string>
-  <string name="file_request_sent">Verzoek verzonden</string>
-  <string name="file_rejected">Geweigerd</string>
-  <string name="file_time_remaining">%s seconds left</string>
-  <!--QR-->
-  <string name="qr_default_title">Installeer Barcode Scanner?</string>
-  <string name="qr_default_message">Deze applicatie vereist Barcode Scanner. Wil je die installeren?</string>
-  <string name="qr_button_yes">Ja</string>
-  <string name="qr_button_no">Nee</string>
-  <!--Notifications-->
-  <!--nav bar-->
-  <string name="drawer_open">Open navigatiepaneel</string>
-  <string name="drawer_close">Sluit navigatiepaneel</string>
-  <string name="open_source_license">Open source licentie</string>
-  <string name="license2">Broncode is beschikbaar op\nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Versie</string>
-  <string name="about">Over</string>
-  <string name="about_antox_1">Nu het aantal overheidsspionage programma\'s alleen maar toeneemt biedt Tox een toegankelijke applicatie die je in staat stelt om met vrienden en familie contact te onderhouden, zonder dat iemand er meeluistert.</string>
-  <string name="about_antox_2">Werkend:</string>
-  <string name="title_activity_call">BelActiviteit</string>
-  <string name="end_call">Gesprek beeindigen</string>
-  <string name="mute_call">Dempen</string>
-  <string name="mute_mic">Microfoon Dempen</string>
-  <string name="profile_info_description">Gebruikersinformatie</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Contact toevoegen</string>
+    <string name="title_activity_friend_profile">Vriendenprofiel</string>
+    <string name="title_activity_group_profile">Groepsinformatie</string>
+    <string name="title_activity_profile_settings">Profielopties</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Contact toevoegen</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Je moet een profielnaam invullen</string>
+    <string name="login_login">Log in</string>
+    <string name="login_account_hint">Profielnaam</string>
+    <string name="login_create_account_text">Creeer Tox-profiel</string>
+    <string name="login_bad_login">Profielnaam wordt niet herkend</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Profielnaam</string>
+    <string name="create_text">Veilige berichten voor iedereen.</string>
+    <string name="create_register">Registreer</string>
+    <string name="create_register_incog">Registreer Anoniem</string>
+    <string name="create_import_profile">Profiel importeren</string>
+    <string name="create_skip">Geef iedereen de mogelijkheid je toe te voegen middels je profiel naam</string>
+    <string name="create_must_fill_in">Je moet alle velden invullen</string>
+    <string name="create_bad_profile_name">Profielnaam mag niet leeg zijn of spaties of slashes bevatten</string>
+    <string name="create_profile_exists">Deze profielnaam bestaat al</string>
+    <string name="import_profile_invalid_file">Gekozen bestand is geen geldig Tox profiel</string>
+    <string name="create_account_exists">Naam bestaat al</string>
+    <string name="create_account_internal_error">Interne Antox fout. Herstart en probeer opnieuw</string>
+    <string name="create_account_reached_registration_limit">Je kunt maximaal 13 accounts registreren per uur. Deze limiet is nu bereikt</string>
+    <string name="create_account_unknown_error">Onbekende registratiefout, probeer het later opnieuw</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Geen actieve chat. Begin een chat door links een vriend te kiezen.</string>
+    <string name="main_recent_no">Geen recente conversaties</string>
+    <string name="main_no_internet">Geen internetverbinding</string>
+    <string name="main_not_connected">Geen internetverbinding gedetecteerd. Zonder internetverbinding heb je beperkte functionaliteit, tenzij je Antox voor LAN gebruikt.</string>
+    <string name="main_mobile_disabled">Momenteel offline door actieve Wi-Fi Only modus. Raak aan voor de instellingen.</string>
+    <string name="search_all_contacts">Zoek in contacten</string>
+    <string name="main_group_coming_soon">Binnenkort beschikbaar...</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Verstuur een bericht</string>
+    <string name="chat_file_transfer">Bestandsoverdracht</string>
+    <string name="chat_message_too_long">Dit bericht is te lang en kan niet worden verzonden</string>
+    <string name="chat_ft_failed_friend_offline">Verzenden mislukt - zenden kan alleen naar online vrienden</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_friend_label">Vriend</string>
+    <string name="addpane_group_label">Groep</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">Je vriend\'s Tox ID</string>
+    <string name="addfriend_friend_message">Bericht bij vriendschapsverzoek</string>
+    <string name="addfriend_button">Voeg vriend toe</string>
+    <string name="addfriend_friend_added">Vriend toegevoegd</string>
+    <string name="addfriend_friend_exists">Vriend is reeds toegevoegd</string>
+    <string name="scanqr_button">Scan een QR-code</string>
+    <string name="invalid_friend_ID">Ongeldig Tox ID</string>
+    <string name="addfriend_nick_hint">Stel een alias in voor je vriend</string>
+    <string name="addfriend_optional_title">Optionele extra\'s</string>
+    <string name="dialog_pin">Voer de pin van je vriend in</string>
+    <string name="addfriend_invalid_pin">Ongeldige pin</string>
+    <string name="addfriend_own_key">Je kunt jezelf niet toevoegen</string>
+    <string name="addfriend_friend_pin_title">Voer vriend\'s pin in</string>
+    <string name="addfriend_friend_pin_text">Voer vriend\'s pin in</string>
+    <string name="addfriend_default_message">Hoi! Wil je me toevoegen als vriend</string>
+    <!--Add Group Fragment-->
+    <string name="addgroup_group_id">Het groeps-ID</string>
+    <string name="addgroup_button">Neem deel aan groep</string>
+    <string name="addgroup_group_added">Groep toegevoegd</string>
+    <string name="addgroup_group_exists">Groep bestaat al</string>
+    <string name="invalid_group_ID">Ongeldige groeps-ID</string>
+    <string name="addgroup_alias_hint">Stel groepsalias in</string>
+    <string name="addgroup_optional_title">Optionele extra\'s</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Bijnaam</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Status</string>
+    <string name="friend_profile_button">Update</string>
+    <string name="friend_profile_updated">Het profiel is bijgewerkt</string>
+    <string name="friend_profile_copied">Tox ID gekopieerd</string>
+    <!--Group Profile Activity-->
+    <string name="group_profile_peer_list_head">Deelnemers</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">%1$s\'s Profiel</string>
+    <string name="friendrequest_accept">Accepteren</string>
+    <string name="friendrequest_reject">Weigeren</string>
+    <string name="friend_request">Nieuw vriendschapsverzoek</string>
+    <!--Group invite fragment-->
+    <string name="groupinvite_accept">Accepteren</string>
+    <string name="groupinvite_reject">Weigeren</string>
+    <string name="group_invite">Nieuwe groepsuitnodiging</string>
+    <string name="invited_by">Je bent uitgenodigd door</string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Profiel</string>
+    <string name="friend_action_delete">Verwijder vriend</string>
+    <string name="friend_action_export_chat">Exporteer chatgeschiedenis</string>
+    <string name="friend_action_delete_chat">Verwijder chatgeschiedenis</string>
+    <string name="friend_action_block">Blokkeren</string>
+    <string name="group_default_peer_name">Anoniem</string>
+    <string name="group_action_delete">Groep verlaten</string>
+    <string name="contacts_actions_on">Acties aan</string>
+    <string name="contacts_delimiter_requests">Verzoeken</string>
+    <string name="contacts_delimiter_invites">Groepsuitnodigingen</string>
+    <string name="contacts_delimiter_groups">Groepen</string>
+    <string name="contacts_delimiter_friends">Vrienden</string>
+    <string name="contacts_delimiter_offline">Offline</string>
+    <string name="contacts_delimiter_online">Online</string>
+    <string name="contacts_resend_friend_request">Verstuur vriendschapsverzoek opnieuw</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">weet je zeker dat je deze vriend wilt verwijderen?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_exported">Chatgeschiedenis succesvol geëxporteerd naar %s</string>
+    <string name="friend_action_chat_log_export_failed">Export van chatgeschiedenis mislukt.</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Weet je zeker dat je de chatgeschiedenis wilt verwijderen?</string>
+    <!--Block Friend Dialog-->
+    <string name="friend_action_block_friend_confirmation">Het blokkeren van deze gebruiker verwijdert hem van je vriendenlijst en blokkeert toekomstige vriendschapsverzoeken.\n\nWeet je zeker dat je verder wilt gaan?</string>
+    <!--Reset ToxID Dialog-->
+    <!--Delete Account Dialog-->
+    <!--Create Group Dialog-->
+    <string name="create_group_dialog_message">Nieuwe groepschat aanmaken</string>
+    <string name="create_group_dialog_create_group">Groep aanmaken</string>
+    <string name="create_group_dialog_cancel">Annuleren</string>
+    <string name="create_group_dialog_name_header">Groepsnaam</string>
+    <!--Group Chat Delete-->
+    <string name="group_default_part_message">Tot ziens</string>
+    <!--Color Picker Dialog-->
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Voeg foto toe</string>
+    <string name="attachment_file">Voeg bestand toe</string>
+    <string name="attachment_takephoto">Neem een foto</string>
+    <string name="message_copy">Kopieer bericht</string>
+    <string name="message_delete">Verwijder bericht</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Recent</string>
+    <string name="titles_contacts">Contacten</string>
+    <string name="titles_settings">Instellingen</string>
+    <!--Misc-->
+    <string name="button_confirm">Bevestigen</string>
+    <string name="button_cancel">Annuleren</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nee</string>
+    <string name="button_ok">Oke</string>
+    <string name="dialog_tox_id">Kopieer Tox ID naar klembord</string>
+    <string name="share_with">Deel met</string>
+    <string name="connection_has">is</string>
+    <string name="connection_online">online gekomen</string>
+    <string name="connection_offline">offline gegaan</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="action_settings">Instellingen</string>
+    <!--Avatar Dialog-->
+    <!--File transfer-->
+    <string name="file_finished">Afgerond</string>
+    <string name="file_failed">Niet gelukt</string>
+    <string name="file_in_progress">Bezig</string>
+    <string name="file_request_sent">Verzoek verzonden</string>
+    <string name="file_rejected">Geweigerd</string>
+    <string name="file_time_remaining">%s seconds left</string>
+    <!--QR-->
+    <string name="qr_default_title">Installeer Barcode Scanner?</string>
+    <string name="qr_default_message">Deze applicatie vereist Barcode Scanner. Wil je die installeren?</string>
+    <string name="qr_button_yes">Ja</string>
+    <string name="qr_button_no">Nee</string>
+    <!--Notifications-->
+    <!--nav bar-->
+    <string name="drawer_open">Open navigatiepaneel</string>
+    <string name="drawer_close">Sluit navigatiepaneel</string>
+    <string name="open_source_license">Open source licentie</string>
+    <string name="license2">Broncode is beschikbaar op\nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Versie</string>
+    <string name="about">Over</string>
+    <string name="about_antox_1">Nu het aantal overheidsspionage programma\'s alleen maar toeneemt biedt Tox een toegankelijke applicatie die je in staat stelt om met vrienden en familie contact te onderhouden, zonder dat iemand er meeluistert.</string>
+    <string name="about_antox_2">Werkend:</string>
+    <string name="title_activity_call">BelActiviteit</string>
+    <string name="end_call">Gesprek beeindigen</string>
+    <string name="mute_call">Dempen</string>
+    <string name="mute_mic">Microfoon Dempen</string>
+    <string name="profile_info_description">Gebruikersinformatie</string>
 </resources>

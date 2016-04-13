@@ -35,47 +35,47 @@ object AntoxDB {
 
     val CREATE_TABLE_CONTACTS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_CONTACTS ($COLUMN_NAME_KEY text primary key,
-         |$COLUMN_NAME_NAME text,
-         |$COLUMN_NAME_STATUS text,
-         |$COLUMN_NAME_NOTE text,
-         |$COLUMN_NAME_ALIAS text,
-         |$COLUMN_NAME_ISONLINE boolean,
-         |$COLUMN_NAME_ISBLOCKED boolean,
-         |$COLUMN_NAME_AVATAR text,
-         |$COLUMN_NAME_RECEIVED_AVATAR boolean,
-         |$COLUMN_NAME_IGNORED boolean,
-         |$COLUMN_NAME_FAVORITE boolean,
-         |$COLUMN_NAME_CONTACT_TYPE int,
-         |$COLUMN_NAME_UNSENT_MESSAGE text);""".stripMargin
+          |$COLUMN_NAME_NAME text,
+          |$COLUMN_NAME_STATUS text,
+          |$COLUMN_NAME_NOTE text,
+          |$COLUMN_NAME_ALIAS text,
+          |$COLUMN_NAME_ISONLINE boolean,
+          |$COLUMN_NAME_ISBLOCKED boolean,
+          |$COLUMN_NAME_AVATAR text,
+          |$COLUMN_NAME_RECEIVED_AVATAR boolean,
+          |$COLUMN_NAME_IGNORED boolean,
+          |$COLUMN_NAME_FAVORITE boolean,
+          |$COLUMN_NAME_CONTACT_TYPE int,
+          |$COLUMN_NAME_UNSENT_MESSAGE text);""".stripMargin
 
     val CREATE_TABLE_MESSAGES: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_MESSAGES (
-         |$COLUMN_NAME_ID integer primary key,
-         |$COLUMN_NAME_TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP,
-         |$COLUMN_NAME_MESSAGE_ID integer,
-         |$COLUMN_NAME_KEY text,
-         |$COLUMN_NAME_SENDER_KEY text,
-         |$COLUMN_NAME_SENDER_NAME text ,
-         |$COLUMN_NAME_MESSAGE text,
-         |$COLUMN_NAME_HAS_BEEN_RECEIVED boolean,
-         |$COLUMN_NAME_HAS_BEEN_READ boolean,
-         |$COLUMN_NAME_SUCCESSFULLY_SENT boolean,
-         |$COLUMN_NAME_SIZE integer,
-         |$COLUMN_NAME_TYPE int,
-         |$COLUMN_NAME_FILE_KIND int,
-         |$COLUMN_NAME_CALL_EVENT_KIND int,
-         |FOREIGN KEY($COLUMN_NAME_KEY) REFERENCES $TABLE_CONTACTS($COLUMN_NAME_KEY))""".stripMargin
+          |$COLUMN_NAME_ID integer primary key,
+          |$COLUMN_NAME_TIMESTAMP DATETIME DEFAULT CURRENT_TIMESTAMP,
+          |$COLUMN_NAME_MESSAGE_ID integer,
+          |$COLUMN_NAME_KEY text,
+          |$COLUMN_NAME_SENDER_KEY text,
+          |$COLUMN_NAME_SENDER_NAME text ,
+          |$COLUMN_NAME_MESSAGE text,
+          |$COLUMN_NAME_HAS_BEEN_RECEIVED boolean,
+          |$COLUMN_NAME_HAS_BEEN_READ boolean,
+          |$COLUMN_NAME_SUCCESSFULLY_SENT boolean,
+          |$COLUMN_NAME_SIZE integer,
+          |$COLUMN_NAME_TYPE int,
+          |$COLUMN_NAME_FILE_KIND int,
+          |$COLUMN_NAME_CALL_EVENT_KIND int,
+          |FOREIGN KEY($COLUMN_NAME_KEY) REFERENCES $TABLE_CONTACTS($COLUMN_NAME_KEY))""".stripMargin
 
     val CREATE_TABLE_FRIEND_REQUESTS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_FRIEND_REQUESTS ( _id integer primary key,
-         |$COLUMN_NAME_KEY text,
-         |$COLUMN_NAME_MESSAGE text)""".stripMargin
+          |$COLUMN_NAME_KEY text,
+          |$COLUMN_NAME_MESSAGE text)""".stripMargin
 
     val CREATE_TABLE_GROUP_INVITES: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_GROUP_INVITES ( _id integer primary key,
-         |$COLUMN_NAME_KEY text,
-         |$COLUMN_NAME_GROUP_INVITER text,
-         |$COLUMN_NAME_GROUP_DATA BLOB)""".stripMargin
+          |$COLUMN_NAME_KEY text,
+          |$COLUMN_NAME_GROUP_INVITER text,
+          |$COLUMN_NAME_GROUP_DATA BLOB)""".stripMargin
 
     def onCreate(mDb: SQLiteDatabase) {
       mDb.execSQL(CREATE_TABLE_CONTACTS)
@@ -97,6 +97,7 @@ object AntoxDB {
       mDb.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIEND_REQUESTS)
     }
   }
+
 }
 
 class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
@@ -189,13 +190,13 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     id
   }
 
-  def addFileTransfer(fileNumber: Int, 
+  def addFileTransfer(fileNumber: Int,
                       key: ContactKey,
-                      senderKey: ToxKey, 
-                      senderName: ToxNickname, 
-                      path: String, 
-                      hasBeenRead: Boolean, 
-                      size: Int, 
+                      senderKey: ToxKey,
+                      senderName: ToxNickname,
+                      path: String,
+                      hasBeenRead: Boolean,
+                      size: Int,
                       fileKind: FileKind): Long = {
 
     addToMessagesTable(
@@ -216,8 +217,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   def fileTransferStarted(key: ContactKey, fileNumber: Int) {
     val where =
       s"""type == ${MessageType.FILE_TRANSFER}
-         |AND message_id == $fileNumber
-         |AND tox_key = '$key'""".stripMargin
+          |AND message_id == $fileNumber
+          |AND tox_key = '$key'""".stripMargin
 
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE), where)
   }
@@ -237,7 +238,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     mDb.insert(TABLE_GROUP_INVITES, values)
   }
 
-  def addMessage(key: ContactKey ,
+  def addMessage(key: ContactKey,
                  senderKey: ToxKey,
                  senderName: ToxNickname,
                  message: String,
@@ -263,11 +264,11 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   def addCallEventMessage(key: ContactKey,
-                         senderKey: ToxKey,
-                         senderName: ToxNickname,
-                         message: String,
-                         hasBeenRead: Boolean,
-                         kind: CallEventKind): Unit = {
+                          senderKey: ToxKey,
+                          senderName: ToxNickname,
+                          message: String,
+                          hasBeenRead: Boolean,
+                          kind: CallEventKind): Unit = {
     addToMessagesTable(
       messageId = -1,
       key,
@@ -310,16 +311,16 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   val unreadCounts: Observable[Map[ContactKey, Int]] = {
     val selectQuery =
       s"""SELECT $TABLE_CONTACTS.$COLUMN_NAME_KEY,
-        |COUNT($TABLE_MESSAGES._id),
-        |conversation.$COLUMN_NAME_CONTACT_TYPE as $COLUMN_NAME_CONVERSATION_CONTACT_TYPE
-        |FROM $TABLE_MESSAGES
-        |
+          |COUNT($TABLE_MESSAGES._id),
+          |conversation.$COLUMN_NAME_CONTACT_TYPE as $COLUMN_NAME_CONVERSATION_CONTACT_TYPE
+          |FROM $TABLE_MESSAGES
+          |
         |LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY
-        |JOIN $TABLE_CONTACTS ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
-        |WHERE $TABLE_MESSAGES.$COLUMN_NAME_HAS_BEEN_READ == $FALSE
-        |AND $COLUMN_NAME_SENDER_KEY != '${selfKey.toString}'
-        |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)}
-        |GROUP BY $TABLE_CONTACTS.tox_key""".stripMargin
+          |JOIN $TABLE_CONTACTS ON $TABLE_CONTACTS.tox_key = $TABLE_MESSAGES.tox_key
+          |WHERE $TABLE_MESSAGES.$COLUMN_NAME_HAS_BEEN_READ == $FALSE
+          |AND $COLUMN_NAME_SENDER_KEY != '${selfKey.toString}'
+          |AND ${createSqlEqualsCondition(COLUMN_NAME_FILE_KIND, FileKind.values.filter(_.visible).map(_.kindId), TABLE_MESSAGES)}
+          |GROUP BY $TABLE_CONTACTS.tox_key""".stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, selectQuery).map(closedCursor => {
       val map = scala.collection.mutable.Map.empty[ContactKey, Int]
@@ -353,10 +354,10 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   def getFileId(key: ContactKey, fileNumber: Int): Int = {
     val selectQuery =
       s"""SELECT _id
-         |FROM $TABLE_MESSAGES
-         |WHERE $COLUMN_NAME_KEY = '$key'
-         |AND $sqlIsFileTransfer
-         |AND $COLUMN_NAME_MESSAGE_ID == $fileNumber""".stripMargin
+          |FROM $TABLE_MESSAGES
+          |WHERE $COLUMN_NAME_KEY = '$key'
+          |AND $sqlIsFileTransfer
+          |AND $COLUMN_NAME_MESSAGE_ID == $fileNumber""".stripMargin
 
     mDb.query(selectQuery).use { cursor =>
       if (cursor.moveToFirst()) {
@@ -382,7 +383,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   def fileTransferFinished(key: ContactKey, fileNumber: Int) {
     AntoxLog.debug("fileFinished", AntoxDB.TAG)
     val where = sqlIsFileTransfer +
-        s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
+      s" AND $COLUMN_NAME_MESSAGE_ID == $fileNumber AND $COLUMN_NAME_KEY = '$key'"
 
     val values = new ContentValues()
     values.put(COLUMN_NAME_HAS_BEEN_RECEIVED, TRUE.asInstanceOf[java.lang.Integer])
@@ -396,10 +397,10 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   /**
-   * Observable called whenever [[TABLE_MESSAGES]] is updated.
-   *
-   * @return the number of messages caught by the query.
-   */
+    * Observable called whenever [[TABLE_MESSAGES]] is updated.
+    *
+    * @return the number of messages caught by the query.
+    */
   def messageListUpdatedObservable(key: Option[ContactKey]): Observable[Int] = {
     val whereKey = if (key.isDefined) {
       s"WHERE $COLUMN_NAME_KEY = '${key.get}'"
@@ -407,7 +408,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val query =
       s"""SELECT COUNT(*) FROM $TABLE_MESSAGES
-        |$whereKey
+          |$whereKey
       """.stripMargin
 
     mDb.createQuery(TABLE_MESSAGES, query).map { closedCursor =>
@@ -425,16 +426,16 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   /**
-   * Gets list of messages (including file transfers) limited by takeLast within conversation 'key' if key is Some,
-   * otherwise returns a list of all messages.
-   *
-   * @param key the conversation key for which the messages should be queried
-   * @param takeLast the number of messages to return, starting from from the end of the query.
-   *                 e.g. if `takeLast = 2` and the total list of messages is `List("a", "b", "c")`,
-   *                 the result of this function would be `List("b", "c")` </code>.
-   *                 If this value is less than 0, as it is by default, there will be no limit on the number of messages returned.
-   * @return a list of messages constrained by the parameters.
-   */
+    * Gets list of messages (including file transfers) limited by takeLast within conversation 'key' if key is Some,
+    * otherwise returns a list of all messages.
+    *
+    * @param key      the conversation key for which the messages should be queried
+    * @param takeLast the number of messages to return, starting from from the end of the query.
+    *                 e.g. if `takeLast = 2` and the total list of messages is `List("a", "b", "c")`,
+    *                 the result of this function would be `List("b", "c")` </code>.
+    *                 If this value is less than 0, as it is by default, there will be no limit on the number of messages returned.
+    * @return a list of messages constrained by the parameters.
+    */
   def getMessageList(key: Option[ContactKey], takeLast: Int = -1): ArrayBuffer[Message] = {
     val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
 
@@ -458,7 +459,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val joins =
       s"""LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_KEY
-         |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
+          |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
 
     val whereKey =
       if (key.isDefined) {
@@ -467,11 +468,11 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
     s"""SELECT $selection
-       |FROM $TABLE_MESSAGES
-       |$joins
-       |$whereKey
-       |AND $sqlMessageVisible
-       |$order""".stripMargin
+        |FROM $TABLE_MESSAGES
+        |$joins
+        |$whereKey
+        |AND $sqlMessageVisible
+        |$order""".stripMargin
   }
 
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
@@ -614,8 +615,8 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   private val groupList: Observable[Seq[GroupInfo]] = {
     val selectQuery =
       s"""SELECT *
-         |FROM $TABLE_CONTACTS
-         |WHERE $COLUMN_NAME_CONTACT_TYPE == ${ContactType.GROUP.id}""".stripMargin
+          |FROM $TABLE_CONTACTS
+          |WHERE $COLUMN_NAME_CONTACT_TYPE == ${ContactType.GROUP.id}""".stripMargin
 
     mDb.createQuery(TABLE_CONTACTS, selectQuery).map(closedCursor => {
       val groupList = new ArrayBuffer[GroupInfo]()
@@ -635,26 +636,26 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   val friendInfoList = friendList
     .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
     .combineLatestWith(unreadCounts)((tup, unreadCountList) => {
-    tup match {
-      case (fl, lm) =>
-        fl.map(f => {
-          val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
-          f.copy(lastMessage = lm.get(f.key), unreadCount = maybeUnreadCount.getOrElse(0))
-        })
-    }
-  })
+      tup match {
+        case (fl, lm) =>
+          fl.map(f => {
+            val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
+            f.copy(lastMessage = lm.get(f.key), unreadCount = maybeUnreadCount.getOrElse(0))
+          })
+      }
+    })
 
   val groupInfoList = groupList
     .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
     .combineLatestWith(unreadCounts)((tup, uc) => {
-    tup match {
-      case (gl, lm) =>
-        gl.map(g => {
-          val unreadCount: Option[Int] = uc.get(g.key)
-          g.copy(lastMessage = lm.get(g.key), unreadCount = unreadCount.getOrElse(0))
-        })
-    }
-  })
+      tup match {
+        case (gl, lm) =>
+          gl.map(g => {
+            val unreadCount: Option[Int] = uc.get(g.key)
+            g.copy(lastMessage = lm.get(g.key), unreadCount = unreadCount.getOrElse(0))
+          })
+      }
+    })
 
   //this is bad FIXME
   val contactListElements = friendInfoList
@@ -795,9 +796,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val alias =
       Option(cursor.getString(COLUMN_NAME_ALIAS))
-      .flatMap(_.toOption)
-      .map(_.getBytes)
-      .map(ToxNickname.unsafeFromValue)
+        .flatMap(_.toOption)
+        .map(_.getBytes)
+        .map(ToxNickname.unsafeFromValue)
 
     val online = cursor.getBoolean(COLUMN_NAME_ISONLINE)
     val blocked = cursor.getBoolean(COLUMN_NAME_ISBLOCKED)

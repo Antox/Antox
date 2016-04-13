@@ -1,215 +1,215 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Додати контакт</string>
-  <string name="title_activity_friend_profile">Профіль друга</string>
-  <string name="title_activity_group_profile">Інформація про групу</string>
-  <string name="title_activity_profile_settings">Персональні налаштування</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Додати контакт</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Ви повинні вказати ім\'я профілю</string>
-  <string name="login_login">Увійти</string>
-  <string name="login_account_hint">Ім\'я</string>
-  <string name="login_create_account_text">Створити Tox профіль</string>
-  <string name="login_bad_login">Им’я профілю не знайдено.</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Им’я</string>
-  <string name="create_text">Безпечний обмін повідомленнями для кожного.</string>
-  <string name="create_register">Зареєструвати</string>
-  <string name="create_registering">Реєстрація профіля...</string>
-  <string name="create_register_incog">Зареєструвати Інкогніто</string>
-  <string name="create_import_profile">Імпорт профілю</string>
-  <string name="create_skip">Дозволити додавати Вас, використовуючи ім\'я профілю</string>
-  <string name="create_must_fill_in">Необхідно заповнити всі поля.</string>
-  <string name="create_bad_profile_name">Ім\'я профілю не може містити пробілів чи знаків косою риси.</string>
-  <string name="create_profile_exists">Профіль з таким ім’ям вже існує</string>
-  <string name="import_profile_invalid_file">Вибраний файл не є дійсним tox-профілем</string>
-  <string name="create_account_exists">Це ім\'я вже зайнято</string>
-  <string name="create_account_internal_error">Помилка у роботі Antox. Перезавантажте програму і спробуйте знову</string>
-  <string name="create_account_reached_registration_limit">Ви можете зареєструвати не більше 13 аккаунтів протягом години. Ви досягнули цієї межі</string>
-  <string name="create_account_unknown_error">Невідома помилка реєстрації. Будь ласка, спробуйте пізніше</string>
-  <string name="create_account_kalium_link_error">Помилка при завантаженні необхідного компонента. Неможливо створити не-інкогніто аккаунти</string>
-  <string name="create_account_invalid_domain">Надано невірний домен ToxMe.</string>
-  <string name="create_account_encrypted_profile_error">Antox наразі не підтримує зашифровані профілі</string>
-  <string name="create_account_load_profile_unknown">Невідома помилка при завантаженні профілю</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Немає активних чатів. Для початку розмови виберіть одного в панелі ліворуч.</string>
-  <string name="main_recent_no">Нема недавніх бесід.</string>
-  <string name="main_no_internet">Немає Інтернет-з\'єднання</string>
-  <string name="main_not_connected">Підключення до інтернету не було виявлено. Ви будете мати обмежені можливості, якщо ви використовуєте Antox тільки в локальній мережі</string>
-  <string name="main_mobile_disabled">Ви у автономному режимі так як обрано використовувати тільки Wi-Fi з\'єднання. Доторкніться для відкриття налаштувань.</string>
-  <string name="search_all_contacts">Пошук в контактах</string>
-  <string name="main_group_coming_soon">Скоро буде...</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Надіслати повідомлення</string>
-  <string name="chat_file_transfer">Передача файлів</string>
-  <string name="chat_message_too_long">Це повідомлення занадто длине і його неможливо відправити</string>
-  <string name="chat_ft_failed_friend_offline">Помилка відправлення файлу - одержувач не в мережі</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_friend_label">Друг</string>
-  <string name="addpane_group_label">Група</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">Tox ID Вашого друга</string>
-  <string name="addfriend_friend_message">Надіслати повідомлення з Вашим запитом</string>
-  <string name="addfriend_button">Додати друга</string>
-  <string name="addfriend_friend_added">Друга додано</string>
-  <string name="addfriend_friend_exists">Друг вже існує</string>
-  <string name="scanqr_button">Сканувати QR-код</string>
-  <string name="invalid_friend_ID">Невірний Tox ID</string>
-  <string name="addfriend_nick_hint">Задайте нік для друга</string>
-  <string name="addfriend_optional_title">Необов\'язкові відомості</string>
-  <string name="dialog_pin">Введіть pin Вашого друга</string>
-  <string name="addfriend_invalid_pin">Невірний pin</string>
-  <string name="addfriend_own_key">Неможливо додавати самого себе.</string>
-  <string name="addfriend_friend_pin_title">Введіть pin друга.</string>
-  <string name="addfriend_friend_pin_text">Введіть pin друга.</string>
-  <string name="addfriend_default_message">Привіт! Прийми, будь ласка, мій запит на додавання друзі.</string>
-  <!--Add Group Fragment-->
-  <string name="addgroup_group_id">Ідентифікатор Групи</string>
-  <string name="addgroup_button">Приєднатися до Групи</string>
-  <string name="addgroup_group_added">Приєднано до Групи</string>
-  <string name="addgroup_group_exists">Група вже існує</string>
-  <string name="invalid_group_ID">Невірний Ідентифікатор Групи</string>
-  <string name="addgroup_alias_hint">Створити псевдонім для цієї Групи</string>
-  <string name="addgroup_optional_title">Необов\'язкові відомості</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Псевдонім</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Статус</string>
-  <string name="friend_profile_button">Оновити</string>
-  <string name="friend_profile_updated">Псевдонім був оновлений</string>
-  <string name="friend_profile_copied">Скопійовано Tox ID</string>
-  <!--Group Profile Activity-->
-  <string name="group_profile_peer_list_head">Учасники</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">%1$s\'s Профілів</string>
-  <string name="friendrequest_accept">Прийняти</string>
-  <string name="friendrequest_reject">Відхилити</string>
-  <string name="friend_request">Новий запит друга</string>
-  <!--Group invite fragment-->
-  <string name="groupinvite_accept">Прийняти</string>
-  <string name="groupinvite_reject">Відклонити</string>
-  <string name="group_invite">Запрошення до нової Групи</string>
-  <string name="invited_by">Ви були запрошені </string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Профіль</string>
-  <string name="friend_action_delete">Видалити друга</string>
-  <string name="friend_action_export_chat">Експортувати історію чату</string>
-  <string name="friend_action_delete_chat">Видалити історію чату</string>
-  <string name="friend_action_block">Заблокувати</string>
-  <string name="friend_accepted_default_status">Додано до друзів</string>
-  <string name="group_default_peer_name">Анонімно</string>
-  <string name="group_action_delete">Покинути Групу</string>
-  <string name="contacts_actions_on">Дії включені</string>
-  <string name="contacts_delimiter_requests">Запити</string>
-  <string name="contacts_delimiter_invites">Запрошення до Групи</string>
-  <string name="contacts_delimiter_groups">Групи</string>
-  <string name="contacts_delimiter_friends">Друзі</string>
-  <string name="contacts_delimiter_offline">Не в мережі</string>
-  <string name="contacts_delimiter_online">В мережі</string>
-  <string name="contacts_resend_friend_request">Повторно відправити запит на додавання в друзі</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Ви впевнені, що хочете видалити цього друга?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_exported">Історія чату успішно експортовано до %s</string>
-  <string name="friend_action_chat_log_export_failed">Помилка експортування історії чату</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Ви впевнені, що хочете видалити історію чату?</string>
-  <!--Block Friend Dialog-->
+    <!--Activity titles-->
+    <string name="title_activity_add">Додати контакт</string>
+    <string name="title_activity_friend_profile">Профіль друга</string>
+    <string name="title_activity_group_profile">Інформація про групу</string>
+    <string name="title_activity_profile_settings">Персональні налаштування</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Додати контакт</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Ви повинні вказати ім\'я профілю</string>
+    <string name="login_login">Увійти</string>
+    <string name="login_account_hint">Ім\'я</string>
+    <string name="login_create_account_text">Створити Tox профіль</string>
+    <string name="login_bad_login">Им’я профілю не знайдено.</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Им’я</string>
+    <string name="create_text">Безпечний обмін повідомленнями для кожного.</string>
+    <string name="create_register">Зареєструвати</string>
+    <string name="create_registering">Реєстрація профіля...</string>
+    <string name="create_register_incog">Зареєструвати Інкогніто</string>
+    <string name="create_import_profile">Імпорт профілю</string>
+    <string name="create_skip">Дозволити додавати Вас, використовуючи ім\'я профілю</string>
+    <string name="create_must_fill_in">Необхідно заповнити всі поля.</string>
+    <string name="create_bad_profile_name">Ім\'я профілю не може містити пробілів чи знаків косою риси.</string>
+    <string name="create_profile_exists">Профіль з таким ім’ям вже існує</string>
+    <string name="import_profile_invalid_file">Вибраний файл не є дійсним tox-профілем</string>
+    <string name="create_account_exists">Це ім\'я вже зайнято</string>
+    <string name="create_account_internal_error">Помилка у роботі Antox. Перезавантажте програму і спробуйте знову</string>
+    <string name="create_account_reached_registration_limit">Ви можете зареєструвати не більше 13 аккаунтів протягом години. Ви досягнули цієї межі</string>
+    <string name="create_account_unknown_error">Невідома помилка реєстрації. Будь ласка, спробуйте пізніше</string>
+    <string name="create_account_kalium_link_error">Помилка при завантаженні необхідного компонента. Неможливо створити не-інкогніто аккаунти</string>
+    <string name="create_account_invalid_domain">Надано невірний домен ToxMe.</string>
+    <string name="create_account_encrypted_profile_error">Antox наразі не підтримує зашифровані профілі</string>
+    <string name="create_account_load_profile_unknown">Невідома помилка при завантаженні профілю</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Немає активних чатів. Для початку розмови виберіть одного в панелі ліворуч.</string>
+    <string name="main_recent_no">Нема недавніх бесід.</string>
+    <string name="main_no_internet">Немає Інтернет-з\'єднання</string>
+    <string name="main_not_connected">Підключення до інтернету не було виявлено. Ви будете мати обмежені можливості, якщо ви використовуєте Antox тільки в локальній мережі</string>
+    <string name="main_mobile_disabled">Ви у автономному режимі так як обрано використовувати тільки Wi-Fi з\'єднання. Доторкніться для відкриття налаштувань.</string>
+    <string name="search_all_contacts">Пошук в контактах</string>
+    <string name="main_group_coming_soon">Скоро буде...</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Надіслати повідомлення</string>
+    <string name="chat_file_transfer">Передача файлів</string>
+    <string name="chat_message_too_long">Це повідомлення занадто длине і його неможливо відправити</string>
+    <string name="chat_ft_failed_friend_offline">Помилка відправлення файлу - одержувач не в мережі</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_friend_label">Друг</string>
+    <string name="addpane_group_label">Група</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">Tox ID Вашого друга</string>
+    <string name="addfriend_friend_message">Надіслати повідомлення з Вашим запитом</string>
+    <string name="addfriend_button">Додати друга</string>
+    <string name="addfriend_friend_added">Друга додано</string>
+    <string name="addfriend_friend_exists">Друг вже існує</string>
+    <string name="scanqr_button">Сканувати QR-код</string>
+    <string name="invalid_friend_ID">Невірний Tox ID</string>
+    <string name="addfriend_nick_hint">Задайте нік для друга</string>
+    <string name="addfriend_optional_title">Необов\'язкові відомості</string>
+    <string name="dialog_pin">Введіть pin Вашого друга</string>
+    <string name="addfriend_invalid_pin">Невірний pin</string>
+    <string name="addfriend_own_key">Неможливо додавати самого себе.</string>
+    <string name="addfriend_friend_pin_title">Введіть pin друга.</string>
+    <string name="addfriend_friend_pin_text">Введіть pin друга.</string>
+    <string name="addfriend_default_message">Привіт! Прийми, будь ласка, мій запит на додавання друзі.</string>
+    <!--Add Group Fragment-->
+    <string name="addgroup_group_id">Ідентифікатор Групи</string>
+    <string name="addgroup_button">Приєднатися до Групи</string>
+    <string name="addgroup_group_added">Приєднано до Групи</string>
+    <string name="addgroup_group_exists">Група вже існує</string>
+    <string name="invalid_group_ID">Невірний Ідентифікатор Групи</string>
+    <string name="addgroup_alias_hint">Створити псевдонім для цієї Групи</string>
+    <string name="addgroup_optional_title">Необов\'язкові відомості</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Псевдонім</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Статус</string>
+    <string name="friend_profile_button">Оновити</string>
+    <string name="friend_profile_updated">Псевдонім був оновлений</string>
+    <string name="friend_profile_copied">Скопійовано Tox ID</string>
+    <!--Group Profile Activity-->
+    <string name="group_profile_peer_list_head">Учасники</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">%1$s\'s Профілів</string>
+    <string name="friendrequest_accept">Прийняти</string>
+    <string name="friendrequest_reject">Відхилити</string>
+    <string name="friend_request">Новий запит друга</string>
+    <!--Group invite fragment-->
+    <string name="groupinvite_accept">Прийняти</string>
+    <string name="groupinvite_reject">Відклонити</string>
+    <string name="group_invite">Запрошення до нової Групи</string>
+    <string name="invited_by">Ви були запрошені </string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Профіль</string>
+    <string name="friend_action_delete">Видалити друга</string>
+    <string name="friend_action_export_chat">Експортувати історію чату</string>
+    <string name="friend_action_delete_chat">Видалити історію чату</string>
+    <string name="friend_action_block">Заблокувати</string>
+    <string name="friend_accepted_default_status">Додано до друзів</string>
+    <string name="group_default_peer_name">Анонімно</string>
+    <string name="group_action_delete">Покинути Групу</string>
+    <string name="contacts_actions_on">Дії включені</string>
+    <string name="contacts_delimiter_requests">Запити</string>
+    <string name="contacts_delimiter_invites">Запрошення до Групи</string>
+    <string name="contacts_delimiter_groups">Групи</string>
+    <string name="contacts_delimiter_friends">Друзі</string>
+    <string name="contacts_delimiter_offline">Не в мережі</string>
+    <string name="contacts_delimiter_online">В мережі</string>
+    <string name="contacts_resend_friend_request">Повторно відправити запит на додавання в друзі</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Ви впевнені, що хочете видалити цього друга?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_exported">Історія чату успішно експортовано до %s</string>
+    <string name="friend_action_chat_log_export_failed">Помилка експортування історії чату</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Ви впевнені, що хочете видалити історію чату?</string>
+    <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Блокування користувача, видалить його, з вашого списку друзів і ви більше не отримуватиме від нього запитів на додавання в друзі. 
 Ви впевнені?</string>
-  <!--Reset ToxID Dialog-->
-  <string name="reset_tox_id_dialog_message">Скидання  Tox ID змінить ваш Ідентифікатор назавжди. Контакти будуть збережені, але інші люди не зможуть додавати вас за старим Ідентифікатором.</string>
-  <string name="reset_tox_id_dialog_title">Підтвердіть скидання Tox ID</string>
-  <string name="reset_tox_id_dialog_confirm">Скинути Ідентифікатор</string>
-  <string name="reset_tox_id_dialog_cancel">Скасувати</string>
-  <string name="tox_id_reset">Ваш Tox ID було скинуто</string>
-  <!--Delete Account Dialog-->
-  <string name="delete_account_dialog_message">Ця дія видалить цей аккаунт Antox та видалить Вас з усіх сервісів ToxMe, до яких прив\'язано цей аккаунт</string>
-  <string name="delete_account_dialog_title">Підтвердження видалення аккаунту Antox</string>
-  <string name="delete_account_dialog_confirm">Видалити аккаунт</string>
-  <string name="delete_account_dialog_cancel">Скасувати</string>
-  <string name="delete_account_successful">Аккаунт було успішно видалено</string>
-  <string name="delete_account_error">Під час видалення аккаунту виникла помилка</string>
-  <!--Create Group Dialog-->
-  <string name="create_group_dialog_message">Створити новий груповий чат</string>
-  <string name="create_group_dialog_create_group">Створити Групу</string>
-  <string name="create_group_dialog_cancel">Скасувати</string>
-  <string name="create_group_dialog_name_header">Ім’я Групи</string>
-  <!--Group Chat Delete-->
-  <string name="group_default_part_message">Допобачення</string>
-  <!--Color Picker Dialog-->
-  <string name="dialog_color_picker_title">Обрати тему</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Прикріпити фото</string>
-  <string name="attachment_file">Прикріпити файл</string>
-  <string name="attachment_takephoto">Зробити фото</string>
-  <string name="message_copy">Скопіювати повідомлення</string>
-  <string name="message_delete">Видалити повідомлення</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Недавні</string>
-  <string name="titles_contacts">Контакти</string>
-  <string name="titles_settings">Налаштування</string>
-  <!--Misc-->
-  <string name="button_confirm">Підтвердити</string>
-  <string name="button_cancel">Скасувати</string>
-  <string name="button_yes">Так</string>
-  <string name="button_no">Ні</string>
-  <string name="button_ok">ОК</string>
-  <string name="dialog_tox_id">Скопіювати Tox ID в буфер обміну.</string>
-  <string name="share_with">Поділитися з</string>
-  <string name="connection_has">був</string>
-  <string name="connection_online">в мережі</string>
-  <string name="connection_offline">не в мережі</string>
-  <string name="title_activity_create_account">Створити активність аккаунту</string>
-  <string name="action_settings">Налаштування</string>
-  <!--Avatar Dialog-->
-  <string name="dialog_avatar_take_photo">Зробити фото</string>
-  <string name="dialog_avatar_use_file">Використовувати файл</string>
-  <string name="avatar_too_large_error">Помилка: розмір файлу аватара занадто великий</string>
-  <string name="no_camera_intent_error">Помилка: Не знайдено жодної програми для камери</string>
-  <string name="dialog_avatar_description">аватар</string>
-  <!--File transfer-->
-  <string name="file_finished">Завершенно</string>
-  <string name="file_failed">Невдало</string>
-  <string name="file_in_progress">В процесі</string>
-  <string name="file_request_sent">Відправити Запит</string>
-  <string name="file_rejected">Відмовлено</string>
-  <string name="file_time_remaining">%s секунд залишилось</string>
-  <!--QR-->
-  <string name="qr_default_title">Встановити Сканер штрих-кодів?</string>
-  <string name="qr_default_message">Ця програма потребує Сканер штрих-кодів. Встановити?</string>
-  <string name="qr_button_yes">Так</string>
-  <string name="qr_button_no">Ні</string>
-  <!--Notifications-->
-  <string name="unread_count">%s Непрочитані повідомлення</string>
-  <!--nav bar-->
-  <string name="n_settings">Налаштування</string>
-  <string name="n_profile_options">Профіль</string>
-  <string name="n_create_group">Створити групу</string>
-  <string name="n_add_person">Додати Контакт</string>
-  <string name="n_about">Про програму</string>
-  <string name="n_open_source">Ліцензія відкритого програмного забезпечення</string>
-  <string name="n_logout">Вийти</string>
-  <string name="drawer_open">Відкрити меню</string>
-  <string name="drawer_close">Закрити меню</string>
-  <string name="open_source_license">Ліцензія</string>
-  <string name="license1">Це програмне забезпечення розповсюджується під ліцензіею GNU GPL v3. Автор Mark Winter, підтримка subliun та інші.</string>
-  <string name="license2">Похідний код доступний на \nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Версія</string>
-  <string name="about">Про Antox</string>
-  <string name="about_antox_1">Поки уряди багатьох країн по всьому світу впроваджують різноманітні програми спостереження, Tox дозволяє бути на зв’язку зі знайомими та близькими, не боячись підслуховування.</string>
-  <string name="about_antox_2"> - Що працюе?:</string>
-  <string name="about_antox_3">Спілкування один-на-один</string>
-  <string name="about_antox_4">- Оповіщення</string>
-  <string name="about_antox_5">- Передача файла</string>
-  <string name="about_antox_6">Не працює:</string>
-  <string name="about_antox_7">- Аудіо/Відео</string>
-  <string name="about_antox_8">Групи</string>
-  <string name="title_activity_call">Активність дзвінка</string>
-  <string name="end_call">Завершити дзвінок</string>
-  <string name="mute_call">Вимкнути звук</string>
-  <string name="mute_mic">Вимкнути мікрофон</string>
-  <string name="profile_info_description">Отримати інформацію про користувача</string>
+    <!--Reset ToxID Dialog-->
+    <string name="reset_tox_id_dialog_message">Скидання  Tox ID змінить ваш Ідентифікатор назавжди. Контакти будуть збережені, але інші люди не зможуть додавати вас за старим Ідентифікатором.</string>
+    <string name="reset_tox_id_dialog_title">Підтвердіть скидання Tox ID</string>
+    <string name="reset_tox_id_dialog_confirm">Скинути Ідентифікатор</string>
+    <string name="reset_tox_id_dialog_cancel">Скасувати</string>
+    <string name="tox_id_reset">Ваш Tox ID було скинуто</string>
+    <!--Delete Account Dialog-->
+    <string name="delete_account_dialog_message">Ця дія видалить цей аккаунт Antox та видалить Вас з усіх сервісів ToxMe, до яких прив\'язано цей аккаунт</string>
+    <string name="delete_account_dialog_title">Підтвердження видалення аккаунту Antox</string>
+    <string name="delete_account_dialog_confirm">Видалити аккаунт</string>
+    <string name="delete_account_dialog_cancel">Скасувати</string>
+    <string name="delete_account_successful">Аккаунт було успішно видалено</string>
+    <string name="delete_account_error">Під час видалення аккаунту виникла помилка</string>
+    <!--Create Group Dialog-->
+    <string name="create_group_dialog_message">Створити новий груповий чат</string>
+    <string name="create_group_dialog_create_group">Створити Групу</string>
+    <string name="create_group_dialog_cancel">Скасувати</string>
+    <string name="create_group_dialog_name_header">Ім’я Групи</string>
+    <!--Group Chat Delete-->
+    <string name="group_default_part_message">Допобачення</string>
+    <!--Color Picker Dialog-->
+    <string name="dialog_color_picker_title">Обрати тему</string>
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Прикріпити фото</string>
+    <string name="attachment_file">Прикріпити файл</string>
+    <string name="attachment_takephoto">Зробити фото</string>
+    <string name="message_copy">Скопіювати повідомлення</string>
+    <string name="message_delete">Видалити повідомлення</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Недавні</string>
+    <string name="titles_contacts">Контакти</string>
+    <string name="titles_settings">Налаштування</string>
+    <!--Misc-->
+    <string name="button_confirm">Підтвердити</string>
+    <string name="button_cancel">Скасувати</string>
+    <string name="button_yes">Так</string>
+    <string name="button_no">Ні</string>
+    <string name="button_ok">ОК</string>
+    <string name="dialog_tox_id">Скопіювати Tox ID в буфер обміну.</string>
+    <string name="share_with">Поділитися з</string>
+    <string name="connection_has">був</string>
+    <string name="connection_online">в мережі</string>
+    <string name="connection_offline">не в мережі</string>
+    <string name="title_activity_create_account">Створити активність аккаунту</string>
+    <string name="action_settings">Налаштування</string>
+    <!--Avatar Dialog-->
+    <string name="dialog_avatar_take_photo">Зробити фото</string>
+    <string name="dialog_avatar_use_file">Використовувати файл</string>
+    <string name="avatar_too_large_error">Помилка: розмір файлу аватара занадто великий</string>
+    <string name="no_camera_intent_error">Помилка: Не знайдено жодної програми для камери</string>
+    <string name="dialog_avatar_description">аватар</string>
+    <!--File transfer-->
+    <string name="file_finished">Завершенно</string>
+    <string name="file_failed">Невдало</string>
+    <string name="file_in_progress">В процесі</string>
+    <string name="file_request_sent">Відправити Запит</string>
+    <string name="file_rejected">Відмовлено</string>
+    <string name="file_time_remaining">%s секунд залишилось</string>
+    <!--QR-->
+    <string name="qr_default_title">Встановити Сканер штрих-кодів?</string>
+    <string name="qr_default_message">Ця програма потребує Сканер штрих-кодів. Встановити?</string>
+    <string name="qr_button_yes">Так</string>
+    <string name="qr_button_no">Ні</string>
+    <!--Notifications-->
+    <string name="unread_count">%s Непрочитані повідомлення</string>
+    <!--nav bar-->
+    <string name="n_settings">Налаштування</string>
+    <string name="n_profile_options">Профіль</string>
+    <string name="n_create_group">Створити групу</string>
+    <string name="n_add_person">Додати Контакт</string>
+    <string name="n_about">Про програму</string>
+    <string name="n_open_source">Ліцензія відкритого програмного забезпечення</string>
+    <string name="n_logout">Вийти</string>
+    <string name="drawer_open">Відкрити меню</string>
+    <string name="drawer_close">Закрити меню</string>
+    <string name="open_source_license">Ліцензія</string>
+    <string name="license1">Це програмне забезпечення розповсюджується під ліцензіею GNU GPL v3. Автор Mark Winter, підтримка subliun та інші.</string>
+    <string name="license2">Похідний код доступний на \nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Версія</string>
+    <string name="about">Про Antox</string>
+    <string name="about_antox_1">Поки уряди багатьох країн по всьому світу впроваджують різноманітні програми спостереження, Tox дозволяє бути на зв’язку зі знайомими та близькими, не боячись підслуховування.</string>
+    <string name="about_antox_2"> - Що працюе?:</string>
+    <string name="about_antox_3">Спілкування один-на-один</string>
+    <string name="about_antox_4">- Оповіщення</string>
+    <string name="about_antox_5">- Передача файла</string>
+    <string name="about_antox_6">Не працює:</string>
+    <string name="about_antox_7">- Аудіо/Відео</string>
+    <string name="about_antox_8">Групи</string>
+    <string name="title_activity_call">Активність дзвінка</string>
+    <string name="end_call">Завершити дзвінок</string>
+    <string name="mute_call">Вимкнути звук</string>
+    <string name="mute_mic">Вимкнути мікрофон</string>
+    <string name="profile_info_description">Отримати інформацію про користувача</string>
 </resources>

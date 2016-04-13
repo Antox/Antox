@@ -29,6 +29,7 @@ object EditCallReplyDialog {
 }
 
 class EditCallReplyDialog extends DialogFragment {
+
   import EditCallReplyDialog._
 
   override def onCreateDialog(savedInstanceState: Bundle): Dialog = {

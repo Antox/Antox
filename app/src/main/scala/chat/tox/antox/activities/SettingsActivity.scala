@@ -119,8 +119,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       Options.udpEnabled = sharedPreferences.getBoolean("enable_udp", false)
       networkSettingsChanged = true
     }
-    if (proxySettings.contains(key))
-    {
+    if (proxySettings.contains(key)) {
       networkSettingsChanged = true
     }
     if (key == "wifi_only") {

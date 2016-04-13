@@ -23,45 +23,55 @@ import scala.util.Try
 final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: Boolean) {
 
   private val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](Set.empty[ToxavFriendCallState])
+
   private def friendState: Set[ToxavFriendCallState] = friendStateSubject.getValue
 
   // only describes self state
   private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
+
   def selfStateObservable: Observable[SelfCallState] = selfStateSubject.asJavaObservable
+
   def selfState = selfStateSubject.getValue
 
   // is video enabled in any way
   val videoEnabledObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
 
   private val endedSubject = Subject[CallEndReason]()
+
   // called only once, when the call ends with the reason it ended
   def endedObservable: Observable[CallEndReason] = endedSubject.asJavaObservable
 
   //only for outgoing audio
-  private val samplingRate = SamplingRate.Rate48k //in Hz
-  private val audioLength = AudioLength.Length20 //in milliseconds
+  private val samplingRate = SamplingRate.Rate48k
+  //in Hz
+  private val audioLength = AudioLength.Length20
+  //in milliseconds
   private val channels = AudioChannels.Stereo
 
-  val audioBufferLength = 3 // in frames
+  val audioBufferLength = 3
+  // in frames
   val videoBufferLength = 3 // in frames
 
   val defaultRingTime = Duration(30, TimeUnit.SECONDS)
 
   // ringing by default (call should only be created if it is ringing)
   private val ringingSubject = BehaviorSubject[Boolean](true)
+
   def ringingObservable: Observable[Boolean] = ringingSubject.asJavaObservable
+
   def ringing = ringingSubject.getValue
 
   var started = false
   var startTime: Duration = Duration(0, TimeUnit.MILLISECONDS)
+
   def duration: Duration = Duration(System.currentTimeMillis(), TimeUnit.MILLISECONDS) - startTime //in milliseconds
 
   val enhancements: ArrayBuffer[CallEnhancement] = new ArrayBuffer()
 
   /**
-   * Describes a state in which the call is not FINISHED or ERROR.
-   * When the call is on hold or ringing (not yet answered) this will return true.
-   */
+    * Describes a state in which the call is not FINISHED or ERROR.
+    * When the call is on hold or ringing (not yet answered) this will return true.
+    */
   def active: Boolean = isActive(friendState) && !selfState.ended
 
   private def isActive(state: Set[ToxavFriendCallState]): Boolean = {
@@ -74,12 +84,14 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   val audioPlayer = new AudioPlayer(samplingRate.value, channels.value, audioBufferLength)
 
   private val videoFrameSubject = Subject[StridedYuvFrame]()
+
   def videoFrameObservable: Observable[StridedYuvFrame] = videoFrameSubject.onBackpressureDrop(_ => AntoxLog.debug("Dropped a video frame due to back-pressure."))
 
   var cameraFrameBuffer: Option[CircularFifoQueue[NV21Frame]] = None
 
   // default value, not checked based on device capabilities
   private val cameraFacingSubject = BehaviorSubject[CameraFacing](CameraFacing.Front)
+
   def cameraFacingObservable: Observable[CameraFacing] = cameraFacingSubject.asJavaObservable
 
   private def frameSize = SampleCount(audioLength, samplingRate)

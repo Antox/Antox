@@ -118,5 +118,6 @@ class ColorPickerDialog(activity: Activity, callback: ColorPickerDialog.Callback
 
     override def getItem(position: Int): AnyRef = null
   }
+
 }
 

@@ -90,7 +90,7 @@ object State {
     activity.finish()
   }
 
-  def deleteActiveAccount(activity: Activity): Unit ={
+  def deleteActiveAccount(activity: Activity): Unit = {
     val userInfo = userDb(activity.getApplicationContext).getActiveUserDetails
     val dataFile = new ToxDataFile(activity.getApplicationContext, userInfo.profileName)
     val toxData = new ToxData
@@ -104,7 +104,7 @@ object State {
     userDb(activity.getApplicationContext).deleteActiveUser()
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext)
-    if(preferences.getBoolean("notifications_persistent", false)){
+    if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
 

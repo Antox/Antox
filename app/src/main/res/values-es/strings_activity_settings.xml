@@ -1,46 +1,46 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Configuración</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Perfil</string>
-  <string name="pref_title_nickname">Nombre</string>
-  <string name="pref_default_nickname">Usuario de Antox</string>
-  <string name="pref_title_password">Contraseña de ToxMe</string>
-  <string name="pref_default_password">No se estableció contraseña</string>
-  <string name="pref_title_status">Estado</string>
-  <string-array name="pref_status_list_titles">
-    <item>Conectado</item>
-    <item>Ausente</item>
-    <item>Ocupado</item>
-  </string-array>
-  <string name="pref_title_status_message">Mensaje de estado</string>
-  <string name="pref_default_status_message">¡Hey! Estoy usando Antox</string>
-  <string name="pref_title_tox_id">Identificación de Tox</string>
-  <string name="pref_default_tox_id">Identificación de Tox por defecto - No debería estar viendo esto</string>
-  <string name="pref_title_toxme">Dirección de ToxMe</string>
-  <string name="pref_default_toxme">Este perfil está actualmente en modo incógnito</string>
-  <string name="pref_title_logging_enabled">Conservar historial del chat al cerrar sesión</string>
-  <string name="pref_title_theme_color">Cambiar color del tema decorativo</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Nombre de perfil</string>
-  <string name="pref_title_export">Exportar perfil</string>
-  <string name="pref_title_delete">Borrar cuenta</string>
-  <string name="pref_title_logout">Desconectar</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Notificaciones</string>
-  <string name="pref_title_enable_notifications">Habilitar notificaciones</string>
-  <string name="pref_title_new_message_notifications">Avisos de mensajes</string>
-  <string name="pref_title_new_friend_notifications">Avisos de solicitud de amistad</string>
-  <!--Other-->
-  <string name="pref_header_other">Otros</string>
-  <string name="pref_title_connection_status_messages">Mensajes de acción</string>
-  <string name="pref_title_wifi_only">Conectar sólo mediante Wi-Fi</string>
-  <string name="pref_title_language">Idioma</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Copiar identificación de Tox</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Habilitar UDP</string>
-  <string name="pref_advanced">Opciones avanzadas</string>
-  <string name="pref_nospam">Restablecer identificación de Tox</string>
-  <string name="pref_autostart">Iniciar Antox en el arranque</string>
+    <string name="title_activity_settings">Configuración</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Perfil</string>
+    <string name="pref_title_nickname">Nombre</string>
+    <string name="pref_default_nickname">Usuario de Antox</string>
+    <string name="pref_title_password">Contraseña de ToxMe</string>
+    <string name="pref_default_password">No se estableció contraseña</string>
+    <string name="pref_title_status">Estado</string>
+    <string-array name="pref_status_list_titles">
+        <item>Conectado</item>
+        <item>Ausente</item>
+        <item>Ocupado</item>
+    </string-array>
+    <string name="pref_title_status_message">Mensaje de estado</string>
+    <string name="pref_default_status_message">¡Hey! Estoy usando Antox</string>
+    <string name="pref_title_tox_id">Identificación de Tox</string>
+    <string name="pref_default_tox_id">Identificación de Tox por defecto - No debería estar viendo esto</string>
+    <string name="pref_title_toxme">Dirección de ToxMe</string>
+    <string name="pref_default_toxme">Este perfil está actualmente en modo incógnito</string>
+    <string name="pref_title_logging_enabled">Conservar historial del chat al cerrar sesión</string>
+    <string name="pref_title_theme_color">Cambiar color del tema decorativo</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Nombre de perfil</string>
+    <string name="pref_title_export">Exportar perfil</string>
+    <string name="pref_title_delete">Borrar cuenta</string>
+    <string name="pref_title_logout">Desconectar</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Notificaciones</string>
+    <string name="pref_title_enable_notifications">Habilitar notificaciones</string>
+    <string name="pref_title_new_message_notifications">Avisos de mensajes</string>
+    <string name="pref_title_new_friend_notifications">Avisos de solicitud de amistad</string>
+    <!--Other-->
+    <string name="pref_header_other">Otros</string>
+    <string name="pref_title_connection_status_messages">Mensajes de acción</string>
+    <string name="pref_title_wifi_only">Conectar sólo mediante Wi-Fi</string>
+    <string name="pref_title_language">Idioma</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Copiar identificación de Tox</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Habilitar UDP</string>
+    <string name="pref_advanced">Opciones avanzadas</string>
+    <string name="pref_nospam">Restablecer identificación de Tox</string>
+    <string name="pref_autostart">Iniciar Antox en el arranque</string>
 </resources>

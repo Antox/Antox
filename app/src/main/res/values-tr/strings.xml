@@ -1,129 +1,129 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_group_profile">Grup Bilgisi</string>
-  <string name="title_activity_profile_settings">Profil Seçenekleri</string>
-  <!--Navigation / Action Bar-->
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Profil adı doldurulmalıdır</string>
-  <string name="login_login">Oturum Aç</string>
-  <string name="login_account_hint">Profil Adı</string>
-  <string name="login_create_account_text">Tox Profili Oluştur</string>
-  <string name="login_bad_login">Profil adı tanınmadı</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Profil adı</string>
-  <string name="create_text">Herkes için güvenli mesajlaşma.</string>
-  <string name="create_register">Kaydol</string>
-  <string name="create_import_profile">İçe profil aktar</string>
-  <string name="create_skip">Profil adını kullanarak herkesin seni eklemesine izin ver</string>
-  <string name="create_must_fill_in">Tüm alanları doldurmalısın</string>
-  <string name="create_bad_profile_name">Profil adı boşluk veya eğik çizgi içeremez ve boş bırakılamaz</string>
-  <string name="create_profile_exists">Bu profil adı zaten var</string>
-  <string name="import_profile_invalid_file">Seçilen dosya geçerli bir tox profili değil</string>
-  <string name="create_account_exists">Bu isim zaten alınmış</string>
-  <string name="create_account_unknown_error">Bilinmeyen kayıt hatası, lütfen sonra tekrar deneyiniz</string>
-  <string name="create_account_encrypted_profile_error">Antox şifreli profilleri henüz desteklemiyor</string>
-  <string name="create_account_load_profile_unknown">Profil yüklenirken bilinmeyen bir hata meydana geldi</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Hiç aktif sohbet yok.Sol panelden bir kişi seçerek başla.</string>
-  <string name="main_no_internet">İnternet bağlantısı yok</string>
-  <string name="main_group_coming_soon">Yakında...</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">İleti Gönder</string>
-  <string name="chat_file_transfer">Dosya transferi</string>
-  <string name="chat_message_too_long">Bu mesaj çok uzun, gönderilemez</string>
-  <string name="chat_ft_failed_friend_offline">Gönderme başarısız-çevrimdışı birine dosya gönderilemez</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_group_label">Grup</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">Arkadaşınızın kullanıcı anahtarı</string>
-  <string name="addfriend_friend_message">İsteğe bağlı mesaj</string>
-  <string name="addfriend_button">Arkadaş ekleyin</string>
-  <string name="addfriend_friend_added">Arkadaş eklendi</string>
-  <string name="addfriend_friend_exists">Zaten arkadaşsınız</string>
-  <string name="scanqr_button">QR kod tara</string>
-  <string name="invalid_friend_ID">Geçersiz Arkadaş ID\'si</string>
-  <string name="addfriend_nick_hint">Arkadaşın için bir kullanıcı adı koy</string>
-  <string name="addfriend_invalid_pin">Geçersiz Pin</string>
-  <string name="addfriend_own_key">Kendinizi ekleyemezsiniz</string>
-  <!--Add Group Fragment-->
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Kullanıcı adı</string>
-  <string name="friend_profile_key">Tox ID</string>
-  <string name="friend_profile_note">Durum</string>
-  <string name="friend_profile_button">Güncelle</string>
-  <string name="friend_profile_updated">Profil güncellendi</string>
-  <string name="friend_profile_copied">Tox ID Kopyalandı</string>
-  <!--Group Profile Activity-->
-  <!--Friend request fragment-->
-  <string name="friendrequest_accept">Kabul et</string>
-  <string name="friendrequest_reject">Reddet</string>
-  <string name="friend_request">Yeni arkadaşlık isteği</string>
-  <!--Group invite fragment-->
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Profil</string>
-  <string name="friend_action_delete">Sil</string>
-  <string name="friend_action_export_chat">Sohbet geçmişini dışa aktar</string>
-  <string name="friend_action_delete_chat">Sohbet geçmişini temizle</string>
-  <string name="friend_action_block">Engelle</string>
-  <string name="group_action_delete">Gruptan ayrıl</string>
-  <string name="contacts_actions_on">Eylemler açık</string>
-  <string name="contacts_delimiter_requests">İstekler</string>
-  <string name="contacts_delimiter_invites">Grup Davetleri</string>
-  <string name="contacts_delimiter_groups">Gruplar</string>
-  <string name="contacts_delimiter_friends">Arkadaşlar</string>
-  <string name="contacts_delimiter_offline">Çevrimdışı</string>
-  <string name="contacts_delimiter_online">Çevrimiçi</string>
-  <string name="contacts_resend_friend_request">Tekrar arkadaşlık isteği gönder</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Kişiyi kaldırmak istediğinden emin misin?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_export_failed">Sohbet geçmişi dışa aktarımı başarısız.</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Sohbet günlüklerini silmek istediğinden emin misin?</string>
-  <!--Block Friend Dialog-->
-  <string name="friend_action_block_friend_confirmation">Bu kullanıcıyı engellemek onu arkadaş listenden çıkarır ve ondan gelen arkadaşlık isteğini artık göremezsin.\n\nDevam etmek istediğine emin misin?</string>
-  <!--Reset ToxID Dialog-->
-  <string name="reset_tox_id_dialog_title">Tox ID Sıfırlamayı Onayla</string>
-  <string name="reset_tox_id_dialog_confirm">ID\'yi Sıfırla</string>
-  <string name="reset_tox_id_dialog_cancel">Vazgeç</string>
-  <string name="tox_id_reset">Tox ID\'in sıfırlandı</string>
-  <!--Delete Account Dialog-->
-  <!--Create Group Dialog-->
-  <!--Group Chat Delete-->
-  <!--Color Picker Dialog-->
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Fotoğraf ekle</string>
-  <string name="attachment_file">Dosya ekle</string>
-  <string name="attachment_takephoto">Fotoğraf çek</string>
-  <string name="message_copy">İletiyi kopyala</string>
-  <string name="message_delete">İletiyi sil</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_settings">Ayarlar</string>
-  <!--Misc-->
-  <string name="button_confirm">Onayla</string>
-  <string name="button_cancel">İptal</string>
-  <string name="button_yes">Evet</string>
-  <string name="button_no">Hayır</string>
-  <string name="button_ok">TAMAM</string>
-  <string name="dialog_tox_id">Tox ID\'yi panoya kopyala</string>
-  <string name="action_settings">Ayarlar</string>
-  <!--Avatar Dialog-->
-  <string name="no_camera_intent_error">Hata:Geçerli kamera uygulaması bulanamadı.</string>
-  <!--File transfer-->
-  <string name="file_request_sent">İstek Gönder</string>
-  <string name="file_rejected">Reddedildi</string>
-  <!--QR-->
-  <string name="qr_default_message">Uygulamanın Barcode Scanner\'a ihtiyacı var.Yüklemek ister misin?</string>
-  <string name="qr_button_yes">Evet</string>
-  <string name="qr_button_no">Hayır</string>
-  <!--Notifications-->
-  <!--nav bar-->
-  <string name="n_open_source">Açık Kaynak Lisansı</string>
-  <string name="n_logout">Oturumu kapat</string>
-  <string name="about">Hakkında</string>
-  <string name="about_antox_1">Hükümetin takibi ile birlikte, Tox arkadaşlarınızla, ailenizle ya da sevdiklerinizle güvenli bir şekilde, kimsenin izleyemeyeceği şekilde kolayca kullanılabilen bir uygulamadır.</string>
-  <string name="end_call">Çağrıyı Sonlandır</string>
-  <string name="mute_call">Sessiz</string>
-  <string name="profile_info_description">Kullanıcı Bilgisini Al</string>
+    <!--Activity titles-->
+    <string name="title_activity_group_profile">Grup Bilgisi</string>
+    <string name="title_activity_profile_settings">Profil Seçenekleri</string>
+    <!--Navigation / Action Bar-->
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Profil adı doldurulmalıdır</string>
+    <string name="login_login">Oturum Aç</string>
+    <string name="login_account_hint">Profil Adı</string>
+    <string name="login_create_account_text">Tox Profili Oluştur</string>
+    <string name="login_bad_login">Profil adı tanınmadı</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Profil adı</string>
+    <string name="create_text">Herkes için güvenli mesajlaşma.</string>
+    <string name="create_register">Kaydol</string>
+    <string name="create_import_profile">İçe profil aktar</string>
+    <string name="create_skip">Profil adını kullanarak herkesin seni eklemesine izin ver</string>
+    <string name="create_must_fill_in">Tüm alanları doldurmalısın</string>
+    <string name="create_bad_profile_name">Profil adı boşluk veya eğik çizgi içeremez ve boş bırakılamaz</string>
+    <string name="create_profile_exists">Bu profil adı zaten var</string>
+    <string name="import_profile_invalid_file">Seçilen dosya geçerli bir tox profili değil</string>
+    <string name="create_account_exists">Bu isim zaten alınmış</string>
+    <string name="create_account_unknown_error">Bilinmeyen kayıt hatası, lütfen sonra tekrar deneyiniz</string>
+    <string name="create_account_encrypted_profile_error">Antox şifreli profilleri henüz desteklemiyor</string>
+    <string name="create_account_load_profile_unknown">Profil yüklenirken bilinmeyen bir hata meydana geldi</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Hiç aktif sohbet yok.Sol panelden bir kişi seçerek başla.</string>
+    <string name="main_no_internet">İnternet bağlantısı yok</string>
+    <string name="main_group_coming_soon">Yakında...</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">İleti Gönder</string>
+    <string name="chat_file_transfer">Dosya transferi</string>
+    <string name="chat_message_too_long">Bu mesaj çok uzun, gönderilemez</string>
+    <string name="chat_ft_failed_friend_offline">Gönderme başarısız-çevrimdışı birine dosya gönderilemez</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_group_label">Grup</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">Arkadaşınızın kullanıcı anahtarı</string>
+    <string name="addfriend_friend_message">İsteğe bağlı mesaj</string>
+    <string name="addfriend_button">Arkadaş ekleyin</string>
+    <string name="addfriend_friend_added">Arkadaş eklendi</string>
+    <string name="addfriend_friend_exists">Zaten arkadaşsınız</string>
+    <string name="scanqr_button">QR kod tara</string>
+    <string name="invalid_friend_ID">Geçersiz Arkadaş ID\'si</string>
+    <string name="addfriend_nick_hint">Arkadaşın için bir kullanıcı adı koy</string>
+    <string name="addfriend_invalid_pin">Geçersiz Pin</string>
+    <string name="addfriend_own_key">Kendinizi ekleyemezsiniz</string>
+    <!--Add Group Fragment-->
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Kullanıcı adı</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Durum</string>
+    <string name="friend_profile_button">Güncelle</string>
+    <string name="friend_profile_updated">Profil güncellendi</string>
+    <string name="friend_profile_copied">Tox ID Kopyalandı</string>
+    <!--Group Profile Activity-->
+    <!--Friend request fragment-->
+    <string name="friendrequest_accept">Kabul et</string>
+    <string name="friendrequest_reject">Reddet</string>
+    <string name="friend_request">Yeni arkadaşlık isteği</string>
+    <!--Group invite fragment-->
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_delete">Sil</string>
+    <string name="friend_action_export_chat">Sohbet geçmişini dışa aktar</string>
+    <string name="friend_action_delete_chat">Sohbet geçmişini temizle</string>
+    <string name="friend_action_block">Engelle</string>
+    <string name="group_action_delete">Gruptan ayrıl</string>
+    <string name="contacts_actions_on">Eylemler açık</string>
+    <string name="contacts_delimiter_requests">İstekler</string>
+    <string name="contacts_delimiter_invites">Grup Davetleri</string>
+    <string name="contacts_delimiter_groups">Gruplar</string>
+    <string name="contacts_delimiter_friends">Arkadaşlar</string>
+    <string name="contacts_delimiter_offline">Çevrimdışı</string>
+    <string name="contacts_delimiter_online">Çevrimiçi</string>
+    <string name="contacts_resend_friend_request">Tekrar arkadaşlık isteği gönder</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Kişiyi kaldırmak istediğinden emin misin?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_export_failed">Sohbet geçmişi dışa aktarımı başarısız.</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Sohbet günlüklerini silmek istediğinden emin misin?</string>
+    <!--Block Friend Dialog-->
+    <string name="friend_action_block_friend_confirmation">Bu kullanıcıyı engellemek onu arkadaş listenden çıkarır ve ondan gelen arkadaşlık isteğini artık göremezsin.\n\nDevam etmek istediğine emin misin?</string>
+    <!--Reset ToxID Dialog-->
+    <string name="reset_tox_id_dialog_title">Tox ID Sıfırlamayı Onayla</string>
+    <string name="reset_tox_id_dialog_confirm">ID\'yi Sıfırla</string>
+    <string name="reset_tox_id_dialog_cancel">Vazgeç</string>
+    <string name="tox_id_reset">Tox ID\'in sıfırlandı</string>
+    <!--Delete Account Dialog-->
+    <!--Create Group Dialog-->
+    <!--Group Chat Delete-->
+    <!--Color Picker Dialog-->
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Fotoğraf ekle</string>
+    <string name="attachment_file">Dosya ekle</string>
+    <string name="attachment_takephoto">Fotoğraf çek</string>
+    <string name="message_copy">İletiyi kopyala</string>
+    <string name="message_delete">İletiyi sil</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_settings">Ayarlar</string>
+    <!--Misc-->
+    <string name="button_confirm">Onayla</string>
+    <string name="button_cancel">İptal</string>
+    <string name="button_yes">Evet</string>
+    <string name="button_no">Hayır</string>
+    <string name="button_ok">TAMAM</string>
+    <string name="dialog_tox_id">Tox ID\'yi panoya kopyala</string>
+    <string name="action_settings">Ayarlar</string>
+    <!--Avatar Dialog-->
+    <string name="no_camera_intent_error">Hata:Geçerli kamera uygulaması bulanamadı.</string>
+    <!--File transfer-->
+    <string name="file_request_sent">İstek Gönder</string>
+    <string name="file_rejected">Reddedildi</string>
+    <!--QR-->
+    <string name="qr_default_message">Uygulamanın Barcode Scanner\'a ihtiyacı var.Yüklemek ister misin?</string>
+    <string name="qr_button_yes">Evet</string>
+    <string name="qr_button_no">Hayır</string>
+    <!--Notifications-->
+    <!--nav bar-->
+    <string name="n_open_source">Açık Kaynak Lisansı</string>
+    <string name="n_logout">Oturumu kapat</string>
+    <string name="about">Hakkında</string>
+    <string name="about_antox_1">Hükümetin takibi ile birlikte, Tox arkadaşlarınızla, ailenizle ya da sevdiklerinizle güvenli bir şekilde, kimsenin izleyemeyeceği şekilde kolayca kullanılabilen bir uygulamadır.</string>
+    <string name="end_call">Çağrıyı Sonlandır</string>
+    <string name="mute_call">Sessiz</string>
+    <string name="profile_info_description">Kullanıcı Bilgisini Al</string>
 </resources>

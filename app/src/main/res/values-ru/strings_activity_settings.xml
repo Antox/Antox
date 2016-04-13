@@ -1,42 +1,42 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--PROMT EDITION-->
-  <string name="title_activity_settings">Настройки</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Профиль</string>
-  <string name="pref_title_nickname">Имя</string>
-  <string name="pref_default_nickname">Пользователь Antox</string>
-  <string name="pref_title_status">Статус</string>
-  <string-array name="pref_status_list_titles">
-    <item>В сети</item>
-    <item>Отошел</item>
-    <item>Занят</item>
-  </string-array>
-  <string name="pref_title_status_message">Изменить статус</string>
-  <string name="pref_default_status_message">Всем привет!</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Tox ID по умолчанию - Вы не должны этого видеть!</string>
-  <string name="pref_title_logging_enabled">Сохранять историю чата при выходе</string>
-  <string name="pref_title_theme_color">Тема</string>
-  <string name="pref_title_avatar">Изображение профиля</string>
-  <string name="pref_title_account_name">Имя профиля</string>
-  <string name="pref_title_export">Экспортировать профиль</string>
-  <string name="pref_title_logout">Выход</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Уведомления</string>
-  <string name="pref_title_enable_notifications">Включить уведомления</string>
-  <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
-  <string name="pref_title_new_friend_notifications">Уведомления о добавления в друзья</string>
-  <!--Other-->
-  <string name="pref_header_other">Другое</string>
-  <string name="pref_title_connection_status_messages">Онлайн/Оффлайн сообщения</string>
-  <string name="pref_title_wifi_only">Только через Wi-Fi</string>
-  <string name="pref_title_language">Язык</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Скопировать Tox ID</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Использовать UDP</string>
-  <string name="pref_advanced">Дополнительно</string>
-  <string name="pref_nospam">Сбросить Tox ID</string>
-  <string name="pref_autostart">Автозапуск</string>
+    <!--PROMT EDITION-->
+    <string name="title_activity_settings">Настройки</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Профиль</string>
+    <string name="pref_title_nickname">Имя</string>
+    <string name="pref_default_nickname">Пользователь Antox</string>
+    <string name="pref_title_status">Статус</string>
+    <string-array name="pref_status_list_titles">
+        <item>В сети</item>
+        <item>Отошел</item>
+        <item>Занят</item>
+    </string-array>
+    <string name="pref_title_status_message">Изменить статус</string>
+    <string name="pref_default_status_message">Всем привет!</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Tox ID по умолчанию - Вы не должны этого видеть!</string>
+    <string name="pref_title_logging_enabled">Сохранять историю чата при выходе</string>
+    <string name="pref_title_theme_color">Тема</string>
+    <string name="pref_title_avatar">Изображение профиля</string>
+    <string name="pref_title_account_name">Имя профиля</string>
+    <string name="pref_title_export">Экспортировать профиль</string>
+    <string name="pref_title_logout">Выход</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Уведомления</string>
+    <string name="pref_title_enable_notifications">Включить уведомления</string>
+    <string name="pref_title_new_message_notifications">Уведомления о сообщениях</string>
+    <string name="pref_title_new_friend_notifications">Уведомления о добавления в друзья</string>
+    <!--Other-->
+    <string name="pref_header_other">Другое</string>
+    <string name="pref_title_connection_status_messages">Онлайн/Оффлайн сообщения</string>
+    <string name="pref_title_wifi_only">Только через Wi-Fi</string>
+    <string name="pref_title_language">Язык</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Скопировать Tox ID</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Использовать UDP</string>
+    <string name="pref_advanced">Дополнительно</string>
+    <string name="pref_nospam">Сбросить Tox ID</string>
+    <string name="pref_autostart">Автозапуск</string>
 </resources>

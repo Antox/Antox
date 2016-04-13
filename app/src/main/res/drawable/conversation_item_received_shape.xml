@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:bottom="0dp" android:id="@+id/received_shape">
+    <item
+        android:bottom="0dp"
+        android:id="@+id/received_shape">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
-            android:shape="rectangle" >
+            android:shape="rectangle">
             <solid android:color="@color/grey_light" />
             <corners android:radius="4dp" />
         </shape>

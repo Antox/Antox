@@ -21,11 +21,11 @@ class AboutActivity extends AppCompatActivity {
 
     val versionTextView = findViewById(R.id.version_text).asInstanceOf[TextView]
     val sourceURLTextView = findViewById(R.id.source_link).asInstanceOf[TextView]
-    
+
     // Make the source URL a clickable link
     val pattern = Pattern.compile("https://github.com/Antox/Antox")
     Linkify.addLinks(sourceURLTextView, pattern, "")
-    
+
     // Fetch the app version and set it in the versionTextView, falling back to a blank version if unable to
     var version = "-.-.-"
     try {

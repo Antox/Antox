@@ -330,7 +330,7 @@ class CreateAccountActivity extends AppCompatActivity {
           val importedFile = new File(getFilesDir.getAbsolutePath + "/" + accountName)
           FileUtils.copy(file, importedFile)
           val toxDataFile = new ToxDataFile(this, accountName)
-          if(toxDataFile.isEncrypted){
+          if (toxDataFile.isEncrypted) {
             AntoxLog.debug("Profile is encrypted")
             val builder = new AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.login_profile_encrypted))

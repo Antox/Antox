@@ -156,23 +156,23 @@ class AddFriendFragment extends Fragment with InputableID {
       try {
         lookupSubscription = Some(
           ToxMe.lookup(_originalUsername)
-          .subscribeOn(IOScheduler())
-          .observeOn(AndroidMainThreadScheduler())
-          .subscribe((m_key: Option[String]) => {
-            m_key match {
-              case Some(key) =>
-                val result = checkAndSend(key, _originalUsername)
-                if (result) {
-                  val update = new Intent(Constants.BROADCAST_ACTION)
-                  update.putExtra("action", Constants.UPDATE)
-                  LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
-                  val i = new Intent()
-                  getActivity.setResult(Activity.RESULT_OK, i)
-                  getActivity.finish()
-                }
-              case None => showToastInvalidID()
-            }
-          }))
+            .subscribeOn(IOScheduler())
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe((m_key: Option[String]) => {
+              m_key match {
+                case Some(key) =>
+                  val result = checkAndSend(key, _originalUsername)
+                  if (result) {
+                    val update = new Intent(Constants.BROADCAST_ACTION)
+                    update.putExtra("action", Constants.UPDATE)
+                    LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
+                    val i = new Intent()
+                    getActivity.setResult(Activity.RESULT_OK, i)
+                    getActivity.finish()
+                  }
+                case None => showToastInvalidID()
+              }
+            }))
       } catch {
         case e: Exception => e.printStackTrace()
       }

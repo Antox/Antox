@@ -1,10 +1,11 @@
 package chat.tox.antox.tests
 
 import java.util.Random
+
 import android.support.test.runner.AndroidJUnit4
 import android.test.AndroidTestCase
-import chat.tox.antox.toxme.ToxMe.{ToxMeResult, PrivacyLevel}
-import chat.tox.antox.toxme.{ToxMeError, ToxMeName, ToxMe, ToxData}
+import chat.tox.antox.toxme.ToxMe.{PrivacyLevel, ToxMeResult}
+import chat.tox.antox.toxme.{ToxData, ToxMe, ToxMeError, ToxMeName}
 import chat.tox.antox.utils.Options
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.options.ToxOptions
@@ -42,8 +43,7 @@ class ToxMeTest extends AndroidTestCase {
   def genRandomToxMeName(): ToxMeName = {
     var text = new Array[Char](10)
     val characters = "abcdefghijklmnopqrstuvwxyz"
-    for (i: Int <- 0 until 10)
-    {
+    for (i: Int <- 0 until 10) {
       val rng = new Random()
       text(i) = characters.charAt(rng.nextInt(characters.length))
     }
@@ -101,7 +101,7 @@ class ToxMeTest extends AndroidTestCase {
   }
 
   @Test
-  def testSearch(): Unit ={
+  def testSearch(): Unit = {
     val maybeResults = ToxMe.search("subl", ToxMe.makeApiURL(ToxMe.DEFAULT_TOXME_DOMAIN)).toBlocking.first
     maybeResults match {
       case Left(error) =>

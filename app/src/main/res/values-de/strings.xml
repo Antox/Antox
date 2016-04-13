@@ -1,221 +1,221 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <!--Activity titles-->
-  <string name="title_activity_add">Kontakt hinzufügen</string>
-  <string name="title_activity_friend_profile">Profil des Freundes</string>
-  <string name="title_activity_group_profile">Gruppeninfo</string>
-  <string name="title_activity_profile_settings">Profileinstellungen</string>
-  <!--Navigation / Action Bar-->
-  <string name="add_contact">Kontakt hinzufügen</string>
-  <!--Login Activity-->
-  <string name="login_must_fill_in">Sie müssen einen Profilnamen eingeben.</string>
-  <string name="login_login">Anmelden</string>
-  <string name="login_account_hint">Profilname</string>
-  <string name="login_create_account_text">Tox-Profil erstellen</string>
-  <string name="login_bad_login">Profilname nicht erkannt</string>
-  <!--Create Account Activity-->
-  <string name="create_name_hint">Profilname</string>
-  <string name="create_text">Sichere Kommunikation für jeden.</string>
-  <string name="create_register">Registrieren</string>
-  <string name="create_registering">Konto wird registriert …</string>
-  <string name="create_register_incog">Anonym registrieren</string>
-  <string name="create_import_profile">Profil importieren</string>
-  <string name="create_skip">Jedem erlauben, Sie mittels Ihres Profilnamens zu finden</string>
-  <string name="create_must_fill_in">Sie müssen alle Felder ausfüllen</string>
-  <string name="create_bad_profile_name">Profilname darf keine Leerzeichen oder Schrägstriche enthalten oder leer sein</string>
-  <string name="create_profile_exists">Dieser Profilname ist bereits vorhanden</string>
-  <string name="import_profile_invalid_file">Die ausgewählte Datei ist kein gültiges Tox-Profil</string>
-  <string name="create_account_exists">Dieser Name ist bereits vergeben</string>
-  <string name="create_account_internal_error">Interner Antox-Fehler. Bitte neu starten und erneut versuchen</string>
-  <string name="create_account_reached_registration_limit">Sie können nur 13 Konten pro Stunde einrichten. Sie haben diese Begrenzung erreicht.</string>
-  <string name="create_account_unknown_error">Unbekannter Registrierungsfehler, bitte später erneut versuchen</string>
-  <string name="create_account_kalium_link_error">Das Laden einer benötigten Bibliothek ist fehlgeschlagen. Nicht anonymes Konto konnte nicht erstellt werden.</string>
-  <string name="create_account_invalid_domain">Ungültige ToxMe-Domain.</string>
-  <string name="create_account_connection_error">Registrierung fehlgeschlagen: Konnte nicht mit dem Internet verbinden.</string>
-  <string name="create_account_encrypted_profile_error">Antox unterstützt noch keine verschlüsselten Profile</string>
-  <string name="create_account_load_profile_unknown">Unbekannter Fehler beim Laden des Profils</string>
-  <!--Main Activity-->
-  <string name="main_no_active_chat">Keine aktiven Chats. Starten Sie einen Chat, indem Sie einen Freund im linken Bereich auswählen</string>
-  <string name="main_recent_no">Keine kürzlichen Konversationen</string>
-  <string name="main_no_internet">Keine Internetverbindung</string>
+    <!--Activity titles-->
+    <string name="title_activity_add">Kontakt hinzufügen</string>
+    <string name="title_activity_friend_profile">Profil des Freundes</string>
+    <string name="title_activity_group_profile">Gruppeninfo</string>
+    <string name="title_activity_profile_settings">Profileinstellungen</string>
+    <!--Navigation / Action Bar-->
+    <string name="add_contact">Kontakt hinzufügen</string>
+    <!--Login Activity-->
+    <string name="login_must_fill_in">Sie müssen einen Profilnamen eingeben.</string>
+    <string name="login_login">Anmelden</string>
+    <string name="login_account_hint">Profilname</string>
+    <string name="login_create_account_text">Tox-Profil erstellen</string>
+    <string name="login_bad_login">Profilname nicht erkannt</string>
+    <!--Create Account Activity-->
+    <string name="create_name_hint">Profilname</string>
+    <string name="create_text">Sichere Kommunikation für jeden.</string>
+    <string name="create_register">Registrieren</string>
+    <string name="create_registering">Konto wird registriert …</string>
+    <string name="create_register_incog">Anonym registrieren</string>
+    <string name="create_import_profile">Profil importieren</string>
+    <string name="create_skip">Jedem erlauben, Sie mittels Ihres Profilnamens zu finden</string>
+    <string name="create_must_fill_in">Sie müssen alle Felder ausfüllen</string>
+    <string name="create_bad_profile_name">Profilname darf keine Leerzeichen oder Schrägstriche enthalten oder leer sein</string>
+    <string name="create_profile_exists">Dieser Profilname ist bereits vorhanden</string>
+    <string name="import_profile_invalid_file">Die ausgewählte Datei ist kein gültiges Tox-Profil</string>
+    <string name="create_account_exists">Dieser Name ist bereits vergeben</string>
+    <string name="create_account_internal_error">Interner Antox-Fehler. Bitte neu starten und erneut versuchen</string>
+    <string name="create_account_reached_registration_limit">Sie können nur 13 Konten pro Stunde einrichten. Sie haben diese Begrenzung erreicht.</string>
+    <string name="create_account_unknown_error">Unbekannter Registrierungsfehler, bitte später erneut versuchen</string>
+    <string name="create_account_kalium_link_error">Das Laden einer benötigten Bibliothek ist fehlgeschlagen. Nicht anonymes Konto konnte nicht erstellt werden.</string>
+    <string name="create_account_invalid_domain">Ungültige ToxMe-Domain.</string>
+    <string name="create_account_connection_error">Registrierung fehlgeschlagen: Konnte nicht mit dem Internet verbinden.</string>
+    <string name="create_account_encrypted_profile_error">Antox unterstützt noch keine verschlüsselten Profile</string>
+    <string name="create_account_load_profile_unknown">Unbekannter Fehler beim Laden des Profils</string>
+    <!--Main Activity-->
+    <string name="main_no_active_chat">Keine aktiven Chats. Starten Sie einen Chat, indem Sie einen Freund im linken Bereich auswählen</string>
+    <string name="main_recent_no">Keine kürzlichen Konversationen</string>
+    <string name="main_no_internet">Keine Internetverbindung</string>
   <string name="main_not_connected">Sie sind nicht mit dem Internet verbunden. Ohne Internetverbindung sind einige Funktionen eingeschränkt, es sei denn Sie verwenden Antox nur im LAN.
     </string>
-  <string name="main_mobile_disabled">Zur Zeit getrennt, weil Nur-WLAN-Modus aktiviert ist. Tippen, um Einstellungen zu öffnen.</string>
-  <string name="search_all_contacts">Alle Kontakte durchsuchen</string>
-  <string name="main_group_coming_soon">Demnächst …</string>
-  <!--Chat Activity-->
-  <string name="chat_enter_message">Nachricht senden</string>
-  <string name="chat_file_transfer">Dateiübertragung</string>
-  <string name="chat_message_too_long">Die Nachricht ist zu lang und kann nicht gesendet werden.</string>
-  <string name="chat_ft_failed_friend_offline">Senden fehlgeschlagen - Datei kann nicht an einen getrennten Kontakt gesendet werden.</string>
-  <!--Add Pane Fragment-->
-  <string name="addpane_friend_label">Freund</string>
-  <string name="addpane_group_label">Gruppe</string>
-  <!--Add Friend Fragment-->
-  <string name="addfriend_friend_key">Tox-Kennung Ihres Freundes</string>
-  <string name="addfriend_friend_message">Nachricht mit Ihrer Anfrage senden</string>
-  <string name="addfriend_button">Freund hinzufügen</string>
-  <string name="addfriend_friend_added">Freund wurde hinzugefügt</string>
-  <string name="addfriend_friend_exists">Freund ist bereits vorhanden</string>
-  <string name="scanqr_button">QR-Code einlesen</string>
-  <string name="invalid_friend_ID">Ungültige Tox-Kennung</string>
-  <string name="addfriend_nick_hint">Einen Spitznamen für Ihren Freund festlegen</string>
-  <string name="addfriend_optional_title">Optionale Angaben</string>
-  <string name="dialog_pin">Die PIN Ihres Freundes eingeben</string>
-  <string name="addfriend_invalid_pin">Ungültige PIN</string>
-  <string name="addfriend_own_key">Sie können sich nicht selber hinzufügen</string>
-  <string name="addfriend_friend_pin_title">Die PIN des Freundes eingeben</string>
-  <string name="addfriend_friend_pin_text">Die PIN des Freundes eingeben</string>
-  <string name="addfriend_default_message">Hallo! Bitte akzeptieren Sie meine Freundschaftsanfrage!</string>
-  <!--Add Group Fragment-->
-  <string name="addgroup_group_id">Die Gruppenkennung</string>
-  <string name="addgroup_button">Gruppe beitreten</string>
-  <string name="addgroup_group_added">Gruppe beigetreten</string>
-  <string name="addgroup_group_exists">Gruppe ist bereits vorhanden</string>
-  <string name="invalid_group_ID">Ungültige Gruppenkennung</string>
-  <string name="addgroup_alias_hint">Einen Alias für diese Gruppe festlegen</string>
-  <string name="addgroup_optional_title">Optionale Extras</string>
-  <!--Friend Profile Activity-->
-  <string name="friend_profile_nick">Spitzname</string>
-  <string name="friend_profile_key">Tox-Kennung</string>
-  <string name="friend_profile_note">Status</string>
-  <string name="friend_profile_button">Aktualisieren</string>
-  <string name="friend_profile_updated">Das Profil wurde aktualisiert</string>
-  <string name="friend_profile_copied">Tox-Kennung kopiert</string>
-  <!--Group Profile Activity-->
-  <string name="group_profile_peer_list_head">Teilnehmer</string>
-  <!--Friend request fragment-->
-  <string name="friend_profile_title">Profil von %1$s</string>
-  <string name="friendrequest_accept">Annehmen</string>
-  <string name="friendrequest_reject">Ablehnen</string>
-  <string name="friend_request">Neue Freundschaftsanfrage</string>
-  <!--Group invite fragment-->
-  <string name="groupinvite_accept">Akzeptieren</string>
-  <string name="groupinvite_reject">Ablehnen</string>
-  <string name="group_invite">Neue Gruppeneinladung</string>
-  <string name="invited_by">Sie wurden eingeladen von</string>
-  <!--Contacts Fragment-->
-  <string name="friend_action_profile">Profil</string>
-  <string name="friend_action_delete">Freund entfernen</string>
-  <string name="friend_action_export_chat">Chatverlauf exportieren</string>
-  <string name="friend_action_delete_chat">Chatverlauf löschen</string>
-  <string name="friend_action_block">Sperren</string>
-  <string name="friend_accepted_default_status">Freund akzeptiert</string>
-  <string name="group_default_peer_name">Anonym</string>
-  <string name="group_action_delete">Gruppe verlassen</string>
-  <string name="contacts_actions_on">Aktionen für</string>
-  <string name="contacts_delimiter_requests">Anfragen</string>
-  <string name="contacts_delimiter_invites">Gruppeneinladungen</string>
-  <string name="contacts_delimiter_groups">Gruppen</string>
-  <string name="contacts_delimiter_friends">Freunde</string>
-  <string name="contacts_delimiter_offline">nicht verbunden</string>
-  <string name="contacts_delimiter_online">verbunden</string>
-  <string name="contacts_resend_friend_request">Freundschaftsanfrage erneut senden</string>
-  <!--Delete Friend Dialog-->
-  <string name="friend_action_delete_friend_confirmation">Sind Sie sicher, dass Sie diesen Freund entfernen möchten?</string>
-  <!--Export Chat Logs Toast-->
-  <string name="friend_action_chat_log_exported">Chatprotokoll erfolgreich nach %s exportiert</string>
-  <string name="friend_action_chat_log_export_failed">Export des Chatprotokolls ist fehlgeschlagen</string>
-  <!--Delete Chat Logs Dialog-->
-  <string name="friend_action_delete_chat_confirmation">Sind Sie sicher, dass Sie das Chatprotokoll löschen möchten?</string>
-  <!--Block Friend Dialog-->
+    <string name="main_mobile_disabled">Zur Zeit getrennt, weil Nur-WLAN-Modus aktiviert ist. Tippen, um Einstellungen zu öffnen.</string>
+    <string name="search_all_contacts">Alle Kontakte durchsuchen</string>
+    <string name="main_group_coming_soon">Demnächst …</string>
+    <!--Chat Activity-->
+    <string name="chat_enter_message">Nachricht senden</string>
+    <string name="chat_file_transfer">Dateiübertragung</string>
+    <string name="chat_message_too_long">Die Nachricht ist zu lang und kann nicht gesendet werden.</string>
+    <string name="chat_ft_failed_friend_offline">Senden fehlgeschlagen - Datei kann nicht an einen getrennten Kontakt gesendet werden.</string>
+    <!--Add Pane Fragment-->
+    <string name="addpane_friend_label">Freund</string>
+    <string name="addpane_group_label">Gruppe</string>
+    <!--Add Friend Fragment-->
+    <string name="addfriend_friend_key">Tox-Kennung Ihres Freundes</string>
+    <string name="addfriend_friend_message">Nachricht mit Ihrer Anfrage senden</string>
+    <string name="addfriend_button">Freund hinzufügen</string>
+    <string name="addfriend_friend_added">Freund wurde hinzugefügt</string>
+    <string name="addfriend_friend_exists">Freund ist bereits vorhanden</string>
+    <string name="scanqr_button">QR-Code einlesen</string>
+    <string name="invalid_friend_ID">Ungültige Tox-Kennung</string>
+    <string name="addfriend_nick_hint">Einen Spitznamen für Ihren Freund festlegen</string>
+    <string name="addfriend_optional_title">Optionale Angaben</string>
+    <string name="dialog_pin">Die PIN Ihres Freundes eingeben</string>
+    <string name="addfriend_invalid_pin">Ungültige PIN</string>
+    <string name="addfriend_own_key">Sie können sich nicht selber hinzufügen</string>
+    <string name="addfriend_friend_pin_title">Die PIN des Freundes eingeben</string>
+    <string name="addfriend_friend_pin_text">Die PIN des Freundes eingeben</string>
+    <string name="addfriend_default_message">Hallo! Bitte akzeptieren Sie meine Freundschaftsanfrage!</string>
+    <!--Add Group Fragment-->
+    <string name="addgroup_group_id">Die Gruppenkennung</string>
+    <string name="addgroup_button">Gruppe beitreten</string>
+    <string name="addgroup_group_added">Gruppe beigetreten</string>
+    <string name="addgroup_group_exists">Gruppe ist bereits vorhanden</string>
+    <string name="invalid_group_ID">Ungültige Gruppenkennung</string>
+    <string name="addgroup_alias_hint">Einen Alias für diese Gruppe festlegen</string>
+    <string name="addgroup_optional_title">Optionale Extras</string>
+    <!--Friend Profile Activity-->
+    <string name="friend_profile_nick">Spitzname</string>
+    <string name="friend_profile_key">Tox-Kennung</string>
+    <string name="friend_profile_note">Status</string>
+    <string name="friend_profile_button">Aktualisieren</string>
+    <string name="friend_profile_updated">Das Profil wurde aktualisiert</string>
+    <string name="friend_profile_copied">Tox-Kennung kopiert</string>
+    <!--Group Profile Activity-->
+    <string name="group_profile_peer_list_head">Teilnehmer</string>
+    <!--Friend request fragment-->
+    <string name="friend_profile_title">Profil von %1$s</string>
+    <string name="friendrequest_accept">Annehmen</string>
+    <string name="friendrequest_reject">Ablehnen</string>
+    <string name="friend_request">Neue Freundschaftsanfrage</string>
+    <!--Group invite fragment-->
+    <string name="groupinvite_accept">Akzeptieren</string>
+    <string name="groupinvite_reject">Ablehnen</string>
+    <string name="group_invite">Neue Gruppeneinladung</string>
+    <string name="invited_by">Sie wurden eingeladen von</string>
+    <!--Contacts Fragment-->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_delete">Freund entfernen</string>
+    <string name="friend_action_export_chat">Chatverlauf exportieren</string>
+    <string name="friend_action_delete_chat">Chatverlauf löschen</string>
+    <string name="friend_action_block">Sperren</string>
+    <string name="friend_accepted_default_status">Freund akzeptiert</string>
+    <string name="group_default_peer_name">Anonym</string>
+    <string name="group_action_delete">Gruppe verlassen</string>
+    <string name="contacts_actions_on">Aktionen für</string>
+    <string name="contacts_delimiter_requests">Anfragen</string>
+    <string name="contacts_delimiter_invites">Gruppeneinladungen</string>
+    <string name="contacts_delimiter_groups">Gruppen</string>
+    <string name="contacts_delimiter_friends">Freunde</string>
+    <string name="contacts_delimiter_offline">nicht verbunden</string>
+    <string name="contacts_delimiter_online">verbunden</string>
+    <string name="contacts_resend_friend_request">Freundschaftsanfrage erneut senden</string>
+    <!--Delete Friend Dialog-->
+    <string name="friend_action_delete_friend_confirmation">Sind Sie sicher, dass Sie diesen Freund entfernen möchten?</string>
+    <!--Export Chat Logs Toast-->
+    <string name="friend_action_chat_log_exported">Chatprotokoll erfolgreich nach %s exportiert</string>
+    <string name="friend_action_chat_log_export_failed">Export des Chatprotokolls ist fehlgeschlagen</string>
+    <!--Delete Chat Logs Dialog-->
+    <string name="friend_action_delete_chat_confirmation">Sind Sie sicher, dass Sie das Chatprotokoll löschen möchten?</string>
+    <!--Block Friend Dialog-->
   <string name="friend_action_block_friend_confirmation">Wenn Sie diesen Benutzer sperren, wird er aus Ihrer Freundesliste gelöscht und Sie erhalten keine
 Freundschaftsanfragen mehr von ihm. Sind Sie sicher, dass Sie diesen Benutzer sperren möchten?</string>
-  <!--Reset ToxID Dialog-->
+    <!--Reset ToxID Dialog-->
   <string name="reset_tox_id_dialog_message">Das Zurücksetzen der Tox-Kennung ändert Ihre Kennung dauerhaft.
 Sie werden Ihre aktuelle Kontaktliste behalten, aber andere Personen können Sie nicht über Ihre alte Kennung hinzufügen.</string>
-  <string name="reset_tox_id_dialog_title">Zurücksetzen der Tox-Kennung bestätigen</string>
-  <string name="reset_tox_id_dialog_confirm">Kennung zurücksetzen</string>
-  <string name="reset_tox_id_dialog_cancel">Abbrechen</string>
-  <string name="tox_id_reset">Ihre Tox-Kennung wurde zurückgesetzt</string>
-  <!--Delete Account Dialog-->
-  <string name="delete_account_dialog_message">Dies wird diesen Antox Benutzer und Dich von jedem ToxMe Service löschen, der mit diesem Account verbunden ist.</string>
-  <string name="delete_account_dialog_title">Antox-Kontolöschung bestätigen</string>
-  <string name="delete_account_dialog_confirm">Konto löschen</string>
-  <string name="delete_account_dialog_cancel">Abbrechen</string>
-  <string name="delete_account_successful">Konto wurde erfolgreich gelöscht</string>
-  <string name="delete_account_error">Beim Löschen Ihres Antox-Kontos ist ein Fehler aufgetreten</string>
-  <!--Create Group Dialog-->
-  <string name="create_group_dialog_message">Neuen Gruppenchat erstellen</string>
-  <string name="create_group_dialog_create_group">Gruppe erstellen</string>
-  <string name="create_group_dialog_cancel">Abbrechen</string>
-  <string name="create_group_dialog_name_header">Gruppenname</string>
-  <!--Group Chat Delete-->
-  <string name="group_default_part_message">Auf Wiedersehen</string>
-  <!--Color Picker Dialog-->
-  <string name="dialog_color_picker_title">Themafarbe auswählen</string>
-  <!--Chat Fragment-->
-  <string name="attachment_photo">Bild anhängen</string>
-  <string name="attachment_file">Datei anhängen</string>
-  <string name="attachment_takephoto">Foto aufnehmen</string>
-  <string name="message_copy">Nachricht kopieren</string>
-  <string name="message_delete">Nachricht löschen</string>
-  <string name="file_delete">Datei löschen</string>
-  <!--Left Pane Fragment-->
-  <string name="titles_recent">Neueste</string>
-  <string name="titles_contacts">Kontakte</string>
-  <string name="titles_settings">Einstellungen</string>
-  <!--Misc-->
-  <string name="button_confirm">Bestätigen</string>
-  <string name="button_cancel">Abbrechen</string>
-  <string name="button_yes">Ja</string>
-  <string name="button_no">Nein</string>
-  <string name="button_ok">OK</string>
-  <string name="dialog_tox_id">Tox-Kennung in die Zwischenablage kopieren</string>
-  <string name="dialog_toxme">In die Zwischenablage kopieren</string>
-  <string name="dialog_password">In die Zwischenablage kopieren</string>
-  <string name="share_with">Teilen mit</string>
-  <string name="connection_has">ist</string>
-  <string name="connection_online">jetzt verbunden.</string>
-  <string name="connection_offline">nicht mehr verbunden.</string>
-  <string name="title_activity_create_account">CreateAccountActivity</string>
-  <string name="action_settings">Einstellungen</string>
-  <!--Avatar Dialog-->
-  <string name="dialog_avatar_take_photo">Fotografieren</string>
-  <string name="dialog_avatar_use_file">Datei verwenden</string>
-  <string name="avatar_too_large_error">Fehler: Avatardatei ist zu groß.</string>
-  <string name="no_camera_intent_error">Fehler: Keine gültige Kameraanwendung gefunden.</string>
-  <string name="dialog_avatar_description">Avatar</string>
-  <!--File transfer-->
-  <string name="file_finished">Beendet</string>
-  <string name="file_failed">Fehlgeschlagen</string>
-  <string name="file_in_progress">In Arbeit</string>
-  <string name="file_request_sent">Anfrage gesendet</string>
-  <string name="file_rejected">Abgelehnt</string>
-  <string name="file_time_remaining">%s Sekunden verbleibend</string>
-  <!--QR-->
-  <string name="qr_default_title">Barcodescanner installieren?</string>
-  <string name="qr_default_message">Diese Anwendung benötigt einen Barcodescanner. Möchten Sie einen installieren?</string>
-  <string name="qr_button_yes">Ja</string>
-  <string name="qr_button_no">Nein</string>
-  <!--Notifications-->
-  <string name="unread_count">%s ungelesene Nachrichten</string>
-  <!--nav bar-->
-  <string name="n_settings">Einstellungen</string>
-  <string name="n_profile_options">Profil</string>
-  <string name="n_create_group">Gruppe erstellen</string>
-  <string name="n_add_person">Person hinzufügen</string>
-  <string name="n_about">Über</string>
-  <string name="n_open_source">Open-Source-Lizenz</string>
-  <string name="n_logout">Abmelden</string>
-  <string name="drawer_open">Navigationsmenü öffnen</string>
-  <string name="drawer_close">Navigationsmenü schließen</string>
-  <string name="open_source_license">Open-Source-Lizenz</string>
-  <string name="license1">Verteilt unter der GNU GPL v3. Erstellt von Mark Winter, verwaltet von subliun und weiteren.</string>
-  <string name="license2">Quellcode ist verfügbar auf\nhttps://github.com/Antox/Antox</string>
-  <string name="ver">Version</string>
-  <string name="about">Über</string>
-  <string name="about_antox_1">Vor dem Hintergrund sich ausweitender, großflächiger Überwachungsprogramme durch einige Regierungen ist Tox eine leicht zu bedienende Anwendung, die es Ihnen ermöglicht, sich mit Freunden und Nahestehenden zu unterhalten, ohne dass jemand zuhört.</string>
-  <string name="about_antox_2">Was derzeit funktioniert:</string>
-  <string name="about_antox_3">- Eins zu eins Nachrichtenaustausch</string>
-  <string name="about_antox_4">- Benachrichtigungen</string>
-  <string name="about_antox_5">- Dateiübertragungen</string>
-  <string name="about_antox_6">Funktioniert nicht:</string>
-  <string name="about_antox_7">- Audio/Video</string>
-  <string name="about_antox_8">- Gruppen</string>
-  <string name="title_activity_call">CallActivity</string>
-  <string name="end_call">Anruf beenden</string>
-  <string name="mute_call">Stumm</string>
-  <string name="mute_mic">Mikrofon stummschalten</string>
-  <string name="profile_info_description">Benutzerinformationen holen</string>
+    <string name="reset_tox_id_dialog_title">Zurücksetzen der Tox-Kennung bestätigen</string>
+    <string name="reset_tox_id_dialog_confirm">Kennung zurücksetzen</string>
+    <string name="reset_tox_id_dialog_cancel">Abbrechen</string>
+    <string name="tox_id_reset">Ihre Tox-Kennung wurde zurückgesetzt</string>
+    <!--Delete Account Dialog-->
+    <string name="delete_account_dialog_message">Dies wird diesen Antox Benutzer und Dich von jedem ToxMe Service löschen, der mit diesem Account verbunden ist.</string>
+    <string name="delete_account_dialog_title">Antox-Kontolöschung bestätigen</string>
+    <string name="delete_account_dialog_confirm">Konto löschen</string>
+    <string name="delete_account_dialog_cancel">Abbrechen</string>
+    <string name="delete_account_successful">Konto wurde erfolgreich gelöscht</string>
+    <string name="delete_account_error">Beim Löschen Ihres Antox-Kontos ist ein Fehler aufgetreten</string>
+    <!--Create Group Dialog-->
+    <string name="create_group_dialog_message">Neuen Gruppenchat erstellen</string>
+    <string name="create_group_dialog_create_group">Gruppe erstellen</string>
+    <string name="create_group_dialog_cancel">Abbrechen</string>
+    <string name="create_group_dialog_name_header">Gruppenname</string>
+    <!--Group Chat Delete-->
+    <string name="group_default_part_message">Auf Wiedersehen</string>
+    <!--Color Picker Dialog-->
+    <string name="dialog_color_picker_title">Themafarbe auswählen</string>
+    <!--Chat Fragment-->
+    <string name="attachment_photo">Bild anhängen</string>
+    <string name="attachment_file">Datei anhängen</string>
+    <string name="attachment_takephoto">Foto aufnehmen</string>
+    <string name="message_copy">Nachricht kopieren</string>
+    <string name="message_delete">Nachricht löschen</string>
+    <string name="file_delete">Datei löschen</string>
+    <!--Left Pane Fragment-->
+    <string name="titles_recent">Neueste</string>
+    <string name="titles_contacts">Kontakte</string>
+    <string name="titles_settings">Einstellungen</string>
+    <!--Misc-->
+    <string name="button_confirm">Bestätigen</string>
+    <string name="button_cancel">Abbrechen</string>
+    <string name="button_yes">Ja</string>
+    <string name="button_no">Nein</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Tox-Kennung in die Zwischenablage kopieren</string>
+    <string name="dialog_toxme">In die Zwischenablage kopieren</string>
+    <string name="dialog_password">In die Zwischenablage kopieren</string>
+    <string name="share_with">Teilen mit</string>
+    <string name="connection_has">ist</string>
+    <string name="connection_online">jetzt verbunden.</string>
+    <string name="connection_offline">nicht mehr verbunden.</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="action_settings">Einstellungen</string>
+    <!--Avatar Dialog-->
+    <string name="dialog_avatar_take_photo">Fotografieren</string>
+    <string name="dialog_avatar_use_file">Datei verwenden</string>
+    <string name="avatar_too_large_error">Fehler: Avatardatei ist zu groß.</string>
+    <string name="no_camera_intent_error">Fehler: Keine gültige Kameraanwendung gefunden.</string>
+    <string name="dialog_avatar_description">Avatar</string>
+    <!--File transfer-->
+    <string name="file_finished">Beendet</string>
+    <string name="file_failed">Fehlgeschlagen</string>
+    <string name="file_in_progress">In Arbeit</string>
+    <string name="file_request_sent">Anfrage gesendet</string>
+    <string name="file_rejected">Abgelehnt</string>
+    <string name="file_time_remaining">%s Sekunden verbleibend</string>
+    <!--QR-->
+    <string name="qr_default_title">Barcodescanner installieren?</string>
+    <string name="qr_default_message">Diese Anwendung benötigt einen Barcodescanner. Möchten Sie einen installieren?</string>
+    <string name="qr_button_yes">Ja</string>
+    <string name="qr_button_no">Nein</string>
+    <!--Notifications-->
+    <string name="unread_count">%s ungelesene Nachrichten</string>
+    <!--nav bar-->
+    <string name="n_settings">Einstellungen</string>
+    <string name="n_profile_options">Profil</string>
+    <string name="n_create_group">Gruppe erstellen</string>
+    <string name="n_add_person">Person hinzufügen</string>
+    <string name="n_about">Über</string>
+    <string name="n_open_source">Open-Source-Lizenz</string>
+    <string name="n_logout">Abmelden</string>
+    <string name="drawer_open">Navigationsmenü öffnen</string>
+    <string name="drawer_close">Navigationsmenü schließen</string>
+    <string name="open_source_license">Open-Source-Lizenz</string>
+    <string name="license1">Verteilt unter der GNU GPL v3. Erstellt von Mark Winter, verwaltet von subliun und weiteren.</string>
+    <string name="license2">Quellcode ist verfügbar auf\nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Version</string>
+    <string name="about">Über</string>
+    <string name="about_antox_1">Vor dem Hintergrund sich ausweitender, großflächiger Überwachungsprogramme durch einige Regierungen ist Tox eine leicht zu bedienende Anwendung, die es Ihnen ermöglicht, sich mit Freunden und Nahestehenden zu unterhalten, ohne dass jemand zuhört.</string>
+    <string name="about_antox_2">Was derzeit funktioniert:</string>
+    <string name="about_antox_3">- Eins zu eins Nachrichtenaustausch</string>
+    <string name="about_antox_4">- Benachrichtigungen</string>
+    <string name="about_antox_5">- Dateiübertragungen</string>
+    <string name="about_antox_6">Funktioniert nicht:</string>
+    <string name="about_antox_7">- Audio/Video</string>
+    <string name="about_antox_8">- Gruppen</string>
+    <string name="title_activity_call">CallActivity</string>
+    <string name="end_call">Anruf beenden</string>
+    <string name="mute_call">Stumm</string>
+    <string name="mute_mic">Mikrofon stummschalten</string>
+    <string name="profile_info_description">Benutzerinformationen holen</string>
 </resources>

@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="@string/call_incoming_voice"
             android:textSize="@dimen/text_medium"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Chronometer
             android:id="@+id/call_duration"

@@ -91,8 +91,8 @@ object BitmapManager {
   }
 
   /**
-   * Will decode the byte Array and proceed to return true if the bitmap is valid.
-   */
+    * Will decode the byte Array and proceed to return true if the bitmap is valid.
+    */
   def decodeAndCheck(byteArr: Array[Byte], options: BitmapOptions): Boolean = {
     options.inJustDecodeBounds = true
     BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
@@ -101,8 +101,8 @@ object BitmapManager {
   }
 
   /**
-   * Reads in bytes from the given stream and returns them in an array
-   */
+    * Reads in bytes from the given stream and returns them in an array
+    */
   private def getBytesFromStream(inputStream: InputStream): Array[Byte] = {
     var byteArr = Array.ofDim[Byte](0)
     val buffer = Array.ofDim[Byte](2 ^ 10)
@@ -132,9 +132,9 @@ object BitmapManager {
   }
 
   /**
-   * Will load the bitmap from file, decode it and then return a potentially downsampled bitmap
-   * ready to be displayed
-   */
+    * Will load the bitmap from file, decode it and then return a potentially downsampled bitmap
+    * ready to be displayed
+    */
   private def decodeBitmap(file: File, imageKey: ImageKey, isAvatar: Boolean): Bitmap = {
     var fis: FileInputStream = null
 

@@ -47,7 +47,7 @@ class CallEventLogger(val call: Call, val context: Context) extends CallEnhancem
     * Log a call event to the db.
     *
     * @param callEventKind kind of call event
-    * @param extraInfo string appended to the standard call event message
+    * @param extraInfo     string appended to the standard call event message
     */
   def addCallEvent(callEventKind: CallEventKind, extraInfo: String = ""): Unit = {
     val (senderKey, senderName) =

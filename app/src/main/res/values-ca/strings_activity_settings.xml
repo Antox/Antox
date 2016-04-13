@@ -1,46 +1,46 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Configuració</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Perfil</string>
-  <string name="pref_title_nickname">Nom</string>
-  <string name="pref_default_nickname">Usuari d\'Antox</string>
-  <string name="pref_title_password">Contrassenya per ToxMe</string>
-  <string name="pref_default_password">No s\'ha especificat contrassenya</string>
-  <string name="pref_title_status">Estat</string>
-  <string-array name="pref_status_list_titles">
-    <item>Disponible</item>
-    <item>Absent</item>
-    <item>Ocupat</item>
-  </string-array>
-  <string name="pref_title_status_message">Missatge d\'estat</string>
-  <string name="pref_default_status_message">Hola! Faig servir l\'Antox</string>
-  <string name="pref_title_tox_id">Identificador Tox</string>
-  <string name="pref_default_tox_id">Identificador Tox per defecte (No s\'hauria de veure)</string>
-  <string name="pref_title_toxme">Adreça de ToxMe</string>
-  <string name="pref_default_toxme">Actualment, aquest perfil està en mode incògnit</string>
-  <string name="pref_title_logging_enabled">Menté l\'hostrial del xat en surtir</string>
-  <string name="pref_title_theme_color">Canvia el color del tema</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Nom del perfil</string>
-  <string name="pref_title_export">Exporta el perfil</string>
-  <string name="pref_title_delete">Esborra el compte</string>
-  <string name="pref_title_logout">Desconnectar</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Notificacions</string>
-  <string name="pref_title_enable_notifications">Activa les notificacions</string>
-  <string name="pref_title_new_message_notifications">Notifica els missatges</string>
-  <string name="pref_title_new_friend_notifications">Notifica les sol·licituds d\'amistat</string>
-  <!--Other-->
-  <string name="pref_header_other">Altres</string>
-  <string name="pref_title_connection_status_messages">Missatge d\'estat</string>
-  <string name="pref_title_wifi_only">Només per Wi-Fi</string>
-  <string name="pref_title_language">Idioma</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Copia l\'dentificador Tox</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Habilita l\'UDP</string>
-  <string name="pref_advanced">Avançades</string>
-  <string name="pref_nospam">Reinicia la ID de Tox</string>
-  <string name="pref_autostart">Inicia l\'Antox a l\'inici</string>
+    <string name="title_activity_settings">Configuració</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Perfil</string>
+    <string name="pref_title_nickname">Nom</string>
+    <string name="pref_default_nickname">Usuari d\'Antox</string>
+    <string name="pref_title_password">Contrassenya per ToxMe</string>
+    <string name="pref_default_password">No s\'ha especificat contrassenya</string>
+    <string name="pref_title_status">Estat</string>
+    <string-array name="pref_status_list_titles">
+        <item>Disponible</item>
+        <item>Absent</item>
+        <item>Ocupat</item>
+    </string-array>
+    <string name="pref_title_status_message">Missatge d\'estat</string>
+    <string name="pref_default_status_message">Hola! Faig servir l\'Antox</string>
+    <string name="pref_title_tox_id">Identificador Tox</string>
+    <string name="pref_default_tox_id">Identificador Tox per defecte (No s\'hauria de veure)</string>
+    <string name="pref_title_toxme">Adreça de ToxMe</string>
+    <string name="pref_default_toxme">Actualment, aquest perfil està en mode incògnit</string>
+    <string name="pref_title_logging_enabled">Menté l\'hostrial del xat en surtir</string>
+    <string name="pref_title_theme_color">Canvia el color del tema</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Nom del perfil</string>
+    <string name="pref_title_export">Exporta el perfil</string>
+    <string name="pref_title_delete">Esborra el compte</string>
+    <string name="pref_title_logout">Desconnectar</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Notificacions</string>
+    <string name="pref_title_enable_notifications">Activa les notificacions</string>
+    <string name="pref_title_new_message_notifications">Notifica els missatges</string>
+    <string name="pref_title_new_friend_notifications">Notifica les sol·licituds d\'amistat</string>
+    <!--Other-->
+    <string name="pref_header_other">Altres</string>
+    <string name="pref_title_connection_status_messages">Missatge d\'estat</string>
+    <string name="pref_title_wifi_only">Només per Wi-Fi</string>
+    <string name="pref_title_language">Idioma</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Copia l\'dentificador Tox</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Habilita l\'UDP</string>
+    <string name="pref_advanced">Avançades</string>
+    <string name="pref_nospam">Reinicia la ID de Tox</string>
+    <string name="pref_autostart">Inicia l\'Antox a l\'inici</string>
 </resources>

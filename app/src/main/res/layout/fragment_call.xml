@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/ic_camera_front_white_24dp"/>
+            android:src="@drawable/ic_camera_front_white_24dp" />
     </FrameLayout>
 
     <RelativeLayout

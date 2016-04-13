@@ -12,7 +12,7 @@ import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{CallReply, ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
-import im.tox.tox4j.core.data.{ToxStatusMessage, ToxNickname}
+import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 
@@ -28,20 +28,20 @@ object UserDB {
   class DatabaseHelper(context: Context) extends SQLiteOpenHelper(context, databaseName, null, USER_DATABASE_VERSION) {
     private val CREATE_TABLE_USERS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_USERS ( _id integer primary key ,
-         |$COLUMN_NAME_PROFILE_NAME text,
-         |$COLUMN_NAME_PASSWORD text,
-         |$COLUMN_NAME_NICKNAME text,
-         |$COLUMN_NAME_STATUS text,
-         |$COLUMN_NAME_STATUS_MESSAGE text,
-         |$COLUMN_NAME_AVATAR text,
-         |$COLUMN_NAME_LOGGING_ENABLED boolean,
-         |$COLUMN_NAME_TOXME_DOMAIN text);""".stripMargin
+          |$COLUMN_NAME_PROFILE_NAME text,
+          |$COLUMN_NAME_PASSWORD text,
+          |$COLUMN_NAME_NICKNAME text,
+          |$COLUMN_NAME_STATUS text,
+          |$COLUMN_NAME_STATUS_MESSAGE text,
+          |$COLUMN_NAME_AVATAR text,
+          |$COLUMN_NAME_LOGGING_ENABLED boolean,
+          |$COLUMN_NAME_TOXME_DOMAIN text);""".stripMargin
 
     private val CREATE_TABLE_CALL_REPLIES: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_CALL_REPLIES ( _id integer primary key ,
-         |$COLUMN_NAME_PROFILE_NAME text,
-         |$COLUMN_NAME_CALL_REPLY text,
-         |FOREIGN KEY($COLUMN_NAME_PROFILE_NAME) REFERENCES $TABLE_USERS($COLUMN_NAME_PROFILE_NAME))""".stripMargin
+          |$COLUMN_NAME_PROFILE_NAME text,
+          |$COLUMN_NAME_CALL_REPLY text,
+          |FOREIGN KEY($COLUMN_NAME_PROFILE_NAME) REFERENCES $TABLE_USERS($COLUMN_NAME_PROFILE_NAME))""".stripMargin
 
     override def onCreate(db: SQLiteDatabase) {
       db.execSQL(CREATE_TABLE_USERS)
@@ -71,6 +71,7 @@ object UserDB {
     }
 
   }
+
 }
 
 class UserDB(ctx: Context) {
@@ -162,9 +163,10 @@ class UserDB(ctx: Context) {
   }
 
   def doesUserExist(username: String): Boolean = {
-    val query = s"""SELECT count(*)
-                   |FROM $TABLE_USERS
-                   |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
+    val query =
+      s"""SELECT count(*)
+          |FROM $TABLE_USERS
+          |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
     val exists = mDb.query(query).use { cursor =>
       cursor.moveToFirst() && cursor.getInt(0) > 0
@@ -183,8 +185,8 @@ class UserDB(ctx: Context) {
 
   private def userDetailsQuery(username: String): String =
     s"""SELECT *
-       |FROM $TABLE_USERS
-       |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
+        |FROM $TABLE_USERS
+        |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
   private def userInfoFromCursor(cursor: Cursor): Option[UserInfo] = {
     val userInfo: Option[UserInfo] =
@@ -266,7 +268,7 @@ class UserDB(ctx: Context) {
 
       if (cursor.moveToFirst()) {
         do {
-            callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), cursor.getString(COLUMN_NAME_CALL_REPLY))
+          callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), cursor.getString(COLUMN_NAME_CALL_REPLY))
         } while (cursor.moveToNext())
       }
 

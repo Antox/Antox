@@ -35,10 +35,10 @@ class GroupChatActivity extends GenericChatActivity[GroupKey] {
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(groupInfo => {
-      val id = activeKey
-      val mGroup: Option[GroupInfo] = groupInfo.find(groupInfo => groupInfo.key == id)
-      thisActivity.setDisplayName(mGroup.map(_.getDisplayName).getOrElse(""))
-    })
+        val id = activeKey
+        val mGroup: Option[GroupInfo] = groupInfo.find(groupInfo => groupInfo.key == id)
+        thisActivity.setDisplayName(mGroup.map(_.getDisplayName).getOrElse(""))
+      })
   }
 
   def onClickVoiceCallFriend(v: View): Unit = {}
@@ -71,7 +71,7 @@ class GroupChatActivity extends GenericChatActivity[GroupKey] {
     // not yet implemented in toxav
   }
 
-  override def onClickVoiceCall(clickLocation: Location  ): Unit = {
+  override def onClickVoiceCall(clickLocation: Location): Unit = {
     // not yet implemented in toxav
   }
 }

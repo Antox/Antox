@@ -74,11 +74,11 @@ object TimestampUtils {
   }
 
   /**
-   * Returns an empty (all fields in constructor set to 0) timstamp.
-   * DO NOT MODIFY THE TIMESTAMP (seriously don't)
-   *
-   * @return an empty timestamp
-   */
+    * Returns an empty (all fields in constructor set to 0) timstamp.
+    * DO NOT MODIFY THE TIMESTAMP (seriously don't)
+    *
+    * @return an empty timestamp
+    */
   def emptyTimestamp(): Timestamp = {
     EMPTY_TIMESTAMP
   }

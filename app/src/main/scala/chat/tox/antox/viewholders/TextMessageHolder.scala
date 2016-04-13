@@ -3,8 +3,8 @@ package chat.tox.antox.viewholders
 import android.app.AlertDialog
 import android.content.{ClipData, ClipboardManager, Context, DialogInterface}
 import android.graphics.PorterDuff
+import android.view.View.{OnLongClickListener, OnTouchListener}
 import android.view.{MotionEvent, View}
-import android.view.View.{OnTouchListener, OnClickListener, OnLongClickListener}
 import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -48,7 +48,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     toggleReceived()
     // generate name colour from hash to ensure names have consistent colours
     UiUtils.generateColor(msg.senderName.hashCode)
-    if (lastMsg.isEmpty  || msg.senderName != lastMsg.get.senderName) {
+    if (lastMsg.isEmpty || msg.senderName != lastMsg.get.senderName) {
       messageTitle.setVisibility(View.VISIBLE)
     }
     messageTitle.setTextColor(UiUtils.generateColor(msg.senderName.hashCode))
@@ -96,7 +96,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         }
 
       case _ =>
-        //do nothing
+      //do nothing
     }
 
     false

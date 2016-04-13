@@ -16,6 +16,7 @@ object PinDialogFragment {
 
     def onDialogNegativeClick(dialog: DialogFragment): Unit
   }
+
 }
 
 class PinDialogFragment extends DialogFragment {

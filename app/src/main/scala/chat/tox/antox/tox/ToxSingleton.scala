@@ -13,12 +13,12 @@ import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.core.network.Port
 import im.tox.tox4j.core.data.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
-import im.tox.tox4j.core.options.{ToxOptions, ProxyOptions}
+import im.tox.tox4j.core.options.{ProxyOptions, ToxOptions}
 import im.tox.tox4j.exceptions.ToxException
 import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.{NewThreadScheduler, IOScheduler}
+import rx.lang.scala.schedulers.{IOScheduler, NewThreadScheduler}
 
 import scala.io.Source
 
@@ -115,20 +115,20 @@ object ToxSingleton {
     }).subscribeOn(IOScheduler())
       .observeOn(NewThreadScheduler())
       .subscribe(nodes => {
-      dhtNodes = nodes
-      AntoxLog.debug("Trying to bootstrap", TAG)
-      try {
-        for (i <- nodes.indices) {
-          tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+        dhtNodes = nodes
+        AntoxLog.debug("Trying to bootstrap", TAG)
+        try {
+          for (i <- nodes.indices) {
+            tox.bootstrap(nodes(i).ipv4, nodes(i).port, nodes(i).key)
+          }
+        } catch {
+          case e: Exception =>
+            e.printStackTrace()
         }
-      } catch {
-        case e: Exception =>
-          e.printStackTrace()
-      }
-      AntoxLog.debug("Successfully bootstrapped", TAG)
-    }, error => {
-      AntoxLog.errorException("Failed bootstrapping", error, TAG)
-    })
+        AntoxLog.debug("Successfully bootstrapped", TAG)
+      }, error => {
+        AntoxLog.errorException("Failed bootstrapping", error, TAG)
+      })
   }
 
   def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {
@@ -139,7 +139,7 @@ object ToxSingleton {
     !(wifiOnly && !wifiInfo.isConnected)
   }
 
-  private def readProxyOptions(preferences: SharedPreferences) : ProxyOptions = {
+  private def readProxyOptions(preferences: SharedPreferences): ProxyOptions = {
     val TAG = LoggerTag("readProxyOptions")
     AntoxLog.verbose("Reading proxy settings", TAG)
 

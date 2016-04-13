@@ -10,4 +10,4 @@ object AndroidMainThreadScheduler {
   }
 }
 
-class AndroidMainThreadScheduler private[scala] (val asJavaScheduler: rx.Scheduler) extends Scheduler {}
+class AndroidMainThreadScheduler private[scala](val asJavaScheduler: rx.Scheduler) extends Scheduler {}

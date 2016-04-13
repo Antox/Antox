@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:background="@drawable/edittextbackground"/>
+            android:background="@drawable/edittextbackground" />
 
         <Button
             android:id="@+id/create_account"
@@ -61,7 +61,7 @@
             android:textColor="@color/white"
             android:background="@color/brand_secondary"
             android:layout_marginTop="10dp"
-            android:onClick="onClickRegisterAccount"/>
+            android:onClick="onClickRegisterAccount" />
 
         <ProgressBar
             android:id="@+id/login_progress_bar"
@@ -85,7 +85,7 @@
         android:textColor="@color/white"
         android:background="#414141"
         android:layout_marginBottom="100dp"
-        android:onClick="onClickRegisterIncogAccount"/>
+        android:onClick="onClickRegisterIncogAccount" />
 
     <Button
         android:id="@+id/create_account_import"
@@ -97,5 +97,5 @@
         android:textColor="@color/white"
         android:background="#414141"
         android:layout_marginBottom="40dp"
-        android:onClick="onClickImportProfile"/>
+        android:onClick="onClickImportProfile" />
 </RelativeLayout>

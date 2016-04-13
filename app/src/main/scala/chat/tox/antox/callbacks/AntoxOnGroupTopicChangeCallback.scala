@@ -10,6 +10,6 @@ class AntoxOnGroupTopicChangeCallback(private var ctx: Context) /* extends Group
     group.topic = new String(topic, "UTF-8")
 
     val db = State.db
-//    db.updateContactStatusMessage(group.key, group.topic)
+    //    db.updateContactStatusMessage(group.key, group.topic)
   }
 }
