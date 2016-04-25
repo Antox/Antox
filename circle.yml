@@ -53,7 +53,7 @@ dependencies:
     - ./download-dependencies.sh
     - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
     - ./gradlew build ; exit 0 # will also crash
-    - ./gradlew build
+    - ./gradlew assemble --stacktrace --info
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
     
