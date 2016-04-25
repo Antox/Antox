@@ -84,8 +84,11 @@ dependencies:
       echo "*** generating new signer key ***";
       keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -keyalg RSA -keysize 2048 -validity 10000 -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" ;
       fi ;
-      jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar app-signed.apk app.apk androiddebugkey > /dev/null 2> /dev/null ;
-      $_SDK_/build-tools/23.0.1/zipalign -v 4 app-signed.apk app-signed-aligned.apk > /dev/null 2> /dev/null ;
+      ls -al ~/ ;
+      jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar app-signed.apk app.apk androiddebugkey ;
+      ls -al ~/ ;
+      $_SDK_/build-tools/23.0.1/zipalign -v 4 app-signed.apk app-signed-aligned.apk ;
+      ls -al ~/ ;
       pwd ;
       ls -al ;
       cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/antox_circleci_$CIRCLE_SHA1.apk || exit 1
