@@ -35,6 +35,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
     - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
 
+
     - pwd ; ls -al
     - ./download-dependencies.sh
     - ./gradlew build -x lint --parallel
