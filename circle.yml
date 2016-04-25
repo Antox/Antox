@@ -45,7 +45,8 @@ dependencies:
     #- sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
     #- cat gradle/wrapper/gradle-wrapper.properties
     - ./download-dependencies.sh
-    - ./gradlew build -x lint --parallel
+    - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
+    - ./gradlew build -x lint
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
     
