@@ -47,16 +47,20 @@ dependencies:
     #- echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
 
     - pwd ; ls -al
+
     - cat gradle/wrapper/gradle-wrapper.properties
-    #- sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
-    #- cat gradle/wrapper/gradle-wrapper.properties
+    - sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
+    - cat gradle/wrapper/gradle-wrapper.properties
+
     - ./download-dependencies.sh
+
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
     - sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
     - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
+
     - ./gradlew build -x lint ; exit 0 # first build will FAIL !!
     - ./gradlew assemble --stacktrace --info
     - pwd ; ls -al
