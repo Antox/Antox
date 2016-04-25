@@ -26,11 +26,9 @@ dependencies:
     - sudo apt-get install x11-utils > /dev/null 2> /dev/null
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
 
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.0
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.1
-    - echo y | android update sdk --no-ui --all --filter build-tools-23
+    - echo y | android update sdk --no-ui --all --filter "tools"
+    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
     #- echo y | android update sdk --no-ui --all --filter android-23
-    - echo y | android update sdk --no-ui --all --filter tools
     #- echo y | android update sdk --no-ui --all --filter platform-tools-preview
     #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23
     #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
