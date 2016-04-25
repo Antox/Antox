@@ -52,6 +52,7 @@ dependencies:
     #- cat gradle/wrapper/gradle-wrapper.properties
     - ./download-dependencies.sh
     - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
+    - ./gradlew build -x lint ; exit 0 # will also crash
     - ./gradlew build -x lint
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
