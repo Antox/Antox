@@ -52,8 +52,11 @@ dependencies:
     #- cat gradle/wrapper/gradle-wrapper.properties
     - ./download-dependencies.sh
     - cat app/build.gradle | grep 'minifyEnabled'
+    - cat app/build.gradle | grep 'useCompileDaemon'
     - sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
+    - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#'
     - cat app/build.gradle | grep 'minifyEnabled'
+    - cat app/build.gradle | grep 'useCompileDaemon'
     - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
     - ./gradlew build ; exit 0 # will also crash
     - ./gradlew assemble --stacktrace --info
