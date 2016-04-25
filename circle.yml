@@ -2,9 +2,9 @@ machine:
   timezone:
     Europe/Vienna
   environment:
-    EMU_: "surespot23"
-    YEMU_: "surespot21"
-    XEMU_: "surespot10"
+    EMU_: "appemu23"
+    YEMU_: "appemu21"
+    XEMU_: "appemu10"
     sdpath: "/sdcard"
     Ysdpath: "/storage/sdcard"
     Xsdpath: "/mnt/sdcard"
@@ -95,14 +95,14 @@ test:
     - echo 'mtools_skip_check=1' > ~/.mtoolsrc
     - android list targets
 #
-    - if [ "$EMU_" == "surespot23" ]; then echo "no" | android create avd -n surespot23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
-    - if [ "$EMU_" == "surespot23" ]; then cat ~/.android/avd/surespot23.avd/config.ini ; fi
+    - if [ "$EMU_" == "appemu23" ]; then echo "no" | android create avd -n appemu23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
+    - if [ "$EMU_" == "appemu23" ]; then cat ~/.android/avd/appemu23.avd/config.ini ; fi
 #
-    - if [ "$EMU_" == "surespot21" ]; then echo "no" | android create avd -n surespot21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
-    - if [ "$EMU_" == "surespot21" ]; then cat ~/.android/avd/surespot21.avd/config.ini ; fi
+    - if [ "$EMU_" == "appemu21" ]; then echo "no" | android create avd -n appemu21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
+    - if [ "$EMU_" == "appemu21" ]; then cat ~/.android/avd/appemu21.avd/config.ini ; fi
 #
-    - if [ "$EMU_" == "surespot10" ]; then echo "no" | android create avd -n surespot10 -f -t android-10 --abi default/armeabi --skin "WVGA854" ; fi
-    - if [ "$EMU_" == "surespot10" ]; then cat ~/.android/avd/surespot10.avd/config.ini ; fi
+    - if [ "$EMU_" == "appemu10" ]; then echo "no" | android create avd -n appemu10 -f -t android-10 --abi default/armeabi --skin "WVGA854" ; fi
+    - if [ "$EMU_" == "appemu10" ]; then cat ~/.android/avd/appemu10.avd/config.ini ; fi
 #
     - echo "$EMU_"
     - echo "$sdpath"
@@ -130,8 +130,8 @@ test:
     - search --onlyvisible ; exit 0
     - xdotool search --class ''|xargs -L1 xdotool getwindowname|grep -v '^$'; xwininfo -root -tree -int
 
-    - xdotool search --name "surespot" key "F2"
-    - xdotool search --name "surespot" key "Return"
+    - xdotool search --name "appemu" key "F2"
+    - xdotool search --name "appemu" key "Return"
 
     - sleep 10
     - import -window root $CIRCLE_ARTIFACTS/capture001.png
@@ -149,10 +149,10 @@ test:
     - adb logcat -v time > $CIRCLE_ARTIFACTS/adb_out.txt 2>&1 :
         background: true
 
-    - fb-adb shell am start -n com.twofours.surespot/com.twofours.surespot.activities.MainActivity
+    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.MainActivity
     - sleep 210
 
     - import -window root $CIRCLE_ARTIFACTS/capture002.png
 
-    #- fb-adb shell am force-stop com.twofours.surespot
+    #- fb-adb shell am force-stop chat.tox.antox
 
