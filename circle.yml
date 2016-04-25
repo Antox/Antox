@@ -67,6 +67,7 @@ dependencies:
 
     - ./gradlew assembleDebug --stacktrace --info ; exit 0 # first build will FAIL !!
     - ls -al app/build ; ls -al app/build/outputs/reports/ ;  ls -al app/build/outputs/reports/*/connected ; exit 0
+    - ls -al app/build/outputs/ ; exit 0
     - ./gradlew assembleDebug --stacktrace --info
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
