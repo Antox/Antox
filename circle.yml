@@ -37,6 +37,9 @@ dependencies:
 
 
     - pwd ; ls -al
+    - cat gradle/wrapper/gradle-wrapper.properties
+    - sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
+    - cat gradle/wrapper/gradle-wrapper.properties
     - ./download-dependencies.sh
     - ./gradlew build -x lint --parallel
     - pwd ; ls -al
