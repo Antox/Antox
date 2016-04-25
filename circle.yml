@@ -57,8 +57,7 @@ dependencies:
     - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#'
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
-    - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
-    - ./gradlew build ; exit 0 # will also crash
+    - ./gradlew build -x lint ; exit 0 # first build will FAIL !!
     - ./gradlew assemble --stacktrace --info
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
