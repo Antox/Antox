@@ -18,7 +18,7 @@ dependencies:
     #- /usr/local/android-sdk-linux/tools
     #- /usr/local/android-sdk-linux/build-tools/23.0.3
   override:
-    #-
+    - echo "dummy"
   pre:
     - sudo apt-get update > /dev/null 2> /dev/null
     - sudo apt-get install xvfb > /dev/null 2> /dev/null
