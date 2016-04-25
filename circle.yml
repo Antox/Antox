@@ -75,7 +75,7 @@ dependencies:
     - ls -al app/build/outputs/apk/app-debug-unaligned.apk ; exit 0
     - ls -al app/build/outputs/apk/ ; exit 0
 
-    - cp -av .app/build/outputs/apk/app-debug-unaligned.apk ~/app.apk ;
+    - cp -av app/build/outputs/apk/app-debug-unaligned.apk ~/app.apk ;
       cd ~/ ;
       echo xxxxxxrm -f ~/.android/debug.keystore ;
       ls -al ~/.android/debug.keystore ;
