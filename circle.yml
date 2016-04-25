@@ -51,6 +51,9 @@ dependencies:
     #- sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
     #- cat gradle/wrapper/gradle-wrapper.properties
     - ./download-dependencies.sh
+    - cat app/build.gradle | grep 'minifyEnabled'
+    - sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
+    - cat app/build.gradle | grep 'minifyEnabled'
     - ./gradlew build -x lint ; exit 0 # first build wil FAIL !!
     - ./gradlew build ; exit 0 # will also crash
     - ./gradlew assemble --stacktrace --info
