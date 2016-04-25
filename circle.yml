@@ -62,8 +62,8 @@ dependencies:
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
 
-    - ./gradlew build -x lint ; exit 0 # first build will FAIL !!
-    - ./gradlew assemble --stacktrace --info
+    - ./gradlew assembleDebug --stacktrace --info ; exit 0 # first build will FAIL !!
+    - ./gradlew assembleDebug --stacktrace --info
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
     
