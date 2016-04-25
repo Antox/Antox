@@ -28,14 +28,11 @@ dependencies:
 
     - echo y | android update sdk --no-ui --all --filter "tools"
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
-    #- echo y | android update sdk --no-ui --all --filter android-23
-    #- echo y | android update sdk --no-ui --all --filter platform-tools-preview
-    #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23
-    #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
-    #- echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
-
-    - exit 1
-
+    - echo y | android update sdk --no-ui --all --filter android-23
+    - echo y | android update sdk --no-ui --all --filter platform-tools-preview
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
+    - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
 
     - pwd ; ls -al
     - cat gradle/wrapper/gradle-wrapper.properties
@@ -45,7 +42,11 @@ dependencies:
     - ./gradlew build -x lint --parallel
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
-    - cp -av ./surespot/build/outputs/apk/surespot-release-unsigned.apk ~/ ;
+    
+    
+    - exit 1
+    
+    - cp -av .app/build/outputs/apk/antox-release-unsigned.apk ~/ ;
       cd ~/ ;
       echo xxxxxxrm -f ~/.android/debug.keystore ;
       ls -al ~/.android/debug.keystore ;
