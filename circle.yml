@@ -44,12 +44,11 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository
     - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
     - echo y | android update sdk --no-ui --all --filter extra-android-support
-    
 
-    #- echo y | android update sdk --no-ui --all --filter platform-tools-preview
-    #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23
-    #- echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
-    #- echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
+    - echo y | android update sdk --no-ui --all --filter platform-tools-preview
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23
+    - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23
 
     - pwd ; ls -al
 
@@ -71,24 +70,12 @@ dependencies:
     - ls -al app/build ; ls -al app/build/outputs/reports/ ;  ls -al app/build/outputs/reports/*/connected ; exit 0
     - ls -al app/build/outputs/ ; exit 0
     - ls -al app/build/outputs/logs/ ; exit 0
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
-    - ./gradlew build -x lint --stacktrace --info --no-daemon
+    - ./gradlew assembleDebug --stacktrace --info --no-daemon
     - pwd ; ls -al
-    - ls -al app/build/outputs/apk/
-    
-    
-    - exit 1
+    - ls -al app/build/outputs/apk/app-debug-unaligned.apk ; exit 0
+    - ls -al app/build/outputs/apk/ ; exit 0
 
-
-
-
-
-
-
-
-    
-    - cp -av .app/build/outputs/apk/antox-release-unsigned.apk ~/ ;
+    - cp -av .app/build/outputs/apk/app-debug-unaligned.apk ~/app.apk ;
       cd ~/ ;
       echo xxxxxxrm -f ~/.android/debug.keystore ;
       ls -al ~/.android/debug.keystore ;
@@ -97,11 +84,11 @@ dependencies:
       echo "*** generating new signer key ***";
       keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -keyalg RSA -keysize 2048 -validity 10000 -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" ;
       fi ;
-      jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar surespot-release-signed.apk surespot-release-unsigned.apk androiddebugkey > /dev/null 2> /dev/null ;
-      $_SDK_/build-tools/23.0.1/zipalign -v 4 surespot-release-signed.apk surespot-release-signed-aligned.apk > /dev/null 2> /dev/null ;
+      jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar app-signed.apk app.apk androiddebugkey > /dev/null 2> /dev/null ;
+      $_SDK_/build-tools/23.0.1/zipalign -v 4 app-signed.apk app-signed-aligned.apk > /dev/null 2> /dev/null ;
       pwd ;
       ls -al ;
-      cp -av surespot-release-signed-aligned.apk $CIRCLE_ARTIFACTS/surespot_circleci_$CIRCLE_SHA1.apk || exit 1
+      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/antox_circleci_$CIRCLE_SHA1.apk || exit 1
 test:
   pre:
     - mksdcard -l e 180M sdcard.img
@@ -120,12 +107,10 @@ test:
     - echo "$EMU_"
     - echo "$sdpath"
   override:
-    - import -window root $CIRCLE_ARTIFACTS/capture000a.png
     - emulator -avd "$EMU_" -sdcard sdcard.img -no-audio:
         background: true
         parallel: true
     - circle-android wait-for-boot
-    - import -window root $CIRCLE_ARTIFACTS/capture000b.png
 
     - xwininfo -root -tree
     - xdotool search --name "DDMS" ; exit 0
@@ -142,15 +127,14 @@ test:
     - xdotool search ; exit 0
     - xdotool search --maxdepth 1 ; exit 0
     - xdotool search --maxdepth 10 ; exit 0
-    - search --onlyvisible ; exit 0    #- xdotool search --name "DDMS" key "alt+F4"
+    - search --onlyvisible ; exit 0
     - xdotool search --class ''|xargs -L1 xdotool getwindowname|grep -v '^$'; xwininfo -root -tree -int
 
     - xdotool search --name "surespot" key "F2"
     - xdotool search --name "surespot" key "Return"
 
-    - import -window root $CIRCLE_ARTIFACTS/capture001.png
     - sleep 10
-    - import -window root $CIRCLE_ARTIFACTS/capture002.png
+    - import -window root $CIRCLE_ARTIFACTS/capture001.png
 
     - fb-adb shell "cat /proc/meminfo" ; exit 0
     - fb-adb shell "free" ; exit 0
@@ -160,26 +144,15 @@ test:
     - adb shell ls -al /storage/ ; exit 0
     - adb shell ls -al /sdcard/ ; exit 0
 
-    - adb install $CIRCLE_ARTIFACTS/surespot_circleci_$CIRCLE_SHA1.apk
+    - adb install ~/app-signed-aligned.apk
 
     - adb logcat -v time > $CIRCLE_ARTIFACTS/adb_out.txt 2>&1 :
         background: true
 
     - fb-adb shell am start -n com.twofours.surespot/com.twofours.surespot.activities.MainActivity
-
-    - sleep 210
-    - sleep 210
     - sleep 210
 
-    - import -window root $CIRCLE_ARTIFACTS/capture003.png
+    - import -window root $CIRCLE_ARTIFACTS/capture002.png
 
-    - fb-adb shell am force-stop com.twofours.surespot
-
-    - cat $CIRCLE_ARTIFACTS/adb_out.txt | grep "xxyy--DEVICE-SCREENSHOT--xxyy" |sed -e 's#\r$##g' |sed -e 's#^.*xxyy--DEVICE-SCREENSHOT--xxyy:##'
-    - adb shell ls -al $sdpath/Android/data/com.twofours.surespot/
-    - cat $CIRCLE_ARTIFACTS/adb_out.txt | grep "xxyy--DEVICE-SCREENSHOT--xxyy" |sed -e 's#\r$##g' |sed -e 's#^.*xxyy--DEVICE-SCREENSHOT--xxyy:##' | grep '.png' | sed -e 's#1_.png##'
-    - cat $CIRCLE_ARTIFACTS/adb_out.txt | grep "xxyy--DEVICE-SCREENSHOT--xxyy" |sed -e 's#\r$##g' |sed -e 's#^.*xxyy--DEVICE-SCREENSHOT--xxyy:##' | grep '.png' | sed -e 's#_1.png##' | head -1
-    - scr=`cat $CIRCLE_ARTIFACTS/adb_out.txt | grep "xxyy--DEVICE-SCREENSHOT--xxyy" |sed -e 's#\r$##g' |sed -e 's#^.*xxyy--DEVICE-SCREENSHOT--xxyy:##' | grep '.png' | sed -e 's#_1.png##'| sed -e 's#_2.png##'| sed -e 's#_3.png##' | head -1` ; echo "--line-1-" ; echo "XX""$scr""YY" ; echo "--line-2-" ; scr1="$scr""_1.png" ; scr2="$scr""_2.png" ;  scr3="$scr""_3.png" ; echo "$scr1" ; adb pull "$scr1" $CIRCLE_ARTIFACTS/scr_1.png ; adb pull "$scr2" $CIRCLE_ARTIFACTS/scr_2.png ; adb pull "$scr3" $CIRCLE_ARTIFACTS/scr_3.png ; exit 0
-
-
+    #- fb-adb shell am force-stop com.twofours.surespot
 
