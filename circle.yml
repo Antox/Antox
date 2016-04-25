@@ -11,10 +11,11 @@ machine:
     ANDROID_HOME: /usr/local/android-sdk-linux
     ANDROID_SDK: /usr/local/android-sdk-linux/
     _SDK_: /usr/local/android-sdk-linux/
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError"'
 general:
   artifacts:
-    #-/home/ubuntu/**repo_name**/build/outputs/reports/**testFolderName**/connected
+    #-./app/build/outputs/reports/**testFolderName**/connected
+    #-./app/build/outputs/logs/
 dependencies:
   cache_directories:
     - ~/.android
@@ -68,6 +69,7 @@ dependencies:
     - ./gradlew assembleDebug --stacktrace --info ; exit 0 # first build will FAIL !!
     - ls -al app/build ; ls -al app/build/outputs/reports/ ;  ls -al app/build/outputs/reports/*/connected ; exit 0
     - ls -al app/build/outputs/ ; exit 0
+    - ls -al app/build/outputs/logs/ ; exit 0
     - ./gradlew assembleDebug --stacktrace --info
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
