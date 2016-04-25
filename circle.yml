@@ -62,18 +62,18 @@ dependencies:
 
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
-    - sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
+    #- sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
     - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
 
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon; exit 0 # first build will FAIL !!
+    - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ls -al app/build ; ls -al app/build/outputs/reports/ ;  ls -al app/build/outputs/reports/*/connected ; exit 0
     - ls -al app/build/outputs/ ; exit 0
     - ls -al app/build/outputs/logs/ ; exit 0
     - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
     - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
+    - ./gradlew build -x lint --stacktrace --info --no-daemon
     - pwd ; ls -al
     - ls -al app/build/outputs/apk/
     
