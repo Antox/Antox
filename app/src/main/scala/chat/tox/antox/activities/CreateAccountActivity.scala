@@ -30,15 +30,22 @@ import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import scala.concurrent.ops._
 
 
 object CreateAccountActivity {
   // automate
-  var _debug_loginButton: View = _
+  var _debug_loginButton: Button = _
+  var _debug_loginUser: EditText = _
   // automate
 }
 
 class CreateAccountActivity extends AppCompatActivity {
+
+  // automate
+  implicit def toRunnable[F](f: => F): Runnable =
+  new Runnable() { def run() = f }
+  // automate
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -58,6 +65,15 @@ class CreateAccountActivity extends AppCompatActivity {
     // automate
     if (MainActivity.DEBUG_CI == 1) {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
+      CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
+
+      spawn {
+        Thread.sleep(3000)         
+        runOnUiThread {
+          CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
+          onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+        }
+      }
     }
     // automate
 
