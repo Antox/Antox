@@ -32,6 +32,12 @@ import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 
+object CreateAccountActivity {
+  // automate
+  var _debug_loginButton: View = _
+  // automate
+}
+
 class CreateAccountActivity extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
@@ -48,6 +54,13 @@ class CreateAccountActivity extends AppCompatActivity {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       getWindow.setStatusBarColor(getResources.getColor(R.color.material_blue_grey_950))
     }
+
+    // automate
+    if (MainActivity.DEBUG_CI == 1) {
+      CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
+    }
+    // automate
+
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
