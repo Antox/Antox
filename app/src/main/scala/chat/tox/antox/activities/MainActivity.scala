@@ -18,7 +18,7 @@ import chat.tox.antox.utils._
 
 object MainActivity {
   // automate
-  val DEBUG_CI: int = 0
+  val DEBUG_CI: Int = 0
   // automate
 }
 
