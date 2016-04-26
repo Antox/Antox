@@ -30,7 +30,7 @@ import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-scala.concurrent.Future._
+import scala.concurrent.Future._
 
 
 object CreateAccountActivity {
