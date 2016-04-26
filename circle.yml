@@ -144,13 +144,11 @@ test:
 
     - adb logcat -v time > $CIRCLE_ARTIFACTS/adb_out.txt 2>&1 :
         background: true
+    - sleep 60 # let the emulator settle down first
 
-    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.MainActivity
+    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.LoginActivity
     - sleep 60
     # - fb-adb shell am force-stop chat.tox.antox
-    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.MainActivity
-    - sleep 60
 
-    - import -window root $CIRCLE_ARTIFACTS/capture002.png
-
+    - import -window root $CIRCLE_ARTIFACTS/capture002.png # get proof that the app is running
 
