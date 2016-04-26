@@ -2,11 +2,11 @@ machine:
   timezone:
     Europe/Vienna
   environment:
-    EMU_: "appemu23"
-    YEMU_: "appemu21"
+    ZEMU_: "appemu23"
+    EMU_: "appemu21"
     XEMU_: "appemu10"
-    sdpath: "/sdcard"
-    Ysdpath: "/storage/sdcard"
+    Zsdpath: "/sdcard"
+    sdpath: "/storage/sdcard"
     Xsdpath: "/mnt/sdcard"
     ANDROID_HOME: /usr/local/android-sdk-linux
     ANDROID_SDK: /usr/local/android-sdk-linux/
@@ -146,9 +146,11 @@ test:
         background: true
 
     - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.MainActivity
-    - sleep 210
+    - sleep 60
+    # - fb-adb shell am force-stop chat.tox.antox
+    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.MainActivity
+    - sleep 60
 
     - import -window root $CIRCLE_ARTIFACTS/capture002.png
 
-    #- fb-adb shell am force-stop chat.tox.antox
 
