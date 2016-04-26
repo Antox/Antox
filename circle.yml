@@ -64,7 +64,7 @@ dependencies:
     - cat app/build.gradle | grep 'useCompileDaemon'
 
     - cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI ='
-    - sed -i -e 's#DEBUG_CI. Int = 0#DEBUG_CI\: Int = 1#' app/src/main/scala/chat/tox/antox/activities/MainActivity.scala
+    - sed -i -e 's#DEBUG_CI.* Int = 0#DEBUG_CI = 1#' app/src/main/scala/chat/tox/antox/activities/MainActivity.scala
     - cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI ='
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
