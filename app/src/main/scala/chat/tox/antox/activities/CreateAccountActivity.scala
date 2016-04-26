@@ -30,7 +30,7 @@ import im.tox.tox4j.exceptions.ToxException
 import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
-import scala.concurrent.ops._
+scala.concurrent.Future._
 
 
 object CreateAccountActivity {
@@ -67,7 +67,7 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-      spawn {
+      Future {
         Thread.sleep(3000)         
         runOnUiThread {
           CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
