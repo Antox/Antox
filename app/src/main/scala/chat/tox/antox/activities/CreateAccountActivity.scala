@@ -52,7 +52,6 @@ class CreateAccountActivity extends AppCompatActivity {
     val task = new AsyncTask[AnyRef,AnyRef,AnyRef]() {
       override def doInBackground(params: AnyRef*) = {
         code
-        null
       }
     }
     task.execute()
