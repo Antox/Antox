@@ -74,8 +74,10 @@ class CreateAccountActivity extends AppCompatActivity {
       }
 
       db.addFriend(key, originalUsername, alias, "Friend Request Sent")
-      // db.deleteFriendRequest(key)
+      db.deleteFriendRequest(key)
       // AntoxNotificationManager.clearRequestNotification(key)
+
+      true
   }
   // automate
 
