@@ -154,5 +154,10 @@ test:
     - sleep 60
     # - fb-adb shell am force-stop chat.tox.antox
 
+    - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'chat.tox.antox'|grep 'died'|wc -l|tr -d ' '` ;
+      if [ $died_count -gt 1 ]; then
+      echo "chat.tox.antox crashed"; exit 1;
+      fi
+
     - import -window root $CIRCLE_ARTIFACTS/capture002.png # get proof that the app is running
 
