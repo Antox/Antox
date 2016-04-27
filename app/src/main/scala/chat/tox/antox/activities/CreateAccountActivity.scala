@@ -91,7 +91,7 @@ class CreateAccountActivity extends AppCompatActivity {
             override def run {
               Thread.sleep(3000)
               uiThread {
-                CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
+                CreateAccountActivity._debug_loginUser.setText("i_am_a_real_human_000111")
                 onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
               }
             }
