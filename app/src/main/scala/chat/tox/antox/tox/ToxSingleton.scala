@@ -139,7 +139,7 @@ object ToxSingleton {
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
 
     // automate
-    var wifiOnly = _
+    var wifiOnly = true
     if (MainActivity.DEBUG_CI == 1) {
       wifiOnly = preferences.getBoolean("wifi_only", false)
     } else {
