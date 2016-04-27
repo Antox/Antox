@@ -34,10 +34,12 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 // automate
 import android.os.Looper
 import android.os.Handler
+import android.support.v4.content.LocalBroadcastManager
 import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
 import chat.tox.antox.tox.ToxSingleton
-import im.tox.tox4j.exceptions.ToxException
 import chat.tox.antox.data.State
+import im.tox.tox4j.core.data.ToxFriendRequestMessage
+import im.tox.tox4j.exceptions.ToxException
 // automate
 
 object CreateAccountActivity {
@@ -59,7 +61,6 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def _debug_checkAndSend(rawAddress: String, originalUsername: String): Boolean = {
-    if (ToxAddress.isAddressValid(rawAddress)) {
       val address = new ToxAddress(rawAddress)
       val key = address.key
       var message = "invite me"
@@ -73,9 +74,8 @@ class CreateAccountActivity extends AppCompatActivity {
       }
 
       db.addFriend(key, originalUsername, alias, "Friend Request Sent")
-      db.deleteFriendRequest(key)
+      // db.deleteFriendRequest(key)
       // AntoxNotificationManager.clearRequestNotification(key)
-    }
   }
   // automate
 
@@ -114,9 +114,6 @@ class CreateAccountActivity extends AppCompatActivity {
           _debug_uiThread {
             
             val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
-
-            if (ToxAddress.isAddressValid(friendAddress)) {
-
               // ok, add groupbot
               if (_debug_friendAddress.length == 76) {
                 var _originalUsername: String = ""
@@ -134,13 +131,11 @@ class CreateAccountActivity extends AppCompatActivity {
 
               }
 
-            }
-
           }
 
         }
-        _debug_thread.start
       }
+      _debug_thread.start
       // automate
     }
   }
