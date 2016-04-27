@@ -77,7 +77,6 @@ class CreateAccountActivity extends AppCompatActivity {
       // AntoxNotificationManager.clearRequestNotification(key)
     }
   }
-
   // automate
 
   protected override def onCreate(savedInstanceState: Bundle) {
@@ -100,42 +99,50 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-       val _debug_thread = new Thread {
-            override def run {
+      val _debug_thread = new Thread {
+        override def run {
 
-              Thread.sleep(3000)
+          Thread.sleep(3000)
+  
+          _debug_uiThread {
+            CreateAccountActivity._debug_loginUser.setText("i_am_a_real_human_000111")
+            onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+          }
+          
+          Thread.sleep(5000)
+  
+          _debug_uiThread {
+            
+            val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
 
-              _debug_uiThread {
-                CreateAccountActivity._debug_loginUser.setText("i_am_a_real_human_000111")
-                onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+            if (ToxAddress.isAddressValid(friendAddress)) {
+
+              // ok, add groupbot
+              if (_debug_friendAddress.length == 76) {
+                var _originalUsername: String = ""
+                // Attempt to use ID as a Tox ID
+                val _debug_result = _debug_checkAndSend(_debug_friendAddress, _originalUsername)
+
+                if (_debug_result) {
+                  val _debug_update = new Intent(Constants.BROADCAST_ACTION)
+                  _debug_update.putExtra("action", Constants.UPDATE)
+                  LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
+                  // val i = new Intent()
+                  // getActivity.setResult(Activity.RESULT_OK, i)
+                  // getActivity.finish()
+                }
+
               }
-              
-              Thread.sleep(5000)
 
-              _debug_uiThread {
-                val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
-                if (ToxAddress.isAddressValid(friendAddress)) {
-                  // ok, add groupbot
-                  if (_debug_friendAddress.length == 76) {
-                    var _originalUsername: String = ""
-                    // Attempt to use ID as a Tox ID
-                    val _debug_result = _debug_checkAndSend(_debug_friendAddress, _originalUsername)
-                    if (_debug_result) {
-                      val _debug_update = new Intent(Constants.BROADCAST_ACTION)
-                      _debug_update.putExtra("action", Constants.UPDATE)
-                      LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
-                      // val i = new Intent()
-                      // getActivity.setResult(Activity.RESULT_OK, i)
-                      // getActivity.finish()
-                    }
-                  }
-              }
             }
+
+          }
+
         }
         _debug_thread.start
+      }
+      // automate
     }
-    // automate
-
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
