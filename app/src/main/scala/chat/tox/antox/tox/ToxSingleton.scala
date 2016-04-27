@@ -133,13 +133,12 @@ object ToxSingleton {
 
   def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val wifiOnly = _
     if (MainActivity.DEBUG_CI == 1) {
       // automate
-      wifiOnly = preferences.getBoolean("wifi_only", false)
+      val wifiOnly = preferences.getBoolean("wifi_only", false)
       // automate
     } else {
-      wifiOnly = preferences.getBoolean("wifi_only", true)
+      val wifiOnly = preferences.getBoolean("wifi_only", true)
     }
     val wifiInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
