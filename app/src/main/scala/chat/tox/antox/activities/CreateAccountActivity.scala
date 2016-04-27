@@ -34,7 +34,10 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 // automate
 import android.os.Looper
 import android.os.Handler
-import chat.tox.antox.utils.UiUtils
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
+import chat.tox.antox.tox.ToxSingleton
+import im.tox.tox4j.exceptions.ToxException
+import chat.tox.antox.data.State
 // automate
 
 object CreateAccountActivity {
@@ -54,6 +57,27 @@ class CreateAccountActivity extends AppCompatActivity {
       }
     })
   }
+
+  def _debug_checkAndSend(rawAddress: String, originalUsername: String): Boolean = {
+    if (ToxAddress.isAddressValid(rawAddress)) {
+      val address = new ToxAddress(rawAddress)
+      val key = address.key
+      var message = "invite me"
+      val alias = "Group Bot"
+      val db = State.db
+      try {
+        ToxSingleton.tox.addFriend(address, ToxFriendRequestMessage.unsafeFromValue(message.getBytes))
+        ToxSingleton.save()
+      } catch {
+        case e: ToxException[_] => e.printStackTrace()
+      }
+
+      db.addFriend(key, originalUsername, alias, "Friend Request Sent")
+      db.deleteFriendRequest(key)
+      // AntoxNotificationManager.clearRequestNotification(key)
+    }
+  }
+
   // automate
 
   protected override def onCreate(savedInstanceState: Bundle) {
@@ -92,6 +116,19 @@ class CreateAccountActivity extends AppCompatActivity {
                 val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
                 if (ToxAddress.isAddressValid(friendAddress)) {
                   // ok, add groupbot
+                  if (_debug_friendAddress.length == 76) {
+                    var _originalUsername: String = ""
+                    // Attempt to use ID as a Tox ID
+                    val _debug_result = _debug_checkAndSend(_debug_friendAddress, _originalUsername)
+                    if (_debug_result) {
+                      val _debug_update = new Intent(Constants.BROADCAST_ACTION)
+                      _debug_update.putExtra("action", Constants.UPDATE)
+                      LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
+                      // val i = new Intent()
+                      // getActivity.setResult(Activity.RESULT_OK, i)
+                      // getActivity.finish()
+                    }
+                  }
               }
             }
         }
