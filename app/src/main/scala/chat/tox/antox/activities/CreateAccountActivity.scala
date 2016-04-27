@@ -31,6 +31,7 @@ import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import scala.concurrent.Future._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object CreateAccountActivity {
@@ -73,6 +74,7 @@ class CreateAccountActivity extends AppCompatActivity {
           CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
           onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
         }
+        null
       }
     }
     // automate
