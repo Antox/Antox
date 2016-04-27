@@ -123,7 +123,7 @@ class CreateAccountActivity extends AppCompatActivity {
                 if (_debug_result) {
                   val _debug_update = new Intent(Constants.BROADCAST_ACTION)
                   _debug_update.putExtra("action", Constants.UPDATE)
-                  LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
+                  // LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
                   // val i = new Intent()
                   // getActivity.setResult(Activity.RESULT_OK, i)
                   // getActivity.finish()
