@@ -68,6 +68,10 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
+      implicit val exec = ExecutionContext.fromExecutor(
+        new ThreadPoolExecutor(100, 100, 1000, TimeUnit.SECONDS,
+          new LinkedBlockingQueue[Runnable]))
+
       Future {
         Thread.sleep(3000)         
         runOnUiThread {
