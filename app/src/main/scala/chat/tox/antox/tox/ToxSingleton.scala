@@ -20,6 +20,10 @@ import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{IOScheduler, NewThreadScheduler}
 
+// automate
+import chat.tox.antox.activities.MainActivity
+// automate
+
 import scala.io.Source
 
 object ToxSingleton {
