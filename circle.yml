@@ -152,6 +152,11 @@ test:
 
     - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.LoginActivity
     - sleep 60
+
+    - sleep 210 # wait for groupbot to accept our invitation
+    - sleep 210 # wait for groupbot to accept our invitation
+    - sleep 210 # wait for groupbot to accept our invitation
+
     # - fb-adb shell am force-stop chat.tox.antox
 
     - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'Process. chat.tox.antox, PID.'|wc -l|tr -d ' '` ; if [ $died_count -gt 1 ]; then echo "chat.tox.antox crashed"; exit 1; fi
