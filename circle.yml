@@ -63,6 +63,7 @@ dependencies:
     - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
 
+    - ls -al app/src/main/scala/chat/tox/antox/activities ; find . -name 'MainActivity.scala' ; exit 0
     - cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI ='
     - sed -i -e 's#DEBUG_CI.* Int = 0#DEBUG_CI = 1#' app/src/main/scala/chat/tox/antox/activities/MainActivity.scala
     - cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI ='
