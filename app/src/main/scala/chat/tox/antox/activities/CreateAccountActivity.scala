@@ -34,6 +34,8 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import android.os.AsyncTask;
 import scala.concurrent.Future._
 import scala.concurrent.ExecutionContext.Implicits.global
+import android.os.Looper;
+import android.os.Handler;
 
 
 object CreateAccountActivity {
@@ -46,9 +48,6 @@ object CreateAccountActivity {
 class CreateAccountActivity extends AppCompatActivity {
 
   // automate
-  implicit def toRunnable[F](f: => F): Runnable =
-  new Runnable() { def run() = f }
-
   def backgroundThread(code: => Unit) {
     val task = new AsyncTask[AnyRef,AnyRef,AnyRef]() {
       override def doInBackground(params: AnyRef*) = {
