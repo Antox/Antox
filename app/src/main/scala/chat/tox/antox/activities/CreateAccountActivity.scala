@@ -31,13 +31,10 @@ import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
-import android.os.AsyncTask
-import java.util.concurrent.{Executors, ExecutorService}
-import scala.concurrent.Future._
-import scala.concurrent.ExecutionContext.Implicits.global
+// automate
 import android.os.Looper
 import android.os.Handler
-
+// automate
 
 object CreateAccountActivity {
   // automate
@@ -49,15 +46,6 @@ object CreateAccountActivity {
 class CreateAccountActivity extends AppCompatActivity {
 
   // automate
-  def backgroundThread(code: => Unit) {
-    val task = new AsyncTask[AnyRef,AnyRef,AnyRef]() {
-      override def doInBackground(params: AnyRef*) = {
-        code
-      }
-    }
-    task.execute()
-  }
- 
   def uiThread(code: => Unit) {
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       override def run() {
