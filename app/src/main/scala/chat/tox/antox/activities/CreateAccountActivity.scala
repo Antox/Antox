@@ -34,6 +34,7 @@ import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 // automate
 import android.os.Looper
 import android.os.Handler
+import chat.tox.antox.utils.UiUtils
 // automate
 
 object CreateAccountActivity {
@@ -46,7 +47,7 @@ object CreateAccountActivity {
 class CreateAccountActivity extends AppCompatActivity {
 
   // automate
-  def uiThread(code: => Unit) {
+  def _debug_uiThread(code: => Unit) {
     new Handler(Looper.getMainLooper()).post(new Runnable() {
       override def run() {
         code
@@ -75,16 +76,26 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-       val thread = new Thread {
+       val _debug_thread = new Thread {
             override def run {
+
               Thread.sleep(3000)
-              uiThread {
+
+              _debug_uiThread {
                 CreateAccountActivity._debug_loginUser.setText("i_am_a_real_human_000111")
                 onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
               }
+              
+              Thread.sleep(5000)
+
+              _debug_uiThread {
+                val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
+                if (ToxAddress.isAddressValid(friendAddress)) {
+                  // ok, add groupbot
+              }
             }
         }
-        thread.start
+        _debug_thread.start
     }
     // automate
 
