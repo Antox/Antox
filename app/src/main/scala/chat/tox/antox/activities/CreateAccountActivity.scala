@@ -31,11 +31,12 @@ import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
-import android.os.AsyncTask;
+import android.os.AsyncTask
+import java.util.concurrent.{Executors, ExecutorService}
 import scala.concurrent.Future._
 import scala.concurrent.ExecutionContext.Implicits.global
-import android.os.Looper;
-import android.os.Handler;
+import android.os.Looper
+import android.os.Handler
 
 
 object CreateAccountActivity {
@@ -86,13 +87,16 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-      backgroundThread {
-          Thread.sleep(3000)
-          uiThread {
-            CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
-            onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
-          }
+       val thread = new Thread {
+            override def run {
+              Thread.sleep(3000)
+              uiThread {
+                CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
+                onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+              }
+            }
         }
+        thread.start
     }
     // automate
 
