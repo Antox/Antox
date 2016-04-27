@@ -46,6 +46,24 @@ class CreateAccountActivity extends AppCompatActivity {
   // automate
   implicit def toRunnable[F](f: => F): Runnable =
   new Runnable() { def run() = f }
+
+  def backgroundThread(code: => Unit) {
+    val task = new AsyncTask[AnyRef,AnyRef,AnyRef]() {
+      override def doInBackground(params: AnyRef*) = {
+        code
+        null
+      }
+    }
+    task.execute()
+  }
+ 
+  def uiThread(code: => Unit) {
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      override def run() {
+        code
+      }
+    })
+  }
   // automate
 
   protected override def onCreate(savedInstanceState: Bundle) {
@@ -68,18 +86,13 @@ class CreateAccountActivity extends AppCompatActivity {
       CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
       CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-      implicit val exec = ExecutionContext.fromExecutor(
-        new ThreadPoolExecutor(100, 100, 1000, TimeUnit.SECONDS,
-          new LinkedBlockingQueue[Runnable]))
-
-      Future {
-        Thread.sleep(3000)         
-        runOnUiThread {
-          CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
-          onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+      backgroundThread {
+          Thread.sleep(3000)
+          uiThread {
+            CreateAccountActivity._debug_loginButton.setText("i_am_a_real_human_000111")
+            onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+          }
         }
-        null
-      }
     }
     // automate
 
