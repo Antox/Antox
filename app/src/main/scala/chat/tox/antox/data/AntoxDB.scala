@@ -437,18 +437,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     * @return a list of messages constrained by the parameters.
     */
   def getMessageList(key: Option[ContactKey], takeLast: Int = -1): ArrayBuffer[Message] = {
-    val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
+    val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING, takeLast)
 
-    val messageList = mDb.query(selectQuery).use(messageListFromCursor)
-
-    if (takeLast >= 0) {
-      val messageListSizeDifference = messageList.size - takeLast
-      val sliceStart = if (messageListSizeDifference < 0) 0 else messageListSizeDifference
-
-      messageList.slice(sliceStart, messageList.size)
-    } else {
-      messageList
-    }
+    mDb.query(selectQuery).use(messageListFromCursor)
   }
 
   private def getMessageQuery(key: Option[ContactKey], orderBy: RowOrder, limit: Int = -1): String = {
@@ -459,7 +450,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val joins =
       s"""LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_KEY
-          |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
+         |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
 
     val whereKey =
       if (key.isDefined) {
@@ -467,12 +458,22 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
       } else s"WHERE $TRUE"
 
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
-    s"""SELECT $selection
-        |FROM $TABLE_MESSAGES
-        |$joins
-        |$whereKey
-        |AND $sqlMessageVisible
-        |$order""".stripMargin
+
+    val query = 
+      s"""SELECT $selection
+         |FROM $TABLE_MESSAGES
+         |$joins
+         |$whereKey
+         |AND $sqlMessageVisible""".stripMargin
+
+    if (limit >= 0) {
+      s"""SELECT *
+         |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
+         |$order""".stripMargin
+    } else {
+      s"""$query
+         |$order""".stripMargin
+    }
   }
 
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
