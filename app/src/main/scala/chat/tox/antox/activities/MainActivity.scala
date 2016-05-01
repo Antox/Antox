@@ -16,6 +16,12 @@ import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils._
 
+object MainActivity {
+  // automate
+  val DEBUG_CI: Int = 0
+  // automate
+}
+
 class MainActivity extends AppCompatActivity {
 
   var request: View = _
