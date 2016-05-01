@@ -390,12 +390,6 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     mDb.update(TABLE_MESSAGES, values, where)
   }
 
-  val lastMessages: Observable[Map[ContactKey, Message]] = {
-    messageListObservable(None).map { messageList =>
-      messageList.groupBy(_.key).filter(_._2.nonEmpty).map(i => (i._1, i._2.last))
-    }
-  }
-
   /**
     * Observable called whenever [[TABLE_MESSAGES]] is updated.
     *
@@ -635,27 +629,21 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   val friendInfoList = friendList
-    .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
-    .combineLatestWith(unreadCounts)((tup, unreadCountList) => {
-      tup match {
-        case (fl, lm) =>
-          fl.map(f => {
-            val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
-            f.copy(lastMessage = lm.get(f.key), unreadCount = maybeUnreadCount.getOrElse(0))
-          })
-      }
+    .combineLatestWith(unreadCounts)((fl, unreadCountList) => {
+      fl.map(f => {
+        val unreadCount: Int = unreadCountList.get(f.key).getOrElse(0)
+        val lastMessage: Option[Message] = getMessageList(Some(f.key), 1).headOption
+        f.copy(lastMessage = lastMessage, unreadCount = unreadCount)
+      })
     })
 
   val groupInfoList = groupList
-    .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
-    .combineLatestWith(unreadCounts)((tup, uc) => {
-      tup match {
-        case (gl, lm) =>
-          gl.map(g => {
-            val unreadCount: Option[Int] = uc.get(g.key)
-            g.copy(lastMessage = lm.get(g.key), unreadCount = unreadCount.getOrElse(0))
-          })
-      }
+    .combineLatestWith(unreadCounts)((gl, unreadCountList) => {
+      gl.map(g => {
+        val unreadCount: Int = unreadCountList.get(g.key).getOrElse(0)
+        val lastMessage: Option[Message] = getMessageList(Some(g.key), 1).headOption
+        g.copy(lastMessage = lastMessage, unreadCount = unreadCount)
+      })
     })
 
   //this is bad FIXME
