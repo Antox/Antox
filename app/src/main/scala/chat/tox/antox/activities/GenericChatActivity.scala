@@ -205,9 +205,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     //FIXME make this more efficient
     adapter.removeAll()
 
-    for (message <- filterMessageList(messageList)) {
-      adapter.add(message)
-    }
+    adapter.addAll(filterMessageList(messageList))
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
