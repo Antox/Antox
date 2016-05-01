@@ -91,13 +91,13 @@ test:
     - echo 'mtools_skip_check=1' > ~/.mtoolsrc
     - android list targets
 #
-    - if [ "$EMU_" == "appemu23" ]; then echo "no" | android create avd -n appemu23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
+    - if [ "$EMU_" == "appemu23" ]; then echo "no" | android create avd -n appemu23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA720" ; fi
     - if [ "$EMU_" == "appemu23" ]; then cat ~/.android/avd/appemu23.avd/config.ini ; fi
 #
-    - if [ "$EMU_" == "appemu21" ]; then echo "no" | android create avd -n appemu21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA800-7in" ; fi
+    - if [ "$EMU_" == "appemu21" ]; then echo "no" | android create avd -n appemu21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA720" ; fi
     - if [ "$EMU_" == "appemu21" ]; then cat ~/.android/avd/appemu21.avd/config.ini ; fi
 #
-    - if [ "$EMU_" == "appemu10" ]; then echo "no" | android create avd -n appemu10 -f -t android-10 --abi default/armeabi --skin "WVGA854" ; fi
+    - if [ "$EMU_" == "appemu10" ]; then echo "no" | android create avd -n appemu10 -f -t android-10 --abi default/armeabi --skin "WQVGA432" ; fi
     - if [ "$EMU_" == "appemu10" ]; then cat ~/.android/avd/appemu10.avd/config.ini ; fi
 #
     - echo "$EMU_"
@@ -108,33 +108,12 @@ test:
         parallel: true
     - circle-android wait-for-boot
 
-    - xwininfo -root -tree
-    - xdotool search --name "DDMS" ; exit 0
-    - xdotool search ; exit 0
-    - xdotool search --maxdepth 1 ; exit 0
-    - xdotool search --maxdepth 10 ; exit 0
-    - search --onlyvisible ; exit 0
-    - xdotool search --class ''|xargs -L1 xdotool getwindowname|grep -v '^$'; xwininfo -root -tree -int
-    - for i in `xdotool search --name "DDMS"`; do xdotool windowfocus "$i" ; xdotool key "Return" ; sleep 1 ; done ; exit 0
     - sleep 210
-    - xwininfo -root -tree
-
-    - xdotool search --name "DDMS" ; exit 0
-    - xdotool search ; exit 0
-    - xdotool search --maxdepth 1 ; exit 0
-    - xdotool search --maxdepth 10 ; exit 0
-    - search --onlyvisible ; exit 0
-    - xdotool search --class ''|xargs -L1 xdotool getwindowname|grep -v '^$'; xwininfo -root -tree -int
-
-    - xdotool search --name "appemu" key "F2"
-    - xdotool search --name "appemu" key "Return"
-
+    - adb shell input keyevent 82
     - sleep 10
-    - import -window root $CIRCLE_ARTIFACTS/capture001.png
+    - import -window root $CIRCLE_ARTIFACTS/capture_emulator_running.png
 
     - fb-adb shell "cat /proc/meminfo" ; exit 0
-    - fb-adb shell "free" ; exit 0
-    - fb-adb shell "sysctl vm.swappiness" ; exit 0
 
     - adb shell ls -al / ; exit 0
     - adb shell ls -al /storage/ ; exit 0
