@@ -9,9 +9,6 @@ import im.tox.tox4j.core.data.{ToxFriendMessage, ToxNickname}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.scaloid.common.LoggerTag
 
-import rx.lang.scala.Observable
-import rx.lang.scala.schedulers.IOScheduler
-
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
 
@@ -49,28 +46,23 @@ object MessageHelper {
     }
   }
 
-  def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Long]): Unit = {
+  def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Int]): Unit = {
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
-      val databaseMessageId: Long = mDbId match {
-        case Some(dbId) => dbId
-        case None => {
-          val senderKey = ToxSingleton.tox.getSelfKey
-          val senderName = ToxSingleton.tox.getName
-          db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
-            hasBeenRead = false, successfullySent = false, messageType)
-        }
+      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromValue(msg.getBytes), messageType)).toOption
+
+      val senderName = ToxSingleton.tox.getName
+      val senderKey = ToxSingleton.tox.getSelfKey
+      mId match {
+        case Some(id) =>
+          mDbId match {
+            case Some(dbId) => db.updateUnsentMessage(id, dbId)
+            case None => db.addMessage(friendKey, senderKey, senderName,
+              splitMsg, hasBeenReceived = false, hasBeenRead = false, successfullySent = true, messageType, messageId = id)
+          }
+        case None => db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
+          hasBeenRead = false, successfullySent = false, messageType)
       }
-
-      Observable[Boolean](subscriber => {
-        val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromValue(msg.getBytes), messageType)).toOption
-
-        mId match {
-          case Some(id) => db.updateUnsentMessage(id, databaseMessageId)
-          case None => AntoxLog.debug(s"SendMessage failed. dbId = $databaseMessageId")
-        }
-        subscriber.onCompleted()
-      }).subscribeOn(IOScheduler()).subscribe()
     }
   }
 
