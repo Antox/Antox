@@ -577,7 +577,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   def markIncomingMessagesRead(key: ContactKey) {
-    val where = s"$COLUMN_NAME_KEY ='$key'"
+    val where = s"$COLUMN_NAME_KEY ='$key' AND $COLUMN_NAME_HAS_BEEN_READ = $FALSE"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
     AntoxLog.debug("Marked incoming messages as read", AntoxDB.TAG)
   }
