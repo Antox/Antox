@@ -563,7 +563,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     messageList.toArray
   }
 
-  def updateUnsentMessage(messageId: Int, id: Int) {
+  def updateUnsentMessage(messageId: Int, id: Long) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
