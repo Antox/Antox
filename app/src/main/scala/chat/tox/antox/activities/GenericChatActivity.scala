@@ -138,7 +138,10 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       }
 
       override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int): Unit = {
-        db.updateContactUnsentMessage(activeKey, charSequence.toString)
+        Observable[Boolean](subscriber => {
+          db.updateContactUnsentMessage(activeKey, charSequence.toString)
+          subscriber.onCompleted()
+        }).subscribeOn(IOScheduler()).subscribe()
       }
 
       override def afterTextChanged(editable: Editable) {
