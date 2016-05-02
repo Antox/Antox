@@ -31,8 +31,55 @@ import im.tox.tox4j.impl.jni.ToxCoreImpl
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
+// automate
+import android.os.Looper
+import android.os.Handler
+import android.support.v4.content.LocalBroadcastManager
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
+import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.data.State
+import im.tox.tox4j.core.data.ToxFriendRequestMessage
+import im.tox.tox4j.exceptions.ToxException
+// automate
+
+object CreateAccountActivity {
+  // automate
+  var _debug_loginButton: Button = _
+  var _debug_loginUser: EditText = _
+  // automate
+}
 
 class CreateAccountActivity extends AppCompatActivity {
+
+  // automate
+  def _debug_uiThread(code: => Unit) {
+    new Handler(Looper.getMainLooper()).post(new Runnable() {
+      override def run() {
+        code
+      }
+    })
+  }
+
+  def _debug_checkAndSend(rawAddress: String, originalUsername: String): Boolean = {
+      val address = new ToxAddress(rawAddress)
+      val key = address.key
+      var message = "invite me"
+      val alias = "Group Bot"
+      val db = State.db
+      try {
+        ToxSingleton.tox.addFriend(address, ToxFriendRequestMessage.unsafeFromValue(message.getBytes))
+        ToxSingleton.save()
+      } catch {
+        case e: ToxException[_] => e.printStackTrace()
+      }
+
+      db.addFriend(key, originalUsername, alias, "Friend Request Sent")
+      db.deleteFriendRequest(key)
+      // AntoxNotificationManager.clearRequestNotification(key)
+
+      true
+  }
+  // automate
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -47,6 +94,51 @@ class CreateAccountActivity extends AppCompatActivity {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       getWindow.setStatusBarColor(getResources.getColor(R.color.material_blue_grey_950))
+    }
+
+    // automate
+    if (MainActivity.DEBUG_CI == 1) {
+      CreateAccountActivity._debug_loginButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
+      CreateAccountActivity._debug_loginUser = findViewById(R.id.create_account_name).asInstanceOf[EditText]
+
+      val _debug_thread = new Thread {
+        override def run {
+
+          Thread.sleep(3000)
+  
+          _debug_uiThread {
+            CreateAccountActivity._debug_loginUser.setText("i_am_a_real_human_000111")
+            onClickRegisterIncogAccount(CreateAccountActivity._debug_loginButton)
+          }
+          
+          Thread.sleep(5000)
+  
+          _debug_uiThread {
+            
+            val _debug_friendAddress = UiUtils.sanitizeAddress(ToxAddress.removePrefix("56A1ADE4B65B86BCD51CC73E2CD4E542179F47959FE3E0E21B4B0ACDADE51855D34D34D37CB5"))
+              // ok, add groupbot
+              if (_debug_friendAddress.length == 76) {
+                var _originalUsername: String = ""
+                // Attempt to use ID as a Tox ID
+                val _debug_result = _debug_checkAndSend(_debug_friendAddress, _originalUsername)
+
+                if (_debug_result) {
+                  val _debug_update = new Intent(Constants.BROADCAST_ACTION)
+                  _debug_update.putExtra("action", Constants.UPDATE)
+                  // LocalBroadcastManager.getInstance(getActivity).sendBroadcast(_debug_update)
+                  // val i = new Intent()
+                  // getActivity.setResult(Activity.RESULT_OK, i)
+                  // getActivity.finish()
+                }
+
+              }
+
+          }
+
+        }
+      }
+      _debug_thread.start
+      // automate
     }
   }
 

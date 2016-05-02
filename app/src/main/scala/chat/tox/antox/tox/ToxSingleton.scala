@@ -20,6 +20,10 @@ import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{IOScheduler, NewThreadScheduler}
 
+// automate
+import chat.tox.antox.activities.MainActivity
+// automate
+
 import scala.io.Source
 
 object ToxSingleton {
@@ -133,7 +137,16 @@ object ToxSingleton {
 
   def isToxConnected(preferences: SharedPreferences, context: Context): Boolean = {
     val connManager = context.getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
-    val wifiOnly = preferences.getBoolean("wifi_only", true)
+
+    // automate
+    var wifiOnly = true
+    if (MainActivity.DEBUG_CI == 1) {
+      wifiOnly = preferences.getBoolean("wifi_only", false)
+    } else {
+      wifiOnly = preferences.getBoolean("wifi_only", true)
+    }
+    // automate
+
     val wifiInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
     !(wifiOnly && !wifiInfo.isConnected)
