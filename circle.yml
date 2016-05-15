@@ -34,7 +34,7 @@ dependencies:
     - android list sdk --all --extended
 
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3 > /dev/null 2> /dev/null
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.1 > /dev/null 2> /dev/null
+    #- echo y | android update sdk --no-ui --all --filter build-tools-23.0.1 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter platform-tools > /dev/null 2> /dev/null
 
@@ -84,11 +84,11 @@ dependencies:
       ls -al ~/ ;
       jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar app-signed.apk app.apk androiddebugkey ;
       ls -al ~/ ;
-      $_SDK_/build-tools/23.0.1/zipalign -v 4 app-signed.apk app-signed-aligned.apk ;
+      $_SDK_/build-tools/23.0.3/zipalign -v 4 app-signed.apk app-signed-aligned.apk ;
       ls -al ~/ ;
       pwd ;
       ls -al ;
-      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/antox_circleci_$CIRCLE_SHA1.apk || exit 1
+      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/antox.apk || exit 1
 test:
   pre:
     - mksdcard -l e 180M sdcard.img
