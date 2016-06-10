@@ -56,13 +56,33 @@
     <string name="pref_header_calls">Calls</string>
     <string name="pref_title_enable_call_event_logging">Call event logging</string>
 
+    <!-- Input -->
+
+    <string name="pref_header_input">Input</string>
+
+    <string name="pref_enable_autocorrect">Enable Autocorrect</string>
+
+    <string name="pref_keyboard_hotkey">Change Keyboard Hotkey</string>
+
+    <string-array name="pref_keyboard_hotkey_titles">
+        <item>Send</item>
+        <item>Emoji</item>
+        <item>Enter</item>
+    </string-array>
+
+    <string-array name="pref_keyboard_hotkey_values" translatable="false">
+        <item>send</item>
+        <item>emote</item>
+        <item>return</item>
+    </string-array>
+
     <!-- Network -->
     <string name="pref_header_network">Network</string>
     <string name="pref_title_connection_status_messages">Action Messages</string>
     <string name="pref_title_wifi_only">Wi-Fi Only</string>
     <string name="pref_title_enable_proxy">Enable proxy</string>
     <string name="pref_title_proxy_type">Select proxy type</string>
-    <string-array name="pref_proxy_type_list_values">
+    <string-array name="pref_proxy_type_list_values" translatable="false">
         <item>HTTP</item>
         <item>SOCKS5</item>
     </string-array>

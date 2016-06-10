@@ -53,6 +53,24 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_header_input">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autocorrect"
+            android:title="@string/pref_enable_autocorrect"/>
+
+        <ListPreference
+            android:defaultValue="emote"
+            android:entries="@array/pref_keyboard_hotkey_titles"
+            android:entryValues="@array/pref_keyboard_hotkey_values"
+            android:key="keyboard_hotkey"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_keyboard_hotkey" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_network">
         <CheckBoxPreference
             android:defaultValue="true"
