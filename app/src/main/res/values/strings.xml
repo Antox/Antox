@@ -25,6 +25,7 @@
     <string name="create_name_hint">Profile Name</string>
     <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
+    <string name="create_register_with_toxme">Register With ToxMe</string>
     <string name="create_registering">Registering account…</string>
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_import_profile">Import Profile</string>
@@ -42,6 +43,13 @@
     <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
+
+    <!-- ToxMe Info -->
+    <string name="toxme_title" translatable="false">ToxMe</string>
+    <string name="toxme_website" translatable="false">&lt;a href="https://toxme.io">toxme.io&lt;/a></string>
+    <string name="toxme_info1">ToxMe makes it easier to connect with friends by turning your Tox ID into a human readable, Email-like format, making it easier for your friends to find and add you on Tox.</string>
+    <string name="toxme_info2">By signing up for ToxMe, your Tox ID will be stored on toxme.io and made publicly available. If you want full anonymity it is not recommended that you sign up for this service.</string>
+    <string name="toxme_info_source">Full source code can be found at\nhttps://github.com/LittleVulpix/toxme</string>
 
 
     <!-- Main Activity -->

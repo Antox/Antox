@@ -51,7 +51,7 @@
             android:name="chat.tox.antox.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AntoxTheme.ActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="chat.tox.antox.activities.LoginActivity"
             android:label="@string/app_name"
@@ -133,6 +133,9 @@
             android:name="chat.tox.antox.activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
             android:screenOrientation="portrait" />
+        <activity android:name="chat.tox.antox.activities.ToxMeInfoActivity"
+            android:label="@string/toxme_title"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="chat.tox.antox.activities.ProfileSettingsActivity"
             android:label="@string/title_activity_profile_settings" />

@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:fillViewport="true"
     android:layout_height="match_parent"
+    android:id="@+id/create_account_activity_full"
     android:background="@color/material_blue_grey_950">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,7 +12,8 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
         android:orientation="vertical"
-        android:focusableInTouchMode="true">
+        android:focusableInTouchMode="true"
+        android:id="@+id/linearLayout">
 
         <ImageView
             android:contentDescription="Antox Logo"
@@ -76,18 +78,6 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/create_account_incog"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="@string/create_register_incog"
-        android:textColor="@color/white"
-        android:background="#414141"
-        android:layout_marginBottom="100dp"
-        android:onClick="onClickRegisterIncogAccount" />
-
-    <Button
         android:id="@+id/create_account_import"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
@@ -97,5 +87,43 @@
         android:textColor="@color/white"
         android:background="#414141"
         android:layout_marginBottom="40dp"
+        android:gravity="center"
         android:onClick="onClickImportProfile" />
+
+    <TextView
+        android:text="@string/create_register_with_toxme"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toxme"
+        android:layout_below="@+id/linearLayout"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/toxme"
+        android:layout_toEndOf="@id/toxme"
+        android:id="@+id/toxme_text" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toxme"
+        android:checked="false"
+        android:buttonTint="@color/white"
+        android:layout_below="@+id/linearLayout"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@+id/create_account_import"
+        android:layout_alignStart="@+id/create_account_import" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toxme_help_button"
+        android:src="@drawable/ic_help_outline_white_48dp"
+        android:layout_alignRight="@+id/create_account_import"
+        android:layout_alignEnd="@+id/create_account_import"
+        android:layout_alignBottom="@+id/toxme_text"
+        android:layout_alignTop="@+id/toxme_text" />
+
+
 </RelativeLayout>
