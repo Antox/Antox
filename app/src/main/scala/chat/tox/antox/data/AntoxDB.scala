@@ -390,12 +390,6 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     mDb.update(TABLE_MESSAGES, values, where)
   }
 
-  val lastMessages: Observable[Map[ContactKey, Message]] = {
-    messageListObservable(None).map { messageList =>
-      messageList.groupBy(_.key).filter(_._2.nonEmpty).map(i => (i._1, i._2.last))
-    }
-  }
-
   /**
     * Observable called whenever [[TABLE_MESSAGES]] is updated.
     *
@@ -437,18 +431,9 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     * @return a list of messages constrained by the parameters.
     */
   def getMessageList(key: Option[ContactKey], takeLast: Int = -1): ArrayBuffer[Message] = {
-    val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING)
+    val selectQuery: String = getMessageQuery(key, RowOrder.ASCENDING, takeLast)
 
-    val messageList = mDb.query(selectQuery).use(messageListFromCursor)
-
-    if (takeLast >= 0) {
-      val messageListSizeDifference = messageList.size - takeLast
-      val sliceStart = if (messageListSizeDifference < 0) 0 else messageListSizeDifference
-
-      messageList.slice(sliceStart, messageList.size)
-    } else {
-      messageList
-    }
+    mDb.query(selectQuery).use(messageListFromCursor)
   }
 
   private def getMessageQuery(key: Option[ContactKey], orderBy: RowOrder, limit: Int = -1): String = {
@@ -459,7 +444,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val joins =
       s"""LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_KEY
-          |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
+         |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
 
     val whereKey =
       if (key.isDefined) {
@@ -467,12 +452,22 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
       } else s"WHERE $TRUE"
 
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
-    s"""SELECT $selection
-        |FROM $TABLE_MESSAGES
-        |$joins
-        |$whereKey
-        |AND $sqlMessageVisible
-        |$order""".stripMargin
+
+    val query = 
+      s"""SELECT $selection
+         |FROM $TABLE_MESSAGES
+         |$joins
+         |$whereKey
+         |AND $sqlMessageVisible""".stripMargin
+
+    if (limit >= 0) {
+      s"""SELECT *
+         |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
+         |$order""".stripMargin
+    } else {
+      s"""$query
+         |$order""".stripMargin
+    }
   }
 
   private def messageListFromCursor(cursor: Cursor): ArrayBuffer[Message] = {
@@ -568,7 +563,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     messageList.toArray
   }
 
-  def updateUnsentMessage(messageId: Int, id: Int) {
+  def updateUnsentMessage(messageId: Int, id: Long) {
     val values = new ContentValues()
     values.put(COLUMN_NAME_SUCCESSFULLY_SENT, TRUE.toString)
     values.put(COLUMN_NAME_MESSAGE_ID, messageId: java.lang.Integer)
@@ -582,7 +577,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   def markIncomingMessagesRead(key: ContactKey) {
-    val where = s"$COLUMN_NAME_KEY ='$key'"
+    val where = s"$COLUMN_NAME_KEY ='$key' AND $COLUMN_NAME_HAS_BEEN_READ = $FALSE"
     mDb.update(TABLE_MESSAGES, contentValue(COLUMN_NAME_HAS_BEEN_READ, TRUE), where)
     AntoxLog.debug("Marked incoming messages as read", AntoxDB.TAG)
   }
@@ -634,27 +629,21 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   }
 
   val friendInfoList = friendList
-    .combineLatestWith(lastMessages)((fl, lm) => (fl, lm))
-    .combineLatestWith(unreadCounts)((tup, unreadCountList) => {
-      tup match {
-        case (fl, lm) =>
-          fl.map(f => {
-            val maybeUnreadCount: Option[Int] = unreadCountList.get(f.key)
-            f.copy(lastMessage = lm.get(f.key), unreadCount = maybeUnreadCount.getOrElse(0))
-          })
-      }
+    .combineLatestWith(unreadCounts)((fl, unreadCountList) => {
+      fl.map(f => {
+        val unreadCount: Int = unreadCountList.get(f.key).getOrElse(0)
+        val lastMessage: Option[Message] = getMessageList(Some(f.key), 1).headOption
+        f.copy(lastMessage = lastMessage, unreadCount = unreadCount)
+      })
     })
 
   val groupInfoList = groupList
-    .combineLatestWith(lastMessages)((gl, lm) => (gl, lm))
-    .combineLatestWith(unreadCounts)((tup, uc) => {
-      tup match {
-        case (gl, lm) =>
-          gl.map(g => {
-            val unreadCount: Option[Int] = uc.get(g.key)
-            g.copy(lastMessage = lm.get(g.key), unreadCount = unreadCount.getOrElse(0))
-          })
-      }
+    .combineLatestWith(unreadCounts)((gl, unreadCountList) => {
+      gl.map(g => {
+        val unreadCount: Int = unreadCountList.get(g.key).getOrElse(0)
+        val lastMessage: Option[Message] = getMessageList(Some(g.key), 1).headOption
+        g.copy(lastMessage = lastMessage, unreadCount = unreadCount)
+      })
     })
 
   //this is bad FIXME
