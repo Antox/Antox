@@ -62,7 +62,7 @@ class ToxService extends Service {
                 .interval(reconnectionIntervalSeconds seconds)
                 .subscribe(x => {
                     AntoxLog.debug("Reconnecting")
-                    ToxSingleton.updateDhtNodes(getApplicationContext)
+                    ToxSingleton.bootstrap(getApplicationContext).subscribe()
                   })
               AntoxLog.debug(s"Tox disconnected. Scheduled reconnection every $reconnectionIntervalSeconds seconds")
             }

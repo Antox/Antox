@@ -96,7 +96,7 @@ object ToxSingleton {
           subscriber.onError(e)
       }
     }).map(json => {
-      AntoxLog.debug(json.toString, TAG)
+      AntoxLog.debug("Fetched Nodefile: " + json.toString, TAG)
       var dhtNodes: Array[DhtNode] = Array()
       val serverArray = json.getJSONArray("nodes")
       for (i <- 0 until serverArray.length) {
@@ -121,12 +121,14 @@ object ToxSingleton {
       if (dhtNodes.isEmpty) {
         val savedNodeFile = new File(ctx.getFilesDir, nodeFileName)
         if (!savedNodeFile.exists()) {
+          AntoxLog.debug("Nodefile does not exist, fetching new one", TAG)
           dhtNodes = updateDhtNodes(ctx).toBlocking.first
         }
         else {
+          AntoxLog.debug("Reading Nodefile", TAG)
           try{
             val json = JsonReader.readJsonFromFile(savedNodeFile)
-            AntoxLog.debug(json.toString, TAG)
+            AntoxLog.debug("Current Nodefile: " + json.toString, TAG)
             var dhtNodes: Array[DhtNode] = Array()
             val serverArray = json.getJSONArray("nodes")
             for (i <- 0 until serverArray.length) {
@@ -137,9 +139,12 @@ object ToxSingleton {
                 jsonObject.getString("ipv4"),
                 ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("public_key"))),
                 Port.unsafeFromInt(jsonObject.getInt("port")))
+
             }
+            this.dhtNodes = dhtNodes
           } catch {
             case e: JSONException =>
+              AntoxLog.debug("Error parsing JSON for Nodefile, fetching new one", TAG)
               dhtNodes = updateDhtNodes(ctx).toBlocking.first
           }
 
@@ -162,6 +167,7 @@ object ToxSingleton {
         subscriber.onCompleted()
       }
       else if(!updateNodes){
+        AntoxLog.debug("Could not find a node to bootstrap to, fetching new Nodefile", TAG)
         subscriber.onNext(bootstrap(ctx, updateNodes = true).toBlocking.first)
         subscriber.onCompleted()
       }

@@ -47,9 +47,6 @@ class ConnectionManager extends BroadcastReceiver {
         }
         ConnectionManager.lastConnectionType = Some(connectionType)
       }
-      if (ToxSingleton.dhtNodes.length == 0) {
-        ToxSingleton.updateDhtNodes(context)
-      }
     }
   }
 }
