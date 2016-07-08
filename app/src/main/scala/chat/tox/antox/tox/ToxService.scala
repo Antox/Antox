@@ -48,7 +48,7 @@ class ToxService extends Service {
 
         var reconnection: Subscription = null
 
-        var connectionSubscription = AntoxOnSelfConnectionStatusCallback.connectionStatusSubject
+        val connectionSubscription = AntoxOnSelfConnectionStatusCallback.connectionStatusSubject
           .observeOn(AndroidMainThreadScheduler())
           .distinctUntilChanged
           .subscribe(toxConnection => {
@@ -69,6 +69,7 @@ class ToxService extends Service {
           })
 
         var ticks = 0
+        val toxCoreIterationRatio = Math.ceil(ToxSingleton.tox.interval/ToxSingleton.toxAv.interval).toInt
         while (keepRunning) {
           if (!ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
@@ -78,15 +79,19 @@ class ToxService extends Service {
             }
           } else {
             try {
-              ToxSingleton.tox.iterate(toxCallbackListener)
+              if(ticks % toxCoreIterationRatio == 0) {
+                ToxSingleton.tox.iterate(toxCallbackListener)
+                AntoxLog.debug("toxcore iterated")
+              }
               ToxSingleton.toxAv.iterate(toxAvCallbackListener)
 
               if (ticks % 100 == 0) {
                 println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
               }
-
-              Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              val time = ToxSingleton.toxAv.interval
+              Thread.sleep(time)
               ticks += 1
+              AntoxLog.debug("toxav iterated")
             } catch {
               case e: Exception =>
                 e.printStackTrace()

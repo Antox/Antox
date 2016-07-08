@@ -16,7 +16,7 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(avEventListener: ToxAvEventListener[Unit]): Unit = toxAv.iterate(avEventListener)(Unit)
 
-  override def interval: Int = toxAv.iterationInterval / 4
+  override def interval: Int = toxAv.iterationInterval
 
   @throws[ToxavCallControlException]
   def callControl(callNumber: CallNumber, control: ToxavCallControl): Unit = toxAv.callControl(ToxFriendNumber.unsafeFromInt(callNumber.value), control)
