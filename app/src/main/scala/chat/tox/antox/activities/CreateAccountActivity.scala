@@ -4,15 +4,17 @@ import java.io.File
 import java.util.regex.Pattern
 
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.animation.{ArgbEvaluator, ValueAnimator}
+import android.animation.{ObjectAnimator, ArgbEvaluator, ValueAnimator}
 import android.app.Activity
 import android.content.DialogInterface.OnClickListener
-import android.content.{DialogInterface, Intent}
+import android.content.{Context, DialogInterface, Intent}
+import android.graphics.Color
 import android.os.{Build, Bundle, Environment}
 import android.support.v7.app.{AlertDialog, AppCompatActivity}
-import android.text.InputType
-import android.view.{Menu, MenuItem, View, WindowManager}
-import android.widget.{Button, EditText, ProgressBar, Toast}
+import android.text._
+import android.text.method.LinkMovementMethod
+import android.view._
+import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.{State, UserDB}
 import chat.tox.antox.theme.ThemeManager
@@ -48,7 +50,33 @@ class CreateAccountActivity extends AppCompatActivity {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       getWindow.setStatusBarColor(getResources.getColor(R.color.material_blue_grey_950))
     }
+
+    val toxmeCheckBox = findViewById(R.id.toxme).asInstanceOf[CheckBox]
+    val toxmeText = findViewById(R.id.toxme_text).asInstanceOf[TextView]
+
+    toxmeText.setOnClickListener(new View.OnClickListener {
+      override def onClick(v: View): Unit = {
+        toxmeCheckBox.toggle()
+        toggleRegisterText()
+      }
+    })
+
+    toxmeCheckBox.setOnClickListener(new View.OnClickListener {
+      override def onClick(v: View): Unit = {
+        toggleRegisterText()
+      }
+    })
+
+    val toxmeHelpButton = findViewById(R.id.toxme_help_button).asInstanceOf[ImageView]
+    toxmeHelpButton.setOnClickListener(new View.OnClickListener {
+      override def onClick(v: View): Unit = {
+        val intent = new Intent(CreateAccountActivity.this, classOf[ToxMeInfoActivity])
+        startActivity(intent)
+      }
+    })
+
   }
+
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
     getMenuInflater.inflate(R.menu.create_account, menu)
@@ -61,6 +89,26 @@ class CreateAccountActivity extends AppCompatActivity {
       return true
     }
     super.onOptionsItemSelected(item)
+  }
+
+  def toggleRegisterText(): Unit ={
+    val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
+    val toxmeCheckBox = findViewById(R.id.toxme).asInstanceOf[CheckBox]
+    val fadeOut = ObjectAnimator.ofInt(registerButton, "textColor", getResources.getColor(R.color.white), Color.TRANSPARENT)
+    fadeOut.setDuration(300)
+    fadeOut.setEvaluator(new ArgbEvaluator)
+    fadeOut.start()
+    if (toxmeCheckBox.isChecked) {
+      registerButton.setText(R.string.create_register_with_toxme)
+    }
+    else {
+      registerButton.setText(R.string.create_register)
+    }
+    val fadeIn = ObjectAnimator.ofInt(registerButton, "textColor", Color.TRANSPARENT, getResources.getColor(R.color.white))
+    fadeIn.setDuration(300)
+    fadeIn.setEvaluator(new ArgbEvaluator)
+    fadeIn.start()
+
   }
 
   def validAccountName(account: String): Boolean = {
@@ -144,9 +192,6 @@ class CreateAccountActivity extends AppCompatActivity {
 
 
   def disableRegisterButton(): Unit = {
-    //prevent user from registering some other way while trying to register
-    val registerIncognitoButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
-    registerIncognitoButton.setEnabled(false)
 
     val importProfileButton = findViewById(R.id.create_account_import).asInstanceOf[Button]
     importProfileButton.setEnabled(false)
@@ -177,15 +222,23 @@ class CreateAccountActivity extends AppCompatActivity {
   }
 
   def enableRegisterButton(): Unit = {
-    val registerIncognitoButton = findViewById(R.id.create_account_incog).asInstanceOf[Button]
-    registerIncognitoButton.setEnabled(true)
 
     val importProfileButton = findViewById(R.id.create_account_import).asInstanceOf[Button]
     importProfileButton.setEnabled(true)
 
     val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
     registerButton.setEnabled(true)
-    registerButton.setText(getResources.getText(R.string.create_register))
+
+
+    val toxmeCheckBox = findViewById(R.id.toxme).asInstanceOf[CheckBox]
+
+    if(toxmeCheckBox.isChecked){
+      registerButton.setText(R.string.create_register_with_toxme)
+    }
+    else{
+      registerButton.setText(R.string.create_register)
+    }
+
     registerButton.setBackgroundColor(getResources.getColor(R.color.brand_secondary))
 
     val progressBar = findViewById(R.id.login_progress_bar).asInstanceOf[ProgressBar]
@@ -286,14 +339,6 @@ class CreateAccountActivity extends AppCompatActivity {
     enableRegisterButton()
   }
 
-  def onClickRegisterIncogAccount(view: View) {
-    val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
-    val account = accountField.getText.toString
-
-    val userDb = State.userDb(this)
-    createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = false)
-  }
-
   def onClickImportProfile(view: View): Unit = {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
@@ -374,6 +419,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
     val userDb = State.userDb(this)
 
-    createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister = true)
+    val shouldRegister = findViewById(R.id.toxme).asInstanceOf[CheckBox].isChecked
+    createAccount(account, userDb, shouldCreateDataFile = true, shouldRegister)
   }
 }
