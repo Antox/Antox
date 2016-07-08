@@ -81,7 +81,6 @@ class ToxService extends Service {
             try {
               if(ticks % toxCoreIterationRatio == 0) {
                 ToxSingleton.tox.iterate(toxCallbackListener)
-                AntoxLog.debug("toxcore iterated")
               }
               ToxSingleton.toxAv.iterate(toxAvCallbackListener)
 
@@ -91,7 +90,6 @@ class ToxService extends Service {
               val time = ToxSingleton.toxAv.interval
               Thread.sleep(time)
               ticks += 1
-              AntoxLog.debug("toxav iterated")
             } catch {
               case e: Exception =>
                 e.printStackTrace()
