@@ -107,6 +107,7 @@ object State {
     if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
+    AntoxNotificationManager.clearAllNotifications()
 
     val startTox = new Intent(activity, classOf[ToxService])
     activity.stopService(startTox)
