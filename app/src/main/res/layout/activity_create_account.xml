@@ -91,7 +91,7 @@
         android:onClick="onClickImportProfile" />
 
     <TextView
-        android:text="@string/create_register_with_toxme"
+        android:text="@string/create_sign_up_for_toxme"
         android:textColor="@color/white"
         android:textSize="17sp"
         android:gravity="center_vertical"

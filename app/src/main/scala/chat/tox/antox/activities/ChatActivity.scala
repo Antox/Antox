@@ -239,10 +239,22 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  override def onClickInfo(clickLocation: Location): Unit = {}
+  override def onClickInfo(clickLocation: Location): Unit = {
+    val intent = new Intent(this, classOf[FriendProfileActivity])
+    val friendInfo = State.db.getFriendInfo(activeKey)
+    intent.putExtra("key", activeKey.key)
+    intent.putExtra("avatar", friendInfo.avatar)
+
+    intent.putExtra("name", friendInfo.alias.getOrElse(friendInfo.name).toString())
+    startActivity(intent)
+  }
 
   def onClickCall(video: Boolean, clickLocation: Location): Unit = {
-    if (!State.db.getFriendInfo(activeKey).online) return
+    AntoxLog.debug("Calling friend")
+    if (!State.db.getFriendInfo(activeKey).online) {
+      AntoxLog.debug("Friend not online")
+      return
+    }
 
     val activeCalls = State.callManager.calls.filter(_.active)
 

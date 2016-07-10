@@ -2,7 +2,7 @@ package chat.tox.antox.activities
 
 import android.content.{Intent, SharedPreferences}
 import android.os.{Build, Bundle}
-import android.preference.{ListPreference, Preference, PreferenceManager}
+import android.preference.{EditTextPreference, ListPreference, Preference, PreferenceManager}
 import android.view.MenuItem
 import android.widget.Toast
 import chat.tox.antox.R
@@ -11,7 +11,9 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager, Options}
+import chat.tox.antox.utils.{Hex, AntoxLog, AntoxNotificationManager, Options}
+import im.tox.tox4j.core.data.ToxPublicKey
+import org.scaloid.common.LoggerTag
 
 object SettingsActivity {
 
@@ -40,7 +42,7 @@ object SettingsActivity {
   }
 }
 
-class SettingsActivity extends BetterPreferenceActivity with Preference.OnPreferenceClickListener with Preference.OnPreferenceChangeListener {
+class SettingsActivity extends BetterPreferenceActivity with Preference.OnPreferenceClickListener {
 
   private var themeDialog: ColorPickerDialog = _
   private var thisActivity: SettingsActivity = _
@@ -85,8 +87,15 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     findPreference("theme_color").setOnPreferenceClickListener(this)
     findPreference("call_replies").setOnPreferenceClickListener(this)
     bindPreferenceSummaryToValue(findPreference("locale"))
-    findPreference("proxy_address").setOnPreferenceChangeListener(this)
-    findPreference("proxy_port").setOnPreferenceChangeListener(this)
+
+    bindPreferenceSummaryToValue(findPreference("proxy_type"))
+    bindPreferenceSummaryToValue(findPreference("proxy_address"))
+    bindPreferenceSummaryToValue(findPreference("proxy_port"))
+
+    bindPreferenceSummaryToValue(findPreference("custom_node_address"))
+    bindPreferenceSummaryToValue(findPreference("custom_node_port"))
+    bindPreferenceSummaryToValue(findPreference("custom_node_key"))
+
   }
 
   override def onResume() {
@@ -122,6 +131,59 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     if (proxySettings.contains(key)) {
       networkSettingsChanged = true
     }
+
+    if(key == "proxy_address"){
+      val address = sharedPreferences.getString("proxy_address", "127.0.0.1")
+      if(!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")){
+        Toast.makeText(getApplicationContext, getString(R.string.error_invalid_ip_address), Toast.LENGTH_SHORT).show()
+        val preference = findPreference("proxy_address").asInstanceOf[EditTextPreference]
+        preference.setText("127.0.0.1")
+        preference.setSummary("127.0.0.1")
+        networkSettingsChanged = false
+      }
+    }
+    if(key == "proxy_port"){
+      val port = sharedPreferences.getString("proxy_port", "9050").toInt
+      if(!(port > 0 && port < 65535)){
+        Toast.makeText(getApplicationContext, getString(R.string.error_invalid_port), Toast.LENGTH_SHORT).show()
+        val preference = findPreference("proxy_port").asInstanceOf[EditTextPreference]
+        preference.setText("9050")
+        preference.setSummary("9050")
+        networkSettingsChanged = false
+      }
+    }
+
+    if(key == "custom_node_address"){
+      val address = sharedPreferences.getString("custom_node_address", "127.0.0.1")
+      if(!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")){
+        Toast.makeText(getApplicationContext, getString(R.string.error_invalid_ip_address), Toast.LENGTH_SHORT).show()
+        val preference = findPreference("custom_node_address").asInstanceOf[EditTextPreference]
+        preference.setText("127.0.0.1")
+        preference.setSummary("127.0.0.1")
+      }
+    }
+
+    if(key == "custom_node_port"){
+      val port = sharedPreferences.getString("custom_node_port", "33445").toInt
+      if(!(port > 0 && port < 65535)){
+        Toast.makeText(getApplicationContext, getString(R.string.error_invalid_port), Toast.LENGTH_SHORT).show()
+        val preference = findPreference("custom_node_port").asInstanceOf[EditTextPreference]
+        preference.setText("33445")
+        preference.setSummary("33445")
+      }
+    }
+
+    if(key == "custom_node_key"){
+      val address = sharedPreferences.getString("custom_node_key", "")
+      if (address.length != 64 || !address.matches("^[0-9A-F]+$")) {
+        AntoxLog.error("Malformed tox public key", LoggerTag("SettingsActivity"))
+        Toast.makeText(getApplicationContext, getString(R.string.error_invalid_tox_id), Toast.LENGTH_SHORT).show()
+        val preference = findPreference("custom_node_key").asInstanceOf[EditTextPreference]
+        preference.setText("")
+        preference.setSummary("")
+      }
+    }
+
     if (key == "wifi_only") {
       if (!ToxSingleton.isToxConnected(sharedPreferences, this)) {
         val antoxDb = State.db
@@ -188,30 +250,5 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   def launchCallRepliesActivity(): Unit = {
     val intent = new Intent(this, classOf[EditCallRepliesActivity])
     startActivity(intent)
-  }
-
-  override def onPreferenceChange(preference: Preference, value: AnyRef): Boolean = {
-    preference.getKey match {
-      case "proxy_address" =>
-        val proxyAddress = value.toString
-        if (proxyAddress.length > 0) {
-          return true
-        }
-        Toast.makeText(thisActivity, getResources.getString(R.string.proxy_address_invalid), Toast.LENGTH_SHORT).show()
-        false
-      case "proxy_port" =>
-        try {
-          val proxyPort = Integer.parseInt(value.toString)
-          if (proxyPort > 0 && proxyPort < 65536) {
-            return true
-          }
-        } catch {
-          case e: NumberFormatException => None
-        }
-        Toast.makeText(thisActivity, getResources.getString(R.string.proxy_port_invalid), Toast.LENGTH_SHORT).show()
-        false
-      case _ =>
-        true
-    }
   }
 }

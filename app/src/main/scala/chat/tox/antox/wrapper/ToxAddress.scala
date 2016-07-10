@@ -3,6 +3,7 @@ package chat.tox.antox.wrapper
 import chat.tox.antox.utils.Hex
 
 object ToxAddress {
+
   val MAX_ADDRESS_LENGTH = 76
 
   def isAddressValid(address: String): Boolean = {

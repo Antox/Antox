@@ -35,6 +35,8 @@ android {
 
         renderscriptTargetApi 23
 
+        multiDexEnabled true
+
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
         testApplicationId "chat.tox.antox.tests"
@@ -75,6 +77,9 @@ dependencies {
     compile files('libs/dnsjava-2.1.6.jar')
     compile files('libs/kalium-jni-1.0.0-SNAPSHOT.jar')
     compile files('libs/tox4j_2.11.jar')
+
+    compile 'com.android.support:multidex:1.0.1'
+
     compile 'org.scala-lang:scala-library:2.11.7'
     compile 'org.scaloid:scaloid_2.11:3.6.1-10'
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.1.0'

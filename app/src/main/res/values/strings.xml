@@ -26,6 +26,7 @@
     <string name="create_text">Secure messaging for everyone.</string>
     <string name="create_register">Register</string>
     <string name="create_register_with_toxme">Register With ToxMe</string>
+    <string name="create_sign_up_for_toxme">Sign Up For ToxMe</string>
     <string name="create_registering">Registering account…</string>
     <string name="create_register_incog">Register Incognito</string>
     <string name="create_import_profile">Import Profile</string>
@@ -71,9 +72,6 @@
     <string name="video_call_friend">Video Call</string>
     <string name="info">Info</string>
 
-    <!-- Settings Activity -->
-    <string name="proxy_address_invalid">Please enter a correct hostname or ip-address</string>
-    <string name="proxy_port_invalid">Please enter a correct port number value between 1 and 65535</string>
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
