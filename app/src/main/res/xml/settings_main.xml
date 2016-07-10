@@ -109,6 +109,30 @@
             android:defaultValue="9050"
             android:key="proxy_port"
             android:title="@string/pref_title_proxy_port" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_custom_node"
+            android:title="@string/pref_title_custom_node" />
+
+        <EditTextPreference
+            android:dependency="enable_custom_node"
+            android:defaultValue="127.0.0.1"
+            android:key="custom_node_address"
+            android:title="@string/pref_title_custom_node_address" />
+
+        <EditTextPreference
+            android:numeric="decimal"
+            android:dependency="enable_custom_node"
+            android:defaultValue="33445"
+            android:key="custom_node_port"
+            android:title="@string/pref_title_custom_node_port" />
+        <EditTextPreference
+            android:dependency="enable_custom_node"
+            android:defaultValue=""
+            android:key="custom_node_key"
+            android:title="@string/pref_title_custom_node_public_key" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_calls">

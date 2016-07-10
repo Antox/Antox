@@ -88,6 +88,13 @@
     </string-array>
     <string name="pref_title_proxy_address">Change proxy address</string>
     <string name="pref_title_proxy_port">Change proxy port</string>
+    <string name="pref_title_custom_node">Use custom bootstrap node</string>
+    <string name="pref_title_custom_node_address">Change node address</string>
+    <string name="pref_title_custom_node_port">Change node port</string>
+    <string name="pref_title_custom_node_public_key">Change node public key</string>
+    <string name="error_invalid_tox_id">Invalid Public Key</string>
+    <string name="error_invalid_ip_address">Invalid IP Address</string>
+    <string name="error_invalid_port">Invalid Port. Please enter a correct port number value between 1 and 65535</string>
 
     <!-- Other -->
     <string name="pref_header_other">Other</string>

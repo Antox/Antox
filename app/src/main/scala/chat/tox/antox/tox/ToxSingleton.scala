@@ -2,6 +2,7 @@ package chat.tox.antox.tox
 
 import java.io._
 import java.util
+import java.util.Collections
 
 import android.content.{Context, SharedPreferences}
 import android.net.ConnectivityManager
@@ -15,7 +16,7 @@ import im.tox.core.network.Port
 import im.tox.tox4j.core.data.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
 import im.tox.tox4j.core.options.{ProxyOptions, ToxOptions}
-import im.tox.tox4j.exceptions.ToxException
+import im.tox.tox4j.exceptions.{ToxKilledException, ToxException}
 import org.json.{JSONException, JSONObject}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
@@ -96,28 +97,41 @@ object ToxSingleton {
           subscriber.onError(e)
       }
     }).map(json => {
-      AntoxLog.debug("Fetched Nodefile: " + json.toString, TAG)
+      AntoxLog.debug("Fetched new Nodefile", TAG)
       var dhtNodes: Array[DhtNode] = Array()
       val serverArray = json.getJSONArray("nodes")
       for (i <- 0 until serverArray.length) {
         val jsonObject = serverArray.getJSONObject(i)
-        dhtNodes +:= new DhtNode(
-          jsonObject.getString("maintainer"),
-          jsonObject.getString("ipv6"),
-          jsonObject.getString("ipv4"),
-          ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("public_key"))),
-          Port.unsafeFromInt(jsonObject.getInt("port")))
+        if(jsonObject.getBoolean("status_tcp")){
+          dhtNodes +:= new DhtNode(
+            jsonObject.getString("maintainer"),
+            jsonObject.getString("ipv4"),
+            ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("public_key"))),
+            Port.unsafeFromInt(jsonObject.getInt("port")))
+        }
       }
       dhtNodes
     })
   }
 
-  def bootstrap(ctx: Context, updateNodes: Boolean = false): Observable[Boolean] = {
+
+  def bootstrap(ctx: Context, ipv4: String= "", port: Int = 0, publicKey: String = "",
+                updateNodes: Boolean = false): Observable[Boolean] = {
     Observable[Boolean](subscriber => {
+      val TAG = LoggerTag("Bootstrap")
+      if(ipv4 != "" && port != 0 && publicKey != ""){
+        AntoxLog.debug(s"Using custom bootstrap node: $ipv4:$port")
+        if (publicKey.length != 64 || !publicKey.matches("^[0-9A-F]+$")) {
+          AntoxLog.error("Malformed tox public key", TAG)
+        }
+        else {
+          val address = ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(publicKey))
+          dhtNodes = Array(new DhtNode("Your custom bootstrap node", ipv4, address, Port.unsafeFromInt(port)))
+        }
+      }
       if(updateNodes){
         dhtNodes = updateDhtNodes(ctx).toBlocking.first
       }
-      val TAG = LoggerTag("Bootstrap")
       if (dhtNodes.isEmpty) {
         val savedNodeFile = new File(ctx.getFilesDir, nodeFileName)
         if (!savedNodeFile.exists()) {
@@ -128,17 +142,17 @@ object ToxSingleton {
           AntoxLog.debug("Reading Nodefile", TAG)
           try{
             val json = JsonReader.readJsonFromFile(savedNodeFile)
-            AntoxLog.debug("Current Nodefile: " + json.toString, TAG)
             var dhtNodes: Array[DhtNode] = Array()
             val serverArray = json.getJSONArray("nodes")
             for (i <- 0 until serverArray.length) {
               val jsonObject = serverArray.getJSONObject(i)
-              dhtNodes +:= new DhtNode(
-                jsonObject.getString("maintainer"),
-                jsonObject.getString("ipv6"),
-                jsonObject.getString("ipv4"),
-                ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("public_key"))),
-                Port.unsafeFromInt(jsonObject.getInt("port")))
+              if(jsonObject.getBoolean("status_tcp")){
+                dhtNodes +:= new DhtNode(
+                  jsonObject.getString("maintainer"),
+                  jsonObject.getString("ipv4"),
+                  ToxPublicKey.unsafeFromValue(Hex.hexStringToBytes(jsonObject.getString("public_key"))),
+                  Port.unsafeFromInt(jsonObject.getInt("port")))
+              }
 
             }
             this.dhtNodes = dhtNodes
@@ -150,15 +164,31 @@ object ToxSingleton {
 
         }
       }
+      Collections.shuffle(util.Arrays.asList(dhtNodes:_*))
+
+
       AntoxLog.debug("Trying to bootstrap", TAG)
+      var nodes = ""
+      for(node <- dhtNodes){
+        nodes += s"Owner: ${node.owner}, Address: ${node.ipv4}:${node.port.value}, Pubkey: ${node.key.toHexString} | "
+      }
+
+      nodes = nodes.substring(0, nodes.length - 2)
+
+      AntoxLog.debug("Current nodes: " + nodes, TAG)
+
       var bootstrapped = false
+
       for (i <- dhtNodes.indices) {
         try{
-          tox.bootstrap(dhtNodes(i).ipv4, dhtNodes(i).port, dhtNodes(i).key)
-          bootstrapped = true
+          if(true){
+            AntoxLog.debug(s"Bootstrapping to ${dhtNodes(i).ipv4}:${dhtNodes(i).port.value}", TAG)
+            tox.bootstrap(dhtNodes(i).ipv4, dhtNodes(i).port, dhtNodes(i).key)
+            bootstrapped = true
+          }
         } catch{
           case e: Exception =>
-            AntoxLog.error(s"Couldn't bootstrap to node ${dhtNodes(i).ipv4}")
+            AntoxLog.error(s"Couldn't bootstrap to node ${dhtNodes(i).ipv4}:${dhtNodes(i).port.value}")
         }
       }
       if(bootstrapped){
@@ -166,12 +196,13 @@ object ToxSingleton {
         subscriber.onNext(true)
         subscriber.onCompleted()
       }
-      else if(!updateNodes){
+      else if(!updateNodes && ipv4 == "" && port == 0){
         AntoxLog.debug("Could not find a node to bootstrap to, fetching new Nodefile", TAG)
         subscriber.onNext(bootstrap(ctx, updateNodes = true).toBlocking.first)
         subscriber.onCompleted()
       }
       else {
+        AntoxLog.debug("Failed to bootstrap", TAG)
         subscriber.onNext(false)
         subscriber.onCompleted()
       }
@@ -237,21 +268,18 @@ object ToxSingleton {
       val editor = preferences.edit()
       editor.putString("tox_id", tox.getAddress.toString)
       editor.commit()
-    } catch {
-      case e: ToxException[_] => e.printStackTrace()
-    }
 
-    State.db = new AntoxDB(ctx, userDb.getActiveUser, tox.getSelfKey)
-    val db = State.db
 
-    toxAv = new ToxAv(tox.getTox)
+      State.db = new AntoxDB(ctx, userDb.getActiveUser, tox.getSelfKey)
+      val db = State.db
 
-    db.clearFileNumbers()
-    db.setAllOffline()
+      toxAv = new ToxAv(tox.getTox)
 
-    db.synchroniseWithTox(tox)
+      db.clearFileNumbers()
+      db.setAllOffline()
 
-    try {
+      db.synchroniseWithTox(tox)
+
       val details = userDb.getActiveUserDetails
       tox.setName(details.nickname)
       tox.setStatusMessage(details.statusMessage)
@@ -259,12 +287,26 @@ object ToxSingleton {
       val newStatusString = details.status
       newStatus = UserStatus.getToxUserStatusFromString(newStatusString)
       tox.setStatus(newStatus)
+
+      if(preferences.getBoolean("enable_custom_node", false)){
+        val ip = preferences.getString("custom_node_address","127.0.0.1")
+        val port = preferences.getString("custom_node_port", "33445").toInt
+        var address = preferences.getString("custom_node_key", "")
+        if(address == "") address = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        bootstrap(ctx,ip,port,address).subscribeOn(IOScheduler())
+          .observeOn(NewThreadScheduler())
+          .subscribe()
+      }
+      else{
+        bootstrap(ctx).subscribeOn(IOScheduler())
+          .observeOn(NewThreadScheduler())
+          .subscribe()
+      }
     } catch {
-      case e: ToxException[_] =>
+      case e: Exception => e.printStackTrace()
     }
-    bootstrap(ctx).subscribeOn(IOScheduler())
-      .observeOn(NewThreadScheduler())
-      .subscribe()
+
+
   }
 
   def save(): Unit = {
