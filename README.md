@@ -1,4 +1,8 @@
 <img src="http://i.imgur.com/fFhygVw.png" width="400" height="185" />
+
+**Jenkins:** [![Build Status](https://build.tox.chat/job/antox_build_android_arm_release/badge/icon)](https://build.tox.chat/job/antox_build_android_arm_release/)
+**CircleCI:** [![CircleCI](https://circleci.com/gh/Antox/Antox.svg?style=shield)](https://circleci.com/gh/Antox/Antox)
+
 =====
 
 Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.com/Astonex). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
@@ -14,9 +18,11 @@ Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.co
 
 ###Getting Antox
 
-To get Antox on Google Play, join the [Google+ Community](https://plus.google.com/communities/103125800027884896310), and follow the instructions given.
+Antox can be downloaded from [Google Play](https://play.google.com/store/apps/details?id=chat.tox.antox).
 
 To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "Antox".
+
+The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_build_android_arm_release/lastSuccessfulBuild/artifact/antox.apk)
 
 ###What Is Currently Working
 - One to one messaging
