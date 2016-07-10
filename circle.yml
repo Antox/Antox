@@ -12,9 +12,8 @@ machine:
     ANDROID_SDK: /usr/local/android-sdk-linux/
     _SDK_: /usr/local/android-sdk-linux/
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1000m -XX:+HeapDumpOnOutOfMemoryError"'
-general:
-  artifacts:
-    #-./app/build/outputs/logs/
+    CLASS_P: chat.tox.antox
+    START_INTENT_P: chat.tox.antox.activities.LoginActivity
 dependencies:
   cache_directories:
     - ~/.android
@@ -28,13 +27,14 @@ dependencies:
     - sudo apt-get install telnet > /dev/null 2> /dev/null
     - sudo apt-get install x11-utils > /dev/null 2> /dev/null
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
+    - sudo apt-get install qrencode > /dev/null 2> /dev/null
 
+    - gradle -v # display gradle version
     - echo y | android update sdk --no-ui --all --filter "tools"
     - android list sdk --all | grep -i tools
     - android list sdk --all --extended
 
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3 > /dev/null 2> /dev/null
-    #- echo y | android update sdk --no-ui --all --filter build-tools-23.0.1 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter platform-tools > /dev/null 2> /dev/null
 
@@ -49,23 +49,11 @@ dependencies:
 
     - pwd ; ls -al
 
-    - cat gradle/wrapper/gradle-wrapper.properties
-    #- sed -i -e 's#gradle-2.11-bin.zip#gradle-2.2-all.zip#' gradle/wrapper/gradle-wrapper.properties
-    #- sed -i -e 's#gradle-2.11-bin.zip#gradle-2.13-all.zip#' gradle/wrapper/gradle-wrapper.properties
-    #- cat gradle/wrapper/gradle-wrapper.properties
-
     - ./download-dependencies.sh
 
-    - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
-    #- sed -i -e 's#minifyEnabled true#minifyEnabled false#g' app/build.gradle # disable proguard!!
     - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle
-    - cat app/build.gradle | grep 'minifyEnabled'
     - cat app/build.gradle | grep 'useCompileDaemon'
-
-    #- cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI:'
-    #- sed -i -e 's#DEBUG_CI.* Int = 0#DEBUG_CI = 1#' app/src/main/scala/chat/tox/antox/activities/MainActivity.scala
-    #- cat app/src/main/scala/chat/tox/antox/activities/MainActivity.scala | grep 'DEBUG_CI'
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon
@@ -88,7 +76,15 @@ dependencies:
       ls -al ~/ ;
       pwd ;
       ls -al ;
-      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/antox.apk || exit 1
+      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk || exit 1
+
+##   also make apk files with different names for each build (for individual downloads)
+    - cp -av $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk ; exit 0
+##   qr code to scan with your phone to directly download the apk file (for convenience)
+    - qrencode -o $CIRCLE_ARTIFACTS/QR_apk.png 'https://circle-artifacts.com/gh/'${CIRCLE_PROJECT_USERNAME}'/'${CIRCLE_PROJECT_REPONAME}'/'${CIRCLE_BUILD_NUM}'/artifacts/'${CIRCLE_NODE_INDEX}'/tmp/'`basename $CIRCLE_ARTIFACTS`'/'"${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk" ; exit 0
+##   qr code to go directly to the aritfacts (to scan with phone)
+    - qrencode -o $CIRCLE_ARTIFACTS/QR_artifacts.png 'https://circleci.com/gh/'${CIRCLE_PROJECT_USERNAME}'/'${CIRCLE_PROJECT_REPONAME}'/'${CIRCLE_BUILD_NUM}'#artifacts' ; exit 0
+
 test:
   pre:
     - mksdcard -l e 180M sdcard.img
@@ -112,8 +108,9 @@ test:
         parallel: true
     - circle-android wait-for-boot
 
-    - sleep 210
-    - adb shell input keyevent 82
+    - sleep 210 # let the emulator settle down first
+
+    - adb shell input keyevent 82 # remove lock screen on emulator
     - sleep 10
     - import -window root $CIRCLE_ARTIFACTS/capture_emulator_running.png
 
@@ -129,16 +126,12 @@ test:
         background: true
     - sleep 60 # let the emulator settle down first
 
-    - fb-adb shell am start -n chat.tox.antox/chat.tox.antox.activities.LoginActivity
+    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
     - sleep 60
+    - sleep 120 # wait to be sure the app has started fully
 
-    - sleep 210 # wait for groupbot to accept our invitation
-    - sleep 210 # wait for groupbot to accept our invitation
-    - sleep 210 # wait for groupbot to accept our invitation
+    - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'Process. '"$CLASS_P"', PID.'|wc -l|tr -d ' '` ; if [ $died_count -gt 0 ]; then echo "app crashed"; exit 1; fi
 
-    # - fb-adb shell am force-stop chat.tox.antox
-
-    - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'Process. chat.tox.antox, PID.'|wc -l|tr -d ' '` ; if [ $died_count -gt 1 ]; then echo "chat.tox.antox crashed"; exit 1; fi
-
-    - import -window root $CIRCLE_ARTIFACTS/capture002.png # get proof that the app is running
+    - import -window root $CIRCLE_ARTIFACTS/capture_app_running.png # get proof that the app is running
+    - adb shell screencap -p | sed 's/\r$//' > $CIRCLE_ARTIFACTS/capture_app_running_2.png
 
