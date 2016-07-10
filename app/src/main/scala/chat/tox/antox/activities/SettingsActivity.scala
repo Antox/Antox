@@ -85,6 +85,10 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     findPreference("theme_color").setOnPreferenceClickListener(this)
     findPreference("call_replies").setOnPreferenceClickListener(this)
     bindPreferenceSummaryToValue(findPreference("locale"))
+
+    bindPreferenceSummaryToValue(findPreference("proxy_type"))
+    bindPreferenceSummaryToValue(findPreference("proxy_address"))
+    bindPreferenceSummaryToValue(findPreference("proxy_port"))
     findPreference("proxy_address").setOnPreferenceChangeListener(this)
     findPreference("proxy_port").setOnPreferenceChangeListener(this)
   }
