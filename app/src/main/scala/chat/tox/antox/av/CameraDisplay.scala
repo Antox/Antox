@@ -3,6 +3,7 @@ package chat.tox.antox.av
 import android.app.Activity
 import android.content.res.Configuration
 import android.graphics.SurfaceTexture
+import android.graphics.ImageFormat 
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
@@ -67,6 +68,7 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
       }
 
       //camera.addCallbackBuffer()
+      FormatConversions.reinit(previewSize.height * previewSize.width * (ImageFormat.getBitsPerPixel(camera.getParameters.getPreviewFormat())) / 8)
       camera.setPreviewCallback(previewCallback)
       camera.startPreview()
     } catch {
