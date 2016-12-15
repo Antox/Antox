@@ -83,8 +83,8 @@ dependencies:
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
-    - cd libsodium-jni/ ; ./build.sh
-    - cd libsodium-jni/ ; ./build-kaliumjni.sh
+    #- cd libsodium-jni/ ; ./build.sh
+    #- cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
     - cp -av /usr/lib/libsodiumjni.so $CIRCLE_ARTIFACTS/ ; exit 0
     - find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
