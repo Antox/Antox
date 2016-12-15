@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package im.tox.tox4j.impl.jni.proto;
+
+
+// struct timeval from <sys/time.h> representing a point in time.
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos = 2;
+}
+
+
+// For aggregates, this contains the members. It can be a tree if the object
+// member itself is also an object.
+message Struct {
+  map<string, Value> members = 1;
+}
+
+
+// A single argument or return value.
+message Value {
+  uint32 truncated = 1;
+  oneof v {
+    sint64 v_sint64 = 2;
+    string v_string = 3;
+    bytes  v_bytes  = 4;
+    Struct v_object = 5;
+  }
+}
+
+
+// A single log entry representing one native function call.
+message JniLogEntry {
+  // The called function name or address.
+  string name = 1;
+
+  // Instance number for the Tox or ToxAV instance.
+  uint32 instance_number = 2;
+
+  // All the arguments to the function in order. These may contain out
+  // parameters, in which case the result will not be logged.
+  // TODO(iphydf): Infer out parameters from constness and log them anyway.
+  repeated Value arguments = 3;
+
+  // Return value of the called function.
+  Value result = 4;
+
+  // Exact point in time (seconds and nanoseconds) when the function
+  // began processing.
+  Timestamp timestamp = 5;
+
+  // Time spent inside the actual native function in nanoseconds. This does
+  // not include JNI overhead and the C++ code around it. It is purely the
+  // time spent in the tox function.
+  uint32 elapsed_nanos = 6;
+}
+
+
+// Top-level log containing all the log entries.
+message JniLog {
+  repeated JniLogEntry entries = 1;
+}

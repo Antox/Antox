@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package im.tox.tox4j.av.proto;
+
+
+message Call {
+  int32         friend_number     = 1;
+  bool          audio_enabled     = 2;
+  bool          video_enabled     = 3;
+}
+
+message CallState {
+  enum Kind {
+    ERROR        = 0;
+    FINISHED     = 1;
+    SENDING_A    = 2;
+    SENDING_V    = 3;
+    ACCEPTING_A  = 4;
+    ACCEPTING_V  = 5;
+  }
+
+  uint32        friend_number    = 1;
+  repeated Kind call_state       = 2;
+}
+
+message BitRateStatus {
+  uint32        friend_number    = 1;
+  uint32        audio_bit_rate   = 2;
+  uint32        video_bit_rate   = 3;
+}
+
+message AudioReceiveFrame {
+  uint32        friend_number    = 1;
+  bytes         pcm              = 2;
+  uint32        channels         = 3;
+  uint32        sampling_rate    = 4;
+}
+
+message VideoReceiveFrame {
+  uint32        friend_number    = 1;
+  uint32        width            = 2;
+  uint32        height           = 3;
+  bytes         y                = 4;
+  bytes         u                = 5;
+  bytes         v                = 6;
+  int32         y_stride         = 7;
+  int32         u_stride         = 8;
+  int32         v_stride         = 9;
+}
+
+
+message AvEvents {
+  repeated Call               call                = 1;
+  repeated CallState          call_state          = 2;
+  repeated BitRateStatus      bit_rate_status     = 3;
+  repeated AudioReceiveFrame  audio_receive_frame = 4;
+  repeated VideoReceiveFrame  video_receive_frame = 5;
+}
