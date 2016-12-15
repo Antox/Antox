@@ -103,13 +103,13 @@ dependencies:
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/05_android
-    - cd jvm-toxcore-c/ ; make
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; export CXX_FLAGS=-std=c++11 ; buildscripts/04_build ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; export CXX_FLAGS=-std=c++11 ; buildscripts/05_android ; exit 0
+    #- cd jvm-toxcore-c/ ; make
     # ---- copy jar to Antox folder ----------
     - rm -Rf app/src/main/protobuf/ ; exit 0
     - rm -Rf app/src/main/java/im/ ; exit 0
