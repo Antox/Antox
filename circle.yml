@@ -79,6 +79,7 @@ dependencies:
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
     #- cd libsodium-jni/ ; ./build-linux.sh ; exit 0
     - cp -av /usr/lib/libsodiumjni.so $CIRCLE_ARTIFACTS/ ; exit 0
+    - find ~/ -name 'libsodiumjni.so' --exec ls -al {} \; ; exit 0
 # ------ build libsodiumjni.so ------
 
 # ------ build tox4j stuff ----------
