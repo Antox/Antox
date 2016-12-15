@@ -28,6 +28,9 @@ dependencies:
     - sudo apt-get install x11-utils > /dev/null 2> /dev/null
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
     - sudo apt-get install qrencode > /dev/null 2> /dev/null
+    
+    - sudo apt-get install clang-3.5
+    - sudo apt-get install p7zip-full
 
     - gradle -v # display gradle version
     - echo y | android update sdk --no-ui --all --filter "tools"
@@ -50,6 +53,20 @@ dependencies:
     - pwd ; ls -al
 
     - ./download-dependencies.sh
+
+# ------ build libsodiumjni.so ------
+    - cd libsodium-jni/ ; pwd
+# ------ build libsodiumjni.so ------
+
+# ------ build tox4j stuff ----------
+    - cd jvm-toxcore-c/ ; pwd
+    - cd jvm-toxcore-c/ ; buildscripts/00_dependencies_host
+    - cd jvm-toxcore-c/ ; buildscripts/01_ndk
+    - cd jvm-toxcore-c/ ; buildscripts/02_toolchain
+    - cd jvm-toxcore-c/ ; buildscripts/03_dependencies_target
+    - cd jvm-toxcore-c/ ; buildscripts/04_build
+    - cd jvm-toxcore-c/ ; buildscripts/05_android
+# ------ build tox4j stuff ----------
 
     - cat app/build.gradle | grep 'useCompileDaemon'
     - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle
