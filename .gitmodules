@@ -1,0 +1,3 @@
+[submodule "libsodium-jni"]
+	path = libsodium-jni
+	url = https://github.com/joshjdevl/libsodium-jni
