@@ -1,6 +1,8 @@
 machine:
   timezone:
     Europe/Vienna
+  java:
+    version: oraclejdk8
   environment:
     ZEMU_: "appemu23"
     EMU_: "appemu21"
@@ -15,6 +17,7 @@ machine:
     SBT_OPTS: "-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M"
     CLASS_P: chat.tox.antox
     START_INTENT_P: chat.tox.antox.activities.LoginActivity
+    DEBIAN_FRONTEND: noninteractive
 dependencies:
   cache_directories:
     - ~/.android
@@ -38,8 +41,8 @@ dependencies:
     - sudo apt-get install clang
     - sudo apt-get install p7zip-full
 
-    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
-    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+    #- sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+    #- sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
 
     - gradle -v # display gradle version
     - echo y | android update sdk --no-ui --all --filter "tools"
@@ -68,7 +71,8 @@ dependencies:
 
 # ------ build libsodiumjni.so ------
     - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
-    - sudo sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
+    - sudo apt-get update
+    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
     - cd libsodium-jni/ ; git submodule init
     #- cd libsodium-jni/ ; git submodule sync
