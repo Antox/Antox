@@ -81,21 +81,27 @@ dependencies:
     - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
     - cd libsodium-jni/ ; git submodule init
-    #- cd libsodium-jni/ ; git submodule sync
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
     - cd libsodium-jni/ ; ./build.sh
     - cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
-    #- cd libsodium-jni/ ; ./build-linux.sh ; exit 0
     - cp -av /usr/lib/libsodiumjni.so $CIRCLE_ARTIFACTS/ ; exit 0
     - find ~/ -name 'libsodiumjni.so' --exec ls -al {} \; ; exit 0
+    # ---- copy libraries to Antox folder ----
+    - cp -v libsodium-jni/libsodium/libsodium-android-armv6/lib/libsodium.so app/src/main/jniLibs/armeabi/
+    - cp -v libsodium-jni/libsodium/libsodium-android-i686/lib/libsodium.so app/src/main/jniLibs/x86/
+    - cp -v libsodium-jni/libsodium/libsodium-android-armv8-a/lib/libsodium.so app/src/main/jniLibs/arm64-v8a/
+    - mkdir -p app/src/main/jniLibs/arm-v7a/    
+    - cp -v libsodium-jni/libsodium/libsodium-android-armv7-a/lib/libsodium.so app/src/main/jniLibs/arm-v7a/
+    #- mkdir -p app/src/main/jniLibs/mips/    
+    #- cp -v libsodium-jni/libsodium/libsodium-android-mips32/lib/libsodium.so app/src/main/jniLibs/misp/
+    # ---- copy libraries to Antox folder ----
 # ------ build libsodiumjni.so ------
 
 # ------ build tox4j stuff ----------
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
-    #- cd jvm-toxcore-c/ ; git submodule sync ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
     #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
     #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
