@@ -33,6 +33,7 @@ dependencies:
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
     - sudo apt-get install qrencode > /dev/null 2> /dev/null
 
+
     - mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
     - wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
 
