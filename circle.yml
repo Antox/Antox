@@ -63,6 +63,11 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23 > /dev/null 2> /dev/null
 
+# ------- install missing NDK ----------
+    - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
+    - printf 'export NDK_VERSION=r10d\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+# ------- install missing NDK ----------
+
     - pwd ; ls -al
 
     - ./download-dependencies.sh
