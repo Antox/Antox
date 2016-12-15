@@ -87,7 +87,7 @@ dependencies:
     - cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
     - cp -av /usr/lib/libsodiumjni.so $CIRCLE_ARTIFACTS/ ; exit 0
-    - find ~/ -name 'libsodiumjni.so' --exec ls -al {} \; ; exit 0
+    - find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
     # ---- copy libraries to Antox folder ----
     - cp -v libsodium-jni/libsodium/libsodium-android-armv6/lib/libsodium.so app/src/main/jniLibs/armeabi/
     #- cp -v libsodium-jni/libsodium/libsodium-android-armv8-a/lib/libsodium.so app/src/main/jniLibs/arm64-v8a/
@@ -107,12 +107,13 @@ dependencies:
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; export CXX_FLAGS=-std=c++11 ; buildscripts/04_build ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; export CXX_FLAGS=-std=c++11 ; buildscripts/05_android ; exit 0
+    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/04_build ; exit 0
+    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/05_android ; exit 0
     #- cd jvm-toxcore-c/ ; make
     # ---- copy jar to Antox folder ----------
     - rm -Rf app/src/main/protobuf/ ; exit 0
     - rm -Rf app/src/main/java/im/ ; exit 0
+    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -al {} \; ; exit 0
     - cp -v ./target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
     # ---- copy jar to Antox folder ----------
     # ---- copy libraries to Antox folder ----
