@@ -32,7 +32,6 @@ The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_
 
 ###Known Issues
 - Currently crashing on x86_64 devices, due to the tox4j library not currently supporting this arch. To find out if your device is running x86_64 Android, look for your device on [GSMArena](http://www.gsmarena.com/) and check your device's chipset. The most common x86_64 Android chipset is the Intel Atom.
-- Crashes on devices running Android 6 and above, due to permission issues. To fix this for now, go to Phone Settings > Apps > Antox > Permissions and enable them.
 
 ###Translating Antox
 - You can localize the application via pull request or using [Transifex](https://www.transifex.com/antox/antox/).
