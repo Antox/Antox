@@ -84,7 +84,7 @@ dependencies:
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
     - cd libsodium-jni/ ; ./build.sh
-    #- cd libsodium-jni/ ; ./build-kaliumjni.sh
+    - cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
     - find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
     - find ~/ -name 'libsodiumjni.so' -exec file {} \; ; exit 0
