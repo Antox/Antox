@@ -134,6 +134,7 @@ dependencies:
 
 
 # ------ build tox4j stuff ----------
+    - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
@@ -151,6 +152,7 @@ dependencies:
     - rm -Rf app/src/main/java/im/ ; exit 0
     - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -al {} \; ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/
     # ---- copy jar to Antox folder ----------
     # ---- copy libraries to Antox folder ----
     # cp -av libtox4j.so app/src/main/jniLibs/armeabi/libtox4j.so
@@ -166,34 +168,8 @@ dependencies:
     - cat app/build.gradle | grep 'useCompileDaemon'
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon
+    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # remove exit 0 later!!
     - ls -al app/build/outputs/apk/ ; exit 0
-
-    - zip -d app/build/outputs/apk/app-debug-unaligned.apk META-INF/\*     # remove signature !!
-    - cp -av app/build/outputs/apk/app-debug-unaligned.apk ~/app.apk ;
-      cd ~/ ;
-      echo xxxxxxrm -f ~/.android/debug.keystore ;
-      ls -al ~/.android/debug.keystore ;
-      if [ ! -f ~/.android/debug.keystore ]; then echo "*** generating new signer key ***" ;
-      echo "*** generating new signer key ***";
-      echo "*** generating new signer key ***";
-      keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -keyalg RSA -keysize 2048 -validity 10000 -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" ;
-      fi ;
-      ls -al ~/ ;
-      jarsigner -verbose -keystore ~/.android/debug.keystore -storepass android -keypass android -sigalg SHA1withRSA -digestalg SHA1 -sigfile CERT -signedjar app-signed.apk app.apk androiddebugkey ;
-      ls -al ~/ ;
-      $_SDK_/build-tools/23.0.3/zipalign -v 4 app-signed.apk app-signed-aligned.apk ;
-      ls -al ~/ ;
-      pwd ;
-      ls -al ;
-      cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk || exit 1
-
-##   also make apk files with different names for each build (for individual downloads)
-    - cp -av $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk ; exit 0
-##   qr code to scan with your phone to directly download the apk file (for convenience)
-    - qrencode -o $CIRCLE_ARTIFACTS/QR_apk.png 'https://circle-artifacts.com/gh/'${CIRCLE_PROJECT_USERNAME}'/'${CIRCLE_PROJECT_REPONAME}'/'${CIRCLE_BUILD_NUM}'/artifacts/'${CIRCLE_NODE_INDEX}'/tmp/'`basename $CIRCLE_ARTIFACTS`'/'"${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk" ; exit 0
-##   qr code to go directly to the aritfacts (to scan with phone)
-    - qrencode -o $CIRCLE_ARTIFACTS/QR_artifacts.png 'https://circleci.com/gh/'${CIRCLE_PROJECT_USERNAME}'/'${CIRCLE_PROJECT_REPONAME}'/'${CIRCLE_BUILD_NUM}'#artifacts' ; exit 0
 
 test:
   pre:
