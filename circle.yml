@@ -107,7 +107,7 @@ dependencies:
 # ------ build libsodiumjni.so ------
 
 # ------ build and install toxcore and toxav ----
-    - sudo sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
+    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
     - mkdir toxcore
     - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
