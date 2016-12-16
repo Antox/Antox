@@ -83,11 +83,11 @@ dependencies:
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
-    #- cd libsodium-jni/ ; ./build.sh
+    - cd libsodium-jni/ ; ./build.sh
     #- cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
-    - cp -av /usr/lib/libsodiumjni.so $CIRCLE_ARTIFACTS/ ; exit 0
     - find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
+    - find ~/ -name 'libsodiumjni.so' -exec file {} \; ; exit 0
     # ---- copy libraries to Antox folder ----
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
     #- cp -v libsodium-jni/libs/arm64-v8a/libsodiumjni.so app/src/main/jniLibs/arm64-v8a/
