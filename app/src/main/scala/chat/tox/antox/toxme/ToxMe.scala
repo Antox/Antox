@@ -221,7 +221,7 @@ object ToxMe {
 
   private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData, publicKey: String): Option[EncryptedPayload] = {
     try {
-      System.load("libkaliumjni.so")
+      System.load("libsodiumjni.so")
     } catch {
       case e: UnsatisfiedLinkError =>
         return None
