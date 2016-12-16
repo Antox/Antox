@@ -128,6 +128,7 @@ dependencies:
     #- cmake .
     - cd toxcore ; cd c-toxcore ; make
     - cd toxcore ; cd c-toxcore ; sudo make install
+    - sudo ldconfig
 ##### ------------ BUILD ------------
 # ------ build and install toxcore and toxav ----
 
