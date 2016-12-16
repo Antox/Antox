@@ -56,7 +56,7 @@ To resolve the problem you can change/upgrade the target version of Gradle you c
 Alternatively, you can ignore this exception and read other information from the model.
 ```
 
-Currently there is no fix for this, but there is a workaround by disabling instant run. This can be done by going to `File > Settings > Build, Execution, Deployment > Instant Run.` and unchecking enable.
+Currently there is no fix for this, but there is a workaround by disabling instant run. This can be done by going to `File > Settings > Build, Execution, Deployment > Instant Run` and unchecking enable.
 
 
 ###Compiling Antox From Source using Gradle
