@@ -106,6 +106,32 @@ dependencies:
     # ---- copy libraries to Antox folder ----
 # ------ build libsodiumjni.so ------
 
+# ------ build and install toxcore and toxav ----
+    - sudo sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
+    - sudo apt-get install libopus-dev libvpx-dev pkg-config
+    - mkdir toxcore
+    - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
+    - cd toxcore ; cd c-toxcore ; git checkout 7d2f2e4607080ebf5155b43050c62af4f14b9c88
+
+    ### ------- get libsodium -------
+    - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout tags/1.0.11
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo ldconfig
+    ### ------- get libsodium -------
+
+##### ------------ BUILD ------------
+    - cd toxcore ; cd c-toxcore ; cmake -DWARNINGS=OFF .
+    #- cmake .
+    - cd toxcore ; cd c-toxcore ; make
+    - cd toxcore ; cd c-toxcore ; sudo make install
+##### ------------ BUILD ------------
+# ------ build and install toxcore and toxav ----
+
+
 # ------ build tox4j stuff ----------
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
