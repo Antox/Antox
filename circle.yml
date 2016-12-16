@@ -136,6 +136,8 @@ dependencies:
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
+    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
     - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
