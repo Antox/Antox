@@ -33,6 +33,10 @@ dependencies:
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
     - sudo apt-get install qrencode > /dev/null 2> /dev/null
 
+    - sudo apt-get install libncurses-dev
+    - sudo bash -c 'cd /etc/apt/sources.list.d; echo "deb http://old-releases.ubuntu.com/ubuntu/ raring main restricted universe multiverse" >ia32-libs-raring.list'
+    - sudo apt-get update
+    - apt-get install ia32-libs
 
     - mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
     - wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
