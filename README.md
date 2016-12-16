@@ -39,13 +39,25 @@ The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_
 
 ###Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
-- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 1.4.1
+- In Android Studio, go to Help>Check For Updates. As of writing, the latest version of AS is 2.2.3
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools.
 - Clone the Antox repo
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
 - Download the latest tox4j binaries by running the download-dependencies script (`./download-dependencies.sh` on Linux/Mac or `download-dependencies.bat` on Windows)
 - Install the Scala plugin in IntelliJ, restart, and wait for IntelliJ to set itself up
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
+
+You may get an error when using the latest version of Android Studio:
+
+```
+Unsupported method: AndroidProject.getPluginGeneration().
+The version of Gradle you connect to does not support that method.
+To resolve the problem you can change/upgrade the target version of Gradle you connect to.
+Alternatively, you can ignore this exception and read other information from the model.
+```
+
+Currently there is no fix for this, but there is a workaround by disabling instant run. This can be done by going to `File > Settings > Build, Execution, Deployment > Instant Run` and unchecking enable.
+
 
 ###Compiling Antox From Source using Gradle
 - Download and install the SDK tools http://developer.android.com/sdk/index.html#Other
