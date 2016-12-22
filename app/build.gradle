@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
 
         renderscriptTargetApi 23
 
