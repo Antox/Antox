@@ -8,6 +8,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{FrameLayout, ImageView, RelativeLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
+import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
@@ -79,10 +80,18 @@ class LeftPaneFragment extends Fragment {
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
 
-    val defaultViewPagerTab = 1
+    val recentViewPagerTab = 0
+    val contactsViewPagerTab = 1
     pager.setCurrentItem(Option(savedInstanceState)
-      .map(_.getInt("tab_position", defaultViewPagerTab))
-      .getOrElse(defaultViewPagerTab)) // start on contacts view by default
+      .map(_.getInt("tab_position", contactsViewPagerTab))
+      .getOrElse({
+        if(State.db.getMessageList(None).isEmpty){
+          contactsViewPagerTab
+        }
+        else{
+          recentViewPagerTab
+        }
+      })) // start on contacts view if there are no messages
 
     tabs.setViewPager(pager)
     tabs.setBackgroundColor(ThemeManager.primaryColor)
