@@ -114,7 +114,7 @@ test:
     - sleep 10
     - import -window root $CIRCLE_ARTIFACTS/capture_emulator_running.png
 
-    - fb-adb shell "cat /proc/meminfo" ; exit 0
+    - adb shell "cat /proc/meminfo" ; exit 0
 
     - adb shell ls -al / ; exit 0
     - adb shell ls -al /storage/ ; exit 0
