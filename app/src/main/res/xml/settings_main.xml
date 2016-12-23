@@ -64,7 +64,7 @@
     <PreferenceCategory android:title="@string/pref_header_input">
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="autocorrect"
             android:title="@string/pref_enable_autocorrect"/>
 
