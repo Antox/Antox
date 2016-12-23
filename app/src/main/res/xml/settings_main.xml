@@ -53,6 +53,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_header_filetransfers">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="autoacceptft"
+            android:title="@string/pref_enable_autoaccept"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_input">
 
         <CheckBoxPreference

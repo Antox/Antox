@@ -4,6 +4,9 @@
 
     <string name="pref_unsupported">Your device does not support this option</string>
 
+    <string name="pref_header_filetransfers">Filetransfers</string>
+    <string name="pref_enable_autoaccept">automatically accept all filetransfers</string>
+
     <!-- Profile -->
     <string name="pref_header_profile">Profile</string>
 

@@ -8,6 +8,7 @@ import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, FriendInfo}
 import im.tox.tox4j.core.data.ToxFilename
 import im.tox.tox4j.core.enums.ToxFileControl
+import chat.tox.antox.utils.Options
 
 class AntoxOnFileRecvCallback(ctx: Context) {
   def fileRecv(friendInfo: FriendInfo,
@@ -51,6 +52,16 @@ class AntoxOnFileRecvCallback(ctx: Context) {
     val chatActive = State.isChatActive(friendInfo.key)
     State.transfers.fileIncomingRequest(friendInfo.key, friendInfo.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind.autoAccept) State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+
+    if (kind.autoAccept) {
+      State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+    }
+    else {
+      if (Options.autoAcceptFt == true) {
+        State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+      }
+    }
+
+
   }
 }
