@@ -1,14 +1,14 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, Options}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, FriendInfo}
-import im.tox.tox4j.core.data.ToxFilename
+import im.tox.tox4j.core.data.{ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
-import chat.tox.antox.utils.Options
 
 class AntoxOnFileRecvCallback(ctx: Context) {
   def fileRecv(friendInfo: FriendInfo,
@@ -51,6 +51,14 @@ class AntoxOnFileRecvCallback(ctx: Context) {
 
     val chatActive = State.isChatActive(friendInfo.key)
     State.transfers.fileIncomingRequest(friendInfo.key, friendInfo.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
+
+    if (!chatActive)
+    {
+      val db = State.db
+      val unreadCount = db.getUnreadCounts(friendInfo.key)
+      AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String("Incoming File ..."), unreadCount)
+    }
+
 
 
     if (kind.autoAccept) {
