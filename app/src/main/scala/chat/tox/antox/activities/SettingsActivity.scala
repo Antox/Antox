@@ -12,7 +12,7 @@ import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
 import chat.tox.antox.utils.{Hex, AntoxLog, AntoxNotificationManager, Options}
-import im.tox.tox4j.core.data.ToxPublicKey
+// import im.tox.tox4j.core.data.ToxPublicKey
 import org.scaloid.common.LoggerTag
 
 object SettingsActivity {
