@@ -191,6 +191,8 @@ dependencies:
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # remove exit 0 later!!
     - ls -al app/build/outputs/apk/ ; exit 0
+    
+    - exit 1 # stop here -------------------------
 
 test:
   pre:
