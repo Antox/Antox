@@ -118,12 +118,12 @@ dependencies:
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
     - mkdir toxcore
     - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
-    - cd toxcore ; cd c-toxcore ; git checkout 7d2f2e4607080ebf5155b43050c62af4f14b9c88
+    - cd toxcore ; cd c-toxcore ; git checkout 'v0.1.2'
 
     ### ------- get libsodium -------
     - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout tags/1.0.11
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout '1.0.11'
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
@@ -145,19 +145,32 @@ dependencies:
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
+    - cd jvm-toxcore-c/ ; git checkout pr8 # use PR8 stuff now
+
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/04_build ; exit 0
+
+    - wget www.scala-lang.org/files/archive/scala-2.11.7.deb -O ~/scala-2.11.7.deb
+    - cd ~ ; sudo dpkg -i scala-2.11.7.deb
+    - mkdir -p ~/cache
+    - mkdir -p ~/.casher
+
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build ; exit 0
     #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/05_android ; exit 0
     #- cd jvm-toxcore-c/ ; make
+
+    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
+    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
+
     # ---- copy jar to Antox folder ----------
     - rm -Rf app/src/main/protobuf/ ; exit 0
     - rm -Rf app/src/main/java/im/ ; exit 0
-    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -al {} \; ; exit 0
+    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -hal {} \; ; exit 0
+    - find ~ -name 'tox4j*' -exec ls -al {} \; 2>&1| grep -i jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
