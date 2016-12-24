@@ -72,7 +72,7 @@ dependencies:
 
 # ------- install missing NDK ----------
     - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
-    - printf 'export NDK_VERSION=r10d\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - printf 'export NDK_VERSION=r13b\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
 # ------- install missing NDK ----------
 
     - pwd ; ls -al
@@ -118,12 +118,12 @@ dependencies:
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
     - mkdir toxcore
     - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
-    - cd toxcore ; cd c-toxcore ; git checkout 7d2f2e4607080ebf5155b43050c62af4f14b9c88
+    - cd toxcore ; cd c-toxcore ; git checkout 'v0.1.2'
 
     ### ------- get libsodium -------
     - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout tags/1.0.11
+    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout '1.0.11'
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
     - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
@@ -145,30 +145,57 @@ dependencies:
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
+    - cd jvm-toxcore-c/ ; git checkout pr8 # use PR8 stuff now
+
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
-    - cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/04_build ; exit 0
-    #- cd jvm-toxcore-c/ ; export NDK_HOME=~/android-ndk ; buildscripts/05_android ; exit 0
-    #- cd jvm-toxcore-c/ ; make
+
+    - wget www.scala-lang.org/files/archive/scala-2.11.7.deb -O ~/scala-2.11.7.deb
+    - cd ~ ; sudo dpkg -i scala-2.11.7.deb
+    - mkdir -p ~/cache
+    - mkdir -p ~/.casher
+
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target ; exit 0
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build ; exit 0
+
+    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
+    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
+
     # ---- copy jar to Antox folder ----------
     - rm -Rf app/src/main/protobuf/ ; exit 0
     - rm -Rf app/src/main/java/im/ ; exit 0
-    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -al {} \; ; exit 0
-    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
-    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar
+    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -hal {} \; ; exit 0
+    - find ~ -name 'tox4j*' -exec ls -al {} \; 2>&1| grep -i jar ; exit 0
+    - find ~ -name 'tox4j*jar' > ~/jars.txt ; exit 0
+    - zip $CIRCLE_ARTIFACTS/tox4j_jars.zip $(cat ~/jars.txt) ; exit 0
+    - find ~ -name 'tox4j*.jar' -exec unzip -t {} \; ; exit 0
+
+    - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
+
+#   ---- copy to Antox dir --------------
+    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar app/libs/tox4j-c_2.11.jar ; exit 0
+    - cp -v /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar ; exit 0
+#   ---- copy to Antox dir --------------
+
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ;
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -v /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.0.jar $CIRCLE_ARTIFACTS/tox4j_2.11_GOOD.jar ; exit 0
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.1-SNAPSHOT-javadoc.jar ; exit 0
     # ---- copy jar to Antox folder ----------
+
     # ---- copy libraries to Antox folder ----
-    # cp -av libtox4j.so app/src/main/jniLibs/armeabi/libtox4j.so
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j.so
     # cp -av libtox4j.so app/src/main/jniLibs/armeabi-v7a/libtox4j.so
     # mkdir -p app/src/main/jniLibs/arm64-v8a
     # cp -av libtox4j.so app/src/main/jniLibs/arm64-v8a/libtox4j.so
     # cp -av libtox4j.so app/src/main/jniLibs/x86/libtox4j.so
     # ---- copy libraries to Antox folder ----
+
 # ------ build tox4j stuff ----------
 
     - cat app/build.gradle | grep 'useCompileDaemon'
@@ -176,56 +203,11 @@ dependencies:
     - cat app/build.gradle | grep 'useCompileDaemon'
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # remove exit 0 later!!
+    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # later remove the exit 0 !!
     - ls -al app/build/outputs/apk/ ; exit 0
 
 test:
   pre:
-    - mksdcard -l e 180M sdcard.img
-    - echo 'mtools_skip_check=1' > ~/.mtoolsrc
-    - android list targets
-#
-    - if [ "$EMU_" == "appemu23" ]; then echo "no" | android create avd -n appemu23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA720" ; fi
-    - if [ "$EMU_" == "appemu23" ]; then cat ~/.android/avd/appemu23.avd/config.ini ; fi
-#
-    - if [ "$EMU_" == "appemu21" ]; then echo "no" | android create avd -n appemu21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA720" ; fi
-    - if [ "$EMU_" == "appemu21" ]; then cat ~/.android/avd/appemu21.avd/config.ini ; fi
-#
-    - if [ "$EMU_" == "appemu10" ]; then echo "no" | android create avd -n appemu10 -f -t android-10 --abi default/armeabi --skin "WQVGA432" ; fi
-    - if [ "$EMU_" == "appemu10" ]; then cat ~/.android/avd/appemu10.avd/config.ini ; fi
-#
-    - echo "$EMU_"
-    - echo "$sdpath"
+    - echo "dummy"
   override:
-    - emulator -avd "$EMU_" -sdcard sdcard.img -no-audio:
-        background: true
-        parallel: true
-    - circle-android wait-for-boot
-
-    - sleep 210 # let the emulator settle down first
-
-    - adb shell input keyevent 82 # remove lock screen on emulator
-    - sleep 10
-    - import -window root $CIRCLE_ARTIFACTS/capture_emulator_running.png
-
-    - adb shell "cat /proc/meminfo" ; exit 0
-
-    - adb shell ls -al / ; exit 0
-    - adb shell ls -al /storage/ ; exit 0
-    - adb shell ls -al /sdcard/ ; exit 0
-
-    - adb install ~/app-signed-aligned.apk
-
-    - adb logcat -v time > $CIRCLE_ARTIFACTS/adb_out.txt 2>&1 :
-        background: true
-    - sleep 60 # let the emulator settle down first
-
-    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
-    - sleep 60
-    - sleep 120 # wait to be sure the app has started fully
-
-    - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'Process. '"$CLASS_P"', PID.'|wc -l|tr -d ' '` ; if [ $died_count -gt 0 ]; then echo "app crashed"; exit 1; fi
-
-    - import -window root $CIRCLE_ARTIFACTS/capture_app_running.png # get proof that the app is running
-    - adb shell screencap -p | sed 's/\r$//' > $CIRCLE_ARTIFACTS/capture_app_running_2.png
-
+    - echo "dummy"
