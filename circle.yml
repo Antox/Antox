@@ -174,6 +174,7 @@ dependencies:
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
+    - find ~ -name 'tox4j*jar' -exec cp -av {} "$CIRCLE_ARTIFACTS/"$(( ( RANDOM % 10000 )  + 1 ))".jar" \; ; exit 0
     # ---- copy jar to Antox folder ----------
     # ---- copy libraries to Antox folder ----
     # cp -av libtox4j.so app/src/main/jniLibs/armeabi/libtox4j.so
@@ -191,56 +192,9 @@ dependencies:
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # remove exit 0 later!!
     - ls -al app/build/outputs/apk/ ; exit 0
-    
-    - exit 1 # stop here -------------------------
 
 test:
   pre:
-    - mksdcard -l e 180M sdcard.img
-    - echo 'mtools_skip_check=1' > ~/.mtoolsrc
-    - android list targets
-#
-    - if [ "$EMU_" == "appemu23" ]; then echo "no" | android create avd -n appemu23 -f -t android-23 --abi default/armeabi-v7a --skin "WXGA720" ; fi
-    - if [ "$EMU_" == "appemu23" ]; then cat ~/.android/avd/appemu23.avd/config.ini ; fi
-#
-    - if [ "$EMU_" == "appemu21" ]; then echo "no" | android create avd -n appemu21 -f -t android-21 --abi default/armeabi-v7a --skin "WXGA720" ; fi
-    - if [ "$EMU_" == "appemu21" ]; then cat ~/.android/avd/appemu21.avd/config.ini ; fi
-#
-    - if [ "$EMU_" == "appemu10" ]; then echo "no" | android create avd -n appemu10 -f -t android-10 --abi default/armeabi --skin "WQVGA432" ; fi
-    - if [ "$EMU_" == "appemu10" ]; then cat ~/.android/avd/appemu10.avd/config.ini ; fi
-#
-    - echo "$EMU_"
-    - echo "$sdpath"
+    - echo "dummy"
   override:
-    - emulator -avd "$EMU_" -sdcard sdcard.img -no-audio:
-        background: true
-        parallel: true
-    - circle-android wait-for-boot
-
-    - sleep 210 # let the emulator settle down first
-
-    - adb shell input keyevent 82 # remove lock screen on emulator
-    - sleep 10
-    - import -window root $CIRCLE_ARTIFACTS/capture_emulator_running.png
-
-    - adb shell "cat /proc/meminfo" ; exit 0
-
-    - adb shell ls -al / ; exit 0
-    - adb shell ls -al /storage/ ; exit 0
-    - adb shell ls -al /sdcard/ ; exit 0
-
-    - adb install ~/app-signed-aligned.apk
-
-    - adb logcat -v time > $CIRCLE_ARTIFACTS/adb_out.txt 2>&1 :
-        background: true
-    - sleep 60 # let the emulator settle down first
-
-    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
-    - sleep 60
-    - sleep 120 # wait to be sure the app has started fully
-
-    - died_count=`cat $CIRCLE_ARTIFACTS/adb_out.txt|grep 'Process. '"$CLASS_P"', PID.'|wc -l|tr -d ' '` ; if [ $died_count -gt 0 ]; then echo "app crashed"; exit 1; fi
-
-    - import -window root $CIRCLE_ARTIFACTS/capture_app_running.png # get proof that the app is running
-    - adb shell screencap -p | sed 's/\r$//' > $CIRCLE_ARTIFACTS/capture_app_running_2.png
-
+    - echo "dummy"
