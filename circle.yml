@@ -72,7 +72,7 @@ dependencies:
 
 # ------- install missing NDK ----------
     - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
-    - printf 'export NDK_VERSION=r10d\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - printf 'export NDK_VERSION=r13b\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
 # ------- install missing NDK ----------
 
     - pwd ; ls -al
