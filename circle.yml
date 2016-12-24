@@ -180,6 +180,7 @@ dependencies:
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -v /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.0.jar $CIRCLE_ARTIFACTS/tox4j_2.11_GOOD.jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.1-SNAPSHOT-javadoc.jar ; exit 0
     # ---- copy jar to Antox folder ----------
     # ---- copy libraries to Antox folder ----
