@@ -171,7 +171,10 @@ dependencies:
     - rm -Rf app/src/main/java/im/ ; exit 0
     - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -hal {} \; ; exit 0
     - find ~ -name 'tox4j*' -exec ls -al {} \; 2>&1| grep -i jar ; exit 0
-    - find ~ -name 'tox4j*jar' -exec cp -av {} "$CIRCLE_ARTIFACTS/"$(( ( RANDOM % 10000 )  + 1 ))".jar" \; ; exit 0
+    - find ~ -name 'tox4j*jar' > ~/jars.txt ; exit 0
+    - zip "$CIRCLE_ARTIFACTS/tox4j_jars.zip -@ < ~/jars.txt ; exit 0
+
+    - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
 
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar ; exit 0
     - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar ; exit 0
