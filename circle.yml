@@ -171,10 +171,11 @@ dependencies:
     - rm -Rf app/src/main/java/im/ ; exit 0
     - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -hal {} \; ; exit 0
     - find ~ -name 'tox4j*' -exec ls -al {} \; 2>&1| grep -i jar ; exit 0
-    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar
-    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar
-    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
     - find ~ -name 'tox4j*jar' -exec cp -av {} "$CIRCLE_ARTIFACTS/"$(( ( RANDOM % 10000 )  + 1 ))".jar" \; ; exit 0
+
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar app/libs/tox4j_2.11.jar ; exit 0
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar ; exit 0
+    - cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
     # ---- copy jar to Antox folder ----------
     # ---- copy libraries to Antox folder ----
     # cp -av libtox4j.so app/src/main/jniLibs/armeabi/libtox4j.so
@@ -185,9 +186,9 @@ dependencies:
     # ---- copy libraries to Antox folder ----
 # ------ build tox4j stuff ----------
 
-    - cat app/build.gradle | grep 'useCompileDaemon'
-    - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle
-    - cat app/build.gradle | grep 'useCompileDaemon'
+    - cat app/build.gradle | grep 'useCompileDaemon' ; exit 0
+    - sed -i -e 's#scalaCompileOptions.useCompileDaemon = true#scalaCompileOptions.useCompileDaemon = false#' app/build.gradle ; exit 0
+    - cat app/build.gradle | grep 'useCompileDaemon' ; exit 0
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # remove exit 0 later!!
