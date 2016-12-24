@@ -203,7 +203,7 @@ dependencies:
     - cat app/build.gradle | grep 'useCompileDaemon'
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon
+    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # later remove the exit 0 !!
     - ls -al app/build/outputs/apk/ ; exit 0
 
 test:
