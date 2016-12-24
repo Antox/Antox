@@ -58,6 +58,7 @@ dependencies:
     - android list sdk --all --extended
 
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3 > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter android-21
     - echo y | android update sdk --no-ui --all --filter android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter platform-tools > /dev/null 2> /dev/null
 
@@ -66,6 +67,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter extra-android-support > /dev/null 2> /dev/null
 
     - echo y | android update sdk --no-ui --all --filter platform-tools-preview > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-21
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23 > /dev/null 2> /dev/null
@@ -203,7 +205,7 @@ dependencies:
     - cat app/build.gradle | grep 'useCompileDaemon'
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0 # later remove the exit 0 !!
+    - ./gradlew assembleDebug --stacktrace --info --no-daemon ; exit 0
     - ls -al app/build/outputs/apk/ ; exit 0
 
 test:
