@@ -140,7 +140,7 @@ test:
         background: true
     - sleep 60 # let the emulator settle down first
 
-    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
+    - adb shell am start -n $CLASS_P/$START_INTENT_P
     - sleep 60
     - sleep 120 # wait to be sure the app has started fully
 
