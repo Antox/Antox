@@ -194,6 +194,8 @@ dependencies:
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
+    - cp /tmp/inst.log $CIRCLE_ARTIFACTS/ ; exit 0
+
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
 
