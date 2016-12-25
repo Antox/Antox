@@ -12,6 +12,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
+import chat.tox.antox.utils.Options
 
 import scala.collection.JavaConversions._
 
@@ -37,6 +38,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val userDb = State.userDb(this)
+
+    // set autoaccept option on startup
+    Options.autoAcceptFt = preferences.getBoolean("autoacceptft", false)
+    // System.out.println("load autoacceptft options : "+Options.autoAcceptFt);
 
     // if the user is starting the app for the first
     // time, go directly to the register account screen

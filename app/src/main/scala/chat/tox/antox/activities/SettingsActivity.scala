@@ -132,13 +132,15 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       networkSettingsChanged = true
     }
 
-    if (sharedPreferences.getBoolean("autoacceptft", false))
+    if (sharedPreferences.getBoolean("autoacceptft", false) == true)
     {
-      Options.autoAcceptFt = false
+      // System.out.println("set autoacceptft = true");
+      Options.autoAcceptFt = true
     }
     else
     {
-      Options.autoAcceptFt = true
+      // System.out.println("set autoacceptft = false");
+      Options.autoAcceptFt = false
     }
 
     if (key == "proxy_address") {
