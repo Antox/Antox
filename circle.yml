@@ -167,6 +167,8 @@ dependencies:
 
 # ---- x86 ----
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
+    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
+
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
