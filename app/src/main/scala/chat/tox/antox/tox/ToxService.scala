@@ -85,7 +85,10 @@ class ToxService extends Service {
               ToxSingleton.toxAv.iterate(toxAvCallbackListener)
 
               if (ticks % 100 == 0) {
-                println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
+                // this does not work, crash!? *TODO*
+                // *TODO*
+                // println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
+                // *TODO*
               }
               val time = ToxSingleton.toxAv.interval
               Thread.sleep(time)
