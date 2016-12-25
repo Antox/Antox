@@ -39,7 +39,7 @@ android {
 
         // testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
-        // testApplicationId "chat.tox.antox.tests"
+        testApplicationId "chat.tox.antox.tests"
     }
 
     lintOptions {
@@ -75,10 +75,6 @@ android {
 dependencies {
 
     compile fileTree(dir: 'libs', include: '*.jar')
-    // compile files('libs/core.jar')
-    // compile files('libs/dnsjava-2.1.6.jar')
-    // compile files('libs/tox4j-api_2.11-0.1.1.jar')
-    // compile files('libs/tox4j-c_2.11.jar')
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.scala-lang:scala-library:2.11.8'
