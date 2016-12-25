@@ -165,6 +165,18 @@ dependencies:
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
 
+#   ---- copy to Antox dir --------------
+    - rm -Rf app/src/main/protobuf/ ; exit 0
+    - rm -Rf app/src/main/java/im/ ; exit 0
+
+    - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
+    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar app/libs/tox4j-c_2.11.jar
+
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
+#   ---- copy to Antox dir --------------
+
 # ---- x86 ----
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
@@ -176,39 +188,14 @@ dependencies:
     - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- x86 ----
 
+#   ---- copy to Antox dir --------------
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-androideabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
+#   ---- copy to Antox dir --------------
 
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
-
-    # ---- copy jar to Antox folder ----------
-    - rm -Rf app/src/main/protobuf/ ; exit 0
-    - rm -Rf app/src/main/java/im/ ; exit 0
-    - find jvm-toxcore-c/ -name 'tox4j*jar' -exec ls -hal {} \; ; exit 0
-    - find ~ -name 'tox4j*' -exec ls -al {} \; 2>&1| grep -i jar ; exit 0
-    - find ~ -name 'tox4j*jar' > ~/jars.txt ; exit 0
-    - zip $CIRCLE_ARTIFACTS/tox4j_jars.zip $(cat ~/jars.txt) ; exit 0
-    - find ~ -name 'tox4j*.jar' -exec unzip -t {} \; ; exit 0
-    - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
-
-#   ---- copy to Antox dir --------------
-    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar app/libs/tox4j-c_2.11.jar
-#   ---- copy to Antox dir --------------
-
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ;
-    #- cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.0-SNAPSHOT.jar $CIRCLE_ARTIFACTS/tox4j_2.11.jar ; exit 0
-    #- cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j*.jar $CIRCLE_ARTIFACTS/ ; exit 0
-    #- cp -v /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.0.jar $CIRCLE_ARTIFACTS/tox4j_2.11_GOOD.jar ; exit 0
-    #- cp -v ./jvm-toxcore-c/target/scala-2.11/tox4j-c_2.11-0.1.1-SNAPSHOT-javadoc.jar ; exit 0
-    # ---- copy jar to Antox folder ----------
-
-    # ---- copy libraries to Antox folder ----
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
-    # - cp -av libtox4j.so app/src/main/jniLibs/armeabi-v7a/libtox4j.so
-    # mkdir -p app/src/main/jniLibs/arm64-v8a
-    # cp -av libtox4j.so app/src/main/jniLibs/arm64-v8a/libtox4j.so
-    # xxxx - cp -av libtox4j.so app/src/main/jniLibs/x86/libtox4j.so
-    # ---- copy libraries to Antox folder ----
 
 # ------ build tox4j stuff ----------
 
