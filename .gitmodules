@@ -4,3 +4,6 @@
 [submodule "jvm-toxcore-c"]
 	path = jvm-toxcore-c
 	url = https://github.com/TokTok/jvm-toxcore-c
+[submodule "jvm-toxcore-api"]
+	path = jvm-toxcore-api
+	url = https://github.com/TokTok/jvm-toxcore-api
