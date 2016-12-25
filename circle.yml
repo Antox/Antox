@@ -116,29 +116,29 @@ dependencies:
 # ------ build libsodiumjni.so ------
 
 # ------ build and install toxcore and toxav ----
-    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
-    - sudo apt-get install libopus-dev libvpx-dev pkg-config
-    - mkdir toxcore
-    - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
-    - cd toxcore ; cd c-toxcore ; git checkout 'v0.1.2'
-
-    ### ------- get libsodium -------
-    - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout '1.0.11'
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
-    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo ldconfig
-    ### ------- get libsodium -------
-
-##### ------------ BUILD ------------
-    - cd toxcore ; cd c-toxcore ; cmake -DWARNINGS=OFF .
-    #- cmake .
-    - cd toxcore ; cd c-toxcore ; make
-    - cd toxcore ; cd c-toxcore ; sudo make install
-    - sudo ldconfig
-##### ------------ BUILD ------------
+#    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
+#    - sudo apt-get install libopus-dev libvpx-dev pkg-config
+#    - mkdir toxcore
+#    - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
+#    - cd toxcore ; cd c-toxcore ; git checkout 'v0.1.2'
+#
+#    ### ------- get libsodium -------
+#    - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout '1.0.11'
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
+#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo ldconfig
+#    ### ------- get libsodium -------
+#
+###### ------------ BUILD ------------
+#    - cd toxcore ; cd c-toxcore ; cmake -DWARNINGS=OFF .
+#    #- cmake .
+#    - cd toxcore ; cd c-toxcore ; make
+#    - cd toxcore ; cd c-toxcore ; sudo make install
+#    - sudo ldconfig
+###### ------------ BUILD ------------
 # ------ build and install toxcore and toxav ----
 
 
@@ -190,8 +190,8 @@ dependencies:
 
 #   ---- copy to Antox dir --------------
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-androideabi/ ; exit 0
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
     - cp /tmp/inst.log $CIRCLE_ARTIFACTS/ ; exit 0
@@ -204,12 +204,12 @@ dependencies:
 
 # ------ build tox4j API stuff ------
 
-    - rm -f ./target/scala-2.11/tox4j-api_2.11-0.1.0.jar ; exit 0
+    - rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
-    - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.0.jar ; exit 0
+    - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
     #   ---- copy to Antox dir --------------
-    - cd jvm-toxcore-api ; cp -v ./target/scala-2.11/tox4j-api_2.11-0.1.0.jar app/libs/tox4j-api_2.11-0.1.1.jar
+    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar
     #   ---- copy to Antox dir --------------
 
 # ------ build tox4j API stuff ------
@@ -292,7 +292,7 @@ test:
         background: true
     - sleep 60 # let the emulator settle down first
 
-    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
+    - adb shell am start -n $CLASS_P/$START_INTENT_P
     - sleep 60
     - sleep 120 # wait to be sure the app has started fully
 
