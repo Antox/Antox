@@ -89,7 +89,7 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
-    - cd libsodium-jni/ ; sed -e -i 'sxwget --quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
+    - cd libsodium-jni/ ; sed -e -i 'sxwget \-\-quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
