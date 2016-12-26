@@ -37,7 +37,7 @@ android {
 
         multiDexEnabled true
 
-        // testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
         testApplicationId "chat.tox.antox.tests"
     }
@@ -101,10 +101,10 @@ dependencies {
     compile 'com.jpardogo.materialtabstrip:library:1.0.3'
     compile 'com.balysv:material-ripple:1.0.2'
     compile 'jp.wasabeef:recyclerview-animators:1.3.0'
-    //androidTestCompile 'org.scala-lang:scala-library:2.11.8'
-    //androidTestCompile 'com.android.support.test:runner:0.4'
-    //androidTestCompile 'com.android.support.test:rules:0.4'
-    //androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'org.scala-lang:scala-library:2.11.8'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }
 
 tasks.withType(ScalaCompile) {
