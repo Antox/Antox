@@ -173,6 +173,8 @@ dependencies:
 
     - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
     - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar app/libs/tox4j-c_2.11.jar
+    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
+
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
@@ -191,7 +193,7 @@ dependencies:
 # ---- x86 ----
 
 #   ---- copy to Antox dir --------------
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-androideabi/ ; exit 0
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
@@ -215,6 +217,7 @@ dependencies:
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
     - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
     #   ---- copy to Antox dir --------------
+    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
     - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar
     #   ---- copy to Antox dir --------------
 
