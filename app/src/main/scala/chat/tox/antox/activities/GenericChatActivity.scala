@@ -272,9 +272,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     db.messageListUpdatedObservable(Some(activeKey))
   }
 
+  // zoff
   def getActiveMessageList(takeLast: Int): ArrayBuffer[Message] = {
+    try {
     val db = State.db
     db.getMessageList(Some(activeKey), takeLast = takeLast)
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+        null
+    }
   }
 
   override def onPause(): Unit = {
