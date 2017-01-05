@@ -62,7 +62,13 @@ object BitmapManager {
 
   private def addBitmapToMemoryCache(key: ImageKey, bitmap: Bitmap) {
     if (memoryCache != null && getBitmapFromMemCache(key).isEmpty) {
-      memoryCache.put(key, bitmap)
+      try {
+        memoryCache.put(key, bitmap)
+      }
+      catch {
+        case e: Exception =>
+          e.printStackTrace()
+      }
     }
   }
 
