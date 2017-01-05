@@ -5,6 +5,7 @@ object Options {
 
   var udpEnabled: Boolean = false
   var autoAcceptFt: Boolean = false
+  var videoCallStartWithNoVideo = false
 
   var proxyEnabled: Boolean = false
   var proxyAddress: String = "127.0.0.1"

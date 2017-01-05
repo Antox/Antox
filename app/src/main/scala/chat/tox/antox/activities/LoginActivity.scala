@@ -43,6 +43,9 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
     Options.autoAcceptFt = preferences.getBoolean("autoacceptft", false)
     // System.out.println("load autoacceptft options : "+Options.autoAcceptFt);
 
+    Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
+    // System.out.println("load videocallstartwithnovideo options : "+Options.videoCallStartWithNoVideo);
+
     // if the user is starting the app for the first
     // time, go directly to the register account screen
     if (userDb.numUsers() == 0) {

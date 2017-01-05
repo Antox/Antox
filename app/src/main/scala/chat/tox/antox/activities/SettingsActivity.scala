@@ -143,6 +143,18 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       Options.autoAcceptFt = false
     }
 
+    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true)
+    {
+      // System.out.println("set videocallstartwithnovideo = true");
+      Options.videoCallStartWithNoVideo = true
+    }
+    else
+    {
+      // System.out.println("set videocallstartwithnovideo = false");
+      Options.videoCallStartWithNoVideo = false
+    }
+
+
     if (key == "proxy_address") {
       val address = sharedPreferences.getString("proxy_address", "127.0.0.1")
       if (!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
