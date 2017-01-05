@@ -5,12 +5,15 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -43,10 +46,66 @@ public class MainApplication extends Application
 
     }
 
+    private static String grabLogcat()
+    {
+        try
+        {
+            // grep -r 'Log\.' *|sed -e 's#^.*Log..("##'|grep -v TAG|sed -e 's#",.*$##'|sort |uniq
+
+            final Process process = Runtime.getRuntime().exec("logcat -d -v threadtime");
+
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            final StringBuilder log = new StringBuilder();
+            final String separator = System.getProperty("line.separator");
+
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                log.append(line);
+                log.append(separator);
+            }
+
+            if ((log.length() < 100) || (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT))
+            {
+                // some problems with the params?
+                final Process process2 = Runtime.getRuntime().exec("logcat -d");
+                final BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process2.getInputStream()));
+                final StringBuilder log2 = new StringBuilder();
+
+                String line2;
+                while ((line2 = bufferedReader2.readLine()) != null)
+                {
+                    log2.append(line2);
+                    log2.append(separator);
+                }
+
+                return log2.toString();
+            }
+            else
+            {
+                return log.toString();
+            }
+        }
+        catch (IOException ioe)
+        {
+            System.out.println("MainApplication:" + "IOException when trying to read logcat.");
+            return null;
+        }
+        catch (Exception e)
+        {
+            System.out.println("MainApplication:" + "Exception when trying to read logcat.");
+            return null;
+        }
+    }
+
+
     void save_error_msg() throws IOException
     {
+
+        String log_detailed = grabLogcat();
+
         PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putString("last_crash_text", last_stack_trace_as_string).commit();
-        System.out.println("MainApplication:" + "save_error_msg=" + last_stack_trace_as_string);
+        System.out.println("MainApplication:" + "save_error_msg=" + last_stack_trace_as_string + "\n" + log_detailed);
 
         try
         {
@@ -63,7 +122,7 @@ public class MainApplication extends Application
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append(last_stack_trace_as_string);
+            myOutWriter.append(last_stack_trace_as_string + "\n" + log_detailed);
             myOutWriter.close();
             fOut.close();
             // also save to crash file ----
