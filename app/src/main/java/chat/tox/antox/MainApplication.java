@@ -8,9 +8,15 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by zoff99 on 05.01.2017.
@@ -37,10 +43,35 @@ public class MainApplication extends Application
 
     }
 
-    void save_error_msg()
+    void save_error_msg() throws IOException
     {
         PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putString("last_crash_text", last_stack_trace_as_string).commit();
         System.out.println("MainApplication:" + "save_error_msg=" + last_stack_trace_as_string);
+
+        try
+        {
+            // also save to crash file ----
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+            String formattedDate = df.format(c.getTime());
+            // *TODO* hardcoded path --> bad!!
+            File myDir = new File("/sdcard/Antox/");
+            myDir.mkdirs();
+            // *TODO* hardcoded path --> bad!!
+            File myFile = new File("/sdcard/Antox/crash_" + formattedDate +".txt");
+            System.out.println("MainApplication:" + "crash file=" + myFile.getAbsolutePath());
+            myFile.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(myFile);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(last_stack_trace_as_string);
+            myOutWriter.close();
+            fOut.close();
+            // also save to crash file ----
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     static void restore_error_msg(Context c)

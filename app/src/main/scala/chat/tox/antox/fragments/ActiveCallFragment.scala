@@ -159,6 +159,17 @@ class ActiveCallFragment extends CommonCallFragment {
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
 
+    // -- crash --
+    // -- crash --
+    // -- crash --
+    // durationView = rootView.findViewById(23398280).asInstanceOf[Chronometer]
+    // videoSurface = null
+    // durationView = null
+    // throw new RuntimeException("whatever")
+    // -- crash --
+    // -- crash --
+    // -- crash --
+
     val cameraPreviewWrapper = rootView.findViewById(R.id.camera_preview_wrapper).asInstanceOf[FrameLayout]
     cameraPreviewWrapper.setOnTouchListener(new OnTouchListener() {
       override def onTouch(view: View, event: MotionEvent): Boolean = {
