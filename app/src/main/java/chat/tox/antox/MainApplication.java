@@ -129,15 +129,15 @@ public class MainApplication extends Application
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
-    static void restore_error_msg(Context c)
-    {
-        last_stack_trace_as_string = PreferenceManager.getDefaultSharedPreferences(c).getString("last_crash_text", "");
-        System.out.println("MainApplication:" + "restore_error_msg=" + last_stack_trace_as_string);
-    }
+//    static void restore_error_msg(Context c)
+//    {
+//        last_stack_trace_as_string = PreferenceManager.getDefaultSharedPreferences(c).getString("last_crash_text", "");
+//        System.out.println("MainApplication:" + "restore_error_msg=" + last_stack_trace_as_string);
+//    }
 
     private void handleUncaughtException(Thread thread, Throwable e)
     {
