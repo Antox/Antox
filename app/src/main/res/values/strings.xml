@@ -197,6 +197,7 @@
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>
     <string name="file_delete">Delete file</string>
+    <string name="file_open">Open file</string>
 
     <!-- Left Pane Fragment -->
     <string name="titles_recent">Recent</string>

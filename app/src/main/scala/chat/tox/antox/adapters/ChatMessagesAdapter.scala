@@ -55,6 +55,17 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     val lastMsg: Option[Message] = data.lift(pos - 1)
     val nextMsg: Option[Message] = data.lift(pos + 1)
 
+    try {
+      System.out.println("onBindViewHolder:1:pos=" + pos + " msg=" + msg.message.substring(0,Math.min(8, msg.message.length())) + " view=" + holder);
+    }
+    catch
+      {
+        case e: Exception => {
+          e.printStackTrace()
+          System.out.println("onBindViewHolder:1:pos=" + pos + " msg=NULL view=" + holder);
+        }
+      }
+
     holder.setMessage(msg, lastMsg, nextMsg)
     holder.setTimestamp()
 
@@ -127,10 +138,31 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
           // println("FILE LENGTH is " + file.length())
           if (file.exists() && file.length > 0) {
             if (isImage) {
+              try {
+                System.out.println("setImage:1:imageMessage:" + file.getName.substring(0,Math.min(40, file.getName.length())));
+              }
+              catch
+                {
+                  case e: Exception => {
+                    e.printStackTrace()
+                    System.out.println("setImage:1:imageMessage:" + "NULL");
+                  }
+                }
               fileHolder.setImage(file, true)
             }
             else {
               // also show icon for non image file types
+              try
+                {
+              System.out.println("setImage:2:imageMessage:"+file.getName.substring(0,Math.min(40, file.getName.length())));
+                }
+              catch
+                {
+                  case e: Exception => {
+                    e.printStackTrace()
+                    System.out.println("setImage:2:imageMessage:" + file.getName);
+                  }
+                }
               fileHolder.setImage(file, false)
             }
           }

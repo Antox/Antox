@@ -54,17 +54,39 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   def setImage(file: File, isImage: Boolean): Unit = {
-    this.file = file
-    // Start a loading indicator in case the bitmap needs to be loaded from disk
-    imageMessage.setImageBitmap(null)
-    imageLoading.setVisibility(View.VISIBLE)
 
-    if (isImage) {
-      imageLoadingSub.foreach(_.unsubscribe())
+
+    try
+    {
+      System.out.println("imageMessage:"+file.getName.substring(0,Math.min(40, file.getName.length()))+" Enter");
+    }
+    catch
+      {
+        case e: Exception => {
+          e.printStackTrace()
+          System.out.println("imageMessage:"+file.getName+" Enter");
+        }
+      }
+
+    this.file = file
+
+    if (file.length > 0) {
+      fileSize.setText(Formatter.formatFileSize(context, file.length))
+      fileSize.setVisibility(View.VISIBLE)
+    }
+    else {
+      fileSize.setVisibility(View.GONE)
     }
 
     if (isImage) {
+      imageLoadingSub.foreach(_.unsubscribe())
+
+      // Start a loading indicator in case the bitmap needs to be loaded from disk
+      imageMessage.setImageBitmap(null)
+      imageLoading.setVisibility(View.VISIBLE)
+
       imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+        System.out.println("imageMessage:"+file.getName+" setImage="+image);
         imageLoading.setVisibility(View.GONE)
         imageMessage.setImageBitmap(image)
       }))
@@ -73,14 +95,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       imageLoading.setVisibility(View.GONE)
       imageMessage.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
       imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
-
-      if (file.length > 0) {
-        fileSize.setText(Formatter.formatFileSize(context, file.length))
-        fileSize.setVisibility(View.VISIBLE)
-      }
-      else {
-        fileSize.setVisibility(View.GONE)
-      }
+      System.out.println("imageMessage:"+file.getName+" setImage=ic_action_attachment_2");
     }
 
     imageMessage.setOnClickListener(this)
@@ -91,10 +106,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     progressLayout.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
     messageTitle.setVisibility(View.GONE)
-    if (isImage) {
-      fileSize.setVisibility(View.GONE)
-      messageText.setVisibility(View.GONE)
-    }
   }
 
   def showFileButtons(): Unit = {
@@ -318,7 +329,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     // add selection to cancel filetransfer??
 
     val items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
-      context.getResources.getString(R.string.file_delete), "open file")
+      context.getResources.getString(R.string.file_delete), context.getResources.getString(R.string.file_open))
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
       def onClick(dialog: DialogInterface, index: Int): Unit = index match {
