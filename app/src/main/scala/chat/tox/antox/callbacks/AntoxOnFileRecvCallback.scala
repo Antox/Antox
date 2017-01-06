@@ -52,11 +52,15 @@ class AntoxOnFileRecvCallback(ctx: Context) {
     val chatActive = State.isChatActive(friendInfo.key)
     State.transfers.fileIncomingRequest(friendInfo.key, friendInfo.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (!chatActive)
-    {
+    if (!chatActive) {
       val db = State.db
-      val unreadCount = db.getUnreadCounts(friendInfo.key)
-      AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String("Incoming File ..."), unreadCount)
+      try {
+        val unreadCount = db.getUnreadCounts(friendInfo.key)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String("Incoming File ..."), unreadCount)
+      }
+      catch {
+        case e: Exception => e.printStackTrace()
+      }
     }
 
 
