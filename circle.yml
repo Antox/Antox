@@ -74,10 +74,10 @@ dependencies:
 
 # ------- install missing NDK ----------
     - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
-    - printf 'export NDK_VERSION=r10d\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - printf 'export NDK_VERSION=r10e\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
 # ------- install missing NDK ----------
 
-    - find /usr/local/toolchains/ -name '*strip*' 2> /dev/null ; exit 0
+    - find /usr/local/android-ndk/ -name '*strip*' 2> /dev/null ; exit 0
 
     - pwd ; ls -al
 
@@ -91,11 +91,18 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
+
+    # -- use: https://github.com/joshjdevl/libsodium-jni/commit/f21eb1c83da8be42efebda01b68474abef958285
+    - cd libsodium-jni/ ; git checkout f21eb1c83da8be42efebda01b68474abef958285
+
     - cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
     #- cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
+    # scripts don't work and need tweaking -----
+    - cd libsodium-jni/ ; sed -i -e 's#quiet install#quiet install;sed -i -e "sx--force xx" ./dist-build/android-build.sh#' build.sh
+    # scripts don't work and need tweaking -----
     - cd libsodium-jni/ ; ./build.sh
     - cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
@@ -105,53 +112,28 @@ dependencies:
     - mkdir -p $CIRCLE_ARTIFACTS/armeabi/
     - mkdir -p $CIRCLE_ARTIFACTS/armeabi-v7a/
     - mkdir -p $CIRCLE_ARTIFACTS/x86/
+
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi/libsodiumjni.so
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi/
+    
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi-v7a/libsodiumjni.so
     - cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi-v7a/
+    
+    - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip libsodium-jni/libs/x86/libsodiumjni.so
     - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/x86/
 
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
-    #- cp -v libsodium-jni/libs/arm64-v8a/libsodiumjni.so app/src/main/jniLibs/arm64-v8a/
-    ## X- do not have tox4j libs yet -X ##- mkdir -p app/src/main/jniLibs/armeabi-v7a/    
-    ## X- do not have tox4j libs yet -X ##- cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so app/src/main/jniLibs/armeabi-v7a/
     - cp -v libsodium-jni/libs/x86/libsodiumjni.so app/src/main/jniLibs/x86/
-    #- mkdir -p app/src/main/jniLibs/mips/    
-    #- cp -v libsodium-jni/libs/mips/libsodiumjni.so app/src/main/jniLibs/mips/
     # ---- copy libraries to Antox folder ----
 # ------ build libsodiumjni.so ------
-
-# ------ build and install toxcore and toxav ----
-#    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
-#    - sudo apt-get install libopus-dev libvpx-dev pkg-config
-#    - mkdir toxcore
-#    - cd toxcore ; git clone https://github.com/TokTok/c-toxcore.git
-#    - cd toxcore ; cd c-toxcore ; git checkout 'v0.1.2'
-#
-#    ### ------- get libsodium -------
-#    - cd toxcore ; cd c-toxcore ; mkdir ./libsodium
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; git clone https://github.com/jedisct1/libsodium.git
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; git checkout '1.0.11'
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./autogen.sh
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; ./configure && make check
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo bash -c "printf 'y\naa\n\n' | checkinstall --install --pkgname libsodium --pkgversion 1.0.0 --nodoc --deldesc=no --pkglicense='GPL2'"
-#    - cd toxcore ; cd c-toxcore ; cd ./libsodium/ ; cd libsodium/ ; sudo ldconfig
-#    ### ------- get libsodium -------
-#
-###### ------------ BUILD ------------
-#    - cd toxcore ; cd c-toxcore ; cmake -DWARNINGS=OFF .
-#    #- cmake .
-#    - cd toxcore ; cd c-toxcore ; make
-#    - cd toxcore ; cd c-toxcore ; sudo make install
-#    - sudo ldconfig
-###### ------------ BUILD ------------
-# ------ build and install toxcore and toxav ----
-
 
 # ------ build tox4j stuff ----------
     - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
     - cd jvm-toxcore-c/ ; pwd
+    # -- use: https://github.com/TokTok/jvm-toxcore-c/commit/137be841050860b71d75c115aa0b046fec127ae5
+    - cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
-    - cd jvm-toxcore-c/ ; git checkout pr8 # use PR8 stuff now
 
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
@@ -180,7 +162,7 @@ dependencies:
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     # strip ----
-    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
@@ -199,7 +181,7 @@ dependencies:
 #   ---- copy to Antox dir --------------
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     # strip ----
-    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
+    - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
@@ -219,6 +201,8 @@ dependencies:
     - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
     - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
     - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
+    # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
     - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
