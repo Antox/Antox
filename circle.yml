@@ -77,7 +77,7 @@ dependencies:
     - printf 'export NDK_VERSION=r13b\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
 # ------- install missing NDK ----------
 
-    - find /usr/local/toolchains/ -name '*strip*' 2> /dev/null ; exit 0
+    - find /usr/local/android-ndk/ -name '*strip*' 2> /dev/null ; exit 0
 
     - pwd ; ls -al
 
@@ -157,7 +157,7 @@ dependencies:
     - cd jvm-toxcore-c/ ; pwd
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
-    - cd jvm-toxcore-c/ ; git checkout pr8 # use PR8 stuff now
+    - cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
 
     - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
