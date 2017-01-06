@@ -96,6 +96,9 @@ dependencies:
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
     - cd libsodium-jni/ ; ./dependencies-linux.sh
+    # scripts don't work and need tweaking -----
+    - cd libsodium-jni/ ; sed -i -e 's#quiet install#quiet install;sed -i -e "sx--force xx" ./dist-build/android-build.sh#' build.sh
+    # scripts don't work and need tweaking -----
     - cd libsodium-jni/ ; ./build.sh
     - cd libsodium-jni/ ; ./build-kaliumjni.sh
     - cd libsodium-jni/ ; ./build-libsodiumjni.sh
