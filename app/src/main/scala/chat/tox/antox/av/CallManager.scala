@@ -20,7 +20,15 @@ class CallManager {
     AntoxLog.debug("Adding call")
     callAddedSubject.onNext(call)
 
-    callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
+    try {
+      callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+      case e: java.lang.NoSuchMethodError => e.printStackTrace()
+      // TODO: getValue !!
+    }
+
     call.endedObservable.subscribe { _ =>
       remove(call.callNumber)
     }
@@ -36,13 +44,29 @@ class CallManager {
 
   private def remove(callNumber: CallNumber): Unit = {
     AntoxLog.debug("Removing call")
-    callsSubject.onNext(callsSubject.getValue - callNumber)
+
+    try {
+      callsSubject.onNext(callsSubject.getValue - callNumber)
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+      case e: java.lang.NoSuchMethodError => e.printStackTrace()
+      // TODO: getValue !!
+    }
+
   }
 
   def removeAndEndAll(): Unit = {
-    callsSubject.getValue.foreach { case (callNumber, call) =>
-      if (call.active) call.end()
-      remove(callNumber)
+    try {
+      callsSubject.getValue.foreach { case (callNumber, call) =>
+        if (call.active) call.end()
+        remove(callNumber)
+      }
+    }
+    catch {
+      // TODO: getValue !!
+      case e: Exception => e.printStackTrace()
+      case e: java.lang.NoSuchMethodError => e.printStackTrace()
     }
   }
 }

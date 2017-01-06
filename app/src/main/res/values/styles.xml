@@ -8,6 +8,10 @@
     <!-- the theme applied to the application or activity -->
     <style name="AntoxTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!-- colorPrimaryDark is used for the status bar -->
+
+        <item name="android:windowBackground">@drawable/toxme</item>
+
+
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
         <item name="actionBarStyle">@style/ActionBar</item>
@@ -24,6 +28,7 @@
 
     <!-- ActionBar styles -->
     <style name="AntoxTheme.ActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
@@ -65,7 +70,9 @@
     </style>
 
     <style name="Theme.AppCompat.Translucent">
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <item name="android:windowBackground">@drawable/splash</item>
+
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>

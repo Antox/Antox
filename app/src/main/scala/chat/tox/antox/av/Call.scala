@@ -296,7 +296,13 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   }
 
   def rotateCamera(): Unit = {
-    cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
+    try {
+      cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+      // TODO: getValue !!
+    }
   }
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
