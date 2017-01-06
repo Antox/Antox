@@ -82,22 +82,30 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     val reject = fileButtons.findViewById(R.id.file_reject_button)
     val key = msg.key.asInstanceOf[FriendKey]
 
+
+    accept.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+    accept.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+    reject.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+    reject.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+
     accept.setOnTouchListener(new OnTouchListener() {
       override def onTouch(view: View, event: MotionEvent): Boolean = {
-
-        System.out.println("accept button *touched*")
-
         event.getAction match {
           case MotionEvent.ACTION_DOWN =>
 
             view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
             view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
-            view.invalidate()
 
-          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP | MotionEvent.ACTION_OUTSIDE =>
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
             view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
             view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
-            view.invalidate()
+
+          case MotionEvent.ACTION_UP =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
 
           case _ => // do nothing
         }
@@ -108,7 +116,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     accept.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        System.out.println("accept button clicked")
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.acceptFile(key, msg.messageId, context)
       }
     })
@@ -116,21 +125,22 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     reject.setOnTouchListener(new OnTouchListener() {
       override def onTouch(view: View, event: MotionEvent): Boolean = {
 
-        System.out.println("reject button *touched*")
-
         event.getAction match {
-          case MotionEvent.ACTION_DOWN =>
+        case MotionEvent.ACTION_DOWN =>
 
-            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
-            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
-            view.invalidate()
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
 
-          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP | MotionEvent.ACTION_OUTSIDE =>
-            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
-            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
-            view.invalidate()
+        case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
+        view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
 
-          case _ => // do nothing
+        case MotionEvent.ACTION_UP =>
+
+          view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+          view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+
+        case _ => // do nothing
         }
 
         false
@@ -140,7 +150,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        System.out.println("reject button clicked")
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.rejectFile(key, msg.messageId, context)
       }
     })
@@ -232,6 +243,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   override def onLongClick(view: View): Boolean = {
+
+    // add selection to open file??
     val items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
       context.getResources.getString(R.string.file_delete))
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
