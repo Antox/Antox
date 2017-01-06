@@ -105,8 +105,11 @@ dependencies:
     - mkdir -p $CIRCLE_ARTIFACTS/armeabi/
     - mkdir -p $CIRCLE_ARTIFACTS/armeabi-v7a/
     - mkdir -p $CIRCLE_ARTIFACTS/x86/
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi/libsodiumjni.so
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi/
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi-v7a/libsodiumjni.so
     - cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi-v7a/
+    - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip libsodium-jni/libs/x86/libsodiumjni.so
     - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/x86/
 
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
@@ -180,7 +183,7 @@ dependencies:
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     # strip ----
-    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
+    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
@@ -199,7 +202,7 @@ dependencies:
 #   ---- copy to Antox dir --------------
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     # strip ----
-    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
+    - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
