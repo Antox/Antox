@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
+import android.webkit.MimeTypeMap._
 import chat.tox.antox.R
 import chat.tox.antox.utils.{Constants, FileUtils}
 import chat.tox.antox.viewholders._
@@ -120,11 +121,18 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
               new File(f.getAbsolutePath + "/" + msg.message)
             }
 
+          // val extension = getFileExtensionFromUrl(file.getAbsolutePath())
           val isImage = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
 
-          println("FILE LENGTH is " + file.length())
-          if (file.exists() && isImage && file.length > 0) {
-            fileHolder.setImage(file)
+          // println("FILE LENGTH is " + file.length())
+          if (file.exists() && file.length > 0) {
+            if (isImage) {
+              fileHolder.setImage(file, true)
+            }
+            else {
+              // also show icon for non image file types
+              fileHolder.setImage(file, false)
+            }
           }
         }
     }

@@ -10,6 +10,8 @@ import android.os.Environment
 import android.text.format.Formatter
 import android.view.{MotionEvent, View}
 import android.view.View.{OnClickListener, OnLongClickListener, OnTouchListener}
+import android.webkit.MimeTypeMap
+import android.webkit.MimeTypeMap._
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -51,30 +53,48 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     imageLoading.setVisibility(View.GONE)
   }
 
-  def setImage(file: File): Unit = {
+  def setImage(file: File, isImage: Boolean): Unit = {
     this.file = file
     // Start a loading indicator in case the bitmap needs to be loaded from disk
     imageMessage.setImageBitmap(null)
     imageLoading.setVisibility(View.VISIBLE)
 
-    imageLoadingSub.foreach(_.unsubscribe())
+    if (isImage) {
+      imageLoadingSub.foreach(_.unsubscribe())
+    }
 
-    imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+    if (isImage) {
+      imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+        imageLoading.setVisibility(View.GONE)
+        imageMessage.setImageBitmap(image)
+      }))
+    }
+    else {
       imageLoading.setVisibility(View.GONE)
-      imageMessage.setImageBitmap(image)
-    }))
+      imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
+      imageMessage.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
+
+      if (file.length > 0) {
+        fileSize.setText(Formatter.formatFileSize(context, file.length))
+        fileSize.setVisibility(View.VISIBLE)
+      }
+      else {
+        fileSize.setVisibility(View.GONE)
+      }
+    }
 
     imageMessage.setOnClickListener(this)
     imageMessage.setOnLongClickListener(this)
     imageMessage.setVisibility(View.VISIBLE)
 
     //TODO would be better to find a way where we didn't have to toggle all these
-    messageText.setVisibility(View.GONE)
-    fileSize.setVisibility(View.GONE)
     progressLayout.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
     messageTitle.setVisibility(View.GONE)
-    messageText.setVisibility(View.GONE)
+    if (isImage) {
+      fileSize.setVisibility(View.GONE)
+      messageText.setVisibility(View.GONE)
+    }
   }
 
   def showFileButtons(): Unit = {
@@ -95,7 +115,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         event.getAction match {
           case MotionEvent.ACTION_DOWN =>
 
-            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
             view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
 
           case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
@@ -104,7 +124,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
           case MotionEvent.ACTION_UP =>
 
-            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
             view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
 
           case _ => // do nothing
@@ -116,7 +136,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     accept.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
-        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
         view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.acceptFile(key, msg.messageId, context)
       }
@@ -126,21 +146,21 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       override def onTouch(view: View, event: MotionEvent): Boolean = {
 
         event.getAction match {
-        case MotionEvent.ACTION_DOWN =>
+          case MotionEvent.ACTION_DOWN =>
 
-        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
-        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
 
-        case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
-        view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
-        view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
 
-        case MotionEvent.ACTION_UP =>
+          case MotionEvent.ACTION_UP =>
 
-          view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
-          view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
 
-        case _ => // do nothing
+          case _ => // do nothing
         }
 
         false
@@ -150,14 +170,17 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
-        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
         view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.rejectFile(key, msg.messageId, context)
       }
     })
+
     fileButtons.setVisibility(View.VISIBLE)
-    fileSize.setText(Formatter.formatFileSize(context, msg.size))
-    fileSize.setVisibility(View.VISIBLE)
+    if (msg.size > 0) {
+      fileSize.setText(Formatter.formatFileSize(context, msg.size))
+      fileSize.setVisibility(View.VISIBLE)
+    }
 
     progressLayout.setVisibility(View.GONE)
     imageMessage.setVisibility(View.GONE)
@@ -212,6 +235,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     fileProgressBar.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
+
     imageMessage.setVisibility(View.GONE)
   }
 
@@ -235,18 +259,66 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       case _: ImageView =>
         val i = new Intent()
         i.setAction(android.content.Intent.ACTION_VIEW)
-        i.setDataAndType(Uri.fromFile(file), "image/*")
+
+        val file =
+          if (msg.message.contains("/")) {
+            new File(msg.message)
+          } else {
+            val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+              Constants.DOWNLOAD_DIRECTORY)
+            new File(f.getAbsolutePath + "/" + msg.message)
+          }
+
+        val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+        var mime: String = "image/*"
+        if (extension != null) {
+          mime = getSingleton().getMimeTypeFromExtension(extension)
+        }
+
+        if (mime == null) {
+          mime = "image/*"
+        }
+        System.out.println("file open:3i:" + mime)
+        i.setDataAndType(Uri.fromFile(file), mime)
         context.startActivity(i)
 
       case _ =>
+        // open any file by clicking on it
+        val file =
+          if (msg.message.contains("/")) {
+            new File(msg.message)
+          } else {
+            val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+              Constants.DOWNLOAD_DIRECTORY)
+            new File(f.getAbsolutePath + "/" + msg.message)
+          }
+
+        try {
+
+          val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+          var mime: String = null
+          if (extension != null) {
+            mime = getSingleton().getMimeTypeFromExtension(extension)
+          }
+          val i = new Intent()
+          i.setAction(android.content.Intent.ACTION_VIEW)
+          System.out.println("file open:3:" + mime)
+          i.setDataAndType(Uri.fromFile(file), mime)
+          context.startActivity(i)
+        }
+        catch {
+          case e: Exception => e.printStackTrace()
+        }
+
     }
   }
 
   override def onLongClick(view: View): Boolean = {
 
-    // add selection to open file??
+    // add selection to cancel filetransfer??
+
     val items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
-      context.getResources.getString(R.string.file_delete))
+      context.getResources.getString(R.string.file_delete), "open file")
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
       def onClick(dialog: DialogInterface, index: Int): Unit = index match {
@@ -271,6 +343,37 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
               }
             file.delete()
 
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler()).subscribe()
+        case 2 =>
+          Observable[Boolean](subscriber => {
+            val db = State.db
+
+            val file =
+              if (msg.message.contains("/")) {
+                new File(msg.message)
+              } else {
+                val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                  Constants.DOWNLOAD_DIRECTORY)
+                new File(f.getAbsolutePath + "/" + msg.message)
+              }
+
+            try {
+
+              val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+              var mime: String = null
+              if (extension != null) {
+                mime = getSingleton().getMimeTypeFromExtension(extension)
+              }
+              val i = new Intent()
+              i.setAction(android.content.Intent.ACTION_VIEW)
+              System.out.println("file open:3:" + mime)
+              i.setDataAndType(Uri.fromFile(file), mime)
+              context.startActivity(i)
+            }
+            catch {
+              case e: Exception => e.printStackTrace()
+            }
             subscriber.onCompleted()
           }).subscribeOn(IOScheduler()).subscribe()
       }
