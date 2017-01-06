@@ -22,7 +22,7 @@ class ToxService extends Service {
 
   private val connectionCheckInterval = 10000 //in ms
 
-  private val reconnectionIntervalSeconds = 60
+  private val reconnectionIntervalSeconds = 120 // 60
 
   private var callService: CallService = _
 
