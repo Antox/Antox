@@ -71,8 +71,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     }
     else {
       imageLoading.setVisibility(View.GONE)
-      imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
       imageMessage.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
+      imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
 
       if (file.length > 0) {
         fileSize.setText(Formatter.formatFileSize(context, file.length))
