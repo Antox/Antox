@@ -4,11 +4,12 @@ import java.io.File
 
 import android.app.AlertDialog
 import android.content._
+import android.graphics.{Color, PorterDuff}
 import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
-import android.view.View
-import android.view.View.{OnClickListener, OnLongClickListener}
+import android.view.{MotionEvent, View}
+import android.view.View.{OnClickListener, OnLongClickListener, OnTouchListener}
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -79,17 +80,67 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   def showFileButtons(): Unit = {
     val accept = fileButtons.findViewById(R.id.file_accept_button)
     val reject = fileButtons.findViewById(R.id.file_reject_button)
-
     val key = msg.key.asInstanceOf[FriendKey]
-    accept.setOnClickListener(new View.OnClickListener() {
 
+    accept.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+
+        System.out.println("accept button *touched*")
+
+        event.getAction match {
+          case MotionEvent.ACTION_DOWN =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+            view.invalidate()
+
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+            view.invalidate()
+
+          case _ => // do nothing
+        }
+
+        false
+      }
+    })
+
+    accept.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
+        System.out.println("accept button clicked")
         State.transfers.acceptFile(key, msg.messageId, context)
       }
     })
+
+    reject.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+
+        System.out.println("reject button *touched*")
+
+        event.getAction match {
+          case MotionEvent.ACTION_DOWN =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000,PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+            view.invalidate()
+
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_UP | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+            view.invalidate()
+
+          case _ => // do nothing
+        }
+
+        false
+      }
+    })
+
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
+        System.out.println("reject button clicked")
         State.transfers.rejectFile(key, msg.messageId, context)
       }
     })
