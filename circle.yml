@@ -74,8 +74,10 @@ dependencies:
 
 # ------- install missing NDK ----------
     - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
-    - printf 'export NDK_VERSION=r13b\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - printf 'export NDK_VERSION=r10d\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
 # ------- install missing NDK ----------
+
+    - find /usr/local/toolchains/ -name '*strip*' 2> /dev/null ; exit 0
 
     - pwd ; ls -al
 
@@ -160,11 +162,11 @@ dependencies:
     - mkdir -p ~/.casher
 
 # ---- arm ----
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
 
 #   ---- copy to Antox dir --------------
@@ -177,23 +179,27 @@ dependencies:
 
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    # strip ----
+    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
 # ---- x86 ----
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
 
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    - cd jvm-toxcore-c/ ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
+    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- x86 ----
 
 #   ---- copy to Antox dir --------------
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
+    # strip ----
+    - /usr/local/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
