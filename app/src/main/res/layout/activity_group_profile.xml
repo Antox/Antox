@@ -18,13 +18,16 @@
             android:layout_height="wrap_content"
             android:background="@color/white_absolute">
 
+            <!-- TODO fix me again -->
+            <!-- app:border_width="2dp"-->
+            <!-- app:border_color="@color/material_blue_grey_800"-->
+            <!-- TODO fix me again -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/group_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:src="@drawable/ic_action_add_group"
-                app:border_width="2dp"
-                app:border_color="@color/material_blue_grey_800" />
+            />
 
             <LinearLayout
                 android:duplicateParentState="true"
