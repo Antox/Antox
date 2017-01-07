@@ -137,7 +137,8 @@ dependencies:
 # ------ build tox4j API stuff ------
 
     - rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
-    - rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar
+    - rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar ; exit 0
+    - mkdir -p /home/ubuntu/cache/usr/bin
     - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
     - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
     - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
