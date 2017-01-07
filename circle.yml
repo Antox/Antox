@@ -145,6 +145,8 @@ dependencies:
     # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
     - cd jvm-toxcore-api ; git fetch
     - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
+
+    - find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' -exec rm -v {} \; ; exit 0
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
     - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
@@ -180,18 +182,24 @@ dependencies:
     - mkdir -p ~/.casher
 
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' -exec rm -v {} \; ; exit 0
 # ---- arm ----
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
     - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - find /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/ -name 'tox4j-c*.jar*' ; exit 0
 
 
