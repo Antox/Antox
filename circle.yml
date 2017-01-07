@@ -94,6 +94,7 @@ dependencies:
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
 
     # -- use: https://github.com/joshjdevl/libsodium-jni/commit/f21eb1c83da8be42efebda01b68474abef958285
+    - cd libsodium-jni/ ; git fetch
     - cd libsodium-jni/ ; git checkout f21eb1c83da8be42efebda01b68474abef958285
 
     - cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
@@ -132,6 +133,7 @@ dependencies:
     - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
     - cd jvm-toxcore-c/ ; pwd
     # -- use: https://github.com/TokTok/jvm-toxcore-c/commit/137be841050860b71d75c115aa0b046fec127ae5
+    - cd jvm-toxcore-c/ ; git fetch
     - cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
@@ -203,6 +205,7 @@ dependencies:
     - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
     - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
     # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    - cd jvm-toxcore-api ; git fetch
     - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
