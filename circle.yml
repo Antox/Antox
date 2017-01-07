@@ -152,8 +152,11 @@ dependencies:
     - find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' ; exit 0
 
     #   ---- copy to Antox dir --------------
-    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
-    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar
+    - jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
+    - echo $(cat /tmp/jarfile1)
+    - ls -al $(cat /tmp/jarfile1)
+    - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
+    - cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
     #   ---- copy to Antox dir --------------
 
 # ------ build tox4j API stuff ------
