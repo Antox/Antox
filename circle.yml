@@ -32,7 +32,6 @@ dependencies:
     - git submodule sync
     - git submodule update
 
-
     - sudo apt-get update > /dev/null 2> /dev/null
     - sudo apt-get install xvfb > /dev/null 2> /dev/null
     - sudo apt-get install xdotool > /dev/null 2> /dev/null
@@ -91,10 +90,6 @@ dependencies:
     - pwd ; ls -al
 
     - ./download-dependencies.sh
-
-    - git submodule init
-    - git submodule sync
-    - git submodule update
 
 # ------ build libsodiumjni.so ------
     - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
