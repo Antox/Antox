@@ -75,6 +75,7 @@ dependencies:
 # ------- install missing NDK ----------
     - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
     - printf 'export NDK_VERSION=r10e\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - sudo chown -R ubuntu:ubuntu /usr/local/android-ndk # fix ACLs
 # ------- install missing NDK ----------
 
     - find /usr/local/android-ndk/ -name '*strip*' 2> /dev/null ; exit 0
