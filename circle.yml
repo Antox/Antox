@@ -25,6 +25,14 @@ dependencies:
   override:
     - echo "dummy"
   pre:
+
+    - git submodule init
+    - git submodule sync
+    - git submodule update ; exit 0
+    - git submodule sync
+    - git submodule update
+
+
     - sudo apt-get update > /dev/null 2> /dev/null
     - sudo apt-get install xvfb > /dev/null 2> /dev/null
     - sudo apt-get install xdotool > /dev/null 2> /dev/null
