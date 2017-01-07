@@ -133,6 +133,31 @@ dependencies:
     # ---- copy libraries to Antox folder ----
 # ------ build libsodiumjni.so ------
 
+
+# ------ build tox4j API stuff ------
+
+    - rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
+    - rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar
+    - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
+    - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
+    - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
+    # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    - cd jvm-toxcore-api ; git fetch
+    - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
+    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
+    - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
+
+    - find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' ; exit 0
+
+    #   ---- copy to Antox dir --------------
+    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
+    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar
+    #   ---- copy to Antox dir --------------
+
+# ------ build tox4j API stuff ------
+
+
 # ------ build tox4j stuff ----------
     - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
     - cd jvm-toxcore-c/ ; pwd
@@ -150,13 +175,22 @@ dependencies:
     - mkdir -p ~/cache
     - mkdir -p ~/.casher
 
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
 # ---- arm ----
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
+    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
+    - find /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/ -name 'tox4j-c*.jar*' ; exit 0
+
+
 
 #   ---- copy to Antox dir --------------
     - rm -Rf app/src/main/protobuf/ ; exit 0
@@ -199,27 +233,6 @@ dependencies:
     - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
 
 # ------ build tox4j stuff ----------
-
-
-# ------ build tox4j API stuff ------
-
-    - rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
-    - rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar
-    - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
-    - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
-    - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
-    # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
-    - cd jvm-toxcore-api ; git fetch
-    - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
-    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
-    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
-    - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
-    #   ---- copy to Antox dir --------------
-    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
-    - cp -v ./jvm-toxcore-api/target/scala-2.11/tox4j-api_2.11-0.1.1.jar app/libs/tox4j-api_2.11-0.1.1.jar
-    #   ---- copy to Antox dir --------------
-
-# ------ build tox4j API stuff ------
 
 
     - cat app/build.gradle | grep 'useCompileDaemon'
