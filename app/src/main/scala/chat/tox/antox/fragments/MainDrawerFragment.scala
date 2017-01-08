@@ -107,11 +107,9 @@ class MainDrawerFragment extends Fragment {
         case Some(avatar) =>
           System.out.println("LLLL:load avatar image:1")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
-          System.out.println("LLLL:load avatar image:2")
         case None =>
           System.out.println("LLLL:set default_avatar:1")
           avatarView.setImageResource(R.drawable.default_avatar)
-          System.out.println("LLLL:set default_avatar:2")
       }
     }
 

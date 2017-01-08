@@ -190,11 +190,11 @@ object BitmapManager {
       case e: FileNotFoundException =>
         AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)
         e.printStackTrace()
-        System.out.println("decodeBitmap:015")
+        System.out.println("decodeBitmap:01")
         null
     } finally {
       if (fis != null) {
-        System.out.println("decodeBitmap:016")
+        System.out.println("decodeBitmap:001")
         fis.close()
       }
     }
@@ -215,21 +215,12 @@ object BitmapManager {
 
     getFromCache(isAvatar, imageKey) match {
       case Some(bitmap) =>
-        AntoxLog.debug("Loading Bitmap image from cache isAvatar="+isAvatar, TAG)
+        AntoxLog.debug("Loading Bitmap image from cache", TAG)
         bitmap
 
-      case None => {
-        AntoxLog.debug("Decoding Bitmap image isAvatar="+isAvatar, TAG)
-        val b: Bitmap = decodeBitmap(file, imageKey, isAvatar)
-        if (b == null) {
-          System.out.println("decodeBitmap:==NULL isAvatar="+isAvatar)
-          null
-        }
-        else {
-          System.out.println("decodeBitmap:==" + b+" isAvatar="+isAvatar)
-          b
-        }
-      }
+      case None =>
+        AntoxLog.debug("Decoding Bitmap image", TAG)
+        decodeBitmap(file, imageKey, isAvatar)
     }
   }
 }
