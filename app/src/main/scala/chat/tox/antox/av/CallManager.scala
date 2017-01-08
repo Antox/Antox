@@ -10,6 +10,7 @@ class CallManager {
   private val callsSubject = BehaviorSubject[Map[CallNumber, Call]](Map.empty[CallNumber, Call])
 
   def calls: Seq[Call] = {
+    // TODO: getValue !!
     try {
       callsSubject.getValue.values.toSeq
     }
@@ -23,7 +24,6 @@ class CallManager {
           e.printStackTrace()
           null
         }
-        // TODO: getValue !!
       }
   }
 
@@ -36,13 +36,13 @@ class CallManager {
     AntoxLog.debug("Adding call")
     callAddedSubject.onNext(call)
 
+    // TODO: getValue !! -> can't logout when it crashes here
     try {
       callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
     }
     catch {
       case e: Exception => e.printStackTrace()
       case e: java.lang.NoSuchMethodError => e.printStackTrace()
-      // TODO: getValue !!
     }
 
     call.endedObservable.subscribe { _ =>
@@ -61,18 +61,19 @@ class CallManager {
   private def remove(callNumber: CallNumber): Unit = {
     AntoxLog.debug("Removing call")
 
+    // TODO: getValue !!
     try {
       callsSubject.onNext(callsSubject.getValue - callNumber)
     }
     catch {
       case e: Exception => e.printStackTrace()
       case e: java.lang.NoSuchMethodError => e.printStackTrace()
-      // TODO: getValue !!
     }
 
   }
 
   def removeAndEndAll(): Unit = {
+    // TODO: getValue !!
     try {
       callsSubject.getValue.foreach { case (callNumber, call) =>
         if (call.active) call.end()
@@ -80,7 +81,6 @@ class CallManager {
       }
     }
     catch {
-      // TODO: getValue !!
       case e: Exception => e.printStackTrace()
       case e: java.lang.NoSuchMethodError => e.printStackTrace()
     }

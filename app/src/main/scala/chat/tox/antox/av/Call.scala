@@ -295,15 +295,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
   }
 
-  def rotateCamera(): Unit = {
-    try {
-      cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
-    }
-    catch {
-      case e: Exception => e.printStackTrace()
-      // TODO: getValue !!
-    }
-  }
+  def rotateCamera(): Unit = cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
+
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
     logCallEvent(s"ended reason:$reason")
