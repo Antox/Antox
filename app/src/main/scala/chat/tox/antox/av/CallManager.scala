@@ -9,7 +9,23 @@ import rx.lang.scala.{Observable, Subject}
 class CallManager {
   private val callsSubject = BehaviorSubject[Map[CallNumber, Call]](Map.empty[CallNumber, Call])
 
-  def calls: Seq[Call] = callsSubject.getValue.values.toSeq
+  def calls: Seq[Call] = {
+    try {
+      callsSubject.getValue.values.toSeq
+    }
+    catch
+      {
+        case e: Exception => {
+          e.printStackTrace()
+          null
+        }
+        case e: java.lang.NoSuchMethodError => {
+          e.printStackTrace()
+          null
+        }
+        // TODO: getValue !!
+      }
+  }
 
   val activeCallObservable = callsSubject.map(_.values.filter(_.active))
 

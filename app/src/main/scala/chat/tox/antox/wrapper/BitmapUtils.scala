@@ -44,7 +44,19 @@ object BitmapUtils {
 
     val color = Color.RED
     val paint = new Paint()
-    val rect = new Rect(0, 0, bitmap.getWidth, bitmap.getHeight)
+
+    var rect :Rect = null
+    // zoff //
+    try {
+      rect = new Rect(0, 0, bitmap.getWidth, bitmap.getHeight)
+    }
+    catch
+    {
+      case e: Exception => {
+        e.printStackTrace()
+        rect = new Rect(0,0,10,10)
+      }
+    }
     val rectF = new RectF(rect)
 
     paint.setAntiAlias(true)
