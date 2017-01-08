@@ -20,6 +20,7 @@ import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import im.tox.tox4j.core.enums.{ToxMessageType, ToxUserStatus}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
+import rx.schedulers.Schedulers
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
@@ -109,8 +110,10 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
   mDbHelper = new DatabaseHelper(ctx, activeDatabase)
-  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
-
+  // old style ----
+  // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
+  // old style ----
+  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
   def close() {
     mDbHelper.close()
   }

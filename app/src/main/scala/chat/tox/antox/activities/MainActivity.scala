@@ -31,7 +31,9 @@ class MainActivity extends AppCompatActivity {
     // Set the right language
     selectLanguage()
 
+    System.out.println("LLLL:001")
     setContentView(R.layout.activity_main)
+    System.out.println("LLLL:002")
 
     // Use a toolbar so that the drawer goes above the action bar
     val toolbar = findViewById(R.id.toolbar).asInstanceOf[Toolbar]

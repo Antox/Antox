@@ -53,10 +53,18 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_header_filetransfers">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="autoacceptft"
+            android:title="@string/pref_enable_autoaccept"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_input">
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="autocorrect"
             android:title="@string/pref_enable_autocorrect"/>
 
@@ -146,6 +154,11 @@
         <Preference
             android:key="call_replies"
             android:title="@string/title_pref_edit_call_replies" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="videocallstartwithnovideo"
+            android:title="@string/pref_enable_videocallstartwithnovideo"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">

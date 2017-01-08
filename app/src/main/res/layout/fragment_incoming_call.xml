@@ -30,6 +30,7 @@
             android:layout_weight="1">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/end_call_circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -50,6 +51,7 @@
             android:layout_weight="1">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/answer_call_circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

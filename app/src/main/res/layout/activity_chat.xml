@@ -26,6 +26,7 @@
                 android:layout_marginRight="@dimen/margin_small">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/chat_avatar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

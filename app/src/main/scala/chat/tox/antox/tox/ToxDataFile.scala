@@ -52,7 +52,7 @@ class ToxDataFile(ctx: Context, fileName: String) {
     if (isEncrypted) {
       val data = loadFile()
       val salt = ToxCryptoImpl.getSalt(data)
-      saveFile(ToxCryptoImpl.decrypt(data, ToxCryptoImpl.deriveKeyWithSalt(pass.getBytes, salt)))
+      saveFile(ToxCryptoImpl.decrypt(data, ToxCryptoImpl.passKeyDeriveWithSalt(pass.getBytes, salt)))
     }
   }
 
@@ -122,7 +122,7 @@ class ToxDataFile(ctx: Context, fileName: String) {
       }
     }
     val salt = ToxCryptoImpl.getSalt(data)
-    ToxCryptoImpl.decrypt(data, ToxCryptoImpl.deriveKeyWithSalt(pass.getBytes, salt))
+    ToxCryptoImpl.decrypt(data, ToxCryptoImpl.passKeyDeriveWithSalt(pass.getBytes, salt))
   }
 
   def loadAsSaveType(): SaveDataOptions = {

@@ -1,12 +1,13 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, Options}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, FriendInfo}
-import im.tox.tox4j.core.data.ToxFilename
+import im.tox.tox4j.core.data.{ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
 
 class AntoxOnFileRecvCallback(ctx: Context) {
@@ -51,6 +52,34 @@ class AntoxOnFileRecvCallback(ctx: Context) {
     val chatActive = State.isChatActive(friendInfo.key)
     State.transfers.fileIncomingRequest(friendInfo.key, friendInfo.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind.autoAccept) State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+    if (!chatActive) {
+      val db = State.db
+      try {
+        val unreadCount = db.getUnreadCounts(friendInfo.key)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String("Incoming File ..."), unreadCount)
+      }
+      catch {
+        case e: Exception => e.printStackTrace()
+      }
+    }
+
+
+
+    if (kind.autoAccept) {
+      // System.out.println("kind.autoAccept:true");
+      State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+    }
+    else {
+
+
+      // System.out.println("Options.autoAcceptFt:" + Options.autoAcceptFt);
+
+      if (Options.autoAcceptFt == true) {
+        // System.out.println("autoAcceptFt == true");
+        State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+      }
+    }
+
+
   }
 }

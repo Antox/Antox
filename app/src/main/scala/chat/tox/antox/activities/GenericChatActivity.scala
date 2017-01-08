@@ -6,7 +6,7 @@ import android.content.{Context, Intent}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView.OnScrollListener
+import android.support.v7.widget.RecyclerView.{ItemAnimator, OnScrollListener}
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView, Toolbar}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
@@ -20,7 +20,7 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
-import chat.tox.antox.utils.{KeyboardOptions, AntoxLog, Constants, Location}
+import chat.tox.antox.utils.{AntoxLog, Constants, KeyboardOptions, Location}
 import chat.tox.antox.wrapper.{ContactKey, Message, MessageType}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -102,10 +102,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     layoutManager.setStackFromEnd(true)
 
+    // zoff // chat message view!!
     chatListView = this.findViewById(R.id.chat_messages).asInstanceOf[RecyclerView]
     chatListView.setLayoutManager(layoutManager)
     chatListView.setAdapter(adapter)
-    chatListView.setItemAnimator(new LandingAnimator())
+
+    // TODO -> enable again
+    // chatListView.setItemAnimator(new LandingAnimator())
+    // TODO -> enable again
+
+
     chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
 
@@ -272,9 +278,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     db.messageListUpdatedObservable(Some(activeKey))
   }
 
+  // zoff
   def getActiveMessageList(takeLast: Int): ArrayBuffer[Message] = {
+    try {
     val db = State.db
     db.getMessageList(Some(activeKey), takeLast = takeLast)
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+        null
+    }
   }
 
   override def onPause(): Unit = {
