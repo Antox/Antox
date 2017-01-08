@@ -28,7 +28,7 @@ dependencies:
 
     - git submodule init
     - git submodule sync
-    - git submodule update ; exit 0
+    - git submodule update ; exit 0 # strange error on first "update" call
     - git submodule sync
     - git submodule update
 
@@ -51,9 +51,10 @@ dependencies:
     - mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
     - wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
 
-    - sudo apt-get install libdevel-trace-perl
+    #- sudo apt-get install libdevel-trace-perl
     #- sudo apt-get install clang-3.5
-    - sudo apt-get install clang
+    #- sudo apt-get install clang-3.4
+    #- sudo apt-get install clang
     - sudo apt-get install p7zip-full
 
     #- sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
@@ -84,8 +85,6 @@ dependencies:
     - printf 'export NDK_VERSION=r10e\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
     - sudo chown -R ubuntu:ubuntu /usr/local/android-ndk # fix ACLs
 # ------- install missing NDK ----------
-
-    - find /usr/local/android-ndk/ -name '*strip*' 2> /dev/null ; exit 0
 
     - pwd ; ls -al
 
@@ -146,19 +145,19 @@ dependencies:
     - cd jvm-toxcore-api ; git fetch
     - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
 
-    - find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' -exec rm -v {} \; ; exit 0
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
     - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
 
-    - find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' ; exit 0
-
     #   ---- copy to Antox dir --------------
-    - jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar*' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
+    - jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
     - echo $(cat /tmp/jarfile1)
     - ls -al $(cat /tmp/jarfile1)
     - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
     - cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
+    - echo "/home/ubuntu/tox4j-api_2.11-0.1.1.jar" > /tmp/jarfile2
+    - cp -v $(cat /tmp/jarfile1) $(cat /tmp/jarfile2)
+    - ls -al $(cat /tmp/jarfile2)
     #   ---- copy to Antox dir --------------
 
 # ------ build tox4j API stuff ------
@@ -173,34 +172,39 @@ dependencies:
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
 
-    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
-    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
+    #- sudo update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100
+    #- sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100
 
     - wget www.scala-lang.org/files/archive/scala-2.11.7.deb -O ~/scala-2.11.7.deb
     - cd ~ ; sudo dpkg -i scala-2.11.7.deb
     - mkdir -p ~/cache
     - mkdir -p ~/.casher
 
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' -exec rm -v {} \; ; exit 0
+    ##q##- cd jvm-toxcore-c/ ; rm -Rf ~/.ivy/
+    - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # load all stuf the first time
+    #- cd jvm-toxcore-c/ ; sed -i -e 's#^.*tox4j-api.*$##' build.sbt
+    #w##- cd jvm-toxcore-c/ ; sed -i -e 's#^.*tox4j-api.*$#"org.toktok" %% "tox4j-api" % "0.1.2" from "file:///home/ubuntu/Antox/jvm-toxcore-c/lib/tox4j-api_2.11-0.1.1.jar",#'  build.sbt
+    #- cd jvm-toxcore-c/ ; mkdir -p /home/ubuntu/Antox/jvm-toxcore-c/unmanagedLibs/
+    #w##- cd vm-toxcore-c/ ; mkdir -p /home/ubuntu/Antox/jvm-toxcore-c/lib/
+    #- cd jvm-toxcore-c/ ; echo "" >> build.sbt ; echo 'unmanagedBase := file("/home/ubuntu/Antox/jvm-toxcore-c/unmanagedLibs/")' >> build.sbt
+    #- cd jvm-toxcore-c/ ; cp -v $(cat /tmp/jarfile2) /home/ubuntu/Antox/jvm-toxcore-c/unmanagedLibs/
+    #w##- cd jvm-toxcore-c/ ; cp -v $(cat /tmp/jarfile2) /home/ubuntu/Antox/jvm-toxcore-c/lib/
+    #w##- mkdir -p /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/
+    #w##- cp -v $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
+    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
+    #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedJars" ; exit 0
+    #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedBase" ; exit 0
+
 # ---- arm ----
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
-    - cd ; find . -name 'tox4j-api_2.*.jar' ; exit 0
-    - find ~/ -name 'tox4j-c*.jar*' ; exit 0
-    - find /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/ -name 'tox4j-c*.jar*' ; exit 0
+
+    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
 
 
 
@@ -209,8 +213,11 @@ dependencies:
     - rm -Rf app/src/main/java/im/ ; exit 0
 
     - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
-    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar app/libs/tox4j-c_2.11.jar
-    - cp -v /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.1-SNAPSHOT/jars/tox4j-c_2.11.jar $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
+    - jarfile=$(find /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/ -name 'tox4j-c_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile3
+    - echo $(cat /tmp/jarfile3)
+    - ls -al $(cat /tmp/jarfile3)
+    - cp -v $(cat /tmp/jarfile3) app/libs/tox4j-c_2.11.jar
+    - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
 
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
@@ -241,8 +248,8 @@ dependencies:
 
     - cp /tmp/inst.log $CIRCLE_ARTIFACTS/ ; exit 0
 
-    - sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
-    - sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
+    #- sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 100
+    #- sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 100
 
 # ------ build tox4j stuff ----------
 
