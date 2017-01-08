@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/splash"/>
+            android:src="@drawable/antox_round_button"/>
     </item>
 
 </layer-list>
