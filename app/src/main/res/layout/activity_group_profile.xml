@@ -18,14 +18,13 @@
             android:layout_height="wrap_content"
             android:background="@color/white_absolute">
 
-            <!-- TODO fix me again -->
-            <!-- app:border_width="2dp"-->
-            <!-- app:border_color="@color/material_blue_grey_800"-->
-            <!-- TODO fix me again -->
             <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/group_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/material_blue_grey_800"
                 android:src="@drawable/ic_action_add_group"
             />
 

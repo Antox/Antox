@@ -5,7 +5,7 @@ import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener
-import android.support.v4.app.Fragment
+import android.support.v4.app.{Fragment, FragmentManager}
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.View.OnClickListener
@@ -24,6 +24,7 @@ import im.tox.tox4j.core.enums.ToxConnection
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
+
 class MainDrawerFragment extends Fragment {
 
   private var mDrawerLayout: DrawerLayout = _
@@ -39,12 +40,18 @@ class MainDrawerFragment extends Fragment {
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
+
+    System.out.println("LLLL:003")
     super.onCreateView(inflater, container, savedInstanceState)
+    System.out.println("LLLL:004")
     val rootView = inflater.inflate(R.layout.fragment_main_drawer, container, false)
+    System.out.println("LLLL:005")
 
     // Set up the navigation drawer
     mDrawerLayout = rootView.findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
+    System.out.println("LLLL:006 mDrawerLayout="+mDrawerLayout)
     mNavigationView = rootView.findViewById(R.id.left_drawer).asInstanceOf[NavigationView]
+    System.out.println("LLLL:007 mNavigationView="+mNavigationView)
 
     mNavigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener {
       override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
@@ -53,16 +60,25 @@ class MainDrawerFragment extends Fragment {
       }
     })
 
-    val drawerHeader = rootView.findViewById(R.id.drawer_header)
+    System.out.println("LLLL:008")
+    val drawerHeader = rootView.findViewById(R.id.drawer_header_fixme)
+    System.out.println("LLLL:009 drawerHeader="+drawerHeader)
 
-    drawerHeader.setOnClickListener(new OnClickListener {
-      override def onClick(v: View): Unit = {
-        val intent = new Intent(getActivity, classOf[ProfileSettingsActivity])
-        startActivity(intent)
-      }
-    })
+    // zoff //
+    if (drawerHeader != null) {
+      drawerHeader.setOnClickListener(new OnClickListener {
+        override def onClick(v: View): Unit = {
+          val intent = new Intent(getActivity, classOf[ProfileSettingsActivity])
+          startActivity(intent)
+        }
+      })
+    }
+    System.out.println("LLLL:010")
 
-    drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
+    // zoff //
+    if (drawerHeader != null) {
+      drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
+    }
 
     rootView
   }
@@ -81,22 +97,33 @@ class MainDrawerFragment extends Fragment {
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
     val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
+    System.out.println("LLLL: avatarView="+avatarView)
 
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
-    mAvatar match {
-      case Some(avatar) =>
-        BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
-      case None =>
-        avatarView.setImageResource(R.drawable.default_avatar)
+    // zoff //
+
+    if (avatarView != null) {
+      mAvatar match {
+        case Some(avatar) =>
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+        case None =>
+          avatarView.setImageResource(R.drawable.default_avatar)
+      }
     }
 
-
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    nameView.setText(new String(userInfo.nickname.value))
-
+    System.out.println("LLLL: nameView="+nameView)
+    // zoff //
+    if (nameView != null) {
+      nameView.setText(new String(userInfo.nickname.value))
+    }
     val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    statusMessageView.setText(new String(userInfo.statusMessage.value))
+    System.out.println("LLLL: statusMessageView="+statusMessageView)
+    // zoff //
+    if (statusMessageView != null) {
+      statusMessageView.setText(new String(userInfo.statusMessage.value))
+    }
 
     updateNavigationHeaderStatus(connectionStatus)
   }
@@ -108,10 +135,13 @@ class MainDrawerFragment extends Fragment {
     val online = toxConnection != ToxConnection.NONE
     val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      statusView.setBackground(drawable)
-    } else {
-      statusView.setBackgroundDrawable(drawable)
+    // zoff //
+    if (statusView != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        statusView.setBackground(drawable)
+      } else {
+        statusView.setBackgroundDrawable(drawable)
+      }
     }
   }
 

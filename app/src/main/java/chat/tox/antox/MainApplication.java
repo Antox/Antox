@@ -21,20 +21,34 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import im.tox.tox4j.core.options.ToxOptions;
+
 /**
  * Created by zoff99 on 05.01.2017.
  */
 public class MainApplication extends Application
 {
-    static String last_stack_trace_as_string = "";
-    static int i = 0;
-    static boolean should_restart = false; // should the app auto restart after crash?
+    String last_stack_trace_as_string = "";
+    int i = 0;
+    int crashes = 0;
+    long last_crash_time = 0L;
+    long prevlast_crash_time = 0L;
+    int randnum = -1;
+
 
     @Override
     public void onCreate()
     {
-        System.out.println("MainApplication:" + "onCreate");
+        randnum = (int) (Math.random() * 1000d);
+        System.out.println("MainApplication:" + randnum + ":" + "onCreate");
         super.onCreate();
+
+        crashes = PreferenceManager.getDefaultSharedPreferences(this).getInt("crashes", 0);
+        System.out.println("MainApplication:" + randnum + ":" + "crashes[load]=" + crashes);
+        last_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("last_crash_time", 0);
+        System.out.println("MainApplication:" + randnum + ":" + "last_crash_time[load]=" + last_crash_time);
+        prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("prevlast_crash_time", 0);
+        System.out.println("MainApplication:" + randnum + ":" + "prevlast_crash_time[load]=" + prevlast_crash_time);
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
         {
@@ -47,7 +61,7 @@ public class MainApplication extends Application
 
     }
 
-    private static String grabLogcat()
+    private String grabLogcat()
     {
         try
         {
@@ -89,12 +103,12 @@ public class MainApplication extends Application
         }
         catch (IOException ioe)
         {
-            System.out.println("MainApplication:" + "IOException when trying to read logcat.");
+            System.out.println("MainApplication:" + randnum + ":" + "IOException when trying to read logcat.");
             return null;
         }
         catch (Exception e)
         {
-            System.out.println("MainApplication:" + "Exception when trying to read logcat.");
+            System.out.println("MainApplication:" + randnum + ":" + "Exception when trying to read logcat.");
             return null;
         }
     }
@@ -104,9 +118,6 @@ public class MainApplication extends Application
     {
 
         String log_detailed = grabLogcat();
-
-        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putString("last_crash_text", last_stack_trace_as_string).commit();
-        System.out.println("MainApplication:" + "save_error_msg=" + last_stack_trace_as_string + "\n" + log_detailed);
 
         try
         {
@@ -118,8 +129,8 @@ public class MainApplication extends Application
             File myDir = new File("/sdcard/Antox/");
             myDir.mkdirs();
             // *TODO* hardcoded path --> bad!!
-            File myFile = new File("/sdcard/Antox/crash_" + formattedDate +".txt");
-            System.out.println("MainApplication:" + "crash file=" + myFile.getAbsolutePath());
+            File myFile = new File("/sdcard/Antox/crash_" + formattedDate + ".txt");
+            System.out.println("MainApplication:" + randnum + ":" + "crash file=" + myFile.getAbsolutePath());
             myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
@@ -128,17 +139,10 @@ public class MainApplication extends Application
             fOut.close();
             // also save to crash file ----
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            // e.printStackTrace();
         }
     }
-
-//    static void restore_error_msg(Context c)
-//    {
-//        last_stack_trace_as_string = PreferenceManager.getDefaultSharedPreferences(c).getString("last_crash_text", "");
-//        System.out.println("MainApplication:" + "restore_error_msg=" + last_stack_trace_as_string);
-//    }
 
     private void handleUncaughtException(Thread thread, Throwable e)
     {
@@ -152,7 +156,7 @@ public class MainApplication extends Application
             e.printStackTrace(printWriter);
             last_stack_trace_as_string = writer.toString();
 
-            System.out.println("MainApplication:" + "stack trace ok");
+            System.out.println("MainApplication:" + randnum + ":" + "stack trace ok");
             stack_trace_ok = true;
         }
         catch (Exception ee)
@@ -160,7 +164,7 @@ public class MainApplication extends Application
         }
         catch (OutOfMemoryError ex2)
         {
-            System.out.println("MainApplication:" + "stack trace *error*");
+            System.out.println("MainApplication:" + randnum + ":" + "stack trace *error*");
         }
 
         if (!stack_trace_ok)
@@ -168,7 +172,7 @@ public class MainApplication extends Application
             try
             {
                 last_stack_trace_as_string = Log.getStackTraceString(e);
-                System.out.println("MainApplication:" + "stack trace ok (addon 1)");
+                System.out.println("MainApplication:" + randnum + ":" + "stack trace ok (addon 1)");
                 stack_trace_ok = true;
             }
             catch (Exception ee)
@@ -176,9 +180,12 @@ public class MainApplication extends Application
             }
             catch (OutOfMemoryError ex2)
             {
-                System.out.println("MainApplication:" + "stack trace *error* (addon 1)");
+                System.out.println("MainApplication:" + randnum + ":" + "stack trace *error* (addon 1)");
             }
         }
+
+        crashes++;
+        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putInt("crashes", crashes).commit();
 
         try
         {
@@ -191,15 +198,22 @@ public class MainApplication extends Application
         {
         }
 
-        // System.out.println("MainApplication:" + "handleUncaughtException" + " thread.name=" + thread.getName() + " thread.id=" + thread.getId() + " Ex=" + last_stack_trace_as_string.replace("\n", " xxx "));
+        System.out.println("MainApplication:" + randnum + ":" + "crashes[set]=" + crashes);
+        System.out.println("MainApplication:" + randnum + ":" + "?:" + (prevlast_crash_time + (60 * 1000)) + " < " + System.currentTimeMillis());
+        System.out.println("MainApplication:" + randnum + ":" + "?:" + (System.currentTimeMillis() - (prevlast_crash_time + (60 * 1000))));
 
-        if (should_restart)
+        if ((prevlast_crash_time + (60 * 1000)) < System.currentTimeMillis())
         {
-            PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getApplicationContext(), chat.tox.antox.activities.LoginActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent); // restart app after 2 second delay
+            // System.out.println("MainApplication:" + randnum + ":" + "restart app!");
+            // PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getApplicationContext(), chat.tox.antox.activities.LoginActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK);
+            // AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            // mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent); // restart app after 2 second delay
+
+            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putInt("crashes", 0).commit();
         }
+
+        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2)");
         System.exit(2);
     }
 }

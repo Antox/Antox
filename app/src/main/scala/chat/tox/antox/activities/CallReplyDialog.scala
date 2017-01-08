@@ -21,7 +21,8 @@ trait CallReplySelectedListener {
 
 class CallReplyDialog extends DialogFragment {
   override def onAttach(activity: Activity): Unit = {
-    super.onAttach(activity)
+    // TODO **
+    //super.onAttach(activity)
     if (!activity.isInstanceOf[CallReplySelectedListener]) {
       throw new ClassCastException(s"${activity.toString} must implement ${classOf[CallReplyDialog]}")
     }

@@ -5,6 +5,7 @@
     android:layout_gravity="center_horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/call_avatar"
         android:layout_width="180dp"
         android:layout_height="180dp"

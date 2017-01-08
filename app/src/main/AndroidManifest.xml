@@ -29,13 +29,14 @@
         android:resizeable="true"
         android:smallScreens="true" />
 
+    <!--android:name="chat.tox.antox.MainApplication"-->
+
     <application
         tools:replace="android:allowBackup"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="chat.tox.antox.MainApplication"
         android:logo="@drawable/ic_actionbar"
         android:theme="@style/AntoxTheme">
         <service
