@@ -65,9 +65,11 @@ dependencies:
     - android list sdk --all | grep -i tools
     - android list sdk --all --extended
 
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3 > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
+    - echo y | android update sdk --no-ui --all --filter build-tools-24.0.2
     - echo y | android update sdk --no-ui --all --filter android-21
-    - echo y | android update sdk --no-ui --all --filter android-23 > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter android-23
+    - echo y | android update sdk --no-ui --all --filter android-24
     - echo y | android update sdk --no-ui --all --filter platform-tools > /dev/null 2> /dev/null
 
     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository > /dev/null 2> /dev/null
