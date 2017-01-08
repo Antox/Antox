@@ -149,12 +149,12 @@ dependencies:
 
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
-    - cd jvm-toxcore-api ; unzip -t target/scala-2.11/tox4j-api_2.11-0.1.1.jar ; exit 0
 
     #   ---- copy to Antox dir --------------
     - jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
     - echo $(cat /tmp/jarfile1)
     - ls -al $(cat /tmp/jarfile1)
+    - unzip -t $(cat /tmp/jarfile1) ; exit 0
     - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
     - cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
     - echo "/home/ubuntu/tox4j-api_2.11-0.1.1.jar" > /tmp/jarfile2
@@ -194,6 +194,7 @@ dependencies:
     #w##- mkdir -p /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/
     #w##- cp -v $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedJars" ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedBase" ; exit 0
@@ -207,6 +208,7 @@ dependencies:
 # ---- arm ----
 
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
 
 
 
@@ -218,6 +220,7 @@ dependencies:
     - jarfile=$(find /home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/ -name 'tox4j-c_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile3
     - echo $(cat /tmp/jarfile3)
     - ls -al $(cat /tmp/jarfile3)
+    - unzip -t $(cat /tmp/jarfile3) ; exit 0
     - cp -v $(cat /tmp/jarfile3) app/libs/tox4j-c_2.11.jar
     - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
 
