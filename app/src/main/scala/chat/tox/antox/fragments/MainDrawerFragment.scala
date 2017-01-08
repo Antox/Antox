@@ -102,18 +102,20 @@ class MainDrawerFragment extends Fragment {
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
     // zoff //
-
     if (avatarView != null) {
       mAvatar match {
         case Some(avatar) =>
+          System.out.println("LLLL:load avatar image")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         case None =>
+          System.out.println("LLLL:set default_avatar")
           avatarView.setImageResource(R.drawable.default_avatar)
       }
     }
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
     System.out.println("LLLL: nameView="+nameView)
+
     // zoff //
     if (nameView != null) {
       nameView.setText(new String(userInfo.nickname.value))
