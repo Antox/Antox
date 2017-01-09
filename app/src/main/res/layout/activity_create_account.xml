@@ -13,7 +13,8 @@
         android:paddingTop="@dimen/margin_small"
         android:orientation="vertical"
         android:focusableInTouchMode="true"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:weightSum="1">
 
         <ImageView
             android:contentDescription="Antox Logo"
@@ -71,7 +72,7 @@
             android:layout_width="300dp"
             android:layout_height="20dp"
             android:layout_marginTop="-8dp"
-            android:layout_marginLeft="14dp"
+            android:layout_gravity="center"
             android:indeterminate="true"
             style="@android:style/Widget.Material.Light.ProgressBar.Horizontal" />
 

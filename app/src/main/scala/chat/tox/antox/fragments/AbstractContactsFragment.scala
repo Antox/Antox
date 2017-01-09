@@ -5,7 +5,7 @@ import java.text.Collator
 
 import android.app.AlertDialog
 import android.content.res.ColorStateList
-import android.content.{Context, DialogInterface, Intent}
+import android.content._
 import android.os.{Bundle, Environment}
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -132,55 +132,72 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def createLeftPanePopup(parentItem: LeftPaneItem): Unit = {
-    val items = if (parentItem.viewType == ContactItemType.FRIEND) {
-      Array[CharSequence](getResources.getString(R.string.friend_action_profile),
-        getResources.getString(R.string.friend_action_delete),
-        getResources.getString(R.string.friend_action_export_chat),
-        getResources.getString(R.string.friend_action_delete_chat))
-    } else if (parentItem.viewType == ContactItemType.GROUP) {
-      Array[CharSequence](getResources.getString(R.string.group_action_delete))
-    } else {
-      Array[CharSequence]("")
+    val items = parentItem.viewType match {
+      case ContactItemType.FRIEND =>
+        Array[CharSequence](getResources.getString(R.string.friend_action_profile),
+          getResources.getString(R.string.friend_action_delete),
+          getResources.getString(R.string.friend_action_export_chat),
+          getResources.getString(R.string.friend_action_delete_chat))
+
+      case ContactItemType.GROUP =>
+        Array[CharSequence](getResources.getString(R.string.group_action_delete))
+
+      case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
+        Array[CharSequence](getResources.getString(R.string.request_action_copy_id))
+
+      case _ => Array[CharSequence]()
     }
 
-    if (parentItem != null) {
+    if (parentItem != null && items.nonEmpty) {
       new AlertDialog.Builder(getActivity, R.style.AppCompatAlertDialogStyle)
         .setTitle(getResources.getString(R.string.contacts_actions_on) + " " + parentItem.first)
         .setCancelable(true)
         .setItems(items,
           new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, index: Int) {
-              if (parentItem.viewType == ContactItemType.FRIEND) {
-                val key = parentItem.key.asInstanceOf[FriendKey]
-                index match {
-                  case 0 =>
-                    val profile = new Intent(getActivity, classOf[FriendProfileActivity])
-                    profile.putExtra("key", key.toString)
-                    profile.putExtra("avatar", parentItem.image)
-                    profile.putExtra("name", parentItem.first)
-                    startActivity(profile)
-                  case 1 => showDeleteFriendDialog(getActivity, key)
-                  case 2 => exportChat(getActivity, key)
-                  case 3 => showDeleteChatDialog(getActivity, key)
-                }
-              }
+              parentItem.viewType match {
+                case ContactItemType.FRIEND =>
+                  val key = parentItem.key.asInstanceOf[FriendKey]
+                  index match {
+                    case 0 =>
+                      val profile = new Intent(getActivity, classOf[FriendProfileActivity])
+                      profile.putExtra("key", key.toString)
+                      profile.putExtra("avatar", parentItem.image)
+                      profile.putExtra("name", parentItem.first)
+                      startActivity(profile)
+                    case 1 => showDeleteFriendDialog(getActivity, key)
+                    case 2 => exportChat(getActivity, key)
+                    case 3 => showDeleteChatDialog(getActivity, key)
+                  }
 
-              if (parentItem.viewType == ContactItemType.GROUP) {
-                val key = parentItem.key.asInstanceOf[GroupKey]
-                index match {
-                  case 0 =>
-                    val db = State.db
-                    db.deleteChatLogs(key)
-                    db.deleteContact(key)
-                    val group = ToxSingleton.getGroupList.getGroup(key)
-                    try {
-                      group.leave(getResources.getString(R.string.group_default_part_message))
-                    } catch {
-                      case e: ToxException[_] =>
-                    }
+                case ContactItemType.GROUP =>
+                  val key = parentItem.key.asInstanceOf[GroupKey]
+                  index match {
+                    case 0 =>
+                      val db = State.db
+                      db.deleteChatLogs(key)
+                      db.deleteContact(key)
+                      val group = ToxSingleton.getGroupList.getGroup(key)
+                      try {
+                        group.leave(getResources.getString(R.string.group_default_part_message))
+                      } catch {
+                        case e: ToxException[_] =>
+                      }
 
-                    ToxSingleton.save()
-                }
+                      ToxSingleton.save()
+                  }
+
+                case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
+                  val key = parentItem.key
+                  val clipboard = getActivity.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+                  clipboard.setPrimaryClip(ClipData.newPlainText(null, key.toString))
+
+                  val text = getString(R.string.request_id_copied)
+                  val duration = Toast.LENGTH_SHORT
+                  val toast = Toast.makeText(getActivity, text, duration)
+                  toast.show()
+
+                case _ => //do nothing
               }
               dialog.cancel()
             }
