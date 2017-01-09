@@ -30,7 +30,7 @@ object BitmapManager {
 
   private val TAG = LoggerTag(getClass.getSimpleName)
 
-  private def getImageKey(file: File): ImageKey = ImageKey(file.getPath + file.getName)
+  private def getImageKey(file: File): ImageKey = ImageKey(file.getPath)
 
   def getFromCache(isAvatar: Boolean, file: File): Option[Bitmap] = {
     getFromCache(isAvatar, getImageKey(file))
