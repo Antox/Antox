@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="LoginButtonStyle" parent="Widget.AppCompat.Button.Colored">
+      <item name="android:colorButtonNormal">@color/LoginButtonColor</item>
+      <item name="android:textColor">@color/LoginButtonTextColor</item>
+  </style>
+
+    <style name="CreateAccountButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:colorButtonNormal">@color/CreateAccountButtonColor</item>
+        <item name="android:textColor">@color/CreateAccountButtonTextColor</item>
+    </style>
+</resources>

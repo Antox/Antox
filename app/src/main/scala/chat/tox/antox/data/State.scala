@@ -23,12 +23,55 @@ object State {
   val activeKey = BehaviorSubject[Option[ContactKey]](None)
   val activeKeySubscription = activeKey.subscribe(x => State.setActiveKey(x))
   val typing = BehaviorSubject[Boolean](false)
+  var autoAcceptFt: Boolean = false
+  var batterySavingMode: Boolean = true
+  var isBootstrapped: Boolean = false
+  var lastFileTransferAction: Long = -1
+  var lastIncomingMessageAction: Long = -1
+  val noBatterySavingWithActionWithinLastXSeconds = 5 * 60 // 5min
+
+  var serviceThreadMain: Thread = null
+
 
   val transfers: FileTransferManager = new FileTransferManager()
 
   var db: AntoxDB = _
   private var _userDb: Option[UserDB] = None
   val callManager = new CallManager()
+
+  def setLastIncomingMessageAction(): Unit = {
+    System.out.println("ToxService:" + "setLastIncomingMessageAction")
+    lastIncomingMessageAction = System.currentTimeMillis()
+  }
+
+  def lastIncomingMessageActionInTheLast(seconds: Long): Boolean = {
+    System.out.println("ToxService:" + "lastIncomingMessageAction=" + lastIncomingMessageAction + " System.currentTimeMillis=" + System.currentTimeMillis())
+    ((lastIncomingMessageAction + seconds) > System.currentTimeMillis())
+  }
+
+  def setLastFileTransferAction(): Unit = {
+    lastFileTransferAction = System.currentTimeMillis()
+  }
+
+  def lastFileTransferActionInTheLast(seconds: Long): Boolean = {
+    ((lastFileTransferAction + seconds) > System.currentTimeMillis())
+  }
+
+  def getAutoAcceptFt(): Boolean = {
+    autoAcceptFt
+  }
+
+  def setAutoAcceptFt(b: Boolean) = {
+    autoAcceptFt = b
+  }
+
+  def getBatterySavingMode(): Boolean = {
+    batterySavingMode
+  }
+
+  def setBatterySavingMode(b: Boolean) = {
+    batterySavingMode = b
+  }
 
   def userDb(context: Context): UserDB = {
     _userDb match {

@@ -197,6 +197,8 @@
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>
     <string name="file_delete">Delete file</string>
+    <string name="file_open">Open file</string>
+    <string name="filetransfer_cancel">Cancel Filetransfer</string>
 
     <!-- Left Pane Fragment -->
     <string name="titles_recent">Recent</string>
@@ -233,6 +235,7 @@
 
     <!-- File transfer -->
     <string name="file_finished">Finished</string>
+    <string name="file_finished_with_errors">Finished with Errors</string>
     <string name="file_failed">Failed</string>
     <string name="file_in_progress">In Progress</string>
     <string name="file_request_sent">Sent Request</string>

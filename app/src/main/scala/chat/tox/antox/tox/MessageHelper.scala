@@ -50,6 +50,7 @@ object MessageHelper {
   }
 
   def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Long]): Unit = {
+    State.setLastIncomingMessageAction()
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
       val databaseMessageId: Long = mDbId match {

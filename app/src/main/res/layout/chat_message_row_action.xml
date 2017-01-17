@@ -2,7 +2,7 @@
 <LinearLayout android:id="@+id/message_row_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white_absolute"
     android:gravity="center_horizontal"
     android:orientation="vertical"
@@ -18,11 +18,13 @@
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:autoLink="web|phone|email"
             android:gravity="center"
+            android:linksClickable="true"
             android:padding="@dimen/padding_small"
             android:text="Message Body: This is some long sample text"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_medium" />
+            android:textSize="@dimen/text_smallish" />
 
     </LinearLayout>
 

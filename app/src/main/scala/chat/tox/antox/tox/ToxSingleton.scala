@@ -178,6 +178,7 @@ object ToxSingleton {
       AntoxLog.debug("Current nodes: " + nodes, TAG)
 
       var bootstrapped = false
+      State.isBootstrapped = bootstrapped
 
       for (i <- dhtNodes.indices) {
         try{
@@ -185,6 +186,7 @@ object ToxSingleton {
             AntoxLog.debug(s"Bootstrapping to ${dhtNodes(i).ipv4}:${dhtNodes(i).port.value}", TAG)
             tox.bootstrap(dhtNodes(i).ipv4, dhtNodes(i).port, dhtNodes(i).key)
             bootstrapped = true
+            State.isBootstrapped = bootstrapped
           }
         } catch{
           case e: Exception =>

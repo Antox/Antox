@@ -26,6 +26,7 @@
                 android:layout_marginRight="@dimen/margin_small">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/chat_avatar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -56,16 +57,78 @@
 
     <include layout="@layout/active_call_bar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_messages"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white_absolute"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="vertical" />
+    <!-- Chat Messages go here -->
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/chat_messages"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@color/white_absolute"-->
+        <!--android:clipToPadding="false"-->
+        <!--android:divider="@null"-->
+        <!--android:dividerHeight="0dp"-->
+        <!--android:scrollbars="vertical" />-->
+    <!-- Chat Messages go here -->
+
+
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="fill_parent"
+                 android:layout_height="0dp"
+                 android:orientation="horizontal"
+                 android:background="@color/transparent"
+                 android:divider="@null"
+                 android:dividerHeight="0dp"
+                 android:layout_weight="1"
+                 android:shrinkColumns="0"
+                 android:stretchColumns="0">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+            <FrameLayout
+                android:id="@+id/conv_frame_1"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent">
+
+                <!--suppress AndroidLintUnusedAttribute-->
+                <View
+                    android:id="@+id/compose_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_gravity="bottom"
+                    android:alpha="0"
+                    android:background="@color/transparent"
+                    android:visibility="invisible"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/chat_messages"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:scrollbarSize="1px"
+                    android:scrollbarStyle="insideOverlay"
+                    android:scrollbarThumbVertical="@drawable/transparent_scrollbar"
+                    android:scrollbarTrackVertical="@drawable/transparent_scrollbar"
+                    android:scrollbars="vertical"/>
+
+            </FrameLayout>
+
+            <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
+                android:id="@+id/fastscroller2"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_weight="1.0"
+                android:background="@color/white_absolute"
+                android:visibility="visible"
+                />
+        </TableRow>
+    </TableLayout>
+
+
 
     <RelativeLayout
         android:layout_width="fill_parent"

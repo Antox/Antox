@@ -16,6 +16,7 @@
         android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -36,6 +37,7 @@
         android:visibility="gone">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -55,6 +57,7 @@
         android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -75,6 +78,7 @@
         android:visibility="gone">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -95,6 +99,7 @@
         android:visibility="gone">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -121,6 +126,7 @@
             android:layout_gravity="center_horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/end_call_circle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -142,6 +148,7 @@
         android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -162,6 +169,7 @@
         android:visibility="gone">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
@@ -181,6 +189,7 @@
         android:layout_weight="1">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@color/white" />
