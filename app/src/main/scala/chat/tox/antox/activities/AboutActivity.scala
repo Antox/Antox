@@ -41,7 +41,7 @@ class AboutActivity extends AppCompatActivity {
       case e: Exception => e.printStackTrace()
     }
 
-    versionTextView.setText(getString(R.string.ver) + " " + version_name + "(" + version_code + ")")
+    versionTextView.setText(getString(R.string.ver) + " " + version_name + " (" + version_code + ")")
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
