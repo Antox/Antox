@@ -8,12 +8,12 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AntoxTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <!-- colorPrimaryDark is used for the status bar -->
-
-        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
-
         <item name="actionBarStyle">@style/ActionBar</item>
         <item name="actionBarTabStyle">@style/ActionBarTabs</item>
+
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+        <item name="colorAccent">@color/brand_secondary</item>
     </style>
 
     <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar"></style>
