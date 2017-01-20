@@ -56,6 +56,29 @@ Alternatively, you can ignore this exception and read other information from the
 
 Currently there is no fix for this, but there is a workaround by disabling instant run. This can be done by going to `File > Settings > Build, Execution, Deployment > Instant Run` and unchecking enable.
 
+###Changing Tox Dependencies (and Sodium) for CI Build
+- in circle.yml
+```
+cd libsodium-jni/ ; git checkout f21eb1c83da8be42efebda01b68474abef958285
+cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
+cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
+```
+- in https://github.com/TokTok/jvm-toxcore-c
+ + build.sbt
+ ```
+ "org.toktok" %% "tox4j-api" % "0.1.2",
+ "toktok" % "libtoxav" % "0.1.0",
+ "toktok" % "libtoxcore" % "0.1.0",
+ "jedisct1" % "libsodium" % "1.0.7",
+ ```
+ + buildscripts/dependencies.pl
+```
+"https://github.com/jedisct1", "libsodium", "1.0.11", @common,
+"https://github.com/TokTok", "c-toxcore", "v0.1.2", @common,
+```
+- in https://github.com/TokTok/jvm-toxcore-api
+ + no versions to configure here
+
 
 ###Compiling Antox From Source using Gradle
 - Download and install the SDK tools http://developer.android.com/sdk/index.html#Other
