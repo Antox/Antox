@@ -295,8 +295,8 @@ dependencies:
     - cd ~/and_stud_prj/ ; zip -r $CIRCLE_ARTIFACTS/supplement.zip *
 # ----------- make zipfile for builds [for download-dependencies.sh] -----------
 
-    - zip -d app/build/outputs/apk/app-debug-unaligned.apk META-INF/\*     # remove signature !!
-    - cp -av app/build/outputs/apk/app-debug-unaligned.apk ~/app.apk ;
+    - zip -d app/build/outputs/apk/app-release-unsigned.apk META-INF/\*     # remove signature !!
+    - cp -av app/build/outputs/apk/app-release-unsigned.apk ~/app.apk ;
       cd ~/ ;
       echo xxxxxxrm -f ~/.android/debug.keystore ;
       ls -al ~/.android/debug.keystore ;
