@@ -1,7 +1,7 @@
 <img src="http://i.imgur.com/fFhygVw.png" width="400" height="185" />
 
-**Jenkins:** [![Build Status](https://build.tox.chat/job/antox_build_android_arm_release/badge/icon)](https://build.tox.chat/job/antox_build_android_arm_release/)
-**CircleCI:** [![CircleCI](https://circleci.com/gh/Antox/Antox.svg?style=shield)](https://circleci.com/gh/Antox/Antox)
+**Travis:** [![Build Status](https://travis-ci.org/zoff99/Antox.png?branch=zoff99/Antox_v0.25)](https://travis-ci.org/zoff99/Antox)
+**CircleCI:** [![CircleCI](https://circleci.com/gh/zoff99/Antox.svg?style=shield)](https://circleci.com/gh/zoff99/Antox)
 
 =====
 
@@ -31,7 +31,6 @@ The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_
 - Partial A/V support
 
 ###Known Issues
-- Currently crashing on x86_64 devices, due to the tox4j library not currently supporting this arch. To find out if your device is running x86_64 Android, look for your device on [GSMArena](http://www.gsmarena.com/) and check your device's chipset. The most common x86_64 Android chipset is the Intel Atom.
 
 ###Translating Antox
 - You can localize the application via pull request or using [Transifex](https://www.transifex.com/antox/antox/).
@@ -42,7 +41,7 @@ The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_
 - In Android Studio again, go to Tools>Android>SDK Manager. Make sure you're using the latest SDK tools and SDK Build tools.
 - Clone the Antox repo
 - To import the project, go to File>Import Project. Select the build.gradle file in the root of the Antox folder
-- Download the latest tox4j binaries by running the download-dependencies script (`./download-dependencies.sh` on Linux/Mac or `download-dependencies.bat` on Windows)
+- Download the latest supplemental binaries by running the download-dependencies script (`./download-dependencies.sh` on Linux/Mac or `download-dependencies.bat` on Windows)
 - Install the Scala plugin in IntelliJ, restart, and wait for IntelliJ to set itself up
 - Connect your phone in developer mode and click Run in Android Studio. It will install Antox on to your phone and run it automatically.
 
