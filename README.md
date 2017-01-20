@@ -72,10 +72,10 @@ cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
  "jedisct1" % "libsodium" % "1.0.7",
  ```
  + buildscripts/dependencies.pl
-```
-"https://github.com/jedisct1", "libsodium", "1.0.11", @common,
-"https://github.com/TokTok", "c-toxcore", "v0.1.2", @common,
-```
+ ```
+ "https://github.com/jedisct1", "libsodium", "1.0.11", @common,
+ "https://github.com/TokTok", "c-toxcore", "v0.1.2", @common,
+ ```
 - in https://github.com/TokTok/jvm-toxcore-api
  + no versions to configure here
 
