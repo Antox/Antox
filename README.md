@@ -22,7 +22,7 @@ Antox can be downloaded from [Google Play](https://play.google.com/store/apps/de
 
 To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "Antox".
 
-The APK can be downloaded from Jenkins, [here](https://build.tox.chat/job/antox_build_android_arm_release/lastSuccessfulBuild/artifact/antox.apk)
+The APK can be downloaded from CircleCI, [here](https://circleci.com/api/v1/project/zoff99/Antox/latest/artifacts/0/$CIRCLE_ARTIFACTS/Antox.apk?filter=successful&branch=zoff99%2FAntox_v0.25)
 
 ###What Is Currently Working
 - One to one messaging
