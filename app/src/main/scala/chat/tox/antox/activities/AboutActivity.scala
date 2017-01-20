@@ -27,13 +27,21 @@ class AboutActivity extends AppCompatActivity {
     Linkify.addLinks(sourceURLTextView, pattern, "")
 
     // Fetch the app version and set it in the versionTextView, falling back to a blank version if unable to
-    var version = "-.-.-"
+    var version_name = "-.-.-"
+    var version_code = 0
     try {
-      version = getPackageManager.getPackageInfo(getPackageName, 0).versionName
+      version_name = getPackageManager.getPackageInfo(getPackageName, 0).versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => e.printStackTrace()
+      case e: Exception => e.printStackTrace()
     }
-    versionTextView.setText(getString(R.string.ver) + " " + version)
+
+    try {
+      version_code = getPackageManager.getPackageInfo(getPackageName, 0).versionCode
+    } catch {
+      case e: Exception => e.printStackTrace()
+    }
+
+    versionTextView.setText(getString(R.string.ver) + " " + version_name + "(" + version_code + ")")
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = item.getItemId match {
