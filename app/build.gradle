@@ -43,10 +43,15 @@ android {
         renderscriptTargetApi 23
 
         multiDexEnabled false
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         applicationId "chat.tox.antox"
         testApplicationId "chat.tox.antox.tests"
+    }
+
+    aaptOptions {  
+        additionalParameters "--no-version-vectors"  
     }
 
     lintOptions {
