@@ -73,7 +73,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val fileDialog = new FileDialog(thisActivity, path, false)
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
           def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+            State.transfers.sendFileSendRequest(file.getAbsolutePath(), activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
           }
         })
         fileDialog.showDialog()

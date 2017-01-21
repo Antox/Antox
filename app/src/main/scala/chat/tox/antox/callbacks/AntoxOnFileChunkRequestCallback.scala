@@ -12,6 +12,8 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) {
   def fileChunkRequest(friendInfo: FriendInfo, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mTransfer = State.transfers.get(friendInfo.key, fileNumber)
 
+    // System.out.println("fileChunkRequest:" + "friendInfo=" + friendInfo + " fileNumber=" + fileNumber + " position=" + position + " length=" + length)
+
     mTransfer match {
       case Some(t) =>
         t.status = FileStatus.IN_PROGRESS
@@ -19,12 +21,16 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) {
           State.transfers.fileFinished(friendInfo.key, t.fileNumber, ctx)
           State.db.clearFileNumber(friendInfo.key, fileNumber)
         } else {
-          val reset = position < t.progress
-          val data = t.readData(reset, length)
+          val data = t.readData(position, t.progress, length)
           data match {
             case Some(d) =>
-              ToxSingleton.tox.fileSendChunk(friendInfo.key, fileNumber, t.progress, d)
-              if (!reset) t.addToProgress(t.progress + length)
+              try {
+                ToxSingleton.tox.fileSendChunk(friendInfo.key, fileNumber, position, d)
+              } catch {
+                case e: Exception =>
+                  e.printStackTrace()
+              }
+              t.addToProgress(position + length)
             case None =>
           }
         }
