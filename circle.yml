@@ -274,7 +274,11 @@ dependencies:
 
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon
+
+# ----------- show generated apk file -----------
     - ls -al app/build/outputs/apk/ ; exit 0
+    - find ./ -name '*.apk' ; exit 0
+# ----------- show generated apk file -----------
 
 # ----------- make zipfile for android studio project [and for download-dependencies.bat] -----------
     - mkdir -p ~/and_stud_prj/app/libs/
