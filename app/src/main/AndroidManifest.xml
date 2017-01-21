@@ -6,6 +6,8 @@
           android:versionName="0.25.0">
 
     <uses-sdk tools:overrideLibrary="xyz.danoz.recyclerviewfastscroller,com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
+    <uses-feature android:name="android.hardware.location.network" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -21,10 +23,6 @@
     <!--this may get the app banned from google play :-(-->
     <!--<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />-->
     <!--this may get the app banned from google play :-(-->
-
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -54,7 +52,7 @@
 
         <activity
             android:name="chat.tox.antox.activities.SplashActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
@@ -64,18 +62,19 @@
         </activity>
         <activity
             android:name="chat.tox.antox.activities.MainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:theme="@style/AntoxTheme.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name="chat.tox.antox.activities.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:theme="@style/Theme.AppCompat.Translucent">
         </activity>
         <activity
             android:name=".activities.ChatActivity"
             android:theme="@style/AntoxTheme.NoActionBar"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -83,6 +82,7 @@
         </activity>
         <activity
             android:name="chat.tox.antox.activities.GroupChatActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:theme="@style/AntoxTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -152,7 +152,8 @@
         <activity
             android:name="chat.tox.antox.activities.CreateAccountActivity"
             android:label="@string/title_activity_create_account"
-            android:screenOrientation="portrait"/>
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            />
         <activity
             android:name="chat.tox.antox.activities.ToxMeInfoActivity"
             android:label="@string/toxme_title"
