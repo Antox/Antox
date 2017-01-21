@@ -272,6 +272,14 @@ dependencies:
     - sudo pkill -9 -u couchdb ; exit 0
     - ps auxwww ; exit 0
 
+
+# --------- install 32bit stuff for clang and 32bit android tools --------
+    - sudo dpkg --add-architecture i386
+    - sudo apt-get update
+    - sudo apt-get install libncurses5:i386
+# --------- install 32bit stuff for clang and 32bit android tools --------
+
+
     - ./gradlew build -x lint; exit 0 # first build will FAIL !!
     - ./gradlew assembleDebug --stacktrace --info --no-daemon
 

@@ -5,6 +5,7 @@ import java.io.{ByteArrayOutputStream, File, FileInputStream}
 import android.content.Context
 import android.os.Environment
 import android.preference.PreferenceManager
+import chat.tox.antox.Utils2
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
@@ -23,10 +24,9 @@ class FileTransferManager extends Intervals {
 
   def isTransferring: Boolean = {
     val ret: Boolean = _transfers.exists(_._2.status == FileStatus.IN_PROGRESS)
-    if (ret)
-      {
-        State.lastFileTransferAction = System.currentTimeMillis()
-      }
+    if (ret) {
+      State.lastFileTransferAction = System.currentTimeMillis()
+    }
     ret
   }
 
@@ -75,15 +75,31 @@ class FileTransferManager extends Intervals {
   }
 
 
-  def sendFileSendRequest(path: String, key: FriendKey, fileKind: FileKind, fileId: ToxFileId, context: Context): Unit = {
+  def sendFileSendRequest(path2: String, key: FriendKey, fileKind: FileKind, fileId2: ToxFileId, context: Context): Unit = {
     val stripExif = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("strip_exif", true)
+    val path = new File(path2).getAbsolutePath // use absolutepath, just to be sure
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
     val splitFileName = file.getName.split("\\.")
     val extension = splitFileName(splitFileName.length - 1)
     AntoxLog.debug("sendFileSendRequest", TAG)
+    var fileId: ToxFileId = fileId2
     System.out.println("FileTransferManager:" + "sendFileSendRequest")
+
+    if (fileId == ToxFileId.empty) {
+      System.out.println("FileTransferManager:" + "fileId == ToxFileId.empty -> generating ID/Hash ...")
+      System.out.println("FileTransferManager:" + "input:path=" + path + " filesizebytes=" + file.length())
+      val hash_string: String = Utils2.getMd5Hash(path + "-" + file.length())
+      if (hash_string == null) {
+        fileId = ToxFileId.empty
+        System.out.println("FileTransferManager:" + "fileId = ToxFileId.empty")
+      }
+      else {
+        fileId = ToxFileId.unsafeFromValue(hash_string.getBytes())
+        System.out.println("FileTransferManager:" + "fileId=" + fileId)
+      }
+    }
 
 
     val length = if (stripExif && Constants.EXIF_FORMATS.contains(extension.toLowerCase)) {
@@ -102,6 +118,7 @@ class FileTransferManager extends Intervals {
     val mFileNumber: Option[Int] = try {
       AntoxLog.debug("Creating tox file sender", TAG)
 
+      // send normal file, use the same "id" every time to be able to resume FT --------------
       ToxSingleton.tox.fileSend(key, fileKind.kindId, length, fileId, ToxFilename.unsafeFromValue(fileName.getBytes)) match {
         case -1 => None
         case x => Some(x)
@@ -323,7 +340,7 @@ class FileTransferManager extends Intervals {
           AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
             case Some(file) =>
               sendFileSendRequest(file.getPath, friend.key, AVATAR,
-                fileId =
+                fileId2 =
                   ToxSingleton.tox.hash(file)
                     .map(_.getBytes)
                     .map(ToxFileId.unsafeFromValue)
