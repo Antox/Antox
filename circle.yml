@@ -208,6 +208,11 @@ dependencies:
     - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # load all stuf the first time
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    # -- now sneak in our freshly compiled jar (ok this is a hack) --
+    - cp -av $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
+    # -- now sneak in our freshly compiled jar (ok this is a hack) --
+    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
