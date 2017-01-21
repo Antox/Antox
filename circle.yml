@@ -214,6 +214,14 @@ dependencies:
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedJars" ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedBase" ; exit 0
 
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+    - cd jvm-toxcore-c/ ; sed -i -e 's#"libsodium", "1.0.11"#"libsodium", "'"$_LIBSODIUM_VERSION_"'"#' buildscripts/dependencies.pl
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
+    - cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
+
 # ---- arm ----
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
