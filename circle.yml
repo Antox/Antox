@@ -279,9 +279,7 @@ dependencies:
     - sudo apt-get install libncurses5:i386
 # --------- install 32bit stuff for clang and 32bit android tools --------
 
-
-    - ./gradlew build -x lint; exit 0 # first build will FAIL !!
-    - ./gradlew assembleDebug --stacktrace --info --no-daemon
+    - ./gradlew build -x lint --stacktrace --info --no-daemon || ./gradlew build -x lint --stacktrace --info --no-daemon # first build may FAIL
 
 # ----------- show generated apk file -----------
     - ls -al app/build/outputs/apk/ ; exit 0
