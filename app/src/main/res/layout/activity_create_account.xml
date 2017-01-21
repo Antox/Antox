@@ -1,38 +1,37 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:fillViewport="true"
-    android:layout_height="match_parent"
-    android:id="@+id/create_account_activity_full"
-    android:background="@color/material_blue_grey_950">
+<RelativeLayout android:id="@+id/create_account_activity_full"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/material_blue_grey_950">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_small"
-        android:orientation="vertical"
-        android:focusableInTouchMode="true"
-        android:id="@+id/linearLayout">
+    <LinearLayout android:id="@+id/linearLayout"
+                  xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:focusableInTouchMode="true"
+                  android:orientation="vertical"
+                  android:paddingLeft="@dimen/margin_large"
+                  android:paddingRight="@dimen/margin_large"
+                  android:paddingTop="@dimen/margin_small">
 
         <ImageView
-            android:contentDescription="Antox Logo"
             android:id="@+id/imageView1"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/full_logo"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:contentDescription="Antox Logo"
+            android:src="@drawable/full_logo"/>
 
         <TextView
             android:id="@+id/create_text"
             android:layout_width="match_parent"
-            android:textColor="@color/white_absolute"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:textStyle="italic"
-            android:textSize="20dp"
             android:layout_height="wrap_content"
-            android:text="@string/create_text" />
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="@string/create_text"
+            android:textColor="@color/white_absolute"
+            android:textSize="20dp"
+            android:textStyle="italic"/>
 
         <EditText
             android:id="@+id/create_account_name"
@@ -42,86 +41,86 @@
             android:background="@drawable/edittextbackground"
             android:gravity="center"
             android:hint="@string/create_name_hint"
-            android:singleLine="true" />
+            android:singleLine="true"/>
 
 
         <EditText
             android:id="@+id/create_bio"
             android:layout_width="200dp"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@drawable/edittextbackground"
             android:gravity="center"
-            android:background="@drawable/edittextbackground" />
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/create_account"
-            android:layout_gravity="center"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:text="@string/create_register"
-            android:theme="@style/LoginButtonStyle"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:onClick="onClickRegisterAccount" />
+            android:onClick="onClickRegisterAccount"
+            android:text="@string/create_register"
+            android:theme="@style/LoginButtonStyle"/>
 
         <ProgressBar
             android:id="@+id/login_progress_bar"
-            android:visibility="gone"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="300dp"
             android:layout_height="20dp"
-            android:layout_marginTop="-8dp"
             android:layout_gravity="center"
+            android:layout_marginTop="-8dp"
             android:indeterminate="true"
-            style="?android:attr/progressBarStyleHorizontal" />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/create_account_import"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="@string/create_import_profile"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
-        android:theme="@style/CreateAccountButtonStyle"
-        android:onClick="onClickImportProfile" />
-
     <TextView
-        android:text="@string/create_sign_up_for_toxme"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:gravity="center_vertical"
+        android:id="@+id/toxme_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/toxme"
         android:layout_below="@+id/linearLayout"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/toxme"
         android:layout_toEndOf="@id/toxme"
-        android:id="@+id/toxme_text" />
+        android:layout_toRightOf="@+id/toxme"
+        android:gravity="center_vertical"
+        android:text="@string/create_sign_up_for_toxme"
+        android:textColor="@color/white"
+        android:textSize="17sp"/>
 
     <CheckBox
+        android:id="@+id/toxme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/toxme"
-        android:checked="false"
-        android:buttonTint="@color/white"
+        android:layout_alignLeft="@+id/create_account_import"
+        android:layout_alignStart="@+id/create_account_import"
         android:layout_below="@+id/linearLayout"
         android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/create_account_import"
-        android:layout_alignStart="@+id/create_account_import" />
+        android:buttonTint="@color/white"
+        android:checked="false"/>
 
     <ImageView
+        android:id="@+id/toxme_help_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/toxme_help_button"
-        android:src="@drawable/ic_help_outline_white_48dp"
-        android:layout_alignRight="@+id/create_account_import"
-        android:layout_alignEnd="@+id/create_account_import"
         android:layout_alignBottom="@+id/toxme_text"
-        android:layout_alignTop="@+id/toxme_text" />
+        android:layout_alignEnd="@+id/create_account_import"
+        android:layout_alignRight="@+id/create_account_import"
+        android:layout_alignTop="@+id/toxme_text"
+        android:src="@drawable/ic_help_outline_white_48dp"/>
+
+    <Button
+        android:id="@+id/create_account_import"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:onClick="onClickImportProfile"
+        android:text="@string/create_import_profile"
+        android:theme="@style/CreateAccountButtonStyle"/>
 
 
 </RelativeLayout>

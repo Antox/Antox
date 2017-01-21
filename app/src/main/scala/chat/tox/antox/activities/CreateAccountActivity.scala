@@ -42,6 +42,7 @@ class CreateAccountActivity extends AppCompatActivity {
     ThemeManager.applyTheme(this, getSupportActionBar)
 
     setContentView(R.layout.activity_create_account)
+
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)

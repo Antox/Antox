@@ -151,8 +151,8 @@
 
         <activity
             android:name="chat.tox.antox.activities.CreateAccountActivity"
-            android:label="@string/title_activity_create_account"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:label="@string/title_activity_create_account"
             />
         <activity
             android:name="chat.tox.antox.activities.ToxMeInfoActivity"
