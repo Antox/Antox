@@ -49,6 +49,7 @@ dependencies:
     - sudo apt-get update
     - sudo apt-get install libncurses-dev
     - sudo apt-get install lib32ncurses5-dev
+    - sudo apt-get install libncurses5:i386
 
     - mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
     - wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
