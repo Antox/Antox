@@ -224,7 +224,7 @@ dependencies:
     - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
 
     - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
-    - cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
+    - cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#"c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
     - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
 
 # ---- arm ----
