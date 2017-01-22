@@ -29,8 +29,8 @@ machine:
     _JVMTOXCOREAPI_VERSION_SBT_: "0.1.2" # this is NOT USED !!
     _LIBSODIUM_VERSION_SBT_: "1.0.7" # this is NOT USED !!
 
-    _LIBSODIUM_VERSION_: "1.0.11"
-    _CTOXCORE_VERSION_ : "137be841050860b71d75c115aa0b046fec127ae5" # 0.1.2 SNAPSHOT
+    _LIBSODIUM_VERSION_: "1.0.11" # can only specify branch here
+    _CTOXCORE_VERSION_ : "v0.1.2" # can only specify branch here
 
 
 dependencies:
