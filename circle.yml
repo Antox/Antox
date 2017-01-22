@@ -20,6 +20,19 @@ machine:
     CLASS_P: chat.tox.antox
     START_INTENT_P: chat.tox.antox.activities.LoginActivity
     DEBIAN_FRONTEND: noninteractive
+
+
+    _LIBSODIUMJNI_VERSION_: "f21eb1c83da8be42efebda01b68474abef958285" # 1.0.3 (uses libsodium somewhere between 1.0.10 and 1.0.11 this seems bad!)
+    _JVMTOXCOREAPI_VERSION_ : "c6d05b3d200de9ea53b19e0101d08abd16a751cd" # 0.1.2 SNAPSHOT
+    _JVMTOXCOREC_VERSION_ : "137be841050860b71d75c115aa0b046fec127ae5" # 0.1.2 SNAPSHOT
+
+    _JVMTOXCOREAPI_VERSION_SBT_: "0.1.2"
+    _LIBSODIUM_VERSION_SBT_: "1.0.7"
+
+    _LIBSODIUM_VERSION_: "1.0.11"
+    _CTOXCORE_VERSION_ : "v0.1.2"
+
+
 dependencies:
   cache_directories:
     - ~/.android
@@ -106,9 +119,9 @@ dependencies:
     - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
     - sudo apt-get install libopus-dev libvpx-dev pkg-config
 
-    # -- use: https://github.com/joshjdevl/libsodium-jni/commit/f21eb1c83da8be42efebda01b68474abef958285
+    # -- use: https://github.com/joshjdevl/libsodium-jni/commit/$_LIBSODIUMJNI_VERSION_
     - cd libsodium-jni/ ; git fetch
-    - cd libsodium-jni/ ; git checkout f21eb1c83da8be42efebda01b68474abef958285
+    - cd libsodium-jni/ ; git checkout "$_LIBSODIUMJNI_VERSION_"
 
     - cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
     #- cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
@@ -155,9 +168,9 @@ dependencies:
     - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
     - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
     - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
-    # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/$_JVMTOXCOREAPI_VERSION_
     - cd jvm-toxcore-api ; git fetch
-    - cd jvm-toxcore-api ; git checkout c6d05b3d200de9ea53b19e0101d08abd16a751cd
+    - cd jvm-toxcore-api ; git checkout "$_JVMTOXCOREAPI_VERSION_"
 
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
     - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
@@ -181,9 +194,9 @@ dependencies:
 # ------ build tox4j stuff ----------
     - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
     - cd jvm-toxcore-c/ ; pwd
-    # -- use: https://github.com/TokTok/jvm-toxcore-c/commit/137be841050860b71d75c115aa0b046fec127ae5
+    # -- use: https://github.com/TokTok/jvm-toxcore-c/commit/$_JVMTOXCOREC_VERSION_
     - cd jvm-toxcore-c/ ; git fetch
-    - cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
+    - cd jvm-toxcore-c/ ; git checkout "$_JVMTOXCOREC_VERSION_"
     - cd jvm-toxcore-c/ ; git submodule init ; exit 0
     - cd jvm-toxcore-c/ ; git submodule update ; exit 0
 
@@ -195,11 +208,24 @@ dependencies:
     - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # load all stuf the first time
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    # -- now sneak in our freshly compiled jar (ok this is a hack) --
+    - cp -av $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
+    # -- now sneak in our freshly compiled jar (ok this is a hack) --
+    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
     - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedJars" ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedBase" ; exit 0
+
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+    - cd jvm-toxcore-c/ ; sed -i -e 's#"libsodium", "1.0.11"#"libsodium", "'"$_LIBSODIUM_VERSION_"'"#' buildscripts/dependencies.pl
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
+    - cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#"c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
+    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
 
 # ---- arm ----
     - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
