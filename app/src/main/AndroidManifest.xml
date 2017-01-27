@@ -2,10 +2,10 @@
 <manifest package="chat.tox.antox"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:versionCode="25000"
-          android:versionName="0.25.0">
+          android:versionCode="25001"
+          android:versionName="0.25.1">
 
-    <uses-sdk tools:overrideLibrary="xyz.danoz.recyclerviewfastscroller,com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
+    <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
 
     <uses-feature
         android:name="android.hardware.location.network"
