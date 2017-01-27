@@ -123,13 +123,21 @@ dependencies:
     - cd libsodium-jni/ ; git fetch
     - cd libsodium-jni/ ; git checkout "$_LIBSODIUMJNI_VERSION_"
 
-    - cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
-    #- cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' dependencies-linux.sh # circleCI needs output or it will kill the command after 10 minutes
+    # -- circleCI needs output or it will kill the command after 10 minutes
+    - cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh
+    - cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' dependencies-linux.sh
+    - cd libsodium-jni/jni/ ; sed -i -e 'sx --quietxxg' installswig.sh
+    - cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' download-gradle.sh
+    - cd libsodium-jni/ ; sed -i -e 'sx --quietxxg' download-gradle.sh
+    - cd libsodium-jni/ ; printf '#! /bin/bash\necho dummy' > update-android.sh ; chmod a+x update-android.sh
+    - cd libsodium-jni/ ; cat update-android.sh
+    # -- circleCI needs output or it will kill the command after 10 minutes
+
     - cd libsodium-jni/ ; git submodule init
     - cd libsodium-jni/ ; git submodule update
 
 # ------------- this sometimes fails and then works again, try 2 times ------------------
-    - cd libsodium-jni/ ; bash -x ./dependencies-linux.sh ; res=$? ; if [ $res -ne 0 ]; then sleep 60 ; bash -x ./dependencies-linux.sh ; fi
+    - cd libsodium-jni/ ; bash -x ./dependencies-linux.sh
 # ------------- this sometimes fails and then works again, try 2 times ------------------
 
     # scripts don't work and need tweaking -----
