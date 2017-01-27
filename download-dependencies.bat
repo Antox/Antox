@@ -34,7 +34,7 @@ echo Downloading latest version ...
 REM REPOUSER="zoff99"
 REM REPO="Antox"
 REM BRANCH="zoff99%2FAntox_v0.25.1"
-powershell -Command "(New-Object Net.WebClient).DownloadFile('https://circleci.com/api/v1/project/zoff99/Antox/latest/artifacts/0/$CIRCLE_ARTIFACTS/and_stud_prj.zip?filter=successful&branch=zoff99%2FAntox_v0.25.1', 'and_stud_prj.zip')"
+powershell -Command "(New-Object Net.WebClient).DownloadFile('https://circleci.com/api/v1/project/zoff99/Antox/latest/artifacts/0/$CIRCLE_ARTIFACTS/and_stud_prj.zip?filter=successful&branch=zoff99%%2FAntox_v0.25.1', 'and_stud_prj.zip')"
 echo Downloaded.
 echo unzipping
 unzip and_stud_prj.zip
