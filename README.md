@@ -1,7 +1,7 @@
 <img src="http://i.imgur.com/fFhygVw.png" width="400" height="185" />
 
-**Travis:** [![Build Status](https://travis-ci.org/zoff99/Antox.png?branch=zoff99%2FAntox_v0.25)](https://travis-ci.org/zoff99/Antox)
-**CircleCI:** [![CircleCI](https://circleci.com/gh/zoff99/Antox/tree/zoff99%2FAntox_v0.25.png?style=badge)](https://circleci.com/gh/zoff99/Antox)
+**Travis:** [![Build Status](https://travis-ci.org/zoff99/Antox.png?branch=zoff99%2FAntox_v0.25.1)](https://travis-ci.org/zoff99/Antox)
+**CircleCI:** [![CircleCI](https://circleci.com/gh/zoff99/Antox/tree/zoff99%2FAntox_v0.25.1.png?style=badge)](https://circleci.com/gh/zoff99/Antox)
 
 =====
 
