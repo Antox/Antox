@@ -129,7 +129,7 @@ dependencies:
     - cd libsodium-jni/ ; git submodule update
 
 # ------------- this sometimes fails and then works again, try 2 times ------------------
-    - cd libsodium-jni/ ; ./dependencies-linux.sh ; res=$? ; if [ $res -ne 0 ]; then sleep 30 ; ./dependencies-linux.sh ; fi
+    - cd libsodium-jni/ ; bash -x ./dependencies-linux.sh ; res=$? ; if [ $res -ne 0 ]; then sleep 60 ; bash -x ./dependencies-linux.sh ; fi
 # ------------- this sometimes fails and then works again, try 2 times ------------------
 
     # scripts don't work and need tweaking -----
