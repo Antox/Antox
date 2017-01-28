@@ -39,6 +39,7 @@
 
 
         <LinearLayout
+            android:id="@+id/fastscroller_handle_pane"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"

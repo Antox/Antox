@@ -32,9 +32,15 @@ public class RecyclerViewFastScroller extends LinearLayout
     private
     @NonNull
     TextView bubble;
+
     private
     @NonNull
     View handle;
+
+    private
+    @NonNull
+    View fastscroller_handle_pane;
+
     private
     @Nullable
     RecyclerView recyclerView;
@@ -69,6 +75,50 @@ public class RecyclerViewFastScroller extends LinearLayout
         inflate(context, R.layout.recycler_view_fast_scroller, this);
         bubble = ViewUtil.findById(this, R.id.fastscroller_bubble);
         handle = ViewUtil.findById(this, R.id.fastscroller_handle);
+        fastscroller_handle_pane = ViewUtil.findById(this, R.id.fastscroller_handle_pane);
+
+        fastscroller_handle_pane.setOnTouchListener(new OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                final int action = event.getAction();
+                switch (action)
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        if (event.getY() < ViewUtil.getY(handle) - handle.getPaddingTop() || event.getY() > ViewUtil.getY(handle) + handle.getHeight() + handle.getPaddingBottom())
+                        {
+                            return false;
+                        }
+
+                        if (currentAnimator != null)
+                        {
+                            currentAnimator.cancel();
+                        }
+
+                        if (bubble.getVisibility() != VISIBLE)
+                        {
+                            showBubble();
+                        }
+
+                        handle.setSelected(true);
+
+                    case MotionEvent.ACTION_MOVE:
+                        final float y = event.getY();
+                        setBubbleAndHandlePosition(y / height);
+                        setRecyclerViewPosition(y);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        handle.setSelected(false);
+                        hideBubble();
+                        return true;
+
+                }
+                return false;
+            }
+        });
 
         TypedArray styledAttributes = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.RecyclerViewFastScroller, 0, 0);
         bubble.setTextSize(TypedValue.COMPLEX_UNIT_PX, styledAttributes.getDimension(R.styleable.RecyclerViewFastScroller_textSize, 0));
@@ -84,43 +134,6 @@ public class RecyclerViewFastScroller extends LinearLayout
             height = h;
             computeBubbleAndHandlePosition();
         }
-    }
-
-    @Override
-    @TargetApi(11)
-    public boolean onTouchEvent(@NonNull MotionEvent event)
-    {
-        final int action = event.getAction();
-        switch (action)
-        {
-            case MotionEvent.ACTION_DOWN:
-                if (event.getX() < ViewUtil.getX(handle) - handle.getPaddingLeft() ||
-                        event.getY() < ViewUtil.getY(handle) - handle.getPaddingTop() ||
-                        event.getY() > ViewUtil.getY(handle) + handle.getHeight() + handle.getPaddingBottom())
-                {
-                    return false;
-                }
-                if (currentAnimator != null)
-                {
-                    currentAnimator.cancel();
-                }
-                if (bubble.getVisibility() != VISIBLE)
-                {
-                    showBubble();
-                }
-                handle.setSelected(true);
-            case MotionEvent.ACTION_MOVE:
-                final float y = event.getY();
-                setBubbleAndHandlePosition(y / height);
-                setRecyclerViewPosition(y);
-                return true;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                handle.setSelected(false);
-                hideBubble();
-                return true;
-        }
-        return super.onTouchEvent(event);
     }
 
     public void setRecyclerView(final @NonNull RecyclerView recyclerView)
@@ -181,13 +194,6 @@ public class RecyclerViewFastScroller extends LinearLayout
 
             final int targetPos = translatedChildPosition(Util.clamp((int) (proportion * (float) itemCount), 0, itemCount - 1));
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(targetPos, 0);
-
-            //            01-28 00:59:28.174 2091-2091/chat.tox.antox E/MessageQueue-JNI: java.lang.ClassCastException:
-            // chat.tox.antox.adapters.ChatMessagesAdapter cannot be cast to
-            // chat.tox.antox.RecyclerViewFastScroller$FastScrollAdapter
-            //            at chat.tox.antox.RecyclerViewFastScroller.setRecyclerViewPosition(RecyclerViewFastScroller.java:189)
-            //            at chat.tox.antox.RecyclerViewFastScroller.onTouchEvent(RecyclerViewFastScroller.java:120)
-
 
             final CharSequence bubbleText = ((chat.tox.antox.adapters.ChatMessagesAdapter) recyclerView.getAdapter()).getBubbleText(targetPos);
             bubble.setText(bubbleText);
