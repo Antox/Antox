@@ -1,5 +1,5 @@
 /**
- * Created by al on 28.01.2017.
+ * Created by zoff99 on 28.01.2017.
  */
 
 package chat.tox.antox;
@@ -27,7 +27,7 @@ import android.widget.TextView;
 public class RecyclerViewFastScroller extends LinearLayout
 {
     private static final int BUBBLE_ANIMATION_DURATION = 100;
-    private static final int TRACK_SNAP_RANGE = 5;
+    public static final int TRACK_SNAP_RANGE = 5;
 
     private
     @NonNull
@@ -170,6 +170,21 @@ public class RecyclerViewFastScroller extends LinearLayout
         }
     }
 
+    public float getHandleY()
+    {
+        return ViewUtil.getY(handle);
+    }
+
+    public int getHandleHeight()
+    {
+        return handle.getHeight();
+    }
+
+    public int getMyHeight()
+    {
+        return height;
+    }
+
     private void setRecyclerViewPosition(float y)
     {
         if (recyclerView != null)
@@ -277,7 +292,7 @@ public class RecyclerViewFastScroller extends LinearLayout
         return (parent.getLayoutManager() instanceof LinearLayoutManager) && ((LinearLayoutManager) parent.getLayoutManager()).getReverseLayout();
     }
 
-    private int translatedChildPosition(int position)
+    public int translatedChildPosition(int position)
     {
         if (recyclerView == null)
         {
