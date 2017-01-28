@@ -6,10 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
 /**
- * Created by al on 28.01.2017.
+ * Created by zoff99 on 28.01.2017.
  */
 
 public class ViewUtil
@@ -57,5 +58,54 @@ public class ViewUtil
     public static <T extends View> T findById(@NonNull View parent, @IdRes int resId)
     {
         return (T) parent.findViewById(resId);
+    }
+
+    public static void animateIn(final @NonNull View view, final @NonNull Animation animation)
+    {
+        if (view.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        view.clearAnimation();
+        animation.reset();
+        animation.setStartTime(0);
+        view.setVisibility(View.VISIBLE);
+        view.startAnimation(animation);
+    }
+
+
+    public static void animateOut(final @NonNull View view, final @NonNull Animation animation, final int visibility)
+    {
+        if (view.getVisibility() == visibility)
+        {
+            // future.set(true);
+        }
+        else
+        {
+            view.clearAnimation();
+            animation.reset();
+            animation.setStartTime(0);
+            animation.setAnimationListener(new Animation.AnimationListener()
+            {
+                @Override
+                public void onAnimationStart(Animation animation)
+                {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation)
+                {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation)
+                {
+                    view.setVisibility(visibility);
+                    // future.set(true);
+                }
+            });
+            view.startAnimation(animation);
+        }
     }
 }
