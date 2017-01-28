@@ -7,9 +7,8 @@ import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.webkit.MimeTypeMap._
 import chat.tox.antox.R
-import chat.tox.antox.utils.{Constants, FileUtils}
+import chat.tox.antox.utils.{Constants, FileUtils, TimestampUtils}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
@@ -61,15 +60,16 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     val nextMsg: Option[Message] = data.lift(pos + 1)
 
     try {
-      System.out.println("onBindViewHolder:1:pos=" + pos + " msg=" + msg.message.substring(0,Math.min(8, msg.message.length())) + " view=" + holder);
+      System.out.println("onBindViewHolder:1:pos=" + pos + " msg=" + msg.message.substring(0, Math.min(8, msg.message.length())) + " view=" + holder)
     }
-    catch
-      {
-        case e: Exception => {
-          e.printStackTrace()
-          System.out.println("onBindViewHolder:1:pos=" + pos + " msg=NULL view=" + holder);
-        }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        System.out.println("onBindViewHolder:1:pos=" + pos + " msg=NULL view=" + holder)
       }
+    }
+
+
 
     holder.setMessage(msg, lastMsg, nextMsg)
     holder.setTimestamp()
@@ -147,30 +147,27 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
           if (file.exists() && file.length > 0) {
             if (isImage) {
               try {
-                System.out.println("setImage:1:imageMessage:" + file.getName.substring(0,Math.min(40, file.getName.length())));
+                System.out.println("setImage:1:imageMessage:" + file.getName.substring(0, Math.min(40, file.getName.length())))
               }
-              catch
-                {
-                  case e: Exception => {
-                    e.printStackTrace()
-                    System.out.println("setImage:1:imageMessage:" + "NULL");
-                  }
+              catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                  System.out.println("setImage:1:imageMessage:" + "NULL")
                 }
+              }
               fileHolder.setImage(file, true)
             }
             else {
               // also show icon for non image file types
-              try
-                {
-              System.out.println("setImage:2:imageMessage:"+file.getName.substring(0,Math.min(40, file.getName.length())));
+              try {
+                System.out.println("setImage:2:imageMessage:" + file.getName.substring(0, Math.min(40, file.getName.length())));
+              }
+              catch {
+                case e: Exception => {
+                  e.printStackTrace()
+                  System.out.println("setImage:2:imageMessage:" + file.getName)
                 }
-              catch
-                {
-                  case e: Exception => {
-                    e.printStackTrace()
-                    System.out.println("setImage:2:imageMessage:" + file.getName);
-                  }
-                }
+              }
               fileHolder.setImage(file, false)
             }
           }
@@ -178,29 +175,37 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     }
   }
 
+  def getHeaderString(position: Int): String = {
+    TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
+  }
+
+  def getBubbleText(position: Int): CharSequence = {
+    getHeaderString(position)
+  }
+
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {
     val inflater = LayoutInflater.from(viewGroup.getContext)
 
-    System.out.println("onCreateViewHolder:type=" + viewType);
+    System.out.println("onCreateViewHolder:type=" + viewType)
 
     viewType match {
       case TEXT =>
-        System.out.println("onCreateViewHolder:TEXT");
+        System.out.println("onCreateViewHolder:TEXT")
         val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
         new TextMessageHolder(v)
 
       case ACTION =>
-        System.out.println("onCreateViewHolder:ACTION");
+        System.out.println("onCreateViewHolder:ACTION")
         val v: View = inflater.inflate(R.layout.chat_message_row_action, viewGroup, false)
         new ActionMessageHolder(v)
 
       case FILE =>
-        System.out.println("onCreateViewHolder:FILE");
+        System.out.println("onCreateViewHolder:FILE")
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
         new FileMessageHolder(v)
 
       case CALL_INFO =>
-        System.out.println("onCreateViewHolder:CALL_INFO");
+        System.out.println("onCreateViewHolder:CALL_INFO")
         val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
         new CallEventMessageHolder(v)
     }

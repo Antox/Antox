@@ -125,11 +125,6 @@ dependencies {
 
     compile fileTree(dir: 'libs', include: '*.jar')
 
-    // can't use the original one, since it does not work properly!
-    compile (project(':recyclerviewfastscroller')){
-        exclude module: 'support-v4'
-        exclude module: 'recyclerview-v7'
-    }
     compile 'com.android.support:multidex:1.0.1' // ???
     compile 'org.scala-lang:scala-library:2.11.8' // 2.11.8 -> [2.12.0, 2.12.1] *dont upgrade*
     // 3.6.1-10 -> [4.0, 4.1, 4.2]

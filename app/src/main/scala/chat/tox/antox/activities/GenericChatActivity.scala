@@ -3,10 +3,10 @@ package chat.tox.antox.activities
 import java.util
 
 import android.content.{Context, Intent}
-import android.os.{Build, Bundle}
+import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView.{ItemAnimator, OnScrollListener}
+import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView, Toolbar}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
@@ -14,7 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.{KeyEvent, Menu, MenuItem, View}
 import android.widget.TextView.OnEditorActionListener
 import android.widget.{EditText, TextView}
-import chat.tox.antox.R
+import chat.tox.antox.{R, RecyclerViewFastScroller}
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
@@ -26,8 +26,6 @@ import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
-import xyz.danoz.recyclerviewfastscroller.AbsRecyclerViewFastScroller
-import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
@@ -57,16 +55,21 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   val defaultMessagePageSize = 50
   var numMessagesShown = defaultMessagePageSize
 
-  var fastScroller: VerticalRecyclerViewFastScroller = _
+  var fastScroller: RecyclerViewFastScroller = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
+
+    System.out.println("XYZ:000.1")
     setContentView(R.layout.activity_chat)
+    System.out.println("XYZ:000.2")
 
     val thisActivity = this
 
     toolbar = findViewById(R.id.chat_toolbar).asInstanceOf[Toolbar]
+    System.out.println("XYZ:000.3")
+
     toolbar.inflateMenu(R.menu.chat_menu)
     toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
     toolbar.setNavigationOnClickListener(new View.OnClickListener {
@@ -116,29 +119,19 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     // TODO -> upgrade
 
 
-    // --- fast scroll enable ---
-    fastScroller = this.findViewById(R.id.fastscroller2).asInstanceOf[VerticalRecyclerViewFastScroller]
+    // --- enable new fastScroller ---
+    // --- enable new fastScroller ---
+    // --- enable new fastScroller ---
+    System.out.println("XYZ:001")
+    fastScroller = this.findViewById(R.id.fast_conversation_scroller).asInstanceOf[RecyclerViewFastScroller]
+    System.out.println("XYZ:002")
+    fastScroller.setVisibility(View.VISIBLE)
+    System.out.println("XYZ:003")
+    chatListView.setVerticalScrollBarEnabled(false)
     fastScroller.setRecyclerView(chatListView)
-    fastScroller.setScrollerDirection(AbsRecyclerViewFastScroller.DIRECTION_NORMAL)
-    fastScroller.setScrollbarFadingEnabled(true)
-
-    if (Build.VERSION.SDK_INT >= 11) {
-      fastScroller.addOnLayoutChangeListener(new View.OnLayoutChangeListener{
-        override def onLayoutChange(v : View, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
-          if ( ((left-right)!= (oldLeft-oldRight)) || ((top-bottom)!= (oldTop-oldBottom)) )
-          {
-            // System.out.println("keyboard opened/closed? -> recalculate the scrollbar position");
-            fastScroller.onReLayout()
-          }
-        }
-      })
-    }
-
-    // -- custom --
-    chatListView.addOnScrollListener(fastScroller.getOnScrollListener())
-    // -- custom --
-    // --- fast scroll enable ---
-
+    // --- enable new fastScroller ---
+    // --- enable new fastScroller ---
+    // --- enable new fastScroller ---
 
     //    chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
@@ -169,7 +162,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     messageBox.setText(db.getContactUnsentMessage(activeKey))
     messageBox.setOnEditorActionListener(new OnEditorActionListener {
       override def onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean = {
-        if(actionId == EditorInfo.IME_ACTION_SEND){
+        if (actionId == EditorInfo.IME_ACTION_SEND) {
           onSendMessage()
           setTyping(typing = false)
           return true
@@ -309,8 +302,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   // zoff
   def getActiveMessageList(takeLast: Int): ArrayBuffer[Message] = {
     try {
-    val db = State.db
-    db.getMessageList(Some(activeKey), takeLast = takeLast)
+      val db = State.db
+      db.getMessageList(Some(activeKey), takeLast = takeLast)
     }
     catch {
       case e: Exception => e.printStackTrace()
