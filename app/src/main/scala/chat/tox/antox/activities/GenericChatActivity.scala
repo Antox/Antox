@@ -60,6 +60,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   var conversationDateHeader: ConversationDateHeader = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
+    System.out.println("MainApplication:GenericChatActivity:onCreate")
+
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
 

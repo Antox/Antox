@@ -1,7 +1,12 @@
 package chat.tox.antox;
 
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -19,6 +24,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+
+import chat.tox.antox.data.State;
 
 /**
  * Created by zoff99 on 05.01.2017.
@@ -31,20 +39,36 @@ public class MainApplication extends Application
     long last_crash_time = 0L;
     long prevlast_crash_time = 0L;
     int randnum = -1;
+    boolean dont_restart_me = false;
 
 
     @Override
     public void onCreate()
     {
         randnum = (int) (Math.random() * 1000d);
+
+        //        dont_restart_me = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false);
+        //        System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me=" + dont_restart_me);
+        //
+        //        if (dont_restart_me)
+        //        {
+        //            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", false).commit();
+        //            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", false).apply();
+        //            System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me[set.1]=" + PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false));
+        //
+        //            // android.os.Process.killProcess(android.os.Process.myPid());
+        //            System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).b");
+        //            System.exit(2);
+        //        }
+
         System.out.println("MainApplication:" + randnum + ":" + "onCreate");
         super.onCreate();
 
-        crashes = PreferenceManager.getDefaultSharedPreferences(this).getInt("crashes", 0);
+        crashes = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getInt("crashes", 0);
         System.out.println("MainApplication:" + randnum + ":" + "crashes[load]=" + crashes);
-        last_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("last_crash_time", 0);
+        last_crash_time = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getLong("last_crash_time", 0);
         System.out.println("MainApplication:" + randnum + ":" + "last_crash_time[load]=" + last_crash_time);
-        prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("prevlast_crash_time", 0);
+        prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getLong("prevlast_crash_time", 0);
         System.out.println("MainApplication:" + randnum + ":" + "prevlast_crash_time[load]=" + prevlast_crash_time);
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
@@ -213,7 +237,56 @@ public class MainApplication extends Application
             // mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent); // restart app after 2 second delay
         }
 
-        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2)");
+        // stop service or the app will autorestart (with strange state)! ---------
+        // State.shutdown(getBaseContext());
+
+        // stop service or the app will autorestart (with strange state)! ---------
+
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+        System.out.println("MainApplication:" + randnum + ":" + "componentInfo=" + componentInfo + " class=" + componentInfo.getClassName());
+
+        try
+        {
+            // State.MainToxService().serviceThread().interrupt();
+            // State.MainToxService().serviceThread().join();
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+
+        try
+        {
+            State.MainToxService().onDestroy();
+        }
+        catch (Exception e2)
+        {
+            e2.printStackTrace();
+        }
+
+        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", true).commit();
+        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", true).apply();
+        System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me[set.2]=" + PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false));
+
+        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).a");
+        // android.os.Process.killProcess(android.os.Process.myPid());
+        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).b");
+        // System.exit(2);
+        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).c");
+
+        Intent intent = new Intent(this, chat.tox.antox.CrashActivity.class);
+        System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(1)=" + intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(2)=" + intent);
+        startActivity(intent);
+        System.out.println("MainApplication:" + randnum + ":" + "xx2");
+        //for restarting the Activity
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.out.println("MainApplication:" + randnum + ":" + "xx3");
         System.exit(2);
+        System.out.println("MainApplication:" + randnum + ":" + "xx4");
+
     }
 }

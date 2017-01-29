@@ -8,10 +8,22 @@
     <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
 
     <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false"/>
+    <uses-feature
         android:name="android.hardware.location.network"
         android:required="false"/>
     <uses-feature
-        android:name="android.hardware.camera.autofocus"
+        android:name="android.hardware.location.gps"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.wifi"
         android:required="false"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -58,6 +70,7 @@
         <activity
             android:name="chat.tox.antox.activities.SplashActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
@@ -65,19 +78,52 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name="chat.tox.antox.ShareActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="text/plain"/>
+                <data android:mimeType="video/*"/>
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name="chat.tox.antox.activities.MainActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
             android:theme="@style/AntoxTheme.ActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity
             android:name="chat.tox.antox.activities.LoginActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
         </activity>
+
+        <activity
+            android:name=".CrashActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
+        </activity>
+
         <activity
             android:name=".activities.ChatActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
             android:theme="@style/AntoxTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
@@ -98,7 +144,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity"/>
-
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

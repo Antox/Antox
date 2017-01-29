@@ -43,6 +43,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
+    System.out.println("MainApplication:ChatActivity:onCreate")
+
     super.onCreate(savedInstanceState)
     val thisActivity = this
 

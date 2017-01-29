@@ -37,6 +37,8 @@ class ToxService extends Service {
 
     System.out.println("ToxService:" + "onCreate")
 
+    State.MainToxService = this
+
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
       AntoxLog.debug("Initting ToxSingleton")
@@ -112,13 +114,6 @@ class ToxService extends Service {
             try {
               if (State.getBatterySavingMode()) {
                 loops = loops + 1
-
-                // System.out.println("ToxService:" + "=========")
-                // System.out.println("ToxService:" + "State.transfers.isTransferring=" + State.transfers.isTransferring)
-                // System.out.println("ToxService:" + "State.lastFile()=" + State.lastFileTransferActionInTheLast(State.noBatterySavingWithActionWithinLastXSeconds))
-                // System.out.println("ToxService:" + "State.lastIn()=" + State.lastIncomingMessageActionInTheLast(State.noBatterySavingWithActionWithinLastXSeconds))
-                // System.out.println("ToxService:" + "=========")
-
                 if (loops > NORMAL_LOOPS) {
                   if (isConnectedNow) {
                     if (!State.transfers.isTransferring) {
@@ -189,6 +184,9 @@ class ToxService extends Service {
         // --------------- main tox loop ---------------
 
         connectionSubscription.unsubscribe()
+
+
+        System.out.println("ToxService:" + "serviceThread ended [run()]")
       }
     }
 
@@ -205,6 +203,9 @@ class ToxService extends Service {
   override def onStartCommand(intent: Intent, flags: Int, id: Int): Int = Service.START_STICKY
 
   override def onDestroy() {
+
+    State.MainToxService = null
+
     super.onDestroy()
 
     System.out.println("ToxService:" + "onDestroy(): enter")
