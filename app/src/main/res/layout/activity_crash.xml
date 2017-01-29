@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/orange"
+              android:background="#FF9900"
+              android:id="@+id/CrashView"
               android:orientation="vertical">
 
     <LinearLayout
@@ -11,11 +12,13 @@
         android:layout_weight="1"/>
 
     <ImageView
+        android:id="@+id/bugButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="1.2"
-        android:src="@drawable/bug2"/>
+        android:layout_weight="1.4"
+        android:src="@drawable/bug2"
+        android:paddingBottom="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingTop="10dp"
-        android:text="please restart Antox"
+        android:text="press to restart Antox"
         android:textColor="#ff101010"
         android:textSize="20sp"/>
 

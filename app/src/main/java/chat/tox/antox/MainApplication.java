@@ -39,27 +39,12 @@ public class MainApplication extends Application
     long last_crash_time = 0L;
     long prevlast_crash_time = 0L;
     int randnum = -1;
-    boolean dont_restart_me = false;
 
 
     @Override
     public void onCreate()
     {
         randnum = (int) (Math.random() * 1000d);
-
-        //        dont_restart_me = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false);
-        //        System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me=" + dont_restart_me);
-        //
-        //        if (dont_restart_me)
-        //        {
-        //            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", false).commit();
-        //            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", false).apply();
-        //            System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me[set.1]=" + PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false));
-        //
-        //            // android.os.Process.killProcess(android.os.Process.myPid());
-        //            System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).b");
-        //            System.exit(2);
-        //        }
 
         System.out.println("MainApplication:" + randnum + ":" + "onCreate");
         super.onCreate();
@@ -266,23 +251,12 @@ public class MainApplication extends Application
             e2.printStackTrace();
         }
 
-        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", true).commit();
-        PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putBoolean("dont_restart_me", true).apply();
-        System.out.println("MainApplication:" + randnum + ":" + "dont_restart_me[set.2]=" + PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("dont_restart_me", false));
-
-        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).a");
-        // android.os.Process.killProcess(android.os.Process.myPid());
-        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).b");
-        // System.exit(2);
-        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2).c");
-
         Intent intent = new Intent(this, chat.tox.antox.CrashActivity.class);
         System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(1)=" + intent);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(2)=" + intent);
         startActivity(intent);
         System.out.println("MainApplication:" + randnum + ":" + "xx2");
-        //for restarting the Activity
         android.os.Process.killProcess(android.os.Process.myPid());
         System.out.println("MainApplication:" + randnum + ":" + "xx3");
         System.exit(2);
