@@ -94,38 +94,48 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
         callEventHolder.setText(msg.message)
         callEventHolder.setPrefixedIcon(msg.callEventKind.imageRes)
 
+
       case FILE =>
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
 
         fileHolder.render()
 
+        System.out.println("CMA:" + "holder.getMessage.isMine=" + holder.getMessage.isMine + " msg.messageId=" + msg.messageId)
+        System.out.println("CMA:" + "msg.sent=" + msg.sent + " msg.isMine=" + msg.isMine + " msg.received=" + msg.received)
+
         if (holder.getMessage.isMine) {
           holder.ownMessage()
+          // show only filename of file (remove path)
           val split = msg.message.split("/")
           fileHolder.setFileText(split(split.length - 1))
         } else {
           holder.contactMessage()
+          // when receiving file there is only filename, no path
           fileHolder.setFileText(msg.message)
         }
 
         if (msg.sent) {
           if (msg.messageId != -1) {
+            System.out.println("CMA:" + "fileHolder.showProgressBar:1")
             fileHolder.showProgressBar()
           } else {
-            System.out.println("fileHolder.showProgressBar")
             //FIXME this should be "Failed" - fix the DB bug
             // TODO: zoff
+            System.out.println("CMA:" + "fileHolder.setProgressText:file_finished")
             fileHolder.setProgressText(R.string.file_finished)
             fileHolder.hideCancelButton()
           }
         } else {
           if (msg.messageId != -1) {
             if (msg.isMine) {
-              fileHolder.setProgressText(R.string.file_request_sent)
+              System.out.println("CMA:" + "fileHolder.setProgressText:file_request_sent")
+              // fileHolder.setProgressText(R.string.file_request_sent) // this removes the progress bar!!
             } else {
+              System.out.println("CMA:" + "fileHolder.showFileButtons")
               fileHolder.showFileButtons()
             }
           } else {
+            System.out.println("CMA:" + "fileHolder.setProgressText:file_rejected")
             fileHolder.setProgressText(R.string.file_rejected)
           }
         }
@@ -176,7 +186,15 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   }
 
   def getHeaderString(position: Int): String = {
-    TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
+    try {
+      return TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        return " "
+      }
+    }
   }
 
   def getBubbleText(position: Int): CharSequence = {
