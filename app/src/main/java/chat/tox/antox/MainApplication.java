@@ -213,19 +213,17 @@ public class MainApplication extends Application
         System.out.println("MainApplication:" + randnum + ":" + "?:" + (prevlast_crash_time + (60 * 1000)) + " < " + System.currentTimeMillis());
         System.out.println("MainApplication:" + randnum + ":" + "?:" + (System.currentTimeMillis() - (prevlast_crash_time + (60 * 1000))));
 
-        if ((prevlast_crash_time + (60 * 1000)) < System.currentTimeMillis())
+
+        // stop service or the app will restart with strange state! ---------
+        try
         {
-
-            // System.out.println("MainApplication:" + randnum + ":" + "restart app!");
-            // PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getApplicationContext(), chat.tox.antox.activities.LoginActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK);
-            // AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            // mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent); // restart app after 2 second delay
+            State.shutdown(getBaseContext());
         }
-
-        // stop service or the app will autorestart (with strange state)! ---------
-        // State.shutdown(getBaseContext());
-
-        // stop service or the app will autorestart (with strange state)! ---------
+        catch (Exception e2)
+        {
+            e2.printStackTrace();
+        }
+        // stop service or the app will restart with strange state! ---------
 
         ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
@@ -234,26 +232,16 @@ public class MainApplication extends Application
 
         try
         {
-            // State.MainToxService().serviceThread().interrupt();
-            // State.MainToxService().serviceThread().join();
-        }
-        catch (Exception e1)
-        {
-            e1.printStackTrace();
-        }
-
-        try
-        {
             State.MainToxService().onDestroy();
         }
-        catch (Exception e2)
+        catch (Exception e3)
         {
-            e2.printStackTrace();
+            e3.printStackTrace();
         }
 
         Intent intent = new Intent(this, chat.tox.antox.CrashActivity.class);
         System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(1)=" + intent);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(2)=" + intent);
         startActivity(intent);
         System.out.println("MainApplication:" + randnum + ":" + "xx2");
