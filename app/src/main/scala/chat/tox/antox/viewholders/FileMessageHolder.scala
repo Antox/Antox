@@ -274,6 +274,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         .subscribe(x => {
 
           updateProgressBar()
+          State.setLastFileTransferAction()
         })
     }
 

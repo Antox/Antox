@@ -112,6 +112,13 @@ class ToxService extends Service {
             try {
               if (State.getBatterySavingMode()) {
                 loops = loops + 1
+
+                // System.out.println("ToxService:" + "=========")
+                // System.out.println("ToxService:" + "State.transfers.isTransferring=" + State.transfers.isTransferring)
+                // System.out.println("ToxService:" + "State.lastFile()=" + State.lastFileTransferActionInTheLast(State.noBatterySavingWithActionWithinLastXSeconds))
+                // System.out.println("ToxService:" + "State.lastIn()=" + State.lastIncomingMessageActionInTheLast(State.noBatterySavingWithActionWithinLastXSeconds))
+                // System.out.println("ToxService:" + "=========")
+
                 if (loops > NORMAL_LOOPS) {
                   if (isConnectedNow) {
                     if (!State.transfers.isTransferring) {

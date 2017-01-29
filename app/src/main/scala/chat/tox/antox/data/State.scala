@@ -40,13 +40,13 @@ object State {
   val callManager = new CallManager()
 
   def setLastIncomingMessageAction(): Unit = {
-    System.out.println("ToxService:" + "setLastIncomingMessageAction")
+    // System.out.println("ToxService:" + "setLastIncomingMessageAction")
     lastIncomingMessageAction = System.currentTimeMillis()
   }
 
   def lastIncomingMessageActionInTheLast(seconds: Long): Boolean = {
-    System.out.println("ToxService:" + "lastIncomingMessageAction=" + lastIncomingMessageAction + " System.currentTimeMillis=" + System.currentTimeMillis())
-    ((lastIncomingMessageAction + seconds) > System.currentTimeMillis())
+    // System.out.println("ToxService:" + "lastIncomingMessageAction=" + lastIncomingMessageAction + " System.currentTimeMillis=" + System.currentTimeMillis())
+    ((lastIncomingMessageAction + (seconds * 1000)) > System.currentTimeMillis())
   }
 
   def setLastFileTransferAction(): Unit = {
@@ -54,7 +54,7 @@ object State {
   }
 
   def lastFileTransferActionInTheLast(seconds: Long): Boolean = {
-    ((lastFileTransferAction + seconds) > System.currentTimeMillis())
+    ((lastFileTransferAction + (seconds * 1000)) > System.currentTimeMillis())
   }
 
   def getAutoAcceptFt(): Boolean = {
