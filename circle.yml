@@ -26,8 +26,8 @@ machine:
     _JVMTOXCOREAPI_VERSION_ : "c6d05b3d200de9ea53b19e0101d08abd16a751cd" # 0.1.2 SNAPSHOT
     _JVMTOXCOREC_VERSION_ : "137be841050860b71d75c115aa0b046fec127ae5" # 0.1.2 SNAPSHOT
 
-    _JVMTOXCOREAPI_VERSION_SBT_: "0.1.2" # this is NOT USED !!
-    _LIBSODIUM_VERSION_SBT_: "1.0.7" # this is NOT USED !!
+    _JVMTOXCOREAPI_VERSION_SBT_: "0.1.2" # this is actually IGNORED !!
+    _LIBSODIUM_VERSION_SBT_: "1.0.7" # this is actually IGNORED !!
 
     _LIBSODIUM_VERSION_: "1.0.11" # can only specify branch here
     _CTOXCORE_VERSION_ : "v0.1.2" # can only specify branch here
@@ -149,18 +149,18 @@ dependencies:
     - find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
     - find ~/ -name 'libsodiumjni.so' -exec file {} \; ; exit 0
     # ---- copy libraries to Antox folder ----
-    - mkdir -p $CIRCLE_ARTIFACTS/armeabi/
-    - mkdir -p $CIRCLE_ARTIFACTS/armeabi-v7a/
-    - mkdir -p $CIRCLE_ARTIFACTS/x86/
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi/
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi-v7a/
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/x86/
 
     - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi/libsodiumjni.so
-    - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi/
+    - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi/
     
     - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi-v7a/libsodiumjni.so
-    - cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/armeabi-v7a/
+    - cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi-v7a/
     
     - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip libsodium-jni/libs/x86/libsodiumjni.so
-    - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/x86/
+    - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjnix86/
 
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
     - cp -v libsodium-jni/libs/x86/libsodiumjni.so app/src/main/jniLibs/x86/
@@ -262,10 +262,11 @@ dependencies:
     - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
 
 
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
     - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/arm-linux-androideabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
@@ -281,10 +282,10 @@ dependencies:
 # ---- x86 ----
 
 #   ---- copy to Antox dir --------------
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
+    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
     - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/i686-linux-android/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/x86/ ; exit 0
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
@@ -415,3 +416,12 @@ test:
 
     - import -window root $CIRCLE_ARTIFACTS/capture_app_running.png # get proof that the app is running
     - adb shell screencap -p | sed 's/\r$//' > $CIRCLE_ARTIFACTS/capture_app_running_2.png
+
+# ----- CI artifact cleanup -----
+    - mkdir -p $CIRCLE_ARTIFACTS/other/
+    - mv -v $CIRCLE_ARTIFACTS/adb_out.txt $CIRCLE_ARTIFACTS/other/
+    - mv -v $CIRCLE_ARTIFACTS/stderr*.txt $CIRCLE_ARTIFACTS/other/
+    - mv -v $CIRCLE_ARTIFACTS/stdout*.txt $CIRCLE_ARTIFACTS/other/
+# ----- CI artifact cleanup -----
+
+
