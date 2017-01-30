@@ -188,7 +188,8 @@ dependencies:
     - echo $(cat /tmp/jarfile1)
     - ls -al $(cat /tmp/jarfile1)
     - unzip -t $(cat /tmp/jarfile1) ; exit 0
-    - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/tox4j-api_2.11-0.1.1.jar ; exit 0
+    - mkdir -p $CIRCLE_ARTIFACTS/jars/
+    - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/jars/tox4j-api_2.11-0.1.1.jar
     - cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
     - echo "/home/ubuntu/tox4j-api_2.11-0.1.1.jar" > /tmp/jarfile2
     - cp -v $(cat /tmp/jarfile1) $(cat /tmp/jarfile2)
@@ -259,14 +260,15 @@ dependencies:
     - unzip -t /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar|sort|grep -v detected > /tmp/jar2.list ; exit 0
     - diff -u /tmp/jar1.list /tmp/jar2.list ; exit 0
     - cp -v $(cat /tmp/jarfile3) app/libs/tox4j-c_2.11.jar
-    - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/tox4j-c_2.11.jar ; exit 0
+    - mkdir -p $CIRCLE_ARTIFACTS/jars/
+    - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/jars/tox4j-c_2.11.jar
 
 
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
     - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
@@ -285,7 +287,7 @@ dependencies:
     - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
     - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/x86/ ; exit 0
+    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
@@ -360,7 +362,7 @@ dependencies:
       cp -av app-signed-aligned.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk || exit 1
 
 ##   also make apk files with different names for each build (for individual downloads)
-    - cp -av $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk ; exit 0
+    - cp -av $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}.apk $CIRCLE_ARTIFACTS/${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk
 ##   qr code to scan with your phone to directly download the apk file (for convenience)
     - qrencode -o $CIRCLE_ARTIFACTS/QR_apk.png 'https://circle-artifacts.com/gh/'${CIRCLE_PROJECT_USERNAME}'/'${CIRCLE_PROJECT_REPONAME}'/'${CIRCLE_BUILD_NUM}'/artifacts/'${CIRCLE_NODE_INDEX}'/tmp/'`basename $CIRCLE_ARTIFACTS`'/'"${CIRCLE_PROJECT_REPONAME}_circleci_$CIRCLE_SHA1.apk" ; exit 0
 ##   qr code to go directly to the aritfacts (to scan with phone)
