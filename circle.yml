@@ -160,7 +160,7 @@ dependencies:
     - cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi-v7a/
     
     - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip libsodium-jni/libs/x86/libsodiumjni.so
-    - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjnix86/
+    - cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/x86/
 
     - cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
     - cp -v libsodium-jni/libs/x86/libsodiumjni.so app/src/main/jniLibs/x86/
