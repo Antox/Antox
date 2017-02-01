@@ -50,6 +50,13 @@ public class MainApplication extends Application
         super.onCreate();
 
         crashes = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getInt("crashes", 0);
+
+        if (crashes > 10000)
+        {
+            crashes = 0;
+            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putInt("crashes", crashes).commit();
+        }
+
         System.out.println("MainApplication:" + randnum + ":" + "crashes[load]=" + crashes);
         last_crash_time = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getLong("last_crash_time", 0);
         System.out.println("MainApplication:" + randnum + ":" + "last_crash_time[load]=" + last_crash_time);
