@@ -199,6 +199,8 @@ dependencies {
     }
     // ---
 
+    compile 'pub.devrel:easypermissions:0.3.0'
+
     // androidTestCompile 'org.scala-lang:scala-library:2.11.8'
     // androidTestCompile 'com.android.support.test:runner:0.4'
     // androidTestCompile 'com.android.support.test:rules:0.4'

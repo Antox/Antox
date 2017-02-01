@@ -332,4 +332,6 @@
     <string name="profile_info_description">Get User Info</string>
     <string name="empty"> </string>
 
+    <string name="request_permissions_text">Grant Permissions</string>
+
 </resources>

@@ -5,7 +5,7 @@
           android:versionCode="25001"
           android:versionName="0.25.1">
 
-    <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
+    <uses-sdk tools:overrideLibrary="pub.devrel.easypermissions,com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -68,7 +68,7 @@
         </receiver>
 
         <activity
-            android:name="chat.tox.antox.activities.SplashActivity"
+            android:name="chat.tox.antox.SplashActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:launchMode="singleTask"
             android:theme="@style/SplashTheme"
