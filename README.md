@@ -67,8 +67,8 @@ cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
  + build.sbt
  ```
  "org.toktok" %% "tox4j-api" % "0.1.2",
- "toktok" % "libtoxav" % "0.1.0",
- "toktok" % "libtoxcore" % "0.1.0",
+ "toktok" % "libtoxav" % "0.1.0", # unused!!
+ "toktok" % "libtoxcore" % "0.1.0", # unused!!
  "jedisct1" % "libsodium" % "1.0.7",
  ```
  + buildscripts/dependencies.pl
