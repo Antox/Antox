@@ -24,7 +24,7 @@ machine:
 
     _LIBSODIUMJNI_VERSION_: "f21eb1c83da8be42efebda01b68474abef958285" # 1.0.3 (uses libsodium somewhere between 1.0.10 and 1.0.11 this seems bad!)
     _JVMTOXCOREAPI_VERSION_ : "c6d05b3d200de9ea53b19e0101d08abd16a751cd" # 0.1.2 SNAPSHOT
-    _JVMTOXCOREC_VERSION_ : "895de7ef26e7617769f2271345e414545c2581f8" # 0.1.6 SNAPSHOT
+    _JVMTOXCOREC_VERSION_ : "137be841050860b71d75c115aa0b046fec127ae5" # 0.1.2 SNAPSHOT
 
     _JVMTOXCOREAPI_VERSION_SBT_: "0.1.2" # this is actually IGNORED !!
     _LIBSODIUM_VERSION_SBT_: "1.0.7" # this is actually IGNORED !!
