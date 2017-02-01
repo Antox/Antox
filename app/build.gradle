@@ -130,7 +130,7 @@ dependencies {
     // 3.6.1-10 -> [4.0, 4.1, 4.2]
     compile 'org.scaloid:scaloid_2.11:4.2'
     compile 'com.typesafe.scala-logging:scala-logging_2.11:3.5.0' // 3.1.0 -> [3.5.0]
-    compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.46' // no newer version yet
+    compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.47'
     // 7.2.0-M1 -> [7.2.8, 7.3.0-M8] *dont upgrade*
     compile 'org.scalaz:scalaz-core_2.11:7.2.8'
     // 1.8.2 -> [1.8.3, 1.9.0, 1.10.3]
@@ -154,7 +154,7 @@ dependencies {
     //    exclude group: 'io.reactivex' }
     // 0.25.0 -> [0.25.1, 0.26.5] ***
     // io.reactivex:rxscala_2 -> io.reactivex:rxjava
-    compile ('io.reactivex:rxscala_2.11:0.25.0'){
+    compile ('io.reactivex:rxscala_2.11:0.25.1'){
         exclude group: 'io.reactivex' }
     // -- upgrade me !! --
     // -- upgrade me !! --
