@@ -137,12 +137,18 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
             // files is the array of the paths of files selected by the Application User.
             // since we only want single file selection, use the first entry
             if (files != null) {
-              if (files(0) != null) {
-                if (files(0).length > 0) {
-                  val directory: File = new File(files(0))
-                  onExportDataFileSelected(directory)
+              if (files.length > 0) {
+                if (files(0) != null) {
+                  if (files(0).length > 0) {
+                    val directory: File = new File(files(0))
+                    onExportDataFileSelected(directory)
+                  }
                 }
               }
+              else
+                {
+                  onExportDataFileSelected(path)
+                }
             }
           }
         })

@@ -88,10 +88,12 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
             // files is the array of the paths of files selected by the Application User.
             // since we only want single file selection, use the first entry
             if (files != null) {
-              if (files(0) != null) {
-                if (files(0).length > 0) {
-                  val filePath: String = new File(files(0)).getAbsolutePath()
-                  State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+              if (files.length > 0) {
+                if (files(0) != null) {
+                  if (files(0).length > 0) {
+                    val filePath: String = new File(files(0)).getAbsolutePath()
+                    State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+                  }
                 }
               }
             }

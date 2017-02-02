@@ -242,13 +242,39 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
         // files is the array of the paths of files selected by the Application User.
         // since we only want single file selection, use the first entry
         if (files != null) {
-          if (files(0) != null) {
-            if (files(0).length > 0) {
-              val directory: File = new File(files(0))
+          if (files.length > 0) {
+            if (files(0) != null) {
+              if (files(0).length > 0) {
+                val directory: File = new File(files(0))
+                try {
+                  val db = State.db
+                  val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
+                  val exportPath = directory.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
+                  val log = new PrintWriter(new FileOutputStream(exportPath, false))
+
+                  messageList.foreach(message => {
+                    val formattedMessage = message.logFormat()
+                    if (formattedMessage.isDefined) {
+                      log.print(formattedMessage.get + '\n')
+                    }
+                  })
+
+                  log.close()
+                  Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
+                } catch {
+                  case e: Exception =>
+                    Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
+                    e.printStackTrace()
+                }
+              }
+            }
+          }
+          else
+            {
               try {
                 val db = State.db
                 val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
-                val exportPath = directory.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
+                val exportPath = path.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
                 val log = new PrintWriter(new FileOutputStream(exportPath, false))
 
                 messageList.foreach(message => {
@@ -266,7 +292,6 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
                   e.printStackTrace()
               }
             }
-          }
         }
       }
     })
