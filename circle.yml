@@ -322,9 +322,9 @@ dependencies:
 
 # --- save lint output ---
     - find . -name '*lint-report*' -exec ls -al {} \; ; exit 0
-    - cp -av ./lint-report.html $CIRCLE_ARTIFACTS/ ; exit 0
-    - cp -av ./lint-report.xml $CIRCLE_ARTIFACTS/ ; exit 0
-    - cp -av ./lint-report.txt $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -av ./app/lint-report.html $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -av ./app/lint-report.xml $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -av ./app/lint-report.txt $CIRCLE_ARTIFACTS/ ; exit 0
 # --- save lint output ---
 
 # ----------- show generated apk file -----------
