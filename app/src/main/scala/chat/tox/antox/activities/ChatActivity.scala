@@ -73,21 +73,12 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
           return
         }
 
-        val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
-        //        val fileDialog = new FileDialog(thisActivity, path, false)
-        //        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-        //          def fileSelected(file: File) {
-        //            State.transfers.sendFileSendRequest(file.getAbsolutePath(), activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
-        //          }
-        //        })
-        //        fileDialog.showDialog()
-
-        var properties: DialogProperties = new DialogProperties()
+        val path = Environment.getExternalStorageDirectory
+        val properties: DialogProperties = new DialogProperties()
         properties.selection_mode = DialogConfigs.SINGLE_MODE
         properties.selection_type = DialogConfigs.FILE_SELECT
-        // properties.root = new File(DialogConfigs.DEFAULT_DIR)
         properties.root = path
-        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR)
+        properties.error_dir = path
         properties.extensions = null
         val dialog: FilePickerDialog = new FilePickerDialog(thisActivity, properties)
         dialog.setTitle(R.string.select_file)
@@ -99,7 +90,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
             if (files != null) {
               if (files(0) != null) {
                 if (files(0).length > 0) {
-                  val filePath: String = new File("" + files(0)).getAbsolutePath()
+                  val filePath: String = new File(files(0)).getAbsolutePath()
                   State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
                 }
               }

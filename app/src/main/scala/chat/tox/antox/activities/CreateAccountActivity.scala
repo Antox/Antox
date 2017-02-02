@@ -4,7 +4,7 @@ import java.io.File
 import java.util.regex.Pattern
 
 import android.animation.ValueAnimator.AnimatorUpdateListener
-import android.animation.{ObjectAnimator, ArgbEvaluator, ValueAnimator}
+import android.animation.{ArgbEvaluator, ObjectAnimator, ValueAnimator}
 import android.app.Activity
 import android.content.DialogInterface.OnClickListener
 import android.content.{Context, DialogInterface, Intent}
@@ -22,9 +22,12 @@ import chat.tox.antox.tox.{ToxDataFile, ToxService}
 import chat.tox.antox.toxme.ToxMe.PrivacyLevel
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.toxme.{ToxData, ToxMe, ToxMeError, ToxMeName}
-import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.ToxAddress
+import chat.tox.antox.wrapper.{FileKind, ToxAddress}
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
+import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions
@@ -319,16 +322,33 @@ class CreateAccountActivity extends AppCompatActivity {
   def onClickImportProfile(view: View): Unit = {
     val accountField = findViewById(R.id.create_account_name).asInstanceOf[EditText]
 
-    val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
+    val path = Environment.getExternalStorageDirectory
 
-    //prompt the user to select the profile to import
-    val fileDialog = new FileDialog(this, path, false)
-    fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-      def fileSelected(file: File) {
-        onImportFileSelected(Some(file), accountField.getText.toString)
+    val properties: DialogProperties = new DialogProperties()
+    properties.selection_mode = DialogConfigs.SINGLE_MODE
+    properties.selection_type = DialogConfigs.FILE_SELECT
+    properties.root = path
+    properties.error_dir = path
+    properties.extensions = null
+    val dialog: FilePickerDialog = new FilePickerDialog(this, properties)
+    dialog.setTitle(R.string.select_file)
+
+    dialog.setDialogSelectionListener(new DialogSelectionListener() {
+      override def onSelectedFilePaths(files: Array[String]) = {
+        // files is the array of the paths of files selected by the Application User.
+        // since we only want single file selection, use the first entry
+        if (files != null) {
+          if (files(0) != null) {
+            if (files(0).length > 0) {
+              val filePath: File = new File(files(0))
+              onImportFileSelected(Some(filePath), accountField.getText.toString)
+            }
+          }
+        }
       }
     })
-    fileDialog.showDialog()
+
+    dialog.show()
   }
 
   def onImportFileSelected(selectedFile: Option[File], accountFieldName: String): Unit = {
