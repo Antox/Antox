@@ -200,6 +200,7 @@ dependencies {
     // ---
 
     compile 'pub.devrel:easypermissions:0.3.0'
+    compile 'com.github.angads25:filepicker:1.0.6'
 
     // androidTestCompile 'org.scala-lang:scala-library:2.11.8'
     // androidTestCompile 'com.android.support.test:runner:0.4'

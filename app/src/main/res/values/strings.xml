@@ -333,5 +333,6 @@
     <string name="empty"> </string>
 
     <string name="request_permissions_text">Grant Permissions</string>
+    <string name="select_file">Select File</string>
 
 </resources>

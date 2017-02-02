@@ -18,11 +18,13 @@ import chat.tox.antox.av.{Call, CameraUtils}
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
-import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -72,14 +74,40 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
 
         val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
-        val fileDialog = new FileDialog(thisActivity, path, false)
-        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-          def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getAbsolutePath(), activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+        //        val fileDialog = new FileDialog(thisActivity, path, false)
+        //        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
+        //          def fileSelected(file: File) {
+        //            State.transfers.sendFileSendRequest(file.getAbsolutePath(), activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+        //          }
+        //        })
+        //        fileDialog.showDialog()
+
+        var properties: DialogProperties = new DialogProperties()
+        properties.selection_mode = DialogConfigs.SINGLE_MODE
+        properties.selection_type = DialogConfigs.FILE_SELECT
+        // properties.root = new File(DialogConfigs.DEFAULT_DIR)
+        properties.root = path
+        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR)
+        properties.extensions = null
+        val dialog: FilePickerDialog = new FilePickerDialog(thisActivity, properties)
+        dialog.setTitle(R.string.select_file)
+
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+          override def onSelectedFilePaths(files: Array[String]) = {
+            // files is the array of the paths of files selected by the Application User.
+            // since we only want single file selection, use the first entry
+            if (files != null) {
+              if (files(0) != null) {
+                if (files(0).length > 0) {
+                  val filePath: String = new File("" + files(0)).getAbsolutePath()
+                  State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+                }
+              }
+            }
           }
         })
-        fileDialog.showDialog()
 
+        dialog.show()
       }
     })
 
