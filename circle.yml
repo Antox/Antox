@@ -13,9 +13,9 @@ machine:
     ANDROID_HOME: /usr/local/android-sdk-linux
     ANDROID_SDK: /usr/local/android-sdk-linux/
     _SDK_: /usr/local/android-sdk-linux/
-    _JAVA_OPTIONS: "-Xms512m -Xmx2012m"
-    JAVA_OPTS: "-Xms512m -Xmx2012m"
-    GRADLE_OPTS: '-Xmx512m -Dorg.gradle.jvmargs="-Xmx2012m -XX:+HeapDumpOnOutOfMemoryError -XX:MaxPermSize=2012m"'
+    _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+    JAVA_OPTS: "-Xms512m -Xmx1024m"
+    GRADLE_OPTS: '-Xmx512m -Dorg.gradle.jvmargs="-Xmx1700m -XX:+HeapDumpOnOutOfMemoryError -XX:MaxPermSize=1700m"'
     SBT_OPTS: "-Xms512M -Xmx1700M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M"
     CLASS_P: chat.tox.antox
     START_INTENT_P: chat.tox.antox.activities.LoginActivity
@@ -318,13 +318,13 @@ dependencies:
     - sudo apt-get install libncurses5:i386
 # --------- install 32bit stuff for clang and 32bit android tools --------
 
-    - ./gradlew build --stacktrace --info --no-daemon || ./gradlew build --stacktrace --info --no-daemon # first build may FAIL
+    - ./gradlew build --max-workers=1 --stacktrace --debug --no-daemon || ./gradlew build --stacktrace --debug --no-daemon # first build may FAIL
 
 # --- save lint output ---
     - find . -name '*lint-report*' -exec ls -al {} \; ; exit 0
     - cp -av ./app/lint-report.html $CIRCLE_ARTIFACTS/ ; exit 0
     - cp -av ./app/lint-report.xml $CIRCLE_ARTIFACTS/ ; exit 0
-    - cp -av ./app/lint-report.txt $CIRCLE_ARTIFACTS/ ; exit 0
+    - cp -av ./lint-report.txt $CIRCLE_ARTIFACTS/ ; exit 0
 # --- save lint output ---
 
 # ----------- show generated apk file -----------
