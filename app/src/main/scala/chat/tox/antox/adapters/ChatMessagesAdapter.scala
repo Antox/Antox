@@ -186,15 +186,15 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   }
 
   def getHeaderString(position: Int): String = {
-    //try {
+    try {
       return TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
-    //}
-    //catch {
-    //  case e: Exception => {
-    //    e.printStackTrace()
-    //    return " "
-    //  }
-    //}
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        return " "
+      }
+    }
   }
 
   def getBubbleText(position: Int): CharSequence = {
