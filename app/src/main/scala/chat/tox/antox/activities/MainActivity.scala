@@ -24,6 +24,8 @@ class MainActivity extends AppCompatActivity {
   var preferences: SharedPreferences = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
+    System.out.println("MainApplication:MainActivity:onCreate")
+
     super.onCreate(savedInstanceState)
 
     preferences = PreferenceManager.getDefaultSharedPreferences(this)

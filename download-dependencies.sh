@@ -17,7 +17,7 @@ rm -f app/libs/tox4j*.jar
 
 REPOUSER="zoff99"
 REPO="Antox"
-BRANCH="z_new_source"
+BRANCH="zoff99%2FAntox_v0.25.1"
 
 wget 'https://circleci.com/api/v1/project/'"$REPOUSER"'/'"$REPO"'/latest/artifacts/0/$CIRCLE_ARTIFACTS/supplement.zip?filter=successful&branch='"$BRANCH" -O ./supplement.zip
 unzip -o ./supplement.zip

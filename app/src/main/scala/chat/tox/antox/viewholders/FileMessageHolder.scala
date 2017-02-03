@@ -108,12 +108,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     imageMessage.setOnClickListener(this)
     imageMessage.setOnLongClickListener(this)
     imageMessage.setVisibility(View.VISIBLE)
-
-    //TODO would be better to find a way where we didn't have to toggle all these
-    progressLayout.setVisibility(View.GONE)
-    fileButtons.setVisibility(View.GONE)
-    hideCancelButton()
-    messageTitle.setVisibility(View.GONE)
   }
 
   def showCancelButton(): Unit = {
@@ -258,6 +252,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     }
 
     progressLayout.setVisibility(View.GONE)
+    System.out.println("progressLayout:"+"gone2")
     imageMessage.setVisibility(View.GONE)
   }
 
@@ -267,6 +262,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
+    System.out.println("progressLayout:"+"VIS1")
     fileProgressText.setVisibility(View.VISIBLE)
 
     showCancelButton()
@@ -278,6 +274,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         .subscribe(x => {
 
           updateProgressBar()
+          State.setLastFileTransferAction()
         })
     }
 
@@ -288,6 +285,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   def updateProgressBar(): Unit = {
     val updateRate = 100
     val mProgress = State.transfers.getProgressSinceXAgo(msg.id, updateRate)
+    // System.out.println("State.transfers:" + "mProgress=" + mProgress)
     val bytesPerSecond = mProgress match {
       case Some(p) => ((p._1 * 1000) / p._2).toInt
       case None => 0
@@ -313,9 +311,19 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     bubble.setOnLongClickListener(this)
     progressLayout.setVisibility(View.VISIBLE)
+    System.out.println("progressLayout:"+"VIS2")
+
 
     fileProgressBar.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
+
+    try {
+      progressSub.unsubscribe()
+      AntoxLog.debug("observer unsubscribed", TAG)
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
 
     imageMessage.setVisibility(View.GONE)
   }

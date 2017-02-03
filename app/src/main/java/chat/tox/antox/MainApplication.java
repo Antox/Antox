@@ -1,7 +1,12 @@
 package chat.tox.antox;
 
+import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -19,6 +24,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
+
+import chat.tox.antox.data.State;
 
 /**
  * Created by zoff99 on 05.01.2017.
@@ -37,14 +45,22 @@ public class MainApplication extends Application
     public void onCreate()
     {
         randnum = (int) (Math.random() * 1000d);
+
         System.out.println("MainApplication:" + randnum + ":" + "onCreate");
         super.onCreate();
 
-        crashes = PreferenceManager.getDefaultSharedPreferences(this).getInt("crashes", 0);
+        crashes = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getInt("crashes", 0);
+
+        if (crashes > 10000)
+        {
+            crashes = 0;
+            PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).edit().putInt("crashes", crashes).commit();
+        }
+
         System.out.println("MainApplication:" + randnum + ":" + "crashes[load]=" + crashes);
-        last_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("last_crash_time", 0);
+        last_crash_time = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getLong("last_crash_time", 0);
         System.out.println("MainApplication:" + randnum + ":" + "last_crash_time[load]=" + last_crash_time);
-        prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(this).getLong("prevlast_crash_time", 0);
+        prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getLong("prevlast_crash_time", 0);
         System.out.println("MainApplication:" + randnum + ":" + "prevlast_crash_time[load]=" + prevlast_crash_time);
 
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler()
@@ -204,16 +220,42 @@ public class MainApplication extends Application
         System.out.println("MainApplication:" + randnum + ":" + "?:" + (prevlast_crash_time + (60 * 1000)) + " < " + System.currentTimeMillis());
         System.out.println("MainApplication:" + randnum + ":" + "?:" + (System.currentTimeMillis() - (prevlast_crash_time + (60 * 1000))));
 
-        if ((prevlast_crash_time + (60 * 1000)) < System.currentTimeMillis())
-        {
 
-            // System.out.println("MainApplication:" + randnum + ":" + "restart app!");
-            // PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getApplicationContext(), chat.tox.antox.activities.LoginActivity.class), Intent.FLAG_ACTIVITY_NEW_TASK);
-            // AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            // mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 2000, intent); // restart app after 2 second delay
+        // stop service or the app will restart with strange state! ---------
+        try
+        {
+            State.shutdown(getBaseContext());
+        }
+        catch (Exception e2)
+        {
+            e2.printStackTrace();
+        }
+        // stop service or the app will restart with strange state! ---------
+
+        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+        ComponentName componentInfo = taskInfo.get(0).topActivity;
+        System.out.println("MainApplication:" + randnum + ":" + "componentInfo=" + componentInfo + " class=" + componentInfo.getClassName());
+
+        try
+        {
+            State.MainToxService().onDestroy();
+        }
+        catch (Exception e3)
+        {
+            e3.printStackTrace();
         }
 
-        System.out.println("MainApplication:" + randnum + ":" + "System.exit(2)");
+        Intent intent = new Intent(this, chat.tox.antox.CrashActivity.class);
+        System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(1)=" + intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(2)=" + intent);
+        startActivity(intent);
+        System.out.println("MainApplication:" + randnum + ":" + "xx2");
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.out.println("MainApplication:" + randnum + ":" + "xx3");
         System.exit(2);
+        System.out.println("MainApplication:" + randnum + ":" + "xx4");
+
     }
 }

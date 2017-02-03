@@ -65,6 +65,37 @@ object TimestampUtils {
     }
   }
 
+
+  def prettyTimestampLong(t: Timestamp): String = {
+    val cal = Calendar.getInstance
+    cal.setTime(t)
+
+    val time = new Time("UTC")
+    time.set(cal.get(Calendar.SECOND), cal.get(Calendar.MINUTE), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.DAY_OF_MONTH),
+      cal.get(Calendar.MONTH), cal.get(Calendar.YEAR))
+    time.switchTimezone(Time.getCurrentTimezone)
+
+    startOfDay.setToNow()
+    startOfDay.switchTimezone(Time.getCurrentTimezone)
+    startOfDay.hour = 0
+    startOfDay.minute = 0
+    startOfDay.second = 0
+
+    startOfYear.setToNow()
+    startOfYear.switchTimezone(Time.getCurrentTimezone)
+    startOfYear.hour = 0
+    startOfYear.minute = 0
+    startOfYear.second = 0
+    startOfYear.monthDay = 0
+    startOfYear.month = 0
+
+    if (t == emptyTimestamp()) {
+      ""
+    } else {
+      time.format("%b %d %Y, %k:%M")
+    }
+  }
+
   def formatDuration(durationInSeconds: Long): String = {
     if (durationInSeconds >= 3600) {
       "%d:%02d:%02d".format(durationInSeconds / 3600, (durationInSeconds % 3600) / 60, durationInSeconds % 60)

@@ -37,6 +37,8 @@ class ToxService extends Service {
 
     System.out.println("ToxService:" + "onCreate")
 
+    State.MainToxService = this
+
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
       AntoxLog.debug("Initting ToxSingleton")
@@ -182,6 +184,9 @@ class ToxService extends Service {
         // --------------- main tox loop ---------------
 
         connectionSubscription.unsubscribe()
+
+
+        System.out.println("ToxService:" + "serviceThread ended [run()]")
       }
     }
 
@@ -198,6 +203,9 @@ class ToxService extends Service {
   override def onStartCommand(intent: Intent, flags: Int, id: Int): Int = Service.START_STICKY
 
   override def onDestroy() {
+
+    State.MainToxService = null
+
     super.onDestroy()
 
     System.out.println("ToxService:" + "onDestroy(): enter")

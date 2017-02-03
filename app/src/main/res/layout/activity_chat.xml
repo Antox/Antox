@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:theme="@style/AntoxTheme.NoActionBar">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:theme="@style/AntoxTheme.NoActionBar">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/chat_toolbar"
@@ -26,11 +27,11 @@
                 android:layout_marginRight="@dimen/margin_small">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/chat_avatar"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/default_avatar" />
+                    android:src="@drawable/default_avatar"/>
 
                 <TextView
                     android:id="@+id/icon"
@@ -38,7 +39,7 @@
                     android:layout_height="12dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/circle_online" />
+                    android:background="@drawable/circle_online"/>
             </RelativeLayout>
 
             <TextView
@@ -50,36 +51,27 @@
                 android:paddingLeft="@dimen/padding_small"
                 android:text="Display name"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <include layout="@layout/active_call_bar" />
-
-    <!-- Chat Messages go here -->
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/chat_messages"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="@color/white_absolute"-->
-        <!--android:clipToPadding="false"-->
-        <!--android:divider="@null"-->
-        <!--android:dividerHeight="0dp"-->
-        <!--android:scrollbars="vertical" />-->
-    <!-- Chat Messages go here -->
+    <include layout="@layout/active_call_bar"/>
 
 
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                  android:layout_width="fill_parent"
                  android:layout_height="0dp"
-                 android:orientation="horizontal"
+                 android:layout_weight="1"
                  android:background="@color/transparent"
                  android:divider="@null"
                  android:dividerHeight="0dp"
-                 android:layout_weight="1"
+                 android:orientation="horizontal"
                  android:shrinkColumns="0"
                  android:stretchColumns="0">
 
@@ -88,46 +80,68 @@
             android:layout_height="fill_parent"
             >
 
-            <FrameLayout
-                android:id="@+id/conv_frame_1"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent">
+            <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+                         android:layout_width="fill_parent"
+                         android:layout_height="match_parent">
 
-                <!--suppress AndroidLintUnusedAttribute-->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/chat_messages"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical"/>
+
+                <TextView
+                    android:id="@+id/scroll_date_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginTop="3dp"
+                    android:background="#FF0288D1"
+                    android:gravity="center"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="3dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:visibility="invisible"
+                    tools:text="March 1, 2015"/>
+
                 <View
                     android:id="@+id/compose_divider"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_gravity="bottom"
-                    android:alpha="0"
-                    android:background="@color/transparent"
+                    android:alpha="1"
                     android:visibility="invisible"/>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/chat_messages"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1.0"
-                    android:scrollbarSize="1px"
-                    android:scrollbarStyle="insideOverlay"
-                    android:scrollbarThumbVertical="@drawable/transparent_scrollbar"
-                    android:scrollbarTrackVertical="@drawable/transparent_scrollbar"
-                    android:scrollbars="vertical"/>
+                <!--<ImageButton-->
+                <!--android:id="@+id/scroll_to_bottom_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|center_horizontal"-->
+                <!--android:layout_marginBottom="20dp"-->
+                <!--android:alpha="0.9"-->
+                <!--android:background="@color/green_light"-->
+                <!--android:elevation="1dp"-->
+                <!--android:padding="5dp"-->
+                <!--android:visibility="gone"/>-->
 
+                <chat.tox.antox.RecyclerViewFastScroller
+                    android:id="@+id/fast_conversation_scroller"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:visibility="gone"
+                    app:textSize="25sp"/>
             </FrameLayout>
 
-            <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
-                android:id="@+id/fastscroller2"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_weight="1.0"
-                android:background="@color/white_absolute"
-                android:visibility="visible"
-                />
         </TableRow>
     </TableLayout>
 
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
 
 
     <RelativeLayout
@@ -139,7 +153,7 @@
             android:id="@+id/divider_comment"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/grey_dark" />
+            android:background="@color/grey_dark"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,7 +176,7 @@
                 android:paddingLeft="20dp"
                 android:paddingTop="@dimen/margin_small"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_medium" />
+                android:textSize="@dimen/text_medium"/>
 
             <ImageView
                 android:id="@+id/send_message_button"
@@ -171,7 +185,7 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="Send Button"
                 android:paddingRight="15dp"
-                android:src="@drawable/ic_send" />
+                android:src="@drawable/ic_send"/>
         </LinearLayout>
     </RelativeLayout>
 
@@ -192,7 +206,7 @@
             android:layout_weight="0.33"
             android:contentDescription="@string/attachment_file"
             android:paddingRight="0dp"
-            android:src="@drawable/ic_attach_file_black_24dp" />
+            android:src="@drawable/ic_attach_file_black_24dp"/>
 
         <ImageView
             android:id="@+id/camera_button"
@@ -201,7 +215,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.33"
             android:contentDescription="@string/attachment_takephoto"
-            android:src="@drawable/ic_photo_camera_black_24dp" />
+            android:src="@drawable/ic_photo_camera_black_24dp"/>
 
         <ImageView
             android:id="@+id/image_button"
@@ -210,7 +224,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="0.33"
             android:contentDescription="@string/attachment_photo"
-            android:src="@drawable/ic_image_black_24dp" />
+            android:src="@drawable/ic_image_black_24dp"/>
 
     </LinearLayout>
 </LinearLayout>

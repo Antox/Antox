@@ -1,2 +1,2 @@
-include ':app', ':PagerSlidingTabStrip', ':recyclerviewfastscroller'
+include ':app', ':PagerSlidingTabStrip'
 project(':PagerSlidingTabStrip').projectDir = new File('app/libs/PagerSlidingTabStrip')

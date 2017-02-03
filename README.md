@@ -1,7 +1,7 @@
 <img src="http://i.imgur.com/fFhygVw.png" width="400" height="185" />
 
-**Travis:** [![Build Status](https://travis-ci.org/zoff99/Antox.png?branch=zoff99%2FAntox_v0.25)](https://travis-ci.org/zoff99/Antox)
-**CircleCI:** [![CircleCI](https://circleci.com/gh/zoff99/Antox/tree/zoff99%2FAntox_v0.25.png?style=badge)](https://circleci.com/gh/zoff99/Antox)
+**Travis:** [![Build Status](https://travis-ci.org/zoff99/Antox.png?branch=zoff99%2FAntox_v0.25.1)](https://travis-ci.org/zoff99/Antox)
+**CircleCI:** [![CircleCI](https://circleci.com/gh/zoff99/Antox/tree/zoff99%2FAntox_v0.25.1.png?style=badge)](https://circleci.com/gh/zoff99/Antox)
 
 =====
 
@@ -22,8 +22,12 @@ Antox can be downloaded from [Google Play](https://play.google.com/store/apps/de
 
 To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "Antox".
 
+<<<<<<< HEAD
 The APK can be downloaded [here](https://pkg.tox.chat/fdroid/repo/antox.apk)
 
+=======
+The APK can be downloaded from CircleCI, [here](https://circleci.com/api/v1/project/zoff99/Antox/latest/artifacts/0/$CIRCLE_ARTIFACTS/Antox.apk?filter=successful&branch=zoff99%2FAntox_v0.25.1)
+>>>>>>> zoff99/Antox_v0.25.1
 
 ###What Is Currently Working
 - One to one messaging
@@ -68,8 +72,8 @@ cd jvm-toxcore-c/ ; git checkout 137be841050860b71d75c115aa0b046fec127ae5
  + build.sbt
  ```
  "org.toktok" %% "tox4j-api" % "0.1.2",
- "toktok" % "libtoxav" % "0.1.0",
- "toktok" % "libtoxcore" % "0.1.0",
+ "toktok" % "libtoxav" % "0.1.0", # unused!!
+ "toktok" % "libtoxcore" % "0.1.0", # unused!!
  "jedisct1" % "libsodium" % "1.0.7",
  ```
  + buildscripts/dependencies.pl
