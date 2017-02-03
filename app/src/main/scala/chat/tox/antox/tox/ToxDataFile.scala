@@ -70,7 +70,9 @@ class ToxDataFile(ctx: Context, fileName: String) {
       throw new IllegalArgumentException("dest must exist")
     }
 
-    FileUtils.copy(ctx.getFileStreamPath(fileName), new File(dest + "/" + fileName + ".tox"))
+    val profilFile = new File(dest + "/" + fileName + ".tox")
+    profilFile.createNewFile()
+    FileUtils.copy(ctx.getFileStreamPath(fileName), profilFile)
   }
 
   def deleteFile() {
