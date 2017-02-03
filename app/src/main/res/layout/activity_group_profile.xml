@@ -19,12 +19,14 @@
             android:background="@color/white_absolute">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/group_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/material_blue_grey_800"
                 android:src="@drawable/ic_action_add_group"
-                app:border_width="2dp"
-                app:border_color="@color/material_blue_grey_800" />
+            />
 
             <LinearLayout
                 android:duplicateParentState="true"

@@ -1,6 +1,7 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.data.State
 import chat.tox.antox.tox.MessageHelper
 import chat.tox.antox.utils.AntoxLog
 import chat.tox.antox.wrapper.{GroupInfo, GroupPeer}
@@ -11,6 +12,7 @@ class AntoxOnGroupMessageCallback(private var ctx: Context) /* extends GroupMess
   //override
   def groupMessage(groupInfo: GroupInfo, peerInfo: GroupPeer, timeDelta: Int, message: Array[Byte]): Unit = {
     AntoxLog.debug("new group message callback for id " + groupInfo.key)
+    State.setLastIncomingMessageAction()
     MessageHelper.handleGroupMessage(ctx, groupInfo, peerInfo, new String(message, "UTF-8"), ToxMessageType.NORMAL)
   }
 }

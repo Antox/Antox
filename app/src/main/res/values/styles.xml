@@ -1,4 +1,5 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/black</item>
@@ -7,16 +8,18 @@
 
     <!-- the theme applied to the application or activity -->
     <style name="AntoxTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
-
         <item name="actionBarStyle">@style/ActionBar</item>
         <item name="actionBarTabStyle">@style/ActionBarTabs</item>
+
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+        <item name="colorAccent">@color/brand_secondary</item>
     </style>
 
     <style name="AntoxTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar"></style>
 
     <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -24,6 +27,7 @@
 
     <!-- ActionBar styles -->
     <style name="AntoxTheme.ActionBar" parent="@style/Theme.AppCompat.NoActionBar">
+
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
 
@@ -66,6 +70,7 @@
 
     <style name="Theme.AppCompat.Translucent">
         <item name="android:windowBackground">@android:color/transparent</item>
+
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
@@ -73,5 +78,25 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AntoxTheme"></style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <item name="LoginButtonColor" type="color">@color/brand_secondary</item>
+    <item name="LoginButtonTextColor" type="color">@color/white</item>
+
+    <style name="LoginButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/LoginButtonColor</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <item name="CreateAccountButtonColor" type="color">#414141</item>
+    <item name="CreateAccountButtonTextColor" type="color">@color/white</item>
+
+    <style name="CreateAccountButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/CreateAccountButtonColor</item>
+        <item name="android:textColor">@color/CreateAccountButtonTextColor</item>
+    </style>
 
 </resources>

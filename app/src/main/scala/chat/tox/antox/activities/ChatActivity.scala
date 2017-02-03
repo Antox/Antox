@@ -73,7 +73,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val fileDialog = new FileDialog(thisActivity, path, false)
         fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
           def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+            State.transfers.sendFileSendRequest(file.getAbsolutePath(), activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
           }
         })
         fileDialog.showDialog()
@@ -184,8 +184,12 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
+          System.out.println("BitmapManager:avatar:001")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+          System.out.println("BitmapManager:avatar:002")
         })
+
+        System.out.println("BitmapManager:avatar:003")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources

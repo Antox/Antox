@@ -22,6 +22,9 @@ class ToxCallbackListener(ctx: Context) extends ToxCoreEventListener[Unit] {
   val fileChunkRequestCallback = new AntoxOnFileChunkRequestCallback(ctx)
   val fileRecvControlCallback = new AntoxOnFileRecvControlCallback(ctx)
   val friendLosslessPacketCallback = new AntoxOnFriendLosslessPacketCallback(ctx)
+  // --------- tox_file_seek callback is missing here !! ----------
+  // tox_file_seek(Tox *tox, uint32_t friend_number, uint32_t file_number, uint64_t position, TOX_ERR_FILE_SEEK *error)
+  // --------- tox_file_seek callback is missing here !! ----------
 
   override def friendTyping(friendNumber: ToxFriendNumber, isTyping: Boolean)(state: Unit): Unit = {
     val friendInfo = State.db.getFriendInfo(ToxSingleton.tox.getFriendKey(friendNumber))

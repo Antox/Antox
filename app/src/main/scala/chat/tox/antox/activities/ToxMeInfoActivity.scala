@@ -2,6 +2,8 @@ package chat.tox.antox.activities
 
 import java.util.regex.Pattern
 
+import android.app.ActivityManager
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.{Build, Bundle}
 import android.support.v7.app.AppCompatActivity
@@ -12,8 +14,7 @@ import android.view.{MenuItem, WindowManager}
 import android.widget.TextView
 import chat.tox.antox.R
 
-
-class ToxMeInfoActivity extends AppCompatActivity{
+class ToxMeInfoActivity extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -23,9 +24,13 @@ class ToxMeInfoActivity extends AppCompatActivity{
     getWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow.setStatusBarColor(getResources.getColor(R.color.material_blue_grey_950))
+      getWindow.setStatusBarColor(Color.parseColor("#202020"))
     }
-    getSupportActionBar.setBackgroundDrawable(new ColorDrawable(getResources.getColor(R.color.black)))
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && getSupportActionBar != null) {
+      val info = new ActivityManager.RunningTaskInfo()
+      getSupportActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#24221f")))
+    }
 
     val toxMeWebsite = findViewById(R.id.toxme_info_website).asInstanceOf[TextView]
 
@@ -37,8 +42,8 @@ class ToxMeInfoActivity extends AppCompatActivity{
     Linkify.addLinks(sourceURLTextView, pattern, "")
   }
 
-  override def onOptionsItemSelected(item: MenuItem): Boolean ={
-    item.getItemId match{
+  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    item.getItemId match {
       case android.R.id.home =>
         finish()
         true
