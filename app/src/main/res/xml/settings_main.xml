@@ -53,22 +53,6 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_filetransfers">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="autoacceptft"
-            android:title="@string/pref_enable_autoaccept"/>
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/pref_header_experimental">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="batterysavingmode"
-            android:title="@string/pref_enable_batterysavingmode"/>
-
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/pref_header_input">
 
         <CheckBoxPreference
@@ -193,6 +177,16 @@
             android:defaultValue="true"
             android:key="strip_exif"
             android:title="@string/pref_strip_exif" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="autoacceptft"
+            android:title="@string/pref_enable_autoaccept"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="batterysavingmode"
+            android:title="@string/pref_enable_batterysavingmode"/>
 
         <CheckBoxPreference
             android:defaultValue="true"

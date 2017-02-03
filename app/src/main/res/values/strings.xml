@@ -208,9 +208,9 @@
     <string name="titles_settings">Settings</string>
 
     <!-- Edit Call Replies -->
-    <string name="title_activity_edit_call_replies">Edit quick call replies</string>
-    <string name="title_pref_edit_call_replies">Quick call replies</string>
-    <string name="edit_call_reply_title">Edit quick reply</string>
+    <string name="title_activity_edit_call_replies">Edit Quick Call Replies</string>
+    <string name="title_pref_edit_call_replies">Quick Call Replies</string>
+    <string name="edit_call_reply_title">Edit Quick Reply</string>
 
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
