@@ -29,12 +29,25 @@ dependencies:
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
     - sudo apt-get install qrencode > /dev/null 2> /dev/null
 
+#  -----------------------------------------------------------------------------------------
+#  ------- /usr/local/android-sdk-linux/build-tools/23.0.3/llvm-rs-cc needs 32bit ncurses
+#  ------- and 32bit libncurses and all sorts of 32bit stuff
+    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 749D6EEC0353B12C
+    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
+    - sudo apt-get update
+    - sudo bash -c 'cd /etc/apt/sources.list.d; echo "deb http://old-releases.ubuntu.com/ubuntu/ raring main restricted universe multiverse" >ia32-libs-raring.list'
+    - sudo apt-get update
+    - sudo apt-get install libncurses-dev
+    - sudo apt-get install lib32ncurses5-dev
+#  -----------------------------------------------------------------------------------------
+
     - gradle -v # display gradle version
     - echo y | android update sdk --no-ui --all --filter "tools"
     - android list sdk --all | grep -i tools
     - android list sdk --all --extended
 
     - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3 > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter android-21
     - echo y | android update sdk --no-ui --all --filter android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter platform-tools > /dev/null 2> /dev/null
 
@@ -43,6 +56,7 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter extra-android-support > /dev/null 2> /dev/null
 
     - echo y | android update sdk --no-ui --all --filter platform-tools-preview > /dev/null 2> /dev/null
+    - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-21
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-addon-google_apis-google-23 > /dev/null 2> /dev/null
     - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23 > /dev/null 2> /dev/null
@@ -126,7 +140,7 @@ test:
         background: true
     - sleep 60 # let the emulator settle down first
 
-    - fb-adb shell am start -n $CLASS_P/$START_INTENT_P
+    - adb shell am start -n $CLASS_P/$START_INTENT_P
     - sleep 60
     - sleep 120 # wait to be sure the app has started fully
 
