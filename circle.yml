@@ -47,6 +47,7 @@ dependencies:
     - git submodule sync
     - git submodule update
 
+    - sudo add-apt-repository ppa:avsm/ppa -y
     - sudo apt-get update > /dev/null 2> /dev/null
     - sudo apt-get install xvfb > /dev/null 2> /dev/null
     - sudo apt-get install xdotool > /dev/null 2> /dev/null
