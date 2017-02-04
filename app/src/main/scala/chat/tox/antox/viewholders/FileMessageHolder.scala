@@ -322,7 +322,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       AntoxLog.debug("observer unsubscribed", TAG)
     }
     catch {
-      case e: Exception => e.printStackTrace()
+      case e: Exception => // e.printStackTrace()
     }
 
     imageMessage.setVisibility(View.GONE)
