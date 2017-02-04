@@ -61,7 +61,7 @@ class MainDrawerFragment extends Fragment {
     })
 
     System.out.println("LLLL:008")
-    val drawerHeader = rootView.findViewById(R.id.drawer_header_fixme)
+    val drawerHeader = rootView.findViewById(R.id.drawer_header)
     System.out.println("LLLL:009 drawerHeader="+drawerHeader)
 
     // zoff //

@@ -72,6 +72,10 @@
     <string name="video_call_friend">Video Call</string>
     <string name="info">Info</string>
 
+    <!-- Crash Activity -->
+    <string name="crash_title">Antox Crashed</string>
+    <string name="crash_restart">Tap to restart</string>
+
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
@@ -237,7 +241,7 @@
 
     <!-- File transfer -->
     <string name="file_finished">Finished</string>
-    <string name="file_finished_with_errors">Finished with Errors</string>
+    <string name="file_finished_with_errors">Finished With Errors</string>
     <string name="file_failed">Failed</string>
     <string name="file_in_progress">In Progress</string>
     <string name="file_request_sent">Sent Request</string>
