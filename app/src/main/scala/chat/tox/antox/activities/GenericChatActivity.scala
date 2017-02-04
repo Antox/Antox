@@ -274,8 +274,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     messagesSubThread = new Thread {
       override def run {
         System.out.println("GenericChatActivity:" + "messagesSub init(1) ...")
-        //        Thread.sleep(2000)
-        //        System.out.println("GenericChatActivity:" + "messagesSub init(2) ...")
+        Thread.sleep(90) // to let the activity open and show first!!
+        System.out.println("GenericChatActivity:" + "messagesSub init(2) ...")
         messagesSub =
           getActiveMessagesUpdatedObservable
             .observeOn(AndroidMainThreadScheduler())
@@ -287,7 +287,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
               System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + adapter.getItemCount)
               System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + chatListView.getBottom)
               if (firstScroll) {
-                // chatListView.smoothScrollToPosition(adapter.getItemCount)
                 firstScroll = false
                 if (adapter.getItemCount > 0) {
                   chatListView.scrollToPosition(adapter.getItemCount - 1)
@@ -335,7 +334,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   private def onScrolledToTop(): Unit = {
 
     // TODO: disable for now ----- DEBUG !!!!!!!
-
+    // TODO: add a special message later, to ask user "load all messages?"
+    //
     //    numMessagesShown += defaultMessagePageSize
     //    Observable[Seq[Message]](subscriber => {
     //      subscriber.onNext(getActiveMessageList(numMessagesShown))

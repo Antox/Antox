@@ -24,51 +24,53 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   private var scrolling: Boolean = false
 
   def add(msg: Message) {
-    System.out.println("ChatMessagesAdapter:add")
+    // System.out.println("ChatMessagesAdapter:add")
     data.add(msg)
     notifyDataSetChanged()
   }
 
   def addAll(list: Seq[Message]) {
-    System.out.println("ChatMessagesAdapter:addAll")
+    // System.out.println("ChatMessagesAdapter:addAll")
     data.addAll(list)
     notifyDataSetChanged()
   }
 
   def remove(msg: Message) {
-    System.out.println("ChatMessagesAdapter:remove")
+    // System.out.println("ChatMessagesAdapter:remove")
     data.remove(msg)
     notifyDataSetChanged()
   }
 
   def removeAll() {
-    System.out.println("ChatMessagesAdapter:removeAll")
+    // System.out.println("ChatMessagesAdapter:removeAll")
     data.clear()
     notifyDataSetChanged()
   }
 
   def setScrolling(scrolling: Boolean) {
-    System.out.println("ChatMessagesAdapter:setScrolling")
+    // System.out.println("ChatMessagesAdapter:setScrolling")
     this.scrolling = scrolling
   }
 
   override def getItemCount: Int = if (data == null) 0 else data.size
 
   override def onBindViewHolder(holder: GenericMessageHolder, pos: Int): Unit = {
+
+    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "pos=" + pos)
+
     val msg = data.get(pos)
     val lastMsg: Option[Message] = data.lift(pos - 1)
     val nextMsg: Option[Message] = data.lift(pos + 1)
 
-    try {
-      System.out.println("onBindViewHolder:1:pos=" + pos + " msg=" + msg.message.substring(0, Math.min(8, msg.message.length())) + " view=" + holder)
-    }
-    catch {
-      case e: Exception => {
-        e.printStackTrace()
-        System.out.println("onBindViewHolder:1:pos=" + pos + " msg=NULL view=" + holder)
-      }
-    }
-
+    //    try {
+    //      System.out.println("onBindViewHolder:1:pos=" + pos + " msg=" + msg.message.substring(0, Math.min(8, msg.message.length())) + " view=" + holder)
+    //    }
+    //    catch {
+    //      case e: Exception => {
+    //        e.printStackTrace()
+    //        System.out.println("onBindViewHolder:1:pos=" + pos + " msg=NULL view=" + holder)
+    //      }
+    //    }
 
 
     holder.setMessage(msg, lastMsg, nextMsg)
@@ -183,6 +185,8 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
           }
         }
     }
+
+    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "pos=" + pos + " ready")
   }
 
   def getHeaderString(position: Int): String = {
@@ -202,31 +206,37 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   }
 
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {
+    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "onCreateViewHolder:type=" + viewType)
+
     val inflater = LayoutInflater.from(viewGroup.getContext)
 
-    System.out.println("onCreateViewHolder:type=" + viewType)
+    var ret: GenericMessageHolder = null
 
     viewType match {
       case TEXT =>
         System.out.println("onCreateViewHolder:TEXT")
         val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
-        new TextMessageHolder(v)
+        ret = new TextMessageHolder(v)
 
       case ACTION =>
         System.out.println("onCreateViewHolder:ACTION")
         val v: View = inflater.inflate(R.layout.chat_message_row_action, viewGroup, false)
-        new ActionMessageHolder(v)
+        ret = new ActionMessageHolder(v)
 
       case FILE =>
         System.out.println("onCreateViewHolder:FILE")
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
-        new FileMessageHolder(v)
+        ret = new FileMessageHolder(v)
 
       case CALL_INFO =>
         System.out.println("onCreateViewHolder:CALL_INFO")
         val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
-        new CallEventMessageHolder(v)
+        ret = new CallEventMessageHolder(v)
     }
+
+    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "onCreateViewHolder:type=" + viewType + " ready")
+
+    return ret
   }
 
   //TODO It would be better to use Ints instead of Enums for MessageType
