@@ -2,25 +2,28 @@
 mkdir -p app/src/main/jniLibs/armeabi
 mkdir -p app/src/main/jniLibs/x86
 mkdir -p app/src/main/jniLibs/arm64-v8a
+mkdir -p app/src/main/jniLibs/x86_64
 
-rm -f app/src/main/jniLibs/armeabi/libtox4j.so
-rm -f app/src/main/jniLibs/x86/libtox4j.so
-rm -f app/src/main/jniLibs/arm64-v8a/libtox4j.so
-
+find app/src/main/jniLibs/ -type f -name 'libtox4j*' -exec rm -f {} +
 
 
-cd ${0%/*}
+echo "Downloading native libraries for tox4j..."
+
+wget https://build.tox.chat/job/tox4j_build_android_armel_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/armeabi/libtox4j-c.so
+wget https://build.tox.chat/job/tox4j_build_android_x86_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/x86/libtox4j-c.so
+wget https://build.tox.chat/job/tox4j_build_android_arm64_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/arm64-v8a/libtox4j-c.so
+wget https://build.tox.chat/job/tox4j_build_android_x86-64_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/x86_64/libtox4j-c.so
+
+
 mkdir -p app/libs
 rm -f app/libs/tox4j*.jar
 
-cp -r templibs/app .
+echo "Downloading new verion of tox4j..."
 
-#REPOUSER="zoff99"
-#REPO="Antox"
-#BRANCH="zoff99%2FAntox_v0.25.1"
+wget https://build.tox.chat/job/tox4j-api_build_android_multiarch_release/lastSuccessfulBuild/artifact/tox4j-api/target/scala-2.11/tox4j-api_2.11-0.1.2.jar -O app/libs/tox4j-api-c.jar
+wget https://build.tox.chat/job/tox4j_build_android_arm64_release/lastSuccessfulBuild/artifact/artifacts/tox4j-c_2.11-0.1.2-SNAPSHOT.jar -O app/libs/tox4j-c.jar
 
-#wget 'https://circleci.com/api/v1/project/'"$REPOUSER"'/'"$REPO"'/latest/artifacts/0/$CIRCLE_ARTIFACTS/supplement.zip?filter=successful&branch='"$BRANCH" -O ./supplement.zip
-#unzip -o ./supplement.zip
 
-git submodule init
-git submodule update
+
+
+
