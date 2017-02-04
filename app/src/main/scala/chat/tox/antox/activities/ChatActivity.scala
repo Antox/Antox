@@ -46,6 +46,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     System.out.println("MainApplication:ChatActivity:onCreate")
+    System.out.println("ChatActivity:" + "onCreate start")
+
 
     super.onCreate(savedInstanceState)
     val thisActivity = this
@@ -141,6 +143,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         startActivityForResult(intent, Constants.IMAGE_RESULT)
       }
     })
+
+    System.out.println("ChatActivity:" + "onCreate ready")
   }
 
   override def onSaveInstanceState(savedInstanceState: Bundle): Unit = {
@@ -158,6 +162,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   }
 
   override def onResume(): Unit = {
+
+    System.out.println("ChatActivity:" + "onResume start")
+
     super.onResume()
     //clear notifications that have already been seen
     AntoxNotificationManager.clearMessageNotification(activeKey)
@@ -193,6 +200,10 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
             activeCallBarView.setVisibility(View.GONE)
         }
       }))
+
+
+    System.out.println("ChatActivity:" + "onResume ready")
+
   }
 
   private def updateDisplayedState(friendInfoList: Seq[FriendInfo]): Unit = {

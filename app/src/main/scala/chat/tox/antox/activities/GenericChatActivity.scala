@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.{KeyEvent, Menu, MenuItem, View}
 import android.widget.TextView.OnEditorActionListener
 import android.widget.{EditText, TextView}
+import chat.tox.antox._
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
@@ -21,7 +22,6 @@ import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils.{AntoxLog, Constants, KeyboardOptions, Location}
 import chat.tox.antox.wrapper.{ContactKey, Message, MessageType}
-import chat.tox.antox._
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -49,21 +49,27 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   val layoutManager = new LinearLayoutManager(this)
 
   var fromNotifications: Boolean = false
+  var messagesSubThread: Thread = null
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
   val defaultMessagePageSize = 50
   var numMessagesShown = defaultMessagePageSize
+  val numMessagesShownFirstStart = 2
   var scrollDateHeader: TextView = _
 
   var fastScroller: RecyclerViewFastScroller = _
   var conversationDateHeader: ConversationDateHeader = _
+  var firstScroll: Boolean = true
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     System.out.println("MainApplication:GenericChatActivity:onCreate")
+    System.out.println("GenericChatActivity:" + "onCreate start")
 
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
+
+    firstScroll = true
 
     setContentView(R.layout.activity_chat)
 
@@ -96,8 +102,11 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     }
 
     val db = State.db
+
+    System.out.println("GenericChatActivity:" + "adapter init ...")
     adapter = new ChatMessagesAdapter(this,
-      new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShown))))
+      new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShownFirstStart))))
+    System.out.println("GenericChatActivity:" + "... adapter ready")
 
     displayNameView = this.findViewById(R.id.displayName).asInstanceOf[TextView]
     statusIconView = this.findViewById(R.id.icon)
@@ -212,6 +221,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       }
     })
 
+    System.out.println("GenericChatActivity:" + "onCreate ready")
+
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -249,33 +260,64 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   }
 
   override def onResume(): Unit = {
+
+    System.out.println("GenericChatActivity:" + "onResume start")
+
     super.onResume()
+
     State.activeKey.onNext(Some(activeKey))
     State.chatActive.onNext(true)
 
     val db = State.db
     db.markIncomingMessagesRead(activeKey)
 
-    messagesSub =
-      getActiveMessagesUpdatedObservable
-        .observeOn(AndroidMainThreadScheduler())
-        .subscribe(_ => {
-          AntoxLog.debug("Messages updated")
-          updateChat(getActiveMessageList(numMessagesShown))
-        })
+    messagesSubThread = new Thread {
+      override def run {
+        System.out.println("GenericChatActivity:" + "messagesSub init(1) ...")
+        //        Thread.sleep(2000)
+        //        System.out.println("GenericChatActivity:" + "messagesSub init(2) ...")
+        messagesSub =
+          getActiveMessagesUpdatedObservable
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe(_ => {
+              AntoxLog.debug("Messages updated")
+              updateChat(getActiveMessageList(numMessagesShown))
+              // scroll to bottom
+              System.out.println("GenericChatActivity:" + "scroll to pos(1)=" + chatListView.getAdapter.getItemCount)
+              System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + adapter.getItemCount)
+              System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + chatListView.getBottom)
+              if (firstScroll) {
+                // chatListView.smoothScrollToPosition(adapter.getItemCount)
+                firstScroll = false
+                if (adapter.getItemCount > 0) {
+                  chatListView.scrollToPosition(adapter.getItemCount - 1)
+                }
+              }
+            })
+        System.out.println("GenericChatActivity:" + "... messagesSub ready")
+      }
+    }
+
+    System.out.println("GenericChatActivity:" + "messagesSubThread start ...")
+    messagesSubThread.start
+    System.out.println("GenericChatActivity:" + "onResume ready")
   }
 
   def updateChat(messageList: Seq[Message]): Unit = {
+    System.out.println("GenericChatActivity:" + "updateChat init ...")
+
     //FIXME make this more efficient
     adapter.removeAll()
-
     adapter.addAll(filterMessageList(messageList))
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
+
     AntoxLog.debug("changing chat list cursor")
+
+    System.out.println("GenericChatActivity:" + "... updateChat ready")
   }
 
   def filterMessageList(messageList: Seq[Message]): Seq[Message] = {
@@ -291,13 +333,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   }
 
   private def onScrolledToTop(): Unit = {
-    numMessagesShown += defaultMessagePageSize
-    Observable[Seq[Message]](subscriber => {
-      subscriber.onNext(getActiveMessageList(numMessagesShown))
-      subscriber.onCompleted()
-    }).subscribeOn(IOScheduler())
-      .observeOn(AndroidMainThreadScheduler())
-      .subscribe(updateChat(_))
+
+    // TODO: disable for now ----- DEBUG !!!!!!!
+
+    //    numMessagesShown += defaultMessagePageSize
+    //    Observable[Seq[Message]](subscriber => {
+    //      subscriber.onNext(getActiveMessageList(numMessagesShown))
+    //      subscriber.onCompleted()
+    //    }).subscribeOn(IOScheduler())
+    //      .observeOn(AndroidMainThreadScheduler())
+    //      .subscribe(updateChat(_))
   }
 
   private def onSendMessage() {
@@ -339,7 +384,23 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     super.onPause()
     State.chatActive.onNext(false)
     if (isFinishing) overridePendingTransition(R.anim.fade_scale_in, R.anim.slide_to_right)
-    messagesSub.unsubscribe()
+
+    try {
+      if (messagesSubThread != null) {
+        messagesSubThread.join()
+        messagesSubThread = null
+      }
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
+
+    try {
+      messagesSub.unsubscribe()
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
   }
 
   override def onBackPressed(): Unit = {
