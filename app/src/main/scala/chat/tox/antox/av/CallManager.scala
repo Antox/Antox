@@ -12,7 +12,7 @@ class CallManager {
   def calls: Seq[Call] = {
     // TODO: getValue !!
     try {
-      callsSubject.getValue.values.toSeq
+      callsSubject.asJavaSubject.getValue.values.toSeq
     }
     catch
       {
@@ -38,7 +38,7 @@ class CallManager {
 
     // TODO: getValue !! -> can't logout when it crashes here
     try {
-      callsSubject.onNext(callsSubject.getValue + (call.callNumber -> call))
+      callsSubject.onNext(callsSubject.asJavaSubject.getValue + (call.callNumber -> call))
     }
     catch {
       case e: Exception => e.printStackTrace()
@@ -63,7 +63,7 @@ class CallManager {
 
     // TODO: getValue !!
     try {
-      callsSubject.onNext(callsSubject.getValue - callNumber)
+      callsSubject.onNext(callsSubject.asJavaSubject.getValue - callNumber)
     }
     catch {
       case e: Exception => e.printStackTrace()
@@ -75,7 +75,7 @@ class CallManager {
   def removeAndEndAll(): Unit = {
     // TODO: getValue !!
     try {
-      callsSubject.getValue.foreach { case (callNumber, call) =>
+      callsSubject.asJavaSubject.getValue.foreach { case (callNumber, call) =>
         if (call.active) call.end()
         remove(callNumber)
       }

@@ -24,14 +24,14 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   private val friendStateSubject = BehaviorSubject[Set[ToxavFriendCallState]](Set.empty[ToxavFriendCallState])
 
-  private def friendState: Set[ToxavFriendCallState] = friendStateSubject.getValue
+  private def friendState: Set[ToxavFriendCallState] = friendStateSubject.asJavaSubject.getValue
 
   // only describes self state
   private val selfStateSubject = BehaviorSubject[SelfCallState](SelfCallState.DEFAULT)
 
   def selfStateObservable: Observable[SelfCallState] = selfStateSubject.asJavaObservable
 
-  def selfState = selfStateSubject.getValue
+  def selfState = selfStateSubject.asJavaSubject.getValue
 
   // is video enabled in any way
   val videoEnabledObservable = selfStateObservable.map(state => state.sendingVideo || state.receivingVideo)
@@ -59,7 +59,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
 
   def ringingObservable: Observable[Boolean] = ringingSubject.asJavaObservable
 
-  def ringing = ringingSubject.getValue
+  def ringing = ringingSubject.asJavaSubject.getValue
 
   var started = false
   var startTime: Duration = Duration(0, TimeUnit.MILLISECONDS)
@@ -297,7 +297,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
   }
 
-  def rotateCamera(): Unit = cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
+  def rotateCamera(): Unit = cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.asJavaSubject.getValue))
 
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
