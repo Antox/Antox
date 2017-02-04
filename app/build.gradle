@@ -155,14 +155,14 @@ dependencies {
     // -- upgrade me !! --
     // -- upgrade me !! --
     // 1.0.6 -> [1.1.10, 1.2.4] *1.2.4*
-    compile 'io.reactivex:rxjava:1.0.17'
+    compile 'io.reactivex:rxjava:1.2.0'
     // 0.24.0 -> [1.0.2, 1.1.0, 1.2.0, 1.2.1] *1.2.1*
     // io.reactivex:rxandroid -> io.reactivex:rxjava
     //compile ('io.reactivex:rxandroid:0.24.0'){
     //    exclude group: 'io.reactivex' }
     // 0.25.0 -> [0.25.1, 0.26.5] ***
     // io.reactivex:rxscala_2 -> io.reactivex:rxjava
-    compile('io.reactivex:rxscala_2.11:0.26.0') {
+    compile('io.reactivex:rxscala_2.11:0.26.3') {
         exclude group: 'io.reactivex'
     }
     // -- upgrade me !! --
