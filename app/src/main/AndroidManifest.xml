@@ -2,7 +2,7 @@
 <manifest package="chat.tox.antox"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:versionCode="25001"
+          android:versionCode="2510001"
           android:versionName="0.25.1">
 
     <uses-sdk tools:overrideLibrary="pub.devrel.easypermissions, com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview"/>
