@@ -39,7 +39,7 @@ android {
     buildToolsVersion '25.0.2'
 
     dexOptions {
-        javaMaxHeapSize "2012m"
+        javaMaxHeapSize "1550m"
         // preDexLibraries = true
     }
 
