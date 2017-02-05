@@ -23,6 +23,10 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
   private var scrolling: Boolean = false
 
+
+  private var v_1_text: View = null
+  private var v_1_count = 0
+
   def add(msg: Message) {
     // System.out.println("ChatMessagesAdapter:add")
     data.add(msg)
@@ -206,7 +210,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   }
 
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {
-    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "onCreateViewHolder:type=" + viewType)
+    System.out.println("ChatMessagesAdapter:" + "_onCreateViewHolder:type=" + viewType + " vg=" + viewGroup)
 
     val inflater = LayoutInflater.from(viewGroup.getContext)
 
@@ -214,27 +218,31 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
     viewType match {
       case TEXT =>
-        System.out.println("onCreateViewHolder:TEXT")
-        val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
-        ret = new TextMessageHolder(v)
+        System.out.println("_onCreateViewHolder:TEXT" + " v=" + v_1_text)
+
+        // if (v_1_text == null) {
+        //  v_1_text = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
+        // }
+        // ret = new TextMessageHolder(v_1_text)
+        ret = new TextMessageHolder(inflater.inflate(R.layout.chat_message_row_text, viewGroup, false))
 
       case ACTION =>
-        System.out.println("onCreateViewHolder:ACTION")
+        System.out.println("_onCreateViewHolder:ACTION")
         val v: View = inflater.inflate(R.layout.chat_message_row_action, viewGroup, false)
         ret = new ActionMessageHolder(v)
 
       case FILE =>
-        System.out.println("onCreateViewHolder:FILE")
+        System.out.println("_onCreateViewHolder:FILE")
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
         ret = new FileMessageHolder(v)
 
       case CALL_INFO =>
-        System.out.println("onCreateViewHolder:CALL_INFO")
+        System.out.println("_onCreateViewHolder:CALL_INFO")
         val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
         ret = new CallEventMessageHolder(v)
     }
 
-    System.out.println("ChatMessagesAdapter:onBindViewHolder" + "onCreateViewHolder:type=" + viewType + " ready")
+    System.out.println("ChatMessagesAdapter:" + "_onCreateViewHolder:type=" + viewType + " ready")
 
     return ret
   }

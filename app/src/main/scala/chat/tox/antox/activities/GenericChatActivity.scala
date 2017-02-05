@@ -53,14 +53,15 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
-  val defaultMessagePageSize = 50
-  var numMessagesShown = defaultMessagePageSize
+  val defaultMessagePageSize = 200
+  var numMessagesShown = 20 // start with 20 messages, and then load in "defaultMessagePageSize" messages every time you scroll up
   val numMessagesShownFirstStart = 2
   var scrollDateHeader: TextView = _
 
   var fastScroller: RecyclerViewFastScroller = _
   var conversationDateHeader: ConversationDateHeader = _
   var firstScroll: Boolean = true
+  var loaded_all: Boolean = false
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     System.out.println("MainApplication:GenericChatActivity:onCreate")
@@ -70,6 +71,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
 
     firstScroll = true
+    loaded_all = false
 
     setContentView(R.layout.activity_chat)
 
@@ -146,6 +148,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
       override def onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int): Unit = {
         if (!recyclerView.canScrollVertically(-1)) {
+          // TODO: don't use this here, find a better way
           onScrolledToTop()
         }
 
@@ -336,13 +339,19 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     // TODO: disable for now ----- DEBUG !!!!!!!
     // TODO: add a special message later, to ask user "load all messages?"
     //
-    //    numMessagesShown += defaultMessagePageSize
-    //    Observable[Seq[Message]](subscriber => {
-    //      subscriber.onNext(getActiveMessageList(numMessagesShown))
-    //      subscriber.onCompleted()
-    //    }).subscribeOn(IOScheduler())
-    //      .observeOn(AndroidMainThreadScheduler())
-    //      .subscribe(updateChat(_))
+    if (!loaded_all) {
+      if (!firstScroll) {
+        System.out.println("GenericChatActivity:" + "load all messages")
+        // loaded_all = true
+        numMessagesShown += defaultMessagePageSize
+        Observable[Seq[Message]](subscriber => {
+          subscriber.onNext(getActiveMessageList(numMessagesShown))
+          subscriber.onCompleted()
+        }).subscribeOn(IOScheduler())
+          .observeOn(AndroidMainThreadScheduler())
+          .subscribe(updateChat(_))
+      }
+    }
   }
 
   private def onSendMessage() {
@@ -368,7 +377,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     db.messageListUpdatedObservable(Some(activeKey))
   }
 
-  // zoff
   def getActiveMessageList(takeLast: Int): ArrayBuffer[Message] = {
     try {
       val db = State.db
