@@ -7,3 +7,6 @@
 [submodule "jvm-toxcore-api"]
 	path = jvm-toxcore-api
 	url = https://github.com/TokTok/jvm-toxcore-api
+[submodule "commons-imaging"]
+	path = commons-imaging
+	url = https://github.com/apache/commons-imaging
