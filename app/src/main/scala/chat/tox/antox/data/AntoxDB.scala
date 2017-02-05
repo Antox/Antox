@@ -114,6 +114,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
   // old style ----
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
+
   def close() {
     mDbHelper.close()
   }
@@ -439,6 +440,36 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
     mDb.query(selectQuery).use(messageListFromCursor)
   }
 
+  def getMessageCount(key: ContactKey): Int = {
+
+    if (key == null) {
+      return -1
+    }
+
+    try {
+      val whereKey = s"WHERE $TABLE_MESSAGES.$COLUMN_NAME_KEY = '$key'"
+      val query =
+        s"""SELECT count(*) as SUM
+            |FROM $TABLE_MESSAGES
+            |$whereKey
+            |AND $sqlMessageVisible""".stripMargin
+
+      var sum = -1
+      mDb.query(query).use { cursor =>
+        cursor.moveToFirst()
+        sum = cursor.getInt(0)
+      }
+      return sum
+
+    } catch {
+      case e: Exception => {
+        // return -1
+      }
+    }
+
+    return -1
+  }
+
   private def getMessageQuery(key: Option[ContactKey], orderBy: RowOrder, limit: Int = -1): String = {
     val selection =
       s"""$TABLE_MESSAGES.*,
@@ -447,7 +478,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val joins =
       s"""LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_KEY
-         |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
+          |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
 
     val whereKey =
       if (key.isDefined) {
@@ -456,17 +487,17 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
 
-    val query = 
+    val query =
       s"""SELECT $selection
-         |FROM $TABLE_MESSAGES
-         |$joins
-         |$whereKey
-         |AND $sqlMessageVisible""".stripMargin
+          |FROM $TABLE_MESSAGES
+          |$joins
+          |$whereKey
+          |AND $sqlMessageVisible""".stripMargin
 
     if (limit >= 0) {
       s"""SELECT *
-         |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
-         |$order""".stripMargin
+          |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
+          |$order""".stripMargin
     } else {
       s"""$query
          |$order""".stripMargin

@@ -54,14 +54,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   val MESSAGE_LENGTH_LIMIT = Constants.MAX_MESSAGE_LENGTH * 64
 
   val defaultMessagePageSize = 200
-  var numMessagesShown = 20 // start with 20 messages, and then load in "defaultMessagePageSize" messages every time you scroll up
-  val numMessagesShownFirstStart = 2
+  var numMessagesShown = 20
+  // start with 20 messages, and then load in "defaultMessagePageSize" messages every time you scroll up
+  val numMessagesShownFirstStart = 1
   var scrollDateHeader: TextView = _
 
   var fastScroller: RecyclerViewFastScroller = _
   var conversationDateHeader: ConversationDateHeader = _
   var firstScroll: Boolean = true
   var loaded_all: Boolean = false
+  var headerTextShowingForLoadingMessages: Boolean = false
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     System.out.println("MainApplication:GenericChatActivity:onCreate")
@@ -72,6 +74,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     firstScroll = true
     loaded_all = false
+    headerTextShowingForLoadingMessages = false
 
     setContentView(R.layout.activity_chat)
 
@@ -145,7 +148,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     //    chatListView.setVerticalScrollBarEnabled(true)
     chatListView.addOnScrollListener(new OnScrollListener {
-
       override def onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int): Unit = {
         if (!recyclerView.canScrollVertically(-1)) {
           // TODO: don't use this here, find a better way
@@ -167,16 +169,14 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
         }
 
         val targetPos = fastScroller.translatedChildPosition(Util.clamp((proportion * itemCount.asInstanceOf[Float]).asInstanceOf[Int], 0, itemCount - 1))
-        scrollDateHeader.setText(recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
-        // System.out.println("myh=" + fastScroller.getMyHeight() + " dy=" + dy + " p=" + proportion + " hy=" + fastScroller.getHandleY() + " targetPos=" + targetPos + "t=" + recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
+        if (!headerTextShowingForLoadingMessages) scrollDateHeader.setText(recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
       }
 
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-
         if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
           conversationDateHeader.show()
         } else if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-          conversationDateHeader.hide()
+          if (!headerTextShowingForLoadingMessages) conversationDateHeader.hide()
         }
 
         adapter.setScrolling(!(newState == RecyclerView.SCROLL_STATE_IDLE))
@@ -279,6 +279,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
         System.out.println("GenericChatActivity:" + "messagesSub init(1) ...")
         Thread.sleep(90) // to let the activity open and show first!!
         System.out.println("GenericChatActivity:" + "messagesSub init(2) ...")
+        System.out.println("GenericChatActivity:" + "updateChat call 1")
         messagesSub =
           getActiveMessagesUpdatedObservable
             .observeOn(AndroidMainThreadScheduler())
@@ -286,9 +287,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
               AntoxLog.debug("Messages updated")
               updateChat(getActiveMessageList(numMessagesShown))
               // scroll to bottom
-              System.out.println("GenericChatActivity:" + "scroll to pos(1)=" + chatListView.getAdapter.getItemCount)
-              System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + adapter.getItemCount)
-              System.out.println("GenericChatActivity:" + "scroll to pos(2)=" + chatListView.getBottom)
               if (firstScroll) {
                 firstScroll = false
                 if (adapter.getItemCount > 0) {
@@ -305,21 +303,30 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     System.out.println("GenericChatActivity:" + "onResume ready")
   }
 
+  def updateChatWithEnding(messageList: Seq[Message]): Unit = {
+    System.out.println("GenericChatActivity:" + "updateChatWithEnding start ...")
+    System.out.println("GenericChatActivity:" + "updateChat call 2")
+    updateChat(messageList)
+    System.out.println("GenericChatActivity:" + "updateChatWithEnding ready")
+    conversationDateHeader.hide()
+    headerTextShowingForLoadingMessages = false
+  }
+
   def updateChat(messageList: Seq[Message]): Unit = {
-    System.out.println("GenericChatActivity:" + "updateChat init ...")
+    System.out.println("GenericChatActivity:" + "updateChat start")
 
     //FIXME make this more efficient
     adapter.removeAll()
     adapter.addAll(filterMessageList(messageList))
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
-    if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
-      chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
-    }
+    //if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
+    //  chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
+    //}
 
     AntoxLog.debug("changing chat list cursor")
 
-    System.out.println("GenericChatActivity:" + "... updateChat ready")
+    System.out.println("GenericChatActivity:" + "updateChat ready")
   }
 
   def filterMessageList(messageList: Seq[Message]): Seq[Message] = {
@@ -341,15 +348,28 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     //
     if (!loaded_all) {
       if (!firstScroll) {
-        System.out.println("GenericChatActivity:" + "load all messages")
-        // loaded_all = true
-        numMessagesShown += defaultMessagePageSize
-        Observable[Seq[Message]](subscriber => {
-          subscriber.onNext(getActiveMessageList(numMessagesShown))
-          subscriber.onCompleted()
-        }).subscribeOn(IOScheduler())
-          .observeOn(AndroidMainThreadScheduler())
-          .subscribe(updateChat(_))
+        val fullMessageCount = State.db.getMessageCount(activeKey)
+        System.out.println("GenericChatActivity:" + "getMessageCount=" + fullMessageCount)
+        System.out.println("GenericChatActivity:" + "numMessagesShown=" + numMessagesShown)
+        if (numMessagesShown < fullMessageCount) {
+          System.out.println("GenericChatActivity:" + "load all messages")
+
+          scrollDateHeader.setText("loading more messages")
+          headerTextShowingForLoadingMessages = true
+          conversationDateHeader.show()
+
+          // loaded_all = true
+          numMessagesShown += defaultMessagePageSize
+          if (numMessagesShown >= fullMessageCount) {
+            numMessagesShown = fullMessageCount
+          }
+          Observable[Seq[Message]](subscriber => {
+            subscriber.onNext(getActiveMessageList(numMessagesShown))
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler())
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe(updateChatWithEnding(_))
+        }
       }
     }
   }
