@@ -29,13 +29,10 @@ repositories {
     maven { url "http://jcenter.bintray.com" }
     maven { url "https://jitpack.io" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    // maven { url "http://dl.bintray.com/drummer-aidan/maven" }
-    // maven { url "https://repository.apache.org/content/repositories/snapshots/" }
 }
 
 apply plugin: "com.android.application"
 apply plugin: "jp.leafytree.android-scala"
-
 
 android {
     compileSdkVersion 25
@@ -129,6 +126,7 @@ android {
 dependencies {
 
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(dir: 'apache-commons-jar', include: '*.jar')
 
     compile 'com.android.support:multidex:1.0.1' // ???
     compile 'org.scala-lang:scala-library:2.11.8' // 2.11.8 -> [2.12.0, 2.12.1] *dont upgrade*
@@ -140,7 +138,6 @@ dependencies {
     compile 'org.scalaz:scalaz-core_2.11:7.2.8'
     // 1.8.2 -> [1.8.3, 1.9.0, 1.10.3]
     compile 'org.scodec:scodec-core_2.11:1.10.3'
-    // compile 'org.apache.commons:commons-imaging:1.0-SNAPSHOT' // 1.0-SNAPSHOT -> [1.0-R1534292]
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
