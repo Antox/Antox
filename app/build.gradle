@@ -7,9 +7,6 @@ buildscript {
         flatDir dirs: "buildlibs"
         maven { url "http://jcenter.bintray.com" }
         maven { url "https://jitpack.io" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "http://dl.bintray.com/drummer-aidan/maven" }
-        maven { url "https://repository.apache.org/content/repositories/snapshots/" }
     }
 
     dependencies {
