@@ -98,12 +98,20 @@ class CreateAccountActivity extends AppCompatActivity {
   def toggleRegisterText(): Unit = {
     val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
     val toxmeCheckBox = findViewById(R.id.toxme).asInstanceOf[CheckBox]
+    val fadeOut = ObjectAnimator.ofInt(registerButton, "textColor", getResources.getColor(R.color.white), Color.TRANSPARENT)
+    fadeOut.setDuration(300)
+    fadeOut.setEvaluator(new ArgbEvaluator)
+    fadeOut.start()
     if (toxmeCheckBox.isChecked) {
       registerButton.setText(R.string.create_register_with_toxme)
     }
     else {
       registerButton.setText(R.string.create_register)
     }
+    val fadeIn = ObjectAnimator.ofInt(registerButton, "textColor", Color.TRANSPARENT, getResources.getColor(R.color.white))
+    fadeIn.setDuration(300)
+    fadeIn.setEvaluator(new ArgbEvaluator)
+    fadeIn.start()
   }
 
   def validAccountName(account: String): Boolean = {
@@ -195,7 +203,22 @@ class CreateAccountActivity extends AppCompatActivity {
     registerButton.setText(getResources.getText(R.string.create_registering))
     registerButton.setEnabled(false)
 
-    registerButton.setBackgroundColor(getResources.getColor(R.color.brand_secondary_darker))
+    //only animate on 2.3+ because animation was added in 3.0
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      val colorFrom = getResources.getColor(R.color.brand_secondary)
+      val colorTo = getResources.getColor(R.color.brand_secondary_darker)
+      val colorAnimation = ValueAnimator.ofObject(
+        new ArgbEvaluator(),
+        colorFrom.asInstanceOf[java.lang.Integer],
+        colorTo.asInstanceOf[java.lang.Integer])
+
+      colorAnimation.addUpdateListener(new AnimatorUpdateListener {
+        override def onAnimationUpdate(animation: ValueAnimator): Unit = {
+          registerButton.setBackgroundColor(animation.getAnimatedValue.asInstanceOf[Int])
+        }
+      })
+      colorAnimation.start()
+    }
 
     val progressBar = findViewById(R.id.login_progress_bar).asInstanceOf[ProgressBar]
     progressBar.setVisibility(View.VISIBLE)
