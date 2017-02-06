@@ -4,8 +4,8 @@ import java.io.{File, FileOutputStream, PrintWriter}
 import java.text.Collator
 
 import android.app.AlertDialog
-import android.content.res.ColorStateList
 import android.content._
+import android.content.res.ColorStateList
 import android.os.{Bundle, Environment}
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -286,29 +286,28 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
               }
             }
           }
-          else
-            {
-              try {
-                val db = State.db
-                val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
-                val exportPath = path.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
-                val log = new PrintWriter(new FileOutputStream(exportPath, false))
+          else {
+            try {
+              val db = State.db
+              val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
+              val exportPath = path.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
+              val log = new PrintWriter(new FileOutputStream(exportPath, false))
 
-                messageList.foreach(message => {
-                  val formattedMessage = message.logFormat()
-                  if (formattedMessage.isDefined) {
-                    log.print(formattedMessage.get + '\n')
-                  }
-                })
+              messageList.foreach(message => {
+                val formattedMessage = message.logFormat()
+                if (formattedMessage.isDefined) {
+                  log.print(formattedMessage.get + '\n')
+                }
+              })
 
-                log.close()
-                Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
-              } catch {
-                case e: Exception =>
-                  Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
-                  e.printStackTrace()
-              }
+              log.close()
+              Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
+            } catch {
+              case e: Exception =>
+                Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
+                e.printStackTrace()
             }
+          }
         }
       }
     })

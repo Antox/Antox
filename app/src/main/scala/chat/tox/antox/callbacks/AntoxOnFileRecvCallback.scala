@@ -4,7 +4,7 @@ import android.content.Context
 import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.{AntoxNotificationManager, Constants, Options}
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, FriendInfo}
 import im.tox.tox4j.core.data.ToxFilename
@@ -26,12 +26,10 @@ class AntoxOnFileRecvCallback(ctx: Context) {
       }
 
 
-    if (State.getBatterySavingMode())
-    {
-      if (kind == FileKind.AVATAR)
-      {
+    if (State.getBatterySavingMode()) {
+      if (kind == FileKind.AVATAR) {
         // cancel all incoming Avatar FTs in battery saving mode
-        System.out.println("AntoxOnFileRecvCallback:"+ "cancel incoming avatar in battery saving mode")
+        System.out.println("AntoxOnFileRecvCallback:" + "cancel incoming avatar in battery saving mode")
         ToxSingleton.tox.fileControl(friendInfo.key, fileNumber, ToxFileControl.CANCEL)
         return
       }
@@ -79,7 +77,7 @@ class AntoxOnFileRecvCallback(ctx: Context) {
 
 
     if (kind.autoAccept) {
-      System.out.println("AntoxOnFileRecvCallback:"+ "kind.autoAccept:true");
+      System.out.println("AntoxOnFileRecvCallback:" + "kind.autoAccept:true");
       State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
     }
     else {
@@ -88,13 +86,12 @@ class AntoxOnFileRecvCallback(ctx: Context) {
       // System.out.println("State.getAutoAcceptFt:" + State.getAutoAcceptFt());
 
       if (State.getAutoAcceptFt() == true) {
-        System.out.println("AntoxOnFileRecvCallback:"+ "autoAcceptFt == true");
+        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == true");
         State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
       }
-      else
-        {
-          System.out.println("AntoxOnFileRecvCallback:"+ "autoAcceptFt == *false*");
-        }
+      else {
+        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == *false*");
+      }
     }
 
 

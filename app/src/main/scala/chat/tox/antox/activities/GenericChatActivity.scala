@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.{KeyEvent, Menu, MenuItem, View}
 import android.widget.TextView.OnEditorActionListener
 import android.widget.{EditText, TextView}
+import chat.tox.antox._
 import chat.tox.antox.adapters.ChatMessagesAdapter
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
@@ -21,7 +22,6 @@ import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils.{AntoxLog, Constants, KeyboardOptions, Location}
 import chat.tox.antox.wrapper.{ContactKey, Message, MessageType}
-import chat.tox.antox._
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -271,7 +271,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     adapter.addAll(filterMessageList(messageList))
 
-    if(adapter.getItemCount > 0) scrollDateHeader.setVisibility(View.VISIBLE)
+    if (adapter.getItemCount > 0) scrollDateHeader.setVisibility(View.VISIBLE)
     else scrollDateHeader.setVisibility(View.GONE)
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
@@ -279,10 +279,10 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
 
-    if(chatListView.computeVerticalScrollRange() > chatListView.getHeight){
+    if (chatListView.computeVerticalScrollRange() > chatListView.getHeight) {
       fastScroller.setVisibility(View.VISIBLE)
     }
-    else{
+    else {
       fastScroller.setVisibility(View.GONE)
     }
 

@@ -58,7 +58,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="autocorrect"
-            android:title="@string/pref_enable_autocorrect"/>
+            android:title="@string/pref_enable_autocorrect" />
 
         <ListPreference
             android:defaultValue="emote"
@@ -88,26 +88,26 @@
             android:title="@string/pref_title_enable_proxy" />
 
         <ListPreference
-            android:dependency="enable_proxy"
             android:defaultValue="SOCKS5"
+            android:dependency="enable_proxy"
             android:entries="@array/pref_proxy_type_list_values"
             android:entryValues="@array/pref_proxy_type_list_values"
             android:key="proxy_type"
-            android:title="@string/pref_title_proxy_type"
             android:negativeButtonText="@null"
-            android:positiveButtonText="@null" />
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_proxy_type" />
 
         <EditTextPreference
-            android:dependency="enable_proxy"
             android:defaultValue="127.0.0.1"
+            android:dependency="enable_proxy"
             android:key="proxy_address"
             android:title="@string/pref_title_proxy_address" />
 
         <EditTextPreference
-            android:numeric="integer"
-            android:dependency="enable_proxy"
             android:defaultValue="9050"
+            android:dependency="enable_proxy"
             android:key="proxy_port"
+            android:numeric="integer"
             android:title="@string/pref_title_proxy_port" />
 
         <CheckBoxPreference
@@ -116,20 +116,20 @@
             android:title="@string/pref_title_custom_node" />
 
         <EditTextPreference
-            android:dependency="enable_custom_node"
             android:defaultValue="127.0.0.1"
+            android:dependency="enable_custom_node"
             android:key="custom_node_address"
             android:title="@string/pref_title_custom_node_address" />
 
         <EditTextPreference
-            android:numeric="integer"
-            android:dependency="enable_custom_node"
             android:defaultValue="33445"
+            android:dependency="enable_custom_node"
             android:key="custom_node_port"
+            android:numeric="integer"
             android:title="@string/pref_title_custom_node_port" />
         <EditTextPreference
-            android:dependency="enable_custom_node"
             android:defaultValue=""
+            android:dependency="enable_custom_node"
             android:key="custom_node_key"
             android:title="@string/pref_title_custom_node_public_key" />
 
@@ -148,7 +148,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="videocallstartwithnovideo"
-            android:title="@string/pref_enable_videocallstartwithnovideo"/>
+            android:title="@string/pref_enable_videocallstartwithnovideo" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">
@@ -179,12 +179,12 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="autoacceptft"
-            android:title="@string/pref_enable_autoaccept"/>
+            android:title="@string/pref_enable_autoaccept" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="batterysavingmode"
-            android:title="@string/pref_enable_batterysavingmode"/>
+            android:title="@string/pref_enable_batterysavingmode" />
 
         <CheckBoxPreference
             android:defaultValue="true"

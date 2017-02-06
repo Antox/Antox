@@ -11,7 +11,8 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{Hex, AntoxLog, AntoxNotificationManager, Options}
+import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager, Options}
+
 // import im.tox.tox4j.core.data.ToxPublicKey
 import org.scaloid.common.LoggerTag
 
@@ -132,36 +133,30 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       networkSettingsChanged = true
     }
 
-    if (sharedPreferences.getBoolean("autoacceptft", false) == true)
-    {
+    if (sharedPreferences.getBoolean("autoacceptft", false) == true) {
       // System.out.println("set autoacceptft = true");
       State.setAutoAcceptFt(true)
     }
-    else
-    {
+    else {
       // System.out.println("set autoacceptft = false");
       State.setAutoAcceptFt(false)
     }
 
-    if (sharedPreferences.getBoolean("batterysavingmode", false) == true)
-    {
+    if (sharedPreferences.getBoolean("batterysavingmode", false) == true) {
       // System.out.println("set batterysavingmode = true");
       State.setBatterySavingMode(true)
     }
-    else
-    {
+    else {
       // System.out.println("set batterysavingmode = false");
       State.setBatterySavingMode(false)
     }
 
 
-    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true)
-    {
+    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true) {
       // System.out.println("set videocallstartwithnovideo = true");
       Options.videoCallStartWithNoVideo = true
     }
-    else
-    {
+    else {
       // System.out.println("set videocallstartwithnovideo = false");
       Options.videoCallStartWithNoVideo = false
     }

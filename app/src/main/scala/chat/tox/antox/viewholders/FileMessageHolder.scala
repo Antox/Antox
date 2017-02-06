@@ -252,7 +252,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     }
 
     progressLayout.setVisibility(View.GONE)
-    System.out.println("progressLayout:"+"gone2")
+    System.out.println("progressLayout:" + "gone2")
     imageMessage.setVisibility(View.GONE)
   }
 
@@ -262,7 +262,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
-    System.out.println("progressLayout:"+"VIS1")
+    System.out.println("progressLayout:" + "VIS1")
     fileProgressText.setVisibility(View.VISIBLE)
 
     showCancelButton()
@@ -311,7 +311,7 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     bubble.setOnLongClickListener(this)
     progressLayout.setVisibility(View.VISIBLE)
-    System.out.println("progressLayout:"+"VIS2")
+    System.out.println("progressLayout:" + "VIS2")
 
 
     fileProgressBar.setVisibility(View.GONE)

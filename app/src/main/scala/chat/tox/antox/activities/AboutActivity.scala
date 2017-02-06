@@ -2,7 +2,6 @@ package chat.tox.antox.activities
 
 import java.util.regex.Pattern
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.util.Linkify

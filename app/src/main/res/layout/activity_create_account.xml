@@ -1,9 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/material_blue_grey_950"
-            android:fillViewport="true"
-            android:gravity="top">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_blue_grey_950"
+    android:fillViewport="true"
+    android:gravity="top">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:contentDescription="Antox Logo"
-                    android:src="@drawable/full_logo"/>
+                    android:src="@drawable/full_logo" />
 
                 <TextView
                     android:id="@+id/create_text"
@@ -42,7 +42,7 @@
                     android:text="@string/create_text"
                     android:textColor="@color/white_absolute"
                     android:textSize="20dp"
-                    android:textStyle="italic"/>
+                    android:textStyle="italic" />
 
                 <EditText
                     android:id="@+id/create_account_name"
@@ -52,7 +52,7 @@
                     android:background="@drawable/edittextbackground"
                     android:gravity="center"
                     android:hint="@string/create_name_hint"
-                    android:singleLine="true"/>
+                    android:singleLine="true" />
 
 
                 <EditText
@@ -62,7 +62,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/edittextbackground"
                     android:gravity="center"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/create_account"
@@ -72,7 +72,7 @@
                     android:layout_marginTop="10dp"
                     android:onClick="onClickRegisterAccount"
                     android:text="@string/create_register"
-                    android:theme="@style/LoginButtonStyle"/>
+                    android:theme="@style/LoginButtonStyle" />
 
                 <ProgressBar
                     android:id="@+id/login_progress_bar"
@@ -82,16 +82,16 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="-8dp"
                     android:indeterminate="true"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout002"
                 android:layout_width="match_parent"
-                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linearLayout001"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
 
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:buttonTint="@color/white"
-                        android:checked="false"/>
+                        android:checked="false" />
 
                     <TextView
                         android:id="@+id/toxme_text"
@@ -116,15 +116,15 @@
                         android:gravity="center_vertical"
                         android:text="@string/create_sign_up_for_toxme"
                         android:textColor="@color/white"
-                        android:textSize="17sp"/>
+                        android:textSize="17sp" />
 
 
                     <ImageView
                         android:id="@+id/toxme_help_button"
-                        android:layout_toRightOf="@+id/toxme_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_help_outline_white_48dp"/>
+                        android:layout_toRightOf="@+id/toxme_text"
+                        android:src="@drawable/ic_help_outline_white_48dp" />
 
                 </RelativeLayout>
             </LinearLayout>
@@ -133,9 +133,9 @@
                 android:id="@+id/linearLayout003"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
-                android:layout_marginTop="20dp"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/linearLayout002"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:gravity="center|bottom"
                 android:orientation="vertical">
@@ -148,7 +148,7 @@
                     android:layout_marginBottom="40dp"
                     android:onClick="onClickImportProfile"
                     android:text="@string/create_import_profile"
-                    android:theme="@style/CreateAccountButtonStyle"/>
+                    android:theme="@style/CreateAccountButtonStyle" />
 
             </LinearLayout>
         </RelativeLayout>

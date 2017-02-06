@@ -18,25 +18,23 @@ object BitmapUtils {
     try {
       w = bitmap.getWidth
     }
-    catch
-      {
-        case e: Exception => {
-          e.printStackTrace()
-          w = 10
-        }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        w = 10
       }
+    }
 
     var h = 10
     try {
       h = bitmap.getWidth
     }
-    catch
-      {
-        case e: Exception => {
-          e.printStackTrace()
-          h = 10
-        }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        h = 10
       }
+    }
 
     val output = Bitmap.createBitmap(w,
       h, Bitmap.Config.ARGB_8888)
@@ -45,16 +43,15 @@ object BitmapUtils {
     val color = Color.RED
     val paint = new Paint()
 
-    var rect :Rect = null
+    var rect: Rect = null
     // zoff //
     try {
       rect = new Rect(0, 0, bitmap.getWidth, bitmap.getHeight)
     }
-    catch
-    {
+    catch {
       case e: Exception => {
         e.printStackTrace()
-        rect = new Rect(0,0,10,10)
+        rect = new Rect(0, 0, 10, 10)
       }
     }
     val rectF = new RectF(rect)
@@ -78,8 +75,7 @@ object BitmapUtils {
     try {
       min = math.min(bitmap.getWidth, bitmap.getHeight)
     }
-    catch
-    {
+    catch {
       case e: Exception => {
         e.printStackTrace()
         min = 10

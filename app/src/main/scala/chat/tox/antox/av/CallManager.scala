@@ -14,17 +14,16 @@ class CallManager {
     try {
       callsSubject.getValue.values.toSeq
     }
-    catch
-      {
-        case e: Exception => {
-          e.printStackTrace()
-          null
-        }
-        case e: java.lang.NoSuchMethodError => {
-          e.printStackTrace()
-          null
-        }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        null
       }
+      case e: java.lang.NoSuchMethodError => {
+        e.printStackTrace()
+        null
+      }
+    }
   }
 
   val activeCallObservable = callsSubject.map(_.values.filter(_.active))

@@ -7,9 +7,9 @@ import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.utils.AntoxLog
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
+import org.json.JSONObject
 import org.libsodium.jni.crypto.Box
 import org.libsodium.jni.encoders.Raw
-import org.json.JSONObject
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler

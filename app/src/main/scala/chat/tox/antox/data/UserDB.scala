@@ -102,6 +102,7 @@ class UserDB(ctx: Context) {
   // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
   // old style ----
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
+
   def close() {
     mDbHelper.close()
   }

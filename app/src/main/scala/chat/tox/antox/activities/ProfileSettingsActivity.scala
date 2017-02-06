@@ -145,10 +145,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
                   }
                 }
               }
-              else
-                {
-                  onExportDataFileSelected(path)
-                }
+              else {
+                onExportDataFileSelected(path)
+              }
             }
           }
         })

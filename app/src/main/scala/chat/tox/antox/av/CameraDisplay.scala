@@ -69,7 +69,7 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
 
       //camera.addCallbackBuffer()
       FormatConversions.updateFrameSettings(camera.getParameters.getPreviewSize.height * camera.getParameters.getPreviewSize.width
-          * (ImageFormat.getBitsPerPixel(camera.getParameters.getPreviewFormat())) / 8)
+        * (ImageFormat.getBitsPerPixel(camera.getParameters.getPreviewFormat())) / 8)
       camera.setPreviewCallback(previewCallback)
       camera.startPreview()
     } catch {

@@ -7,12 +7,11 @@ import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.animation.{ArgbEvaluator, ObjectAnimator, ValueAnimator}
 import android.app.Activity
 import android.content.DialogInterface.OnClickListener
-import android.content.{Context, DialogInterface, Intent}
+import android.content.{DialogInterface, Intent}
 import android.graphics.Color
 import android.os.{Build, Bundle, Environment}
 import android.support.v7.app.{AlertDialog, AppCompatActivity}
 import android.text._
-import android.text.method.LinkMovementMethod
 import android.view._
 import android.widget._
 import chat.tox.antox.R
@@ -23,11 +22,10 @@ import chat.tox.antox.toxme.ToxMe.PrivacyLevel
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.toxme.{ToxData, ToxMe, ToxMeError, ToxMeName}
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.{FileKind, ToxAddress}
+import chat.tox.antox.wrapper.ToxAddress
 import com.github.angads25.filepicker.controller.DialogSelectionListener
 import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
 import com.github.angads25.filepicker.view.FilePickerDialog
-import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions

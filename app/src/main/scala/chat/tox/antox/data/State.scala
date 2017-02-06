@@ -28,7 +28,8 @@ object State {
   var isBootstrapped: Boolean = false
   var lastFileTransferAction: Long = -1
   var lastIncomingMessageAction: Long = -1
-  val noBatterySavingWithActionWithinLastXSeconds = 5 * 60 // 5min
+  val noBatterySavingWithActionWithinLastXSeconds = 5 * 60
+  // 5min
   var MainToxService: ToxService = null
 
   var serviceThreadMain: Thread = null
@@ -135,37 +136,37 @@ object State {
   }
 
   def shutdown(c: Context): Unit = {
-    System.out.println("Shutdown:"+"001")
+    System.out.println("Shutdown:" + "001")
     val preferences = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext)
     if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
-    System.out.println("Shutdown:"+"002")
+    System.out.println("Shutdown:" + "002")
 
     //clear notifications as they are now invalid after logging out
     AntoxNotificationManager.clearAllNotifications()
-    System.out.println("Shutdown:"+"003")
+    System.out.println("Shutdown:" + "003")
 
     //remove and end all calls
     callManager.removeAndEndAll()
-    System.out.println("Shutdown:"+"004")
+    System.out.println("Shutdown:" + "004")
 
     if (!userDb(c).getActiveUserDetails.loggingEnabled) {
       db.friendInfoList.toBlocking.first.foreach(f => db.deleteChatLogs(f.key))
     }
-    System.out.println("Shutdown:"+"005")
+    System.out.println("Shutdown:" + "005")
 
     //workaround for contacts appearing offline when the DB is upgraded
     db.synchroniseWithTox(ToxSingleton.tox)
     db.close()
-    System.out.println("Shutdown:"+"006")
+    System.out.println("Shutdown:" + "006")
 
     val startTox = new Intent(c, classOf[ToxService])
-    System.out.println("Shutdown:"+"007")
+    System.out.println("Shutdown:" + "007")
     c.stopService(startTox)
-    System.out.println("Shutdown:"+"008")
+    System.out.println("Shutdown:" + "008")
     userDb(c).logout()
-    System.out.println("Shutdown:"+"009")
+    System.out.println("Shutdown:" + "009")
   }
 
 

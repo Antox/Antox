@@ -5,7 +5,7 @@ import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener
-import android.support.v4.app.{Fragment, FragmentManager}
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.View.OnClickListener
@@ -49,9 +49,9 @@ class MainDrawerFragment extends Fragment {
 
     // Set up the navigation drawer
     mDrawerLayout = rootView.findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
-    System.out.println("LLLL:006 mDrawerLayout="+mDrawerLayout)
+    System.out.println("LLLL:006 mDrawerLayout=" + mDrawerLayout)
     mNavigationView = rootView.findViewById(R.id.left_drawer).asInstanceOf[NavigationView]
-    System.out.println("LLLL:007 mNavigationView="+mNavigationView)
+    System.out.println("LLLL:007 mNavigationView=" + mNavigationView)
 
     mNavigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener {
       override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
@@ -62,7 +62,7 @@ class MainDrawerFragment extends Fragment {
 
     System.out.println("LLLL:008")
     val drawerHeader = rootView.findViewById(R.id.drawer_header)
-    System.out.println("LLLL:009 drawerHeader="+drawerHeader)
+    System.out.println("LLLL:009 drawerHeader=" + drawerHeader)
 
     // zoff //
     if (drawerHeader != null) {
@@ -97,7 +97,7 @@ class MainDrawerFragment extends Fragment {
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
     val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
-    System.out.println("LLLL: avatarView="+avatarView)
+    System.out.println("LLLL: avatarView=" + avatarView)
 
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
@@ -114,14 +114,14 @@ class MainDrawerFragment extends Fragment {
     }
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    System.out.println("LLLL: nameView="+nameView)
+    System.out.println("LLLL: nameView=" + nameView)
 
     // zoff //
     if (nameView != null) {
       nameView.setText(new String(userInfo.nickname.value))
     }
     val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    System.out.println("LLLL: statusMessageView="+statusMessageView)
+    System.out.println("LLLL: statusMessageView=" + statusMessageView)
     // zoff //
     if (statusMessageView != null) {
       statusMessageView.setText(new String(userInfo.statusMessage.value))
