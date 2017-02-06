@@ -98,14 +98,13 @@
             android:positiveButtonText="@null" />
 
         <EditTextPreference
-            android:numeric="decimal"
             android:dependency="enable_proxy"
             android:defaultValue="127.0.0.1"
             android:key="proxy_address"
             android:title="@string/pref_title_proxy_address" />
 
         <EditTextPreference
-            android:numeric="decimal"
+            android:numeric="integer"
             android:dependency="enable_proxy"
             android:defaultValue="9050"
             android:key="proxy_port"
@@ -117,14 +116,13 @@
             android:title="@string/pref_title_custom_node" />
 
         <EditTextPreference
-            android:numeric="decimal"
             android:dependency="enable_custom_node"
             android:defaultValue="127.0.0.1"
             android:key="custom_node_address"
             android:title="@string/pref_title_custom_node_address" />
 
         <EditTextPreference
-            android:numeric="decimal"
+            android:numeric="integer"
             android:dependency="enable_custom_node"
             android:defaultValue="33445"
             android:key="custom_node_port"
