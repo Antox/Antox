@@ -64,30 +64,15 @@
     <!-- chat messages area  -->
     <!-- chat messages area  -->
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:layout_width="fill_parent"
-                 android:layout_height="0dp"
-                 android:layout_weight="1"
-                 android:background="@color/transparent"
-                 android:divider="@null"
-                 android:dividerHeight="0dp"
-                 android:orientation="horizontal"
-                 android:shrinkColumns="0"
-                 android:stretchColumns="0">
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            >
-
             <FrameLayout xmlns:tools="http://schemas.android.com/tools"
-                         android:layout_width="fill_parent"
-                         android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/chat_messages"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="fill_parent"
                     android:scrollbars="vertical"/>
 
                 <TextView
@@ -136,8 +121,6 @@
                     app:textSize="25sp"/>
             </FrameLayout>
 
-        </TableRow>
-    </TableLayout>
 
     <!-- chat messages area  -->
     <!-- chat messages area  -->

@@ -117,14 +117,14 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     chatListView.setItemAnimator(new LandingAnimator())
 
     scrollDateHeader = this.findViewById(R.id.scroll_date_header).asInstanceOf[TextView]
-    scrollDateHeader.setVisibility(View.INVISIBLE)
+    scrollDateHeader.setVisibility(View.GONE)
     conversationDateHeader = new ConversationDateHeader(getApplicationContext, scrollDateHeader)
 
     // --- enable new fastScroller ---
     // --- enable new fastScroller ---
     // --- enable new fastScroller ---
     fastScroller = this.findViewById(R.id.fast_conversation_scroller).asInstanceOf[RecyclerViewFastScroller]
-    fastScroller.setVisibility(View.VISIBLE)
+    fastScroller.setVisibility(View.GONE)
     chatListView.setVerticalScrollBarEnabled(false)
     fastScroller.setRecyclerView(chatListView)
     // --- enable new fastScroller ---
@@ -271,10 +271,21 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
     adapter.addAll(filterMessageList(messageList))
 
+    if(adapter.getItemCount > 0) scrollDateHeader.setVisibility(View.VISIBLE)
+    else scrollDateHeader.setVisibility(View.GONE)
+
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
       chatListView.smoothScrollToPosition(chatListView.getAdapter.getItemCount)
     }
+
+    if(chatListView.computeVerticalScrollRange() > chatListView.getHeight){
+      fastScroller.setVisibility(View.VISIBLE)
+    }
+    else{
+      fastScroller.setVisibility(View.GONE)
+    }
+
     AntoxLog.debug("changing chat list cursor")
   }
 
