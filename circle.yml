@@ -21,6 +21,7 @@ machine:
     START_INTENT_P: chat.tox.antox.activities.LoginActivity
     DEBIAN_FRONTEND: noninteractive
 
+    PATH: ~/_bin:$PATH
 
     _LIBSODIUMJNI_VERSION_: "f21eb1c83da8be42efebda01b68474abef958285" # 1.0.3 (uses libsodium somewhere between 1.0.10 and 1.0.11 this seems bad!)
     _JVMTOXCOREAPI_VERSION_ : "c6d05b3d200de9ea53b19e0101d08abd16a751cd" # 0.1.2 SNAPSHOT
@@ -41,37 +42,40 @@ dependencies:
     - echo "dummy"
   pre:
 
+    # --- fullsource build? ---
+    - mkdir -p ~/_bin/
+    - if [[ "$CIRCLE_BRANCH""x" =~ "fullsource" ]]; then printf '#!/bin/bash\necho "fullsource"\n' > ~/_bin/f ; else printf '#!/bin/bash\nexit 0\n' > ~/_bin/f ; fi
+    - chmod a+rx ~/_bin/f
+    - if [[ "$CIRCLE_BRANCH""x" =~ "fullsource" ]]; then printf '#!/bin/bash\nexit 0\n' > ~/_bin/xf ; else printf '#!/bin/bash\necho "fullsource"\n' > ~/_bin/xf ; fi
+    - chmod a+rx ~/_bin/xf
+    # --- fullsource build? ---
+
     - git submodule init
     - git submodule sync
     - git submodule update ; exit 0 # strange error on first "update" call
     - git submodule sync
     - git submodule update
 
-    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 749D6EEC0353B12C
-    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
-    - sudo bash -c 'cd /etc/apt/sources.list.d; echo "deb http://old-releases.ubuntu.com/ubuntu/ raring main restricted universe multiverse" >ia32-libs-raring.list'
-    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
-    - sudo dpkg --add-architecture i386
-    
     - sudo apt-get update > /dev/null 2> /dev/null
-    - sudo apt-get install libncurses5:i386
     - sudo apt-get install xvfb > /dev/null 2> /dev/null
     - sudo apt-get install xdotool > /dev/null 2> /dev/null
     - sudo apt-get install telnet > /dev/null 2> /dev/null
     - sudo apt-get install x11-utils > /dev/null 2> /dev/null
     - sudo apt-get install xvkbd > /dev/null 2> /dev/null
     - sudo apt-get install qrencode > /dev/null 2> /dev/null
-    - sudo apt-get install p7zip-full
-    - sudo apt-get install libncurses-dev
-    - sudo apt-get install lib32ncurses5-dev
-    
-    - sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
-    - sudo apt-get install libopus-dev libvpx-dev pkg-config
-    - sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
 
+    - . f;sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 749D6EEC0353B12C
+    - . f;sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
+    - . f;sudo apt-get update
+    - . f;sudo bash -c 'cd /etc/apt/sources.list.d; echo "deb http://old-releases.ubuntu.com/ubuntu/ raring main restricted universe multiverse" >ia32-libs-raring.list'
+    - . f;sudo apt-get update
+    - . f;sudo apt-get install libncurses-dev
+    - . f;sudo apt-get install lib32ncurses5-dev
 
-    - mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
-    - wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
+    - . f;mkdir -p "/home/ubuntu/.sbt/.lib/0.13.12/"
+    - . f;wget http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.12/sbt-launch.jar -O "/home/ubuntu/.sbt/.lib/0.13.12/sbt-launch.jar"
+
+    - . f;sudo apt-get install p7zip-full
 
     - gradle -v # display gradle version
     - echo y | android update sdk --no-ui --all --filter "tools"
@@ -98,9 +102,9 @@ dependencies:
     - echo y | android update sdk --no-ui --all --filter addon-google_apis-google-23 > /dev/null 2> /dev/null
 
 # ------- install missing NDK ----------
-    - wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
-    - printf 'export NDK_VERSION=r10e\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
-    - sudo chown -R ubuntu:ubuntu /usr/local/android-ndk # fix ACLs
+    - . f;wget -O ~/zandroid-ndk.sh 'https://raw.githubusercontent.com/zoff99/circleCI_android_template/master/android-ndk.sh'
+    - . f;printf 'export NDK_VERSION=r10e\n. ~/zandroid-ndk.sh && install_android_ndk\n' | sudo bash
+    - . f;sudo chown -R ubuntu:ubuntu /usr/local/android-ndk # fix ACLs
 # ------- install missing NDK ----------
 
     - pwd ; ls -al
@@ -118,132 +122,187 @@ dependencies:
     - rm -fv app/libs/tox4j*.jar
 # ------ remove old libs and jar (if they exist) and create missing dirs --------
 
+# ------ build libsodiumjni.so ------
+    - . f;sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
+    - . f;sudo apt-get update
+    - . f;sudo apt-get install build-essential libtool autotools-dev automake checkinstall check git yasm
+    - . f;sudo apt-get install libopus-dev libvpx-dev pkg-config
 
+    # -- use: https://github.com/joshjdevl/libsodium-jni/commit/$_LIBSODIUMJNI_VERSION_
+    - . f;cd libsodium-jni/ ; git fetch
+    - . f;cd libsodium-jni/ ; git checkout "$_LIBSODIUMJNI_VERSION_"
+
+    # -- circleCI needs output or it will kill the command after 10 minutes
+    - . f;cd libsodium-jni/ ; sed -i -e 'sxwget --quietxwget xg' dependencies-linux.sh
+    - . f;cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' dependencies-linux.sh
+    - . f;cd libsodium-jni/jni/ ; sed -i -e 'sx --quietxxg' installswig.sh
+    - . f;cd libsodium-jni/ ; sed -i -e 'sxunzip -qqxunzipxg' download-gradle.sh
+    - . f;cd libsodium-jni/ ; sed -i -e 'sx --quietxxg' download-gradle.sh
+    - . f;cd libsodium-jni/jni/ ; sed -i -e 'sx --quietxxg' installswig.sh
+    - . f;cd libsodium-jni/jni/ ; sed -i -e 'sxgcc xgcc -O2 xg' compile.sh
+    #- cd libsodium-jni/ ; printf '#! /bin/bash\necho dummy' > update-android.sh ; chmod a+x update-android.sh
+    - . f;cd libsodium-jni/ ; cat update-android.sh
+    # -- circleCI needs output or it will kill the command after 10 minutes
+
+    - . f;cd libsodium-jni/ ; git submodule init
+    - . f;cd libsodium-jni/ ; git submodule update
+
+# ------------- this sometimes fails and then works again, try 2 times ------------------
+    - . f;cd libsodium-jni/ ; bash -x ./dependencies-linux.sh
+# ------------- this sometimes fails and then works again, try 2 times ------------------
+
+    # scripts don't work and need tweaking -----
+    - . f;cd libsodium-jni/ ; sed -i -e 's#quiet install#quiet install;sed -i -e "sx--force xx" ./dist-build/android-build.sh#' build.sh
+    # scripts don't work and need tweaking -----
+    - . f;cd libsodium-jni/ ; ./build.sh
+    - . f;cd libsodium-jni/ ; ./build-kaliumjni.sh
+    - . f;cd libsodium-jni/ ; ./build-libsodiumjni.sh
+    - . f;find ~/ -name 'libsodiumjni.so' -exec ls -al {} \; ; exit 0
+    - . f;find ~/ -name 'libsodiumjni.so' -exec file {} \; ; exit 0
+    # ---- copy libraries to Antox folder ----
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi/
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi-v7a/
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/sodiumjni/x86/
+
+    - . f;/usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi/libsodiumjni.so
+    - . f;cp -v libsodium-jni/libs/armeabi/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi/
+    
+    - . f;/usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip libsodium-jni/libs/armeabi-v7a/libsodiumjni.so
+    - . f;cp -v libsodium-jni/libs/armeabi-v7a/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/armeabi-v7a/
+    
+    - . f;/usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip libsodium-jni/libs/x86/libsodiumjni.so
+    - . f;cp -v libsodium-jni/libs/x86/libsodiumjni.so $CIRCLE_ARTIFACTS/solibs/sodiumjni/x86/
+
+    - . f;cp -v libsodium-jni/libs/armeabi/libsodiumjni.so app/src/main/jniLibs/armeabi/
+    - . f;cp -v libsodium-jni/libs/x86/libsodiumjni.so app/src/main/jniLibs/x86/
+    # ---- copy libraries to Antox folder ----
+# ------ build libsodiumjni.so ------
 
 
 # ------ build tox4j API stuff ------
 
-    - rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
-    - rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar ; exit 0
-    - mkdir -p /home/ubuntu/cache/usr/bin
-    - curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
-    - printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
-    - chmod a+rx /home/ubuntu/cache/usr/bin/sbt
+    - . f;rm -f ./target/scala-2.11/tox4j-api_2.*.jar ; exit 0
+    - . f;rm -f /home/ubuntu/cache/usr/bin/sbt-launch.jar ; exit 0
+    - . f;mkdir -p /home/ubuntu/cache/usr/bin
+    - . f;curl -s -L -o /home/ubuntu/cache/usr/bin/sbt-launch.jar http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/0.13.9/sbt-launch.jar
+    - . f;printf '#!/bin/sh\nset -e -x\nexec </dev/null\nexec java $SBT_OPTS -jar /home/ubuntu/cache/usr/bin/sbt-launch.jar "$@"\n' > /home/ubuntu/cache/usr/bin/sbt
+    - . f;chmod a+rx /home/ubuntu/cache/usr/bin/sbt
     # -- use: https://github.com/TokTok/jvm-toxcore-api/commit/$_JVMTOXCOREAPI_VERSION_
-    - cd jvm-toxcore-api ; git fetch
-    - cd jvm-toxcore-api ; git checkout "$_JVMTOXCOREAPI_VERSION_"
+    - . f;cd jvm-toxcore-api ; git fetch
+    - . f;cd jvm-toxcore-api ; git checkout "$_JVMTOXCOREAPI_VERSION_"
 
-    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
-    - cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
+    - . f;cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt compile
+    - . f;cd jvm-toxcore-api ; /home/ubuntu/cache/usr/bin/sbt package
 
     #   ---- copy to Antox dir --------------
-    - jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
-    - echo $(cat /tmp/jarfile1)
-    - ls -al $(cat /tmp/jarfile1)
-    - unzip -t $(cat /tmp/jarfile1) ; exit 0
-    - mkdir -p $CIRCLE_ARTIFACTS/jars/
-    - cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/jars/tox4j-api_2.11-0.1.1.jar
-    - cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
-    - echo "/home/ubuntu/tox4j-api_2.11-0.1.1.jar" > /tmp/jarfile2
-    - cp -v $(cat /tmp/jarfile1) $(cat /tmp/jarfile2)
-    - ls -al $(cat /tmp/jarfile2)
-    - unzip -t $(cat /tmp/jarfile2)|sort|grep -v detected > /tmp/jar1.list ; exit 0
+    - . f;jarfile=$(find ./jvm-toxcore-api/target/scala-2.11/ -name 'tox4j-api_*.jar' 2> /dev/null | tail -1) ; echo $jarfile > /tmp/jarfile1
+    - . f;echo $(cat /tmp/jarfile1)
+    - . f;ls -al $(cat /tmp/jarfile1)
+    - . f;unzip -t $(cat /tmp/jarfile1) ; exit 0
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/jars/
+    - . f;cp -v $(cat /tmp/jarfile1) $CIRCLE_ARTIFACTS/jars/tox4j-api_2.11-0.1.1.jar
+    - . f;cp -v $(cat /tmp/jarfile1) app/libs/tox4j-api_2.11-0.1.1.jar
+    - . f;echo "/home/ubuntu/tox4j-api_2.11-0.1.1.jar" > /tmp/jarfile2
+    - . f;cp -v $(cat /tmp/jarfile1) $(cat /tmp/jarfile2)
+    - . f;ls -al $(cat /tmp/jarfile2)
+    - . f;unzip -t $(cat /tmp/jarfile2)|sort|grep -v detected > /tmp/jar1.list ; exit 0
     #   ---- copy to Antox dir --------------
 
 # ------ build tox4j API stuff ------
 
 
 # ------ build tox4j stuff ----------
-    - cd jvm-toxcore-c/ ; pwd
+    - . f;sudo apt-get install check libcv-dev libhighgui-dev libopencv-contrib-dev libsndfile1-dev libvpx-dev opam portaudio19-dev texinfo
+    - . f;cd jvm-toxcore-c/ ; pwd
     # -- use: https://github.com/TokTok/jvm-toxcore-c/commit/$_JVMTOXCOREC_VERSION_
-    - cd jvm-toxcore-c/ ; git fetch
-    - cd jvm-toxcore-c/ ; git checkout "$_JVMTOXCOREC_VERSION_"
-    - cd jvm-toxcore-c/ ; git submodule init ; exit 0
-    - cd jvm-toxcore-c/ ; git submodule update ; exit 0
+    - . f;cd jvm-toxcore-c/ ; git fetch
+    - . f;cd jvm-toxcore-c/ ; git checkout "$_JVMTOXCOREC_VERSION_"
+    - . f;cd jvm-toxcore-c/ ; git submodule init ; exit 0
+    - . f;cd jvm-toxcore-c/ ; git submodule update ; exit 0
 
-    - wget www.scala-lang.org/files/archive/scala-2.11.7.deb -O ~/scala-2.11.7.deb
-    - cd ~ ; sudo dpkg -i scala-2.11.7.deb
-    - mkdir -p ~/cache
-    - mkdir -p ~/.casher
+    - . f;wget www.scala-lang.org/files/archive/scala-2.11.7.deb -O ~/scala-2.11.7.deb
+    - . f;cd ~ ; sudo dpkg -i scala-2.11.7.deb
+    - . f;mkdir -p ~/cache
+    - . f;mkdir -p ~/.casher
 
-    - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # load all stuf the first time
-    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
-    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # load all stuf the first time
+    - . f;md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     # -- now sneak in our freshly compiled jar (ok this is a hack) --
-    - cp -av $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
+    - . f;cp -av $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar
     # -- now sneak in our freshly compiled jar (ok this is a hack) --
-    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
-    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
-    - cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
-    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
-    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "+update" ; exit 0 # now update with new compiled jar
+    - . f;md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedJars" ; exit 0
     #- cd jvm-toxcore-c/ ; /home/ubuntu/cache/usr/bin/sbt "show unmanagedBase" ; exit 0
 
-    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
-    - cd jvm-toxcore-c/ ; sed -i -e 's#"libsodium", "1.0.11"#"libsodium", "'"$_LIBSODIUM_VERSION_"'"#' buildscripts/dependencies.pl
-    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+    - . f;cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
+    - . f;cd jvm-toxcore-c/ ; sed -i -e 's#"libsodium", "1.0.11"#"libsodium", "'"$_LIBSODIUM_VERSION_"'"#' buildscripts/dependencies.pl
+    - . f;cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'libsodium'
 
-    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
-    - cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#"c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
-    - cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
+    - . f;cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
+    - . f;cd jvm-toxcore-c/ ; sed -i -e 's#"c-toxcore", "v0.1.2"#"c-toxcore", "'"$_CTOXCORE_VERSION_"'"#' buildscripts/dependencies.pl
+    - . f;cd jvm-toxcore-c/ ; cat buildscripts/dependencies.pl | grep 'c-toxcore'
 
 # ---- arm ----
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=arm-linux-androideabi ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- arm ----
 
-    - md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
-    - ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;md5sum $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
+    - . f;ls -al $(cat /tmp/jarfile2) /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar ; exit 0
 
 
 #   ---- copy to Antox dir --------------
-    - rm -Rf app/src/main/protobuf/ ; exit 0
-    - rm -Rf app/src/main/java/im/ ; exit 0
+    - . f;rm -Rf app/src/main/protobuf/ ; exit 0
+    - . f;rm -Rf app/src/main/java/im/ ; exit 0
 
-    - find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
-    - jarfile="/home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.2-SNAPSHOT/jars/tox4j-c_2.11.jar" ; echo $jarfile > /tmp/jarfile3
-    - echo $(cat /tmp/jarfile3)
-    - ls -al $(cat /tmp/jarfile3)
-    - unzip -t $(cat /tmp/jarfile3) ; exit 0
-    - unzip -t /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar|sort|grep -v detected > /tmp/jar2.list ; exit 0
-    - diff -u /tmp/jar1.list /tmp/jar2.list ; exit 0
-    - cp -v $(cat /tmp/jarfile3) app/libs/tox4j-c_2.11.jar
-    - mkdir -p $CIRCLE_ARTIFACTS/jars/
-    - cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/jars/tox4j-c_2.11.jar
+    - . f;find ~ -name 'libtox4j*' -exec ls -al {} \; 2>&1| grep -i \.so ; exit 0
+    - . f;jarfile="/home/ubuntu/.ivy2/local/org.toktok/tox4j-c_2.11/0.1.2-SNAPSHOT/jars/tox4j-c_2.11.jar" ; echo $jarfile > /tmp/jarfile3
+    - . f;echo $(cat /tmp/jarfile3)
+    - . f;ls -al $(cat /tmp/jarfile3)
+    - . f;unzip -t $(cat /tmp/jarfile3) ; exit 0
+    - . f;unzip -t /home/ubuntu/.ivy2/cache/org.toktok/tox4j-api_2.11/jars/tox4j-api_2.11-0.1.2.jar|sort|grep -v detected > /tmp/jar2.list ; exit 0
+    - . f;diff -u /tmp/jar1.list /tmp/jar2.list ; exit 0
+    - . f;cp -v $(cat /tmp/jarfile3) app/libs/tox4j-c_2.11.jar
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/jars/
+    - . f;cp -v $(cat /tmp/jarfile3) $CIRCLE_ARTIFACTS/jars/tox4j-c_2.11.jar
 
 
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
-    - /usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
+    - . f;/usr/local/android-ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-strip /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so
+    - . f;cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/armeabi/
+    - . f;cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/arm-linux-androideabi/libtox4j-c.so app/src/main/jniLibs/armeabi/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
 # ---- x86 ----
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make clean
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; make distclean
 
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
-    - cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/00_dependencies_host
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/01_ndk
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/02_toolchain
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/03_dependencies_target
+    - . f;cd jvm-toxcore-c/ ; export CFLAGS=-O2 ; export CXXFLAGS=-O2 ; export CASHER_DIR=$HOME/.casher ; export CACHE_DIR=~/cache ; export TARGET=i686-linux-android ; export NDK_HOME=~/android-ndk ; buildscripts/04_build
 # ---- x86 ----
 
 #   ---- copy to Antox dir --------------
-    - mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
+    - . f;mkdir -p $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
     # strip ----
-    - /usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
-    - cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
+    - . f;/usr/local/android-ndk/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-strip /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so
+    - . f;cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so $CIRCLE_ARTIFACTS/solibs/tox4j/x86/
+    - . f;cp -v /home/ubuntu/Antox/jvm-toxcore-c/target/i686-linux-android/libtox4j-c.so app/src/main/jniLibs/x86/libtox4j-c.so
 #   ---- copy to Antox dir --------------
 
-    - cp /tmp/inst.log $CIRCLE_ARTIFACTS/ ; exit 0
+    - . f;cp /tmp/inst.log $CIRCLE_ARTIFACTS/ ; exit 0
 
 # ------ build tox4j stuff ----------
 
@@ -263,9 +322,12 @@ dependencies:
 
 
 # --------- install 32bit stuff for clang and 32bit android tools --------
-    
+    - sudo dpkg --add-architecture i386
+    - sudo apt-get update
+    - sudo apt-get install libncurses5:i386
 # --------- install 32bit stuff for clang and 32bit android tools --------
 
+    - . xf; ./download-dependencies.sh
     - ./gradlew build --max-workers=1 --stacktrace --debug --no-daemon || ./gradlew build --stacktrace --debug --no-daemon # first build may FAIL
 
 # --- save lint output ---
@@ -281,22 +343,22 @@ dependencies:
 # ----------- show generated apk file -----------
 
 # ----------- make zipfile for android studio project [and for download-dependencies.bat] -----------
-    - mkdir -p ~/and_stud_prj/app/libs/
-    - cp -av app/libs/tox*jar ~/and_stud_prj/app/libs/
-    - mkdir -p ~/and_stud_prj/app/src/main/java/org/libsodium/
-    - cp -av ./libsodium-jni/src/main/java/org/libsodium/* ~/and_stud_prj/app/src/main/java/org/libsodium/
-    - mkdir -p ~/and_stud_prj/app/src/main/jniLibs/
-    - cp -av app/src/main/jniLibs/* ~/and_stud_prj/app/src/main/jniLibs/
-    - cd ~/and_stud_prj/ ; zip -r $CIRCLE_ARTIFACTS/and_stud_prj.zip *
-    - rm -Rf ~/and_stud_prj/
+    - . f;mkdir -p ~/and_stud_prj/app/libs/
+    - . f;cp -av app/libs/tox*jar ~/and_stud_prj/app/libs/
+    - . f;mkdir -p ~/and_stud_prj/app/src/main/java/org/libsodium/
+    - . f;cp -av ./libsodium-jni/src/main/java/org/libsodium/* ~/and_stud_prj/app/src/main/java/org/libsodium/
+    - . f;mkdir -p ~/and_stud_prj/app/src/main/jniLibs/
+    - . f;cp -av app/src/main/jniLibs/* ~/and_stud_prj/app/src/main/jniLibs/
+    - . f;cd ~/and_stud_prj/ ; zip -r $CIRCLE_ARTIFACTS/and_stud_prj.zip *
+    - . f;rm -Rf ~/and_stud_prj/
 # ----------- make zipfile for android studio project [and for download-dependencies.bat] -----------
 
 # ----------- make zipfile for builds [for download-dependencies.sh] -----------
-    - mkdir -p ~/and_stud_prj/app/libs/
-    - cp -av app/libs/tox*jar ~/and_stud_prj/app/libs/
-    - mkdir -p ~/and_stud_prj/app/src/main/jniLibs/
-    - cp -av app/src/main/jniLibs/* ~/and_stud_prj/app/src/main/jniLibs/
-    - cd ~/and_stud_prj/ ; zip -r $CIRCLE_ARTIFACTS/supplement.zip *
+    - . f;mkdir -p ~/and_stud_prj/app/libs/
+    - . f;cp -av app/libs/tox*jar ~/and_stud_prj/app/libs/
+    - . f;mkdir -p ~/and_stud_prj/app/src/main/jniLibs/
+    - . f;cp -av app/src/main/jniLibs/* ~/and_stud_prj/app/src/main/jniLibs/
+    - . f;cd ~/and_stud_prj/ ; zip -r $CIRCLE_ARTIFACTS/supplement.zip *
 # ----------- make zipfile for builds [for download-dependencies.sh] -----------
 
     - zip -d app/build/outputs/apk/app-release-unsigned.apk META-INF/\*     # remove signature !!

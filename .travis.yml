@@ -28,9 +28,15 @@ android:
     - 'android-sdk-license-.+'
 
 script:
+   - echo $TRAVIS_EVENT_TYPE
+   - echo $TRAVIS_REPO_SLUG
    - rm -fv app/libs/tox4j*.jar # make sure dependencies are really downloaded and not old ones from repo get used
-   - chmod a+rx ./download-dependencies.sh
-   - ./download-dependencies.sh
-   - ./gradlew assembleDebug -x lint --stacktrace
+   - _reponame=$(echo $TRAVIS_REPO_SLUG | cut -d'/' -f2) ; echo $_reponame
+   - _repouser=$(echo $TRAVIS_REPO_SLUG | cut -d'/' -f1) ; echo $_repouser
+   - echo $TRAVIS_BRANCH
+   - echo $TRAVIS_PULL_REQUEST_BRANCH
+   - _branch_from=$( if [ "$TRAVIS_PULL_REQUEST_BRANCH""x" == "x" ]; then echo "$TRAVIS_BRANCH" ; else echo "$TRAVIS_PULL_REQUEST_BRANCH" ; fi ) ; echo $_branch_from
+   - _branch_from=$( if [ "$TRAVIS_PULL_REQUEST_BRANCH""x" == "x" ]; then echo "$TRAVIS_BRANCH" ; else echo "$TRAVIS_PULL_REQUEST_BRANCH" ; fi ) ; if [[ $_branch_from"x" =~ "fullsource" ]]; then bash ./fullsource/download-dependencies.sh ; else bash ./download-dependencies.sh ; fi
+   - ./gradlew assembleRelease -x lint --stacktrace
    - find . -name '*.apk' -exec ls -al {} \;
-   
+
