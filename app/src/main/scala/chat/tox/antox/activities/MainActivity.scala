@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
 import chat.tox.antox.R
+import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils._
@@ -23,6 +24,8 @@ class MainActivity extends AppCompatActivity {
   var preferences: SharedPreferences = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
+    System.out.println("MainApplication:MainActivity:onCreate")
+
     super.onCreate(savedInstanceState)
 
     preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -65,6 +68,15 @@ class MainActivity extends AppCompatActivity {
 
     // Removes the drop shadow from the actionbar as it overlaps the tabs
     getSupportActionBar.setElevation(0)
+
+    // set autoaccept option on startup
+    State.setAutoAcceptFt(preferences.getBoolean("autoacceptft", false))
+    // System.out.println("load autoacceptft options : "+State.getAutoAcceptFt());
+
+    Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
+    // System.out.println("load videocallstartwithnovideo options : "+Options.videoCallStartWithNoVideo);
+
+    State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }
 
   def onClickAdd(v: View) {

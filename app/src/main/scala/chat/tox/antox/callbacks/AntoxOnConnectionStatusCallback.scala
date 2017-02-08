@@ -48,7 +48,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
     if (online) {
       MessageHelper.sendUnsentMessages(friendInfo.key, ctx)
-      State.transfers.updateSelfAvatar(ctx)
+      State.transfers.updateSelfAvatar(ctx, false)
     } else {
       ToxSingleton.typingMap.put(friendInfo.key, false)
       State.typing.onNext(true)

@@ -15,6 +15,7 @@ import com.squareup.sqlbrite.SqlBrite
 import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
+import rx.schedulers.Schedulers
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -97,7 +98,10 @@ class UserDB(ctx: Context) {
   def getActiveUser: String = activeUser.getOrElse(throw new NotLoggedInException())
 
   mDbHelper = new DatabaseHelper(ctx)
-  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
+  // old style ----
+  // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
+  // old style ----
+  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
 
   def close() {
     mDbHelper.close()

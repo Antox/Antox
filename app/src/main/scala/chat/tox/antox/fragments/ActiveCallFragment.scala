@@ -14,9 +14,8 @@ import chat.tox.antox.R
 import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.av.CameraFacing.CameraFacing
 import chat.tox.antox.av._
+import chat.tox.antox.utils.{AntoxLog, Constants, Options, UiUtils}
 import chat.tox.antox.utils.ObservableExtensions.RichObservable
-import chat.tox.antox.utils.UiUtils._
-import chat.tox.antox.utils.{AntoxLog, Constants}
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, NewThreadScheduler}
@@ -100,9 +99,9 @@ class ActiveCallFragment extends CommonCallFragment {
     compositeSubscription +=
       call.selfStateObservable.subscribe(selfState => {
         if (selfState.audioMuted) {
-          toggleViewVisibility(micOff, micOn)
+          UiUtils.toggleViewVisibility(micOff, micOn)
         } else {
-          toggleViewVisibility(micOn, micOff)
+          UiUtils.toggleViewVisibility(micOn, micOff)
         }
 
         if (selfState.loudspeakerEnabled) {
@@ -112,23 +111,23 @@ class ActiveCallFragment extends CommonCallFragment {
         }
 
         if (selfState.loudspeakerEnabled) {
-          toggleViewVisibility(loudspeakerOn, speakerOn, speakerOff)
+          UiUtils.toggleViewVisibility(loudspeakerOn, speakerOn, speakerOff)
         } else if (selfState.receivingAudio) {
-          toggleViewVisibility(speakerOn, speakerOff, loudspeakerOn)
+          UiUtils.toggleViewVisibility(speakerOn, speakerOff, loudspeakerOn)
         } else {
-          toggleViewVisibility(speakerOff, loudspeakerOn, speakerOn)
+          UiUtils.toggleViewVisibility(speakerOff, loudspeakerOn, speakerOn)
         }
 
         if (selfState.sendingVideo) {
-          toggleViewVisibility(videoOn, videoOff)
+          UiUtils.toggleViewVisibility(videoOn, videoOff)
         } else {
-          toggleViewVisibility(videoOff, videoOn)
+          UiUtils.toggleViewVisibility(videoOff, videoOn)
         }
 
         if (selfState.videoHidden) {
-          toggleViewVisibility(videoOff, videoOn)
+          UiUtils.toggleViewVisibility(videoOff, videoOn)
         } else {
-          toggleViewVisibility(videoOn, videoOff)
+          UiUtils.toggleViewVisibility(videoOn, videoOff)
         }
       })
 
@@ -148,8 +147,26 @@ class ActiveCallFragment extends CommonCallFragment {
       getActivity.finish()
     })
 
+    if (CameraUtils.deviceHasCamera(getActivity)) {
+      if (Options.videoCallStartWithNoVideo == true) {
+        // start with video off!
+        call.hideSelfVideo
+      }
+    }
+
     durationView = rootView.findViewById(R.id.call_duration).asInstanceOf[Chronometer]
     videoSurface = rootView.findViewById(R.id.video_surface).asInstanceOf[TextureView]
+
+    // -- crash --
+    // -- crash --
+    // -- crash --
+    // durationView = rootView.findViewById(23398280).asInstanceOf[Chronometer]
+    // videoSurface = null
+    // durationView = null
+    // throw new RuntimeException("whatever")
+    // -- crash --
+    // -- crash --
+    // -- crash --
 
     val cameraPreviewWrapper = rootView.findViewById(R.id.camera_preview_wrapper).asInstanceOf[FrameLayout]
     cameraPreviewWrapper.setOnTouchListener(new OnTouchListener() {
@@ -253,8 +270,8 @@ class ActiveCallFragment extends CommonCallFragment {
   private def scaleSurfaceRelativeToScreen(textureView: TextureView, scale: Float): Unit = {
     val layoutParams = textureView.getLayoutParams
 
-    layoutParams.width = (getScreenWidth(getActivity) * scale).toInt
-    layoutParams.height = (getScreenHeight(getActivity) * scale).toInt
+    layoutParams.width = (UiUtils.getScreenWidth(getActivity) * scale).toInt
+    layoutParams.height = (UiUtils.getScreenHeight(getActivity) * scale).toInt
 
     textureView.setLayoutParams(layoutParams)
   }

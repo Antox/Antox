@@ -5,7 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#5e7c88"
-    android:padding="10dp"
+    android:padding="@dimen/padding"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:weightSum="1">
 
     <TextView
@@ -19,6 +21,7 @@
         android:text="@string/toxme_website"
         android:id="@+id/toxme_info_website"
         android:layout_gravity="center_horizontal" />
+
     <TextView
         android:textColor="@color/white"
         android:layout_marginTop="30dp"
@@ -27,6 +30,7 @@
         android:layout_height="wrap_content"
         android:text="@string/toxme_info1"
         android:layout_gravity="center_horizontal" />
+
     <TextView
         android:textColor="@color/white"
         android:layout_marginTop="10dp"

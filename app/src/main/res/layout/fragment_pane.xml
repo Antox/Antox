@@ -20,7 +20,7 @@
         android:background="@color/white_absolute"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/left_drawer"

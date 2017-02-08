@@ -226,13 +226,15 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
             if (active && selfState.sendingVideo && !ringing) {
               val startSendTime = System.currentTimeMillis()
               val yuvFrame = FormatConversions.nv21toYuv420(cameraFrame)
+              //To log the delta time taken for encoding and sending in native libtoxcore
+              val yuvConvertedTime = System.currentTimeMillis()
               try {
                 ToxSingleton.toxAv.videoSendFrame(callNumber, yuvFrame.width, yuvFrame.height, yuvFrame.y, yuvFrame.u, yuvFrame.v)
               } catch {
                 case e: ToxException[_] =>
                   AntoxLog.debug("Ignoring video send frame exception.")
               }
-              println(s"sending frame took ${System.currentTimeMillis() - startSendTime}")
+              println(s"sending frame took ${System.currentTimeMillis() - startSendTime}, libtoxcore took ${System.currentTimeMillis() - yuvConvertedTime}")
             }
           })
         }
@@ -295,9 +297,8 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
     ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
   }
 
-  def rotateCamera(): Unit = {
-    cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
-  }
+  def rotateCamera(): Unit = cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
+
 
   def end(reason: CallEndReason = CallEndReason.Normal): Unit = {
     logCallEvent(s"ended reason:$reason")

@@ -41,20 +41,16 @@
 
     <!-- Notifications -->
     <string name="pref_header_notifications">Notifications</string>
-    <string name="pref_title_enable_notifications">Enable notifications</string>
-    <string name="pref_title_new_message_notifications">Message notifications</string>
-    <string name="pref_title_new_friend_notifications">Friend request notifications</string>
-    <string name="pref_title_persistent_notification">Show persistent notification</string>
+    <string name="pref_title_enable_notifications">Enable Notifications</string>
+    <string name="pref_title_new_message_notifications">Message Notifications</string>
+    <string name="pref_title_new_friend_notifications">Friend Request Notifications</string>
+    <string name="pref_title_persistent_notification">Show Persistent Notification</string>
     <string name="pref_title_notification_vibrate">Vibrate</string>
-    <string name="pref_title_notification_sound">Play sound</string>
-    <string name="pref_title_notification_light">Pulse light</string>
+    <string name="pref_title_notification_sound">Play Sound</string>
+    <string name="pref_title_notification_light">Pulse Light</string>
 
     <string name="pref_description_notification_vibrate">Vibrate</string>
-    <string name="pref_description_notification_sound">Play sound</string>
-
-    <!-- Calls -->
-    <string name="pref_header_calls">Calls</string>
-    <string name="pref_title_enable_call_event_logging">Call event logging</string>
+    <string name="pref_description_notification_sound">Play Sound</string>
 
     <!-- Input -->
 
@@ -80,21 +76,27 @@
     <string name="pref_header_network">Network</string>
     <string name="pref_title_connection_status_messages">Action Messages</string>
     <string name="pref_title_wifi_only">Wi-Fi Only</string>
-    <string name="pref_title_enable_proxy">Enable proxy</string>
-    <string name="pref_title_proxy_type">Select proxy type</string>
+    <string name="pref_udp">Enable UDP</string>
+    <string name="pref_title_enable_proxy">Enable Proxy</string>
+    <string name="pref_title_proxy_type">Select Proxy type</string>
     <string-array name="pref_proxy_type_list_values" translatable="false">
         <item>HTTP</item>
         <item>SOCKS5</item>
     </string-array>
-    <string name="pref_title_proxy_address">Change proxy address</string>
-    <string name="pref_title_proxy_port">Change proxy port</string>
-    <string name="pref_title_custom_node">Use custom bootstrap node</string>
-    <string name="pref_title_custom_node_address">Change node address</string>
-    <string name="pref_title_custom_node_port">Change node port</string>
-    <string name="pref_title_custom_node_public_key">Change node public key</string>
+    <string name="pref_title_proxy_address">Change Proxy Address</string>
+    <string name="pref_title_proxy_port">Change Proxy Port</string>
+    <string name="pref_title_custom_node">Use Custom Bootstrap Node</string>
+    <string name="pref_title_custom_node_address">Change Node Address</string>
+    <string name="pref_title_custom_node_port">Change Node Port</string>
+    <string name="pref_title_custom_node_public_key">Change Node Public Key</string>
     <string name="error_invalid_tox_id">Invalid Public Key</string>
     <string name="error_invalid_ip_address">Invalid IP Address</string>
     <string name="error_invalid_port">Invalid Port. Please enter a correct port number value between 1 and 65535</string>
+
+    <!-- Calls -->
+    <string name="pref_header_calls">Calls</string>
+    <string name="pref_title_enable_call_event_logging">Call Event Logging</string>
+    <string name="pref_enable_videocallstartwithnovideo">Start Video Call With Video Disabled</string>
 
     <!-- Other -->
     <string name="pref_header_other">Other</string>
@@ -166,8 +168,9 @@
     <string name="copy_tox_id">Copy Tox ID</string>
 
     <!-- Advanced strings -->
-    <string name="pref_strip_exif">Strip EXIF data from images</string>
-    <string name="pref_udp">Enable UDP</string>
+    <string name="pref_enable_batterysavingmode">Experimental Battery Saving Mode </string>
+    <string name="pref_strip_exif">Strip EXIF Data From Images</string>
+    <string name="pref_enable_autoaccept">Auto-accept Files</string>
     <string name="pref_advanced">Advanced</string>
     <string name="pref_nospam">Reset Tox ID</string>
     <string name="pref_autostart">Start Antox On Boot</string>

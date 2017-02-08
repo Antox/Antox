@@ -4,8 +4,8 @@ import java.io.{File, FileOutputStream, PrintWriter}
 import java.text.Collator
 
 import android.app.AlertDialog
+import android.content._
 import android.content.res.ColorStateList
-import android.content.{Context, DialogInterface, Intent}
 import android.os.{Bundle, Environment}
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
@@ -19,10 +19,11 @@ import chat.tox.antox.adapters.ContactListAdapter
 import chat.tox.antox.av.Call
 import chat.tox.antox.data.{CallEventKind, State}
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.transfer.FileDialog
-import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
 import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -132,55 +133,72 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def createLeftPanePopup(parentItem: LeftPaneItem): Unit = {
-    val items = if (parentItem.viewType == ContactItemType.FRIEND) {
-      Array[CharSequence](getResources.getString(R.string.friend_action_profile),
-        getResources.getString(R.string.friend_action_delete),
-        getResources.getString(R.string.friend_action_export_chat),
-        getResources.getString(R.string.friend_action_delete_chat))
-    } else if (parentItem.viewType == ContactItemType.GROUP) {
-      Array[CharSequence](getResources.getString(R.string.group_action_delete))
-    } else {
-      Array[CharSequence]("")
+    val items = parentItem.viewType match {
+      case ContactItemType.FRIEND =>
+        Array[CharSequence](getResources.getString(R.string.friend_action_profile),
+          getResources.getString(R.string.friend_action_delete),
+          getResources.getString(R.string.friend_action_export_chat),
+          getResources.getString(R.string.friend_action_delete_chat))
+
+      case ContactItemType.GROUP =>
+        Array[CharSequence](getResources.getString(R.string.group_action_delete))
+
+      case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
+        Array[CharSequence](getResources.getString(R.string.request_action_copy_id))
+
+      case _ => Array[CharSequence]()
     }
 
-    if (parentItem != null) {
+    if (parentItem != null && items.nonEmpty) {
       new AlertDialog.Builder(getActivity, R.style.AppCompatAlertDialogStyle)
         .setTitle(getResources.getString(R.string.contacts_actions_on) + " " + parentItem.first)
         .setCancelable(true)
         .setItems(items,
           new DialogInterface.OnClickListener() {
             def onClick(dialog: DialogInterface, index: Int) {
-              if (parentItem.viewType == ContactItemType.FRIEND) {
-                val key = parentItem.key.asInstanceOf[FriendKey]
-                index match {
-                  case 0 =>
-                    val profile = new Intent(getActivity, classOf[FriendProfileActivity])
-                    profile.putExtra("key", key.toString)
-                    profile.putExtra("avatar", parentItem.image)
-                    profile.putExtra("name", parentItem.first)
-                    startActivity(profile)
-                  case 1 => showDeleteFriendDialog(getActivity, key)
-                  case 2 => exportChat(getActivity, key)
-                  case 3 => showDeleteChatDialog(getActivity, key)
-                }
-              }
+              parentItem.viewType match {
+                case ContactItemType.FRIEND =>
+                  val key = parentItem.key.asInstanceOf[FriendKey]
+                  index match {
+                    case 0 =>
+                      val profile = new Intent(getActivity, classOf[FriendProfileActivity])
+                      profile.putExtra("key", key.toString)
+                      profile.putExtra("avatar", parentItem.image)
+                      profile.putExtra("name", parentItem.first)
+                      startActivity(profile)
+                    case 1 => showDeleteFriendDialog(getActivity, key)
+                    case 2 => exportChat(getActivity, key)
+                    case 3 => showDeleteChatDialog(getActivity, key)
+                  }
 
-              if (parentItem.viewType == ContactItemType.GROUP) {
-                val key = parentItem.key.asInstanceOf[GroupKey]
-                index match {
-                  case 0 =>
-                    val db = State.db
-                    db.deleteChatLogs(key)
-                    db.deleteContact(key)
-                    val group = ToxSingleton.getGroupList.getGroup(key)
-                    try {
-                      group.leave(getResources.getString(R.string.group_default_part_message))
-                    } catch {
-                      case e: ToxException[_] =>
-                    }
+                case ContactItemType.GROUP =>
+                  val key = parentItem.key.asInstanceOf[GroupKey]
+                  index match {
+                    case 0 =>
+                      val db = State.db
+                      db.deleteChatLogs(key)
+                      db.deleteContact(key)
+                      val group = ToxSingleton.getGroupList.getGroup(key)
+                      try {
+                        group.leave(getResources.getString(R.string.group_default_part_message))
+                      } catch {
+                        case e: ToxException[_] =>
+                      }
 
-                    ToxSingleton.save()
-                }
+                      ToxSingleton.save()
+                  }
+
+                case ContactItemType.FRIEND_REQUEST | ContactItemType.GROUP_INVITE =>
+                  val key = parentItem.key
+                  val clipboard = getActivity.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[ClipboardManager]
+                  clipboard.setPrimaryClip(ClipData.newPlainText(null, key.toString))
+
+                  val text = getString(R.string.request_id_copied)
+                  val duration = Toast.LENGTH_SHORT
+                  val toast = Toast.makeText(getActivity, text, duration)
+                  toast.show()
+
+                case _ => //do nothing
               }
               dialog.cancel()
             }
@@ -226,32 +244,75 @@ abstract class AbstractContactsFragment extends Fragment with OnItemClickListene
   }
 
   def exportChat(context: Context, friendKey: FriendKey) {
-    val fileDialog = new FileDialog(this.getActivity, Environment.getExternalStorageDirectory, true)
-    fileDialog.addDirectoryListener(new DirectorySelectedListener {
-      override def directorySelected(directory: File): Unit = {
-        try {
-          val db = State.db
-          val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
-          val exportPath = directory.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
-          val log = new PrintWriter(new FileOutputStream(exportPath, false))
+    val path = Environment.getExternalStorageDirectory
+    val properties: DialogProperties = new DialogProperties()
+    properties.selection_mode = DialogConfigs.SINGLE_MODE
+    properties.selection_type = DialogConfigs.DIR_SELECT
+    properties.root = path
+    properties.error_dir = path
+    properties.extensions = null
+    val dialog: FilePickerDialog = new FilePickerDialog(this.getActivity, properties)
+    dialog.setTitle(R.string.select_file)
 
-          messageList.foreach(message => {
-            val formattedMessage = message.logFormat()
-            if (formattedMessage.isDefined) {
-              log.print(formattedMessage.get + '\n')
+    dialog.setDialogSelectionListener(new DialogSelectionListener() {
+      override def onSelectedFilePaths(files: Array[String]) = {
+        // files is the array of the paths of files selected by the Application User.
+        // since we only want single file selection, use the first entry
+        if (files != null) {
+          if (files.length > 0) {
+            if (files(0) != null) {
+              if (files(0).length > 0) {
+                val directory: File = new File(files(0))
+                try {
+                  val db = State.db
+                  val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
+                  val exportPath = directory.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
+                  val log = new PrintWriter(new FileOutputStream(exportPath, false))
+
+                  messageList.foreach(message => {
+                    val formattedMessage = message.logFormat()
+                    if (formattedMessage.isDefined) {
+                      log.print(formattedMessage.get + '\n')
+                    }
+                  })
+
+                  log.close()
+                  Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
+                } catch {
+                  case e: Exception =>
+                    Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
+                    e.printStackTrace()
+                }
+              }
             }
-          })
+          }
+          else {
+            try {
+              val db = State.db
+              val messageList: Seq[Message] = db.getMessageList(Some(friendKey))
+              val exportPath = path.getPath + "/" + db.getFriendInfo(friendKey).name + "-" + UiUtils.trimId(friendKey) + "-log.txt"
+              val log = new PrintWriter(new FileOutputStream(exportPath, false))
 
-          log.close()
-          Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
-        } catch {
-          case e: Exception =>
-            Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
-            e.printStackTrace()
+              messageList.foreach(message => {
+                val formattedMessage = message.logFormat()
+                if (formattedMessage.isDefined) {
+                  log.print(formattedMessage.get + '\n')
+                }
+              })
+
+              log.close()
+              Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_exported, exportPath), Toast.LENGTH_SHORT).show()
+            } catch {
+              case e: Exception =>
+                Toast.makeText(context, getResources.getString(R.string.friend_action_chat_log_export_failed), Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+            }
+          }
         }
       }
     })
-    fileDialog.showDialog()
+
+    dialog.show()
   }
 
   def showDeleteChatDialog(context: Context, key: ContactKey) {

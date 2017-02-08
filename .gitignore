@@ -37,7 +37,7 @@ local.properties
 app/build/
 build/
 capture/
-app/libs/tox4j_2.11.jar
+app/libs/tox4j*
 app/libs/protobuf-java-2.6.1.jar
 app/src/main/jniLibs
 atlassian-ide-plugin.xml

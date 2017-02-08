@@ -21,7 +21,7 @@
         android:textColor="@color/grey_darkest"
         android:singleLine="true"
         android:textSize="@dimen/text_largest"
-        android:text="Jimmy Joe James"
+        android:text=""
         android:paddingTop="16dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"

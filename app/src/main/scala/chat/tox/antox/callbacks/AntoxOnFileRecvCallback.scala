@@ -1,9 +1,10 @@
 package chat.tox.antox.callbacks
 
 import android.content.Context
+import chat.tox.antox.activities.ChatActivity
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.utils.Constants
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants}
 import chat.tox.antox.wrapper.FileKind.AVATAR
 import chat.tox.antox.wrapper.{FileKind, FriendInfo}
 import im.tox.tox4j.core.data.ToxFilename
@@ -23,6 +24,17 @@ class AntoxOnFileRecvCallback(ctx: Context) {
       } else {
         filename.toString
       }
+
+
+    if (State.getBatterySavingMode()) {
+      if (kind == FileKind.AVATAR) {
+        // cancel all incoming Avatar FTs in battery saving mode
+        System.out.println("AntoxOnFileRecvCallback:" + "cancel incoming avatar in battery saving mode")
+        ToxSingleton.tox.fileControl(friendInfo.key, fileNumber, ToxFileControl.CANCEL)
+        return
+      }
+    }
+
 
     if (kind == FileKind.AVATAR) {
       if (fileSize > Constants.MAX_AVATAR_SIZE) {
@@ -51,6 +63,37 @@ class AntoxOnFileRecvCallback(ctx: Context) {
     val chatActive = State.isChatActive(friendInfo.key)
     State.transfers.fileIncomingRequest(friendInfo.key, friendInfo.name, chatActive, fileNumber, name, kind, fileSize, kind.replaceExisting, ctx)
 
-    if (kind.autoAccept) State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+    if (!chatActive) {
+      val db = State.db
+      try {
+        val unreadCount = db.getUnreadCounts(friendInfo.key)
+        AntoxNotificationManager.createMessageNotification(ctx, classOf[ChatActivity], friendInfo, new String("Incoming File ..."), unreadCount)
+      }
+      catch {
+        case e: Exception => e.printStackTrace()
+      }
+    }
+
+
+
+    if (kind.autoAccept) {
+      System.out.println("AntoxOnFileRecvCallback:" + "kind.autoAccept:true");
+      State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+    }
+    else {
+
+
+      // System.out.println("State.getAutoAcceptFt:" + State.getAutoAcceptFt());
+
+      if (State.getAutoAcceptFt() == true) {
+        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == true");
+        State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
+      }
+      else {
+        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == *false*");
+      }
+    }
+
+
   }
 }

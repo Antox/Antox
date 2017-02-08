@@ -4,7 +4,6 @@ import java.util
 
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
-import chat.tox.antox.tox.ToxSingleton
 
 import scala.collection.JavaConversions._
 
