@@ -31,6 +31,8 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
   private var rootLayout: FrameLayout = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
+    System.out.println("MainApplication:CallActivity:onCreate")
+
     super.onCreate(savedInstanceState)
     overridePendingTransition(0, 0)
 

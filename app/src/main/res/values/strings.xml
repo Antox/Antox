@@ -72,6 +72,10 @@
     <string name="video_call_friend">Video Call</string>
     <string name="info">Info</string>
 
+    <!-- Crash Activity -->
+    <string name="crash_title">Antox Crashed</string>
+    <string name="crash_restart">Tap to restart</string>
+
 
     <!-- Add Pane Fragment -->
     <string name="addpane_friend_label">Friend</string>
@@ -135,6 +139,8 @@
     <string name="friend_accepted_default_status">Friend Accepted</string>
     <string name="group_default_peer_name">Anonymous</string>
     <string name="group_action_delete">Leave Group</string>
+    <string name="request_action_copy_id">Copy Full ID</string>
+    <string name="request_id_copied">Copied ID of Requester</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
     <string name="contacts_delimiter_invites">Group Invites</string>
@@ -197,6 +203,8 @@
     <string name="message_copy">Copy message</string>
     <string name="message_delete">Delete message</string>
     <string name="file_delete">Delete file</string>
+    <string name="file_open">Open file</string>
+    <string name="filetransfer_cancel">Cancel Filetransfer</string>
 
     <!-- Left Pane Fragment -->
     <string name="titles_recent">Recent</string>
@@ -204,9 +212,9 @@
     <string name="titles_settings">Settings</string>
 
     <!-- Edit Call Replies -->
-    <string name="title_activity_edit_call_replies">Edit quick call replies</string>
-    <string name="title_pref_edit_call_replies">Quick call replies</string>
-    <string name="edit_call_reply_title">Edit quick reply</string>
+    <string name="title_activity_edit_call_replies">Edit Quick Call Replies</string>
+    <string name="title_pref_edit_call_replies">Quick Call Replies</string>
+    <string name="edit_call_reply_title">Edit Quick Reply</string>
 
     <!-- Misc -->
     <string name="button_confirm">Confirm</string>
@@ -233,6 +241,7 @@
 
     <!-- File transfer -->
     <string name="file_finished">Finished</string>
+    <string name="file_finished_with_errors">Finished With Errors</string>
     <string name="file_failed">Failed</string>
     <string name="file_in_progress">In Progress</string>
     <string name="file_request_sent">Sent Request</string>
@@ -328,5 +337,8 @@
     <string name="mute_mic">Mute Mic</string>
     <string name="profile_info_description">Get User Info</string>
     <string name="empty"> </string>
+
+    <string name="request_permissions_text">Grant Permissions</string>
+    <string name="select_file">Select File</string>
 
 </resources>

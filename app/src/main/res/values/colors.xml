@@ -4,6 +4,7 @@
     <color name="white">#f3f3f3</color>
     <color name="grey_light">#EAEAEA</color>
     <color name="grey">#dcdcdc</color>
+    <color name="wha">#202020</color>
     <color name="grey_dark">@android:color/darker_gray</color>
     <color name="grey_darker">#666666</color>
     <color name="grey_darkest">#444444</color>

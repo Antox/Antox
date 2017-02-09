@@ -8,7 +8,6 @@ import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.data.{ToxFriendMessage, ToxNickname}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.scaloid.common.LoggerTag
-
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 
@@ -50,6 +49,7 @@ object MessageHelper {
   }
 
   def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Long]): Unit = {
+    State.setLastIncomingMessageAction()
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
       val databaseMessageId: Long = mDbId match {

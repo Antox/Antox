@@ -74,13 +74,39 @@ abstract class CommonCallFragment extends Fragment {
     val mFriend: Option[FriendInfo] = friendInfoList.find(f => f.key == activeKey)
 
     mFriend match {
-      case Some(friend) =>
-        nameView.setText(friend.getDisplayName)
+      case Some(friend) => {
+        // need to run on UI Thread
+        try {
+          nameView.getHandler().post(new Runnable() {
+            def run {
+              nameView.setText(friend.getDisplayName)
+            }
+          })
+          // nameView.setText(friend.getDisplayName)
+        }
+        catch {
+          case e: Exception =>
+            System.out.println("onUiThread:001")
+        }
+      }
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
-          avatarView.setImageBitmap(bitmap)
+
+          // need to run on UI Thread
+          try {
+            avatarView.getHandler().post(new Runnable() {
+              def run {
+                avatarView.setImageBitmap(bitmap)
+              }
+            })
+            // avatarView.setImageBitmap(bitmap)
+          }
+          catch {
+            case e: Exception =>
+              System.out.println("onUiThread:002")
+          }
         })
 
       case None =>

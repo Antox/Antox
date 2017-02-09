@@ -30,7 +30,7 @@ object BitmapManager {
 
   private val TAG = LoggerTag(getClass.getSimpleName)
 
-  private def getImageKey(file: File): ImageKey = ImageKey(file.getPath + file.getName)
+  private def getImageKey(file: File): ImageKey = ImageKey(file.getAbsolutePath)
 
   def getFromCache(isAvatar: Boolean, file: File): Option[Bitmap] = {
     getFromCache(isAvatar, getImageKey(file))
@@ -62,7 +62,13 @@ object BitmapManager {
 
   private def addBitmapToMemoryCache(key: ImageKey, bitmap: Bitmap) {
     if (memoryCache != null && getBitmapFromMemCache(key).isEmpty) {
-      memoryCache.put(key, bitmap)
+      try {
+        memoryCache.put(key, bitmap)
+      }
+      catch {
+        case e: Exception =>
+          e.printStackTrace()
+      }
     }
   }
 
@@ -139,38 +145,56 @@ object BitmapManager {
     var fis: FileInputStream = null
 
     try {
+
+      System.out.println("decodeBitmap:001")
+
       // Get a stream to the file
       fis = new FileInputStream(file)
+      System.out.println("decodeBitmap:002")
 
       // Get the bytes from the image file
       val byteArr = getBytesFromStream(fis)
+      System.out.println("decodeBitmap:003")
 
       val options = new BitmapFactory.Options()
+      System.out.println("decodeBitmap:004")
 
       if (!decodeAndCheck(byteArr, options)) {
+        System.out.println("decodeBitmap:005")
         return null
       }
 
+      System.out.println("decodeBitmap:006")
       options.inSampleSize = calculateInSampleSize(options, 200)
+      System.out.println("decodeBitmap:008")
       options.inPreferredConfig = Bitmap.Config.RGB_565
+      System.out.println("decodeBitmap:009")
       options.inJustDecodeBounds = false
+      System.out.println("decodeBitmap:010")
 
       val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+      System.out.println("decodeBitmap:011")
 
       if (isAvatar) {
+        System.out.println("decodeBitmap:012")
         addAvatarToCache(imageKey, bitmap)
       } else {
+        System.out.println("decodeBitmap:013")
         addBitmapToMemoryCache(imageKey, bitmap)
       }
+
+      System.out.println("decodeBitmap:014")
 
       bitmap
     } catch {
       case e: FileNotFoundException =>
         AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)
         e.printStackTrace()
+        System.out.println("decodeBitmap:01")
         null
     } finally {
       if (fis != null) {
+        System.out.println("decodeBitmap:001")
         fis.close()
       }
     }

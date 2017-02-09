@@ -2,7 +2,7 @@ package chat.tox.antox.av
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.graphics.SurfaceTexture
+import android.graphics.{ImageFormat, SurfaceTexture}
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
@@ -55,7 +55,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
           try {
             val previewSize = camera.getParameters.getPreviewSize
 
-            val rotation = CameraUtils.getCameraRotation(activity, antoxCamera, hack = true)
+            //The getCameraRotation takes about 200ms per frame - needed to be optimized also, or rotate on the receiver client side
+            val rotation = 0
             val frame = NV21Frame(previewSize.width, previewSize.height, data, rotation)
 
             frameBuffer.add(frame)
@@ -67,6 +68,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
       }
 
       //camera.addCallbackBuffer()
+      FormatConversions.updateFrameSettings(camera.getParameters.getPreviewSize.height * camera.getParameters.getPreviewSize.width
+        * (ImageFormat.getBitsPerPixel(camera.getParameters.getPreviewFormat())) / 8)
       camera.setPreviewCallback(previewCallback)
       camera.startPreview()
     } catch {

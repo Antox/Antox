@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -25,7 +26,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="@dimen/margin_small">
 
-                <de.hdodenhof.circleimageview.CircleImageView
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/chat_avatar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -56,16 +57,74 @@
 
     <include layout="@layout/active_call_bar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_messages"
+
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+
+    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/white_absolute"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollbars="vertical" />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chat_messages"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical" />
+
+        <TextView
+            android:id="@+id/scroll_date_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="3dp"
+            android:background="#FF0288D1"
+            android:gravity="center"
+            android:paddingBottom="3dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="3dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            tools:text="March 1, 2015" />
+
+        <View
+            android:id="@+id/compose_divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:alpha="1"
+            android:visibility="invisible" />
+
+        <!--<ImageButton-->
+        <!--android:id="@+id/scroll_to_bottom_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|center_horizontal"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:alpha="0.9"-->
+        <!--android:background="@color/green_light"-->
+        <!--android:elevation="1dp"-->
+        <!--android:padding="5dp"-->
+        <!--android:visibility="gone"/>-->
+
+        <chat.tox.antox.RecyclerViewFastScroller
+            android:id="@+id/fast_conversation_scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            app:textSize="25sp" />
+    </FrameLayout>
+
+
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+    <!-- chat messages area  -->
+
 
     <RelativeLayout
         android:layout_width="fill_parent"

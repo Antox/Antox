@@ -56,7 +56,7 @@ class AvatarDialog(activity: Activity) {
       }
       val db = State.db
       db.setAllFriendReceivedAvatar(false)
-      State.transfers.updateSelfAvatar(activity)
+      State.transfers.updateSelfAvatar(activity, true)
 
     }
   }

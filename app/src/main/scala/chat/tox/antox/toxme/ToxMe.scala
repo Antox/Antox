@@ -7,9 +7,9 @@ import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.utils.AntoxLog
 import com.squareup.okhttp.Request.Builder
 import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
-import org.abstractj.kalium.crypto.Box
-import org.abstractj.kalium.encoders.Raw
 import org.json.JSONObject
+import org.libsodium.jni.crypto.Box
+import org.libsodium.jni.encoders.Raw
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
@@ -221,20 +221,20 @@ object ToxMe {
 
   private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData, publicKey: String): Option[EncryptedPayload] = {
     try {
-      System.load("libkaliumjni.so")
+      System.load("libsodiumjni.so")
     } catch {
       case e: UnsatisfiedLinkError =>
         return None
     }
 
-    val hexEncoder = new org.abstractj.kalium.encoders.Hex
+    val hexEncoder = new org.libsodium.jni.encoders.Hex
     val rawEncoder = new Raw
     val toxmePk = publicKey
     val serverPublicKey = hexEncoder.decode(toxmePk)
     val ourSecretKey = Array.ofDim[Byte](32)
     System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
     val box = new Box(serverPublicKey, ourSecretKey)
-    val random = new org.abstractj.kalium.crypto.Random()
+    val random = new org.libsodium.jni.crypto.Random()
     var nonce = random.randomBytes(24)
     var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
     payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)

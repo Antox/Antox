@@ -85,10 +85,10 @@ class LeftPaneFragment extends Fragment {
     pager.setCurrentItem(Option(savedInstanceState)
       .map(_.getInt("tab_position", contactsViewPagerTab))
       .getOrElse({
-        if(State.db.getMessageList(None).isEmpty){
+        if (State.db.getMessageList(None).isEmpty) {
           contactsViewPagerTab
         }
-        else{
+        else {
           recentViewPagerTab
         }
       })) // start on contacts view if there are no messages

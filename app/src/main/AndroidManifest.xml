@@ -2,10 +2,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="chat.tox.antox"
-    android:versionCode="47"
-    android:versionName="0.23">
+    android:versionCode="25001"
+    android:versionName="0.25.1">
 
-    <uses-sdk tools:overrideLibrary="com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview" />
+    <uses-sdk tools:overrideLibrary="pub.devrel.easypermissions, xyz.danoz.recyclerviewfastscroller,com.astuetz.pagerslidingtabstrip, com.balysv.materialripple, jp.wasabeef.recyclerview, org.kaliumjni.lib" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,9 +37,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+    <!--this may get the app banned from google play :-(-->
+    <!--<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />-->
+    <!--this may get the app banned from google play :-(-->
 
     <supports-screens
         android:anyDensity="true"
@@ -30,16 +49,17 @@
         android:smallScreens="true" />
 
     <application
-        android:allowBackup="true"
-        android:hardwareAccelerated="false"
+        android:name="chat.tox.antox.MainApplication"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/ic_actionbar"
-        android:theme="@style/AntoxTheme">
+        android:theme="@style/AntoxTheme"
+        tools:replace="android:allowBackup">
         <service
             android:name="chat.tox.antox.tox.ToxService"
             android:exported="false"
-            android:label="Antox" />
+            android:label="ToxService" />
 
         <receiver android:name="chat.tox.antox.utils.BootReceiver">
             <intent-filter>
@@ -48,30 +68,69 @@
         </receiver>
 
         <activity
-            android:name="chat.tox.antox.activities.MainActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AntoxTheme.ActionBar"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name="chat.tox.antox.activities.LoginActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:name="chat.tox.antox.SplashActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@style/SplashTheme"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name="chat.tox.antox.ShareActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name="chat.tox.antox.activities.MainActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@style/AntoxTheme.ActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name="chat.tox.antox.activities.LoginActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"></activity>
+
+        <activity
+            android:name=".CrashActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"></activity>
+
         <activity
             android:name=".activities.ChatActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AntoxTheme.NoActionBar">
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@style/AntoxTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
         </activity>
         <activity
             android:name="chat.tox.antox.activities.GroupChatActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:theme="@style/AntoxTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -83,7 +142,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
-
             <!-- Intent filter for handling tox: links -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -105,8 +163,8 @@
         <activity
             android:name=".activities.CallActivity"
             android:label="@string/title_activity_friend_profile"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.MainActivity" />
@@ -121,6 +179,14 @@
                 android:value="chat.tox.antox.activities.GroupChatActivity" />
         </activity>
 
+        <receiver android:name="chat.tox.antox.AlarmReceiver">
+
+            <intent-filter>
+                <action android:name="chat.tox.antox.TOXSERVICE_ALARM"></action>
+            </intent-filter>
+
+        </receiver>
+
         <receiver
             android:name=".utils.ConnectionManager"
             android:label="NetworkConnection">
@@ -131,11 +197,12 @@
 
         <activity
             android:name="chat.tox.antox.activities.CreateAccountActivity"
-            android:label="@string/title_activity_create_account"
-            android:screenOrientation="portrait" />
-        <activity android:name="chat.tox.antox.activities.ToxMeInfoActivity"
+            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
+            android:label="@string/title_activity_create_account" />
+        <activity
+            android:name="chat.tox.antox.activities.ToxMeInfoActivity"
             android:label="@string/toxme_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="chat.tox.antox.activities.ProfileSettingsActivity"
             android:label="@string/title_activity_profile_settings" />

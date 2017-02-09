@@ -18,11 +18,13 @@ import chat.tox.antox.av.{Call, CameraUtils}
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
-import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -43,6 +45,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
+    System.out.println("MainApplication:ChatActivity:onCreate")
+
     super.onCreate(savedInstanceState)
     val thisActivity = this
 
@@ -69,15 +73,34 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
           return
         }
 
-        val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
-        val fileDialog = new FileDialog(thisActivity, path, false)
-        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-          def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+        val path = Environment.getExternalStorageDirectory
+        val properties: DialogProperties = new DialogProperties()
+        properties.selection_mode = DialogConfigs.SINGLE_MODE
+        properties.selection_type = DialogConfigs.FILE_SELECT
+        properties.root = path
+        properties.error_dir = path
+        properties.extensions = null
+        val dialog: FilePickerDialog = new FilePickerDialog(thisActivity, properties)
+        dialog.setTitle(R.string.select_file)
+
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+          override def onSelectedFilePaths(files: Array[String]) = {
+            // files is the array of the paths of files selected by the Application User.
+            // since we only want single file selection, use the first entry
+            if (files != null) {
+              if (files.length > 0) {
+                if (files(0) != null) {
+                  if (files(0).length > 0) {
+                    val filePath: String = new File(files(0)).getAbsolutePath()
+                    State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+                  }
+                }
+              }
+            }
           }
         })
-        fileDialog.showDialog()
 
+        dialog.show()
       }
     })
 
@@ -184,8 +207,12 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
+          System.out.println("BitmapManager:avatar:001")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+          System.out.println("BitmapManager:avatar:002")
         })
+
+        System.out.println("BitmapManager:avatar:003")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources

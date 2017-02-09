@@ -1,0 +1,36 @@
+language: android
+cache: false
+sudo: false
+jdk:
+  - oraclejdk8
+env:
+  global:
+  - _JAVA_OPTIONS="-Xms512m -Xmx1024m"
+  - GRADLE_OPTS='-Xmx512m -Dorg.gradle.jvmargs="-Xmx1700m -XX:+HeapDumpOnOutOfMemoryError -XX:MaxPermSize=1700m"'
+android:
+  components:
+    - tools # to get the new `repository-11.xml`
+    - tools # see https://github.com/travis-ci/travis-ci/issues/6040#issuecomment-219367943)
+    - platform-tools
+    - build-tools-23.0.3
+    - build-tools-24.0.2
+    - build-tools-25.0.2
+    - android-21
+    - android-22
+    - android-23
+    - android-24
+    - android-25
+    - extra-android-m2repository
+    - extra-google-m2repository
+    - extra-android-support
+  licenses:
+    - '.+'
+    - 'android-sdk-license-.+'
+
+script:
+   - rm -fv app/libs/tox4j*.jar # make sure dependencies are really downloaded and not old ones from repo get used
+   - chmod a+rx ./download-dependencies.sh
+   - ./download-dependencies.sh
+   - ./gradlew assembleDebug -x lint --stacktrace
+   - find . -name '*.apk' -exec ls -al {} \;
+   

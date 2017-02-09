@@ -30,6 +30,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium"
         android:singleLine="true"
+        android:maxLines="1"
         android:ellipsize="end"
         android:layout_alignTop="@+id/drawer_avatar"
         android:layout_toRightOf="@+id/drawer_avatar"

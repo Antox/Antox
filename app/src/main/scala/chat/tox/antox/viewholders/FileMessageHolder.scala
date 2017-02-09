@@ -4,16 +4,21 @@ import java.io.File
 
 import android.app.AlertDialog
 import android.content._
+import android.graphics.{Color, PorterDuff}
 import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
-import android.view.View
-import android.view.View.{OnClickListener, OnLongClickListener}
+import android.view.View.{OnClickListener, OnLongClickListener, OnTouchListener}
+import android.view.{MotionEvent, View}
+import android.webkit.MimeTypeMap._
 import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
+import chat.tox.antox.tox.ToxSingleton
+import chat.tox.antox.transfer.{FileStatus, FileTransfer}
 import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
 import chat.tox.antox.wrapper.FriendKey
+import im.tox.tox4j.core.enums.ToxFileControl
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
 import rx.lang.scala.{Observable, Subscription}
@@ -27,6 +32,8 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   protected val imageMessage = view.findViewById(R.id.message_sent_photo).asInstanceOf[ImageView]
 
   protected val fileButtons = view.findViewById(R.id.file_buttons).asInstanceOf[LinearLayout]
+
+  protected val filetransfer_cancel_button_view = view.findViewById(R.id.filetransfer_cancel_button_view).asInstanceOf[LinearLayout]
 
   protected val progressLayout = view.findViewById(R.id.progress_layout).asInstanceOf[LinearLayout]
 
@@ -50,68 +57,224 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     imageLoading.setVisibility(View.GONE)
   }
 
-  def setImage(file: File): Unit = {
+  def hideCancelButton() = {
+    filetransfer_cancel_button_view.setVisibility(View.GONE)
+  }
+
+
+  def setImage(file: File, isImage: Boolean): Unit = {
+
+
+    try {
+      System.out.println("imageMessage:" + file.getName.substring(0, Math.min(40, file.getName.length())) + " Enter");
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        System.out.println("imageMessage:" + file.getName + " Enter");
+      }
+    }
+
     this.file = file
-    // Start a loading indicator in case the bitmap needs to be loaded from disk
-    imageMessage.setImageBitmap(null)
-    imageLoading.setVisibility(View.VISIBLE)
 
-    imageLoadingSub.foreach(_.unsubscribe())
+    if (file.length > 0) {
+      fileSize.setText(Formatter.formatFileSize(context, file.length))
+      fileSize.setVisibility(View.VISIBLE)
+    }
+    else {
+      fileSize.setVisibility(View.GONE)
+    }
 
-    imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+    if (isImage) {
+      imageLoadingSub.foreach(_.unsubscribe())
+
+      // Start a loading indicator in case the bitmap needs to be loaded from disk
+      imageMessage.setImageBitmap(null)
+      imageLoading.setVisibility(View.VISIBLE)
+
+      imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
+        System.out.println("imageMessage:" + file.getName + " setImage=" + image);
+        imageLoading.setVisibility(View.GONE)
+        imageMessage.setImageBitmap(image)
+      }))
+    }
+    else {
       imageLoading.setVisibility(View.GONE)
-      imageMessage.setImageBitmap(image)
-    }))
+      imageMessage.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
+      imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
+      System.out.println("imageMessage:" + file.getName + " setImage=ic_action_attachment_2");
+    }
 
     imageMessage.setOnClickListener(this)
     imageMessage.setOnLongClickListener(this)
     imageMessage.setVisibility(View.VISIBLE)
+  }
 
-    //TODO would be better to find a way where we didn't have to toggle all these
-    messageText.setVisibility(View.GONE)
-    fileSize.setVisibility(View.GONE)
-    progressLayout.setVisibility(View.GONE)
-    fileButtons.setVisibility(View.GONE)
-    messageTitle.setVisibility(View.GONE)
-    messageText.setVisibility(View.GONE)
+  def showCancelButton(): Unit = {
+    val cancel = filetransfer_cancel_button_view.findViewById(R.id.file_cancel_button)
+
+    cancel.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+    cancel.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+    cancel.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+
+        event.getAction match {
+          case MotionEvent.ACTION_DOWN =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+          case MotionEvent.ACTION_UP =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+
+          case _ => // do nothing
+        }
+
+        false
+      }
+    })
+
+    cancel.setOnClickListener(new View.OnClickListener() {
+
+      override def onClick(view: View) {
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+
+        val key = msg.key.asInstanceOf[FriendKey]
+        var thisFt: FileTransfer = null
+        try {
+          thisFt = State.transfers.get(key, msg.messageId).get
+        }
+        catch {
+          case e: Exception => // e.printStackTrace()
+        }
+        if ((thisFt != null) && ((thisFt.status == FileStatus.IN_PROGRESS) || (thisFt.status == FileStatus.PAUSED))) {
+          hideCancelButton()
+          ToxSingleton.tox.fileControl(key, msg.messageId, ToxFileControl.CANCEL)
+          State.transfers.cancelFile(key, msg.messageId, context)
+        }
+      }
+    })
+
+    filetransfer_cancel_button_view.setVisibility(View.VISIBLE)
   }
 
   def showFileButtons(): Unit = {
     val accept = fileButtons.findViewById(R.id.file_accept_button)
     val reject = fileButtons.findViewById(R.id.file_reject_button)
-
     val key = msg.key.asInstanceOf[FriendKey]
-    accept.setOnClickListener(new View.OnClickListener() {
 
+
+    accept.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+    accept.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+    reject.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+    reject.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+
+    accept.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+        event.getAction match {
+          case MotionEvent.ACTION_DOWN =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+          case MotionEvent.ACTION_UP =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+
+          case _ => // do nothing
+        }
+
+        false
+      }
+    })
+
+    accept.setOnClickListener(new View.OnClickListener() {
       override def onClick(view: View) {
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.acceptFile(key, msg.messageId, context)
       }
     })
+
+    reject.setOnTouchListener(new OnTouchListener() {
+      override def onTouch(view: View, event: MotionEvent): Boolean = {
+
+        event.getAction match {
+          case MotionEvent.ACTION_DOWN =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#9ea1a2"))
+
+          case MotionEvent.ACTION_CANCEL | MotionEvent.ACTION_OUTSIDE =>
+            view.asInstanceOf[ImageView].getDrawable.clearColorFilter()
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.TRANSPARENT)
+
+          case MotionEvent.ACTION_UP =>
+
+            view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+            view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
+
+          case _ => // do nothing
+        }
+
+        false
+      }
+    })
+
     reject.setOnClickListener(new View.OnClickListener() {
 
       override def onClick(view: View) {
+        view.asInstanceOf[ImageView].getDrawable.setColorFilter(0x77000000, PorterDuff.Mode.SRC_ATOP)
+        view.asInstanceOf[ImageView].setBackgroundColor(Color.parseColor("#959595"))
         State.transfers.rejectFile(key, msg.messageId, context)
       }
     })
+
     fileButtons.setVisibility(View.VISIBLE)
-    fileSize.setText(Formatter.formatFileSize(context, msg.size))
-    fileSize.setVisibility(View.VISIBLE)
+    if (msg.size > 0) {
+      fileSize.setText(Formatter.formatFileSize(context, msg.size))
+      fileSize.setVisibility(View.VISIBLE)
+    }
 
     progressLayout.setVisibility(View.GONE)
+    System.out.println("progressLayout:" + "gone2")
     imageMessage.setVisibility(View.GONE)
   }
 
   def showProgressBar(): Unit = {
+    System.out.println("FileMessageHolder:" + "showProgressBar")
     fileProgressBar.setMax(msg.size)
+
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
+    System.out.println("progressLayout:" + "VIS1")
+    fileProgressText.setVisibility(View.VISIBLE)
+
+    showCancelButton()
 
     if (progressSub == null || progressSub.isUnsubscribed) {
       AntoxLog.debug("observer subscribing", TAG)
-      progressSub = Observable.interval(500 milliseconds)
+      progressSub = Observable.interval(1000 milliseconds)
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(x => {
+
           updateProgressBar()
+          State.setLastFileTransferAction()
         })
     }
 
@@ -120,8 +283,9 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   }
 
   def updateProgressBar(): Unit = {
-    val updateRate = 500
+    val updateRate = 100
     val mProgress = State.transfers.getProgressSinceXAgo(msg.id, updateRate)
+    // System.out.println("State.transfers:" + "mProgress=" + mProgress)
     val bytesPerSecond = mProgress match {
       case Some(p) => ((p._1 * 1000) / p._2).toInt
       case None => 0
@@ -147,9 +311,20 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     bubble.setOnLongClickListener(this)
     progressLayout.setVisibility(View.VISIBLE)
+    System.out.println("progressLayout:" + "VIS2")
+
 
     fileProgressBar.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
+
+    try {
+      progressSub.unsubscribe()
+      AntoxLog.debug("observer unsubscribed", TAG)
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
+
     imageMessage.setVisibility(View.GONE)
   }
 
@@ -173,18 +348,82 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       case _: ImageView =>
         val i = new Intent()
         i.setAction(android.content.Intent.ACTION_VIEW)
-        i.setDataAndType(Uri.fromFile(file), "image/*")
+
+        val file =
+          if (msg.message.contains("/")) {
+            new File(msg.message)
+          } else {
+            val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+              Constants.DOWNLOAD_DIRECTORY)
+            new File(f.getAbsolutePath + "/" + msg.message)
+          }
+
+        val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+        var mime: String = "image/*"
+        if (extension != null) {
+          mime = getSingleton().getMimeTypeFromExtension(extension)
+        }
+
+        if (mime == null) {
+          mime = "image/*"
+        }
+        System.out.println("file open:3i:" + mime)
+        i.setDataAndType(Uri.fromFile(file), mime)
         context.startActivity(i)
 
       case _ =>
+        // open any file by clicking on it
+        val file =
+          if (msg.message.contains("/")) {
+            new File(msg.message)
+          } else {
+            val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+              Constants.DOWNLOAD_DIRECTORY)
+            new File(f.getAbsolutePath + "/" + msg.message)
+          }
+
+        try {
+
+          val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+          var mime: String = null
+          if (extension != null) {
+            mime = getSingleton().getMimeTypeFromExtension(extension)
+          }
+          val i = new Intent()
+          i.setAction(android.content.Intent.ACTION_VIEW)
+          System.out.println("file open:3:" + mime)
+          i.setDataAndType(Uri.fromFile(file), mime)
+          context.startActivity(i)
+        }
+        catch {
+          case e: Exception => e.printStackTrace()
+        }
+
     }
   }
 
   override def onLongClick(view: View): Boolean = {
-    val items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
-      context.getResources.getString(R.string.file_delete))
-    new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
+    val key = msg.key.asInstanceOf[FriendKey]
+    var thisFt: FileTransfer = null
+    try {
+      thisFt = State.transfers.get(key, msg.messageId).get
+    }
+    catch {
+      case e: Exception => // e.printStackTrace()
+    }
+    var items: Array[CharSequence] = null
+    if ((thisFt != null) && ((thisFt.status == FileStatus.IN_PROGRESS) || (thisFt.status == FileStatus.PAUSED))) {
+      items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
+        context.getResources.getString(R.string.file_delete), context.getResources.getString(R.string.file_open),
+        context.getResources.getString(R.string.filetransfer_cancel))
+    }
+    else {
+      items = Array[CharSequence](context.getResources.getString(R.string.message_delete),
+        context.getResources.getString(R.string.file_delete), context.getResources.getString(R.string.file_open))
+    }
+
+    new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
       def onClick(dialog: DialogInterface, index: Int): Unit = index match {
         case 0 =>
           Observable[Boolean](subscriber => {
@@ -209,9 +448,48 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
             subscriber.onCompleted()
           }).subscribeOn(IOScheduler()).subscribe()
+        case 2 =>
+          Observable[Boolean](subscriber => {
+            val db = State.db
+
+            val file =
+              if (msg.message.contains("/")) {
+                new File(msg.message)
+              } else {
+                val f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                  Constants.DOWNLOAD_DIRECTORY)
+                new File(f.getAbsolutePath + "/" + msg.message)
+              }
+
+            try {
+              val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+              var mime: String = null
+              if (extension != null) {
+                mime = getSingleton().getMimeTypeFromExtension(extension)
+              }
+              val i = new Intent()
+              i.setAction(android.content.Intent.ACTION_VIEW)
+              System.out.println("file open:3:" + mime)
+              i.setDataAndType(Uri.fromFile(file), mime)
+              context.startActivity(i)
+            }
+            catch {
+              case e: Exception => e.printStackTrace()
+            }
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler()).subscribe()
+        case 3 =>
+          Observable[Boolean](subscriber => {
+            ToxSingleton.tox.fileControl(key, msg.messageId, ToxFileControl.CANCEL)
+            State.transfers.cancelFile(key, msg.messageId, context)
+            hideCancelButton()
+            subscriber.onCompleted()
+          }).subscribeOn(IOScheduler()).subscribe()
       }
-    }).create().show()
+    }
+    ).create().show()
 
     true
   }
+
 }

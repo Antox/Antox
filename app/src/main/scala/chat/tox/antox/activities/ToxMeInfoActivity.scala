@@ -2,20 +2,19 @@ package chat.tox.antox.activities
 
 import java.util.regex.Pattern
 
+import android.app.ActivityManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
-import android.support.v4.app.NavUtils
+import android.os.{Build, Bundle}
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
-import android.view.{WindowManager, MenuItem}
+import android.view.{MenuItem, WindowManager}
 import android.widget.TextView
 import chat.tox.antox.R
 
-
-class ToxMeInfoActivity extends AppCompatActivity{
+class ToxMeInfoActivity extends AppCompatActivity {
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -23,8 +22,15 @@ class ToxMeInfoActivity extends AppCompatActivity{
     getSupportActionBar.setHomeButtonEnabled(true)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     getWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    getWindow.setStatusBarColor(Color.parseColor("#202020"))
-    getSupportActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#24221f")))
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow.setStatusBarColor(Color.parseColor("#202020"))
+    }
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && getSupportActionBar != null) {
+      val info = new ActivityManager.RunningTaskInfo()
+      getSupportActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#24221f")))
+    }
 
     val toxMeWebsite = findViewById(R.id.toxme_info_website).asInstanceOf[TextView]
 
@@ -36,8 +42,8 @@ class ToxMeInfoActivity extends AppCompatActivity{
     Linkify.addLinks(sourceURLTextView, pattern, "")
   }
 
-  override def onOptionsItemSelected(item: MenuItem): Boolean ={
-    item.getItemId match{
+  override def onOptionsItemSelected(item: MenuItem): Boolean = {
+    item.getItemId match {
       case android.R.id.home =>
         finish()
         true

@@ -422,4 +422,3 @@ public class CircularFifoQueue<E> extends AbstractCollection<E>
     }
 
 }
-

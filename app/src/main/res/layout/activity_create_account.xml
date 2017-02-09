@@ -1,129 +1,156 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:fillViewport="true"
     android:layout_height="match_parent"
-    android:id="@+id/create_account_activity_full"
-    android:background="@color/material_blue_grey_950">
+    android:background="@color/material_blue_grey_950"
+    android:fillViewport="true"
+    android:gravity="top">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_small"
-        android:orientation="vertical"
-        android:focusableInTouchMode="true"
-        android:id="@+id/linearLayout">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            android:contentDescription="Antox Logo"
-            android:id="@+id/imageView1"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/full_logo"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/create_text"
+        <RelativeLayout
+            android:id="@+id/create_account_activity_full"
             android:layout_width="match_parent"
-            android:textColor="@color/white_absolute"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:textStyle="italic"
-            android:textSize="20dp"
-            android:layout_height="wrap_content"
-            android:text="@string/create_text" />
+            android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/create_account_name"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:background="@drawable/edittextbackground"
-            android:gravity="center"
-            android:hint="@string/create_name_hint"
-            android:singleLine="true" />
+            <LinearLayout
+                android:id="@+id/linearLayout001"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_small">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="Antox Logo"
+                    android:src="@drawable/full_logo" />
+
+                <TextView
+                    android:id="@+id/create_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="@string/create_text"
+                    android:textColor="@color/white_absolute"
+                    android:textSize="20dp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/create_account_name"
+                    android:layout_width="300dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/edittextbackground"
+                    android:gravity="center"
+                    android:hint="@string/create_name_hint"
+                    android:singleLine="true" />
 
 
-        <EditText
-            android:id="@+id/create_bio"
-            android:layout_width="200dp"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:background="@drawable/edittextbackground" />
+                <EditText
+                    android:id="@+id/create_bio"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/edittextbackground"
+                    android:gravity="center"
+                    android:visibility="gone" />
 
-        <Button
-            android:id="@+id/create_account"
-            android:layout_gravity="center"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:text="@string/create_register"
-            android:textColor="@color/white"
-            android:background="@color/brand_secondary"
-            android:layout_marginTop="10dp"
-            android:onClick="onClickRegisterAccount" />
+                <Button
+                    android:id="@+id/create_account"
+                    android:layout_width="300dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:onClick="onClickRegisterAccount"
+                    android:text="@string/create_register"
+                    android:theme="@style/LoginButtonStyle" />
 
-        <ProgressBar
-            android:id="@+id/login_progress_bar"
-            android:visibility="gone"
-            android:layout_width="300dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="-8dp"
-            android:layout_marginLeft="14dp"
-            android:indeterminate="true"
-            style="@android:style/Widget.Material.Light.ProgressBar.Horizontal" />
+                <ProgressBar
+                    android:id="@+id/login_progress_bar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="300dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-8dp"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout002"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout001"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:id="@+id/linearLayout002a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/toxme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:buttonTint="@color/white"
+                        android:checked="false" />
+
+                    <TextView
+                        android:id="@+id/toxme_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/toxme"
+                        android:gravity="center_vertical"
+                        android:text="@string/create_sign_up_for_toxme"
+                        android:textColor="@color/white"
+                        android:textSize="17sp" />
+
+
+                    <ImageView
+                        android:id="@+id/toxme_help_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/toxme_text"
+                        android:src="@drawable/ic_help_outline_white_48dp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout003"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/linearLayout002"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:gravity="center|bottom"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/create_account_import"
+                    android:layout_width="300dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="40dp"
+                    android:onClick="onClickImportProfile"
+                    android:text="@string/create_import_profile"
+                    android:theme="@style/CreateAccountButtonStyle" />
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/create_account_import"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:text="@string/create_import_profile"
-        android:textColor="@color/white"
-        android:background="#414141"
-        android:layout_marginBottom="40dp"
-        android:gravity="center"
-        android:onClick="onClickImportProfile" />
-
-    <TextView
-        android:text="@string/create_sign_up_for_toxme"
-        android:textColor="@color/white"
-        android:textSize="17sp"
-        android:gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/toxme"
-        android:layout_below="@+id/linearLayout"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/toxme"
-        android:layout_toEndOf="@id/toxme"
-        android:id="@+id/toxme_text" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/toxme"
-        android:checked="false"
-        android:buttonTint="@color/white"
-        android:layout_below="@+id/linearLayout"
-        android:layout_marginTop="10dp"
-        android:layout_alignLeft="@+id/create_account_import"
-        android:layout_alignStart="@+id/create_account_import" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/toxme_help_button"
-        android:src="@drawable/ic_help_outline_white_48dp"
-        android:layout_alignRight="@+id/create_account_import"
-        android:layout_alignEnd="@+id/create_account_import"
-        android:layout_alignBottom="@+id/toxme_text"
-        android:layout_alignTop="@+id/toxme_text" />
-
-
-</RelativeLayout>
+</ScrollView>

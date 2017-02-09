@@ -11,8 +11,9 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{Hex, AntoxLog, AntoxNotificationManager, Options}
-import im.tox.tox4j.core.data.ToxPublicKey
+import chat.tox.antox.utils.{AntoxLog, AntoxNotificationManager, Options}
+
+// import im.tox.tox4j.core.data.ToxPublicKey
 import org.scaloid.common.LoggerTag
 
 object SettingsActivity {
@@ -132,9 +133,38 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       networkSettingsChanged = true
     }
 
-    if(key == "proxy_address"){
+    if (sharedPreferences.getBoolean("autoacceptft", false) == true) {
+      // System.out.println("set autoacceptft = true");
+      State.setAutoAcceptFt(true)
+    }
+    else {
+      // System.out.println("set autoacceptft = false");
+      State.setAutoAcceptFt(false)
+    }
+
+    if (sharedPreferences.getBoolean("batterysavingmode", false) == true) {
+      // System.out.println("set batterysavingmode = true");
+      State.setBatterySavingMode(true)
+    }
+    else {
+      // System.out.println("set batterysavingmode = false");
+      State.setBatterySavingMode(false)
+    }
+
+
+    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true) {
+      // System.out.println("set videocallstartwithnovideo = true");
+      Options.videoCallStartWithNoVideo = true
+    }
+    else {
+      // System.out.println("set videocallstartwithnovideo = false");
+      Options.videoCallStartWithNoVideo = false
+    }
+
+
+    if (key == "proxy_address") {
       val address = sharedPreferences.getString("proxy_address", "127.0.0.1")
-      if(!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")){
+      if (!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
         Toast.makeText(getApplicationContext, getString(R.string.error_invalid_ip_address), Toast.LENGTH_SHORT).show()
         val preference = findPreference("proxy_address").asInstanceOf[EditTextPreference]
         preference.setText("127.0.0.1")
@@ -142,9 +172,9 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         networkSettingsChanged = false
       }
     }
-    if(key == "proxy_port"){
+    if (key == "proxy_port") {
       val port = sharedPreferences.getString("proxy_port", "9050").toInt
-      if(!(port > 0 && port < 65535)){
+      if (!(port > 0 && port < 65535)) {
         Toast.makeText(getApplicationContext, getString(R.string.error_invalid_port), Toast.LENGTH_SHORT).show()
         val preference = findPreference("proxy_port").asInstanceOf[EditTextPreference]
         preference.setText("9050")
@@ -153,9 +183,9 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     }
 
-    if(key == "custom_node_address"){
+    if (key == "custom_node_address") {
       val address = sharedPreferences.getString("custom_node_address", "127.0.0.1")
-      if(!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")){
+      if (!address.matches("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$")) {
         Toast.makeText(getApplicationContext, getString(R.string.error_invalid_ip_address), Toast.LENGTH_SHORT).show()
         val preference = findPreference("custom_node_address").asInstanceOf[EditTextPreference]
         preference.setText("127.0.0.1")
@@ -163,9 +193,9 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     }
 
-    if(key == "custom_node_port"){
+    if (key == "custom_node_port") {
       val port = sharedPreferences.getString("custom_node_port", "33445").toInt
-      if(!(port > 0 && port < 65535)){
+      if (!(port > 0 && port < 65535)) {
         Toast.makeText(getApplicationContext, getString(R.string.error_invalid_port), Toast.LENGTH_SHORT).show()
         val preference = findPreference("custom_node_port").asInstanceOf[EditTextPreference]
         preference.setText("33445")
@@ -173,7 +203,7 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     }
 
-    if(key == "custom_node_key"){
+    if (key == "custom_node_key") {
       val address = sharedPreferences.getString("custom_node_key", "")
       if (address.length != 64 || !address.matches("^[0-9A-F]+$")) {
         AntoxLog.error("Malformed tox public key", LoggerTag("SettingsActivity"))

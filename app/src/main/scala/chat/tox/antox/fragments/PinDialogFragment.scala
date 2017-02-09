@@ -26,7 +26,8 @@ class PinDialogFragment extends DialogFragment {
   var pin: EditText = _
 
   override def onAttach(activity: Activity) {
-    super.onAttach(activity)
+    // TODO **
+    // super.onAttach(activity)
     listener = activity.asInstanceOf[PinDialogListener]
   }
 
