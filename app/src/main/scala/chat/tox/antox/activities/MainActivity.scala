@@ -1,17 +1,23 @@
 package chat.tox.antox.activities
 
-import java.util.Locale
+import java.io.{IOException, PrintWriter, _}
+import java.text.SimpleDateFormat
+import java.util.{Calendar, List, Locale, Scanner}
+import java.io.InputStreamReader
+import java.util
 
-import android.app.{AlertDialog, NotificationManager}
+import android.app.{ActivityManager, AlertDialog, Application, NotificationManager}
 import android.content.res.Configuration
-import android.content.{Context, DialogInterface, Intent, SharedPreferences}
+import android.content._
 import android.net.ConnectivityManager
-import android.os.{Build, Bundle}
+import android.os.{Build, Bundle, Environment}
 import android.preference.PreferenceManager
+import android.support.multidex.MultiDex
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.{MenuItem, View, WindowManager}
-import chat.tox.antox.R
+import chat.tox.antox.{CrashActivity, R}
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
@@ -19,12 +25,12 @@ import chat.tox.antox.utils._
 
 class MainActivity extends AppCompatActivity {
 
+
   var request: View = _
 
   var preferences: SharedPreferences = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
-    System.out.println("MainApplication:MainActivity:onCreate")
 
     super.onCreate(savedInstanceState)
 
@@ -79,6 +85,11 @@ class MainActivity extends AppCompatActivity {
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }
 
+  override protected def attachBaseContext(base: Context) {
+    super.attachBaseContext(base)
+    MultiDex.install(this)
+  }
+
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])
     startActivityForResult(intent, Constants.ADD_FRIEND_REQUEST_CODE)
@@ -110,10 +121,7 @@ class MainActivity extends AppCompatActivity {
     alertDialog.setTitle(title)
     alertDialog.setMessage(message)
     alertDialog.setIcon(R.drawable.ic_launcher)
-    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-
-      def onClick(dialog: DialogInterface, which: Int) {
-      }
+    alertDialog.setButton("OK", (dialog: DialogInterface, which: Int) => {
     })
     alertDialog.show()
   }
@@ -172,4 +180,6 @@ class MainActivity extends AppCompatActivity {
       getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
     }
   }
+
+
 }

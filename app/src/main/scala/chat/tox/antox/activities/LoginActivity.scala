@@ -14,7 +14,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
-import chat.tox.antox.utils.Options
+import chat.tox.antox.utils.{CrashWatcher, Options}
 
 import scala.collection.JavaConversions._
 
@@ -23,32 +23,9 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
   private var profileSelected: String = _
 
 
-  def isIgnoringBatteryOptimizations(): Boolean = {
-    val context: Context = this
-    val packageName: String = context.getPackageName()
-    val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    return pm.isIgnoringBatteryOptimizations(packageName)
-  }
-
-  def ShowPermissionDialog() {
-    val intent = new Intent()
-    val context: Context = this
-    val packageName: String = context.getPackageName()
-    val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    if (pm.isIgnoringBatteryOptimizations(packageName)) {
-      // intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-      // context.startActivity(intent)
-      // don't show list of apps, we are already ignoring battery optimizations
-    } else {
-      intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-      intent.setData(Uri.parse("package:" + packageName))
-      context.startActivity(intent)
-    }
-  }
-
   protected override def onCreate(savedInstanceState: Bundle) {
-    System.out.println("MainApplication:LoginActivity:onCreate")
     super.onCreate(savedInstanceState)
+    CrashWatcher.setup(getApplicationContext)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
 
