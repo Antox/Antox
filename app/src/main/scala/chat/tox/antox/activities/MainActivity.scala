@@ -82,7 +82,7 @@ class MainActivity extends AppCompatActivity {
 
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }
-  
+
 
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])

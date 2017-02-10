@@ -13,9 +13,7 @@ import android.util.Log
 import chat.tox.antox.CrashActivity
 import chat.tox.antox.data.State
 
-/**
-  * Created by William on 10/02/2017.
-  */
+
 object CrashWatcher {
 
   private var last_stack_trace_as_string: String = ""
@@ -37,7 +35,6 @@ object CrashWatcher {
 
     last_crash_time = PreferenceManager.getDefaultSharedPreferences(ctx).getLong("last_crash_time", 0)
     prevlast_crash_time = PreferenceManager.getDefaultSharedPreferences(ctx).getLong("prevlast_crash_time", 0)
-
     Thread.setDefaultUncaughtExceptionHandler((thread: Thread, e: Throwable) => {
       handleUncaughtException(thread, e, ctx)
     })

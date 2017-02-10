@@ -23,7 +23,6 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    CrashWatcher.setup(getApplicationContext)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()
 

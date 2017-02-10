@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import chat.tox.antox.utils.CrashWatcher;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -22,6 +23,7 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        CrashWatcher.setup(this.getApplicationContext());
         super.onCreate(savedInstanceState);
         getPermissions();
     }
