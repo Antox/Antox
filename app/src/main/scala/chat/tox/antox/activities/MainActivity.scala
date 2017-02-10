@@ -82,11 +82,7 @@ class MainActivity extends AppCompatActivity {
 
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }
-
-  override protected def attachBaseContext(base: Context) {
-    super.attachBaseContext(base)
-    MultiDex.install(this)
-  }
+  
 
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])
