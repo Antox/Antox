@@ -41,11 +41,8 @@ dependencies:
     - echo "dummy"
   pre:
 
-    - git submodule init
-    - git submodule sync
-    - git submodule update ; exit 0 # strange error on first "update" call
-    - git submodule sync
-    - git submodule update
+    git clone https://github.com/TokTok/jvm-toxcore-c
+    git clone https://github.com/TokTok/jvm-toxcore-api
 
     - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 749D6EEC0353B12C
     - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D
