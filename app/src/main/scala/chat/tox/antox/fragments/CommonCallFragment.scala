@@ -86,7 +86,6 @@ abstract class CommonCallFragment extends Fragment {
         }
         catch {
           case e: Exception =>
-            System.out.println("onUiThread:001")
         }
       }
 
@@ -105,7 +104,6 @@ abstract class CommonCallFragment extends Fragment {
           }
           catch {
             case e: Exception =>
-              System.out.println("onUiThread:002")
           }
         })
 

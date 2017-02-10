@@ -11,10 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-/**
- * Created by zoff99 on 29.01.2017.
- */
-
 public class CrashActivity extends AppCompatActivity
 {
     ImageView bug_button = null;
@@ -23,7 +19,6 @@ public class CrashActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        System.out.println("CrashActivity:onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash);
 

@@ -42,12 +42,10 @@ object State {
   val callManager = new CallManager()
 
   def setLastIncomingMessageAction(): Unit = {
-    // System.out.println("ToxService:" + "setLastIncomingMessageAction")
     lastIncomingMessageAction = System.currentTimeMillis()
   }
 
   def lastIncomingMessageActionInTheLast(seconds: Long): Boolean = {
-    // System.out.println("ToxService:" + "lastIncomingMessageAction=" + lastIncomingMessageAction + " System.currentTimeMillis=" + System.currentTimeMillis())
     ((lastIncomingMessageAction + (seconds * 1000)) > System.currentTimeMillis())
   }
 
@@ -136,37 +134,28 @@ object State {
   }
 
   def shutdown(c: Context): Unit = {
-    System.out.println("Shutdown:" + "001")
     val preferences = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext)
     if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
-    System.out.println("Shutdown:" + "002")
 
     //clear notifications as they are now invalid after logging out
     AntoxNotificationManager.clearAllNotifications()
-    System.out.println("Shutdown:" + "003")
 
     //remove and end all calls
     callManager.removeAndEndAll()
-    System.out.println("Shutdown:" + "004")
 
     if (!userDb(c).getActiveUserDetails.loggingEnabled) {
       db.friendInfoList.toBlocking.first.foreach(f => db.deleteChatLogs(f.key))
     }
-    System.out.println("Shutdown:" + "005")
 
     //workaround for contacts appearing offline when the DB is upgraded
     db.synchroniseWithTox(ToxSingleton.tox)
     db.close()
-    System.out.println("Shutdown:" + "006")
 
     val startTox = new Intent(c, classOf[ToxService])
-    System.out.println("Shutdown:" + "007")
     c.stopService(startTox)
-    System.out.println("Shutdown:" + "008")
     userDb(c).logout()
-    System.out.println("Shutdown:" + "009")
   }
 
 

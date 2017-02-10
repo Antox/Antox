@@ -60,7 +60,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   var conversationDateHeader: ConversationDateHeader = _
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
-    System.out.println("MainApplication:GenericChatActivity:onCreate")
 
     super.onCreate(savedInstanceState)
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
@@ -156,7 +155,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
         val targetPos = fastScroller.translatedChildPosition(Util.clamp((proportion * itemCount.asInstanceOf[Float]).asInstanceOf[Int], 0, itemCount - 1))
         scrollDateHeader.setText(recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
-        // System.out.println("myh=" + fastScroller.getMyHeight() + " dy=" + dy + " p=" + proportion + " hy=" + fastScroller.getHandleY() + " targetPos=" + targetPos + "t=" + recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
       }
 
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

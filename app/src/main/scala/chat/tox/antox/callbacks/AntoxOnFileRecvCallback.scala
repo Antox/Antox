@@ -29,7 +29,6 @@ class AntoxOnFileRecvCallback(ctx: Context) {
     if (State.getBatterySavingMode()) {
       if (kind == FileKind.AVATAR) {
         // cancel all incoming Avatar FTs in battery saving mode
-        System.out.println("AntoxOnFileRecvCallback:" + "cancel incoming avatar in battery saving mode")
         ToxSingleton.tox.fileControl(friendInfo.key, fileNumber, ToxFileControl.CANCEL)
         return
       }
@@ -77,20 +76,16 @@ class AntoxOnFileRecvCallback(ctx: Context) {
 
 
     if (kind.autoAccept) {
-      System.out.println("AntoxOnFileRecvCallback:" + "kind.autoAccept:true");
       State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
     }
     else {
 
 
-      // System.out.println("State.getAutoAcceptFt:" + State.getAutoAcceptFt());
 
       if (State.getAutoAcceptFt() == true) {
-        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == true");
         State.transfers.acceptFile(friendInfo.key, fileNumber, ctx)
       }
       else {
-        System.out.println("AntoxOnFileRecvCallback:" + "autoAcceptFt == *false*");
       }
     }
 

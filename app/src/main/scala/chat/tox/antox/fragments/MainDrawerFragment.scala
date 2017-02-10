@@ -41,17 +41,12 @@ class MainDrawerFragment extends Fragment {
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
 
-    System.out.println("LLLL:003")
     super.onCreateView(inflater, container, savedInstanceState)
-    System.out.println("LLLL:004")
     val rootView = inflater.inflate(R.layout.fragment_main_drawer, container, false)
-    System.out.println("LLLL:005")
 
     // Set up the navigation drawer
     mDrawerLayout = rootView.findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
-    System.out.println("LLLL:006 mDrawerLayout=" + mDrawerLayout)
     mNavigationView = rootView.findViewById(R.id.left_drawer).asInstanceOf[NavigationView]
-    System.out.println("LLLL:007 mNavigationView=" + mNavigationView)
 
     mNavigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener {
       override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
@@ -60,9 +55,7 @@ class MainDrawerFragment extends Fragment {
       }
     })
 
-    System.out.println("LLLL:008")
     val drawerHeader = rootView.findViewById(R.id.drawer_header)
-    System.out.println("LLLL:009 drawerHeader=" + drawerHeader)
 
     // zoff //
     if (drawerHeader != null) {
@@ -73,7 +66,6 @@ class MainDrawerFragment extends Fragment {
         }
       })
     }
-    System.out.println("LLLL:010")
 
     // zoff //
     if (drawerHeader != null) {
@@ -97,7 +89,6 @@ class MainDrawerFragment extends Fragment {
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
     val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
-    System.out.println("LLLL: avatarView=" + avatarView)
 
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
@@ -105,23 +96,19 @@ class MainDrawerFragment extends Fragment {
     if (avatarView != null) {
       mAvatar match {
         case Some(avatar) =>
-          System.out.println("LLLL:load avatar image:1")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         case None =>
-          System.out.println("LLLL:set default_avatar:1")
           avatarView.setImageResource(R.drawable.default_avatar)
       }
     }
 
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    System.out.println("LLLL: nameView=" + nameView)
 
     // zoff //
     if (nameView != null) {
       nameView.setText(new String(userInfo.nickname.value))
     }
     val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    System.out.println("LLLL: statusMessageView=" + statusMessageView)
     // zoff //
     if (statusMessageView != null) {
       statusMessageView.setText(new String(userInfo.statusMessage.value))

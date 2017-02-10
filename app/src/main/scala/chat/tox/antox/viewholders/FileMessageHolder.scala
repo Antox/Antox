@@ -66,12 +66,10 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
 
     try {
-      System.out.println("imageMessage:" + file.getName.substring(0, Math.min(40, file.getName.length())) + " Enter");
     }
     catch {
       case e: Exception => {
         e.printStackTrace()
-        System.out.println("imageMessage:" + file.getName + " Enter");
       }
     }
 
@@ -93,7 +91,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       imageLoading.setVisibility(View.VISIBLE)
 
       imageLoadingSub = Some(BitmapManager.load(file, isAvatar = false).subscribe(image => {
-        System.out.println("imageMessage:" + file.getName + " setImage=" + image);
         imageLoading.setVisibility(View.GONE)
         imageMessage.setImageBitmap(image)
       }))
@@ -102,7 +99,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
       imageLoading.setVisibility(View.GONE)
       imageMessage.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
       imageMessage.setImageResource(R.drawable.ic_action_attachment_2)
-      System.out.println("imageMessage:" + file.getName + " setImage=ic_action_attachment_2");
     }
 
     imageMessage.setOnClickListener(this)
@@ -252,17 +248,14 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     }
 
     progressLayout.setVisibility(View.GONE)
-    System.out.println("progressLayout:" + "gone2")
     imageMessage.setVisibility(View.GONE)
   }
 
   def showProgressBar(): Unit = {
-    System.out.println("FileMessageHolder:" + "showProgressBar")
     fileProgressBar.setMax(msg.size)
 
     fileProgressBar.setVisibility(View.VISIBLE)
     progressLayout.setVisibility(View.VISIBLE)
-    System.out.println("progressLayout:" + "VIS1")
     fileProgressText.setVisibility(View.VISIBLE)
 
     showCancelButton()
@@ -285,7 +278,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
   def updateProgressBar(): Unit = {
     val updateRate = 100
     val mProgress = State.transfers.getProgressSinceXAgo(msg.id, updateRate)
-    // System.out.println("State.transfers:" + "mProgress=" + mProgress)
     val bytesPerSecond = mProgress match {
       case Some(p) => ((p._1 * 1000) / p._2).toInt
       case None => 0
@@ -311,7 +303,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     bubble.setOnLongClickListener(this)
     progressLayout.setVisibility(View.VISIBLE)
-    System.out.println("progressLayout:" + "VIS2")
 
 
     fileProgressBar.setVisibility(View.GONE)
@@ -367,7 +358,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
         if (mime == null) {
           mime = "image/*"
         }
-        System.out.println("file open:3i:" + mime)
         i.setDataAndType(Uri.fromFile(file), mime)
         context.startActivity(i)
 
@@ -391,7 +381,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
           }
           val i = new Intent()
           i.setAction(android.content.Intent.ACTION_VIEW)
-          System.out.println("file open:3:" + mime)
           i.setDataAndType(Uri.fromFile(file), mime)
           context.startActivity(i)
         }
@@ -469,7 +458,6 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
               }
               val i = new Intent()
               i.setAction(android.content.Intent.ACTION_VIEW)
-              System.out.println("file open:3:" + mime)
               i.setDataAndType(Uri.fromFile(file), mime)
               context.startActivity(i)
             }

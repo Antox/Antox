@@ -6,10 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-/**
- * Created by zoff99 on 29.01.2017.
- */
-
 public class ShareActivity extends AppCompatActivity
 {
 
@@ -22,7 +18,6 @@ public class ShareActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent)
     {
-        System.out.println("ShareActivity:" + "onNewIntent:intent=" + intent);
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
         {

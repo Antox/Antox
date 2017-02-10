@@ -53,7 +53,6 @@ object CrashWatcher {
       val myDir: File = new File(Environment.getExternalStorageDirectory.getAbsolutePath + "/Antox")
       myDir.mkdirs
       val myFile: File = new File(myDir.getAbsolutePath + "/crash_" + formattedDate + ".txt")
-      System.out.println("MainApplication:" + randnum + ":" + "crash file=" + myFile.getAbsolutePath)
       myFile.createNewFile
       val fOut: FileOutputStream = new FileOutputStream(myFile)
       val myOutWriter: OutputStreamWriter = new OutputStreamWriter(fOut)
@@ -75,27 +74,23 @@ object CrashWatcher {
       val printWriter: PrintWriter = new PrintWriter(writer)
       e.printStackTrace(printWriter)
       last_stack_trace_as_string = writer.toString
-      System.out.println("MainApplication:" + randnum + ":" + "stack trace ok")
       stack_trace_ok = true
     }
     catch {
       case ee: Exception =>
 
       case ex2: OutOfMemoryError =>
-        System.out.println("MainApplication:" + randnum + ":" + "stack trace *error*")
 
     }
     if (!stack_trace_ok) {
       try {
         last_stack_trace_as_string = Log.getStackTraceString(e)
-        System.out.println("MainApplication:" + randnum + ":" + "stack trace ok (addon 1)")
         stack_trace_ok = true
       }
       catch {
         case ee: Exception =>
 
         case ex2: OutOfMemoryError =>
-          System.out.println("MainApplication:" + randnum + ":" + "stack trace *error* (addon 1)")
 
       }
     }
@@ -129,15 +124,10 @@ object CrashWatcher {
         e3.printStackTrace()
     }
     val intent: Intent = new Intent(ctx, classOf[CrashActivity])
-    System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(1)=" + intent)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
-    System.out.println("MainApplication:" + randnum + ":" + "xx1 intent(2)=" + intent)
     ctx.startActivity(intent)
-    System.out.println("MainApplication:" + randnum + ":" + "xx2")
     android.os.Process.killProcess(android.os.Process.myPid)
-    System.out.println("MainApplication:" + randnum + ":" + "xx3")
     System.exit(2)
-    System.out.println("MainApplication:" + randnum + ":" + "xx4")
   }
 
   private def grabLogcat: String = {

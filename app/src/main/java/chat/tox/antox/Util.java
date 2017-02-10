@@ -1,7 +1,3 @@
-/**
- * Created by zoff99 on 28.01.2017.
- */
-package chat.tox.antox;
 
 public class Util
 {

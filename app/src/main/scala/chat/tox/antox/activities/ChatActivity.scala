@@ -45,7 +45,6 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
-    System.out.println("MainApplication:ChatActivity:onCreate")
 
     super.onCreate(savedInstanceState)
     val thisActivity = this
@@ -207,12 +206,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
-          System.out.println("BitmapManager:avatar:001")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
-          System.out.println("BitmapManager:avatar:002")
         })
 
-        System.out.println("BitmapManager:avatar:003")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources

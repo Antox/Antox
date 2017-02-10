@@ -9,10 +9,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
-/**
- * Created by zoff99 on 28.01.2017.
- */
-
 public class ViewUtil
 {
     public static void setY(final @NonNull View v, final int y)

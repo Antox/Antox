@@ -1,12 +1,10 @@
 package chat.tox.antox.activities
 
 import android.app.Activity
-import android.content.{Context, Intent}
+import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
-import android.os.{Build, Bundle, PowerManager}
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.provider.Settings
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}

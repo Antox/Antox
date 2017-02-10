@@ -60,15 +60,11 @@ class CallService(toxService: ToxService) {
   }
 
   def destroy(): Unit = {
-    System.out.println("CallService:" + "destroy(): enter")
     toxService.stopForeground(true)
-    System.out.println("CallService:" + "destroy(): stopSelf")
     toxService.stopSelf()
-    System.out.println("CallService:" + "destroy(): stopSelf -> ready")
 
     AntoxNotificationManager.stopMonitoringCalls()
     callAddedSubscription.foreach(_.unsubscribe())
     callNotificationSubscription.foreach(_.unsubscribe())
-    System.out.println("CallService:" + "destroy(): ready")
   }
 }

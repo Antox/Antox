@@ -77,10 +77,8 @@ class MainActivity extends AppCompatActivity {
 
     // set autoaccept option on startup
     State.setAutoAcceptFt(preferences.getBoolean("autoacceptft", false))
-    // System.out.println("load autoacceptft options : "+State.getAutoAcceptFt());
 
     Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
-    // System.out.println("load videocallstartwithnovideo options : "+Options.videoCallStartWithNoVideo);
 
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }

@@ -134,30 +134,24 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
     }
 
     if (sharedPreferences.getBoolean("autoacceptft", false) == true) {
-      // System.out.println("set autoacceptft = true");
       State.setAutoAcceptFt(true)
     }
     else {
-      // System.out.println("set autoacceptft = false");
       State.setAutoAcceptFt(false)
     }
 
     if (sharedPreferences.getBoolean("batterysavingmode", false) == true) {
-      // System.out.println("set batterysavingmode = true");
       State.setBatterySavingMode(true)
     }
     else {
-      // System.out.println("set batterysavingmode = false");
       State.setBatterySavingMode(false)
     }
 
 
     if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true) {
-      // System.out.println("set videocallstartwithnovideo = true");
       Options.videoCallStartWithNoVideo = true
     }
     else {
-      // System.out.println("set videocallstartwithnovideo = false");
       Options.videoCallStartWithNoVideo = false
     }
 

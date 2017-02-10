@@ -12,7 +12,6 @@ class AntoxOnFileChunkRequestCallback(private var ctx: Context) {
   def fileChunkRequest(friendInfo: FriendInfo, fileNumber: Int, position: Long, length: Int)(state: Unit): Unit = {
     val mTransfer = State.transfers.get(friendInfo.key, fileNumber)
 
-    // System.out.println("fileChunkRequest:" + "friendInfo=" + friendInfo + " fileNumber=" + fileNumber + " position=" + position + " length=" + length)
 
     mTransfer match {
       case Some(t) =>
