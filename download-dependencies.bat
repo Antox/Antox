@@ -4,6 +4,7 @@ rmdir /s /q app\src\main\jniLibs\
 mkdir app\src\main\jniLibs\
 
 mkdir app\src\main\jniLibs\armeabi-v7a
+mkdir app\src\main\jniLibs\armeabi
 mkdir app\src\main\jniLibs\x86
 mkdir app\src\main\jniLibs\arm64-v8a
 mkdir app\src\main\jniLibs\x86_64
@@ -14,6 +15,7 @@ mkdir app\libs
 echo Removed old version
 
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://build.tox.chat/job/tox4j_build_android_armel_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so', 'app\src\main\jniLibs\armeabi-v7a\libtox4j-c.so')"
+powershell -Command "(New-Object Net.WebClient).DownloadFile('https://build.tox.chat/job/tox4j_build_android_armel_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so', 'app\src\main\jniLibs\armeabi\libtox4j-c.so')"
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://build.tox.chat/job/tox4j_build_android_x86_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so', 'app\src\main\jniLibs\x86\libtox4j-c.so')"
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://build.tox.chat/job/tox4j_build_android_arm64_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so', 'app\src\main\jniLibs\arm64-v8a\libtox4j-c.so')"
 powershell -Command "(New-Object Net.WebClient).DownloadFile('https://build.tox.chat/job/tox4j_build_android_x86-64_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so', 'app\src\main\jniLibs\x86_64\libtox4j-c.so')"
