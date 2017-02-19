@@ -46,7 +46,7 @@ case class ToxAddress(address: String) {
 
   def bytes: Array[Byte] = Hex.hexStringToBytes(address)
 
-  def key: FriendKey = new FriendKey(address.substring(0, ToxKey.MAX_KEY_LENGTH))
+  def key: FriendKey = new FriendKey(address.toUpperCase().substring(0, ToxKey.MAX_KEY_LENGTH))
 
-  override def toString: String = address
+  override def toString: String = address.toUpperCase()
 }
