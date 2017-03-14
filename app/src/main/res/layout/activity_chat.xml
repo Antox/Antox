@@ -125,6 +125,44 @@
     <!-- chat messages area  -->
     <!-- chat messages area  -->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white_absolute"
+        android:orientation="horizontal"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp">
+
+        <ImageView
+            android:id="@+id/attachment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/attachment_file"
+            android:paddingRight="0dp"
+            android:src="@drawable/ic_attach_file_black_24dp" />
+
+        <ImageView
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/attachment_takephoto"
+            android:src="@drawable/ic_photo_camera_black_24dp" />
+
+        <ImageView
+            android:id="@+id/image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
+            android:contentDescription="@string/attachment_photo"
+            android:src="@drawable/ic_image_black_24dp" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -170,43 +208,4 @@
                 android:src="@drawable/ic_send" />
         </LinearLayout>
     </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/white_absolute"
-        android:orientation="horizontal"
-        android:paddingBottom="7dp"
-        android:paddingTop="7dp">
-
-        <ImageView
-            android:id="@+id/attachment_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.33"
-            android:contentDescription="@string/attachment_file"
-            android:paddingRight="0dp"
-            android:src="@drawable/ic_attach_file_black_24dp" />
-
-        <ImageView
-            android:id="@+id/camera_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.33"
-            android:contentDescription="@string/attachment_takephoto"
-            android:src="@drawable/ic_photo_camera_black_24dp" />
-
-        <ImageView
-            android:id="@+id/image_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.33"
-            android:contentDescription="@string/attachment_photo"
-            android:src="@drawable/ic_image_black_24dp" />
-
-    </LinearLayout>
 </LinearLayout>
