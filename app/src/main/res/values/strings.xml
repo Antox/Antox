@@ -197,6 +197,7 @@
     <string name="dialog_color_picker_title">Select theme color</string>
 
     <!-- Chat Fragment -->
+    <string name="toggle_keyboard">Toggle keyboard</string>
     <string name="attachment_photo">Attach photo</string>
     <string name="attachment_file">Attach File</string>
     <string name="attachment_takephoto">Take photo</string>

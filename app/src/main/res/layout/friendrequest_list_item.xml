@@ -44,16 +44,16 @@
         android:layout_alignEnd="@+id/avatar" />
 
     <TextView
-        android:paddingTop="2dp"
         android:id="@+id/request_key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textSize="18dp"
-        android:paddingLeft="15dp"
+        android:layout_toLeftOf="@id/accept"
         android:layout_toRightOf="@id/avatar"
-        android:layout_toLeftOf="@id/accept" />
+        android:ellipsize="marquee"
+        android:paddingLeft="15dp"
+        android:paddingTop="2dp"
+        android:singleLine="true"
+        android:textSize="18dp" />
 
     <TextView
         android:paddingLeft="15dp"
