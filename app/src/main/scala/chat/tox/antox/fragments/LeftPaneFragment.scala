@@ -41,7 +41,7 @@ class LeftPaneFragment extends Fragment {
         imageView.asInstanceOf[ImageView].setImageResource(ICONS(position))
         imageView.setLayoutParams(params)
         return materialRippleLayout
-      }17
+      }
 
       null
     }
