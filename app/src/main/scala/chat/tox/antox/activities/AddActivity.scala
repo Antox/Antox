@@ -27,6 +27,7 @@ class AddActivity extends AppCompatActivity {
 
     context = getApplicationContext
 
+    setTitle(getResources.getString(R.string.title_activity_add))
     setContentView(R.layout.activity_add)
     ThemeManager.applyTheme(this, getSupportActionBar)
 

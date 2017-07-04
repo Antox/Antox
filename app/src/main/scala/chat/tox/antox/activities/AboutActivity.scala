@@ -15,6 +15,8 @@ class AboutActivity extends AppCompatActivity {
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.about)
+
+    setTitle(getResources.getString(R.string.about))
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 

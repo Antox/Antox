@@ -59,9 +59,13 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   private var avatarDialog: AvatarDialog = _
 
   override def onCreate(savedInstanceState: Bundle) {
+
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    setTitle(getResources.getString(R.string.title_activity_profile_settings))
+
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)

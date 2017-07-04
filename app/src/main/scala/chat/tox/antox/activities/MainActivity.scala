@@ -38,13 +38,16 @@ class MainActivity extends AppCompatActivity {
     ThemeManager.init(getApplicationContext)
 
     // Set the right language
-    selectLanguage()
+    AntoxLocalization.setLanguage(getApplicationContext)
 
     setContentView(R.layout.activity_main)
 
     // Use a toolbar so that the drawer goes above the action bar
     val toolbar = findViewById(R.id.toolbar).asInstanceOf[Toolbar]
     setSupportActionBar(toolbar)
+
+    setTitle(getResources.getString(R.string.app_name))
+
 
     getSupportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
@@ -149,31 +152,6 @@ class MainActivity extends AppCompatActivity {
     }
   }
 
-  private def selectLanguage() {
-    val localeString = preferences.getString("locale", "-1")
-    val locale = getResources.getConfiguration.locale
-
-    if (localeString == "-1") {
-      val editor = preferences.edit()
-      val currentLanguage = locale.getLanguage.toLowerCase
-      val currentCountry = locale.getCountry
-
-      editor.putString("locale", currentLanguage + "_" + currentCountry)
-      editor.apply()
-    } else {
-      val locale = if (localeString.contains("_")) {
-        val (language, country) = localeString.splitAt(localeString.indexOf("_"))
-        new Locale(language, country)
-      } else {
-        new Locale(localeString)
-      }
-
-      Locale.setDefault(locale)
-      val config = new Configuration()
-      config.locale = locale
-      getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
-    }
-  }
 
 
 }
