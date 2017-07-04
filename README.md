@@ -30,11 +30,8 @@ The APK can be downloaded [here](https://pkg.tox.chat/fdroid/repo/antox.apk)
 - Avatars
 - Partial A/V support
 
-### Known Issues
-- Currently crashing on x86_64 devices, due to the tox4j library not currently supporting this arch. To find out if your device is running x86_64 Android, look for your device on [GSMArena](http://www.gsmarena.com/) and check your device's chipset. The most common x86_64 Android chipset is the Intel Atom.
-
 ### Translating Antox
-- You can localize the application via pull request or using [Transifex](https://www.transifex.com/antox/antox/).
+- You can localize the application via pull request ~~or using [Transifex](https://www.transifex.com/antox/antox/).~~ We are currently trying to find who has login details for the Transifex account so languages can be merged. For now, it is better to make a pull request to get new languages merged as soon as possible.
 
 ### Compiling Antox From Source with Android Studio
 - Download https://developer.android.com/sdk/installing/studio.html
