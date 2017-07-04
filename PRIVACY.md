@@ -9,7 +9,7 @@ All messages sent are P2P (peer to peer), meaning they are sent directly to the 
 
 Camera and microphone usage is solely for calling other users, and is not recorded in any way by the application. However, this does not stop the person you are talking to from recording you.
 
-Any connections made by the device are either to your online friends, or as a node on the Tox network to receive friend requests or access the DHT. Connecting to the network also requires connection to a bootstrap node, Antox will connect to one of these at random. A full list of the bootstrap nodes that Antox uses can be found at
+Any connections made by the device are either to your online friends, or as a node on the Tox network to receive friend requests or access the DHT. Connecting to the network also requires connection to a bootstrap node, Antox will attempt to connect to all of the currently listed bootstrap nodes. A full list of the bootstrap nodes that Antox uses can be found at
 https://nodes.tox.chat/.
 This list is provided and maintained by The Tox Project.
 
