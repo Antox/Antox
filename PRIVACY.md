@@ -13,6 +13,6 @@ Any connections made by the device are either to your online friends, or as a no
 https://nodes.tox.chat/.
 This list is provided and maintained by The Tox Project.
 
-The Tox network also utilizes a DHT to store IP addresses so that users are able to find each other on the network and start a connection. There is no way of matching a Tox ID with an IP address as the addresses are paired with random keys. This DHT is publicly available, meaning that whilst nobody can determine your exact IP addresses, anyone can see which IP addresses are currently connected to the Tox network.
+The Tox network also utilizes a DHT (distributed hash table) to store IP addresses so that users are able to find each other on the network and start a connection. There is no way of matching a Tox ID with an IP address as the addresses are paired with random keys. This DHT is publicly available, meaning that whilst nobody can determine your exact IP addresses, anyone can see which IP addresses are currently connected to the Tox network.
 
 Antox also uses ToxMe, a service that allows users to store their Tox ID in an easy to read form (example@toxme.io). ToxMe can be used by anyone, and anyone can create a clone of this service. Antox uses toxme.io by default, but you are free to use any other service that you wish. Antox does not send any user information to these services, other than a Tox ID or a ToxMe ID, for name resolution and creation.
