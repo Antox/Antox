@@ -6,7 +6,7 @@ import scala.collection.JavaConversions._
 
 class Group(val key: GroupKey,
             val groupNumber: Int,
-            private var _name: String,
+            var name: String,
             var alias: String,
             var topic: String,
             val peers: PeerList) {
@@ -41,12 +41,4 @@ class Group(val key: GroupKey,
   }
 
   override def toString: String = name
-
-  //Getters
-  def name: String = _name
-
-  //Setters
-  def name_=(name: String): Unit = {
-    _name = name
-  }
 }

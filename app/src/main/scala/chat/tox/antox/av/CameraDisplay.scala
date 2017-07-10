@@ -124,26 +124,23 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
     camera.setParameters(newParameters)
   }
 
-  override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-    if (!active) return
+  override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit =
+    if (active)
+      maybeCamera.foreach(create(_, surface))
 
-    maybeCamera.foreach(create(_, surface))
-  }
+  override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit =
+    if (active) {
+      maybeCamera.foreach(camera => {
+        try {
+          camera.stopPreview()
+        } catch {
+          case e: Exception =>
+            e.printStackTrace()
+        }
 
-  override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-    if (!active) return
-
-    maybeCamera.foreach(camera => {
-      try {
-        camera.stopPreview()
-      } catch {
-        case e: Exception =>
-          e.printStackTrace()
-      }
-
-      recreate(camera, surface)
-    })
-  }
+        recreate(camera, surface)
+      })
+    }
 
   //do nothing, we don't care
   override def onSurfaceTextureUpdated(surface: SurfaceTexture): Unit = {}

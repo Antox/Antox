@@ -24,20 +24,21 @@ case class Message(id: Int,
                    fileKind: FileKind,
                    callEventKind: CallEventKind) {
 
-  def logFormat(): Option[String] = {
-    if (this.isFileTransfer) return None
+  def logFormat(): Option[String] =
+    if (!isFileTransfer) {
+      val name =
+        if (isMine) {
+          ToxSingleton.tox.getName
+        } else {
+          senderName
+        }
 
-    val name =
-      if (isMine) {
-        ToxSingleton.tox.getName
-      } else {
-        senderName
-      }
+      val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
 
-    val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
-
-    Some(s"<$name> $message [$prettyTimestamp]")
-  }
+      Some(s"<$name> $message [$prettyTimestamp]")
+    } else {
+      None
+    }
 
   def toNotificationFormat(context: Context): String = {
     `type` match {

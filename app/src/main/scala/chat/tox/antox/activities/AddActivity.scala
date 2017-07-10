@@ -34,8 +34,7 @@ class AddActivity extends AppCompatActivity {
     val intent = getIntent
     if (Intent.ACTION_VIEW == intent.getAction && intent != null) {
       // Handle incoming tox uri links
-      var uri: Uri = null
-      uri = intent.getData
+      val uri = intent.getData
       if (uri != null) {
         getSupportFragmentManager.findFragmentById(R.id.fragment_add_pane)
           .asInstanceOf[AddPaneFragment].getSelectedFragment

@@ -155,24 +155,23 @@ object BitmapManager {
 
       val options = new BitmapFactory.Options()
 
-      if (!decodeAndCheck(byteArr, options)) {
-        return null
-      }
+      if (decodeAndCheck(byteArr, options)) {
+        options.inSampleSize = calculateInSampleSize(options, 200)
+        options.inPreferredConfig = Bitmap.Config.RGB_565
+        options.inJustDecodeBounds = false
 
-      options.inSampleSize = calculateInSampleSize(options, 200)
-      options.inPreferredConfig = Bitmap.Config.RGB_565
-      options.inJustDecodeBounds = false
+        val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
 
-      val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+        if (isAvatar) {
+          addAvatarToCache(imageKey, bitmap)
+        } else {
+          addBitmapToMemoryCache(imageKey, bitmap)
+        }
 
-      if (isAvatar) {
-        addAvatarToCache(imageKey, bitmap)
+        bitmap
       } else {
-        addBitmapToMemoryCache(imageKey, bitmap)
+        null
       }
-
-
-      bitmap
     } catch {
       case e: FileNotFoundException =>
         AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)

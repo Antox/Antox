@@ -38,11 +38,13 @@ object FileUtils {
   def readToBytes(source: File): Option[Array[Byte]] = {
     val f = new RandomAccessFile(source, "r")
     try {
-      if (f.length() > Integer.MAX_VALUE) return None
-
-      val data = new Array[Byte](f.length().asInstanceOf[Int])
-      f.readFully(data)
-      Some(data)
+      if (f.length() <= Integer.MAX_VALUE) {
+        val data = new Array[Byte](f.length().asInstanceOf[Int])
+        f.readFully(data)
+        Some(data)
+      } else {
+        None
+      }
     } finally {
       f.close()
     }

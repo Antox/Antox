@@ -56,15 +56,14 @@ class WifiWarningFragment extends Fragment {
     preferences.registerOnSharedPreferenceChangeListener(preferencesListener)
   }
 
-  def updateWifiWarning(): Unit = {
-    if (getActivity == null) return
-
-    if (!ToxSingleton.isToxConnected(preferences, getActivity)) {
-      showWifiWarning()
-    } else {
-      hideWifiWarning()
+  def updateWifiWarning(): Unit =
+    if (getActivity != null) {
+      if (!ToxSingleton.isToxConnected(preferences, getActivity)) {
+        showWifiWarning()
+      } else {
+        hideWifiWarning()
+      }
     }
-  }
 
   def onClickWifiOnlyWarning(view: View): Unit = {
     val intent = new Intent(getActivity, classOf[SettingsActivity])

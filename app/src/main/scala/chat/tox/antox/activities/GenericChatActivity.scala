@@ -139,22 +139,16 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
           onScrolledToTop()
         }
 
-        val itemCount = recyclerView.getAdapter().getItemCount()
-        var proportion: Float = 0f
-        if (fastScroller.getHandleY() == 0) {
-          proportion = 0f
-        }
-        else {
-          if (fastScroller.getHandleY() + fastScroller.getHandleHeight() >= fastScroller.getMyHeight() - RecyclerViewFastScroller.TRACK_SNAP_RANGE) {
-            proportion = 1f
-          }
-          else {
-            proportion = fastScroller.getHandleY() / fastScroller.getMyHeight()
-          }
-        }
+        val itemCount = recyclerView.getAdapter.getItemCount
+        val proportion = if (fastScroller.getHandleY == 0)
+          0f
+        else if (fastScroller.getHandleY + fastScroller.getHandleHeight >= fastScroller.getMyHeight - RecyclerViewFastScroller.TRACK_SNAP_RANGE)
+          1f
+        else
+          fastScroller.getHandleY / fastScroller.getMyHeight
 
-        val targetPos = fastScroller.translatedChildPosition(Util.clamp((proportion * itemCount.asInstanceOf[Float]).asInstanceOf[Int], 0, itemCount - 1))
-        scrollDateHeader.setText(recyclerView.getAdapter().asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
+        val targetPos = fastScroller.translatedChildPosition(Util.clamp((proportion * itemCount).toInt, 0, itemCount - 1))
+        scrollDateHeader.setText(recyclerView.getAdapter.asInstanceOf[chat.tox.antox.adapters.ChatMessagesAdapter].getBubbleText(targetPos))
       }
 
       override def onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -187,9 +181,10 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
         if (actionId == EditorInfo.IME_ACTION_SEND) {
           onSendMessage()
           setTyping(typing = false)
-          return true
+          true
+        } else {
+          false
         }
-        false
       }
     })
     messageBox.setInputType(KeyboardOptions.getInputType(getApplicationContext))

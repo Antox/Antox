@@ -29,26 +29,21 @@ class AddPaneFragment extends Fragment {
           .inflate(R.layout.custom_tab_old, parent, false).asInstanceOf[FrameLayout]
         customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView].setImageResource(ICONS(position))
         customTabLayout.findViewById(R.id.text).asInstanceOf[TextView].setText(LABELS(position))
-        return customTabLayout
+        customTabLayout
       } else {
         val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity)
           .inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
         materialRippleLayout.findViewById(R.id.image).asInstanceOf[ImageView].setImageResource(ICONS(position))
         materialRippleLayout.findViewById(R.id.text).asInstanceOf[TextView].setText(LABELS(position))
-        return materialRippleLayout
+        materialRippleLayout
       }
-
-      null
     }
 
-    override def getPageTitle(position: Int): CharSequence = {
+    override def getPageTitle(position: Int): CharSequence =
       position match {
-        case 0 => return LABELS(0)
-        case _ => return LABELS(1)
+        case 0 => LABELS(0)
+        case _ => LABELS(1)
       }
-
-      null
-    }
 
     override def getItem(pos: Int): Fragment = pos match {
       case 0 => new AddFriendFragment()
@@ -70,7 +65,6 @@ class AddPaneFragment extends Fragment {
     rootView
   }
 
-  def getSelectedFragment: Fragment = {
+  def getSelectedFragment: Fragment =
     pager.getAdapter.asInstanceOf[AddPagerAdapter].getActiveFragment(pager, pager.getCurrentItem)
-  }
 }

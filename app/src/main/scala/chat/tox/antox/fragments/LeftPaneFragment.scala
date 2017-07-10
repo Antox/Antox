@@ -34,26 +34,21 @@ class LeftPaneFragment extends Fragment {
         val imageView = customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView]
         imageView.setImageResource(ICONS(position))
         imageView.setLayoutParams(params)
-        return customTabLayout
+        customTabLayout
       } else {
         val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
         val imageView = materialRippleLayout.findViewById(R.id.image)
         imageView.asInstanceOf[ImageView].setImageResource(ICONS(position))
         imageView.setLayoutParams(params)
-        return materialRippleLayout
+        materialRippleLayout
       }
-
-      null
     }
 
-    override def getPageTitle(position: Int): CharSequence = {
+    override def getPageTitle(position: Int): CharSequence =
       position match {
-        case 0 => return "Recent"
-        case _ => return "Contacts"
+        case 0 => "Recent"
+        case _ => "Contacts"
       }
-
-      null
-    }
 
     override def getItem(pos: Int): Fragment = pos match {
       case 0 => new RecentFragment()

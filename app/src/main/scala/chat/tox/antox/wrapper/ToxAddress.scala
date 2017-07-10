@@ -6,24 +6,11 @@ object ToxAddress {
 
   val MAX_ADDRESS_LENGTH = 76
 
-  def isAddressValid(address: String): Boolean = {
-    if (address.length != MAX_ADDRESS_LENGTH || !address.matches("^[0-9A-F]+$")) {
-      return false
-    }
+  def isAddressValid(address: String): Boolean =
+    address.length == MAX_ADDRESS_LENGTH &&
+      address.matches("^[0-9A-F]+$") &&
+      address.grouped(4).map(Integer.parseInt(_, 16)).fold(0)(_ ^ _) == 0
 
-    var x = 0
-    try {
-      var i = 0
-      while (i < address.length) {
-        x = x ^
-          java.lang.Integer.valueOf(address.substring(i, i + 4), 16)
-        i += 4
-      }
-    } catch {
-      case e: NumberFormatException => return false
-    }
-    x == 0
-  }
 
   def removePrefix(address: String): String = {
     val prefix = "tox:"
@@ -47,7 +34,7 @@ case class ToxAddress(address: String) {
 
   def bytes: Array[Byte] = Hex.hexStringToBytes(fixedAddress)
 
-  def key: FriendKey = new FriendKey(fixedAddress.substring(0, ToxKey.MAX_KEY_LENGTH))
+  def key: FriendKey = FriendKey(fixedAddress.substring(0, ToxKey.MAX_KEY_LENGTH))
 
   override def toString: String = fixedAddress
 }

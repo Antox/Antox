@@ -220,23 +220,24 @@ object ToxSingleton {
 
     val proxyEnabled = preferences.getBoolean("enable_proxy", Options.proxyEnabled)
     AntoxLog.verbose("Proxy enabled: " + proxyEnabled.toString, TAG)
-    if (!proxyEnabled) {
-      return ProxyOptions.None
-    }
 
-    val proxyAddress = preferences.getString("proxy_address", Options.proxyAddress)
-    AntoxLog.verbose("Proxy address: " + proxyAddress, TAG)
+    if (proxyEnabled) {
+      val proxyAddress = preferences.getString("proxy_address", Options.proxyAddress)
+      AntoxLog.verbose("Proxy address: " + proxyAddress, TAG)
 
-    val proxyPort = preferences.getString("proxy_port", Options.proxyPort).toInt
-    AntoxLog.verbose("Proxy port: " + proxyPort, TAG)
+      val proxyPort = preferences.getString("proxy_port", Options.proxyPort).toInt
+      AntoxLog.verbose("Proxy port: " + proxyPort, TAG)
 
-    val proxyType = preferences.getString("proxy_type", "SOCKS5")
-    AntoxLog.verbose("Proxy type: " + proxyType, TAG)
-    proxyType match {
-      case "HTTP" =>
-        ProxyOptions.Http(proxyAddress, proxyPort)
-      case "SOCKS5" =>
-        ProxyOptions.Socks5(proxyAddress, proxyPort)
+      val proxyType = preferences.getString("proxy_type", "SOCKS5")
+      AntoxLog.verbose("Proxy type: " + proxyType, TAG)
+      proxyType match {
+        case "HTTP" =>
+          ProxyOptions.Http(proxyAddress, proxyPort)
+        case "SOCKS5" =>
+          ProxyOptions.Socks5(proxyAddress, proxyPort)
+      }
+    } else {
+      ProxyOptions.None
     }
   }
 
@@ -253,7 +254,7 @@ object ToxSingleton {
 
     val udpEnabled = preferences.getBoolean("enable_udp", false)
     val proxyOptions = readProxyOptions(preferences)
-    val options = new ToxOptions(
+    val options = ToxOptions(
       ipv6Enabled = Options.ipv6Enabled,
       proxy = proxyOptions,
       udpEnabled = udpEnabled,

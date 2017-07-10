@@ -87,10 +87,7 @@ class CreateAccountActivity extends AppCompatActivity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     val id = item.getItemId
-    if (id == R.id.action_settings) {
-      return true
-    }
-    super.onOptionsItemSelected(item)
+    id == R.id.action_settings || super.onOptionsItemSelected(item)
   }
 
   def toggleRegisterText(): Unit = {

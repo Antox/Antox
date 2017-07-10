@@ -1,23 +1,14 @@
 package chat.tox.antox.activities
 
-import java.io.{IOException, PrintWriter, _}
-import java.text.SimpleDateFormat
-import java.util.{Calendar, List, Locale, Scanner}
-import java.io.InputStreamReader
-import java.util
-
-import android.app.{ActivityManager, AlertDialog, Application, NotificationManager}
-import android.content.res.Configuration
+import android.app.{AlertDialog, NotificationManager}
 import android.content._
 import android.net.ConnectivityManager
-import android.os.{Build, Bundle, Environment}
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.support.multidex.MultiDex
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.{MenuItem, View, WindowManager}
-import chat.tox.antox.{CrashActivity, R}
+import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.fragments.MainDrawerFragment
 import chat.tox.antox.theme.ThemeManager
@@ -130,15 +121,10 @@ class MainActivity extends AppCompatActivity {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
     val networkInfo = connectivityManager.getAllNetworkInfo
 
-    for (info <- networkInfo) {
-      if ("WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
-        return true
-      } else if ("MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
-        return true
-      }
+    networkInfo.exists { info =>
+      "WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected ||
+        "MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected
     }
-
-    false
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {

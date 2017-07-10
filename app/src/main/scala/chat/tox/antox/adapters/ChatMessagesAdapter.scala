@@ -169,13 +169,11 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
   def getHeaderString(position: Int): String = {
     try {
-      return TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
-    }
-    catch {
-      case e: Exception => {
+      TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
+    } catch {
+      case e: Exception =>
         e.printStackTrace()
-        return " "
-      }
+        " "
     }
   }
 

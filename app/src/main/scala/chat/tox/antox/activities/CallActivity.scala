@@ -51,7 +51,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     setContentView(R.layout.activity_call)
 
-    activeKey = new FriendKey(getIntent.getStringExtra("key"))
+    activeKey = FriendKey(getIntent.getStringExtra("key"))
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
     call =
       State.callManager.get(callNumber).getOrElse({

@@ -63,19 +63,18 @@ class AudioPlayer(_sampleRate: Int, _channels: Int, minBufferLength: Int) extend
     }
   }
 
-  def start(): Unit = {
-    if (active) return
-
-    active = true
-    new Thread(new Runnable {
-      override def run(): Unit = {
-        while (active) {
-          val sleepTime = playAudioFrame()
-          Thread.sleep(sleepTime)
+  def start(): Unit =
+    if (!active) {
+      active = true
+      new Thread(new Runnable {
+        override def run(): Unit = {
+          while (active) {
+            val sleepTime = playAudioFrame()
+            Thread.sleep(sleepTime)
+          }
         }
-      }
-    }).start()
-  }
+      }).start()
+    }
 
   def stop(): Unit = {
     active = false

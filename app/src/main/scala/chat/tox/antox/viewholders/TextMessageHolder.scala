@@ -104,14 +104,14 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     event.getAction match {
       case MotionEvent.ACTION_DOWN =>
         isLongClick = false
+        v.onTouchEvent(event)
 
       case MotionEvent.ACTION_UP if isLongClick =>
         isLongClick = false
-        return true // if we're in a long click ignore the release action
+        true // if we're in a long click ignore the release action
 
       case _ => //do nothing
+        v.onTouchEvent(event)
     }
-
-    v.onTouchEvent(event)
   }
 }

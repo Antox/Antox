@@ -148,9 +148,9 @@ class ActiveCallFragment extends CommonCallFragment {
     })
 
     if (CameraUtils.deviceHasCamera(getActivity)) {
-      if (Options.videoCallStartWithNoVideo == true) {
+      if (Options.videoCallStartWithNoVideo) {
         // start with video off!
-        call.hideSelfVideo
+        call.hideSelfVideo()
       }
     }
 
@@ -279,9 +279,8 @@ class ActiveCallFragment extends CommonCallFragment {
   private def setupOnClickToggle(clickView: View, action: () => Unit): Unit = {
     clickView.setOnClickListener(new OnClickListener {
       override def onClick(view: View): Unit = {
-        if (!call.active || call.ringing) return
-
-        action()
+        if (call.active && !call.ringing)
+          action()
       }
     })
   }
