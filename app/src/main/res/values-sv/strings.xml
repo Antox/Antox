@@ -1,113 +1,294 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <!--Activity titles-->
-    <string name="title_activity_friend_profile">Väns Profil</string>
-    <!--Navigation / Action Bar-->
-    <!--Login Activity-->
-    <string name="login_must_fill_in">Du måste fylla i ett profilnamn</string>
-    <string name="login_login">Logga in</string>
-    <string name="login_account_hint">Profilnamn</string>
-    <string name="login_create_account_text">Skapa Tox-profil</string>
-    <string name="login_bad_login">Profilnamnet kändes inte igen</string>
-    <!--Create Account Activity-->
-    <string name="create_name_hint">Profilnamn</string>
-    <string name="create_register">Registrera</string>
-    <string name="create_register_incog">Registrera Inkognito</string>
-    <string name="create_skip">Tillåt vem som helst att lägga till dig via ditt profilnamn</string>
-    <string name="create_must_fill_in">Du måste fylla i alla fält</string>
-    <!--Main Activity-->
-    <string name="main_no_active_chat">Ingen aktiv chatt. Starta en genom att klicka på en vän i panelen till vänster.</string>
-    <string name="main_recent_no">Inga nya konversationer</string>
-    <string name="main_no_internet">Ingen Internetanslutning</string>
-    <string name="main_not_connected">Ingen internetanslutning hittades. Utan internetanslutning kommer du ha begränsad funktionalitet om du inte endast använder Antox över LAN</string>
-    <string name="search_all_contacts">Sök i kontakter</string>
-    <!--Chat Activity-->
-    <string name="chat_enter_message">Skicka ett meddelande</string>
-    <string name="chat_file_transfer">Filöverföring</string>
-    <!--Add Pane Fragment-->
-    <!--Add Friend Fragment-->
-    <string name="addfriend_friend_key">Din väns Tox ID</string>
-    <string name="addfriend_friend_message">Skicka ett meddelande med din förfrågan</string>
-    <string name="addfriend_button">Lägg Till Vän</string>
-    <string name="addfriend_friend_added">Vän Tillagd</string>
-    <string name="addfriend_friend_exists">Vännen finns redan</string>
-    <string name="scanqr_button">Skanna en QR-kod</string>
-    <string name="invalid_friend_ID">Ogiltigt Tox ID</string>
-    <string name="addfriend_nick_hint">Ange ett smeknamn för din vän</string>
-    <string name="addfriend_optional_title">Tillval</string>
-    <string name="dialog_pin">Ange din väns pin</string>
-    <string name="addfriend_invalid_pin">Ogiltig Pin</string>
-    <string name="addfriend_own_key">Du kan inte lägga till dig själv</string>
-    <string name="addfriend_friend_pin_title">Skriv In Din Väns Pin</string>
-    <string name="addfriend_friend_pin_text">Skriv In Din Väns Pin</string>
-    <string name="addfriend_default_message">Hej! Snälla acceptera min vänförfrågan</string>
-    <!--Add Group Fragment-->
-    <!--Friend Profile Activity-->
-    <string name="friend_profile_nick">Smeknamn</string>
-    <string name="friend_profile_key">Tox ID</string>
-    <string name="friend_profile_note">Status</string>
-    <string name="friend_profile_button">Uppdatera</string>
-    <string name="friend_profile_updated">Profilen har uppdaterats</string>
-    <string name="friend_profile_copied">Tox ID Kopierat</string>
-    <!--Group Profile Activity-->
-    <!--Friend request fragment-->
-    <string name="friend_profile_title">%1$ss Profil</string>
-    <string name="friendrequest_accept">Acceptera</string>
-    <string name="friendrequest_reject">Avvisa</string>
-    <string name="friend_request">Ny Vänförfrågan</string>
-    <!--Group invite fragment-->
-    <!--Contacts Fragment-->
-    <string name="friend_action_profile">Profil</string>
-    <string name="friend_action_delete">Ta bort Vän</string>
-    <string name="friend_action_delete_chat">Ta bort Chattloggar</string>
-    <string name="friend_action_block">Blockera</string>
-    <string name="contacts_actions_on">Handlingar på</string>
-    <string name="contacts_delimiter_requests">Förfrågningar</string>
-    <string name="contacts_delimiter_friends">Vänner</string>
-    <string name="contacts_delimiter_offline">Offline</string>
-    <string name="contacts_delimiter_online">Online</string>
-    <string name="contacts_resend_friend_request">Skicka om Vänförfrågan</string>
-    <!--Delete Friend Dialog-->
-    <string name="friend_action_delete_friend_confirmation">Är du säker på att du vill ta bort den här kontakten?</string>
-    <!--Export Chat Logs Toast-->
-    <!--Delete Chat Logs Dialog-->
-    <string name="friend_action_delete_chat_confirmation">Är du säker på att du vill ta bort chatloggarna?</string>
-    <!--Block Friend Dialog-->
-    <string name="friend_action_block_friend_confirmation">Att blockera den här användaren kommer ta bort dem från din kontaktlista och du kommer inte längre se vänförfrågningar från dem.\n\nÄr du säker på att du vill fortsätta?</string>
-    <!--Reset ToxID Dialog-->
-    <!--Delete Account Dialog-->
-    <!--Create Group Dialog-->
-    <!--Group Chat Delete-->
-    <!--Color Picker Dialog-->
-    <!--Chat Fragment-->
-    <string name="attachment_photo">Bifoga bild</string>
-    <string name="attachment_file">Bifoga Fil</string>
-    <string name="attachment_takephoto">Ta bild</string>
-    <string name="message_copy">Kopiera meddelande</string>
-    <string name="message_delete">Ta bort meddelande</string>
-    <!--Left Pane Fragment-->
-    <string name="titles_recent">Tidigare</string>
-    <string name="titles_contacts">Kontakter</string>
-    <string name="titles_settings">Inställningar</string>
-    <!--Misc-->
-    <string name="button_confirm">Bekräfta</string>
-    <string name="button_cancel">Avbryt</string>
-    <string name="button_yes">Ja</string>
-    <string name="button_no">Nej</string>
-    <string name="button_ok">OK</string>
-    <string name="dialog_tox_id">Kopiera Tox ID till urklipp</string>
-    <string name="share_with">Dela med</string>
-    <string name="connection_has">har</string>
-    <string name="connection_online">loggat in</string>
-    <string name="connection_offline">loggat ut</string>
-    <string name="action_settings">Inställningar</string>
-    <!--Avatar Dialog-->
-    <!--File transfer-->
-    <!--QR-->
-    <string name="qr_default_title">Installera Barcode Scanner?</string>
-    <string name="qr_default_message">Den här applicationen kräver Barcode Scanner. Vill du installera det?</string>
-    <string name="qr_button_yes">Ja</string>
-    <string name="qr_button_no">Nej</string>
-    <!--Notifications-->
-    <!--nav bar-->
+  <!--Activity titles-->
+  <string name="title_activity_add">Lägg till kontakt</string>
+  <string name="title_activity_friend_profile">Väns profil</string>
+  <string name="title_activity_group_profile">Gruppinformation</string>
+  <string name="title_activity_profile_settings">Profil alternativ</string>
+  <!--Navigation / Action Bar-->
+  <string name="add_contact">Lägg till kontakt</string>
+  <!--Login Activity-->
+  <string name="login_must_fill_in">Du måste fylla i ett profilnamn</string>
+  <string name="login_login">Logga in</string>
+  <string name="login_account_hint">Profilnamn</string>
+  <string name="login_create_account_text">Skapa Tox-profil</string>
+  <string name="login_bad_login">Profilnamnet kändes inte igen</string>
+  <string name="login_passphrase_incorrect">Lösenord felaktigt</string>
+  <string name="login_profile_encrypted">Profil krypterad. Ange lösenord för att dekryptera:</string>
+  <!--Create Account Activity-->
+  <string name="create_name_hint">Profilnamn</string>
+  <string name="create_text">Säker meddelandehantering för alla.</string>
+  <string name="create_register">Registrera</string>
+  <string name="create_register_with_toxme">Registrera med ToxMe</string>
+  <string name="create_sign_up_for_toxme">Registrera dig för ToxMe</string>
+  <string name="create_registering">Registrerar konto...</string>
+  <string name="create_register_incog">Registrera Inkognito</string>
+  <string name="create_import_profile">Importera profil</string>
+  <string name="create_skip">Tillåt vem som helst att lägga till dig genom ditt profilnamn</string>
+  <string name="create_must_fill_in">Du måste fylla i alla fält</string>
+  <string name="create_bad_profile_name">Profilnamn kan inte innehålla mellanslag eller snedstreck eller vara tom</string>
+  <string name="create_profile_exists">Detta profilnamn finns redan</string>
+  <string name="import_profile_invalid_file">Filen som valts är inte en giltig tox-profil</string>
+  <string name="create_account_exists">Namnet är redan taget</string>
+  <string name="create_account_internal_error">Internt Antox fel. Var god starta om och försök igen</string>
+  <string name="create_account_reached_registration_limit">Du kan bara registrera 13 konton i timmen. Du har nått denna gräns</string>
+  <string name="create_account_unknown_error">Okänt registreringsfel, var god försök igen senare</string>
+  <string name="create_account_kalium_link_error">Misslyckades att läsa in en erforderlig bibliotek. Det går inte att skapa icke-inkognito konton</string>
+  <string name="create_account_invalid_domain">Ogiltig toxme domän levererad.</string>
+  <string name="create_account_connection_error">Registreringen misslyckades: Kunde inte ansluta till internet.</string>
+  <string name="create_account_encrypted_profile_error">Antox stöder inte krypterade profiler ännu</string>
+  <string name="create_account_load_profile_unknown">Okänt fel vid laddning av profil</string>
+  <!--ToxMe Info-->
+  <string name="toxme_info1">ToxMe gör det lättare att hålla kontakten med vänner genom att omvandla ditt Tox-ID till ett läsbart, e-post liknande format, vilket gör det lättare för dina vänner att hitta och lägga till dig på Tox.</string>
+  <string name="toxme_info2">Genom att anmäla dig för ToxMe kommer ditt Tox-ID lagras på toxme.io och göras tillgänglig för allmänheten. Om du vill ha full anonymitet rekommenderas det inte att du registrerar dig för denna tjänst.</string>
+  <string name="toxme_info_source">Fullständig källkod kan hittas på\nhttps://github.com/LittleVulpix/toxme</string>
+  <!--Main Activity-->
+  <string name="main_no_active_chat">Ingen aktiv chatt. Påbörja en genom att klicka på en vän i panelen till vänster.</string>
+  <string name="main_recent_no">Inga färska konversationer</string>
+  <string name="main_no_internet">Ingen Internetanslutning</string>
+  <string name="main_not_connected">Ingen internetanslutning hittades. Utan internetanslutning kommer du ha begränsad funktionalitet såvida du inte endast använder Antox över LAN</string>
+  <string name="main_mobile_disabled">För närvarande inte uppkopplad då Wi-Fi endast läge är aktiverat. Tryck här för att öppna inställningarna.</string>
+  <string name="search_all_contacts">Sök i alla kontakter</string>
+  <string name="main_group_coming_soon">Kommer snart...</string>
+  <!--Chat Activity-->
+  <string name="chat_enter_message">Skicka ett meddelande</string>
+  <string name="chat_file_transfer">Filöverföring</string>
+  <string name="chat_message_too_long">Detta meddelande är för långt och kan inte skickas</string>
+  <string name="chat_ft_failed_friend_offline">Sändning misslyckades - kan inte skicka fil till frånkopplad vän</string>
+  <string name="call_friend">Ring</string>
+  <string name="video_call_friend">Videosamtal</string>
+  <string name="info">Info</string>
+  <!--Crash Activity-->
+  <string name="crash_title">Antox kraschade</string>
+  <string name="crash_restart">Tryck för att starta om</string>
+  <!--Add Pane Fragment-->
+  <string name="addpane_friend_label">Vän</string>
+  <string name="addpane_group_label">Grupp</string>
+  <!--Add Friend Fragment-->
+  <string name="addfriend_friend_key">Din väns Tox-ID</string>
+  <string name="addfriend_friend_message">Skicka ett meddelande med din förfrågan</string>
+  <string name="addfriend_button">Lägg till vän</string>
+  <string name="addfriend_friend_added">Vän tillagd</string>
+  <string name="addfriend_friend_exists">Vännen finns redan</string>
+  <string name="scanqr_button">Skanna en QR-kod</string>
+  <string name="invalid_friend_ID">Ogiltigt Tox-ID</string>
+  <string name="addfriend_nick_hint">Ange ett smeknamn för din vän</string>
+  <string name="addfriend_optional_title">Tillval</string>
+  <string name="dialog_pin">Ange din väns pin</string>
+  <string name="addfriend_invalid_pin">Ogiltig pin</string>
+  <string name="addfriend_own_key">Du kan inte lägga till dig själv</string>
+  <string name="addfriend_friend_pin_title">Ange din väns pin</string>
+  <string name="addfriend_friend_pin_text">Ange din väns pin</string>
+  <string name="addfriend_default_message">Hej! Var god acceptera min vänförfrågan</string>
+  <!--Add Group Fragment-->
+  <string name="addgroup_group_id">Gruppens ID</string>
+  <string name="addgroup_button">Gå med i grupp</string>
+  <string name="addgroup_group_added">Gick med i grupp</string>
+  <string name="addgroup_group_exists">Grupp finns redan</string>
+  <string name="invalid_group_ID">Ogiltigt gupp-ID</string>
+  <string name="addgroup_alias_hint">Ange en alias för denna grupp</string>
+  <string name="addgroup_optional_title">Extra tillval</string>
+  <!--Friend Profile Activity-->
+  <string name="friend_profile_nick">Smeknamn</string>
+  <string name="friend_profile_key">Tox-ID</string>
+  <string name="friend_profile_note">Status</string>
+  <string name="friend_profile_button">Uppdatera</string>
+  <string name="friend_profile_updated">Profilen har uppdaterats</string>
+  <string name="friend_profile_copied">Tox-ID kopierat</string>
+  <!--Group Profile Activity-->
+  <string name="group_profile_peer_list_head">Deltagare</string>
+  <!--Friend request fragment-->
+  <string name="friend_profile_title">%1$ss profil</string>
+  <string name="friendrequest_accept">Acceptera</string>
+  <string name="friendrequest_reject">Avvisa</string>
+  <string name="friend_request">Ny vänförfrågan</string>
+  <!--Group invite fragment-->
+  <string name="groupinvite_accept">Acceptera</string>
+  <string name="groupinvite_reject">Avvisa</string>
+  <string name="group_invite">Ny gruppinbjudan</string>
+  <string name="invited_by">Du bjöds in av</string>
+  <!--Contacts Fragment-->
+  <string name="friend_action_profile">Profil</string>
+  <string name="friend_action_delete">Ta bort vän</string>
+  <string name="friend_action_export_chat">Exportera chattloggar</string>
+  <string name="friend_action_delete_chat">Ta bort chattloggar</string>
+  <string name="friend_action_block">Blockera</string>
+  <string name="friend_accepted_default_status">Vän accepterad</string>
+  <string name="group_default_peer_name">Anonym</string>
+  <string name="group_action_delete">Lämna grupp</string>
+  <string name="request_action_copy_id">Kopiera hel ID</string>
+  <string name="request_id_copied">Kopierade förfrågarens ID</string>
+  <string name="contacts_actions_on">Åtgärder på</string>
+  <string name="contacts_delimiter_requests">Förfrågningar</string>
+  <string name="contacts_delimiter_invites">Grupp inbjudningar</string>
+  <string name="contacts_delimiter_groups">Grupper</string>
+  <string name="contacts_delimiter_friends">Vänner</string>
+  <string name="contacts_delimiter_offline">Frånkopplad</string>
+  <string name="contacts_delimiter_online">Uppkopplad</string>
+  <string name="contacts_resend_friend_request">Skicka om vänförfrågan</string>
+  <string name="friend_sent_image">%s skickade en bild.</string>
+  <string name="friend_sent_file">%s skickade en fil.</string>
+  <string name="you_sent_image">Du skickade en bild.</string>
+  <string name="you_sent_file">Du skickade en fil.</string>
+  <!--Delete Friend Dialog-->
+  <string name="friend_action_delete_friend_confirmation">Är du säker på att du vill ta bort vännen?</string>
+  <!--Export Chat Logs Toast-->
+  <string name="friend_action_chat_log_exported">Chattlogg exportering till %s lyckades</string>
+  <string name="friend_action_chat_log_export_failed">Chattlogg exportering misslyckades.</string>
+  <!--Delete Chat Logs Dialog-->
+  <string name="friend_action_delete_chat_confirmation">Är du säker på att du vill ta bort chatloggarna?</string>
+  <!--Block Friend Dialog-->
+  <string name="friend_action_block_friend_confirmation">Blockering av den här användaren kommer ta bort dem från din kontaktlista och du kommer inte längre se vänförfrågningar från dem.\n\nÄr du säker på att du vill fortsätta?</string>
+  <!--Reset ToxID Dialog-->
+  <string name="reset_tox_id_dialog_message">Nollställning av ditt Tox-ID ändrar din ID permanent. Du kommer
+hålla din nuvarande kontaktlistan men andra människor kommer inte att kunna lägga till dig med ditt gamla ID.</string>
+  <string name="reset_tox_id_dialog_title">Bekräfta nollställning av Tox-ID</string>
+  <string name="reset_tox_id_dialog_confirm">Nollställ ID</string>
+  <string name="reset_tox_id_dialog_cancel">Avbryt</string>
+  <string name="tox_id_reset">Ditt Tox-ID har nollställts</string>
+  <!--Delete Account Dialog-->
+  <string name="delete_account_dialog_message">Detta kommer att permanent ta bort den här Antox användaren och ta bort dig från alla ToxMe tjänster knutna till ditt konto</string>
+  <string name="delete_account_dialog_title">Bekräfta Antox-konto borttagning</string>
+  <string name="delete_account_dialog_confirm">Ta bort konto</string>
+  <string name="delete_account_dialog_cancel">Avbryt</string>
+  <string name="delete_account_successful">Kontot har tagits bort</string>
+  <string name="delete_account_error">Ett fel uppstod när du tog bort ditt Antox-konto</string>
+  <!--Create Group Dialog-->
+  <string name="create_group_dialog_message">Skapa en ny guppchatt</string>
+  <string name="create_group_dialog_create_group">Skapa grupp</string>
+  <string name="create_group_dialog_cancel">Avbryt</string>
+  <string name="create_group_dialog_name_header">Gruppnamn</string>
+  <!--Group Chat Delete-->
+  <string name="group_default_part_message">Hejdå</string>
+  <!--Color Picker Dialog-->
+  <string name="dialog_color_picker_title">Välj färg på tema</string>
+  <!--Chat Fragment-->
+  <string name="attachment_photo">Bifoga bild</string>
+  <string name="attachment_file">Bifoga fil</string>
+  <string name="attachment_takephoto">Ta bild</string>
+  <string name="message_copy">Kopiera meddelande</string>
+  <string name="message_delete">Ta bort meddelande</string>
+  <string name="file_delete">Ta bort fil</string>
+  <string name="file_open">Öppna fil</string>
+  <string name="filetransfer_cancel">Avbryt filöverföring</string>
+  <!--Left Pane Fragment-->
+  <string name="titles_recent">Tidigare</string>
+  <string name="titles_contacts">Kontakter</string>
+  <string name="titles_settings">Inställningar</string>
+  <!--Edit Call Replies-->
+  <string name="title_activity_edit_call_replies">Redigera snabba samtalssvar</string>
+  <string name="title_pref_edit_call_replies">Snabba samtalssvar</string>
+  <string name="edit_call_reply_title">Redigera snabba svar</string>
+  <!--Misc-->
+  <string name="button_confirm">Bekräfta</string>
+  <string name="button_cancel">Avbryt</string>
+  <string name="button_yes">Ja</string>
+  <string name="button_no">Nej</string>
+  <string name="button_ok">OK</string>
+  <string name="dialog_tox_id">Kopiera Tox-ID till urklipp</string>
+  <string name="dialog_toxme">Kopiera till urklipp</string>
+  <string name="dialog_password">Kopiera till urklipp</string>
+  <string name="share_with">Dela med</string>
+  <string name="connection_has">har</string>
+  <string name="connection_online">loggat in</string>
+  <string name="connection_offline">loggat ut</string>
+  <string name="title_activity_create_account">CreateAccountActivity</string>
+  <string name="action_settings">Inställningar</string>
+  <!--Avatar Dialog-->
+  <string name="dialog_avatar_take_photo">Ta bild</string>
+  <string name="dialog_avatar_use_file">Använd fil</string>
+  <string name="avatar_too_large_error">Fel: Avatarfil för stor.</string>
+  <string name="no_camera_intent_error">Fel: Ingen giltig kamera applikation hittades.</string>
+  <string name="dialog_avatar_description">avatar</string>
+  <!--File transfer-->
+  <string name="file_finished">Färdig</string>
+  <string name="file_finished_with_errors">Avslutade med fel</string>
+  <string name="file_failed">Misslyckades</string>
+  <string name="file_in_progress">Pågående</string>
+  <string name="file_request_sent">Skicka förfråga</string>
+  <string name="file_rejected">Avvisad</string>
+  <string name="file_time_remaining">%s sekunder kvar</string>
+  <!--Call Activity-->
+  <string name="call_incoming">Inkommande samtal</string>
+  <string name="call_ongoing">Samtal pågående</string>
+  <string name="call_ringing">Ringer...</string>
+  <string name="call_duration">Samtals längd</string>
+  <string name="call_notification_header">Inkommande samtal</string>
+  <string name="call_mute">Tyst</string>
+  <string name="call_unmute">Aktivera volym</string>
+  <string name="call_show_video">Aktivera video</string>
+  <string name="call_hide_video">Inaktivera video</string>
+  <string name="call_mute_speaker">Tysta högtalare</string>
+  <string name="call_unmute_speaker">Aktivera volym på högtalaren</string>
+  <!--Call Events-->
+  <string name="call_event_incoming">Inkommande samtal</string>
+  <string name="call_event_outgoing">Utgående samtal</string>
+  <string name="call_event_rejected">Samtal avvisat</string>
+  <string name="call_event_unanswered">Samtal osvarat</string>
+  <string name="call_event_missed">Samtal missat</string>
+  <string name="call_event_answered">Samtal påbörjat</string>
+  <string name="call_event_ended">Samtal tog slut</string>
+  <string name="call_event_cancelled">Samtal avbröts</string>
+  <!--Incoming Call Activity-->
+  <string name="call_incoming_video">Inkommande videosamtal...</string>
+  <string name="call_incoming_voice">Inkommande röstsamtal...</string>
+  <string name="call_incoming_reply_with_message">Svara</string>
+  <string name="call_incoming_reply_dialog_title">Svara med meddelande</string>
+  <string name="call_incoming_reply_dialog_custom">Anpassad...</string>
+  <string-array name="call_incoming_reply_message_choices">
+    <item>Kan inte att prata nu. Hur är det?</item>
+    <item>Jag ringer tillbaka.</item>
+    <item>Jag ringer dig senare.</item>
+    <item>Jag är påväg.</item>
+  </string-array>
+  <!--Missed Call Notification-->
+  <string name="call_missed_title">Missat samtal</string>
+  <string name="call_missed_call_back">Ring</string>
+  <string name="call_missed_reply">Svara</string>
+  <!--QR-->
+  <string name="qr_default_title">Installera Barcode Scanner?</string>
+  <string name="qr_default_message">Den här applicationen kräver Barcode Scanner. Vill du installera det?</string>
+  <string name="qr_button_yes">Ja</string>
+  <string name="qr_button_no">Nej</string>
+  <!--Notifications-->
+  <string name="unread_count">%s olästa meddelanden</string>
+  <!--User Status-->
+  <string name="status_online">Uppkopplad</string>
+  <string name="status_away">Borta</string>
+  <string name="status_busy">Upptagen</string>
+  <string name="status_offline">Frånkopplad</string>
+  <!--Export profile-->
+  <string name="export_success">Exporterade datafil till %s</string>
+  <string name="export_failed">Fel: Kunde inte att exportera datafil.</string>
+  <!--nav bar-->
+  <string name="n_settings">Inställningar</string>
+  <string name="n_profile_options">Profil</string>
+  <string name="n_create_group">Skapa grupp</string>
+  <string name="n_add_person">Lägg till person</string>
+  <string name="n_about">Om</string>
+  <string name="n_open_source">Öppen källkod licens</string>
+  <string name="n_logout">Logga ut</string>
+  <string name="drawer_open">Öppna navigeringspanelen </string>
+  <string name="drawer_close">Stäng navigeringspanelen </string>
+  <string name="open_source_license">Öppna källkod licens</string>
+  <string name="license1">Distribueras under GNU GPL v3. Skapad av Mark Winter.</string>
+  <string name="license2">Källkoden finns på\nhttps://github.com/Antox/Antox</string>
+  <string name="ver">Version</string>
+  <string name="about">Om</string>
+  <string name="about_antox_1">Med anledning av statliga övervakningsprogram erbjuder Tox ett lättanvänt program som låter dig ansluta med vänner och familj utan att någon annan lyssnar.</string>
+  <string name="about_antox_2">Vad fungerar just nu:</string>
+  <string name="about_antox_3">- En till en meddelande</string>
+  <string name="about_antox_4">- Aviseringar</string>
+  <string name="about_antox_5">- Filöverföringar</string>
+  <string name="about_antox_6">Fungerar inte:</string>
+  <string name="about_antox_7">- Ljud/video</string>
+  <string name="about_antox_8">- Grupper</string>
+  <string name="title_activity_call">CallActivity</string>
+  <string name="end_call">Avsluta samtal</string>
+  <string name="mute_call">Tyst</string>
+  <string name="mute_mic">Tysta mikrofon</string>
+  <string name="profile_info_description">Få användarinfo</string>
+  <string name="empty"> </string>
+  <string name="request_permissions_text">Bevilja behörigheter</string>
+  <string name="select_file">Markera fil</string>
 </resources>
