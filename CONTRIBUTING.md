@@ -34,10 +34,12 @@ Remember to check the issue tracker before lodging your issue, as it may have al
 
 ### <a name="questions"></a> Questions
 
+Before asking a question, be sure to check out the [Tox Wiki](https://wiki.tox.chat/doku.php) to see if it is already covered there.
+
 Any questions can be made either on the freenode IRC network in the #tox-dev channel, 
 or by creating a [GitHub issue](https://github.com/Antox/Antox/issues/new).
 Make sure your questions are in English and are easy to understand.
-If you feel that your question has been answered remember to close the issue to clean up the issue tracker andso developers 
+If you feel that your question has been answered remember to close the issue to clean up the issue tracker and so developers 
 can help other people.
 
 ### <a name="features"></a> Feature Requests and Ideas 
@@ -66,8 +68,8 @@ There are a few guidelines to make sure the repo stays clean and tidy.
 The main programming language for Antox is [Scala](https://www.scala-lang.org/). 
 Please make sure you are educated in this language before starting work on your PR.
 
-Your work should be created using the automatic code formatting in Android Studio so that code can be read the same.
-This can be done in Android Studio automatically before submitting your PR by going to `Code` then `Reformat Code`. 
+Your work should be created using the automatic code formatting in Android Studio.
+This can be done automatically before submitting your PR by going to `Code` then `Reformat Code`. 
 
 Try to leave comments, where you can so that other developers can understand what the code does.
 If the code still needs work then you can tag necessary areas via a `// TODO` or `// FIXME` comment.
@@ -81,7 +83,6 @@ eg `app/src/main/java/org/website/software/WebsiteSoftware.java`. Libraries that
 ### <a name="commits"></a> Commit Guidelines
 
 Your commits messages should be short, but descriptive.
-Try and use proper grammer as it is proven to be harder to read text that is not gramatically correct.
 
 Make sure that when you are commiting you are only changing what is described in the commit message.
 If you just commited something and you want to change one little thing, try and use `git commit --amend` to add to the previous commit.
@@ -94,7 +95,7 @@ into the previous one. You can also rename commits by replacing `pick` with `rew
 ### <a name="submitting-pr"></a> Submitting the Pull Request
 
 When submitting a PR make sure you are clear on what has been changed. 
-Avoid submitting overly large pull requests as these can be difficult to review,
+Avoid submitting overly large pull requests as these can be difficult to review;
 usually it is a good idea to create seperate pull requests for seperate changes, 
 as this speeds up the reviewing process.
 Once you have created the PR avoid adding more commits unless a change has been suggested and you have mentioned 
