@@ -32,23 +32,23 @@
     <string name="create_import_profile">Import Profile</string>
     <string name="create_skip">Allow anyone to add you using your profile name</string>
     <string name="create_must_fill_in">You must fill in all fields</string>
-    <string name="create_bad_profile_name">Profile name can\'t contain spaces or slashes or be empty</string>
+    <string name="create_bad_profile_name">Profile name can\'t contain spaces, slashes or be empty</string>
     <string name="create_profile_exists">This profile name already exists</string>
-    <string name="import_profile_invalid_file">The file chosen is not a valid tox profile </string>
+    <string name="import_profile_invalid_file">The chosen file is not a valid Tox profile </string>
     <string name="create_account_exists">This name is already taken</string>
     <string name="create_account_internal_error">Internal Antox Error. Please restart and try again</string>
-    <string name="create_account_reached_registration_limit">You can only register 13 accounts an hour. You have reached this limit</string>
+    <string name="create_account_reached_registration_limit">You have reached the limit of 13 registered accounts per hour.</string>
     <string name="create_account_unknown_error">Unknown registration error, please try again later</string>
     <string name="create_account_kalium_link_error">Failed to load a required library. Unable to create non-incognito accounts</string>
-    <string name="create_account_invalid_domain">Invalid toxme domain supplied.</string>
-    <string name="create_account_connection_error">Registration Failed: Could not connect to the internet.</string>
+    <string name="create_account_invalid_domain">Invalid ToxMe domain supplied.</string>
+    <string name="create_account_connection_error">Registration Failed: Could not connect to the Internet.</string>
     <string name="create_account_encrypted_profile_error">Antox does not support encrypted profiles yet</string>
     <string name="create_account_load_profile_unknown">Unknown error loading profile</string>
 
     <!-- ToxMe Info -->
     <string name="toxme_title" translatable="false">ToxMe</string>
     <string name="toxme_website" translatable="false">&lt;a href="https://toxme.io">toxme.io&lt;/a></string>
-    <string name="toxme_info1">ToxMe makes it easier to connect with friends by turning your Tox ID into a human readable, Email-like format, making it easier for your friends to find and add you on Tox.</string>
+    <string name="toxme_info1">ToxMe makes it easier to connect with friends by turning your Tox ID into a human readable, e-mail-like format, making it easier for your friends to find and add you on Tox.</string>
     <string name="toxme_info2">By signing up for ToxMe, your Tox ID will be stored on toxme.io and made publicly available. If you want full anonymity it is not recommended that you sign up for this service.</string>
     <string name="toxme_info_source">Full source code can be found at\nhttps://github.com/LittleVulpix/toxme</string>
 
@@ -67,7 +67,7 @@
     <string name="chat_enter_message">Send a message</string>
     <string name="chat_file_transfer">File transfer</string>
     <string name="chat_message_too_long">This message is too long and cannot be sent</string>
-    <string name="chat_ft_failed_friend_offline">Sending failed - cannot send file to offline friend</string>
+    <string name="chat_ft_failed_friend_offline">Sending failed—cannot send file to offline friend</string>
     <string name="call_friend">Call</string>
     <string name="video_call_friend">Video Call</string>
     <string name="info">Info</string>
@@ -86,16 +86,16 @@
     <string name="addfriend_friend_message">Send a message with your request</string>
     <string name="addfriend_button">Add Friend</string>
     <string name="addfriend_friend_added">Friend Added</string>
-    <string name="addfriend_friend_exists">Friend already exists</string>
+    <string name="addfriend_friend_exists">Friend added already</string>
     <string name="scanqr_button">Scan a QR code</string>
     <string name="invalid_friend_ID">Invalid Tox ID</string>
     <string name="addfriend_nick_hint">Set a nickname for your friend</string>
     <string name="addfriend_optional_title">Optional Extras</string>
-    <string name="dialog_pin">Enter your friend\'s pin</string>
-    <string name="addfriend_invalid_pin">Invalid Pin</string>
+    <string name="dialog_pin">Enter your friend\'s PIN</string>
+    <string name="addfriend_invalid_pin">Invalid PIN</string>
     <string name="addfriend_own_key">You cannot add yourself</string>
-    <string name="addfriend_friend_pin_title">Enter Friend\'s Pin</string>
-    <string name="addfriend_friend_pin_text">Enter Friend\'s Pin</string>
+    <string name="addfriend_friend_pin_title">Enter Friend\'s PIN</string>
+    <string name="addfriend_friend_pin_text">Enter Friend\'s PIN</string>
     <string name="addfriend_default_message">Hey! Please accept my friend request</string>
 
     <!-- Add Group Fragment -->
@@ -139,8 +139,8 @@
     <string name="friend_accepted_default_status">Friend Accepted</string>
     <string name="group_default_peer_name">Anonymous</string>
     <string name="group_action_delete">Leave Group</string>
-    <string name="request_action_copy_id">Copy Full ID</string>
-    <string name="request_id_copied">Copied ID of Requester</string>
+    <string name="request_action_copy_id">Copy Full Tox ID</string>
+    <string name="request_id_copied">Copied Tox ID of Requester</string>
     <string name="contacts_actions_on">Actions on</string>
     <string name="contacts_delimiter_requests">Requests</string>
     <string name="contacts_delimiter_invites">Group Invites</string>
@@ -158,7 +158,7 @@
     <string name="friend_action_delete_friend_confirmation">Are you sure you want to remove this friend?</string>
 
     <!-- Export Chat Logs Toast -->
-    <string name="friend_action_chat_log_exported">Chat log successfully exported to %s</string>
+    <string name="friend_action_chat_log_exported">Chat log exported to %s</string>
     <string name="friend_action_chat_log_export_failed">Chat log export failed. </string>
 
     <!-- Delete Chat Logs Dialog -->
@@ -172,7 +172,7 @@
     <string name="reset_tox_id_dialog_message">Resetting your Tox ID changes your ID permanently. You will
         keep your current contacts list, but other people won\'t be able to add you using your old ID. </string>
     <string name="reset_tox_id_dialog_title">Confirm Tox ID Reset</string>
-    <string name="reset_tox_id_dialog_confirm">Reset ID</string>
+    <string name="reset_tox_id_dialog_confirm">Reset Tox ID</string>
     <string name="reset_tox_id_dialog_cancel">Cancel</string>
     <string name="tox_id_reset">Your Tox ID has been reset</string>
 
@@ -181,8 +181,8 @@
     <string name="delete_account_dialog_title">Confirm Antox Account Deletion</string>
     <string name="delete_account_dialog_confirm">Delete Account</string>
     <string name="delete_account_dialog_cancel">Cancel</string>
-    <string name="delete_account_successful">Account was successfully deleted</string>
-    <string name="delete_account_error">An error occurred while deleting your Antox accont</string>
+    <string name="delete_account_successful">Account deleted</string>
+    <string name="delete_account_error">An error occurred while deleting your Antox account</string>
 
     <!-- Create Group Dialog -->
     <string name="create_group_dialog_message">Create a new Group Chat</string>
@@ -194,7 +194,7 @@
     <string name="group_default_part_message">Goodbye</string>
 
     <!-- Color Picker Dialog -->
-    <string name="dialog_color_picker_title">Select theme color</string>
+    <string name="dialog_color_picker_title">Theme color</string>
 
     <!-- Chat Fragment -->
     <string name="attachment_photo">Attach photo</string>
@@ -236,7 +236,7 @@
     <string name="dialog_avatar_take_photo">Take Photo</string>
     <string name="dialog_avatar_use_file">Use File</string>
     <string name="avatar_too_large_error">Error: Avatar file too large.</string>
-    <string name="no_camera_intent_error">Error: No valid camera application found.</string>
+    <string name="no_camera_intent_error">Error: No camera app found.</string>
     <string name="dialog_avatar_description">avatar</string>
 
     <!-- File transfer -->
@@ -291,7 +291,7 @@
 
     <!-- QR -->
     <string name="qr_default_title">Install Barcode Scanner?</string>
-    <string name="qr_default_message">This application requires Barcode Scanner. Would you like to install it?</string>
+    <string name="qr_default_message">This app requires Barcode Scanner. Would you like to install it?</string>
     <string name="qr_button_yes">Yes</string>
     <string name="qr_button_no">No</string>
 
@@ -315,7 +315,7 @@
     <string name="n_add_person">Add Person</string>
     <string name="n_about">About</string>
     <string name="n_open_source">Open Source License</string>
-    <string name="n_logout">Logout</string>
+    <string name="n_logout">Log out</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="open_source_license">Open source license</string>
@@ -323,7 +323,7 @@
     <string name="license2">Source code is available at\nhttps://github.com/Antox/Antox</string>
     <string name="ver">Version</string>
     <string name="about">About</string>
-    <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
+    <string name="about_antox_1">With the rise of government monitoring programs, Tox lets you to connect with friends and family without anyone else listening in.</string>
     <string name="about_antox_2">What Is Currently Working:</string>
     <string name="about_antox_3">- One to one messaging</string>
     <string name="about_antox_4">- Notifications</string>
