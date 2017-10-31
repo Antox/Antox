@@ -20,7 +20,7 @@ class LeftPaneFragment extends Fragment {
 
   class LeftPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) with CustomTabProvider {
 
-    val ICONS: Array[Int] = Array(R.drawable.ic_chat_white_24dp, R.drawable.ic_person_white_24dp)
+    val ICONS: Array[Int] = Array(R.drawable.ic_access_time_black_24dp, R.drawable.ic_contacts_black_24dp)
 
     override def getCustomTabView(parent: ViewGroup, position: Int): View = {
       //hack to center the image only for left pane

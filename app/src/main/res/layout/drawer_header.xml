@@ -17,10 +17,10 @@
         android:id="@+id/status"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@color/green"
+        android:layout_alignEnd="@+id/drawer_avatar"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/drawer_avatar"
-        android:layout_alignEnd="@+id/drawer_avatar" />
+        android:background="@color/green" />
 
     <TextView
         android:id="@+id/name"
