@@ -21,6 +21,7 @@ Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.co
 Antox can be downloaded from [Google Play](https://play.google.com/store/apps/details?id=chat.tox.antox).
 
 To install on F-Droid, add `https://pkg.tox.chat/fdroid/repo` and search for "Antox".
+Fingerprint: 9F777DD77C7F768269848233CF83D44F5C4FE480D7D5CB1CF32820B23A1AF086
 
 The APK can be downloaded [here](https://pkg.tox.chat/fdroid/repo/antox.apk)
 
