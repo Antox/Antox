@@ -14,7 +14,7 @@ buildscript {
 
     dependencies {
 
-        classpath ('com.android.tools.build:gradle:2.2.3'){
+        classpath ('com.android.tools.build:gradle:3.0.1'){
             exclude module: 'proguard-gradle'
         }
         // compiled by subliun --------
@@ -43,7 +43,6 @@ apply plugin: "jp.leafytree.android-scala"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
 
     dexOptions {
         javaMaxHeapSize "2012m"
@@ -211,7 +210,13 @@ dependencies {
     // androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }
 
+ScalaCompileOptions.metaClass.daemonServer = true
+ScalaCompileOptions.metaClass.fork = true
+ScalaCompileOptions.metaClass.useAnt = false
+ScalaCompileOptions.metaClass.useCompileDaemon = false
+
 tasks.withType(ScalaCompile) {
+
     // If you want to use scala compile daemon
     scalaCompileOptions.useCompileDaemon = false
     // Suppress deprecation warnings
