@@ -179,7 +179,7 @@ class MainDrawerFragment extends Fragment {
         startActivity(intent)
 
       case R.id.nav_logout =>
-        State.logout(getActivity)
+        if (State.loggedIn(getActivity)) State.logout(getActivity)
     }
 
     menuItem.setChecked(false)

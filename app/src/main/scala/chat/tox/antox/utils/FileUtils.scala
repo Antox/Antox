@@ -67,4 +67,13 @@ object FileUtils {
         e.printStackTrace()
     }
   }
+
+  /**
+    * Check if this file name has an extension typical of an image.
+    * Does not guarantee that the file is a valid image file.
+    */
+  def hasImageFilename(fileName: String): Boolean = {
+    val imageRegex = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r
+    imageRegex.findAllMatchIn(fileName.toLowerCase).nonEmpty
+  }
 }

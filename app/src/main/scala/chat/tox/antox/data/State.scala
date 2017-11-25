@@ -29,6 +29,7 @@ object State {
   var lastFileTransferAction: Long = -1
   var lastIncomingMessageAction: Long = -1
   val noBatterySavingWithActionWithinLastXSeconds = 5 * 60
+
   // 5min
   var MainToxService: ToxService = null
 
@@ -97,6 +98,8 @@ object State {
     _activeKey = k
   }
 
+  def loggedIn(context: Context): Boolean = userDb(context).loggedIn
+
   def login(name: String, context: Context): Unit = {
     userDb(context).login(name)
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -128,6 +131,7 @@ object State {
     val startTox = new Intent(activity, classOf[ToxService])
     activity.stopService(startTox)
     userDb(activity).logout()
+
     val login = new Intent(activity, classOf[LoginActivity])
     activity.startActivity(login)
     activity.finish()

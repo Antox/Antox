@@ -45,8 +45,9 @@ case class Message(id: Int,
       case MessageType.ACTION | MessageType.GROUP_ACTION =>
         s"$senderName $message"
       case MessageType.FILE_TRANSFER =>
-        val extension = message.substring(message.lastIndexOf(".") + 1)
-        if (FileUtils.imageExtensions.contains(extension)) {
+        val fileName = message
+
+        if (FileUtils.hasImageFilename(fileName)) {
           if (isMine) {
             context.getResources.getString(R.string.you_sent_image)
           } else {

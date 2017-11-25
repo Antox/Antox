@@ -493,7 +493,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
         val key = contactKeyFromContactType(cursor.getString(COLUMN_NAME_KEY), ContactType(cursor.getInt(COLUMN_NAME_CONVERSATION_CONTACT_TYPE)))
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
         val callEventKind = CallEventKind.values.find(_.kindId == cursor.getInt(COLUMN_NAME_CALL_EVENT_KIND)).getOrElse(CallEventKind.Invalid)
-        messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
+        messageList += Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
           timestamp, size, messageType, fileKind, callEventKind)
       } while (cursor.moveToNext())
     }

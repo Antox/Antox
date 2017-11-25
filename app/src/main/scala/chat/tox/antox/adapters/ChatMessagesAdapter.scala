@@ -6,7 +6,7 @@ import java.util
 import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
-import android.view.{LayoutInflater, View, ViewGroup}
+import android.view.{LayoutInflater, View, ViewGroup, ViewStub}
 import chat.tox.antox.R
 import chat.tox.antox.utils.{Constants, FileUtils, TimestampUtils}
 import chat.tox.antox.viewholders._
@@ -54,16 +54,6 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     val lastMsg: Option[Message] = data.lift(pos - 1)
     val nextMsg: Option[Message] = data.lift(pos + 1)
 
-    try {
-    }
-    catch {
-      case e: Exception => {
-        e.printStackTrace()
-      }
-    }
-
-
-
     holder.setMessage(msg, lastMsg, nextMsg)
     holder.setTimestamp()
 
@@ -110,9 +100,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
             fileHolder.showProgressBar()
           } else {
             //FIXME this should be "Failed" - fix the DB bug
-            // TODO: zoff
             fileHolder.setProgressText(R.string.file_finished)
-            fileHolder.hideCancelButton()
           }
         } else {
           if (msg.messageId != -1) {
@@ -137,31 +125,11 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
             }
 
           // val extension = getFileExtensionFromUrl(file.getAbsolutePath())
-          val isImage = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
+          val isImage = FileUtils.hasImageFilename(file.getName)
 
           // println("FILE LENGTH is " + file.length())
-          if (file.exists() && file.length > 0) {
-            if (isImage) {
-              try {
-              }
-              catch {
-                case e: Exception => {
-                  e.printStackTrace()
-                }
-              }
-              fileHolder.setImage(file, true)
-            }
-            else {
-              // also show icon for non image file types
-              try {
-              }
-              catch {
-                case e: Exception => {
-                  e.printStackTrace()
-                }
-              }
-              fileHolder.setImage(file, false)
-            }
+          if (file.exists() && isImage && file.length > 0) {
+              fileHolder.setImage(file)
           }
         }
     }
@@ -184,10 +152,10 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {
     val inflater = LayoutInflater.from(viewGroup.getContext)
 
-
     viewType match {
       case TEXT =>
         val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
+        //inflateSpecificMessageRowLayout(v, R.layout.chat_message_row_text)
         new TextMessageHolder(v)
 
       case ACTION =>
@@ -196,12 +164,19 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
       case FILE =>
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
+        //inflateSpecificMessageRowLayout(v, R.layout.chat_message_row_file)
         new FileMessageHolder(v)
 
       case CALL_INFO =>
         val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
         new CallEventMessageHolder(v)
     }
+  }
+
+  private def inflateSpecificMessageRowLayout(v: View, layoutResource: Int) = {
+    val customLayoutViewStub = v.findViewById(R.id.custom_message_row_layout).asInstanceOf[ViewStub]
+    customLayoutViewStub.setLayoutResource(layoutResource)
+    customLayoutViewStub.inflate()
   }
 
   //TODO It would be better to use Ints instead of Enums for MessageType
