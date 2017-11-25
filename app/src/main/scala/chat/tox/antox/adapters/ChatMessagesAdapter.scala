@@ -6,7 +6,7 @@ import java.util
 import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
-import android.view.{LayoutInflater, View, ViewGroup, ViewStub}
+import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.utils.{Constants, FileUtils, TimestampUtils}
 import chat.tox.antox.viewholders._
@@ -155,7 +155,6 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
     viewType match {
       case TEXT =>
         val v: View = inflater.inflate(R.layout.chat_message_row_text, viewGroup, false)
-        //inflateSpecificMessageRowLayout(v, R.layout.chat_message_row_text)
         new TextMessageHolder(v)
 
       case ACTION =>
@@ -164,19 +163,12 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
 
       case FILE =>
         val v: View = inflater.inflate(R.layout.chat_message_row_file, viewGroup, false)
-        //inflateSpecificMessageRowLayout(v, R.layout.chat_message_row_file)
         new FileMessageHolder(v)
 
       case CALL_INFO =>
         val v: View = inflater.inflate(R.layout.chat_message_row_call_event, viewGroup, false)
         new CallEventMessageHolder(v)
     }
-  }
-
-  private def inflateSpecificMessageRowLayout(v: View, layoutResource: Int) = {
-    val customLayoutViewStub = v.findViewById(R.id.custom_message_row_layout).asInstanceOf[ViewStub]
-    customLayoutViewStub.setLayoutResource(layoutResource)
-    customLayoutViewStub.inflate()
   }
 
   //TODO It would be better to use Ints instead of Enums for MessageType
