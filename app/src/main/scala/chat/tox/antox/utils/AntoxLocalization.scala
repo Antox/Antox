@@ -2,9 +2,7 @@ package chat.tox.antox.utils
 
 import java.util.Locale
 
-import android.app.Activity
-import android.content.res.Configuration
-import android.content.{Context, SharedPreferences}
+import android.content.Context
 import android.os.Build
 import android.preference.PreferenceManager
 
@@ -38,20 +36,13 @@ object AntoxLocalization {
       Locale.setDefault(locale)
       val config = context.getResources.getConfiguration
 
-
-
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
         config.setLocale(locale)
-      }
-      else {
-
       }
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         context.createConfigurationContext(config)
-
-      }
-      else {
+      } else {
         context.getResources.updateConfiguration(config, context.getResources.getDisplayMetrics)
       }
 

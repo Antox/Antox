@@ -112,12 +112,6 @@
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".CrashActivity"
-            android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-
-        <activity
             android:name=".activities.ChatActivity"
             android:configChanges="screenSize|locale|touchscreen|navigation|orientation|fontScale|keyboard|keyboardHidden"
             android:launchMode="singleTask"
@@ -177,14 +171,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="chat.tox.antox.activities.GroupChatActivity" />
         </activity>
-
-        <receiver android:name="chat.tox.antox.AlarmReceiver">
-
-            <intent-filter>
-                <action android:name="chat.tox.antox.TOXSERVICE_ALARM"></action>
-            </intent-filter>
-
-        </receiver>
 
         <receiver
             android:name=".utils.ConnectionManager"

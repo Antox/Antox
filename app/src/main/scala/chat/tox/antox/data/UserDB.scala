@@ -158,9 +158,9 @@ class UserDB(ctx: Context) {
 
   def addDefaultCallReplies(profileName: String): Unit = {
     val values = new ContentValues()
-    for (reply <- ctx.getResources.getStringArray(R.array.call_incoming_reply_message_choices)) {
+    for (_ <- 0 until QUICK_CALL_REPLY_COUNT) {
       values.put(COLUMN_NAME_PROFILE_NAME, profileName)
-      values.put(COLUMN_NAME_CALL_REPLY, reply)
+      values.put(COLUMN_NAME_CALL_REPLY, "") // call replies are initially empty until edited
       mDb.insert(TABLE_CALL_REPLIES, values)
       values.clear()
     }
@@ -198,7 +198,7 @@ class UserDB(ctx: Context) {
         val domain = cursor.getString(COLUMN_NAME_TOXME_DOMAIN)
         val toxMeName = new ToxMeName(cursor.getString(COLUMN_NAME_PROFILE_NAME), if (domain.isEmpty) None else Some(domain))
 
-        Some(new UserInfo(
+        Some(UserInfo(
           toxMeName = toxMeName,
           password = cursor.getString(COLUMN_NAME_PASSWORD),
           nickname = ToxNickname.unsafeFromValue(cursor.getString(COLUMN_NAME_NICKNAME).getBytes),
@@ -269,10 +269,18 @@ class UserDB(ctx: Context) {
     val query = s"SELECT * FROM $TABLE_CALL_REPLIES WHERE $COLUMN_NAME_PROFILE_NAME='$getActiveUser'"
     mDb.createQuery(TABLE_CALL_REPLIES, query).map(_.use { cursor =>
       val callReplies = new ArrayBuffer[CallReply]()
+      val defaultReplies = ctx.getResources.getStringArray(R.array.call_incoming_reply_message_choices)
 
       if (cursor.moveToFirst()) {
+        var i = 0
         do {
-          callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), cursor.getString(COLUMN_NAME_CALL_REPLY))
+          val databaseReply = cursor.getString(COLUMN_NAME_CALL_REPLY)
+
+          //hack to keep the replies translatable by using defaults unless the user has set one
+          val reply = if (databaseReply.isEmpty) defaultReplies.lift(i).getOrElse("") else databaseReply
+          callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), reply)
+
+          i += 1
         } while (cursor.moveToNext())
       }
 

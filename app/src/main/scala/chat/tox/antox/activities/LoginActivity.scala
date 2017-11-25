@@ -12,7 +12,7 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
-import chat.tox.antox.utils.{CrashWatcher, Options}
+import chat.tox.antox.utils.Options
 
 import scala.collection.JavaConversions._
 

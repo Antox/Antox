@@ -19,6 +19,8 @@ object DatabaseConstants {
 
   val USER_DATABASE_VERSION = 6
 
+  val QUICK_CALL_REPLY_COUNT = 4
+
   /**
     * Table used for storing all contacts and contact-related information, including friends and groups (may store group peers in the future).
     * Friends which have not yet accepted a sent friend request and groups which are not yet connected to are also stored in this table.

@@ -47,8 +47,13 @@ class EditCallReplyDialog extends DialogFragment {
 
     builder.setPositiveButton(R.string.button_ok, new OnClickListener {
       override def onClick(dialog: DialogInterface, whichButton: Int): Unit = {
-        val newReply = callReply.copy(reply = editText.getText.toString)
-        State.userDb(getActivity).updateActiveUserCallReply(newReply)
+        val newReplyString = editText.getText.toString
+
+        //prevent the preset translatable replies from being overwritten
+        if (newReplyString != callReply.reply) {
+          val newReply = callReply.copy(reply = newReplyString)
+          State.userDb(getActivity).updateActiveUserCallReply(newReply)
+        }
       }
     })
 
