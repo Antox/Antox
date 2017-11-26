@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import chat.tox.antox.utils.AntoxLog;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import rx.plugins.RxJavaErrorHandler;
@@ -25,13 +26,18 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
-            @Override
-            public void handleError(Throwable e) {
-                e.printStackTrace();
-                super.handleError(e);
-            }
-        });
+        try {
+            RxJavaPlugins.getInstance().registerErrorHandler(new RxJavaErrorHandler() {
+                @Override
+                public void handleError(Throwable e) {
+                    e.printStackTrace();
+                    super.handleError(e);
+                }
+            });
+        } catch (Exception e) {
+            // don't worry about this, this is just annoying
+            AntoxLog.debug("Registered another error handler when we didn't need to.", AntoxLog.DEFAULT_TAG());
+        }
 
         getPermissions();
     }
