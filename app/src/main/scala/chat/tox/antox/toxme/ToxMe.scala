@@ -5,8 +5,8 @@ import chat.tox.antox.toxme.ToxMe.PrivacyLevel.PrivacyLevel
 import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.utils.AntoxLog
-import com.squareup.okhttp.Request.Builder
-import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
+import okhttp3.{MediaType, OkHttpClient, RequestBody}
+import okhttp3.Request.Builder
 import org.json.JSONObject
 import org.libsodium.jni.crypto.Box
 import org.libsodium.jni.encoders.Raw

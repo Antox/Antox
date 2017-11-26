@@ -25,7 +25,6 @@ object State {
   val typing = BehaviorSubject[Boolean](false)
   var autoAcceptFt: Boolean = false
   var batterySavingMode: Boolean = true
-  var isBootstrapped: Boolean = false
   var lastFileTransferAction: Long = -1
   var lastIncomingMessageAction: Long = -1
   val noBatterySavingWithActionWithinLastXSeconds = 5 * 60
