@@ -10,6 +10,7 @@ import android.content.DialogInterface.OnClickListener
 import android.content.{DialogInterface, Intent}
 import android.graphics.Color
 import android.os.{Build, Bundle, Environment}
+import android.preference.PreferenceManager
 import android.support.v7.app.{AlertDialog, AppCompatActivity}
 import android.text._
 import android.view._
@@ -276,7 +277,8 @@ class CreateAccountActivity extends AppCompatActivity {
             if (shouldRegister) {
               // Register acccount
               if (ConnectionManager.isNetworkAvailable(this)) {
-                ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, data)
+                val proxy = ProxyUtils.netProxyFromPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext))
+                ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, data, proxy)
               } else {
                 // fail if there is no connection
                 Observable.just(Left(ToxMeError.CONNECTION_ERROR))

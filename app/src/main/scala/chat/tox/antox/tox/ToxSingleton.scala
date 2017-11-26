@@ -13,7 +13,7 @@ import chat.tox.antox.wrapper.{ToxCore, _}
 import im.tox.core.network.Port
 import im.tox.tox4j.core.data.ToxPublicKey
 import im.tox.tox4j.core.enums.ToxUserStatus
-import im.tox.tox4j.core.options.{ProxyOptions, ToxOptions}
+import im.tox.tox4j.core.options.ToxOptions
 import org.json.{JSONException, JSONObject}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
@@ -171,32 +171,7 @@ object ToxSingleton {
     !(wifiOnly && !wifiInfo.isConnected)
   }
 
-  private def readProxyOptions(preferences: SharedPreferences): ProxyOptions = {
-    val TAG = LoggerTag("readProxyOptions")
-    AntoxLog.verbose("Reading proxy settings", TAG)
 
-    val proxyEnabled = preferences.getBoolean("enable_proxy", Options.proxyEnabled)
-    AntoxLog.verbose("Proxy enabled: " + proxyEnabled.toString, TAG)
-
-    if (proxyEnabled) {
-      val proxyAddress = preferences.getString("proxy_address", Options.proxyAddress)
-      AntoxLog.verbose("Proxy address: " + proxyAddress, TAG)
-
-      val proxyPort = preferences.getString("proxy_port", Options.proxyPort).toInt
-      AntoxLog.verbose("Proxy port: " + proxyPort, TAG)
-
-      val proxyType = preferences.getString("proxy_type", "SOCKS5")
-      AntoxLog.verbose("Proxy type: " + proxyType, TAG)
-      proxyType match {
-        case "HTTP" =>
-          ProxyOptions.Http(proxyAddress, proxyPort)
-        case "SOCKS5" =>
-          ProxyOptions.Socks5(proxyAddress, proxyPort)
-      }
-    } else {
-      ProxyOptions.None
-    }
-  }
 
   def initTox(ctx: Context) {
     isInited = true
@@ -210,7 +185,7 @@ object ToxSingleton {
     dataFile = new ToxDataFile(ctx, userDb.getActiveUser)
 
     val udpEnabled = preferences.getBoolean("enable_udp", false)
-    val proxyOptions = readProxyOptions(preferences)
+    val proxyOptions = ProxyUtils.toxProxyFromPreferences(preferences)
     val options = ToxOptions(
       ipv6Enabled = Options.ipv6Enabled,
       proxy = proxyOptions,

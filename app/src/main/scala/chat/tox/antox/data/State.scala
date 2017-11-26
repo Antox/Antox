@@ -9,7 +9,7 @@ import chat.tox.antox.av.CallManager
 import chat.tox.antox.tox.{ToxDataFile, ToxService, ToxSingleton}
 import chat.tox.antox.toxme.{ToxData, ToxMe}
 import chat.tox.antox.transfer.FileTransferManager
-import chat.tox.antox.utils.AntoxNotificationManager
+import chat.tox.antox.utils.{AntoxNotificationManager, ProxyUtils}
 import chat.tox.antox.wrapper.ContactKey
 import rx.lang.scala.subjects.BehaviorSubject
 
@@ -163,6 +163,8 @@ object State {
 
 
   def deleteActiveAccount(activity: Activity): Unit = {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext)
+
     val userInfo = userDb(activity.getApplicationContext).getActiveUserDetails
     val dataFile = new ToxDataFile(activity.getApplicationContext, userInfo.profileName)
     val toxData = new ToxData
@@ -170,12 +172,13 @@ object State {
     toxData.address = ToxSingleton.tox.getAddress
     val toxMeName = userInfo.toxMeName
     if (toxMeName.domain.isDefined) {
-      val observable = ToxMe.deleteAccount(toxMeName, toxData)
+
+      val proxy = ProxyUtils.netProxyFromPreferences(preferences)
+      val observable = ToxMe.deleteAccount(toxMeName, toxData, proxy)
       observable.subscribe()
     }
     userDb(activity.getApplicationContext).deleteActiveUser()
 
-    val preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext)
     if (preferences.getBoolean("notifications_persistent", false)) {
       AntoxNotificationManager.removePersistentNotification()
     }
