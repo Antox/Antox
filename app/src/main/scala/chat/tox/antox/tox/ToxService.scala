@@ -6,9 +6,13 @@ import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
 import chat.tox.antox.av.CallService
-import chat.tox.antox.callbacks.{ToxCallbackListener, ToxavCallbackListener}
+import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback, ToxCallbackListener, ToxavCallbackListener}
 import chat.tox.antox.utils.AntoxLog
+import im.tox.tox4j.core.enums.ToxConnection
 import im.tox.tox4j.impl.jni.ToxJniLog
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
+import rx.lang.scala.{Observable, Subscription}
+import scala.concurrent.duration._
 
 class ToxService extends Service {
 
@@ -17,6 +21,8 @@ class ToxService extends Service {
   private var keepRunning: Boolean = true
 
   private val connectionCheckInterval = 10000 //in ms
+
+  private val reconnectionIntervalSeconds = 60
 
   private var callService: CallService = _
 
@@ -40,7 +46,29 @@ class ToxService extends Service {
         val toxCallbackListener = new ToxCallbackListener(thisService)
         val toxAvCallbackListener = new ToxavCallbackListener(thisService)
 
-        var ticks: Long = 0
+        var reconnection: Subscription = null
+
+        val connectionSubscription = AntoxOnSelfConnectionStatusCallback.connectionStatusSubject
+          .observeOn(AndroidMainThreadScheduler())
+          .distinctUntilChanged
+          .subscribe(toxConnection => {
+            if (toxConnection != ToxConnection.NONE) {
+              if (reconnection != null && !reconnection.isUnsubscribed) {
+                reconnection.unsubscribe()
+              }
+              AntoxLog.debug("Tox connected. Stopping reconnection")
+            } else {
+              reconnection = Observable
+                .interval(reconnectionIntervalSeconds seconds)
+                .subscribe(x => {
+                    AntoxLog.debug("Reconnecting")
+                    Observable[Boolean](_ => ToxSingleton.bootstrap(getApplicationContext)).subscribe()
+                  })
+              AntoxLog.debug(s"Tox disconnected. Scheduled reconnection every $reconnectionIntervalSeconds seconds")
+            }
+          })
+
+        var ticks = 0
         while (keepRunning) {
           if (!ToxSingleton.isToxConnected(preferences, thisService)) {
             try {
@@ -65,6 +93,8 @@ class ToxService extends Service {
             }
           }
         }
+
+        connectionSubscription.unsubscribe()
       }
     }
 
