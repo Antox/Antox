@@ -14,6 +14,7 @@ import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 object CommonCallFragment {
@@ -74,37 +75,13 @@ abstract class CommonCallFragment extends Fragment {
     val mFriend: Option[FriendInfo] = friendInfoList.find(f => f.key == activeKey)
 
     mFriend match {
-      case Some(friend) => {
-        // need to run on UI Thread
-        try {
-          nameView.getHandler().post(new Runnable() {
-            def run {
-              nameView.setText(friend.getDisplayName)
-            }
-          })
-          // nameView.setText(friend.getDisplayName)
-        }
-        catch {
-          case e: Exception =>
-        }
-      }
+      case Some(friend) =>
+        nameView.setText(friend.getDisplayName)
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
-
-          // need to run on UI Thread
-          try {
-            avatarView.getHandler().post(new Runnable() {
-              def run {
-                avatarView.setImageBitmap(bitmap)
-              }
-            })
-            // avatarView.setImageBitmap(bitmap)
-          }
-          catch {
-            case e: Exception =>
-          }
+          avatarView.setImageBitmap(bitmap)
         })
 
       case None =>
@@ -135,6 +112,7 @@ abstract class CommonCallFragment extends Fragment {
     // update displayed friend info on change
     compositeSubscription +=
       State.db.friendInfoList
+        .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
           updateDisplayedState(fi)
         })
