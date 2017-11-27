@@ -34,6 +34,8 @@ Remember to check the issue tracker before lodging your issue, as it may have al
 
 Old issues will be closed if the author is inactive and the problem still hasn't been discovered.
 
+Created issues and replies must be on topic. Advertising websites or other repos is not allowed.
+
 ### <a name="questions"></a> Questions
 
 Before asking a question, be sure to check out the [Tox Wiki](https://wiki.tox.chat/doku.php) to see if it is already covered there.
