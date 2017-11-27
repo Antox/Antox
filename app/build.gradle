@@ -10,6 +10,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "http://dl.bintray.com/drummer-aidan/maven" }
         maven { url "https://repository.apache.org/content/repositories/snapshots/" }
+        maven { url 'https://maven.google.com' }
     }
 
     dependencies {

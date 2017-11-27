@@ -28,19 +28,13 @@ dependencies:
   override:
     - echo "dummy"
   pre:
-
     - gradle -v
     - echo y | android update sdk --no-ui --all --filter "tools"
     - android list sdk --all | grep -i tools
     - android list sdk --all --extended
 
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.3
-    - echo y | android update sdk --no-ui --all --filter build-tools-24.0.2
-    - echo y | android update sdk --no-ui --all --filter build-tools-25.0.2
-    - echo y | android update sdk --no-ui --all --filter android-21
-    - echo y | android update sdk --no-ui --all --filter android-23
-    - echo y | android update sdk --no-ui --all --filter android-24
-    - echo y | android update sdk --no-ui --all --filter android-25
+    - echo y | android update sdk --no-ui --all --filter build-tools-27.0.1
+    - echo y | android update sdk --no-ui --all --filter android-27
     - echo y | android update sdk --no-ui --all --filter platform-tools
 
     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository > /dev/null 2> /dev/null
@@ -56,9 +50,7 @@ dependencies:
     - git clone https://github.com/Antox/Antox.git
     - cd Antox
     - ./download-dependencies.sh
-    
-    - sed -i "s/buildToolsVersion.*/buildToolsVersion '23.0.3'/g" app/build.gradle
-    
+
 
 test:
   pre:
