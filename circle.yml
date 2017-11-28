@@ -59,7 +59,7 @@ test:
   
     - ./gradlew clean build -x lint --parallel -Dorg.gradle.native=false --stacktrace || ./gradlew build -x lint --parallel -Dorg.gradle.native=false --stacktrace
     
-    - cp -av app/build/outputs/apk/app-release-unsigned.apk ~/app.apk ;
+    - cp -av app/build/outputs/apk/release/app-release-unsigned.apk ~/app.apk ;
       cd ~/ ;
       echo xxxxxxrm -f ~/.android/debug.keystore ;
       ls -al ~/.android/debug.keystore ;
