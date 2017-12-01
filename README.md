@@ -64,6 +64,10 @@ Currently there is no fix for this, but there is a workaround by disabling insta
 - The apk will then be available in `app/build/outputs/apk/`
 - To install the app via ADB, run `adb install <apk file>` 
 
+### Mug
+
+By popular demand, the Antox mug is now available on [Redbubble](https://www.redbubble.com/people/wiiaam/works/29178212-antox-mug?asc=u&p=mug&rel=carousel&style=standard)
+
 ### Remarks
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
