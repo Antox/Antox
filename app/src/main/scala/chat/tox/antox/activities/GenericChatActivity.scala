@@ -185,7 +185,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
         true
 
       case R.id.user_info =>
-        onClickInfo(clickLocation)
+        onClickInfo()
         true
 
       case _ =>
@@ -305,5 +305,5 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
   def onClickVideoCall(clickLocation: Location): Unit
 
-  def onClickInfo(clickLocation: Location): Unit
+  def onClickInfo(): Unit
 }
