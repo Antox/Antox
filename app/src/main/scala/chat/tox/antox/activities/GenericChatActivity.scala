@@ -96,7 +96,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     avatarActionView = this.findViewById(R.id.avatarActionView)
     avatarActionView.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        thisActivity.finish()
+        onClickInfo()
       }
     })
 
@@ -182,10 +182,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
       case R.id.video_call_button =>
         onClickVideoCall(clickLocation)
-        true
-
-      case R.id.user_info =>
-        onClickInfo()
         true
 
       case _ =>
