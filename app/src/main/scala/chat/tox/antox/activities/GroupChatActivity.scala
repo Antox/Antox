@@ -63,7 +63,7 @@ class GroupChatActivity extends GenericChatActivity[GroupKey] {
     // not yet implemented in toxcore
   }
 
-  override def onClickInfo(clickLocation: Location): Unit = {
+  override def onClickInfo(): Unit = {
     //TODO add a group profile activity
   }
 

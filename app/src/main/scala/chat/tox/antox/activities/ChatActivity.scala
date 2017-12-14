@@ -262,7 +262,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  override def onClickInfo(clickLocation: Location): Unit = {
+  override def onClickInfo(): Unit = {
     val intent = new Intent(this, classOf[FriendProfileActivity])
     val friendInfo = State.db.getFriendInfo(activeKey)
     intent.putExtra("key", activeKey.key)
