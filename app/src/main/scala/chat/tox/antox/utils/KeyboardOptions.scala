@@ -8,7 +8,7 @@ import android.text.InputType
 object KeyboardOptions {
   def getInputType(ctx: Context): Int = {
     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-    val hotkey = preferences.getString("keyboard_hotkey", "emoji")
+    val hotkey = preferences.getString("keyboard_hotkey", "emote")
     var defaultInputTypes = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_CLASS_TEXT
     if (preferences.getBoolean("autocorrect", true)) {
       defaultInputTypes = defaultInputTypes | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT
