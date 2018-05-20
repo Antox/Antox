@@ -11,7 +11,8 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.ColorPickerDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{ToxService, ToxSingleton}
-import chat.tox.antox.utils.{Hex, AntoxLog, AntoxNotificationManager, Options}
+import chat.tox.antox.utils.{AntoxLocalization, AntoxLog, AntoxNotificationManager, Options}
+
 // import im.tox.tox4j.core.data.ToxPublicKey
 import org.scaloid.common.LoggerTag
 
@@ -47,13 +48,17 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
   private var themeDialog: ColorPickerDialog = _
   private var thisActivity: SettingsActivity = _
 
+
   override def onCreate(savedInstanceState: Bundle) {
+
+
     thisActivity = this
 
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
 
+    setTitle(getResources.getString(R.string.title_activity_settings)) // fix locale changes
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
 
@@ -132,37 +137,25 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       networkSettingsChanged = true
     }
 
-    if (sharedPreferences.getBoolean("autoacceptft", false) == true)
-    {
-      // System.out.println("set autoacceptft = true");
+    if (sharedPreferences.getBoolean("autoacceptft", false)) {
       State.setAutoAcceptFt(true)
     }
-    else
-    {
-      // System.out.println("set autoacceptft = false");
+    else {
       State.setAutoAcceptFt(false)
     }
 
-    if (sharedPreferences.getBoolean("batterysavingmode", false) == true)
-    {
-      // System.out.println("set batterysavingmode = true");
+    if (sharedPreferences.getBoolean("batterysavingmode", false)) {
       State.setBatterySavingMode(true)
     }
-    else
-    {
-      // System.out.println("set batterysavingmode = false");
+    else {
       State.setBatterySavingMode(false)
     }
 
 
-    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false) == true)
-    {
-      // System.out.println("set videocallstartwithnovideo = true");
+    if (sharedPreferences.getBoolean("videocallstartwithnovideo", false)) {
       Options.videoCallStartWithNoVideo = true
     }
-    else
-    {
-      // System.out.println("set videocallstartwithnovideo = false");
+    else {
       Options.videoCallStartWithNoVideo = false
     }
 
@@ -174,7 +167,9 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         val preference = findPreference("proxy_address").asInstanceOf[EditTextPreference]
         preference.setText("127.0.0.1")
         preference.setSummary("127.0.0.1")
-        networkSettingsChanged = false
+      }
+      else {
+        networkSettingsChanged = true
       }
     }
     if (key == "proxy_port") {
@@ -185,6 +180,9 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
         preference.setText("9050")
         preference.setSummary("9050")
         networkSettingsChanged = false
+      }
+      else{
+        networkSettingsChanged = true
       }
     }
 
@@ -226,9 +224,11 @@ class SettingsActivity extends BetterPreferenceActivity with Preference.OnPrefer
       }
     }
     if (key == "locale") {
+      AntoxLog.debug("Locale changed")
+      AntoxLocalization.setLanguage(getApplicationContext)
       val intent = new Intent(getApplicationContext, classOf[MainActivity])
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-      finish()
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+      Intent.FLAG_ACTIVITY_CLEAR_TOP)
       startActivity(intent)
     }
     if (key == "notifications_persistent") {

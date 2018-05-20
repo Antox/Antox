@@ -24,28 +24,30 @@ case class Message(id: Int,
                    fileKind: FileKind,
                    callEventKind: CallEventKind) {
 
-  def logFormat(): Option[String] = {
-    if (this.isFileTransfer) return None
+  def logFormat(): Option[String] =
+    if (!isFileTransfer) {
+      val name =
+        if (isMine) {
+          ToxSingleton.tox.getName
+        } else {
+          senderName
+        }
 
-    val name =
-      if (isMine) {
-        ToxSingleton.tox.getName
-      } else {
-        senderName
-      }
+      val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
 
-    val prettyTimestamp = TimestampUtils.prettyTimestamp(timestamp, isChat = true)
-
-    Some(s"<$name> $message [$prettyTimestamp]")
-  }
+      Some(s"<$name> $message [$prettyTimestamp]")
+    } else {
+      None
+    }
 
   def toNotificationFormat(context: Context): String = {
     `type` match {
       case MessageType.ACTION | MessageType.GROUP_ACTION =>
         s"$senderName $message"
       case MessageType.FILE_TRANSFER =>
-        val extension = message.substring(message.lastIndexOf(".") + 1)
-        if (FileUtils.imageExtensions.contains(extension)) {
+        val fileName = message
+
+        if (FileUtils.hasImageFilename(fileName)) {
           if (isMine) {
             context.getResources.getString(R.string.you_sent_image)
           } else {

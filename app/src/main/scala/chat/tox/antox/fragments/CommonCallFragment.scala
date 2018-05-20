@@ -13,12 +13,9 @@ import chat.tox.antox.data.State
 import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
-import im.tox.tox4j.exceptions.ToxException
 import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.subscriptions.CompositeSubscription
-
-import scala.concurrent.{Future, Promise}
-import scala.util.Try
 
 object CommonCallFragment {
   val EXTRA_CALL_NUMBER = "call_number"
@@ -78,33 +75,13 @@ abstract class CommonCallFragment extends Fragment {
     val mFriend: Option[FriendInfo] = friendInfoList.find(f => f.key == activeKey)
 
     mFriend match {
-      case Some(friend) => {
-        // need to run on UI Thread
-        try {
-          nameView.getHandler().post(new Runnable(){def run {nameView.setText(friend.getDisplayName)}})
-          // nameView.setText(friend.getDisplayName)
-        }
-        catch
-          {
-            case e: Exception =>
-              System.out.println("onUiThread:001")
-          }
-      }
+      case Some(friend) =>
+        nameView.setText(friend.getDisplayName)
 
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
-
-          // need to run on UI Thread
-          try {
-            avatarView.getHandler().post(new Runnable(){def run {avatarView.setImageBitmap(bitmap)}})
-            // avatarView.setImageBitmap(bitmap)
-          }
-          catch
-            {
-              case e: Exception =>
-                System.out.println("onUiThread:002")
-            }
+          avatarView.setImageBitmap(bitmap)
         })
 
       case None =>
@@ -135,6 +112,7 @@ abstract class CommonCallFragment extends Fragment {
     // update displayed friend info on change
     compositeSubscription +=
       State.db.friendInfoList
+        .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
           updateDisplayedState(fi)
         })

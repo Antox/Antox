@@ -1,7 +1,7 @@
 package chat.tox.antox.activities
 
 import android.app.{Activity, Dialog}
-import android.content.DialogInterface
+import android.content.{Context, DialogInterface}
 import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -20,12 +20,17 @@ trait CallReplySelectedListener {
 }
 
 class CallReplyDialog extends DialogFragment {
-  override def onAttach(activity: Activity): Unit = {
-    // TODO **
-    //super.onAttach(activity)
-    if (!activity.isInstanceOf[CallReplySelectedListener]) {
-      throw new ClassCastException(s"${activity.toString} must implement ${classOf[CallReplyDialog]}")
+  override def onAttach(context: Context): Unit = {
+    super.onAttach(context)
+    context match {
+      case activity: Activity =>
+        if (!activity.isInstanceOf[CallReplySelectedListener]) {
+          throw new ClassCastException(s"${activity.toString} must implement ${classOf[CallReplyDialog]}")
+        }
+
+      case _ =>
     }
+
   }
 
   override def onCreateDialog(savedInstanceState: Bundle): Dialog = {

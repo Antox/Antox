@@ -37,15 +37,8 @@ sealed trait FileKind extends FileKind.Value {
 }
 
 object FileKind extends Enum[FileKind] {
-  def fromToxFileKind(toxFileKind: Int): FileKind = {
-    for (value <- values) {
-      if (value.kindId == toxFileKind) {
-        return value
-      }
-    }
-
-    INVALID
-  }
+  def fromToxFileKind(toxFileKind: Int): FileKind =
+    values.find(_.kindId == toxFileKind).getOrElse(INVALID)
 
   case object INVALID extends FileKind {
     val kindId = -1
@@ -77,16 +70,17 @@ object FileKind extends Enum[FileKind] {
     val replaceExisting = true
 
 
-    def getAvatarFile(avatarName: String, context: Context): Option[File] = {
-      if (avatarName == null || avatarName.equals("") || context == null) return None
-
-      val file = new File(AVATAR.getStorageDir(context), avatarName)
-      if (file.exists() && !file.isDirectory) {
-        Some(file)
+    def getAvatarFile(avatarName: String, context: Context): Option[File] =
+      if (avatarName != null && avatarName.nonEmpty && context != null) {
+        val file = new File(AVATAR.getStorageDir(context), avatarName)
+        if (file.exists() && !file.isDirectory) {
+          Some(file)
+        } else {
+          None
+        }
       } else {
         None
       }
-    }
   }
 
   val values = List(INVALID, DATA, AVATAR)

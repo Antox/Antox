@@ -13,13 +13,13 @@ class AntoxOnGroupInviteCallback(private var ctx: Context) /* extends GroupInvit
 
   def groupInvite(inviterInfo: FriendInfo, inviteData: Array[Byte]): Unit = {
     val db = State.db
-    if (db.isContactBlocked(inviterInfo.key)) return
+    if (!db.isContactBlocked(inviterInfo.key)) {
+      val inviteKeyLength = 32
+      //val key = new GroupKey(inviteData.slice(0, inviteKeyLength))
+      //db.addGroupInvite(key, inviterInfo.key, inviteData)
 
-    val inviteKeyLength = 32
-    //val key = new GroupKey(inviteData.slice(0, inviteKeyLength))
-    //db.addGroupInvite(key, inviterInfo.key, inviteData)
-
-    AntoxLog.debug("New Group Invite")
-    //AntoxNotificationManager.createRequestNotification(key, None, ctx)
+      AntoxLog.debug("New Group Invite")
+      //AntoxNotificationManager.createRequestNotification(key, None, ctx)
+    }
   }
 }

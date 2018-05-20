@@ -4,10 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-/**
- * Created by zoff99 on 28.01.2017.
- */
-
 public class HeaderViewHolder extends RecyclerView.ViewHolder
 {
     protected TextView textView;

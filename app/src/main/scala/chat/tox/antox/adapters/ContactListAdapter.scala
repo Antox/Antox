@@ -152,14 +152,12 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
       holder.imageLoadingSubscription =
         item.image match {
           case Some(img) =>
-            System.out.println("avatar.setImageResource=Some[0]")
             BitmapManager.getFromCache(isAvatar = true, img) match {
               case Some(bitmap) =>
                 holder.avatar.setImageBitmap(bitmap)
                 None
 
               case None => {
-                System.out.println("avatar.setImageResource=None[1]")
                 Some(BitmapManager
                   .load(img, isAvatar = true)
                   .subscribe(bitmap => holder.avatar.setImageBitmap(bitmap)))
@@ -167,7 +165,6 @@ class ContactListAdapter(private var context: Context) extends BaseAdapter with 
             }
 
           case None => {
-            System.out.println("avatar.setImageResource=default_avatar[2]")
             holder.avatar.setImageResource(R.drawable.default_avatar)
             None
           }

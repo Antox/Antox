@@ -96,15 +96,18 @@ class AudioCapture(_sampleRate: Int, _channels: Int) extends AudioDevice(_sample
           callAudioEffects = Some(new CallAudioEffects(recorder))
           callAudioEffects.foreach(_.enable())
 
-          return Some(recorder)
+          Some(recorder)
+        } else {
+          None
         }
+      } else {
+        None
       }
     } catch {
       case e: Exception =>
         e.printStackTrace()
+        None
     }
-
-    None
   }
 
 

@@ -50,7 +50,7 @@ class ToxCore(groupList: GroupList, options: ToxOptions) extends Intervals {
 
   override def interval: Int = IntervalLevels.AWAKE.id
 
-  def getSelfKey: SelfKey = new SelfKey(tox.getPublicKey.toHexString)
+  def getSelfKey: SelfKey = SelfKey(tox.getPublicKey.toHexString)
 
   def getSecretKey: ToxSecretKey = tox.getSecretKey
 

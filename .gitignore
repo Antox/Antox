@@ -1,3 +1,7 @@
+# Windows generated files
+Thumbs.db
+
+
 # Top-level generated gradle build file
 /build.gradle
 

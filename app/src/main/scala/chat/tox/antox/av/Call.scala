@@ -226,7 +226,7 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
             if (active && selfState.sendingVideo && !ringing) {
               val startSendTime = System.currentTimeMillis()
               val yuvFrame = FormatConversions.nv21toYuv420(cameraFrame)
-			  //To log the delta time taken for encoding and sending in native libtoxcore
+              //To log the delta time taken for encoding and sending in native libtoxcore
               val yuvConvertedTime = System.currentTimeMillis()
               try {
                 ToxSingleton.toxAv.videoSendFrame(callNumber, yuvFrame.width, yuvFrame.height, yuvFrame.y, yuvFrame.u, yuvFrame.v)

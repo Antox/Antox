@@ -51,7 +51,7 @@ abstract class GenericMessageHolder(val v: View) extends RecyclerView.ViewHolder
     val delayedMessage =
       nextMsg
         .map(nextMessage => (nextMessage.timestamp.getTime - msg.timestamp.getTime) / 1000)
-        .map(_ > messageTimeSeparation + 1).getOrElse(true)
+        .forall(_ > messageTimeSeparation + 1)
 
     val differentSender = nextMsg.exists(_.senderName != msg.senderName)
 

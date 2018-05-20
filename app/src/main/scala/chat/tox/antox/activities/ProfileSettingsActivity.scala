@@ -59,9 +59,13 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   private var avatarDialog: AvatarDialog = _
 
   override def onCreate(savedInstanceState: Bundle) {
+
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    setTitle(getResources.getString(R.string.title_activity_profile_settings))
+
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
@@ -145,10 +149,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
                   }
                 }
               }
-              else
-                {
-                  onExportDataFileSelected(path)
-                }
+              else {
+                onExportDataFileSelected(path)
+              }
             }
           }
         })
@@ -246,9 +249,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         clipboard.setText(sharedPreferences.getString("tox_id", ""))
       }
     })
-    var file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/")
-    if (!file.exists()) {
-      file.mkdirs()
+    val dir = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/")
+    if (!dir.exists) {
+      dir.mkdirs()
     }
     val noMedia = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/", ".nomedia")
     if (!noMedia.exists()) {
@@ -259,7 +262,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       }
     }
 
-    file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")
+    val file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
     generateQR(pref.getString("tox_id", ""))
     val bmp = BitmapFactory.decodeFile(file.getAbsolutePath)

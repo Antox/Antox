@@ -7,10 +7,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 
-/**
- * Created by zoff99 on 28.01.2017.
- */
-
 public class ConversationDateHeader extends HeaderViewHolder
 {
 

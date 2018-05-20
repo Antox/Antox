@@ -10,6 +10,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.wrapper.CallReply
 import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ArrayBuffer
@@ -30,14 +31,17 @@ class EditCallRepliesActivity extends AppCompatActivity {
     val callRepliesListView = findViewById(R.id.call_replies_list).asInstanceOf[ListView]
     val callRepliesAdapter = new EditCallRepliesAdapter(this, ArrayBuffer.empty)
     callRepliesSubscription =
-      Some(State.userDb(this).getActiveUserCallRepliesObservable.subscribe(callReplies => {
-        callRepliesAdapter.setNotifyOnChange(false)
+      Some(State.userDb(this)
+        .getActiveUserCallRepliesObservable
+        .observeOn(AndroidMainThreadScheduler())
+        .subscribe(callReplies => {
+          callRepliesAdapter.setNotifyOnChange(false)
 
-        callRepliesAdapter.clear()
-        callRepliesAdapter.addAll(callReplies)
+          callRepliesAdapter.clear()
+          callRepliesAdapter.addAll(callReplies)
 
-        callRepliesAdapter.notifyDataSetChanged()
-      }))
+          callRepliesAdapter.notifyDataSetChanged()
+        }))
 
     callRepliesListView.setAdapter(callRepliesAdapter)
 

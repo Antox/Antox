@@ -1,10 +1,7 @@
 package chat.tox.antox.activities
 
-import java.util.Locale
-
 import android.app.{AlertDialog, NotificationManager}
-import android.content.res.Configuration
-import android.content.{Context, DialogInterface, Intent, SharedPreferences}
+import android.content._
 import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
@@ -19,12 +16,12 @@ import chat.tox.antox.utils._
 
 class MainActivity extends AppCompatActivity {
 
+
   var request: View = _
 
   var preferences: SharedPreferences = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
-    System.out.println("MainApplication:MainActivity:onCreate")
 
     super.onCreate(savedInstanceState)
 
@@ -32,13 +29,16 @@ class MainActivity extends AppCompatActivity {
     ThemeManager.init(getApplicationContext)
 
     // Set the right language
-    selectLanguage()
+    AntoxLocalization.setLanguage(getApplicationContext)
 
     setContentView(R.layout.activity_main)
 
     // Use a toolbar so that the drawer goes above the action bar
     val toolbar = findViewById(R.id.toolbar).asInstanceOf[Toolbar]
     setSupportActionBar(toolbar)
+
+    setTitle(getResources.getString(R.string.app_name))
+
 
     getSupportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
@@ -71,13 +71,12 @@ class MainActivity extends AppCompatActivity {
 
     // set autoaccept option on startup
     State.setAutoAcceptFt(preferences.getBoolean("autoacceptft", false))
-    // System.out.println("load autoacceptft options : "+State.getAutoAcceptFt());
 
     Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
-    // System.out.println("load videocallstartwithnovideo options : "+Options.videoCallStartWithNoVideo);
 
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
   }
+
 
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])
@@ -110,10 +109,7 @@ class MainActivity extends AppCompatActivity {
     alertDialog.setTitle(title)
     alertDialog.setMessage(message)
     alertDialog.setIcon(R.drawable.ic_launcher)
-    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-
-      def onClick(dialog: DialogInterface, which: Int) {
-      }
+    alertDialog.setButton("OK", (dialog: DialogInterface, which: Int) => {
     })
     alertDialog.show()
   }
@@ -125,15 +121,10 @@ class MainActivity extends AppCompatActivity {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
     val networkInfo = connectivityManager.getAllNetworkInfo
 
-    for (info <- networkInfo) {
-      if ("WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
-        return true
-      } else if ("MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected) {
-        return true
-      }
+    networkInfo.exists { info =>
+      "WIFI".equalsIgnoreCase(info.getTypeName) && info.isConnected ||
+        "MOBILE".equalsIgnoreCase(info.getTypeName) && info.isConnected
     }
-
-    false
   }
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
@@ -147,29 +138,6 @@ class MainActivity extends AppCompatActivity {
     }
   }
 
-  private def selectLanguage() {
-    val localeString = preferences.getString("locale", "-1")
-    val locale = getResources.getConfiguration.locale
 
-    if (localeString == "-1") {
-      val editor = preferences.edit()
-      val currentLanguage = locale.getLanguage.toLowerCase
-      val currentCountry = locale.getCountry
 
-      editor.putString("locale", currentLanguage + "_" + currentCountry)
-      editor.apply()
-    } else {
-      val locale = if (localeString.contains("_")) {
-        val (language, country) = localeString.splitAt(localeString.indexOf("_"))
-        new Locale(language, country)
-      } else {
-        new Locale(localeString)
-      }
-
-      Locale.setDefault(locale)
-      val config = new Configuration()
-      config.locale = locale
-      getApplicationContext.getResources.updateConfiguration(config, getApplicationContext.getResources.getDisplayMetrics)
-    }
-  }
 }

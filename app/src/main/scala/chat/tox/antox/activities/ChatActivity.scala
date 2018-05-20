@@ -45,7 +45,6 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
-    System.out.println("MainApplication:ChatActivity:onCreate")
 
     super.onCreate(savedInstanceState)
     val thisActivity = this
@@ -207,12 +206,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
-          System.out.println("BitmapManager:avatar:001")
           BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
-          System.out.println("BitmapManager:avatar:002")
         })
 
-        System.out.println("BitmapManager:avatar:003")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
@@ -266,7 +262,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  override def onClickInfo(clickLocation: Location): Unit = {
+  override def onClickInfo(): Unit = {
     val intent = new Intent(this, classOf[FriendProfileActivity])
     val friendInfo = State.db.getFriendInfo(activeKey)
     intent.putExtra("key", activeKey.key)
@@ -296,7 +292,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
       case None =>
         //an active call does not exist, start a new call and start a corresponding activity
-        val call = new Call(CallNumber.fromFriendNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey, incoming = false)
+        val call = Call(CallNumber.fromFriendNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey, incoming = false)
         State.callManager.add(call)
         call.startCall(sendingAudio = true, sendingVideo = video)
 

@@ -7,6 +7,7 @@ import java.nio.charset.Charset
 import org.json.JSONObject
 
 import scala.io.Source
+import scala.util.Try
 
 object JsonReader {
 
@@ -20,33 +21,33 @@ object JsonReader {
     sb.toString()
   }
 
-  def readFromUrl(url: String): String = {
-    val is = new URL(url).openStream()
-    try {
-      val rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))
-      val jsonText = readAll(rd)
-      jsonText
-    } catch {
-      case e: Exception => {
-        AntoxLog.errorException("JsonReader readJsonFromUrl error", e)
-        ""
+  def readFromUrl(url: String): Option[String] = {
+    Try(new URL(url).openStream()).map(is => {
+      try {
+        val rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")))
+        val jsonText = readAll(rd)
+        Some(jsonText)
+      } catch {
+        case e: Exception => {
+          AntoxLog.errorException("JsonReader readJsonFromUrl error", e)
+          None
+        }
+      } finally {
+        is.close()
       }
-    } finally {
-      is.close()
-    }
+    }).toOption.flatten
   }
 
-  def readJsonFromFile(file: File): JSONObject = {
+  def readJsonFromFile(file: File): Option[JSONObject] = {
     try {
       val source = Source.fromFile(file)
       val jsonText = try source.mkString finally source.close()
 
-      new JSONObject(jsonText)
+      Some(new JSONObject(jsonText))
     } catch {
-      case e: Exception => {
-        AntoxLog.errorException("JsonReader readJsonFromFile error", e)
-        new JSONObject()
-      }
+      case _: Exception =>
+        AntoxLog.error("JSON file not found")
+        None
     }
   }
 }

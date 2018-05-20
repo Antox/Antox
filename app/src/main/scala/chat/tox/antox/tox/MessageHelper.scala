@@ -8,7 +8,6 @@ import chat.tox.antox.wrapper._
 import im.tox.tox4j.core.data.{ToxFriendMessage, ToxNickname}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.scaloid.common.LoggerTag
-
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
 

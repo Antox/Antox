@@ -1,4 +1,9 @@
 #!/bin/sh
+
+rm -rf app/src/main/jniLibs/
+mkdir app/src/main/jniLibs/
+
+mkdir -p app/src/main/jniLibs/armeabi-v7a
 mkdir -p app/src/main/jniLibs/armeabi
 mkdir -p app/src/main/jniLibs/x86
 mkdir -p app/src/main/jniLibs/arm64-v8a
@@ -9,6 +14,7 @@ find app/src/main/jniLibs/ -type f -name 'libtox4j*' -exec rm -f {} +
 
 echo "Downloading native libraries for tox4j..."
 
+wget https://build.tox.chat/job/tox4j_build_android_armel_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/armeabi-v7a/libtox4j-c.so
 wget https://build.tox.chat/job/tox4j_build_android_armel_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/armeabi/libtox4j-c.so
 wget https://build.tox.chat/job/tox4j_build_android_x86_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/x86/libtox4j-c.so
 wget https://build.tox.chat/job/tox4j_build_android_arm64_release/lastSuccessfulBuild/artifact/artifacts/libtox4j-c.so -O app/src/main/jniLibs/arm64-v8a/libtox4j-c.so

@@ -1,12 +1,10 @@
 package chat.tox.antox.activities
 
 import android.app.Activity
-import android.content.{Context, Intent}
+import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
-import android.os.{Build, Bundle, PowerManager}
+import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
-import android.provider.Settings
 import android.support.v4.content.IntentCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.{View, WindowManager}
@@ -23,31 +21,7 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
   private var profileSelected: String = _
 
 
-  def isIgnoringBatteryOptimizations(): Boolean = {
-    val context: Context = this
-    val packageName: String = context.getPackageName()
-    val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    return pm.isIgnoringBatteryOptimizations(packageName)
-  }
-
-  def ShowPermissionDialog() {
-    val intent = new Intent()
-    val context: Context = this
-    val packageName: String = context.getPackageName()
-    val pm = context.getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-    if (pm.isIgnoringBatteryOptimizations(packageName)) {
-      // intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-      // context.startActivity(intent)
-      // don't show list of apps, we are already ignoring battery optimizations
-    } else {
-      intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-      intent.setData(Uri.parse("package:" + packageName))
-      context.startActivity(intent)
-    }
-  }
-
   protected override def onCreate(savedInstanceState: Bundle) {
-    System.out.println("MainApplication:LoginActivity:onCreate")
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     getSupportActionBar.hide()

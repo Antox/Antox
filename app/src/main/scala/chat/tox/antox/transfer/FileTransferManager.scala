@@ -44,7 +44,6 @@ class FileTransferManager extends Intervals {
   }
 
   def remove(id: Long): Unit = {
-    System.out.println("FileTransferManager:" + "remove id=" + id)
     val mTransfer = this.get(id)
     mTransfer match {
       case Some(t) =>
@@ -85,19 +84,14 @@ class FileTransferManager extends Intervals {
     val extension = splitFileName(splitFileName.length - 1)
     AntoxLog.debug("sendFileSendRequest", TAG)
     var fileId: ToxFileId = fileId2
-    System.out.println("FileTransferManager:" + "sendFileSendRequest")
 
     if (fileId == ToxFileId.empty) {
-      System.out.println("FileTransferManager:" + "fileId == ToxFileId.empty -> generating ID/Hash ...")
-      System.out.println("FileTransferManager:" + "input:path=" + path + " filesizebytes=" + file.length())
       val hash_string: String = Utils2.getMd5Hash(path + "-" + file.length())
       if (hash_string == null) {
         fileId = ToxFileId.empty
-        System.out.println("FileTransferManager:" + "fileId = ToxFileId.empty")
       }
       else {
         fileId = ToxFileId.unsafeFromValue(hash_string.getBytes())
-        System.out.println("FileTransferManager:" + "fileId=" + fileId)
       }
     }
 
@@ -172,7 +166,6 @@ class FileTransferManager extends Intervals {
                           replaceExisting: Boolean,
                           context: Context) {
     AntoxLog.debug("fileIncomingRequest", TAG)
-    System.out.println("FileTransferManager:" + "fileIncomingRequest")
 
     var fileN = fileName
     val fileSplit = fileName.split("\\.")
@@ -261,7 +254,6 @@ class FileTransferManager extends Intervals {
 
   def fileFinished(key: ContactKey, fileNumber: Integer, context: Context) {
     AntoxLog.debug("fileFinished", TAG)
-    System.out.println("FileTransferManager:" + "fileFinished filenum=" + fileNumber)
 
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
@@ -287,7 +279,6 @@ class FileTransferManager extends Intervals {
 
   def cancelFile(key: ContactKey, fileNumber: Int, context: Context) {
     AntoxLog.debug("cancelFile", TAG)
-    System.out.println("FileTransferManager:" + "cancelFile filenum=" + fileNumber)
 
     val db = State.db
     State.transfers.remove(key, fileNumber)
@@ -305,13 +296,11 @@ class FileTransferManager extends Intervals {
 
   def fileTransferStarted(key: ContactKey, fileNumber: Integer, ctx: Context) {
     AntoxLog.debug("fileTransferStarted", TAG)
-    System.out.println("FileTransferManager:" + "fileTransferStarted filenum=" + fileNumber)
 
     State.db.fileTransferStarted(key, fileNumber)
   }
 
   def pauseFile(id: Long, ctx: Context) {
-    System.out.println("FileTransferManager:" + "pauseFile id=" + id)
 
     AntoxLog.debug("pauseFile", TAG)
     val mTransfer = State.transfers.get(id)
@@ -331,7 +320,6 @@ class FileTransferManager extends Intervals {
 
     // don't send my avatar in battery saving mode, unless we have changed the avatar
     if ((!State.getBatterySavingMode()) || (updated)) {
-      System.out.println("updateSelfAvatar")
       val db = State.db
       val friendList = db.friendInfoList.toBlocking.first
 

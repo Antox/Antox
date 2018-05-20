@@ -114,6 +114,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
   // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
   // old style ----
   mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
+
   def close() {
     mDbHelper.close()
   }
@@ -447,7 +448,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val joins =
       s"""LEFT JOIN $TABLE_CONTACTS AS conversation ON conversation.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_KEY
-         |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
+          |LEFT JOIN $TABLE_CONTACTS AS sender ON sender.$COLUMN_NAME_KEY = $TABLE_MESSAGES.$COLUMN_NAME_SENDER_KEY""".stripMargin
 
     val whereKey =
       if (key.isDefined) {
@@ -456,17 +457,17 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
 
     val order = s"ORDER BY $COLUMN_NAME_TIMESTAMP ${orderBy.toString}"
 
-    val query = 
+    val query =
       s"""SELECT $selection
-         |FROM $TABLE_MESSAGES
-         |$joins
-         |$whereKey
-         |AND $sqlMessageVisible""".stripMargin
+          |FROM $TABLE_MESSAGES
+          |$joins
+          |$whereKey
+          |AND $sqlMessageVisible""".stripMargin
 
     if (limit >= 0) {
       s"""SELECT *
-         |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
-         |$order""".stripMargin
+          |FROM ($query ORDER BY $COLUMN_NAME_ID DESC LIMIT $limit)
+          |$order""".stripMargin
     } else {
       s"""$query
          |$order""".stripMargin
@@ -492,7 +493,7 @@ class AntoxDB(ctx: Context, activeDatabase: String, selfKey: SelfKey) {
         val key = contactKeyFromContactType(cursor.getString(COLUMN_NAME_KEY), ContactType(cursor.getInt(COLUMN_NAME_CONVERSATION_CONTACT_TYPE)))
         val fileKind = FileKind.fromToxFileKind(cursor.getInt(COLUMN_NAME_FILE_KIND))
         val callEventKind = CallEventKind.values.find(_.kindId == cursor.getInt(COLUMN_NAME_CALL_EVENT_KIND)).getOrElse(CallEventKind.Invalid)
-        messageList += new Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
+        messageList += Message(id, messageId, key, senderKey, senderName, message, received, read, sent,
           timestamp, size, messageType, fileKind, callEventKind)
       } while (cursor.moveToNext())
     }

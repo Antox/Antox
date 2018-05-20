@@ -16,10 +16,10 @@
             android:id="@+id/prefixed_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_call_black_18dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/message_bubble"
-            android:layout_toStartOf="@+id/message_bubble" />
+            android:layout_toStartOf="@+id/message_bubble"
+            android:src="@drawable/ic_call_black_18dp" />
 
         <LinearLayout
             android:id="@+id/message_bubble"
@@ -47,13 +47,13 @@
         android:id="@+id/message_text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:paddingEnd="@dimen/padding"
         android:paddingLeft="@dimen/padding"
         android:paddingRight="@dimen/padding"
         android:paddingStart="@dimen/padding"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_tiny"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="@dimen/text_tiny" />
 
 </LinearLayout>

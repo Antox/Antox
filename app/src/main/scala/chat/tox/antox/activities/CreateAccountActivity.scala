@@ -7,12 +7,12 @@ import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.animation.{ArgbEvaluator, ObjectAnimator, ValueAnimator}
 import android.app.Activity
 import android.content.DialogInterface.OnClickListener
-import android.content.{Context, DialogInterface, Intent}
+import android.content.{DialogInterface, Intent}
 import android.graphics.Color
 import android.os.{Build, Bundle, Environment}
+import android.preference.PreferenceManager
 import android.support.v7.app.{AlertDialog, AppCompatActivity}
 import android.text._
-import android.text.method.LinkMovementMethod
 import android.view._
 import android.widget._
 import chat.tox.antox.R
@@ -23,11 +23,10 @@ import chat.tox.antox.toxme.ToxMe.PrivacyLevel
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.toxme.{ToxData, ToxMe, ToxMeError, ToxMeName}
 import chat.tox.antox.utils._
-import chat.tox.antox.wrapper.{FileKind, ToxAddress}
+import chat.tox.antox.wrapper.ToxAddress
 import com.github.angads25.filepicker.controller.DialogSelectionListener
 import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
 import com.github.angads25.filepicker.view.FilePickerDialog
-import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.exceptions.ToxNewException
 import im.tox.tox4j.core.options.SaveDataOptions.ToxSave
 import im.tox.tox4j.core.options.ToxOptions
@@ -89,21 +88,26 @@ class CreateAccountActivity extends AppCompatActivity {
 
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
     val id = item.getItemId
-    if (id == R.id.action_settings) {
-      return true
-    }
-    super.onOptionsItemSelected(item)
+    id == R.id.action_settings || super.onOptionsItemSelected(item)
   }
 
   def toggleRegisterText(): Unit = {
     val registerButton = findViewById(R.id.create_account).asInstanceOf[Button]
     val toxmeCheckBox = findViewById(R.id.toxme).asInstanceOf[CheckBox]
+    val fadeOut = ObjectAnimator.ofInt(registerButton, "textColor", getResources.getColor(R.color.white), Color.TRANSPARENT)
+    fadeOut.setDuration(300)
+    fadeOut.setEvaluator(new ArgbEvaluator)
+    fadeOut.start()
     if (toxmeCheckBox.isChecked) {
       registerButton.setText(R.string.create_register_with_toxme)
     }
     else {
       registerButton.setText(R.string.create_register)
     }
+    val fadeIn = ObjectAnimator.ofInt(registerButton, "textColor", Color.TRANSPARENT, getResources.getColor(R.color.white))
+    fadeIn.setDuration(300)
+    fadeIn.setEvaluator(new ArgbEvaluator)
+    fadeIn.start()
   }
 
   def validAccountName(account: String): Boolean = {
@@ -195,7 +199,22 @@ class CreateAccountActivity extends AppCompatActivity {
     registerButton.setText(getResources.getText(R.string.create_registering))
     registerButton.setEnabled(false)
 
-    registerButton.setBackgroundColor(getResources.getColor(R.color.brand_secondary_darker))
+    //only animate on 2.3+ because animation was added in 3.0
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      val colorFrom = getResources.getColor(R.color.brand_secondary)
+      val colorTo = getResources.getColor(R.color.brand_secondary_darker)
+      val colorAnimation = ValueAnimator.ofObject(
+        new ArgbEvaluator(),
+        colorFrom.asInstanceOf[java.lang.Integer],
+        colorTo.asInstanceOf[java.lang.Integer])
+
+      colorAnimation.addUpdateListener(new AnimatorUpdateListener {
+        override def onAnimationUpdate(animation: ValueAnimator): Unit = {
+          registerButton.setBackgroundColor(animation.getAnimatedValue.asInstanceOf[Int])
+        }
+      })
+      colorAnimation.start()
+    }
 
     val progressBar = findViewById(R.id.login_progress_bar).asInstanceOf[ProgressBar]
     progressBar.setVisibility(View.VISIBLE)
@@ -258,7 +277,8 @@ class CreateAccountActivity extends AppCompatActivity {
             if (shouldRegister) {
               // Register acccount
               if (ConnectionManager.isNetworkAvailable(this)) {
-                ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, data)
+                val proxy = ProxyUtils.netProxyFromPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext))
+                ToxMe.registerAccount(toxMeName, PrivacyLevel.PUBLIC, data, proxy)
               } else {
                 // fail if there is no connection
                 Observable.just(Left(ToxMeError.CONNECTION_ERROR))

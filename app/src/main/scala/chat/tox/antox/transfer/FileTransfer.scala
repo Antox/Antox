@@ -149,27 +149,21 @@ class FileTransfer(val key: ContactKey,
               rw.removeExifMetadata(bFile, baos)
               baos.close()
               val bis = new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray))
-              // System.out.println("skipping:(1) " + (pos - 1) + " bytes")
               var skipped: Long = 0
               skipped = bis.skip(pos - 1)
-              // System.out.println("skipping:(1) : skipped=" + skipped + " bytes")
               while (skipped < (pos - 1)) {
                 // skip until wanted position is reached
                 skipped = skipped + bis.skip((pos - 1) - skipped)
-                // System.out.println("skipping:(1) : skipped=" + skipped + " bytes")
               }
               bis
             }
             else {
               val bis = new BufferedInputStream(input)
-              // System.out.println("skipping:(2) " + (pos - 1) + " bytes")
               var skipped: Long = 0
-              // System.out.println("skipping:(2) : skipped=" + skipped + " bytes")
               skipped = bis.skip(pos - 1)
               while (skipped < (pos - 1)) {
                 // skip until wanted position is reached
                 skipped = skipped + bis.skip((pos - 1) - skipped)
-                // System.out.println("skipping:(1) : skipped=" + skipped + " bytes")
               }
               bis
             }
@@ -194,7 +188,6 @@ class FileTransfer(val key: ContactKey,
   //def readData(reset: Boolean, chunkSize: Integer): Option[Array[Byte]] = {
   def readData(pos: Long, progress: Long, chunkSize: Integer): Option[Array[Byte]] = {
     //Log.d(TAG, "reading data from " + file.getPath)
-    // System.out.println("readData:" + "pos=" + pos + " progress=" + progress + " chunkSize=" + chunkSize + " file=" + file.getAbsolutePath)
 
     if (pos != progress) {
       // we need to seek. close inputstream, open it and skip some bytes

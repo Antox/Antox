@@ -193,24 +193,24 @@ object AntoxNotificationManager {
   }
 
   def createPersistentNotification(ctx: Context) {
-    if (persistBuilder.isDefined) return
+    if (persistBuilder.isEmpty) {
+      AntoxLog.debug("Creating persistent notification")
 
-    AntoxLog.debug("Creating persistent notification")
+      val resultIntent = new Intent(ctx, classOf[MainActivity])
+      val stackBuilder = TaskStackBuilder.create(ctx)
+      stackBuilder.addParentStack(classOf[MainActivity])
+      stackBuilder.addNextIntent(resultIntent)
+      val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-    val resultIntent = new Intent(ctx, classOf[MainActivity])
-    val stackBuilder = TaskStackBuilder.create(ctx)
-    stackBuilder.addParentStack(classOf[MainActivity])
-    stackBuilder.addNextIntent(resultIntent)
-    val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+      val builder = new NotificationCompat.Builder(ctx)
+        .setSmallIcon(R.drawable.ic_actionbar)
+        .setContentTitle(ctx.getString(R.string.app_name))
+        .setContentText(getStatus(ctx))
+        .setContentIntent(resultPendingIntent)
+        .setShowWhen(false)
 
-    persistBuilder = Some(new NotificationCompat.Builder(ctx)
-      .setSmallIcon(R.drawable.ic_actionbar)
-      .setContentTitle(ctx.getString(R.string.app_name))
-      .setContentText(getStatus(ctx))
-      .setContentIntent(resultPendingIntent)
-      .setShowWhen(false))
+      persistBuilder = Some(builder)
 
-    persistBuilder.foreach(builder => {
       val notification = builder.build()
       notification.flags = Notification.FLAG_ONGOING_EVENT
       mNotificationManager.foreach(_.notify(persistID, notification))
@@ -222,7 +222,7 @@ object AntoxNotificationManager {
         .subscribe(tuple => {
           updatePersistentNotification(ctx, tuple._2)
         }))
-    })
+    }
   }
 
   def removePersistentNotification() {
@@ -245,9 +245,9 @@ object AntoxNotificationManager {
   }
 
   private def getStatus(ctx: Context): String = {
-    if (ToxSingleton.tox == null) return ctx.getString(R.string.status_offline)
-
-    if (ToxSingleton.tox.getSelfConnectionStatus != ToxConnection.NONE) {
+    if (ToxSingleton.tox == null) {
+      ctx.getString(R.string.status_offline)
+    } else if (ToxSingleton.tox.getSelfConnectionStatus != ToxConnection.NONE) {
       ToxSingleton.tox.getStatus match {
         case ToxUserStatus.NONE =>
           ctx.getString(R.string.status_online)
@@ -256,8 +256,9 @@ object AntoxNotificationManager {
         case ToxUserStatus.BUSY =>
           ctx.getString(R.string.status_busy)
       }
+    } else {
+      ctx.getString(R.string.status_offline)
     }
-    else ctx.getString(R.string.status_offline)
   }
 
   def addAlerts(builder: NotificationCompat.Builder, preferences: SharedPreferences) {
