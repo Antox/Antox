@@ -11,11 +11,12 @@ buildscript {
         maven { url "http://dl.bintray.com/drummer-aidan/maven" }
         maven { url "https://repository.apache.org/content/repositories/snapshots/" }
         maven { url 'https://maven.google.com' }
+        google()
     }
 
     dependencies {
 
-        classpath ('com.android.tools.build:gradle:3.0.1'){
+        classpath ('com.android.tools.build:gradle:3.1.3'){
             exclude module: 'proguard-gradle'
         }
         // compiled by subliun --------
@@ -137,40 +138,40 @@ android {
 
 dependencies {
 
-    compile fileTree(dir: 'libs', include: '*.jar')
+    implementation fileTree(dir: 'libs', include: '*.jar')
 
-    compile 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:1.0.3-SNAPSHOT'
+    implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:1.0.3-SNAPSHOT'
 
-    compile 'com.android.support:multidex:1.0.2' // ???
-    compile 'org.scala-lang:scala-library:2.11.8' // 2.11.8 -> [2.12.0, 2.12.1] *dont upgrade*
+    implementation 'com.android.support:multidex:1.0.2' // ???
+    implementation 'org.scala-lang:scala-library:2.11.8' // 2.11.8 -> [2.12.0, 2.12.1] *dont upgrade*
     // 3.6.1-10 -> [4.0, 4.1, 4.2]
-    compile 'org.scaloid:scaloid_2.11:4.2'
-    compile 'com.typesafe.scala-logging:scala-logging_2.11:3.5.0' // 3.1.0 -> [3.5.0]
-    compile 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.47'
+    implementation 'org.scaloid:scaloid_2.11:4.2'
+    implementation 'com.typesafe.scala-logging:scala-logging_2.11:3.5.0' // 3.1.0 -> [3.5.0]
+    implementation 'com.trueaccord.scalapb:scalapb-runtime_2.11:0.5.47'
     // 7.2.0-M1 -> [7.2.8, 7.3.0-M8] *dont upgrade*
-    compile 'org.scalaz:scalaz-core_2.11:7.2.8'
+    implementation 'org.scalaz:scalaz-core_2.11:7.2.8'
     // 1.8.2 -> [1.8.3, 1.9.0, 1.10.3]
-    compile 'org.scodec:scodec-core_2.11:1.10.3'
-    compile 'org.apache.commons:commons-imaging:1.0-SNAPSHOT' // 1.0-SNAPSHOT -> [1.0-R1534292]
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:gridlayout-v7:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
+    implementation 'org.scodec:scodec-core_2.11:1.10.3'
+    implementation 'org.apache.commons:commons-imaging:1.0-SNAPSHOT' // 1.0-SNAPSHOT -> [1.0-R1534292]
+    implementation 'com.android.support:design:25.1.0'
+    implementation 'com.android.support:recyclerview-v7:25.1.0'
+    implementation 'com.android.support:appcompat-v7:25.1.0'
+    implementation 'com.android.support:gridlayout-v7:25.1.0'
+    implementation 'com.android.support:support-v4:25.1.0'
     //
     //
     //
     // -- upgrade me !! --
     // -- upgrade me !! --
     // 1.0.6 -> [1.1.10, 1.2.4] *1.2.4*
-    compile 'io.reactivex:rxjava:1.0.17'
+    implementation 'io.reactivex:rxjava:1.0.17'
     // 0.24.0 -> [1.0.2, 1.1.0, 1.2.0, 1.2.1] *1.2.1*
     // io.reactivex:rxandroid -> io.reactivex:rxjava
-    compile ('io.reactivex:rxandroid:0.24.0')
+    implementation ('io.reactivex:rxandroid:0.24.0')
     //    exclude group: 'io.reactivex'
     // 0.25.0 -> [0.25.1, 0.26.5] ***
     // io.reactivex:rxscala_2 -> io.reactivex:rxjava
-    compile('io.reactivex:rxscala_2.11:0.25.1') {
+    implementation('io.reactivex:rxscala_2.11:0.25.1') {
         exclude group: 'io.reactivex'
     }
     // -- upgrade me !! --
@@ -181,35 +182,35 @@ dependencies {
     //
     // 0.4.0 -> [0.4.1, 0.5.1, 0.6.3, 0.7.0, 0.8.0, 1.0.0, 1.1.1]
     // com.squareup.sqlbrite:sqlbrite -> io.reactivex:rxjava
-    compile('com.squareup.sqlbrite:sqlbrite:1.1.1') {
+    implementation('com.squareup.sqlbrite:sqlbrite:1.1.1') {
         exclude group: 'io.reactivex'
     }
     // no newer version yet
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.okhttp3:okhttp:3.9.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.9.1'
+    implementation 'com.squareup.retrofit:retrofit:1.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.1'
     // 2.0.0 -> [2.1.0, 2.2.0, 2.6.0, 2.7.5]
-    compile 'com.squareup.okhttp3:okhttp:3.9.1' // 2.0.0 -> [2.1.0, 2.2.0, 2.6.0, 2.7.5]
-    compile 'com.intellij:annotations:12.0' // no newer version yet
-    compile 'de.hdodenhof:circleimageview:2.1.0' // 1.2.2 -> [1.3.0, 2.0.0, 2.1.0] *2.1.0*
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1' // 2.0.0 -> [2.1.0, 2.2.0, 2.6.0, 2.7.5]
+    implementation 'com.intellij:annotations:12.0' // no newer version yet
+    implementation 'de.hdodenhof:circleimageview:2.1.0' // 1.2.2 -> [1.3.0, 2.0.0, 2.1.0] *2.1.0*
     // ---
     // Error:Conflict with dependency 'com.android.support:support-annotations'. Resolved versions for app (24.2.0) and test app (23.0.1) differ.
     // 1.0.3 -> [1.0.9, 1.1.1] *1.0.9*
-    compile('com.jpardogo.materialtabstrip:library:1.0.9') {
+    implementation('com.jpardogo.materialtabstrip:library:1.0.9') {
         exclude group: 'com.android.support'
     }
     // ---
-    compile 'com.balysv:material-ripple:1.0.2' // no newer version yet
+    implementation 'com.balysv:material-ripple:1.0.2' // no newer version yet
     // ---
     // Error:Conflict with dependency
     // 1.3.0 -> [2.2.5] *2.2.5*
-    compile('jp.wasabeef:recyclerview-animators:2.2.5') {
+    implementation('jp.wasabeef:recyclerview-animators:2.2.5') {
         exclude group: 'com.android.support'
     }
     // ---
 
-    compile 'pub.devrel:easypermissions:0.3.0'
-    compile 'com.github.angads25:filepicker:1.0.6'
+    implementation 'pub.devrel:easypermissions:0.3.0'
+    implementation 'com.github.angads25:filepicker:1.0.6'
 
     // androidTestCompile 'org.scala-lang:scala-library:2.11.8'
     // androidTestCompile 'com.android.support.test:runner:0.4'
