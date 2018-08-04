@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="title_activity_settings">设置</string>
+
+    <string name="pref_unsupported">您的设备不支持此选项</string>
+
+    <!-- Profile -->
+    <string name="pref_header_profile">个人资料</string>
+
+    <string name="pref_title_nickname">昵称</string>
+    <string name="pref_default_nickname">Antox用户</string>
+
+    <string name="pref_title_password">ToxMe密码</string>
+    <string name="pref_default_password">未设置密码</string>
+
+    <string name="pref_title_status">状态</string>
+    <string-array name="pref_status_list_titles">
+        <item>在线</item>
+        <item>离开</item>
+        <item>忙碌</item>
+    </string-array>
+    <string-array name="pref_status_list_values" translatable="false">
+        <item>online</item>
+        <item>away</item>
+        <item>busy</item>
+    </string-array>
+
+    <string name="pref_title_status_message">状态消息</string>
+    <string name="pref_default_status_message">嘿！我正在使用Antox</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">默认Tox ID - 你不应该看到这个</string>
+    <string name="pref_title_toxme">ToxMe地址</string>
+    <string name="pref_default_toxme">此个人资料目前处于隐身模式</string>
+    <string name="pref_title_logging_enabled">在退出时保持聊天记录</string>
+    <string name="pref_title_theme_color">更改主题颜色</string>
+    <string name="pref_title_avatar">头像</string>
+    <string name="pref_title_account_name">用户名</string>
+    <string name="pref_title_export">导出配置文件</string>
+    <string name="pref_title_delete">删除帐户</string>
+    <string name="pref_title_logout">注销</string>
+
+    <!-- Notifications -->
+    <string name="pref_header_notifications">通知</string>
+    <string name="pref_title_enable_notifications">启用通知</string>
+    <string name="pref_title_new_message_notifications">消息通知</string>
+    <string name="pref_title_new_friend_notifications">朋友请求通知</string>
+    <string name="pref_title_persistent_notification">常驻通知栏</string>
+    <string name="pref_title_notification_vibrate">振动</string>
+    <string name="pref_title_notification_sound">声音</string>
+    <string name="pref_title_notification_light">呼吸灯</string>
+
+    <string name="pref_description_notification_vibrate">振动</string>
+    <string name="pref_description_notification_sound">声音</string>
+
+    <!-- Input -->
+
+    <string name="pref_header_input">输入</string>
+
+    <string name="pref_enable_autocorrect">启用自动更正</string>
+
+    <string name="pref_keyboard_hotkey">设置键盘热键</string>
+
+    <string-array name="pref_keyboard_hotkey_titles">
+        <item>发送</item>
+        <item>表情</item>
+        <item>输入</item>
+    </string-array>
+
+    <string-array name="pref_keyboard_hotkey_values" translatable="false">
+        <item>send</item>
+        <item>emote</item>
+        <item>return</item>
+    </string-array>
+
+    <!-- Network -->
+    <string name="pref_header_network">网络</string>
+    <string name="pref_title_connection_status_messages">操作消息</string>
+    <string name="pref_title_wifi_only">仅用于Wi-Fi环境</string>
+    <string name="pref_udp">启用UDP</string>
+    <string name="pref_title_enable_proxy">启用代理</string>
+    <string name="pref_title_proxy_type">选择代理类型</string>
+    <string-array name="pref_proxy_type_list_values" translatable="false">
+        <item>HTTP</item>
+        <item>SOCKS5</item>
+    </string-array>
+    <string name="pref_title_proxy_address">更改代理地址</string>
+    <string name="pref_title_proxy_port">更改代理端口</string>
+    <string name="pref_title_custom_node">使用自定义启动节点</string>
+    <string name="pref_title_custom_node_address">更改节点地址</string>
+    <string name="pref_title_custom_node_port">更改节点端口</string>
+    <string name="pref_title_custom_node_public_key">更改节点公钥</string>
+    <string name="error_invalid_tox_id">无效的公钥</string>
+    <string name="error_invalid_ip_address">无效的IP地址</string>
+    <string name="error_invalid_port">无效的端口, 请输入介于1和65535之间的正确端口号</string>
+
+    <!-- Calls -->
+    <string name="pref_header_calls">呼叫</string>
+    <string name="pref_title_enable_call_event_logging">呼叫事件记录</string>
+    <string name="pref_enable_videocallstartwithnovideo">当禁用视频也启动视频通话</string>
+
+    <!-- Other -->
+    <string name="pref_header_other">其他</string>
+    <string name="pref_title_language">语言</string>
+    <string-array name="pref_language_list_titles" translatable="false">
+        <item>العربية</item>
+        <item>Български</item>
+        <item>Català</item>
+        <item>čeština</item>
+        <item>Deutsch</item>
+        <item>English</item>
+        <item>ελληνικά</item>
+        <item>Español</item>
+        <item>فارسی</item>
+        <item>Suomi</item>
+        <item>Français</item>
+        <item>Magyar</item>
+        <item>Hrvatski</item>
+        <item>Italiano</item>
+        <item>日本語</item>
+        <item>بهاس ملايو</item>
+        <item>Norsk bokmål</item>
+        <item>Nederlands</item>
+        <item>Polski</item>
+        <item>Português (BR)</item>
+        <item>Português (PT)</item>
+        <item>Русский</item>
+        <item>Slovenský</item>
+        <item>Shqip</item>
+        <item>Svenska</item>
+        <item>Српски</item>
+        <item>Türkçe</item>
+        <item>Український</item>
+        <item>简体中文</item>
+    </string-array>
+    <string-array name="pref_language_list_values" translatable="false">
+        <item>ar</item>
+        <item>bg</item>
+        <item>ca</item>
+        <item>cs</item>
+        <item>de</item>
+        <item>en</item>
+        <item>el</item>
+        <item>es</item>
+        <item>fa</item>
+        <item>fi</item>
+        <item>fr</item>
+        <item>hu</item>
+        <item>hr</item>
+        <item>it</item>
+        <item>ja</item>
+        <item>ms</item>
+        <item>nb</item>
+        <item>nl</item>
+        <item>pl</item>
+        <item>pt_BR</item>
+        <item>pt_PT</item>
+        <item>ru</item>
+        <item>sk</item>
+        <item>sq</item>
+        <item>sr</item>
+        <item>sv</item>
+        <item>tr</item>
+        <item>uk</item>
+        <item>zh_CN</item>
+    </string-array>
+
+    <!-- Menu strings -->
+    <string name="copy_tox_id">复制Tox ID至粘贴板</string>
+
+    <!-- Advanced strings -->
+    <string name="pref_enable_batterysavingmode">节电模式(实验性)</string>
+    <string name="pref_strip_exif">从图像中删除EXIF数据</string>
+    <string name="pref_enable_autoaccept">自动接收文件</string>
+    <string name="pref_advanced">高级</string>
+    <string name="pref_nospam">重置Tox ID</string>
+    <string name="pref_autostart">开机启动Antox</string>
+</resources>
+ 
