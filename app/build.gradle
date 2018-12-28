@@ -30,13 +30,14 @@ buildscript {
 }
 
 repositories {
+    maven { url 'https://maven.google.com' }
     mavenCentral()
     maven { url "http://jcenter.bintray.com" }
     maven { url "https://jitpack.io" }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "http://dl.bintray.com/drummer-aidan/maven" }
     maven { url "https://repository.apache.org/content/repositories/snapshots/" }
-    maven { url 'https://maven.google.com' }
+
 }
 
 apply plugin: "com.android.application"
@@ -210,6 +211,9 @@ dependencies {
 
     compile 'pub.devrel:easypermissions:0.3.0'
     compile 'com.github.angads25:filepicker:1.0.6'
+    compile ('cn.yipianfengye.android:zxing-library:2.2'){
+        exclude group: 'com.android.support'
+    }
 
     // androidTestCompile 'org.scala-lang:scala-library:2.11.8'
     // androidTestCompile 'com.android.support.test:runner:0.4'

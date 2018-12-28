@@ -28,6 +28,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.uuzuche.lib_zxing.activity.CaptureActivity;
+import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -240,10 +242,8 @@ public class IntentIntegrator {
      * if a prompt was needed, or null otherwise
      */
     public final AlertDialog initiateScan(Collection<String> desiredBarcodeFormats) {
-        Intent intentScan = new Intent(BS_PACKAGE + ".SCAN");
-        intentScan.addCategory(Intent.CATEGORY_DEFAULT);
-
-        // check which types of codes to scan for
+        ZXingLibrary.initDisplayOpinion(activity);
+        Intent  intentScan = new Intent(activity,CaptureActivity.class);
         if (desiredBarcodeFormats != null) {
             // set the desired barcode types
             StringBuilder joinedByComma = new StringBuilder();
@@ -255,12 +255,6 @@ public class IntentIntegrator {
             }
             intentScan.putExtra("SCAN_FORMATS", joinedByComma.toString());
         }
-
-        String targetAppPackage = findTargetAppPackage(intentScan);
-        if (targetAppPackage == null) {
-            return showDownloadDialog();
-        }
-        intentScan.setPackage(targetAppPackage);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         attachMoreExtras(intentScan);
@@ -346,8 +340,8 @@ public class IntentIntegrator {
     public static IntentResult parseActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                String contents = intent.getStringExtra("result_string");
+                String formatName = intent.getStringExtra("RESULT_FORMAT");
                 byte[] rawBytes = intent.getByteArrayExtra("SCAN_RESULT_BYTES");
                 int intentOrientation = intent.getIntExtra("SCAN_RESULT_ORIENTATION", Integer.MIN_VALUE);
                 Integer orientation = intentOrientation == Integer.MIN_VALUE ? null : intentOrientation;
