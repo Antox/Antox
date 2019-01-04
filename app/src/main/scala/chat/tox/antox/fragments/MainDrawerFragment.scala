@@ -138,6 +138,14 @@ class MainDrawerFragment extends Fragment {
 
   def openDrawer(): Unit = {
     mDrawerLayout.openDrawer(GravityCompat.START)
+    // bugfix--the maindrawer does not refresh the username and status when the drawer open
+    userDetailsSubscription = State.userDb(getActivity)
+      .activeUserDetailsObservable()
+      .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe((tuple) => {
+        refreshDrawerHeader(tuple._1, tuple._2)
+      })
   }
 
   def closeDrawer(): Unit = {
