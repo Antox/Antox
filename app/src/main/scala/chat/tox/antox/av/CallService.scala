@@ -49,6 +49,7 @@ class CallService(toxService: ToxService) {
             case None =>
               // if there is no active call stop foreground and remove the notification
               toxService.stopForeground(true)
+              toxService.stickForground()
           }
         }))
 

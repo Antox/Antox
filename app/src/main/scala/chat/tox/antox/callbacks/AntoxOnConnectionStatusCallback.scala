@@ -17,7 +17,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
   def setAllStatusNone(): Unit = {
     if (!ToxSingleton.isToxConnected(preferences, ctx)) {
       for (friendInfo <- State.db.friendInfoList.toBlocking.first) {
-        friendConnectionStatus(friendInfo, ToxConnection.NONE)(Unit)
+        friendConnectionStatus(friendInfo, ToxConnection.NONE)(Unit) //fixme: ToxConnection.NONE means nothing to do
       }
     }
   }

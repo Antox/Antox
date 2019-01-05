@@ -49,6 +49,7 @@
         android:smallScreens="true" />
 
     <application
+        android:name="chat.tox.antox.tox.ToxApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"

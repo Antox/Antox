@@ -4,6 +4,8 @@ import java.util
 
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
+import chat.tox.antox.data.State
+import chat.tox.antox.tox.ToxService
 
 import scala.collection.JavaConversions._
 
@@ -40,6 +42,12 @@ class ConnectionManager extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent) {
     if (ConnectionManager.isNetworkAvailable(context)) {
       val connectionType = ConnectionManager.getConnectionType(context)
+
+      if (ConnectionManager.lastConnectionType == None && State.userDb(context).loggedIn) {
+        val service = new Intent(context, classOf[ToxService])
+        context.startService(service)
+      }
+
       if (ConnectionManager.lastConnectionType.isEmpty || connectionType != ConnectionManager.lastConnectionType.get) {
         for (listener <- ConnectionManager.listenerList) {
           listener.connectionTypeChange(connectionType)
@@ -47,5 +55,12 @@ class ConnectionManager extends BroadcastReceiver {
         ConnectionManager.lastConnectionType = Some(connectionType)
       }
     }
+
+    if (!ConnectionManager.isNetworkAvailable(context)) {
+      val service = new Intent(context, classOf[ToxService])
+      context.stopService(service)
+      ConnectionManager.lastConnectionType = None
+    }
+
   }
 }
