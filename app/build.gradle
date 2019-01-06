@@ -214,6 +214,8 @@ dependencies {
     compile ('cn.yipianfengye.android:zxing-library:2.2'){
         exclude group: 'com.android.support'
     }
+    compile 'android.arch.lifecycle:common-java8:1.1.1'
+    compile 'android.arch.lifecycle:extensions:1.1.1'
 
     // androidTestCompile 'org.scala-lang:scala-library:2.11.8'
     // androidTestCompile 'com.android.support.test:runner:0.4'

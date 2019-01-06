@@ -31,6 +31,8 @@ class ToxService extends Service {
 
   private val FOREGROUND_ID = 1030
 
+  private val bgIterateInterval = 3 * 1000 //in ms
+
   override def onCreate() {
     if (!ToxSingleton.isInited) {
       ToxSingleton.initTox(getApplicationContext)
@@ -90,7 +92,11 @@ class ToxService extends Service {
                 println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
               }
 
-              Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              if (ToxApplication.getInstance(thisService).getAppVisible)
+                Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              else {
+                Thread.sleep(bgIterateInterval)
+              }
               ticks += 1
             } catch {
               case e: Exception =>
