@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat
 import chat.tox.antox.R
 import chat.tox.antox.av.CallService
 import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback, ToxCallbackListener, ToxavCallbackListener}
+import chat.tox.antox.data.State
 import chat.tox.antox.utils.AntoxLog
 import im.tox.tox4j.core.enums.ToxConnection
 import im.tox.tox4j.impl.jni.ToxJniLog
@@ -92,7 +93,7 @@ class ToxService extends Service {
                 println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
               }
 
-              if (ToxApplication.getInstance(thisService).getAppVisible)
+              if (State.isAppVisible)
                 Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
               else {
                 Thread.sleep(bgIterateInterval)

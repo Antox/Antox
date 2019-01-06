@@ -28,7 +28,8 @@ object State {
   var lastFileTransferAction: Long = -1
   var lastIncomingMessageAction: Long = -1
   val noBatterySavingWithActionWithinLastXSeconds = 5 * 60
-
+  var internetConnectivity = true
+  var isAppVisible = false
   // 5min
   var MainToxService: ToxService = null
 

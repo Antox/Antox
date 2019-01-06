@@ -168,7 +168,7 @@ object ToxSingleton {
     val wifiOnly = preferences.getBoolean("wifi_only", true)
     val wifiInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
-    !(wifiOnly && !wifiInfo.isConnected)
+    (!(wifiOnly && !wifiInfo.isConnected)) && State.internetConnectivity
   }
 
 

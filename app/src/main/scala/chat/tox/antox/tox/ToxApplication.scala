@@ -1,11 +1,12 @@
 package chat.tox.antox.tox
 
 import android.app.Application
-import android.arch.lifecycle.{DefaultLifecycleObserver, ProcessLifecycleOwner}
+import android.arch.lifecycle.{DefaultLifecycleObserver, LifecycleOwner, ProcessLifecycleOwner}
 import android.content.{Context, IntentFilter}
 import android.net.ConnectivityManager
 import android.os.Build
 import android.support.annotation.NonNull
+import chat.tox.antox.data.State
 import chat.tox.antox.utils.ConnectionManager
 
 object ToxApplication {
@@ -14,17 +15,16 @@ object ToxApplication {
 
 class ToxApplication extends Application with DefaultLifecycleObserver {
 
-  private var isAppVisible = false
 
-  def onStart(@NonNull owner: Nothing): Unit = {
-    isAppVisible = true
+  def onStart(@NonNull owner: LifecycleOwner): Unit = {
+    State.isAppVisible = true
   }
 
-  def onStop(@NonNull owner: Nothing): Unit = {
-    isAppVisible = false
+  def onStop(@NonNull owner: LifecycleOwner): Unit = {
+    State.isAppVisible = false
   }
 
-  def getAppVisible: Boolean = isAppVisible
+  def getAppVisible: Boolean = State.isAppVisible
 
   override def onCreate(): Unit = {
     super.onCreate()

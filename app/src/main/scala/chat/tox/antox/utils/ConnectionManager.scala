@@ -5,7 +5,6 @@ import java.util
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
 import chat.tox.antox.data.State
-import chat.tox.antox.tox.ToxService
 
 import scala.collection.JavaConversions._
 
@@ -40,26 +39,26 @@ object ConnectionManager {
 
 class ConnectionManager extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent) {
+    this.synchronized {
+      try {
+        wait(5000) //give some time to switch network,sometimes networkinfo shows not connected during switch
+      } catch {
+        case e: Exception =>
+      }
+    }
     if (ConnectionManager.isNetworkAvailable(context)) {
       val connectionType = ConnectionManager.getConnectionType(context)
-
-      if (ConnectionManager.lastConnectionType == None && State.userDb(context).loggedIn) {
-        val service = new Intent(context, classOf[ToxService])
-        context.startService(service)
-      }
-
       if (ConnectionManager.lastConnectionType.isEmpty || connectionType != ConnectionManager.lastConnectionType.get) {
         for (listener <- ConnectionManager.listenerList) {
           listener.connectionTypeChange(connectionType)
         }
         ConnectionManager.lastConnectionType = Some(connectionType)
       }
+      State.internetConnectivity = true
     }
 
     if (!ConnectionManager.isNetworkAvailable(context)) {
-      val service = new Intent(context, classOf[ToxService])
-      context.stopService(service)
-      ConnectionManager.lastConnectionType = None
+      State.internetConnectivity = false
     }
 
   }
