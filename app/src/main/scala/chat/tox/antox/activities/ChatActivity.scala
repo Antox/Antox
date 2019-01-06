@@ -6,10 +6,9 @@ import java.util.Date
 
 import android.app.Activity
 import android.content.{Context, Intent}
-import android.net.Uri
 import android.os.{Build, Bundle, Environment, SystemClock}
 import android.provider.MediaStore
-import android.support.v4.content.CursorLoader
+import android.support.v4.content.{CursorLoader, FileProvider}
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget._
@@ -117,7 +116,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
           val file = File.createTempFile(image_name, ".jpg", storageDir)
-          val imageUri = Uri.fromFile(file)
+          val imageUri = FileProvider.getUriForFile(getApplicationContext, getPackageName + ".provider", file)
           cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
           photoPath = Some(file.getAbsolutePath)
           startActivityForResult(cameraIntent, Constants.PHOTO_RESULT)
