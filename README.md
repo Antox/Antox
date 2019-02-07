@@ -5,7 +5,7 @@
 
 ---
 
-Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.com/Astonex). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
+Antox is an Android 4+ client for Tox created by [Mark Winter](https://github.com/markwinter). It aims to bring the full multimedia support Tox offers to your device, although it's still currently in heavy development. Antox is currently available for alpha testing on Google Play and F-Droid.
 
 ### Screenshots
 
