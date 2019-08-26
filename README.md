@@ -72,6 +72,6 @@ By popular demand, the Antox mug is now available on [Redbubble](https://www.red
 
 *The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License.*
 
-*This repository resembles but is legally distinct from [astonex/Antox](https://github.com/Astonex/Antox) and the Lollipop Guild.*
+*This repository resembles but is legally distinct from [markwinter/Antox](https://github.com/markwinter/Antox) and the Lollipop Guild.*
 
 
