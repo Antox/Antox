@@ -4,6 +4,7 @@ import java.util
 
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
+import chat.tox.antox.data.State
 
 import scala.collection.JavaConversions._
 
@@ -38,6 +39,13 @@ object ConnectionManager {
 
 class ConnectionManager extends BroadcastReceiver {
   override def onReceive(context: Context, intent: Intent) {
+    this.synchronized {
+      try {
+        wait(5000) //give some time to switch network,sometimes networkinfo shows not connected during switch
+      } catch {
+        case e: Exception =>
+      }
+    }
     if (ConnectionManager.isNetworkAvailable(context)) {
       val connectionType = ConnectionManager.getConnectionType(context)
       if (ConnectionManager.lastConnectionType.isEmpty || connectionType != ConnectionManager.lastConnectionType.get) {
@@ -46,6 +54,12 @@ class ConnectionManager extends BroadcastReceiver {
         }
         ConnectionManager.lastConnectionType = Some(connectionType)
       }
+      State.internetConnectivity = true
     }
+
+    if (!ConnectionManager.isNetworkAvailable(context)) {
+      State.internetConnectivity = false
+    }
+
   }
 }

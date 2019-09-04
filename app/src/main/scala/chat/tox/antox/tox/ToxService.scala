@@ -5,13 +5,17 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.preference.PreferenceManager
+import android.support.v4.app.NotificationCompat
+import chat.tox.antox.R
 import chat.tox.antox.av.CallService
 import chat.tox.antox.callbacks.{AntoxOnSelfConnectionStatusCallback, ToxCallbackListener, ToxavCallbackListener}
+import chat.tox.antox.data.State
 import chat.tox.antox.utils.AntoxLog
 import im.tox.tox4j.core.enums.ToxConnection
 import im.tox.tox4j.impl.jni.ToxJniLog
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
+
 import scala.concurrent.duration._
 
 class ToxService extends Service {
@@ -25,6 +29,10 @@ class ToxService extends Service {
   private val reconnectionIntervalSeconds = 60
 
   private var callService: CallService = _
+
+  private val FOREGROUND_ID = 1030
+
+  private val bgIterateInterval = 3 * 1000 //in ms
 
   override def onCreate() {
     if (!ToxSingleton.isInited) {
@@ -85,7 +93,11 @@ class ToxService extends Service {
                 println(ToxJniLog().entries.filter(_.name == "tox4j_video_receive_frame_cb").map(_.elapsedNanos).toList.map(nanos => s" elapsed nanos video cb: $nanos").mkString("\n"))
               }
 
-              Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              if (State.isAppVisible)
+                Thread.sleep(Math.min(ToxSingleton.interval, ToxSingleton.toxAv.interval))
+              else {
+                Thread.sleep(bgIterateInterval)
+              }
               ticks += 1
             } catch {
               case e: Exception =>
@@ -100,6 +112,17 @@ class ToxService extends Service {
 
     serviceThread = new Thread(start)
     serviceThread.start()
+
+    stickForground()
+  }
+
+  def stickForground(): Unit = {
+    val builder = new NotificationCompat.Builder(this)
+    builder.setContentTitle("Antox")
+    builder.setPriority(NotificationCompat.PRIORITY_MIN)
+    builder.setWhen(0)
+    builder.setSmallIcon(R.drawable.ic_action_add)
+    startForeground(FOREGROUND_ID, builder.build)
   }
 
   override def onBind(intent: Intent): IBinder = null

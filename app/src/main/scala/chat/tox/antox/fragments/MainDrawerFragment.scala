@@ -33,16 +33,18 @@ class MainDrawerFragment extends Fragment {
   private var preferences: SharedPreferences = _
 
   private var userDetailsSubscription: Subscription = _
-
+  private var rootView: View = _
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     preferences = PreferenceManager.getDefaultSharedPreferences(getActivity)
   }
 
+  override def getView: View = super.getView
+
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
 
     super.onCreateView(inflater, container, savedInstanceState)
-    val rootView = inflater.inflate(R.layout.fragment_main_drawer, container, false)
+    rootView = inflater.inflate(R.layout.fragment_main_drawer, container, false)
 
     // Set up the navigation drawer
     mDrawerLayout = rootView.findViewById(R.id.drawer_layout).asInstanceOf[DrawerLayout]
@@ -88,7 +90,7 @@ class MainDrawerFragment extends Fragment {
   }
 
   def refreshDrawerHeader(userInfo: UserInfo, connectionStatus: ToxConnection): Unit = {
-    val avatarView = getView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
+    val avatarView = rootView.findViewById(R.id.drawer_avatar).asInstanceOf[CircleImageView]
 
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
@@ -102,13 +104,13 @@ class MainDrawerFragment extends Fragment {
       }
     }
 
-    val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
+    val nameView = rootView.findViewById(R.id.name).asInstanceOf[TextView]
 
     // zoff //
     if (nameView != null) {
       nameView.setText(new String(userInfo.nickname.value))
     }
-    val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
+    val statusMessageView = rootView.findViewById(R.id.status_message).asInstanceOf[TextView]
     // zoff //
     if (statusMessageView != null) {
       statusMessageView.setText(new String(userInfo.statusMessage.value))
@@ -118,11 +120,11 @@ class MainDrawerFragment extends Fragment {
   }
 
   def updateNavigationHeaderStatus(toxConnection: ToxConnection): Unit = {
-    val statusView = getView.findViewById(R.id.status)
+    val statusView = rootView.findViewById(R.id.status)
 
     val status = UserStatus.getToxUserStatusFromString(State.userDb(getActivity).getActiveUserDetails.status)
     val online = toxConnection != ToxConnection.NONE
-    val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
+    val drawable = rootView.getResources.getDrawable(IconColor.iconDrawable(online, status))
 
     // zoff //
     if (statusView != null) {
@@ -138,6 +140,14 @@ class MainDrawerFragment extends Fragment {
 
   def openDrawer(): Unit = {
     mDrawerLayout.openDrawer(GravityCompat.START)
+    // bugfix--the maindrawer does not refresh the username and status when the drawer open
+    userDetailsSubscription = State.userDb(getActivity)
+      .activeUserDetailsObservable()
+      .combineLatestWith(AntoxOnSelfConnectionStatusCallback.connectionStatusSubject)((user, status) => (user, status))
+      .observeOn(AndroidMainThreadScheduler())
+      .subscribe((tuple) => {
+        refreshDrawerHeader(tuple._1, tuple._2)
+      })
   }
 
   def closeDrawer(): Unit = {

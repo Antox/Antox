@@ -5,6 +5,7 @@ import android.content._
 import android.net.ConnectivityManager
 import android.os.{Build, Bundle}
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.{MenuItem, View, WindowManager}
@@ -75,8 +76,43 @@ class MainActivity extends AppCompatActivity {
     Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
 
     State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
+
+    batteryOptimization()
   }
 
+  def batteryOptimization(): Unit = {
+    try // ask user to whitelist app from DozeMode/BatteryOptimizations
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      val settings = PreferenceManager.getDefaultSharedPreferences(this)
+      val asked_for_whitelist_doze_already = settings.getBoolean("asked_whitelist_doze", false)
+      if (!asked_for_whitelist_doze_already) {
+        settings.edit.putBoolean("asked_whitelist_doze", true).commit
+        val intent = new Intent
+        intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+        val resolve_activity = getPackageManager.resolveActivity(intent, 0)
+        if (resolve_activity != null) {
+
+          var ad = new AlertDialog.Builder(this).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            override def onClick(dialog: DialogInterface, id: Int): Unit = {
+              startActivity(intent)
+            }
+          }).setNegativeButton("no", new DialogInterface.OnClickListener() {
+            override def onClick(dialog: DialogInterface, id: Int): Unit = {
+            }
+          }).create
+          ad.setTitle("INFO")
+          ad.setMessage("Add Antox to the exception list for Batteryoptimization?")
+          ad.setCancelable(false)
+          ad.setCanceledOnTouchOutside(false)
+          ad.show()
+        }
+      }
+    }
+    catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
+  }
 
   def onClickAdd(v: View) {
     val intent = new Intent(this, classOf[AddActivity])

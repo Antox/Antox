@@ -26,8 +26,8 @@ object AntoxLocalization {
     }
     else {
       val locale = if (localeString.contains("_")) {
-        val (language, country) = localeString.splitAt(localeString.indexOf("_"))
-        new Locale(language, country)
+        val lc = localeString.split("_")
+        new Locale(lc(0), lc(1))
       } else {
         new Locale(localeString)
       }
