@@ -1,187 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
     <!-- Activity titles -->
-    <string name="title_activity_add_friend">添加好友</string>
-    <string name="title_activity_friend_profile">好友配置</string>
-    <string name="title_activity_profile_settings">账户配置选项</string>
+    <string name="title_activity_add">添加联系人</string>
+    <string name="title_activity_friend_profile">朋友资料</string>
+    <string name="title_activity_group_profile">群组信息</string>
+    <string name="title_activity_profile_settings">配置文件选项</string>
 
     <!-- Navigation / Action Bar -->
-    <string name="add_friend">添加好友</string>
+    <string name="add_contact">添加联系人</string>
 
     <!-- Login Activity -->
-    <string name="login_must_fill_in">您必须填写账户配置名称</string>
+    <string name="login_must_fill_in">您必须填写个人资料名称</string>
     <string name="login_login">登录</string>
-    <string name="login_account_hint">配置名称</string>
-    <string name="login_create_account_text">创建Tox账户配置</string>
-    <string name="login_bad_login">Profile name was not recognised</string>
+    <string name="login_account_hint">个人资料名称</string>
+    <string name="login_create_account_text">创建Tox账户</string>
+    <string name="login_bad_login">无法识别用户名</string>
+    <string name="login_passphrase_incorrect">密码不正确</string>
+    <string name="login_profile_encrypted">配置文件已加密, 请输入密码:</string>
 
     <!-- Create Account Activity -->
-    <string name="create_name_hint">配置名称</string>
-    <string name="create_text">Secure messaging for everyone.</string>
-    <string name="create_register_incog">匿名注册</string>
-    <string name="create_import_profile">导入配置</string>
-    <string name="create_skip">允许任何人以您的名称添加您为好友</string>
-    <string name="create_must_fill_in">您必须填写所有条目</string>
-    <string name="create_bad_profile_name">配置名称不允许包含空格、斜杠或留空</string>
-    <string name="create_profile_exists">此配置名称已存在</string>
-    <string name="import_profile_invalid_file">您选择的文件并非合法的tox配置文件</string>
-    <string name="create_account_exists">此名称已使用</string>
-    <string name="create_account_internal_error">Antox内部错误，请重启再试</string>
-    <string name="create_account_reached_registration_limit">每小时只能注册13个账户，您已达到此限制</string>
-    <string name="create_account_unknown_error">未知的注册错误，请稍后再试</string>
+    <string name="create_name_hint">填写用户名</string>
+    <string name="create_text">为每个人提供安全的聊天环境</string>
+    <string name="create_register">注册</string>
+    <string name="create_register_with_toxme">注册ToxMe</string>
+    <string name="create_sign_up_for_toxme">注册ToxMe</string>
+    <string name="create_registering">正在注册....</string>
+    <string name="create_register_incog">注册隐身</string>
+    <string name="create_import_profile">导入配置文件</string>
+    <string name="create_skip">允许任何人使用您的个人资料名称添加您</string>
+    <string name="create_must_fill_in">您必须填写所有字段</string>
+    <string name="create_bad_profile_name">用户名不能包含空格, 斜杠或为空</string>
+    <string name="create_profile_exists">此用户名已存在</string>
+    <string name="import_profile_invalid_file">所选文件不是有效的Tox配置文件</string>
+    <string name="create_account_exists">此名称已被使用</string>
+    <string name="create_account_internal_error">Antox内部错误, 请重新启动并重试</string>
+    <string name="create_account_reached_registration_limit">您已达到每小时13个注册帐户的限制</string>
+    <string name="create_account_unknown_error">未知注册错误, 请稍后再试</string>
+    <string name="create_account_kalium_link_error">无法加载所需的库, 无法创建非隐身帐户</string>
+    <string name="create_account_invalid_domain">提供的ToxMe域无效</string>
+    <string name="create_account_connection_error">注册失败:无法连接到Internet</string>
+    <string name="create_account_encrypted_profile_error">Antox不支持加密配置文件</string>
+    <string name="create_account_load_profile_unknown">加载配置文件的未知错误</string>
+
+    <!-- ToxMe Info -->
+    <string name="toxme_title" translatable="false">ToxMe</string>
+    <string name="toxme_website" translatable="false">&lt;a href="https://toxme.io">toxme.io&lt;/a></string>
+    <string name="toxme_info1">通过将Tox ID转换为人类可读的电子邮件格式, ToxMe可以更轻松地让您与朋友联系, 让您的朋友更容易找到并添加您的Tox.</string>
+    <string name="toxme_info2">通过注册ToxMe, 您的Tox ID将存储在toxme.io中并公开发布, 如果您想要完全匿名, 则不建议您注册此服务.</string>
+    <string name="toxme_info_source">完整的源代码在这里\nhttps://github.com/LittleVulpix/toxme</string>
+
 
     <!-- Main Activity -->
-    <string name="main_no_active_chat">没有进行中的聊天。您可以选择左边的好友来开始对话。</string>
-    <string name="main_recent_no">无最近对话</string>
-    <string name="main_not_connected">无有效的互联网连接。在此情况下，应用功能将受限，Antox仅能在LAN内进行通信</string>
+    <string name="main_no_active_chat">目前无聊天活动, 从左侧选择朋友来开始会话吧.</string>
+    <string name="main_recent_no">最近无对话</string>
+    <string name="main_no_internet">无Internet连接</string>
+    <string name="main_not_connected">未检测到互联网连接, 没有互联网连接, 你将拥有功能有限, 除非您仅使用Antox for LAN</string>
+    <string name="main_mobile_disabled">目前处于离线状态, 因为仅支持Wi-Fi模式, 点击打开设置</string>
+    <string name="search_all_contacts">搜索所有联系人</string>
+    <string name='main_group_coming_soon'>"即将推出......"</string>
+
 
     <!-- Chat Activity -->
     <string name="chat_enter_message">发送消息</string>
     <string name="chat_file_transfer">文件传输</string>
-    <string name="chat_message_too_long">此消息超出最大发送长度</string>
+    <string name="chat_message_too_long">此消息超出最长可发送的长度</string>
+    <string name="chat_ft_failed_friend_offline">发送失败-无法将文件发送给离线好友</string>
+    <string name="call_friend">语音通话</string>
+    <string name="video_call_friend">视频通话</string>
+    <string name="info">详情</string>
 
-    <!-- Add Friend Activity -->
-    <string name="addfriend_friend_key">您好友的Tox ID</string>
+    <!-- Crash Activity -->
+    <string name="crash_title">Antox已崩溃…</string>
+    <string name="crash_restart">点击重启</string>
+
+
+    <!-- Add Pane Fragment -->
+    <string name="addpane_friend_label">朋友</string>
+    <string name="addpane_group_label">群组</string>
+
+    <!-- Add Friend Fragment -->
+    <string name="addfriend_friend_key">您朋友的Tox ID</string>
+    <string name="addfriend_friend_message">发送请求消息</string>
     <string name="addfriend_button">添加好友</string>
+    <string name="addfriend_friend_added">好友添加成功</string>
     <string name="addfriend_friend_exists">好友已存在</string>
     <string name="scanqr_button">扫描二维码</string>
-    <string name="invalid_friend_ID">无效Tox ID</string>
-    <string name="addfriend_nick_hint">为您的好友设置昵称</string>
-    <string name="addfriend_optional_title">Optional Extras</string>
-    <string name="dialog_pin">输入您好友的pin码</string>
-    <string name="addfriend_invalid_pin">Pin码无效</string>
-    <string name="addfriend_own_key">您不能添加自己为好友</string>
-    <string name="addfriend_friend_pin_title">请输入好友的Pin码</string>
-    <string name="addfriend_friend_pin_text">请输入好友的Pin码</string>
-    <string name="addfriend_default_message">嘿！请接受我的好友请求</string>
+    <string name="invalid_friend_ID">无效的Tox ID</string>
+    <string name="addfriend_nick_hint">为您的朋友设置昵称</string>
+    <string name="addfriend_optional_title">可选附加项</string>
+    <string name="dialog_pin">输入您的朋友的PIN</string>
+    <string name="addfriend_invalid_pin">无效的PIN</string>
+    <string name="addfriend_own_key">不能添加自己</string>
+    <string name="addfriend_friend_pin_title">输入朋友的PIN</string>
+    <string name="addfriend_friend_pin_text">输入朋友的PIN</string>
+    <string name="addfriend_default_message">嗨！请接受我的朋友请求</string>
+
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">群组的ID</string>
+    <string name="addgroup_button">加入群组</string>
+    <string name="addgroup_group_added">群组加入成功</string>
+    <string name="addgroup_group_exists">群组已存在</string>
+    <string name="invalid_group_ID">无效群组ID</string>
+    <string name="addgroup_alias_hint">为此组设置别名</string>
+    <string name="addgroup_optional_title">可选附加项</string>
 
     <!-- Friend Profile Activity -->
     <string name="friend_profile_nick">昵称</string>
     <string name="friend_profile_key">Tox ID</string>
     <string name="friend_profile_note">状态</string>
     <string name="friend_profile_button">更新</string>
-    <string name="friend_profile_updated">配置已更新</string>
+    <string name="friend_profile_updated">个人资料已更新</string>
     <string name="friend_profile_copied">Tox ID已复制</string>
 
+    <!-- Group Profile Activity -->
+    <string name="group_profile_peer_list_head">参与者</string>
+
     <!-- Friend request fragment -->
-    <string name="friend_profile_title">%1$s的账户配置</string>
+    <string name="friend_profile_title">%1$s\的个人资料</string>
     <string name="friendrequest_accept">接受</string>
-    <string name="friend_request">新好友请求</string>
+    <string name="friendrequest_reject">拒绝</string>
+    <string name="friend_request">新朋友请求</string>
+
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">接受</string>
+    <string name="groupinvite_reject">拒绝</string>
+    <string name="group_invite">新的群组邀请</string>
+    <string name="invite_by">邀请来自</string>
 
     <!-- Contacts Fragment -->
-    <string name="friend_action_profile">账户配置</string>
-    <string name="friend_action_delete">删除好友</string>
+    <string name="friend_action_profile">个人资料</string>
+    <string name="friend_action_delete">删除朋友</string>
     <string name="friend_action_export_chat">导出聊天记录</string>
     <string name="friend_action_delete_chat">删除聊天记录</string>
-    <string name="friend_action_block">屏蔽</string>
-    <string name="contacts_actions_on">Actions on</string>
+    <string name="friend_action_block">加入黑名单</string>
+    <string name="friend_accepted_default_status">接受的朋友</string>
+    <string name="group_default_peer_name">匿名</string>
+    <string name="group_action_delete">退出群组</string>
+    <string name="request_action_copy_id">复制完整Tox ID</string>
+    <string name="request_id_copied">复制请求者的Tox ID</string>
+    <string name="contacts_actions_on">操作</string>
     <string name="contacts_delimiter_requests">请求</string>
-    <string name="contacts_delimiter_friends">好友</string>
+    <string name="contacts_delimiter_invites">群组邀请</string>
+    <string name="contacts_delimiter_groups">群组</string>
+    <string name="contacts_delimiter_friends">朋友</string>
     <string name="contacts_delimiter_offline">离线</string>
     <string name="contacts_delimiter_online">在线</string>
     <string name="contacts_resend_friend_request">重新发送好友请求</string>
+    <string name="friend_sent_image">%s发送了%s图像.</string>
+    <string name="friend_sent_file">%s发送了一个文件.</string>
+    <string name="you_sent_image">您发送了一个图像.</string>
+    <string name="you_sent_file">您发送了一个文件.</string>
 
     <!-- Delete Friend Dialog -->
-    <string name="friend_action_delete_friend_confirmation">您确定要删除此好友么？</string>
+    <string name="friend_action_delete_friend_confirmation">您确定要删除此朋友吗？</string>
 
     <!-- Export Chat Logs Toast -->
-    <string name="friend_action_chat_log_exported">聊天记录导出至%s</string>
-    <string name="friend_action_chat_log_export_failed">聊天记录导出失败</string>
+    <string name="friend_action_chat_log_exported">将聊天记录导出到%s</string>
+    <string name="friend_action_chat_log_export_failed">聊天记录导出失败.</string>
 
     <!-- Delete Chat Logs Dialog -->
-    <string name="friend_action_delete_chat_confirmation">您确定要删除聊天记录么？</string>
+    <string name="friend_action_delete_chat_confirmation">您确定要删除聊天记录吗？</string>
 
     <!-- Block Friend Dialog -->
-    <string name="friend_action_block_friend_confirmation">屏蔽此好友将从您的好友列表中删除此人，而且无法再看到此人的好友请求。\n\n您确定要继续么？</string>
+    <string name="friend_action_block_friend_confirmation">拉黑此用户, 从您的好友列表中删除他们, 并且不会再收到他们的好友请求.\n\n您确定要继续吗?</string>
+
+
+    <!-- Delete Account Dialog -->
+    <string name="reset_tox_id_dialog_message">重置您的Tox ID会永久更改您的ID。您将保留当前的联系人列表, 但其他人无法使用您之前的ID来添加您</string>
+    <string name="reset_tox_id_dialog_title">确认重置Tox ID</string>
+    <string name="reset_tox_id_dialog_confirm">重置Tox ID</string>
+    <string name="reset_tox_id_dialog_cancel">取消</string>
+    <string name="tox_id_reset">您的Tox ID已重置</string>
+
+
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_dialog_message">这将永久删除此Antox用户并删除所关联的所有ToxMe服务信息.</string>
+    <string name="delete_account_dialog_title">确认删除Antox帐户</string>
+    <string name="delete_account_dialog_confirm">删除帐户</string>
+    <string name="delete_account_dialog_cancel">取消</string>
+    <string name="delete_account_successful">帐户已删除</string>
+    <string name="delete_account_error">删除Antox帐户时出错</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">创建新的群聊</string>
+    <string name="create_group_dialog_create_group">创建群聊</string>
+    <string name="create_group_dialog_cancel">取消</string>
+    <string name="create_group_dialog_name_header">群组名称</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">再见</string>
+
+    <!-- Color Picker Dialog -->
+    <string name="dialog_color_picker_title">主题颜色</string>
 
     <!-- Chat Fragment -->
-    <string name="attachment_photo">添加相片</string>
-    <string name="attachment_file">添加附件</string>
-    <string name="attachment_takephoto">拍摄相片</string>
+    <string name="attachment_photo">添加照片</string>
+    <string name="attachment_file">添加文件</string>
+    <string name="attachment_takephoto">拍照</string>
     <string name="message_copy">复制消息</string>
     <string name="message_delete">删除消息</string>
+    <string name="file_delete">删除文件</string>
+    <string name="file_open">打开文件</string>
+    <string name="filetransfer_cancel">取消文件传输</string>
 
     <!-- Left Pane Fragment -->
-    <string name="titles_recent">最近联系</string>
+    <string name="titles_recent">最近</string>
     <string name="titles_contacts">联系人</string>
     <string name="titles_settings">设置</string>
+
+    <!-- Edit Call Replies -->
+    <string name="title_activity_edit_call_replies">编辑快速电话回复</string>
+    <string name="title_pref_edit_call_replies">快速电话回复</string>
+    <string name="edit_call_reply_title">编辑快速回复</string>
 
     <!-- Misc -->
     <string name="button_confirm">确认</string>
     <string name="button_cancel">取消</string>
     <string name="button_yes">是</string>
     <string name="button_no">否</string>
-    <string name="button_ok">好</string>
-    <string name="dialog_tox_id">复制Tox ID至粘贴板</string>
-    <string name="connection_has">has</string>
-    <string name="connection_online">上线了</string>
-    <string name="connection_offline">下线了</string>
-    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="button_ok">确定</string>
+    <string name="dialog_tox_id">将Tox ID复制到剪贴板</string>
+    <string name="dialog_toxme">复制到剪贴板</string>
+    <string name="dialog_password">复制到剪贴板</string>
+    <string name="share_with">共享</string>
+    <string name="connection_has">有</string>
+    <string name="connection_online">上线</string>
+    <string name="connection_offline">离线</string>
+    <string name="title_activity_create_account">注册帐户</string>
     <string name="action_settings">设置</string>
 
+    <!-- Avatar Dialog -->
+    <string name="dialog_avatar_take_photo">拍照</string>
+    <string name="dialog_avatar_use_file">选择图片</string>
+    <string name="avatar_too_large_error">错误:头像文件太大</string>
+    <string name="no_camera_intent_error">错误:找不到相机应用程序.</string>
+    <string name="dialog_avatar_description">头像</string>
+
+    <!-- File transfer -->
+    <string name="file_finished">已完成</string>
+    <string name="file_finished_with_errors">发生错误</string>
+    <string name="file_failed">失败</string>
+    <string name="file_in_progress">正在发送</string>
+    <string name="file_request_sent">已发送请求</string>
+    <string name="file_rejected">已拒绝</string>
+    <string name="file_time_remaining">剩余%s秒</string>
+
+    <!-- Call Activity -->
+    <string name="call_incoming">来电</string>
+    <string name="call_ongoing">正在呼叫</string>
+    <string name="call_ringing">响铃…</string>
+    <string name="call_duration">通话时长</string>
+    <string name="call_notification_header">来电</string>
+    <string name="call_mute">静音</string>
+    <string name="call_unmute">取消静音</string>
+    <string name="call_show_video">启用视频</string>
+    <string name="call_hide_video">禁用视频</string>
+    <string name="call_mute_speaker">扬声器静音</string>
+    <string name="call_unmute_speaker">取消扬声器静音</string>
+
+    <!-- Call Events -->
+    <string name="call_event_incoming">来电</string>
+    <string name="call_event_outgoing">拨出电话</string>
+    <string name="call_event_rejected">拒接来电</string>
+    <string name="call_event_unanswered">呼叫未接听</string>
+    <string name="call_event_missed">呼叫未接</string>
+    <string name="call_event_answered">呼叫已启动</string>
+    <string name="call_event_ended">呼叫结束</string>
+    <string name="call_event_cancelled">呼叫取消</string>
+
+    <!-- Incoming Call Activity -->
+    <string name="call_incoming_video">来电视频通话…</string>
+    <string name="call_incoming_voice">传入语音呼叫…</string>
+    <string name="call_incoming_reply_with_message">回复</string>
+    <string name="call_income_reply_dialog_title">回复消息</string>
+    <string name="call_incoming_reply_dialog_custom">自定义…</string>
+    <string-array name="call_incoming_reply_message_choices">
+        <item>现在不方便说话, 怎么了?</item>
+        <item>我马上打电话给你.</item>
+        <item>我稍后会打电话给你.</item>
+        <item>我正在路上.</item>
+    </string-array>
+
+    <!-- Missed Call Notification -->
+    <string name="call_missed_title">未接来电</string>
+    <string name="call_missed_call_back">呼叫</string>
+    <string name="call_missed_reply">回复</string>
+
     <!-- QR -->
-    <string name="qr_default_title">安装二维码扫描程序么？</string>
-    <string name="qr_default_message">此应用需要二维码扫描器应用。您需要安装么？</string>
+    <string name="qr_default_title">安装条码扫描器?</string>
+    <string name="qr_default_message">此应用需要条码扫描器. 是否要安装它?</string>
     <string name="qr_button_yes">是</string>
-    <string name="qr_button_no">不</string>
+    <string name="qr_button_no">否</string>
+
+    <!-- Notifications -->
+    <string name="unread_count">%s条未读消息</string>
+
+    <!-- User Status -->
+    <string name="status_online">在线</string>
+    <string name="status_away">离开</string>
+    <string name="status_busy">忙碌</string>
+    <string name="status_offline">离线</string>
+
+    <!-- Export profile -->
+    <string name="export_success">导出数据文件到%s</string>
+    <string name="export_failed">错误:无法导出数据文件.</string>
 
     <!-- nav bar -->
     <string name="n_settings">设置</string>
-    <string name="n_profile_options">账户配置</string>
+    <string name="n_profile_options">个人资料</string>
     <string name="n_create_group">创建群组</string>
-    <string name="n_add_person">添加联系人</string>
+    <string name="n_add_person">添加人员</string>
     <string name="n_about">关于</string>
-    <string name="n_open_source">开源许可协议</string>
-    <string name="n_logout">登出</string>
-    <string name="drawer_open">打开导航界面</string>
-    <string name="drawer_close">关闭导航界面</string>
-    <string name="open_source_license">开源许可协议</string>
-    <string name="license1">于GNU GPL v3协议下发行</string>
-    <string name="license2">源码请参见\nhttps://github.com/Antox/Antox</string>
+    <string name="n_open_source">开源许可证</string>
+    <string name="n_logout">注销</string>
+    <string name="drawer_open">打开导航抽屉</string>
+    <string name="drawer_close">关闭导航抽屉</string>
+    <string name="open_source_license">开源许可证</string>
+    <string name="license1">在GNU GPL v3下分发, 由Mark Winter创建.</string>
+    <string name="license2">源代码位于\nhttps://github.com/Antox/Antox</string>
     <string name="ver">版本</string>
     <string name="about">关于</string>
-    <string name="about_antox_1">With the rise of government monitoring programs, Tox provides an easy to use application that allows you to connect with friends and family without anyone else listening in.</string>
-    <string name="about_antox_2">目前可用的：</string>
-    <string name="about_antox_3">-基本消息（不包括群聊）</string>
-    <string name="about_antox_4">-通知</string>
-    <string name="about_antox_6">-音频/视频以及文件传输</string>
-    <string name="title_activity_call">CallActivity</string>
+    <string name="about_antox_1">随着监控程序的兴起, Tox让您可以在他人无法监听的情况下让您与朋友和家人联系.</string>
+    <string name="about_antox_2">当前可用:</string>
+    <string name="about_antox_3">- 一对一消息</string>
+    <string name="about_antox_4">- 通知</string>
+    <string name="about_antox_5">- 文件传输</string>
+    <string name="about_antox_6">当前不可用:</string>
+    <string name="about_antox_7">- 音频/视频</string>
+    <string name="about_antox_8">- 群组</string>
+    <string name="title_activity_call">通话</string>
     <string name="end_call">结束通话</string>
     <string name="mute_call">静音</string>
-    <string name="mute_mic">麦克风静音</string>
-    <string name="addfriend_friend_added">成功添加好友</string>
-    <string name="title_activity_settings">设置</string>
-    <string name="about_antox_5">不可用</string>
-    <string name="copy_tox_id">复制Tox ID</string>
-    <string name="create_register">注册</string>
-    <string name="friendrequest_reject">拒绝</string>
-    <string name="search_all_contacts">搜索所有联系人</string>
-    <string name="pref_advanced">高级设置</string>
-    <string name="pref_default_nickname">Antox用户</string>
-    <string name="pref_default_password">未设置密码</string>
-    <string name="pref_default_status_message">嗨！我正在用Antox</string>
-    <string name="pref_default_tox_id">默认Tox ID-您不应该看到这条</string>
-    <string name="pref_header_notifications">通知设置</string>
-    <string name="pref_header_other">其它</string>
-    <string name="pref_header_profile">账户配置</string>
-    <string name="pref_nospam">生成新的垃圾信息阻挡随机数</string>
-    <string name="pref_title_account_name">账户配置名称</string>
-    <string name="pref_title_enable_notifications">启用通知</string>
-    <string name="pref_title_export">导出配置</string>
-    <string name="pref_title_language">语言</string>
-    <string name="pref_title_logout">登出</string>
-    <string name="pref_title_new_friend_notifications">好友请求通知</string>
-    <string name="pref_title_new_message_notifications">消息通知</string>
-    <string name="pref_title_nickname">名字</string>
-    <string name="pref_title_password">Toxme密码</string>
-    <string name="pref_title_status">状态</string>
-    <string name="pref_title_status_message">状态消息</string>
-    <string name="pref_title_tox_id">Tox ID</string>
-    <string name="pref_title_wifi_only">仅用于Wi-Fi环境</string>
-    <string name="pref_udp">启用UDP</string>
-    <string name="share_with">分享</string>
-    <string name="main_no_internet">无因特网连接</string>
-    <string name="addfriend_friend_message">在好友请求中加句话</string>
+    <string name="mute_mic">静音麦克风</string>
+    <string name="profile_info_description">获取用户信息</string>
+    <string name="empty"> </string>
+
+    <string name="request_permissions_text">授予权限</string>
+    <string name="select_file">选择文件</string>
 
 </resources>
+ 
