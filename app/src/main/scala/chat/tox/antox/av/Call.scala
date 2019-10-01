@@ -282,19 +282,36 @@ final case class Call(callNumber: CallNumber, contactKey: ContactKey, incoming: 
   }
 
   def muteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.MUTE_AUDIO)
+    try {
+      ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.MUTE_AUDIO)
+    } catch {
+      case ex:Exception => logCallEvent(ex.toString)
+    }
   }
 
   def unmuteFriendAudio(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.UNMUTE_AUDIO)
+    try {
+      ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.UNMUTE_AUDIO)
+    } catch {
+      case ex:Exception => logCallEvent(ex.toString)
+    }
   }
 
   def hideFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.HIDE_VIDEO)
+    try {
+      ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.HIDE_VIDEO)
+    } catch {
+      case ex:Exception => logCallEvent(ex.toString)
+    }
+
   }
 
   def showFriendVideo(): Unit = {
-    ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
+    try {
+      ToxSingleton.toxAv.callControl(callNumber, ToxavCallControl.SHOW_VIDEO)
+    } catch {
+      case ex:Exception => logCallEvent(ex.toString)
+    }
   }
 
   def rotateCamera(): Unit = cameraFacingSubject.onNext(CameraFacing.swap(cameraFacingSubject.getValue))
