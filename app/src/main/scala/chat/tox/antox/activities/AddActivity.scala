@@ -49,6 +49,9 @@ class AddActivity extends AppCompatActivity {
 
   private def scanIntent() {
     val integrator = new IntentIntegrator(this)
+    val list = new java.util.ArrayList(IntentIntegrator.TARGET_ALL_KNOWN)
+    list.add("tw.com.quickmark")
+    integrator.setTargetApplications(list)
     integrator.initiateScan()
   }
 
