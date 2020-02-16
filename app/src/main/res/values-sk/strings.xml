@@ -13,10 +13,15 @@
     <string name="login_account_hint">Názov profilu</string>
     <string name="login_create_account_text">Vytvoriť Tox profil</string>
     <string name="login_bad_login">Názov profilu nebol rozpoznaný</string>
+    <string name="login_passphrase_incorrect">Nesprávne heslo</string>
+    <string name="login_profile_encrypted">Profil je zašifrovaný. Napíšte heslo na odšifrovanie:</string>
     <!--Create Account Activity-->
     <string name="create_name_hint">Názov profilu</string>
     <string name="create_text">Bezpečné posielanie správ pre každého.</string>
     <string name="create_register">Registrovať</string>
+    <string name="create_register_with_toxme">Registrovať na ToxMe</string>
+    <string name="create_sign_up_for_toxme">Účet pre ToxMe</string>
+    <string name="create_registering">Vytváram účet…</string>
     <string name="create_register_incog">Registrovať inkognito</string>
     <string name="create_import_profile">Importovať profil</string>
     <string name="create_skip">Umožniť každému pridať si vás na základe vášho názvu profilu.</string>
@@ -28,6 +33,20 @@
     <string name="create_account_internal_error">Interná chyba programu Antox. Prosím reštartujte a skúste znovu</string>
     <string name="create_account_reached_registration_limit">Môžte zaregistrovať najviac 13 účtov za hodinu. Tento limit ste dosiahli.</string>
     <string name="create_account_unknown_error">Neznáma chyba registrácie, prosím skúste znovu neskôr.</string>
+    <string name="create_account_kalium_link_error">Potrebnú knižnicu sa nepodarilo načítať. Nie je možné vytvoriť súkromné účty</string>
+    <string name="create_account_invalid_domain">Zadaná bola neplatná ToxMe doména.</string>
+    <string name="create_account_connection_error">Registrácia zlyhala: Internet nie je dostupný.</string>
+    <string name="create_account_encrypted_profile_error">Antox zatiaľ nepodporuje šifrované profily</string>
+    <string name="create_account_load_profile_unknown">Neznáma chyba pri načítavaní profilu</string>
+
+    <!-- ToxMe Info -->
+    <string name="toxme_title" translatable="false">ToxMe</string>
+    <string name="toxme_website" translatable="false">&lt;a href="https://toxme.io">toxme.io&lt;/a></string>
+    <string name="toxme_info1">ToxMe uľahčuje komunikáciu s priateľmi vytvorením ľahko zapamätateľnej, emailu - podobnej identity, namiesto vášho Tox ID.</string>
+    <string name="toxme_info2">Po registrácii v ToxMe bude vaše Tox ID uložené na toxme.io a zverejnené. Ak chcete byť úplne anonymný, nepoužívajte túto službu.</string>
+    <string name="toxme_info_source">Kompletný zdrojový kód nájdete na \nhttps://github.com/LittleVulpix/toxme</string>
+
+
     <!--Main Activity-->
     <string name="main_no_active_chat">Nie je aktívny chat. Začnite nejaký výberom priateľa z panelu naľavo.</string>
     <string name="main_recent_no">Žiadne nedávne konverzácie</string>
@@ -37,43 +56,283 @@ funkcionalitu pokiaľ Antox nepoužívate len na LAN sieti.</string>
     <string name="main_mobile_disabled">V súčastnosti Offline ak je zapnutý mód iba cez Wi-Fi. Dotykom otvoríte nastavenia.</string>
     <string name="search_all_contacts">Hľadať všetky kontakty</string>
     <string name="main_group_coming_soon">Bude čoskoro...</string>
+
     <!--Chat Activity-->
     <string name="chat_enter_message">Poslať správu</string>
     <string name="chat_file_transfer">Prenos súborov</string>
     <string name="chat_message_too_long">Táto správa je dlhá a nemôže byť odoslaná</string>
     <string name="chat_ft_failed_friend_offline">Odoslanie zlyhalo - nemožno poslať priateľovi, ktorý je offline</string>
+    <string name="call_friend">Volať</string>
+    <string name="video_call_friend">Video hovor</string>
+    <string name="info">Info</string>
+
+    <!-- Crash Activity -->
+    <string name="crash_title">Antox bol neočakávane ukončený</string>
+    <string name="crash_restart">Dotykom reštartovať</string>
+
+
     <!--Add Pane Fragment-->
     <string name="addpane_friend_label">Priateľ</string>
     <string name="addpane_group_label">Skupina</string>
+
     <!--Add Friend Fragment-->
     <string name="addfriend_friend_key">Tox ID vášho priateľa</string>
-    <!--Add Group Fragment-->
-    <!--Friend Profile Activity-->
-    <!--Group Profile Activity-->
-    <!--Friend request fragment-->
-    <!--Group invite fragment-->
-    <!--Contacts Fragment-->
-    <!--Delete Friend Dialog-->
-    <!--Export Chat Logs Toast-->
-    <!--Delete Chat Logs Dialog-->
-    <!--Block Friend Dialog-->
-    <!--Reset ToxID Dialog-->
-    <!--Delete Account Dialog-->
-    <!--Create Group Dialog-->
-    <!--Group Chat Delete-->
-    <!--Color Picker Dialog-->
-    <!--Chat Fragment-->
-    <!--Left Pane Fragment-->
-    <!--Misc-->
-    <!--Avatar Dialog-->
-    <!--File transfer-->
-    <!--QR-->
-    <!--Notifications-->
-    <!--nav bar-->
+    <string name="addfriend_friend_message">Poslať správu s dopytom</string>
+    <string name="addfriend_button">Pridať priateľa</string>
+    <string name="addfriend_friend_added">Priateľ pridaný</string>
+    <string name="addfriend_friend_exists">Priateľ bol už pridaný</string>
+    <string name="scanqr_button">Skenovať QR kód</string>
+    <string name="invalid_friend_ID">Neplatné Tox ID</string>
+    <string name="addfriend_nick_hint">Vytvoriť prezývku pre priateľa</string>
+    <string name="addfriend_optional_title">Nepovinné nastavenia</string>
+    <string name="dialog_pin">Vložiť priateľov PIN</string>
+    <string name="addfriend_invalid_pin">Neplatný PIN</string>
+    <string name="addfriend_own_key">Seba nemôžte pridávať</string>
+    <string name="addfriend_friend_pin_title">Vložiť priateľov PIN</string>
+    <string name="addfriend_friend_pin_text">Vložiť priateľov PIN</string>
+    <string name="addfriend_default_message">Hej! Prijmite žiadosť od priateľa.</string>
+
+    <!-- Add Group Fragment -->
+    <string name="addgroup_group_id">ID skupiny</string>
+    <string name="addgroup_button">Pridať sa do skupiny</string>
+    <string name="addgroup_group_added">Pridaný do skupiny</string>
+    <string name="addgroup_group_exists">Skupina už existuje</string>
+    <string name="invalid_group_ID">Neplatné ID skupiny</string>
+    <string name="addgroup_alias_hint">Vytvoriť prezývku pre skupinu</string>
+    <string name="addgroup_optional_title">Nepovinné nastavenia</string>
+
+    <!-- Friend Profile Activity -->
+    <string name="friend_profile_nick">Prezývky</string>
+    <string name="friend_profile_key">Tox ID</string>
+    <string name="friend_profile_note">Status</string>
+    <string name="friend_profile_button">Aktualizovať</string>
+    <string name="friend_profile_updated">Profil bol aktualizovaný</string>
+    <string name="friend_profile_copied">Tox ID skopírovaný</string>
+
+    <!-- Group Profile Activity -->
+    <string name="group_profile_peer_list_head">Účastníci</string>
+
+    <!-- Friend request fragment -->
+    <string name="friend_profile_title">%1$s\'s profil</string>
+    <string name="friendrequest_accept">Prijať</string>
+    <string name="friendrequest_reject">Odmietnuť</string>
+    <string name="friend_request">Nová žiadosť od priateľa</string>
+
+    <!-- Group invite fragment -->
+    <string name="groupinvite_accept">Prijať</string>
+    <string name="groupinvite_reject">Odmietnuť</string>
+    <string name="group_invite">Nová skupinová žiadosť</string>
+    <string name="invited_by">Boli ste pozvaný používateľom </string>
+
+    <!-- Contacts Fragment -->
+    <string name="friend_action_profile">Profil</string>
+    <string name="friend_action_delete">Odstrániť priateľa</string>
+    <string name="friend_action_export_chat">Exportovať logy konverzácií</string>
+    <string name="friend_action_delete_chat">Zmazať logy konverzácií</string>
+    <string name="friend_action_block">Blokovať</string>
+    <string name="friend_accepted_default_status">Priateľ akceptovaný</string>
+    <string name="group_default_peer_name">Anonym</string>
+    <string name="group_action_delete">Opustiť skupinu</string>
+    <string name="request_action_copy_id">Skopírovať celé Tox ID</string>
+    <string name="request_id_copied">Tox ID žiadateľa skopírované</string>
+    <string name="contacts_actions_on">Akcia na</string>
+    <string name="contacts_delimiter_requests">Žiadosti</string>
+    <string name="contacts_delimiter_invites">Skupinové pozvánky</string>
+    <string name="contacts_delimiter_groups">Skupiny</string>
+    <string name="contacts_delimiter_friends">Priatelia</string>
+    <string name="contacts_delimiter_offline">Nedostupní</string>
+    <string name="contacts_delimiter_online">Dostupní</string>
+    <string name="contacts_resend_friend_request">Znovu poslať žiadoť of priateľstvo</string>
+    <string name="friend_sent_image">%s zaslal obrázok.</string>
+    <string name="friend_sent_file">%s zaslal súbor.</string>
+    <string name="you_sent_image">Poslali ste obrázok.</string>
+    <string name="you_sent_file">Poslali ste súbor.</string>
+
+    <!-- Delete Friend Dialog -->
+    <string name="friend_action_delete_friend_confirmation">Určite chcete odstrániť tohoto priateľa?</string>
+
+    <!-- Export Chat Logs Toast -->
+    <string name="friend_action_chat_log_exported">Záznam konverzácií exportovaný do %s</string>
+    <string name="friend_action_chat_log_export_failed">Export záznamu konverzácií zlyhal.</string>
+
+    <!-- Delete Chat Logs Dialog -->
+    <string name="friend_action_delete_chat_confirmation">Určite chcete zmazať záznamy konverzácií?</string>
+
+    <!-- Block Friend Dialog -->
+    <string name="friend_action_block_friend_confirmation">Blokovanie tohoto používateľa ho odstráni z vášho zoznamu priateľov a následne neuvidíte od neho žiadosti o rozhovor.\n\nUrčite chcete pokračovať?</string>
+
+    <!-- Reset ToxID Dialog -->
+    <string name="reset_tox_id_dialog_message">Resetovanie vášho Tox ID ho natrvalo a nevratne zmení. Váš zoznam kontaktov bude zachovaný, ale iní používatelia vás nebudú môcť kontaktovať s vašim pôvodným ID. </string>
+    <string name="reset_tox_id_dialog_title">Potvrdiť zmenu Tox ID</string>
+    <string name="reset_tox_id_dialog_confirm">Resetovať Tox ID</string>
+    <string name="reset_tox_id_dialog_cancel">Zrušiť</string>
+    <string name="tox_id_reset">Vaše Tox ID bolo zmenené</string>
+
+    <!-- Delete Account Dialog -->
+    <string name="delete_account_dialog_message">
+    Týmto natrvalo zmažete tento Antox účet a budete odstránený zo všetkých ToxMe služieb spojených s vašim účtom</string>
+    <string name="delete_account_dialog_title">Potvrdiť zmazanie Antox účtu</string>
+    <string name="delete_account_dialog_confirm">Zmazať účet</string>
+    <string name="delete_account_dialog_cancel">Zrušiť</string>
+    <string name="delete_account_successful">Účet zmazaný</string>
+    <string name="delete_account_error">Pri mazaní Antox účtu sa objavila chyba</string>
+
+    <!-- Create Group Dialog -->
+    <string name="create_group_dialog_message">Vytvorť novú skupinovú konverzáciu</string>
+    <string name="create_group_dialog_create_group">Vytvoriť skupinu</string>
+    <string name="create_group_dialog_cancel">Zrušiť</string>
+    <string name="create_group_dialog_name_header">Meno skupiny</string>
+
+    <!-- Group Chat Delete -->
+    <string name="group_default_part_message">Dovidenia</string>
+
+    <!-- Color Picker Dialog -->
+    <string name="dialog_color_picker_title">Farba témy</string>
+
+    <!-- Chat Fragment -->
+    <string name="attachment_photo">Pripojiť snímku</string>
+    <string name="attachment_file">Pripojiť súbor</string>
+    <string name="attachment_takephoto">Urobiť snímku</string>
+    <string name="message_copy">Skopírovať správu</string>
+    <string name="message_delete">Zmazať správu</string>
+    <string name="file_delete">Zmazať súbor</string>
+    <string name="file_open">Otvoriť súbor</string>
+    <string name="filetransfer_cancel">Zrušiť prenos súborov</string>
+
+
+    <!-- Left Pane Fragment -->
+    <string name="titles_recent">Nedávne</string>
+    <string name="titles_contacts">Kontakty</string>
+    <string name="titles_settings">Nastavenia</string>
+
+    <!-- Edit Call Replies -->
+    <string name="title_activity_edit_call_replies">Editovať odpovede na rýchle volania</string>
+    <string name="title_pref_edit_call_replies">Odpovede na rýchle volania</string>
+    <string name="edit_call_reply_title">Editovať odpoved na rýchle volanie</string>
+
+    <!-- Misc -->
+    <string name="button_confirm">Potvrdiť</string>
+    <string name="button_cancel">Zrušiť</string>
+    <string name="button_yes">Áno</string>
+    <string name="button_no">Nie</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_tox_id">Skopírovať Tox ID</string>
+    <string name="dialog_toxme">Skopírovať</string>
+    <string name="dialog_password">Skopírovať</string>
+    <string name="share_with">Zdieľať s</string>
+    <string name="connection_has">má</string>
+    <string name="connection_online">pripojil sa</string>
+    <string name="connection_offline">odpojil sa</string>
+    <string name="title_activity_create_account">VytvoriťÚčetČinnosti</string>
+    <string name="action_settings">Nastavenia</string>
+
+    <!-- Avatar Dialog -->
+    <string name="dialog_avatar_take_photo">Urobiť snímku</string>
+    <string name="dialog_avatar_use_file">Použiť snímku</string>
+    <string name="avatar_too_large_error">Chyba: Avatár je príliš veľký.</string>
+    <string name="no_camera_intent_error">Chyba: nenašli sme kameru.</string>
+    <string name="dialog_avatar_description">avatár</string>
+
+    <!-- File transfer -->
+    <string name="file_finished">Koniec</string>
+    <string name="file_finished_with_errors">Ukončené s chybami</string>
+    <string name="file_failed">Zlyhalo</string>
+    <string name="file_in_progress">Prenáša sa</string>
+    <string name="file_request_sent">Žiadosť zaslaná</string>
+    <string name="file_rejected">Odmietnuté</string>
+    <string name="file_time_remaining">ostáva %s sekúnd</string>
+
+    <!-- Call Activity -->
+    <string name="call_incoming">Prichádzajúce volanie</string>
+    <string name="call_ongoing">Odchádzajúce volanie</string>
+    <string name="call_ringing">Zvoní…</string>
+    <string name="call_duration">Dĺžka hovoru</string>
+    <string name="call_notification_header">Prichádzajúce volanie</string>
+    <string name="call_mute">Vypnúť zvuk</string>
+    <string name="call_unmute">Zapnúť zvuk</string>
+    <string name="call_show_video">Zapnúť video</string>
+    <string name="call_hide_video">Vypnúť video</string>
+    <string name="call_mute_speaker">Vypnúť reproduktor</string>
+    <string name="call_unmute_speaker">Zapnúť reproduktor</string>
+
+    <!-- Call Events -->
+    <string name="call_event_incoming">Prichádzajúci hovor</string>
+    <string name="call_event_outgoing">Odchádzajúci hovor</string>
+    <string name="call_event_rejected">Hovor odmietnutý</string>
+    <string name="call_event_unanswered">Bez odpovede na volanie</string>
+    <string name="call_event_missed">Zmeškaný hovor</string>
+    <string name="call_event_answered">Hovor začatý</string>
+    <string name="call_event_ended">Hovor ukončený</string>
+    <string name="call_event_cancelled">Hovor zrušený</string>
+
+    <!-- Incoming Call Activity -->
+    <string name="call_incoming_video">Video hovor zrušený…</string>
+    <string name="call_incoming_voice">Prichádzajúci hovor…</string>
+    <string name="call_incoming_reply_with_message">Odpovedať</string>
+    <string name="call_incoming_reply_dialog_title">Odpovedať správou</string>
+    <string name="call_incoming_reply_dialog_custom">Vlastné…</string>
+    <string-array name="call_incoming_reply_message_choices">
+        <item>Teraz nemôžem hovoriť. O čo ide?</item>
+        <item>Zavolám hneď späť.</item>
+        <item>Zavolám neskôr.</item>
+        <item>Už som na ceste.</item>
+    </string-array>
+
+    <!-- Missed Call Notification -->
+    <string name="call_missed_title">Zmeškaný hovor</string>
+    <string name="call_missed_call_back">Zavolať späť</string>
+    <string name="call_missed_reply">Odpovedať</string>
+
+    <!-- QR -->
+    <string name="qr_default_title">Nainštalovať skener čiarového kódu?</string>
+    <string name="qr_default_message">Táto aplikácia vyžaduje skener čiarového kódu. Chcete ho nainštalovať?</string>
+    <string name="qr_button_yes">Áno</string>
+    <string name="qr_button_no">Nie</string>
+
+    <!-- Notifications -->
+    <string name="unread_count">%s neprečítaných správ</string>
+
+    <!-- User Status -->
+    <string name="status_online">Prítomný</string>
+    <string name="status_away">Preč</string>
+    <string name="status_busy">Zaneprázdnený</string>
+    <string name="status_offline">Neprítomný</string>
+
+    <!-- Export profile -->
+    <string name="export_success">Dátový súbor vyexportovaný do %s</string>
+    <string name="export_failed">Chyba: dátový súbor nebolo možné exportovať.</string>    <!-- nav bar -->
+
+    <!-- nav bar -->
+    <string name="n_settings">Nastavenia</string>
+    <string name="n_profile_options">Profil</string>
+    <string name="n_create_group">Vytvoriť skupinu</string>
+    <string name="n_add_person">Pridať osobu</string>
+    <string name="n_about">O aplikácii</string>
+    <string name="n_open_source">Licencia</string>
+    <string name="n_logout">Odhlásiť</string>
+    <string name="drawer_open">Otvoriť navigačný panel</string>
+    <string name="drawer_close">Zatvoriť navigačný panel</string>
+    <string name="open_source_license">Licencia</string>
+    <string name="license1">Distributed under the GNU GPL v3. Created by Mark Winter.</string>
+    <string name="license2">Zdrojový kód je dostupný na\nhttps://github.com/Antox/Antox</string>
+    <string name="ver">Verzia</string>
+    <string name="about">O aplikácii</string>
+    <string name="about_antox_1">S nárastom vládnych monitorovacích programov vám Tox umožňuje spojiť sa s priateľmi a rodinou bez toho, aby vás niekto počúval.</string>
     <string name="about_antox_2">Čo v súčasnosti funguje:</string>
+    <string name="about_antox_3">- Bezprostredná komunikácia</string>
+    <string name="about_antox_4">- Notifikácie</string>
+    <string name="about_antox_5">- Prenosy súborov</string>
+    <string name="about_antox_6">Čo nefunguje:</string>
+    <string name="about_antox_7">- Audio/Video</string>
+    <string name="about_antox_8">- Skupiny</string>
     <string name="title_activity_call">Aktivita hovoru</string>
     <string name="end_call">Ukončiť hovor</string>
     <string name="mute_call">Stlmiť zvuk</string>
     <string name="mute_mic">Stlmiť mikrofón</string>
     <string name="profile_info_description">Získať info o používateľovi</string>
+    <string name="empty"> </string>
+
+    <string name="request_permissions_text">Udeliť povolenia</string>
+    <string name="select_file">Vybrať súbor</string>
+
 </resources>
