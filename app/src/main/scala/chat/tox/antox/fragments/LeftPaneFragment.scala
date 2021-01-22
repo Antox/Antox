@@ -8,6 +8,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import android.widget.{FrameLayout, ImageView, RelativeLayout}
 import chat.tox.antox.R
 import chat.tox.antox.activities.MainActivity
+import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import com.astuetz.PagerSlidingTabStrip
 import com.astuetz.PagerSlidingTabStrip.CustomTabProvider
@@ -33,26 +34,21 @@ class LeftPaneFragment extends Fragment {
         val imageView = customTabLayout.findViewById(R.id.image).asInstanceOf[ImageView]
         imageView.setImageResource(ICONS(position))
         imageView.setLayoutParams(params)
-        return customTabLayout
+        customTabLayout
       } else {
         val materialRippleLayout: MaterialRippleLayout = LayoutInflater.from(getActivity).inflate(R.layout.custom_tab, parent, false).asInstanceOf[MaterialRippleLayout]
         val imageView = materialRippleLayout.findViewById(R.id.image)
         imageView.asInstanceOf[ImageView].setImageResource(ICONS(position))
         imageView.setLayoutParams(params)
-        return materialRippleLayout
+        materialRippleLayout
       }
-
-      null
     }
 
-    override def getPageTitle(position: Int): CharSequence = {
+    override def getPageTitle(position: Int): CharSequence =
       position match {
-        case 0 => return "Recent"
-        case _ => return "Contacts"
+        case 0 => "Recent"
+        case _ => "Contacts"
       }
-
-      null
-    }
 
     override def getItem(pos: Int): Fragment = pos match {
       case 0 => new RecentFragment()
@@ -79,10 +75,18 @@ class LeftPaneFragment extends Fragment {
 
     pager.setAdapter(new LeftPagerAdapter(getFragmentManager))
 
-    val defaultViewPagerTab = 1
+    val recentViewPagerTab = 0
+    val contactsViewPagerTab = 1
     pager.setCurrentItem(Option(savedInstanceState)
-      .map(_.getInt("tab_position", defaultViewPagerTab))
-      .getOrElse(defaultViewPagerTab)) // start on contacts view by default
+      .map(_.getInt("tab_position", contactsViewPagerTab))
+      .getOrElse({
+        if (State.db.getMessageList(None).isEmpty) {
+          contactsViewPagerTab
+        }
+        else {
+          recentViewPagerTab
+        }
+      })) // start on contacts view if there are no messages
 
     tabs.setViewPager(pager)
     tabs.setBackgroundColor(ThemeManager.primaryColor)

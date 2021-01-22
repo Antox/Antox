@@ -30,7 +30,7 @@ object BitmapManager {
 
   private val TAG = LoggerTag(getClass.getSimpleName)
 
-  private def getImageKey(file: File): ImageKey = ImageKey(file.getPath + file.getName)
+  private def getImageKey(file: File): ImageKey = ImageKey(file.getAbsolutePath)
 
   def getFromCache(isAvatar: Boolean, file: File): Option[Bitmap] = {
     getFromCache(isAvatar, getImageKey(file))
@@ -62,7 +62,13 @@ object BitmapManager {
 
   private def addBitmapToMemoryCache(key: ImageKey, bitmap: Bitmap) {
     if (memoryCache != null && getBitmapFromMemCache(key).isEmpty) {
-      memoryCache.put(key, bitmap)
+      try {
+        memoryCache.put(key, bitmap)
+      }
+      catch {
+        case e: Exception =>
+          e.printStackTrace()
+      }
     }
   }
 
@@ -91,8 +97,8 @@ object BitmapManager {
   }
 
   /**
-   * Will decode the byte Array and proceed to return true if the bitmap is valid.
-   */
+    * Will decode the byte Array and proceed to return true if the bitmap is valid.
+    */
   def decodeAndCheck(byteArr: Array[Byte], options: BitmapOptions): Boolean = {
     options.inJustDecodeBounds = true
     BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
@@ -101,8 +107,8 @@ object BitmapManager {
   }
 
   /**
-   * Reads in bytes from the given stream and returns them in an array
-   */
+    * Reads in bytes from the given stream and returns them in an array
+    */
   private def getBytesFromStream(inputStream: InputStream): Array[Byte] = {
     var byteArr = Array.ofDim[Byte](0)
     val buffer = Array.ofDim[Byte](2 ^ 10)
@@ -132,13 +138,15 @@ object BitmapManager {
   }
 
   /**
-   * Will load the bitmap from file, decode it and then return a potentially downsampled bitmap
-   * ready to be displayed
-   */
+    * Will load the bitmap from file, decode it and then return a potentially downsampled bitmap
+    * ready to be displayed
+    */
   private def decodeBitmap(file: File, imageKey: ImageKey, isAvatar: Boolean): Bitmap = {
     var fis: FileInputStream = null
 
     try {
+
+
       // Get a stream to the file
       fis = new FileInputStream(file)
 
@@ -147,23 +155,23 @@ object BitmapManager {
 
       val options = new BitmapFactory.Options()
 
-      if (!decodeAndCheck(byteArr, options)) {
-        return null
-      }
+      if (decodeAndCheck(byteArr, options)) {
+        options.inSampleSize = calculateInSampleSize(options, 200)
+        options.inPreferredConfig = Bitmap.Config.RGB_565
+        options.inJustDecodeBounds = false
 
-      options.inSampleSize = calculateInSampleSize(options, 200)
-      options.inPreferredConfig = Bitmap.Config.RGB_565
-      options.inJustDecodeBounds = false
+        val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
 
-      val bitmap = BitmapFactory.decodeByteArray(byteArr, 0, byteArr.length, options)
+        if (isAvatar) {
+          addAvatarToCache(imageKey, bitmap)
+        } else {
+          addBitmapToMemoryCache(imageKey, bitmap)
+        }
 
-      if (isAvatar) {
-        addAvatarToCache(imageKey, bitmap)
+        bitmap
       } else {
-        addBitmapToMemoryCache(imageKey, bitmap)
+        null
       }
-
-      bitmap
     } catch {
       case e: FileNotFoundException =>
         AntoxLog.debug("File not found when trying to be used for FileInputStream", TAG)

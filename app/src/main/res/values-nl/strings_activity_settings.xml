@@ -1,38 +1,38 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Instellingen</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profiel</string>
-  <string name="pref_title_nickname">Gebruikersnaam</string>
-  <string name="pref_default_nickname">Antox-gebruiker</string>
-  <string name="pref_default_password">Standaardwachtwoord</string>
-  <string name="pref_title_status">Status</string>
-  <string-array name="pref_status_list_titles">
-    <item>Online</item>
-    <item>Weg</item>
-    <item>Bezig</item>
-  </string-array>
-  <string name="pref_title_status_message">Statusbericht</string>
-  <string name="pref_default_status_message">Hoi! Ik gebruik Antox</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Standaard Tox ID - Dit hoor je niet te zien</string>
-  <string name="pref_title_avatar">Profielfoto</string>
-  <string name="pref_title_account_name">Profiel naam</string>
-  <string name="pref_title_export">Profiel exporteren</string>
-  <string name="pref_title_logout">Log uit</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Meldingen</string>
-  <string name="pref_title_enable_notifications">Zet meldingen aan</string>
-  <string name="pref_title_new_message_notifications">Berichtmeldingen</string>
-  <string name="pref_title_new_friend_notifications">Vriendschapsverzoekmeldingen</string>
-  <!--Other-->
-  <string name="pref_header_other">Andere</string>
-  <string name="pref_title_connection_status_messages">Connectiemeldingen</string>
-  <string name="pref_title_wifi_only">Alleen op Wi-Fi</string>
-  <string name="pref_title_language">Taal</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Kopieer Tox ID</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">Gebruik UDP</string>
-  <string name="pref_advanced">Geavanceerd</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profiel</string>
+    <string name="pref_title_nickname">Gebruikersnaam</string>
+    <string name="pref_default_nickname">Antox-gebruiker</string>
+    <string name="pref_default_password">Standaardwachtwoord</string>
+    <string name="pref_title_status">Status</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Weg</item>
+        <item>Bezig</item>
+    </string-array>
+    <string name="pref_title_status_message">Statusbericht</string>
+    <string name="pref_default_status_message">Hoi! Ik gebruik Antox</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Standaard Tox ID - Dit hoor je niet te zien</string>
+    <string name="pref_title_avatar">Profielfoto</string>
+    <string name="pref_title_account_name">Profiel naam</string>
+    <string name="pref_title_export">Profiel exporteren</string>
+    <string name="pref_title_logout">Log uit</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Meldingen</string>
+    <string name="pref_title_enable_notifications">Zet meldingen aan</string>
+    <string name="pref_title_new_message_notifications">Berichtmeldingen</string>
+    <string name="pref_title_new_friend_notifications">Vriendschapsverzoekmeldingen</string>
+    <!--Other-->
+    <string name="pref_header_other">Andere</string>
+    <string name="pref_title_connection_status_messages">Connectiemeldingen</string>
+    <string name="pref_title_wifi_only">Alleen op Wi-Fi</string>
+    <string name="pref_title_language">Taal</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Kopieer Tox ID</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Gebruik UDP</string>
+    <string name="pref_advanced">Geavanceerd</string>
 </resources>

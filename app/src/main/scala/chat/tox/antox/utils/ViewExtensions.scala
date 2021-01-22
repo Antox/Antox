@@ -3,6 +3,7 @@ package chat.tox.antox.utils
 import android.view.View
 
 object ViewExtensions {
+
   implicit class RichView(val view: View) extends AnyVal {
     def getLocationOnScreen(): Location = {
       val rawLocation = Array.ofDim[Int](2)
@@ -15,4 +16,5 @@ object ViewExtensions {
       Location(upperLocation.x + view.getWidth / 2, upperLocation.y + view.getHeight / 2)
     }
   }
+
 }

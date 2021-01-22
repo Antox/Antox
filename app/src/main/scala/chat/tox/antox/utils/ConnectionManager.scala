@@ -4,7 +4,6 @@ import java.util
 
 import android.content.{BroadcastReceiver, Context, Intent}
 import android.net.ConnectivityManager
-import chat.tox.antox.tox.ToxSingleton
 
 import scala.collection.JavaConversions._
 
@@ -25,7 +24,7 @@ object ConnectionManager {
 
   def getConnectionType(context: Context): Int = {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
-                                     .asInstanceOf[ConnectivityManager]
+      .asInstanceOf[ConnectivityManager]
     connectivityManager.getActiveNetworkInfo.getType
   }
 
@@ -46,9 +45,6 @@ class ConnectionManager extends BroadcastReceiver {
           listener.connectionTypeChange(connectionType)
         }
         ConnectionManager.lastConnectionType = Some(connectionType)
-      }
-      if (ToxSingleton.dhtNodes.length == 0) {
-        ToxSingleton.updateDhtNodes(context)
       }
     }
   }

@@ -15,6 +15,6 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:textColor="@color/black"
-        android:text="Can't talk right now."/>
+        android:text="Can't talk right now." />
 
 </LinearLayout>

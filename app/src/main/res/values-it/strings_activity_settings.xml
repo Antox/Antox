@@ -1,51 +1,51 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_settings">Impostazioni</string>
 
-  <!-- Profile -->
-  <string name="pref_header_profile">Profilo</string>
+    <!-- Profile -->
+    <string name="pref_header_profile">Profilo</string>
 
-  <string name="pref_title_nickname">Nome</string>
-  <string name="pref_default_nickname">Utente Antox</string>
+    <string name="pref_title_nickname">Nome</string>
+    <string name="pref_default_nickname">Utente Antox</string>
 
-  <string name="pref_title_password">Password per Toxme.io</string>
-  <string name="pref_default_password">Nessuna Password Impostata</string>
+    <string name="pref_title_password">Password per Toxme.io</string>
+    <string name="pref_default_password">Nessuna Password Impostata</string>
 
-  <string name="pref_title_status">Stato</string>
-  <string-array name="pref_status_list_titles">
-    <item>Online</item>
-    <item>Assente</item>
-    <item>Occupato</item>
-  </string-array>
+    <string name="pref_title_status">Stato</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Assente</item>
+        <item>Occupato</item>
+    </string-array>
 
-  <string name="pref_title_status_message">Messaggio di Stato</string>
-  <string name="pref_default_status_message">Hey! Sto usando Antox!</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
-  <string name="pref_title_logging_enabled">Mantieni i log delle chat dopo il logout</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Nome Profilo</string>
-  <string name="pref_title_export">Esporta Profilo</string>
-  <string name="pref_title_logout">Logout</string>
+    <string name="pref_title_status_message">Messaggio di Stato</string>
+    <string name="pref_default_status_message">Hey! Sto usando Antox!</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Default Tox ID - Non dovresti vedere questo messaggio</string>
+    <string name="pref_title_logging_enabled">Mantieni i log delle chat dopo il logout</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Nome Profilo</string>
+    <string name="pref_title_export">Esporta Profilo</string>
+    <string name="pref_title_logout">Logout</string>
 
-  <!-- Notifications -->
-  <string name="pref_header_notifications">Notifiche</string>
-  <string name="pref_title_enable_notifications">Abilita notifiche</string>
-  <string name="pref_title_new_message_notifications">Notifiche per i nuovi messaggi</string>
-  <string name="pref_title_new_friend_notifications">Notifiche per le richieste d\'amicizia</string>
+    <!-- Notifications -->
+    <string name="pref_header_notifications">Notifiche</string>
+    <string name="pref_title_enable_notifications">Abilita notifiche</string>
+    <string name="pref_title_new_message_notifications">Notifiche per i nuovi messaggi</string>
+    <string name="pref_title_new_friend_notifications">Notifiche per le richieste d\'amicizia</string>
 
-  <!-- Other -->
-  <string name="pref_header_other">Altro</string>
-  <string name="pref_title_connection_status_messages">Visualizza quando un contatto entra/esce</string>
-  <string name="pref_title_wifi_only">Usa solo connessioni Wi-Fi</string>
-  <string name="pref_title_language">Lingua</string>
+    <!-- Other -->
+    <string name="pref_header_other">Altro</string>
+    <string name="pref_title_connection_status_messages">Visualizza quando un contatto entra/esce</string>
+    <string name="pref_title_wifi_only">Usa solo connessioni Wi-Fi</string>
+    <string name="pref_title_language">Lingua</string>
 
-  <!-- Menu strings -->
-  <string name="copy_tox_id">Copia Tox ID</string>
+    <!-- Menu strings -->
+    <string name="copy_tox_id">Copia Tox ID</string>
 
-  <!-- Advanced strings -->
-  <string name="pref_udp">Abilita connessioni UDP</string>
-  <string name="pref_advanced">Avanzate</string>
-  <string name="pref_nospam">Resetta Tox ID</string>
-  <string name="pref_autostart">Avvia Antox al boot</string>
+    <!-- Advanced strings -->
+    <string name="pref_udp">Abilita connessioni UDP</string>
+    <string name="pref_advanced">Avanzate</string>
+    <string name="pref_nospam">Resetta Tox ID</string>
+    <string name="pref_autostart">Avvia Antox al boot</string>
 </resources>

@@ -5,7 +5,7 @@ import android.content.{Context, Intent}
 import android.support.v4.app.{NotificationCompat, TaskStackBuilder}
 import chat.tox.antox.R
 import chat.tox.antox.activities.{CallActivity, MainActivity}
-import chat.tox.antox.utils.{NotificationOffsets, AntoxNotificationManager, Constants}
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, NotificationOffsets}
 import chat.tox.antox.wrapper.ContactInfo
 
 class OngoingCallNotification(context: Context, contact: ContactInfo, call: Call) {

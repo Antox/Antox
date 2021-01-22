@@ -7,7 +7,6 @@ import android.content._
 import android.net.Uri
 import android.os.Environment
 import android.text.format.Formatter
-import android.util.Log
 import android.view.View
 import android.view.View.{OnClickListener, OnLongClickListener}
 import android.widget._
@@ -109,11 +108,12 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
     if (progressSub == null || progressSub.isUnsubscribed) {
       AntoxLog.debug("observer subscribing", TAG)
-      progressSub = Observable.interval(500 milliseconds)
+      progressSub = Observable.interval(1000 milliseconds)
         .observeOn(AndroidMainThreadScheduler())
         .subscribe(x => {
-        updateProgressBar()
-      })
+          updateProgressBar()
+          State.setLastFileTransferAction()
+        })
     }
 
     imageMessage.setVisibility(View.GONE)
@@ -149,8 +149,10 @@ class FileMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     bubble.setOnLongClickListener(this)
     progressLayout.setVisibility(View.VISIBLE)
 
+
     fileProgressBar.setVisibility(View.GONE)
     fileButtons.setVisibility(View.GONE)
+
     imageMessage.setVisibility(View.GONE)
   }
 

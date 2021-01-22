@@ -12,9 +12,10 @@ import chat.tox.antox.utils.DatabaseConstants._
 import chat.tox.antox.utils.{AntoxLog, BriteScalaDatabase, DatabaseUtil}
 import chat.tox.antox.wrapper.{CallReply, ToxAddress, UserInfo}
 import com.squareup.sqlbrite.SqlBrite
-import im.tox.tox4j.core.data.{ToxStatusMessage, ToxNickname}
+import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
+import rx.schedulers.Schedulers
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -28,20 +29,20 @@ object UserDB {
   class DatabaseHelper(context: Context) extends SQLiteOpenHelper(context, databaseName, null, USER_DATABASE_VERSION) {
     private val CREATE_TABLE_USERS: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_USERS ( _id integer primary key ,
-         |$COLUMN_NAME_PROFILE_NAME text,
-         |$COLUMN_NAME_PASSWORD text,
-         |$COLUMN_NAME_NICKNAME text,
-         |$COLUMN_NAME_STATUS text,
-         |$COLUMN_NAME_STATUS_MESSAGE text,
-         |$COLUMN_NAME_AVATAR text,
-         |$COLUMN_NAME_LOGGING_ENABLED boolean,
-         |$COLUMN_NAME_TOXME_DOMAIN text);""".stripMargin
+          |$COLUMN_NAME_PROFILE_NAME text,
+          |$COLUMN_NAME_PASSWORD text,
+          |$COLUMN_NAME_NICKNAME text,
+          |$COLUMN_NAME_STATUS text,
+          |$COLUMN_NAME_STATUS_MESSAGE text,
+          |$COLUMN_NAME_AVATAR text,
+          |$COLUMN_NAME_LOGGING_ENABLED boolean,
+          |$COLUMN_NAME_TOXME_DOMAIN text);""".stripMargin
 
     private val CREATE_TABLE_CALL_REPLIES: String =
       s"""CREATE TABLE IF NOT EXISTS $TABLE_CALL_REPLIES ( _id integer primary key ,
-         |$COLUMN_NAME_PROFILE_NAME text,
-         |$COLUMN_NAME_CALL_REPLY text,
-         |FOREIGN KEY($COLUMN_NAME_PROFILE_NAME) REFERENCES $TABLE_USERS($COLUMN_NAME_PROFILE_NAME))""".stripMargin
+          |$COLUMN_NAME_PROFILE_NAME text,
+          |$COLUMN_NAME_CALL_REPLY text,
+          |FOREIGN KEY($COLUMN_NAME_PROFILE_NAME) REFERENCES $TABLE_USERS($COLUMN_NAME_PROFILE_NAME))""".stripMargin
 
     override def onCreate(db: SQLiteDatabase) {
       db.execSQL(CREATE_TABLE_USERS)
@@ -71,6 +72,7 @@ object UserDB {
     }
 
   }
+
 }
 
 class UserDB(ctx: Context) {
@@ -96,7 +98,10 @@ class UserDB(ctx: Context) {
   def getActiveUser: String = activeUser.getOrElse(throw new NotLoggedInException())
 
   mDbHelper = new DatabaseHelper(ctx)
-  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
+  // old style ----
+  // mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper))
+  // old style ----
+  mDb = new BriteScalaDatabase(AntoxDB.sqlBrite.wrapDatabaseHelper(mDbHelper, Schedulers.io()))
 
   def close() {
     mDbHelper.close()
@@ -153,18 +158,19 @@ class UserDB(ctx: Context) {
 
   def addDefaultCallReplies(profileName: String): Unit = {
     val values = new ContentValues()
-    for (reply <- ctx.getResources.getStringArray(R.array.call_incoming_reply_message_choices)) {
+    for (_ <- 0 until QUICK_CALL_REPLY_COUNT) {
       values.put(COLUMN_NAME_PROFILE_NAME, profileName)
-      values.put(COLUMN_NAME_CALL_REPLY, reply)
+      values.put(COLUMN_NAME_CALL_REPLY, "") // call replies are initially empty until edited
       mDb.insert(TABLE_CALL_REPLIES, values)
       values.clear()
     }
   }
 
   def doesUserExist(username: String): Boolean = {
-    val query = s"""SELECT count(*)
-                   |FROM $TABLE_USERS
-                   |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
+    val query =
+      s"""SELECT count(*)
+          |FROM $TABLE_USERS
+          |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
     val exists = mDb.query(query).use { cursor =>
       cursor.moveToFirst() && cursor.getInt(0) > 0
@@ -183,8 +189,8 @@ class UserDB(ctx: Context) {
 
   private def userDetailsQuery(username: String): String =
     s"""SELECT *
-       |FROM $TABLE_USERS
-       |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
+        |FROM $TABLE_USERS
+        |WHERE $COLUMN_NAME_PROFILE_NAME='$username'""".stripMargin
 
   private def userInfoFromCursor(cursor: Cursor): Option[UserInfo] = {
     val userInfo: Option[UserInfo] =
@@ -192,7 +198,7 @@ class UserDB(ctx: Context) {
         val domain = cursor.getString(COLUMN_NAME_TOXME_DOMAIN)
         val toxMeName = new ToxMeName(cursor.getString(COLUMN_NAME_PROFILE_NAME), if (domain.isEmpty) None else Some(domain))
 
-        Some(new UserInfo(
+        Some(UserInfo(
           toxMeName = toxMeName,
           password = cursor.getString(COLUMN_NAME_PASSWORD),
           nickname = ToxNickname.unsafeFromValue(cursor.getString(COLUMN_NAME_NICKNAME).getBytes),
@@ -263,10 +269,18 @@ class UserDB(ctx: Context) {
     val query = s"SELECT * FROM $TABLE_CALL_REPLIES WHERE $COLUMN_NAME_PROFILE_NAME='$getActiveUser'"
     mDb.createQuery(TABLE_CALL_REPLIES, query).map(_.use { cursor =>
       val callReplies = new ArrayBuffer[CallReply]()
+      val defaultReplies = ctx.getResources.getStringArray(R.array.call_incoming_reply_message_choices)
 
       if (cursor.moveToFirst()) {
+        var i = 0
         do {
-            callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), cursor.getString(COLUMN_NAME_CALL_REPLY))
+          val databaseReply = cursor.getString(COLUMN_NAME_CALL_REPLY)
+
+          //hack to keep the replies translatable by using defaults unless the user has set one
+          val reply = if (databaseReply.isEmpty) defaultReplies.lift(i).getOrElse("") else databaseReply
+          callReplies += CallReply(cursor.getInt(COLUMN_NAME_ID), reply)
+
+          i += 1
         } while (cursor.moveToNext())
       }
 

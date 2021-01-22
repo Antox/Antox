@@ -2,7 +2,7 @@ package chat.tox.antox.activities
 
 import java.util
 
-import android.content.{Intent, Context}
+import android.content.{Context, Intent}
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.support.v7.widget.{LinearLayoutManager, RecyclerView, Toolbar}
 import android.text.InputFilter.LengthFilter
 import android.text.{Editable, InputFilter, TextWatcher}
-import android.view.{Menu, MenuItem, View}
+import android.view.inputmethod.EditorInfo
+import android.view.{KeyEvent, Menu, MenuItem, View}
+import android.widget.TextView.OnEditorActionListener
 import android.widget.{EditText, TextView}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ChatMessagesAdapter
@@ -18,8 +20,8 @@ import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
-import chat.tox.antox.utils.{Location, AntoxLog, Constants}
-import chat.tox.antox.wrapper.{MessageType, ContactKey, Message}
+import chat.tox.antox.utils.{KeyboardOptions, AntoxLog, Constants, Location}
+import chat.tox.antox.wrapper.{ContactKey, Message, MessageType}
 import im.tox.tox4j.core.enums.ToxMessageType
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import rx.lang.scala.schedulers.{AndroidMainThreadScheduler, IOScheduler}
@@ -84,7 +86,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       finish()
       return
     }
-    
+
     val db = State.db
     adapter = new ChatMessagesAdapter(this,
       new util.ArrayList(mutableSeqAsJavaList(getActiveMessageList(numMessagesShown))))
@@ -94,7 +96,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     avatarActionView = this.findViewById(R.id.avatarActionView)
     avatarActionView.setOnClickListener(new View.OnClickListener() {
       override def onClick(v: View) {
-        thisActivity.finish()
+        onClickInfo()
       }
     })
 
@@ -131,6 +133,17 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     messageBox = this.findViewById(R.id.your_message).asInstanceOf[EditText]
     messageBox.setFilters(Array[InputFilter](new LengthFilter(MESSAGE_LENGTH_LIMIT)))
     messageBox.setText(db.getContactUnsentMessage(activeKey))
+    messageBox.setOnEditorActionListener(new OnEditorActionListener {
+      override def onEditorAction(v: TextView, actionId: Int, event: KeyEvent): Boolean = {
+        if (actionId == EditorInfo.IME_ACTION_SEND){
+          onSendMessage()
+          setTyping(typing = false)
+          return true
+        }
+        false
+      }
+    })
+    messageBox.setInputType(KeyboardOptions.getInputType(getApplicationContext))
     messageBox.addTextChangedListener(new TextWatcher() {
       override def beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
         val isTyping = after > 0
@@ -138,7 +151,10 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
       }
 
       override def onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int): Unit = {
-        db.updateContactUnsentMessage(activeKey, charSequence.toString)
+        Observable[Boolean](subscriber => {
+          db.updateContactUnsentMessage(activeKey, charSequence.toString)
+          subscriber.onCompleted()
+        }).subscribeOn(IOScheduler()).subscribe()
       }
 
       override def afterTextChanged(editable: Editable) {
@@ -166,10 +182,6 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
 
       case R.id.video_call_button =>
         onClickVideoCall(clickLocation)
-        true
-
-      case R.id.info =>
-        onClickInfo(clickLocation)
         true
 
       case _ =>
@@ -202,9 +214,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     //FIXME make this more efficient
     adapter.removeAll()
 
-    for (message <- filterMessageList(messageList)) {
-      adapter.add(message)
-    }
+    adapter.addAll(filterMessageList(messageList))
 
     // This works like TRANSCRIPT_MODE_NORMAL but for RecyclerView
     if (layoutManager.findLastCompletelyVisibleItemPosition() >= chatListView.getAdapter.getItemCount - 2) {
@@ -212,7 +222,7 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
     }
     AntoxLog.debug("changing chat list cursor")
   }
-  
+
   def filterMessageList(messageList: Seq[Message]): Seq[Message] = {
     val showCallEvents = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("call_event_logging", true)
 
@@ -288,6 +298,8 @@ abstract class GenericChatActivity[KeyType <: ContactKey] extends AppCompatActiv
   def setTyping(typing: Boolean): Unit
 
   def onClickVoiceCall(clickLocation: Location): Unit
+
   def onClickVideoCall(clickLocation: Location): Unit
-  def onClickInfo(clickLocation: Location): Unit
+
+  def onClickInfo(): Unit
 }

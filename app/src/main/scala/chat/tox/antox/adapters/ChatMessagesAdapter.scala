@@ -7,9 +7,8 @@ import android.content.Context
 import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.{LayoutInflater, View, ViewGroup}
-import android.widget.LinearLayout
 import chat.tox.antox.R
-import chat.tox.antox.utils.{Constants, FileUtils}
+import chat.tox.antox.utils.{Constants, FileUtils, TimestampUtils}
 import chat.tox.antox.viewholders._
 import chat.tox.antox.wrapper.{Message, MessageType}
 
@@ -78,17 +77,21 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
         callEventHolder.setText(msg.message)
         callEventHolder.setPrefixedIcon(msg.callEventKind.imageRes)
 
+
       case FILE =>
         val fileHolder = holder.asInstanceOf[FileMessageHolder]
 
         fileHolder.render()
 
+
         if (holder.getMessage.isMine) {
           holder.ownMessage()
+          // show only filename of file (remove path)
           val split = msg.message.split("/")
           fileHolder.setFileText(split(split.length - 1))
         } else {
           holder.contactMessage()
+          // when receiving file there is only filename, no path
           fileHolder.setFileText(msg.message)
         }
 
@@ -102,7 +105,7 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
         } else {
           if (msg.messageId != -1) {
             if (msg.isMine) {
-              fileHolder.setProgressText(R.string.file_request_sent)
+              // fileHolder.setProgressText(R.string.file_request_sent) // this removes the progress bar!!
             } else {
               fileHolder.showFileButtons()
             }
@@ -121,14 +124,29 @@ class ChatMessagesAdapter(context: Context, data: util.ArrayList[Message]) exten
               new File(f.getAbsolutePath + "/" + msg.message)
             }
 
-          val isImage = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r.findAllMatchIn(file.getName.toLowerCase).nonEmpty
+          // val extension = getFileExtensionFromUrl(file.getAbsolutePath())
+          val isImage = FileUtils.hasImageFilename(file.getName)
 
-          println("FILE LENGTH is " + file.length())
+          // println("FILE LENGTH is " + file.length())
           if (file.exists() && isImage && file.length > 0) {
-            fileHolder.setImage(file)
+              fileHolder.setImage(file)
           }
         }
     }
+  }
+
+  def getHeaderString(position: Int): String = {
+    try {
+      TimestampUtils.prettyTimestampLong(data.get(position).timestamp)
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+        " "
+    }
+  }
+
+  def getBubbleText(position: Int): CharSequence = {
+    getHeaderString(position)
   }
 
   override def onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): GenericMessageHolder = {

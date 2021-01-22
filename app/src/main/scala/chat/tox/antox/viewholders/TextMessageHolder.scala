@@ -3,8 +3,8 @@ package chat.tox.antox.viewholders
 import android.app.AlertDialog
 import android.content.{ClipData, ClipboardManager, Context, DialogInterface}
 import android.graphics.PorterDuff
+import android.view.View.{OnLongClickListener, OnTouchListener}
 import android.view.{MotionEvent, View}
-import android.view.View.{OnTouchListener, OnClickListener, OnLongClickListener}
 import android.widget.TextView
 import chat.tox.antox.R
 import chat.tox.antox.data.State
@@ -16,6 +16,7 @@ import rx.lang.scala.schedulers.IOScheduler
 class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with OnLongClickListener with OnTouchListener {
 
   protected val messageTitle = view.findViewById(R.id.message_title).asInstanceOf[TextView]
+  private var isLongClick = false
 
   def setText(s: String): Unit = {
     messageText.setText(s)
@@ -48,7 +49,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
     toggleReceived()
     // generate name colour from hash to ensure names have consistent colours
     UiUtils.generateColor(msg.senderName.hashCode)
-    if (lastMsg.isEmpty  || msg.senderName != lastMsg.get.senderName) {
+    if (lastMsg.isEmpty || msg.senderName != lastMsg.get.senderName) {
       messageTitle.setVisibility(View.VISIBLE)
     }
     messageTitle.setTextColor(UiUtils.generateColor(msg.senderName.hashCode))
@@ -61,6 +62,7 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
 
   override def onLongClick(view: View): Boolean = {
     val items = Array[CharSequence](context.getResources.getString(R.string.message_copy), context.getResources.getString(R.string.message_delete))
+    isLongClick = true
     new AlertDialog.Builder(context).setCancelable(true).setItems(items, new DialogInterface.OnClickListener() {
 
       def onClick(dialog: DialogInterface, index: Int): Unit = index match {
@@ -95,10 +97,21 @@ class TextMessageHolder(val view: View) extends GenericMessageHolder(view) with 
           view.invalidate()
         }
 
-      case _ =>
-        //do nothing
+      case _ => //do nothing
     }
 
-    false
+    //bizarre workaround to prevent long pressing on a link causing the link to open on release
+    event.getAction match {
+      case MotionEvent.ACTION_DOWN =>
+        isLongClick = false
+        v.onTouchEvent(event)
+
+      case MotionEvent.ACTION_UP if isLongClick =>
+        isLongClick = false
+        true // if we're in a long click ignore the release action
+
+      case _ => //do nothing
+        v.onTouchEvent(event)
+    }
   }
 }

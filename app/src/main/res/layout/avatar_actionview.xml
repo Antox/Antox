@@ -2,7 +2,7 @@
     android:id="@+id/avatarActionView"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
-    
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="Voice Call Friend"
             android:onClick="onClickVoiceCall"
-            android:src="@drawable/ic_action_call"/>
+            android:src="@drawable/ic_action_call" />
 
         <ImageButton
             android:id="@+id/video"
@@ -27,7 +27,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="Video Call Friend"
             android:onClick="onClickVideoCall"
-            android:src="@drawable/ic_action_video"/>
+            android:src="@drawable/ic_action_video" />
 
         <ImageButton
             android:id="@+id/info"
@@ -38,9 +38,8 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/profile_info_description"
             android:onClick="onClickInfo"
-            android:src="@drawable/ic_info"/>
+            android:src="@drawable/ic_info" />
     </LinearLayout>
-
 
 
 </RelativeLayout>

@@ -35,7 +35,7 @@
             android:layout_marginTop="20dp"
             android:textSize="25sp"
             android:text="@string/addfriend_optional_title"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal" />
 
         <EditText
             android:layout_width="match_parent"

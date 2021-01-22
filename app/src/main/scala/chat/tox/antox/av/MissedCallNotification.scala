@@ -27,7 +27,7 @@ class MissedCallNotification(context: Context, contact: ContactInfo, missedCallM
     .addAction(R.drawable.ic_call_white_24dp,
       context.getResources.getString(R.string.call_missed_call_back),
       startCallPendingIntent)
-      .addAction(R.drawable.ic_send_white_24dp,
+    .addAction(R.drawable.ic_send_white_24dp,
       context.getResources.getString(R.string.call_missed_reply),
       replyPendingIntent)
     .setContentTitle(context.getResources.getString(R.string.call_missed_title) + numMissedCallString)

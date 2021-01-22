@@ -1,8 +1,8 @@
 package chat.tox.antox.wrapper
 
 import chat.tox.antox.tox.Intervals
-import im.tox.tox4j.av.data.{BitRate, SampleCount, SamplingRate, AudioChannels}
 import im.tox.tox4j.av.callbacks._
+import im.tox.tox4j.av.data.{AudioChannels, BitRate, SampleCount, SamplingRate}
 import im.tox.tox4j.av.enums.ToxavCallControl
 import im.tox.tox4j.av.exceptions.ToxavCallControlException
 import im.tox.tox4j.core.data.ToxFriendNumber
@@ -16,7 +16,7 @@ class ToxAv(core: ToxCoreImpl) extends Intervals {
 
   def iterate(avEventListener: ToxAvEventListener[Unit]): Unit = toxAv.iterate(avEventListener)(Unit)
 
-  override def interval: Int = toxAv.iterationInterval / 4
+  override def interval: Int = toxAv.iterationInterval
 
   @throws[ToxavCallControlException]
   def callControl(callNumber: CallNumber, control: ToxavCallControl): Unit = toxAv.callControl(ToxFriendNumber.unsafeFromInt(callNumber.value), control)

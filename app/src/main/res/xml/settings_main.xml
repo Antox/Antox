@@ -53,6 +53,24 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_header_input">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="autocorrect"
+            android:title="@string/pref_enable_autocorrect" />
+
+        <ListPreference
+            android:defaultValue="emote"
+            android:entries="@array/pref_keyboard_hotkey_titles"
+            android:entryValues="@array/pref_keyboard_hotkey_values"
+            android:key="keyboard_hotkey"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_keyboard_hotkey" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_network">
         <CheckBoxPreference
             android:defaultValue="true"
@@ -64,17 +82,73 @@
             android:key="enable_udp"
             android:title="@string/pref_udp" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_proxy"
+            android:title="@string/pref_title_enable_proxy" />
+
+        <ListPreference
+            android:defaultValue="SOCKS5"
+            android:dependency="enable_proxy"
+            android:entries="@array/pref_proxy_type_list_values"
+            android:entryValues="@array/pref_proxy_type_list_values"
+            android:key="proxy_type"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_proxy_type" />
+
+        <EditTextPreference
+            android:defaultValue="127.0.0.1"
+            android:dependency="enable_proxy"
+            android:key="proxy_address"
+            android:title="@string/pref_title_proxy_address" />
+
+        <EditTextPreference
+            android:defaultValue="9050"
+            android:dependency="enable_proxy"
+            android:key="proxy_port"
+            android:numeric="integer"
+            android:title="@string/pref_title_proxy_port" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="enable_custom_node"
+            android:title="@string/pref_title_custom_node" />
+
+        <EditTextPreference
+            android:defaultValue="127.0.0.1"
+            android:dependency="enable_custom_node"
+            android:key="custom_node_address"
+            android:title="@string/pref_title_custom_node_address" />
+
+        <EditTextPreference
+            android:defaultValue="33445"
+            android:dependency="enable_custom_node"
+            android:key="custom_node_port"
+            android:numeric="integer"
+            android:title="@string/pref_title_custom_node_port" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:dependency="enable_custom_node"
+            android:key="custom_node_key"
+            android:title="@string/pref_title_custom_node_public_key" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_calls">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="call_event_logging"
-            android:title="@string/pref_title_enable_call_event_logging"/>
+            android:title="@string/pref_title_enable_call_event_logging" />
 
         <Preference
             android:key="call_replies"
-            android:title="@string/title_pref_edit_call_replies"/>
+            android:title="@string/title_pref_edit_call_replies" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="videocallstartwithnovideo"
+            android:title="@string/pref_enable_videocallstartwithnovideo" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_header_other">
@@ -101,6 +175,16 @@
             android:defaultValue="true"
             android:key="strip_exif"
             android:title="@string/pref_strip_exif" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="autoacceptft"
+            android:title="@string/pref_enable_autoaccept" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="batterysavingmode"
+            android:title="@string/pref_enable_batterysavingmode" />
 
         <CheckBoxPreference
             android:defaultValue="true"

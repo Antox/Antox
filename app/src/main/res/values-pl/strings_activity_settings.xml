@@ -1,38 +1,38 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Ustawienia</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profil</string>
-  <string name="pref_title_nickname">Nazwa</string>
-  <string name="pref_default_nickname">Użytkownik Antoxa</string>
-  <string name="pref_title_status">Status</string>
-  <string-array name="pref_status_list_titles">
-    <item>Online</item>
-    <item>Nieobecny</item>
-    <item>Zajęty</item>
-  </string-array>
+    <string name="title_activity_settings">Ustawienia</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profil</string>
+    <string name="pref_title_nickname">Nazwa</string>
+    <string name="pref_default_nickname">Użytkownik Antoxa</string>
+    <string name="pref_title_status">Status</string>
+    <string-array name="pref_status_list_titles">
+        <item>Online</item>
+        <item>Nieobecny</item>
+        <item>Zajęty</item>
+    </string-array>
 
-  <string name="pref_title_status_message">Opis</string>
-  <string name="pref_default_status_message">Hej! Używam Antoxa</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Domyślny Tox ID - Nie powinno tego widać</string>
-  <string name="pref_title_account_name">Nazwa profilu</string>
-  <string name="pref_title_logout">Wyloguj</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Powiadomienia</string>
-  <string name="pref_title_enable_notifications">Włącz powiadomienia</string>
-  <string name="pref_title_new_message_notifications">Powiadomienia o wiadomościach</string>
-  <string name="pref_title_new_friend_notifications">Powiadomienia o zaproszeniu</string>
-  <!--Other-->
-  <string name="pref_header_other">Inne</string>
-  <string name="pref_title_connection_status_messages">Wiadomości online/offline</string>
-  <string name="pref_title_wifi_only">Tylko przez Wi-Fi</string>
-  <string name="pref_title_language">Język</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Skopiuj Tox ID</string>
+    <string name="pref_title_status_message">Opis</string>
+    <string name="pref_default_status_message">Hej! Używam Antoxa</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_default_tox_id">Domyślny Tox ID - Nie powinno tego widać</string>
+    <string name="pref_title_account_name">Nazwa profilu</string>
+    <string name="pref_title_logout">Wyloguj</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Powiadomienia</string>
+    <string name="pref_title_enable_notifications">Włącz powiadomienia</string>
+    <string name="pref_title_new_message_notifications">Powiadomienia o wiadomościach</string>
+    <string name="pref_title_new_friend_notifications">Powiadomienia o zaproszeniu</string>
+    <!--Other-->
+    <string name="pref_header_other">Inne</string>
+    <string name="pref_title_connection_status_messages">Wiadomości online/offline</string>
+    <string name="pref_title_wifi_only">Tylko przez Wi-Fi</string>
+    <string name="pref_title_language">Język</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Skopiuj Tox ID</string>
 
-  <!--Advanced strings-->
-  <string name="pref_udp">Włącz UDP</string>
-  <string name="pref_advanced">Zaawansowane</string>
-  <string name="pref_nospam">Wygeneruj nową wartość Nospam</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">Włącz UDP</string>
+    <string name="pref_advanced">Zaawansowane</string>
+    <string name="pref_nospam">Wygeneruj nową wartość Nospam</string>
 </resources>

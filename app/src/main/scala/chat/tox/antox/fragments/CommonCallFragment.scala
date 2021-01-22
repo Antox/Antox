@@ -14,6 +14,7 @@ import chat.tox.antox.utils.{AntoxLog, BitmapManager}
 import chat.tox.antox.wrapper.{CallNumber, ContactKey, FriendInfo, FriendKey}
 import de.hdodenhof.circleimageview.CircleImageView
 import rx.lang.scala.Subscription
+import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.subscriptions.CompositeSubscription
 
 object CommonCallFragment {
@@ -111,6 +112,7 @@ abstract class CommonCallFragment extends Fragment {
     // update displayed friend info on change
     compositeSubscription +=
       State.db.friendInfoList
+        .observeOn(AndroidMainThreadScheduler())
         .subscribe(fi => {
           updateDisplayedState(fi)
         })

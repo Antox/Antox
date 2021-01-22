@@ -15,7 +15,7 @@ import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxSingleton
 import chat.tox.antox.toxme.ToxMe
-import chat.tox.antox.utils.{AntoxNotificationManager, Constants, UiUtils}
+import chat.tox.antox.utils.{AntoxNotificationManager, Constants, ProxyUtils, UiUtils}
 import chat.tox.antox.wrapper.ToxAddress
 import im.tox.tox4j.core.ToxCoreConstants
 import im.tox.tox4j.core.data.ToxFriendRequestMessage
@@ -154,25 +154,27 @@ class AddFriendFragment extends Fragment with InputableID {
       // Attempt to use ID as a toxme account name
       _originalUsername = friendID.getText.toString
       try {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val proxy = ProxyUtils.netProxyFromPreferences(preferences)
         lookupSubscription = Some(
-          ToxMe.lookup(_originalUsername)
-          .subscribeOn(IOScheduler())
-          .observeOn(AndroidMainThreadScheduler())
-          .subscribe((m_key: Option[String]) => {
-            m_key match {
-              case Some(key) =>
-                val result = checkAndSend(key, _originalUsername)
-                if (result) {
-                  val update = new Intent(Constants.BROADCAST_ACTION)
-                  update.putExtra("action", Constants.UPDATE)
-                  LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
-                  val i = new Intent()
-                  getActivity.setResult(Activity.RESULT_OK, i)
-                  getActivity.finish()
-                }
-              case None => showToastInvalidID()
-            }
-          }))
+          ToxMe.lookup(_originalUsername, proxy)
+            .subscribeOn(IOScheduler())
+            .observeOn(AndroidMainThreadScheduler())
+            .subscribe((m_key: Option[String]) => {
+              m_key match {
+                case Some(key) =>
+                  val result = checkAndSend(key, _originalUsername)
+                  if (result) {
+                    val update = new Intent(Constants.BROADCAST_ACTION)
+                    update.putExtra("action", Constants.UPDATE)
+                    LocalBroadcastManager.getInstance(getActivity).sendBroadcast(update)
+                    val i = new Intent()
+                    getActivity.setResult(Activity.RESULT_OK, i)
+                    getActivity.finish()
+                  }
+                case None => showToastInvalidID()
+              }
+            }))
       } catch {
         case e: Exception => e.printStackTrace()
       }

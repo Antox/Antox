@@ -12,12 +12,14 @@ import android.widget._
 import chat.tox.antox.R
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.ToxService
+import chat.tox.antox.utils.Options
 
 import scala.collection.JavaConversions._
 
 class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedListener {
 
   private var profileSelected: String = _
+
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
@@ -28,8 +30,6 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       getWindow.setStatusBarColor(getResources.getColor(R.color.black))
     }
 
-
-
     if (Build.VERSION.SDK_INT != Build.VERSION_CODES.JELLY_BEAN &&
       Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
       getWindow.setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
@@ -37,6 +37,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val userDb = State.userDb(this)
+
+    State.setAutoAcceptFt(preferences.getBoolean("autoacceptft", false))
+    Options.videoCallStartWithNoVideo = preferences.getBoolean("videocallstartwithnovideo", false)
+    State.setBatterySavingMode(preferences.getBoolean("batterysavingmode", false))
 
     // if the user is starting the app for the first
     // time, go directly to the register account screen
@@ -63,6 +67,10 @@ class LoginActivity extends AppCompatActivity with AdapterView.OnItemSelectedLis
       profileSpinner.setSelection(0)
       profileSpinner.setOnItemSelectedListener(this)
     }
+
+
+    // this may get the app banned from google play :-(
+    // ShowPermissionDialog()
   }
 
   def onItemSelected(parent: AdapterView[_], view: View, pos: Int, id: Long) {

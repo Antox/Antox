@@ -7,7 +7,7 @@ import android.view.{LayoutInflater, View, ViewGroup}
 import chat.tox.antox.R
 import chat.tox.antox.adapters.ContactListAdapter
 import chat.tox.antox.av.Call
-import chat.tox.antox.data.{CallEventKind, State}
+import chat.tox.antox.data.CallEventKind
 import chat.tox.antox.utils.{LeftPaneItem, TimestampUtils}
 import chat.tox.antox.wrapper._
 

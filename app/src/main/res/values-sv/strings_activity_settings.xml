@@ -1,34 +1,82 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="title_activity_settings">Inställningar</string>
+  <string name="pref_unsupported">Din enhet har inte stöd för det här alternativet</string>
   <!--Profile-->
   <string name="pref_header_profile">Profil</string>
   <string name="pref_title_nickname">Namn</string>
-  <string name="pref_default_nickname">Antoxanvändare</string>
+  <string name="pref_default_nickname">Antox användare</string>
+  <string name="pref_title_password">ToxMe lösenord</string>
+  <string name="pref_default_password">Inget lösenord angivet</string>
   <string name="pref_title_status">Status</string>
   <string-array name="pref_status_list_titles">
-    <item>Online</item>
+    <item>Uppkopplad</item>
     <item>Borta</item>
     <item>Upptagen</item>
   </string-array>
   <string name="pref_title_status_message">Statusmeddelande</string>
   <string name="pref_default_status_message">Hey! Jag använder Antox</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_default_tox_id">Standard Tox ID - Du ska inte se det här</string>
+  <string name="pref_title_tox_id">Tox-ID</string>
+  <string name="pref_default_tox_id">Standard Tox-ID - Du bör inte se det här</string>
+  <string name="pref_title_toxme">ToxMe-adress</string>
+  <string name="pref_default_toxme">Denna profil är för närvarande i inkognitoläge</string>
+  <string name="pref_title_logging_enabled">Behåll chatthistorik vid utoggning</string>
+  <string name="pref_title_theme_color">Ändra färg på tema</string>
+  <string name="pref_title_avatar">Avatar</string>
   <string name="pref_title_account_name">Profilnamn</string>
+  <string name="pref_title_export">Exportera profil</string>
+  <string name="pref_title_delete">Ta bort konto</string>
   <string name="pref_title_logout">Logga ut</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Aviseringar</string>
   <string name="pref_title_enable_notifications">Aktivera aviseringar</string>
-  <string name="pref_title_new_message_notifications">Meddelandeaviseringar</string>
-  <string name="pref_title_new_friend_notifications">Vänförfrågningsaviseringar</string>
+  <string name="pref_title_new_message_notifications">Meddelande aviseringar</string>
+  <string name="pref_title_new_friend_notifications">Aviseringar för vänförfrågningar</string>
+  <string name="pref_title_persistent_notification">Visa bestående avisering</string>
+  <string name="pref_title_notification_vibrate">Vibrera</string>
+  <string name="pref_title_notification_sound">Spela ljud</string>
+  <string name="pref_title_notification_light">Pulsera ljus</string>
+  <string name="pref_description_notification_vibrate">Vibrera</string>
+  <string name="pref_description_notification_sound">Spela ljud</string>
+  <!--Input-->
+  <string name="pref_header_input">Indata</string>
+  <string name="pref_enable_autocorrect">Aktivera automatisk korrigering</string>
+  <string name="pref_keyboard_hotkey">Förändra tangentbords snabbknapp</string>
+  <string-array name="pref_keyboard_hotkey_titles">
+    <item>Skicka</item>
+    <item>Emoji</item>
+    <item>Enter</item>
+  </string-array>
+  <!--Network-->
+  <string name="pref_header_network">Nätverk</string>
+  <string name="pref_title_connection_status_messages">Åtgärdsmeddelanden</string>
+  <string name="pref_title_wifi_only">Endast Wi-Fi</string>
+  <string name="pref_udp">Aktivera UDP</string>
+  <string name="pref_title_enable_proxy">Aktivera proxy</string>
+  <string name="pref_title_proxy_type">Välj proxytyp</string>
+  <string name="pref_title_proxy_address">Ändra proxyadress</string>
+  <string name="pref_title_proxy_port">Ändra proxyport</string>
+  <string name="pref_title_custom_node">Använd anpassad bootstrapsnod</string>
+  <string name="pref_title_custom_node_address">Ändra nodadress</string>
+  <string name="pref_title_custom_node_port">Ändra nodens port</string>
+  <string name="pref_title_custom_node_public_key">Ändra nodens publika nyckel</string>
+  <string name="error_invalid_tox_id">Ogiltig publik nyckel</string>
+  <string name="error_invalid_ip_address">Ogiltig ip-adress</string>
+  <string name="error_invalid_port">Ogiltig port. Var god ange ett korrekt portnummervärde mellan 1 och 65535</string>
+  <!--Calls-->
+  <string name="pref_header_calls">Samtal</string>
+  <string name="pref_title_enable_call_event_logging">Samtalshändelseloggning </string>
+  <string name="pref_enable_videocallstartwithnovideo">Starta videosamtal med video inaktiverad</string>
   <!--Other-->
   <string name="pref_header_other">Annat</string>
-  <string name="pref_title_wifi_only">Endast Wi-Fi</string>
   <string name="pref_title_language">Språk</string>
   <!--Menu strings-->
-  <string name="copy_tox_id">Kopiera Tox ID</string>
+  <string name="copy_tox_id">Kopiera Tox-ID</string>
   <!--Advanced strings-->
-  <string name="pref_udp">Aktivera UDP</string>
+  <string name="pref_enable_batterysavingmode">Experimentellt batterisparläge</string>
+  <string name="pref_strip_exif">Ta bort EXIF-data från bilder</string>
+  <string name="pref_enable_autoaccept">Auto-acceptera filer</string>
   <string name="pref_advanced">Avancerat</string>
+  <string name="pref_nospam">Nollställ Tox-ID</string>
+  <string name="pref_autostart">Starta Antox vid uppstart</string>
 </resources>

@@ -1,13 +1,12 @@
 package chat.tox.antox.theme
 
 import android.app.ActivityManager.TaskDescription
-import android.app.{ActivityManager, Activity}
+import android.app.{Activity, ActivityManager}
 import android.content.{Context, SharedPreferences}
-import android.graphics.{BitmapFactory, Color}
 import android.graphics.drawable.ColorDrawable
+import android.graphics.{BitmapFactory, Color}
 import android.os.Build
 import android.preference.PreferenceManager
-import android.support.v4.app.ActivityManagerCompat
 import android.support.v7.app.ActionBar
 import chat.tox.antox.R
 
@@ -49,6 +48,7 @@ object ThemeManager {
 
   //getters
   def primaryColor: Int = _primaryColor
+
   def primaryColorDark: Int = _primaryColorDark
 
   //setters

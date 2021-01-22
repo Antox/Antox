@@ -11,8 +11,8 @@ object FileUtils {
   val imageExtensions = List("jpg", "jpeg", "gif", "png")
 
   /**
-  * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
-  */
+    * Gets the directory designated by 'path' from the appropriate place based on 'storageType'
+    */
   def getDirectory(path: String, storageType: StorageType, context: Context): File = {
     if (storageType == StorageType.EXTERNAL) {
       new File(path)
@@ -38,11 +38,13 @@ object FileUtils {
   def readToBytes(source: File): Option[Array[Byte]] = {
     val f = new RandomAccessFile(source, "r")
     try {
-      if (f.length() > Integer.MAX_VALUE) return None
-
-      val data = new Array[Byte](f.length().asInstanceOf[Int])
-      f.readFully(data)
-      Some(data)
+      if (f.length() <= Integer.MAX_VALUE) {
+        val data = new Array[Byte](f.length().asInstanceOf[Int])
+        f.readFully(data)
+        Some(data)
+      } else {
+        None
+      }
     } finally {
       f.close()
     }
@@ -64,5 +66,14 @@ object FileUtils {
       case e: Exception =>
         e.printStackTrace()
     }
+  }
+
+  /**
+    * Check if this file name has an extension typical of an image.
+    * Does not guarantee that the file is a valid image file.
+    */
+  def hasImageFilename(fileName: String): Boolean = {
+    val imageRegex = (s"^.+?\\.(${FileUtils.imageExtensions.mkString("|")})" + "$").r
+    imageRegex.findAllMatchIn(fileName.toLowerCase).nonEmpty
   }
 }

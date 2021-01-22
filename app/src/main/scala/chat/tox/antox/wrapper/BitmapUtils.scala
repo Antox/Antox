@@ -1,12 +1,10 @@
 package chat.tox.antox.wrapper
 
-import android.content.Context
-import android.graphics.PorterDuff.Mode
 import android.graphics._
-import android.graphics.Bitmap.Config
 import android.media.ThumbnailUtils
 
 object BitmapUtils {
+
   implicit class RichBitmap(bitmap: Bitmap) {
     //bitmap.getByteCount doesn't exist in Android 2.3
     def getSizeInBytes: Long = {
@@ -15,13 +13,47 @@ object BitmapUtils {
   }
 
   def getCircleBitmap(bitmap: Bitmap, recycle: Boolean = true): Bitmap = {
-    val output = Bitmap.createBitmap(bitmap.getWidth,
-      bitmap.getHeight, Bitmap.Config.ARGB_8888)
+
+    var w = 10
+    try {
+      w = bitmap.getWidth
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        w = 10
+      }
+    }
+
+    var h = 10
+    try {
+      h = bitmap.getWidth
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        h = 10
+      }
+    }
+
+    val output = Bitmap.createBitmap(w,
+      h, Bitmap.Config.ARGB_8888)
     val canvas = new Canvas(output)
 
     val color = Color.RED
     val paint = new Paint()
-    val rect = new Rect(0, 0, bitmap.getWidth, bitmap.getHeight)
+
+    var rect: Rect = null
+    // zoff //
+    try {
+      rect = new Rect(0, 0, bitmap.getWidth, bitmap.getHeight)
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        rect = new Rect(0, 0, 10, 10)
+      }
+    }
     val rectF = new RectF(rect)
 
     paint.setAntiAlias(true)
@@ -36,10 +68,21 @@ object BitmapUtils {
 
     output
   }
-  
+
   def getCroppedBitmap(bitmap: Bitmap, recycle: Boolean = true): Bitmap = {
-    val min = math.min(bitmap.getWidth,bitmap.getHeight)
-    val output = ThumbnailUtils.extractThumbnail(bitmap,min,min)
+
+    var min = 10
+    try {
+      min = math.min(bitmap.getWidth, bitmap.getHeight)
+    }
+    catch {
+      case e: Exception => {
+        e.printStackTrace()
+        min = 10
+      }
+    }
+
+    val output = ThumbnailUtils.extractThumbnail(bitmap, min, min)
     if (recycle) bitmap.recycle()
     output
   }

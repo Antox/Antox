@@ -10,6 +10,6 @@
         android:name="chat.tox.antox.fragments.MainDrawerFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/fragment_main_drawer"/>
+        tools:layout="@layout/fragment_main_drawer" />
 
 </LinearLayout>

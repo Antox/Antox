@@ -4,7 +4,7 @@ import android.content.Context
 import chat.tox.antox.av.{StridedYuvFrame, YuvFrame}
 import chat.tox.antox.wrapper.CallNumber
 import im.tox.tox4j.av.callbacks.ToxAvEventListener
-import im.tox.tox4j.av.data.{Width, Height, SamplingRate, AudioChannels}
+import im.tox.tox4j.av.data.{AudioChannels, Height, SamplingRate, Width}
 import im.tox.tox4j.av.enums.ToxavFriendCallState
 import im.tox.tox4j.core.data.ToxFriendNumber
 
@@ -23,7 +23,7 @@ class ToxavCallbackListener(ctx: Context) extends ToxAvEventListener[Unit] {
     callStateCallback.callState(CallNumber.fromFriendNumber(friendNumber), callState)(Unit)
   }
 
-  override def audioReceiveFrame(friendNumber: ToxFriendNumber, pcm: Array[Short], channels: AudioChannels, samplingRate : SamplingRate)(state: Unit): Unit = {
+  override def audioReceiveFrame(friendNumber: ToxFriendNumber, pcm: Array[Short], channels: AudioChannels, samplingRate: SamplingRate)(state: Unit): Unit = {
     audioReceiveFrameCallback.audioReceiveFrame(CallNumber.fromFriendNumber(friendNumber), pcm, channels, samplingRate)(Unit)
   }
 

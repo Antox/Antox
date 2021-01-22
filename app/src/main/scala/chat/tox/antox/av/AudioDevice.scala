@@ -9,15 +9,16 @@ abstract class AudioDevice(var _sampleRate: Int, var _channels: Int) {
 
   //getters
   protected def sampleRate = _sampleRate
+
   protected def channels = _channels
 
   //setters
-  protected def sampleRate_= (sampleRate: Int): Unit = {
+  protected def sampleRate_=(sampleRate: Int): Unit = {
     _sampleRate = sampleRate
     dirty = true
   }
 
-  protected def channels_= (channels: Int): Unit = {
+  protected def channels_=(channels: Int): Unit = {
     _channels = channels
     dirty = true
   }

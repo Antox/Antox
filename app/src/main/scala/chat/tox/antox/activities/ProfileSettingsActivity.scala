@@ -21,9 +21,10 @@ import chat.tox.antox.data.State
 import chat.tox.antox.fragments.AvatarDialog
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.ToxSingleton
-import chat.tox.antox.transfer.FileDialog
-import chat.tox.antox.transfer.FileDialog.DirectorySelectedListener
 import chat.tox.antox.wrapper.UserStatus
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
 import com.google.zxing.{BarcodeFormat, WriterException}
 import im.tox.tox4j.core.data.{ToxNickname, ToxStatusMessage}
 import im.tox.tox4j.exceptions.ToxException
@@ -58,9 +59,13 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   private var avatarDialog: AvatarDialog = _
 
   override def onCreate(savedInstanceState: Bundle) {
+
     getDelegate.installViewFactory()
     getDelegate.onCreate(savedInstanceState)
     super.onCreate(savedInstanceState)
+
+    setTitle(getResources.getString(R.string.title_activity_profile_settings))
+
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
@@ -119,13 +124,39 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
     val thisActivity = this
     exportProfile.setOnPreferenceClickListener(new OnPreferenceClickListener {
       override def onPreferenceClick(preference: Preference): Boolean = {
-        val fileDialog = new FileDialog(thisActivity, Environment.getExternalStorageDirectory, true)
-        fileDialog.addDirectoryListener(new DirectorySelectedListener {
-          override def directorySelected(directory: File): Unit = {
-            onExportDataFileSelected(directory)
+
+        val path = Environment.getExternalStorageDirectory
+
+        val properties: DialogProperties = new DialogProperties()
+        properties.selection_mode = DialogConfigs.SINGLE_MODE
+        properties.selection_type = DialogConfigs.DIR_SELECT
+        properties.root = path
+        properties.error_dir = path
+        properties.extensions = null
+        val dialog: FilePickerDialog = new FilePickerDialog(thisActivity, properties)
+        dialog.setTitle(R.string.select_file)
+
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+          override def onSelectedFilePaths(files: Array[String]) = {
+            // files is the array of the paths of files selected by the Application User.
+            // since we only want single file selection, use the first entry
+            if (files != null) {
+              if (files.length > 0) {
+                if (files(0) != null) {
+                  if (files(0).length > 0) {
+                    val directory: File = new File(files(0))
+                    onExportDataFileSelected(directory)
+                  }
+                }
+              }
+              else {
+                onExportDataFileSelected(path)
+              }
+            }
           }
         })
-        fileDialog.showDialog()
+
+        dialog.show()
         true
       }
     })
@@ -218,9 +249,9 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
         clipboard.setText(sharedPreferences.getString("tox_id", ""))
       }
     })
-    var file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/")
-    if (!file.exists()) {
-      file.mkdirs()
+    val dir = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/")
+    if (!dir.exists) {
+      dir.mkdirs()
     }
     val noMedia = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/", ".nomedia")
     if (!noMedia.exists()) {
@@ -231,7 +262,7 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
       }
     }
 
-    file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")
+    val file = new File(Environment.getExternalStorageDirectory.getPath + "/Antox/userkey_qr.png")
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
     generateQR(pref.getString("tox_id", ""))
     val bmp = BitmapFactory.decodeFile(file.getAbsolutePath)
@@ -254,16 +285,16 @@ class ProfileSettingsActivity extends BetterPreferenceActivity {
   def createCopyToClipboardDialog(prefKey: String, dialogPositiveString: String, dialogNeutralString: String): Unit = {
     val builder = new AlertDialog.Builder(ProfileSettingsActivity.this)
     val pref = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this.getApplicationContext)
-    builder.setTitle(pref.getString(prefKey,""))
+    builder.setTitle(pref.getString(prefKey, ""))
     builder.setPositiveButton(dialogPositiveString, null)
     builder.setNeutralButton(dialogNeutralString,
       new DialogInterface.OnClickListener() {
-      def onClick(dialogInterface: DialogInterface, ID: Int) {
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
-        val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
-        clipboard.setText(sharedPreferences.getString(prefKey, ""))
-      }
-    })
+        def onClick(dialogInterface: DialogInterface, ID: Int) {
+          val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ProfileSettingsActivity.this)
+          val clipboard = ProfileSettingsActivity.this.getSystemService(Context.CLIPBOARD_SERVICE).asInstanceOf[android.text.ClipboardManager]
+          clipboard.setText(sharedPreferences.getString(prefKey, ""))
+        }
+      })
     builder.create().show()
   }
 

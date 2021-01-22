@@ -1,7 +1,7 @@
 package chat.tox.antox.av
 
 import android.media.AudioRecord
-import android.media.audiofx.{AutomaticGainControl, AcousticEchoCanceler, LoudnessEnhancer}
+import android.media.audiofx.{AcousticEchoCanceler, AutomaticGainControl, LoudnessEnhancer}
 
 class CallAudioEffects(audioRecord: AudioRecord) {
 

@@ -16,7 +16,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
   def setAllStatusNone(): Unit = {
     if (!ToxSingleton.isToxConnected(preferences, ctx)) {
-      for (friendInfo  <- State.db.friendInfoList.toBlocking.first) {
+      for (friendInfo <- State.db.friendInfoList.toBlocking.first) {
         friendConnectionStatus(friendInfo, ToxConnection.NONE)(Unit)
       }
     }
@@ -48,7 +48,7 @@ class AntoxOnConnectionStatusCallback(private var ctx: Context) extends FriendCo
 
     if (online) {
       MessageHelper.sendUnsentMessages(friendInfo.key, ctx)
-      State.transfers.updateSelfAvatar(ctx)
+      State.transfers.updateSelfAvatar(ctx, false)
     } else {
       ToxSingleton.typingMap.put(friendInfo.key, false)
       State.typing.onNext(true)

@@ -5,7 +5,7 @@ import android.graphics._
 import android.renderscript._
 import android.view.{Surface, TextureView, View}
 import chat.tox.antox.ScriptC_yuvToRgb
-import chat.tox.antox.utils.{UiUtils, AntoxLog}
+import chat.tox.antox.utils.{AntoxLog, UiUtils}
 import org.apache.commons.collections4.queue.CircularFifoQueue
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 import rx.lang.scala.{Observable, Subscription}
@@ -34,7 +34,7 @@ class VideoDisplay(activity: Activity, videoFrameObservable: Observable[StridedY
     callVideoFrameSubscription = Some(videoFrameObservable
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(frame => {
-        if(logging) AntoxLog.debug(s"got a new frame at ${System.currentTimeMillis()}")
+        if (logging) AntoxLog.debug(s"got a new frame at ${System.currentTimeMillis()}")
         videoBuffer.add(frame)
       }))
   }
@@ -99,11 +99,11 @@ class Renderer(activity: Activity,
       }
     }
 
-    if(logging) AntoxLog.debug("Got surface texture.")
+    if (logging) AntoxLog.debug("Got surface texture.")
 
     for (surfaceTexture <- mSurfaceTexture) {
 
-      if(logging) AntoxLog.debug("Initialised window surface.")
+      if (logging) AntoxLog.debug("Initialised window surface.")
 
       while (active) {
         try {
@@ -119,7 +119,7 @@ class Renderer(activity: Activity,
 
       surfaceTexture.release()
 
-      if(logging) AntoxLog.debug("Renderer thread exiting.")
+      if (logging) AntoxLog.debug("Renderer thread exiting.")
     }
 
   }
@@ -169,7 +169,7 @@ class Renderer(activity: Activity,
   def printFps(): Unit = {
     if (System.currentTimeMillis() - lastFrameTime >= 1000) {
       lastFrameTime = System.currentTimeMillis()
-      if(logging) println(s"current fps $framesRendered")
+      if (logging) println(s"current fps $framesRendered")
       framesRendered = 0
     }
   }
@@ -186,9 +186,9 @@ class Renderer(activity: Activity,
 
     if (dirty) recreate(surfaceTexture, videoFrame.yStride, videoFrame.uStride, videoFrame.vStride)
 
-    if(logging) println(s"recreation took ${System.currentTimeMillis() - startRecreateTime}")
+    if (logging) println(s"recreation took ${System.currentTimeMillis() - startRecreateTime}")
 
-    if(logging) println("rendering to the surface")
+    if (logging) println("rendering to the surface")
 
     printFps()
 
@@ -198,18 +198,18 @@ class Renderer(activity: Activity,
     yAllocation.copyFrom(videoFrame.yuvData.y)
     uAllocation.copyFrom(videoFrame.yuvData.u)
     vAllocation.copyFrom(videoFrame.yuvData.v)
-    if(logging) AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
+    if (logging) AntoxLog.debug(s"packing took ${System.currentTimeMillis() - startPackingTime}")
 
     yuvToRgbScript.forEach_yuvToRgb(emptyAllocation, outAllocation)
     outAllocation.ioSend()
 
-    if(logging) AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
+    if (logging) AntoxLog.debug(s"conversion took ${System.currentTimeMillis() - startConversionTime}")
 
     framesRendered += 1
   }
 
   def stop(): Unit = {
-    if(logging) println("renderer stopped")
+    if (logging) println("renderer stopped")
     videoBuffer.clear()
     active = false
   }

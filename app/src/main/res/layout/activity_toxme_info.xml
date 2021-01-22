@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/toxme_dialog"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#5e7c88"
+    android:padding="@dimen/padding"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:weightSum="1">
+
+    <TextView
+        android:textColorLink="@color/white_absolute"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:linksClickable="true"
+        android:textSize="@dimen/text_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toxme_website"
+        android:id="@+id/toxme_info_website"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_marginTop="30dp"
+        android:textSize="@dimen/text_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toxme_info1"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/text_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toxme_info2"
+        android:layout_gravity="center_horizontal" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textColorLink="@color/white_absolute"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/toxme_info_source"
+            android:id="@+id/toxme_source"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:src="@drawable/toxme"
+            android:layout_above="@+id/toxme_source"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="31dp" />
+    </RelativeLayout>
+
+</LinearLayout>

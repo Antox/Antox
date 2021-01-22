@@ -1,10 +1,7 @@
 package chat.tox.antox.transfer
 
 import java.io._
-import java.nio.ByteBuffer
-import android.graphics.Bitmap.CompressFormat
-import android.graphics.{Bitmap, BitmapFactory}
-import android.media.ExifInterface
+
 import chat.tox.antox.transfer.FileStatus.FileStatus
 import chat.tox.antox.utils.Constants
 import chat.tox.antox.wrapper.{ContactKey, FileKind}
@@ -38,6 +35,7 @@ class FileTransfer(val key: ContactKey,
   private var _inputStream: Option[FileInputStream] = None
 
   private var _bInputStream: Option[BufferedInputStream] = None
+  // private var _bInputStream: Option[InputStream] = None
 
   def progress: Long = {
     progressHistory.last._2
@@ -85,20 +83,25 @@ class FileTransfer(val key: ContactKey,
         val input = new FileInputStream(file)
         if (input != null) {
           _inputStream = Some(input)
+          // -----------------------------
+          // -----------------------------
           try {
             val splitFileName = file.getName.split("\\.")
-            val extension = splitFileName(splitFileName.length-1)
-            val bInput = if(stripExifData && Constants.EXIF_FORMATS.contains(extension.toLowerCase)){
+            val extension = splitFileName(splitFileName.length - 1)
+            val bInput = if (stripExifData && Constants.EXIF_FORMATS.contains(extension.toLowerCase)) {
               val bFile = new Array[Byte](file.length().toInt)
               input.read(bFile)
               val baos = new ByteArrayOutputStream()
               val rw = new ExifRewriter()
-              rw.removeExifMetadata(bFile,baos)
+              rw.removeExifMetadata(bFile, baos)
               baos.close()
               new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray))
-
             }
-            else new BufferedInputStream(input)
+            else {
+              new BufferedInputStream(input)
+            }
+            // -----------------------------
+            // -----------------------------
             if (bInput != null) {
               _bInputStream = Some(bInput)
             }
@@ -114,15 +117,87 @@ class FileTransfer(val key: ContactKey,
     }
   }
 
-  def readData(reset: Boolean, chunkSize: Integer): Option[Array[Byte]] = {
+  def resumeInputStream(pos: Long) = {
+    if (sending) {
+
+      try {
+        _bInputStream match {
+          case Some(s) =>
+            s.close()
+          case None =>
+        }
+
+        _inputStream match {
+          case Some(s) =>
+            s.close()
+          case None =>
+        }
+
+        val input = new FileInputStream(file)
+        if (input != null) {
+          _inputStream = Some(input)
+          // -----------------------------
+          // -----------------------------
+          try {
+            val splitFileName = file.getName.split("\\.")
+            val extension = splitFileName(splitFileName.length - 1)
+            val bInput = if (stripExifData && Constants.EXIF_FORMATS.contains(extension.toLowerCase)) {
+              val bFile = new Array[Byte](file.length().toInt)
+              input.read(bFile)
+              val baos = new ByteArrayOutputStream()
+              val rw = new ExifRewriter()
+              rw.removeExifMetadata(bFile, baos)
+              baos.close()
+              val bis = new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray))
+              var skipped: Long = 0
+              skipped = bis.skip(pos - 1)
+              while (skipped < (pos - 1)) {
+                // skip until wanted position is reached
+                skipped = skipped + bis.skip((pos - 1) - skipped)
+              }
+              bis
+            }
+            else {
+              val bis = new BufferedInputStream(input)
+              var skipped: Long = 0
+              skipped = bis.skip(pos - 1)
+              while (skipped < (pos - 1)) {
+                // skip until wanted position is reached
+                skipped = skipped + bis.skip((pos - 1) - skipped)
+              }
+              bis
+            }
+            // -----------------------------
+            // -----------------------------
+            if (bInput != null) {
+              _bInputStream = Some(bInput)
+            }
+          } catch {
+            case e: Exception => e.printStackTrace()
+          }
+        } else {
+          _inputStream = None
+        }
+      } catch {
+        case e: Exception => e.printStackTrace()
+      }
+    }
+  }
+
+
+  //def readData(reset: Boolean, chunkSize: Integer): Option[Array[Byte]] = {
+  def readData(pos: Long, progress: Long, chunkSize: Integer): Option[Array[Byte]] = {
     //Log.d(TAG, "reading data from " + file.getPath)
-    createInputStream()
+
+    if (pos != progress) {
+      // we need to seek. close inputstream, open it and skip some bytes
+      resumeInputStream(pos)
+    }
+    else {
+      createInputStream()
+    }
     _bInputStream match {
       case Some(s) =>
-        if (reset) {
-          s.reset()
-        }
-        s.mark(chunkSize)
         val data = new Array[Byte](chunkSize)
         s.read(data, 0, chunkSize)
         Some(data)

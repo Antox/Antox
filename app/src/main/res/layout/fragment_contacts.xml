@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/contact_list"
+<LinearLayout android:id="@+id/contact_list"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -19,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/padding_small"
-            android:src="@drawable/ic_action_search"/>
+            android:src="@drawable/ic_action_search" />
 
         <EditText
             android:id="@+id/searchBar"
@@ -33,7 +32,7 @@
             android:textColor="@color/black"
             android:textColorHint="@color/grey_darker"
             android:typeface="normal"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
 
     </LinearLayout>
 
@@ -45,12 +44,12 @@
         android:text="@string/main_recent_no"
         android:textColor="@color/grey_darker"
         android:textSize="@dimen/text_large"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/list_divider"/>
+        android:background="@drawable/list_divider" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -65,9 +64,9 @@
             android:divider="@drawable/list_divider"
             android:dividerHeight="0dp"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="true"/>
+            android:headerDividersEnabled="true" />
 
-        <include layout="@layout/floating_action_button"/>
+        <include layout="@layout/floating_action_button" />
 
     </RelativeLayout>
 </LinearLayout>

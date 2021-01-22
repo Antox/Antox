@@ -1,10 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="title_activity_settings">Paramètres</string>
+  <string name="pref_unsupported">Votre appareil ne supporte pas cette option</string>
   <!--Profile-->
   <string name="pref_header_profile">Profil</string>
   <string name="pref_title_nickname">Pseudonyme</string>
   <string name="pref_default_nickname">Utilisateur d\'Antox</string>
+  <string name="pref_title_password">Mot de passe ToxMe</string>
   <string name="pref_default_password">Mot de passe non rempli</string>
   <string name="pref_title_status">Statut</string>
   <string-array name="pref_status_list_titles">
@@ -16,27 +18,65 @@
   <string name="pref_default_status_message">Bonjour! J\'utilise Antox</string>
   <string name="pref_title_tox_id">Identifiant Tox</string>
   <string name="pref_default_tox_id">Identifiant Tox par défaut - ce champ devrait être caché normalement</string>
+  <string name="pref_title_toxme">Adresse ToxMe</string>
+  <string name="pref_default_toxme">Ce profil est actuellement en mode  incognito</string>
   <string name="pref_title_logging_enabled">Conserver l\'historique des conversations après déconnexion</string>
-  <string name="pref_title_theme_color">Modifier Les Couleurs</string>
+  <string name="pref_title_theme_color">Modifier les couleurs</string>
   <string name="pref_title_avatar">Avatar</string>
   <string name="pref_title_account_name">Nom du profil</string>
   <string name="pref_title_export">Exporter le profil</string>
+  <string name="pref_title_delete">Supprimer le compte</string>
   <string name="pref_title_logout">Se déconnecter</string>
   <!--Notifications-->
   <string name="pref_header_notifications">Notifications</string>
   <string name="pref_title_enable_notifications">Activer les notifications</string>
-  <string name="pref_title_new_message_notifications">Notifications de message</string>
-  <string name="pref_title_new_friend_notifications">Notifications de demandes d\'amis</string>
-  <!--Other-->
-  <string name="pref_header_other">Autres paramètres</string>
+  <string name="pref_title_new_message_notifications">Notifications des messages</string>
+  <string name="pref_title_new_friend_notifications">Notifications lors des demandes d\'ajout</string>
+  <string name="pref_title_persistent_notification">Notification persistante</string>
+  <string name="pref_title_notification_vibrate">Vibrer</string>
+  <string name="pref_title_notification_sound">Jouer un son</string>
+  <string name="pref_title_notification_light">Faire clignoter la LED</string>
+  <string name="pref_description_notification_vibrate">Vibrer</string>
+  <string name="pref_description_notification_sound">Jouer un son</string>
+  <!--Input-->
+  <string name="pref_header_input">Entrée</string>
+  <string name="pref_enable_autocorrect">Activer l\'autocorrection</string>
+  <string name="pref_keyboard_hotkey">Changer le raccourci clavier</string>
+  <string-array name="pref_keyboard_hotkey_titles">
+    <item>Envoyer</item>
+    <item>Émoticônes</item>
+    <item>Entrée</item>
+  </string-array>
+  <!--Network-->
+  <string name="pref_header_network">Réseau</string>
   <string name="pref_title_connection_status_messages">Messages des actions</string>
   <string name="pref_title_wifi_only">Se connecter exclusivement en Wi-Fi</string>
+  <string name="pref_udp">Activer UDP</string>
+  <string name="pref_title_enable_proxy">Activer le serveur proxy</string>
+  <string name="pref_title_proxy_type">Type du serveur proxy</string>
+  <string name="pref_title_proxy_address">Adresse du serveur proxy</string>
+  <string name="pref_title_proxy_port">Port du serveur proxy</string>
+  <string name="pref_title_custom_node">Utiliser un noeud de bootstrap personalisé</string>
+  <string name="pref_title_custom_node_address">Adresse du serveur bootstrap</string>
+  <string name="pref_title_custom_node_port">Port du serveur bootstrap</string>
+  <string name="pref_title_custom_node_public_key">Clée publique du serveur bootstrap</string>
+  <string name="error_invalid_tox_id">Clef Publique Invalide</string>
+  <string name="error_invalid_ip_address">Adresse IP Invalide</string>
+  <string name="error_invalid_port">Port invalide. Veuillez entrer un numéro de port compris entre 1 et 65535, s\'il vous plait</string>
+  <!--Calls-->
+  <string name="pref_header_calls">Appels</string>
+  <string name="pref_title_enable_call_event_logging">Journalisation des appels</string>
+  <string name="pref_enable_videocallstartwithnovideo">Démarrer l\'appel vidéo avec la vidéo désactivée</string>
+  <!--Other-->
+  <string name="pref_header_other">Autres paramètres</string>
   <string name="pref_title_language">Langue</string>
   <!--Menu strings-->
   <string name="copy_tox_id">Copier l\'identifiant Tox</string>
   <!--Advanced strings-->
-  <string name="pref_udp">Activer UDP</string>
+  <string name="pref_enable_batterysavingmode">[Experimental] Mode économie d\'énergie</string>
+  <string name="pref_strip_exif">Retirer les données EXIF des images</string>
+  <string name="pref_enable_autoaccept">Accepter les fichiers automatiquement</string>
   <string name="pref_advanced">Paramètres Avancés</string>
-  <string name="pref_nospam">Remettre l\'identifiant Tox</string>
+  <string name="pref_nospam">Réinitialiser l\'identifiant Tox</string>
   <string name="pref_autostart">Lancer Antox au démarrage</string>
 </resources>

@@ -7,4 +7,5 @@ object CallNumber {
     CallNumber(friendNumber.value)
   }
 }
+
 final case class CallNumber(value: Int) extends AnyVal

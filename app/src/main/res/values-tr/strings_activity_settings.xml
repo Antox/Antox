@@ -1,39 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-  <string name="title_activity_settings">Ayarlar</string>
-  <!--Profile-->
-  <string name="pref_header_profile">Profil</string>
-  <string name="pref_title_nickname">Ad</string>
-  <string name="pref_default_nickname">Antox User</string>
-  <string name="pref_title_status">Durum</string>
-  <string-array name="pref_status_list_titles">
-    <item>Çevrimiçi</item>
-    <item>Dışarıda</item>
-    <item>Meşgul</item>
-  </string-array>
-  <string name="pref_title_status_message">Durum Mesajı</string>
-  <string name="pref_default_status_message">Hey! I\'m using Antox</string>
-  <string name="pref_title_tox_id">Tox ID</string>
-  <string name="pref_title_logging_enabled">Sohbet Geçmişini Oturum Sonlandığında Koru</string>
-  <string name="pref_title_theme_color">Tema Rengini Değiştir</string>
-  <string name="pref_title_avatar">Avatar</string>
-  <string name="pref_title_account_name">Profil Adı</string>
-  <string name="pref_title_export">Profili Dışa Aktar</string>
-  <string name="pref_title_logout">Oturumu kapat</string>
-  <!--Notifications-->
-  <string name="pref_header_notifications">Bildirimler</string>
-  <string name="pref_title_enable_notifications">Bildirimleri etkinleştir</string>
-  <string name="pref_title_new_message_notifications">Mesaj bildirimleri</string>
-  <string name="pref_title_new_friend_notifications">Arkadaşlık isteği bildirimleri</string>
-  <!--Other-->
-  <string name="pref_header_other">Diğer</string>
-  <string name="pref_title_wifi_only">Yalnızca Wi-Fi</string>
-  <string name="pref_title_language">Dil</string>
-  <!--Menu strings-->
-  <string name="copy_tox_id">Tox ID\'yi Kopyala</string>
-  <!--Advanced strings-->
-  <string name="pref_udp">UDP Etkin</string>
-  <string name="pref_advanced">Gelişmiş</string>
-  <string name="pref_nospam">Tox ID\'yi Sıfırla</string>
-  <string name="pref_autostart">Antox\'u Başlangıçta Başlat</string>
+    <string name="title_activity_settings">Ayarlar</string>
+    <!--Profile-->
+    <string name="pref_header_profile">Profil</string>
+    <string name="pref_title_nickname">Ad</string>
+    <string name="pref_default_nickname">Antox User</string>
+    <string name="pref_title_status">Durum</string>
+    <string-array name="pref_status_list_titles">
+        <item>Çevrimiçi</item>
+        <item>Dışarıda</item>
+        <item>Meşgul</item>
+    </string-array>
+    <string name="pref_title_status_message">Durum Mesajı</string>
+    <string name="pref_default_status_message">Hey! I\'m using Antox</string>
+    <string name="pref_title_tox_id">Tox ID</string>
+    <string name="pref_title_logging_enabled">Sohbet Geçmişini Oturum Sonlandığında Koru</string>
+    <string name="pref_title_theme_color">Tema Rengini Değiştir</string>
+    <string name="pref_title_avatar">Avatar</string>
+    <string name="pref_title_account_name">Profil Adı</string>
+    <string name="pref_title_export">Profili Dışa Aktar</string>
+    <string name="pref_title_logout">Oturumu kapat</string>
+    <!--Notifications-->
+    <string name="pref_header_notifications">Bildirimler</string>
+    <string name="pref_title_enable_notifications">Bildirimleri etkinleştir</string>
+    <string name="pref_title_new_message_notifications">Mesaj bildirimleri</string>
+    <string name="pref_title_new_friend_notifications">Arkadaşlık isteği bildirimleri</string>
+    <!--Other-->
+    <string name="pref_header_other">Diğer</string>
+    <string name="pref_title_wifi_only">Yalnızca Wi-Fi</string>
+    <string name="pref_title_language">Dil</string>
+    <!--Menu strings-->
+    <string name="copy_tox_id">Tox ID\'yi Kopyala</string>
+    <!--Advanced strings-->
+    <string name="pref_udp">UDP Etkin</string>
+    <string name="pref_advanced">Gelişmiş</string>
+    <string name="pref_nospam">Tox ID\'yi Sıfırla</string>
+    <string name="pref_autostart">Antox\'u Başlangıçta Başlat</string>
 </resources>

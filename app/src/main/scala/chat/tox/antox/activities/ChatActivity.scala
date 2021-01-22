@@ -14,15 +14,17 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget._
 import chat.tox.antox.R
-import chat.tox.antox.av.{CameraUtils, Call}
+import chat.tox.antox.av.{Call, CameraUtils}
 import chat.tox.antox.data.State
 import chat.tox.antox.theme.ThemeManager
 import chat.tox.antox.tox.{MessageHelper, ToxSingleton}
-import chat.tox.antox.transfer.FileDialog
 import chat.tox.antox.utils.StringExtensions.RichString
 import chat.tox.antox.utils.ViewExtensions.RichView
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.{DialogConfigs, DialogProperties}
+import com.github.angads25.filepicker.view.FilePickerDialog
 import de.hdodenhof.circleimageview.CircleImageView
 import im.tox.tox4j.core.data.ToxFileId
 import im.tox.tox4j.core.enums.ToxMessageType
@@ -43,11 +45,14 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
   override def getKey(key: String): FriendKey = new FriendKey(key)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
+
     super.onCreate(savedInstanceState)
     val thisActivity = this
 
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     ThemeManager.applyTheme(this, getSupportActionBar)
+
+    //findViewById(R.id.info).setVisibility(View.GONE)
 
     /* Set up on click actions for attachment buttons. Could possible just add onClick to the XML?? */
     val attachmentButton = findViewById(R.id.attachment_button)
@@ -67,15 +72,34 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
           return
         }
 
-        val path = new File(Environment.getExternalStorageDirectory + "//DIR//")
-        val fileDialog = new FileDialog(thisActivity, path, false)
-        fileDialog.addFileListener(new FileDialog.FileSelectedListener() {
-          def fileSelected(file: File) {
-            State.transfers.sendFileSendRequest(file.getPath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+        val path = Environment.getExternalStorageDirectory
+        val properties: DialogProperties = new DialogProperties()
+        properties.selection_mode = DialogConfigs.SINGLE_MODE
+        properties.selection_type = DialogConfigs.FILE_SELECT
+        properties.root = path
+        properties.error_dir = path
+        properties.extensions = null
+        val dialog: FilePickerDialog = new FilePickerDialog(thisActivity, properties)
+        dialog.setTitle(R.string.select_file)
+
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+          override def onSelectedFilePaths(files: Array[String]) = {
+            // files is the array of the paths of files selected by the Application User.
+            // since we only want single file selection, use the first entry
+            if (files != null) {
+              if (files.length > 0) {
+                if (files(0) != null) {
+                  if (files(0).length > 0) {
+                    val filePath: String = new File(files(0)).getAbsolutePath()
+                    State.transfers.sendFileSendRequest(filePath, activeKey, FileKind.DATA, ToxFileId.empty, thisActivity)
+                  }
+                }
+              }
+            }
           }
         })
-        fileDialog.showDialog()
 
+        dialog.show()
       }
     })
 
@@ -88,11 +112,11 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
 
         val cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-        val imageName = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
+        val image_name = "Antoxpic " + new SimpleDateFormat("hhmm").format(new Date()) + " "
 
         val storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         try {
-          val file = File.createTempFile(imageName, ".jpg", storageDir)
+          val file = File.createTempFile(image_name, ".jpg", storageDir)
           val imageUri = Uri.fromFile(file)
           cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
           photoPath = Some(file.getAbsolutePath)
@@ -141,8 +165,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
       .subscribeOn(IOScheduler())
       .observeOn(AndroidMainThreadScheduler())
       .subscribe(fi => {
-      updateDisplayedState(fi)
-    })
+        updateDisplayedState(fi)
+      })
 
     activeCallSubscription =
       Some(State.callManager.activeCallObservable.observeOn(AndroidMainThreadScheduler()).subscribe(activeCalls => {
@@ -182,9 +206,9 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         val avatar = friend.avatar
         avatar.foreach(avatar => {
           val avatarView = this.findViewById(R.id.chat_avatar).asInstanceOf[CircleImageView]
-          val bitmap = BitmapManager.loadBlocking(avatar, isAvatar = true)
-          avatarView.setImageBitmap(bitmap)
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
         })
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
           thisActivity.statusIconView.setBackground(thisActivity.getResources
@@ -222,8 +246,8 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
         }
       }
       if (requestCode == Constants.PHOTO_RESULT) {
-          photoPath.foreach(path => State.transfers.sendFileSendRequest(path, this.activeKey, FileKind.DATA, ToxFileId.empty, this))
-          photoPath = None
+        photoPath.foreach(path => State.transfers.sendFileSendRequest(path, this.activeKey, FileKind.DATA, ToxFileId.empty, this))
+        photoPath = None
       }
     } else {
       AntoxLog.debug("onActivityResult result code not okay, user cancelled")
@@ -238,10 +262,22 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
     startActivity(callActivity)
   }
 
-  override def onClickInfo(clickLocation: Location): Unit = {}
+  override def onClickInfo(): Unit = {
+    val intent = new Intent(this, classOf[FriendProfileActivity])
+    val friendInfo = State.db.getFriendInfo(activeKey)
+    intent.putExtra("key", activeKey.key)
+    intent.putExtra("avatar", friendInfo.avatar)
+
+    intent.putExtra("name", friendInfo.alias.getOrElse(friendInfo.name).toString())
+    startActivity(intent)
+  }
 
   def onClickCall(video: Boolean, clickLocation: Location): Unit = {
-    if (!State.db.getFriendInfo(activeKey).online) return
+    AntoxLog.debug("Calling friend")
+    if (!State.db.getFriendInfo(activeKey).online) {
+      AntoxLog.debug("Friend not online")
+      return
+    }
 
     val activeCalls = State.callManager.calls.filter(_.active)
 
@@ -256,7 +292,7 @@ class ChatActivity extends GenericChatActivity[FriendKey] {
 
       case None =>
         //an active call does not exist, start a new call and start a corresponding activity
-        val call = new Call(CallNumber.fromFriendNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey, incoming = false)
+        val call = Call(CallNumber.fromFriendNumber(ToxSingleton.tox.getFriendNumber(activeKey)), activeKey, incoming = false)
         State.callManager.add(call)
         call.startCall(sendingAudio = true, sendingVideo = video)
 

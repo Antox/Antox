@@ -2,7 +2,7 @@ package chat.tox.antox.av
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.graphics.SurfaceTexture
+import android.graphics.{ImageFormat, SurfaceTexture}
 import android.hardware.Camera
 import android.hardware.Camera.PreviewCallback
 import android.view.TextureView
@@ -55,7 +55,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
           try {
             val previewSize = camera.getParameters.getPreviewSize
 
-            val rotation = CameraUtils.getCameraRotation(activity, antoxCamera, hack = true)
+            //The getCameraRotation takes about 200ms per frame - needed to be optimized also, or rotate on the receiver client side
+            val rotation = 0
             val frame = NV21Frame(previewSize.width, previewSize.height, data, rotation)
 
             frameBuffer.add(frame)
@@ -67,6 +68,8 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
       }
 
       //camera.addCallbackBuffer()
+      FormatConversions.updateFrameSettings(camera.getParameters.getPreviewSize.height * camera.getParameters.getPreviewSize.width
+        * (ImageFormat.getBitsPerPixel(camera.getParameters.getPreviewFormat())) / 8)
       camera.setPreviewCallback(previewCallback)
       camera.startPreview()
     } catch {
@@ -108,7 +111,7 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
       println("couldn't find a nice resolution")
       UiUtils.adjustAspectRatio(activity, previewView, closestSize.width, closestSize.height)
     } else { */
-      // could find a nice resolution (yay), scale the textureview
+    // could find a nice resolution (yay), scale the textureview
     println("could find a nice resolution")
     val layoutParams = previewView.getLayoutParams
     layoutParams.width = if (vertical) closestSize.height else closestSize.width
@@ -121,26 +124,23 @@ class CameraDisplay(activity: Activity, previewView: TextureView, previewWrapper
     camera.setParameters(newParameters)
   }
 
-  override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-    if (!active) return
+  override def onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int): Unit =
+    if (active)
+      maybeCamera.foreach(create(_, surface))
 
-    maybeCamera.foreach(create(_, surface))
-  }
+  override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit =
+    if (active) {
+      maybeCamera.foreach(camera => {
+        try {
+          camera.stopPreview()
+        } catch {
+          case e: Exception =>
+            e.printStackTrace()
+        }
 
-  override def onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int): Unit = {
-    if (!active) return
-
-    maybeCamera.foreach(camera => {
-      try {
-        camera.stopPreview()
-      } catch {
-        case e: Exception =>
-          e.printStackTrace()
-      }
-
-      recreate(camera, surface)
-    })
-  }
+        recreate(camera, surface)
+      })
+    }
 
   //do nothing, we don't care
   override def onSurfaceTextureUpdated(surface: SurfaceTexture): Unit = {}

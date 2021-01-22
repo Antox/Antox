@@ -61,6 +61,7 @@ class CallService(toxService: ToxService) {
 
   def destroy(): Unit = {
     toxService.stopForeground(true)
+    toxService.stopSelf()
 
     AntoxNotificationManager.stopMonitoringCalls()
     callAddedSubscription.foreach(_.unsubscribe())

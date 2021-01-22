@@ -5,11 +5,11 @@ import chat.tox.antox.toxme.ToxMe.PrivacyLevel.PrivacyLevel
 import chat.tox.antox.toxme.ToxMe.RequestAction.EncryptedRequestAction
 import chat.tox.antox.toxme.ToxMeError.ToxMeError
 import chat.tox.antox.utils.AntoxLog
-import com.squareup.okhttp.Request.Builder
-import com.squareup.okhttp.{MediaType, OkHttpClient, RequestBody}
-import org.abstractj.kalium.crypto.Box
-import org.abstractj.kalium.encoders.Raw
+import okhttp3.Request.Builder
+import okhttp3.{MediaType, OkHttpClient, RequestBody}
 import org.json.JSONObject
+import org.libsodium.jni.crypto.Box
+import org.libsodium.jni.encoders.Raw
 import org.scaloid.common.LoggerTag
 import rx.lang.scala.Observable
 import rx.lang.scala.schedulers.IOScheduler
@@ -25,13 +25,13 @@ object ToxMe {
 
   private def epoch = System.currentTimeMillis() / 1000
 
- /**
-  * Performs a lookup and returns the Tox ID registered to the given toxMeName.
-  *
-  * @param rawToxMeName the ToxMe name to lookup
-  * @return the ID or None if the name is not found or no domain is supplied
-  */
-  def lookup(rawToxMeName: String): Observable[Option[String]] = {
+  /**
+    * Performs a lookup and returns the Tox ID registered to the given toxMeName.
+    *
+    * @param rawToxMeName the ToxMe name to lookup
+    * @return the ID or None if the name is not found or no domain is supplied
+    */
+  def lookup(rawToxMeName: String, proxy: Option[java.net.Proxy]): Observable[Option[String]] = {
     Observable(subscriber => {
       if (rawToxMeName.contains("@")) {
         val toxMeName = ToxMeName.fromString(rawToxMeName, useToxMe = true)
@@ -40,7 +40,7 @@ object ToxMe {
           json.put("action", RequestAction.LOOKUP)
           json.put("name", toxMeName.username)
 
-          val response = postJson(json, makeApiURL(toxMeName.domain.get))
+          val response = postJson(json, makeApiURL(toxMeName.domain.get), proxy)
           subscriber.onNext(response.right.toOption.map(_.getString("tox_id")))
         } catch {
           case e: Exception =>
@@ -56,14 +56,14 @@ object ToxMe {
   final case class SearchResult(name: String, bio: String)
 
   /**
-   * Search a ToxMe service for a user
-   *
-   * @param query The query to search for
-   * @param domain The ToxMe api URL
-   * @param page The page number
-   * @return A sequence of SearchResult
-   */
-  def search(query: String, domain: String, page: Int = 0): Observable[ToxMeResult[Seq[SearchResult]]] = {
+    * Search a ToxMe service for a user
+    *
+    * @param query  The query to search for
+    * @param domain The ToxMe api URL
+    * @param page   The page number
+    * @return A sequence of SearchResult
+    */
+  def search(query: String, domain: String, proxy: Option[java.net.Proxy], page: Int = 0): Observable[ToxMeResult[Seq[SearchResult]]] = {
     Observable(subscriber => {
       try {
         val json = new JSONObject()
@@ -71,14 +71,14 @@ object ToxMe {
         json.put("name", query)
         json.put("page", page)
 
-        val response = postJson(json, domain)
+        val response = postJson(json, domain, proxy)
         var users = ArrayBuffer[SearchResult]()
-        response match{
+        response match {
           case Left(error) =>
             subscriber.onNext(Left(error))
           case Right(jsonResult) =>
             val results = jsonResult.getJSONArray("users")
-            for(i <- 0 until results.length()) {
+            for (i <- 0 until results.length()) {
               val result = results.getJSONObject(i)
               users += new SearchResult(result.getString("name"), result.getString("bio"))
             }
@@ -93,14 +93,14 @@ object ToxMe {
   }
 
   /**
-   * Performs a https lookup for the given domain to retrieve
-   * the service's public key to be used for encrypted requests.
-   *
-   * If the server does not exist or a network-related error occurs, None is returned.
-   *
-   * @param domain the domain on which to perform the lookup (e.g. toxme.io)
-   * @return the public key of the ToxMe service or None
-   */
+    * Performs a https lookup for the given domain to retrieve
+    * the service's public key to be used for encrypted requests.
+    *
+    * If the server does not exist or a network-related error occurs, None is returned.
+    *
+    * @param domain the domain on which to perform the lookup (e.g. toxme.io)
+    * @return the public key of the ToxMe service or None
+    */
   def lookupPublicKey(domain: String): Option[String] = {
     try {
       val client = new OkHttpClient()
@@ -123,8 +123,8 @@ object ToxMe {
   type ToxMeResult[Success] = Either[ToxMeError, Success]
 
   /**
-   * Different request types for the ToxMe
-   */
+    * Different request types for the ToxMe
+    */
   object RequestAction extends Enumeration {
     type EncryptedRequestAction = Int
     val REGISTRATION = 1
@@ -141,14 +141,14 @@ object ToxMe {
   }
 
   /**
-   * Registers a new account on the specified ToxMe (ToxMeName.domain)
-   *
-   * If the service cannot be contacted, the network is down, or some other error occurs,
-   * the appropriate RegError is returned.
-   *
-   * @return ToxMe request observable that contains password on success, RegError on lookup error
-   */
-  def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData): Observable[ToxMeResult[Password]] = {
+    * Registers a new account on the specified ToxMe (ToxMeName.domain)
+    *
+    * If the service cannot be contacted, the network is down, or some other error occurs,
+    * the appropriate RegError is returned.
+    *
+    * @return ToxMe request observable that contains password on success, RegError on lookup error
+    */
+  def registerAccount(name: ToxMeName, privacyLevel: PrivacyLevel, toxData: ToxData, proxy: Option[java.net.Proxy]): Observable[ToxMeResult[Password]] = {
     Observable[ToxMeResult[Password]](subscriber => {
       val json = new JSONObject
       json.put("tox_id", toxData.address)
@@ -157,39 +157,39 @@ object ToxMe {
       json.put("bio", "")
       json.put("timestamp", epoch)
       subscriber.onNext(
-        makeEncryptedRequest(name, toxData, json, RequestAction.REGISTRATION)
-        .right
-        .map(_.getString("password")))
+        makeEncryptedRequest(name, toxData, json, RequestAction.REGISTRATION, proxy)
+          .right
+          .map(_.getString("password")))
       subscriber.onCompleted()
     }).subscribeOn(IOScheduler())
   }
 
   /**
-   * Deletes an account on the specified ToxMe (ToxMeName.domain)
-   *
-   * If the service cannot be contacted, the network is down, or some other error occurs,
-   * the appropriate RegError is returned.
-   *
-   * @return ToxMe request observable that contains a confirmation string on success. RegError on lookup error
-   */
-  def deleteAccount(name: ToxMeName, toxData: ToxData): Observable[Option[ToxMeError]] = {
+    * Deletes an account on the specified ToxMe (ToxMeName.domain)
+    *
+    * If the service cannot be contacted, the network is down, or some other error occurs,
+    * the appropriate RegError is returned.
+    *
+    * @return ToxMe request observable that contains a confirmation string on success. RegError on lookup error
+    */
+  def deleteAccount(name: ToxMeName, toxData: ToxData, proxy: Option[java.net.Proxy]): Observable[Option[ToxMeError]] = {
     Observable[Option[ToxMeError]](subscriber => {
       val json = new JSONObject
       json.put("public_key", toxData.address.key.toString)
       json.put("timestamp", epoch)
       subscriber.onNext(
-        makeEncryptedRequest(name, toxData, json, RequestAction.DELETION)
-        .left
-        .toOption)
+        makeEncryptedRequest(name, toxData, json, RequestAction.DELETION, proxy)
+          .left
+          .toOption)
       subscriber.onCompleted()
     }).subscribeOn(IOScheduler())
   }
 
-  private def makeEncryptedRequest(name: ToxMeName, toxData: ToxData, json: JSONObject, action: EncryptedRequestAction) = {
+  private def makeEncryptedRequest(name: ToxMeName, toxData: ToxData, json: JSONObject, action: EncryptedRequestAction, proxy: Option[java.net.Proxy]) = {
     val apiURL = makeApiURL(name.domain.get)
 
     encryptRequestJson(name, toxData, json, action)
-      .right.flatMap(postJson(_, apiURL))
+      .right.flatMap(postJson(_, apiURL, proxy))
   }
 
   private def encryptRequestJson(name: ToxMeName, toxData: ToxData, requestJson: JSONObject, requestAction: EncryptedRequestAction): ToxMeResult[JSONObject] = {
@@ -221,20 +221,20 @@ object ToxMe {
 
   private def encryptPayload(unencryptedPayload: JSONObject, toxData: ToxData, publicKey: String): Option[EncryptedPayload] = {
     try {
-      System.load("libkaliumjni.so")
+      System.loadLibrary("sodiumjni")
     } catch {
       case e: UnsatisfiedLinkError =>
         return None
     }
 
-    val hexEncoder = new org.abstractj.kalium.encoders.Hex
+    val hexEncoder = new org.libsodium.jni.encoders.Hex
     val rawEncoder = new Raw
     val toxmePk = publicKey
     val serverPublicKey = hexEncoder.decode(toxmePk)
     val ourSecretKey = Array.ofDim[Byte](32)
     System.arraycopy(toxData.fileBytes, 52, ourSecretKey, 0, 32)
     val box = new Box(serverPublicKey, ourSecretKey)
-    val random = new org.abstractj.kalium.crypto.Random()
+    val random = new org.libsodium.jni.crypto.Random()
     var nonce = random.randomBytes(24)
     var payloadBytes = box.encrypt(nonce, rawEncoder.decode(unencryptedPayload.toString))
     payloadBytes = Base64.encode(payloadBytes, Base64.NO_WRAP)
@@ -244,8 +244,11 @@ object ToxMe {
     Some(EncryptedPayload(payload, nonceString))
   }
 
-  private def postJson(requestJson: JSONObject, toxMeApiUrl: String): ToxMeResult[JSONObject] = {
-    val httpClient = new OkHttpClient()
+  private def postJson(requestJson: JSONObject, toxMeApiUrl: String, proxy: Option[java.net.Proxy]): ToxMeResult[JSONObject] = {
+    val clientBuilder = new OkHttpClient.Builder()
+    proxy.map(clientBuilder.proxy)
+    val httpClient = clientBuilder.build()
+
     try {
       val mediaType = MediaType.parse("application/json; charset=utf-8")
       val requestBody = RequestBody.create(mediaType, requestJson.toString)

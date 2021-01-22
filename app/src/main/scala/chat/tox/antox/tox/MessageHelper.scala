@@ -5,9 +5,11 @@ import chat.tox.antox.activities.{ChatActivity, GroupChatActivity}
 import chat.tox.antox.data.State
 import chat.tox.antox.utils._
 import chat.tox.antox.wrapper._
-import im.tox.tox4j.core.data.{ToxNickname, ToxFriendMessage}
+import im.tox.tox4j.core.data.{ToxFriendMessage, ToxNickname}
 import im.tox.tox4j.core.enums.ToxMessageType
 import org.scaloid.common.LoggerTag
+import rx.lang.scala.Observable
+import rx.lang.scala.schedulers.IOScheduler
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Try
@@ -46,23 +48,29 @@ object MessageHelper {
     }
   }
 
-  def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Int]): Unit = {
+  def sendMessage(ctx: Context, friendKey: FriendKey, msg: String, messageType: ToxMessageType, mDbId: Option[Long]): Unit = {
+    State.setLastIncomingMessageAction()
     val db = State.db
     for (splitMsg <- splitMessage(msg)) {
-      val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromValue(msg.getBytes), messageType)).toOption
-
-      val senderName = ToxSingleton.tox.getName
-      val senderKey = ToxSingleton.tox.getSelfKey
-      mId match {
-        case Some(id) =>
-          mDbId match {
-            case Some(dbId) => db.updateUnsentMessage(id, dbId)
-            case None => db.addMessage(friendKey, senderKey, senderName,
-              splitMsg, hasBeenReceived = false, hasBeenRead = false, successfullySent = true, messageType, messageId = id)
-          }
-        case None => db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
-          hasBeenRead = false, successfullySent = false, messageType)
+      val databaseMessageId: Long = mDbId match {
+        case Some(dbId) => dbId
+        case None => {
+          val senderKey = ToxSingleton.tox.getSelfKey
+          val senderName = ToxSingleton.tox.getName
+          db.addMessage(friendKey, senderKey, senderName, splitMsg, hasBeenReceived = false,
+            hasBeenRead = false, successfullySent = false, messageType)
+        }
       }
+
+      Observable[Boolean](subscriber => {
+        val mId = Try(ToxSingleton.tox.friendSendMessage(friendKey, ToxFriendMessage.unsafeFromValue(msg.getBytes), messageType)).toOption
+
+        mId match {
+          case Some(id) => db.updateUnsentMessage(id, databaseMessageId)
+          case None => AntoxLog.debug(s"SendMessage failed. dbId = $databaseMessageId")
+        }
+        subscriber.onCompleted()
+      }).subscribeOn(IOScheduler()).subscribe()
     }
   }
 
@@ -120,14 +128,14 @@ object MessageHelper {
     AntoxLog.debug(s"Sending ${unsentMessageList.length} unsent messages.", TAG)
 
     for (unsentMessage <- unsentMessageList) {
-        contactKey match {
-          case key: FriendKey =>
-            sendMessage(ctx, key, unsentMessage.message,
-              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-          case key: GroupKey =>
-            sendGroupMessage(ctx, key, unsentMessage.message,
-              MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
-        }
+      contactKey match {
+        case key: FriendKey =>
+          sendMessage(ctx, key, unsentMessage.message,
+            MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
+        case key: GroupKey =>
+          sendGroupMessage(ctx, key, unsentMessage.message,
+            MessageType.toToxMessageType(unsentMessage.`type`), Some(unsentMessage.id))
+      }
     }
   }
 }

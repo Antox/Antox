@@ -31,6 +31,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
   private var rootLayout: FrameLayout = _
 
   protected override def onCreate(savedInstanceState: Bundle) {
+
     super.onCreate(savedInstanceState)
     overridePendingTransition(0, 0)
 
@@ -50,7 +51,7 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
 
     setContentView(R.layout.activity_call)
 
-    activeKey = new FriendKey(getIntent.getStringExtra("key"))
+    activeKey = FriendKey(getIntent.getStringExtra("key"))
     val callNumber = CallNumber(getIntent.getIntExtra("call_number", -1))
     call =
       State.callManager.get(callNumber).getOrElse({
@@ -181,5 +182,12 @@ class CallActivity extends FragmentActivity with CallReplySelectedListener {
     super.onDestroy()
 
     compositeSubscription.unsubscribe()
+  }
+
+  override def onBackPressed(): Unit = {
+    if (call.active && call.ringing) {
+      call.end()
+    }
+    super.onBackPressed()
   }
 }

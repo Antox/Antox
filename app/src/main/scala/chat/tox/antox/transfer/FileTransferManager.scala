@@ -1,18 +1,16 @@
 package chat.tox.antox.transfer
 
-import java.io._
-import java.nio.ByteBuffer
+import java.io.{ByteArrayOutputStream, File, FileInputStream}
 
 import android.content.Context
-import android.graphics.Bitmap.CompressFormat
-import android.graphics.BitmapFactory
 import android.os.Environment
 import android.preference.PreferenceManager
+import chat.tox.antox.Utils2
 import chat.tox.antox.data.State
 import chat.tox.antox.tox.{IntervalLevels, Intervals, ToxSingleton}
-import chat.tox.antox.utils.{Constants, AntoxLog, BitmapManager}
+import chat.tox.antox.utils.{AntoxLog, BitmapManager, Constants}
 import chat.tox.antox.wrapper.FileKind.AVATAR
-import chat.tox.antox.wrapper.{FriendKey, ContactKey, FileKind}
+import chat.tox.antox.wrapper.{ContactKey, FileKind, FriendKey}
 import im.tox.tox4j.core.data.{ToxFileId, ToxFilename, ToxNickname}
 import im.tox.tox4j.core.enums.ToxFileControl
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter
@@ -24,7 +22,13 @@ class FileTransferManager extends Intervals {
   private var _transfers: Map[Long, FileTransfer] = Map[Long, FileTransfer]()
   private var _keyAndFileNumberToId: Map[(ContactKey, Integer), Long] = Map[(ContactKey, Integer), Long]()
 
-  def isTransferring: Boolean = _transfers.exists(_._2.status == FileStatus.IN_PROGRESS)
+  def isTransferring: Boolean = {
+    val ret: Boolean = _transfers.exists(_._2.status == FileStatus.IN_PROGRESS)
+    if (ret) {
+      State.lastFileTransferAction = System.currentTimeMillis()
+    }
+    ret
+  }
 
   override def interval: Int = {
     if (isTransferring) {
@@ -42,9 +46,9 @@ class FileTransferManager extends Intervals {
   def remove(id: Long): Unit = {
     val mTransfer = this.get(id)
     mTransfer match {
-      case Some(t) => 
-    _transfers = _transfers - id
-    _keyAndFileNumberToId = _keyAndFileNumberToId - ((t.key, t.fileNumber))
+      case Some(t) =>
+        _transfers = _transfers - id
+        _keyAndFileNumberToId = _keyAndFileNumberToId - ((t.key, t.fileNumber))
       case None =>
     }
   }
@@ -53,7 +57,7 @@ class FileTransferManager extends Intervals {
     val mId = _keyAndFileNumberToId.get(key, fileNumber)
     mId match {
       case Some(id) => this.remove(id)
-      case None => 
+      case None =>
     }
   }
 
@@ -70,31 +74,45 @@ class FileTransferManager extends Intervals {
   }
 
 
-  def sendFileSendRequest(path: String, key: FriendKey, fileKind: FileKind, fileId: ToxFileId, context: Context): Unit = {
+  def sendFileSendRequest(path2: String, key: FriendKey, fileKind: FileKind, fileId2: ToxFileId, context: Context): Unit = {
     val stripExif = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("strip_exif", true)
+    val path = new File(path2).getAbsolutePath // use absolutepath, just to be sure
     val file = new File(path)
     val splitPath = path.split("/")
     val fileName = splitPath(splitPath.length - 1)
     val splitFileName = file.getName.split("\\.")
-    val extension = splitFileName(splitFileName.length-1)
+    val extension = splitFileName(splitFileName.length - 1)
     AntoxLog.debug("sendFileSendRequest", TAG)
+    var fileId: ToxFileId = fileId2
 
-    val length = if(stripExif && Constants.EXIF_FORMATS.contains(extension.toLowerCase)){
+    if (fileId == ToxFileId.empty) {
+      val hash_string: String = Utils2.getMd5Hash(path + "-" + file.length())
+      if (hash_string == null) {
+        fileId = ToxFileId.empty
+      }
+      else {
+        fileId = ToxFileId.unsafeFromValue(hash_string.getBytes())
+      }
+    }
+
+
+    val length = if (stripExif && Constants.EXIF_FORMATS.contains(extension.toLowerCase)) {
       val input = new FileInputStream(file)
       val bFile = new Array[Byte](file.length().toInt)
       input.read(bFile)
       input.close()
       val baos = new ByteArrayOutputStream()
       val rw = new ExifRewriter()
-      rw.removeExifMetadata(bFile,baos)
+      rw.removeExifMetadata(bFile, baos)
       baos.close()
-      baos.toByteArray.length
+      baos.toByteArray.length.toLong
     }
     else file.length()
 
     val mFileNumber: Option[Int] = try {
       AntoxLog.debug("Creating tox file sender", TAG)
 
+      // send normal file, use the same "id" every time to be able to resume FT --------------
       ToxSingleton.tox.fileSend(key, fileKind.kindId, length, fileId, ToxFilename.unsafeFromValue(fileName.getBytes)) match {
         case -1 => None
         case x => Some(x)
@@ -108,37 +126,36 @@ class FileTransferManager extends Intervals {
     mFileNumber.foreach(fileNumber => {
       val db = State.db
       AntoxLog.debug("adding File Transfer", TAG)
-      val id = db.addFileTransfer(fileNumber, key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true,  length.toInt, fileKind)
+      val id = db.addFileTransfer(fileNumber, key, ToxSingleton.tox.getSelfKey, ToxSingleton.tox.getName, path, hasBeenRead = true, length.toInt, fileKind)
       State.transfers.add(new FileTransfer(key, file, fileNumber, length, 0, true, FileStatus.REQUEST_SENT, id, fileKind, stripExif))
-
     })
   }
 
   def sendFileDeleteRequest(key: FriendKey, fileKind: FileKind, context: Context): Unit = {
-      ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, ToxFileId.empty, ToxFilename.unsafeFromValue("".getBytes))
-      if (fileKind == FileKind.AVATAR) {
-        onSelfAvatarSendFinished(key, context)
-      }
+    ToxSingleton.tox.fileSend(key, AVATAR.kindId, 0, ToxFileId.empty, ToxFilename.unsafeFromValue("".getBytes))
+    if (fileKind == FileKind.AVATAR) {
+      onSelfAvatarSendFinished(key, context)
+    }
   }
 
   /**
-   * Adds a new incoming file request to the database and selects an unconflicting name for the file if necessary.
-   *
-   * Called when there is a new request to receive a file sent by a friend.
-   * (i.e. in [[chat.tox.antox.callbacks.AntoxOnFileRecvCallback]]
-   * This will not start the file transfer until it is accepted using [[acceptFile]]
-   *
-   * @param key ContactKey of the friend sending the file.
-   * @param senderName Name of the friend sending the file.
-   * @param fileNumber File number
-   * @param fileName Name of the file to be received.
-   *                 This will be changed to avoid conflicts if an existing
-   *                 file with the same name exists and 'replaceExisting' is false.
-   * @param fileKind Kind of the incoming file.
-   * @param fileSize Size of the incoming file in bytes.
-   * @param replaceExisting Whether or not to replace an existing file with the same name.
-   * @param context Android context
-   */
+    * Adds a new incoming file request to the database and selects an unconflicting name for the file if necessary.
+    *
+    * Called when there is a new request to receive a file sent by a friend.
+    * (i.e. in [[chat.tox.antox.callbacks.AntoxOnFileRecvCallback]]
+    * This will not start the file transfer until it is accepted using [[acceptFile]]
+    *
+    * @param key             ContactKey of the friend sending the file.
+    * @param senderName      Name of the friend sending the file.
+    * @param fileNumber      File number
+    * @param fileName        Name of the file to be received.
+    *                        This will be changed to avoid conflicts if an existing
+    *                        file with the same name exists and 'replaceExisting' is false.
+    * @param fileKind        Kind of the incoming file.
+    * @param fileSize        Size of the incoming file in bytes.
+    * @param replaceExisting Whether or not to replace an existing file with the same name.
+    * @param context         Android context
+    */
   def fileIncomingRequest(key: ContactKey,
                           senderName: ToxNickname,
                           hasBeenRead: Boolean,
@@ -149,6 +166,7 @@ class FileTransferManager extends Intervals {
                           replaceExisting: Boolean,
                           context: Context) {
     AntoxLog.debug("fileIncomingRequest", TAG)
+
     var fileN = fileName
     val fileSplit = fileName.split("\\.")
     var filePre = ""
@@ -236,12 +254,14 @@ class FileTransferManager extends Intervals {
 
   def fileFinished(key: ContactKey, fileNumber: Integer, context: Context) {
     AntoxLog.debug("fileFinished", TAG)
+
     val transfer = State.transfers.get(key, fileNumber)
     transfer match {
       case Some(t) =>
         t.status = FileStatus.FINISHED
         State.db.fileTransferFinished(key, fileNumber)
         State.db.clearFileNumber(key, fileNumber)
+        State.setLastFileTransferAction()
         if (t.fileKind == FileKind.AVATAR) {
           if (t.sending) {
             onSelfAvatarSendFinished(key, context)
@@ -259,6 +279,7 @@ class FileTransferManager extends Intervals {
 
   def cancelFile(key: ContactKey, fileNumber: Int, context: Context) {
     AntoxLog.debug("cancelFile", TAG)
+
     val db = State.db
     State.transfers.remove(key, fileNumber)
     db.clearFileNumber(key, fileNumber)
@@ -266,6 +287,7 @@ class FileTransferManager extends Intervals {
 
   def getProgress(id: Long): Long = {
     val mTransfer = State.transfers.get(id)
+
     mTransfer match {
       case Some(t) => t.progress
       case None => 0
@@ -274,10 +296,12 @@ class FileTransferManager extends Intervals {
 
   def fileTransferStarted(key: ContactKey, fileNumber: Integer, ctx: Context) {
     AntoxLog.debug("fileTransferStarted", TAG)
+
     State.db.fileTransferStarted(key, fileNumber)
   }
 
   def pauseFile(id: Long, ctx: Context) {
+
     AntoxLog.debug("pauseFile", TAG)
     val mTransfer = State.transfers.get(id)
     mTransfer match {
@@ -289,30 +313,34 @@ class FileTransferManager extends Intervals {
   def onSelfAvatarSendFinished(sentTo: ContactKey, context: Context): Unit = {
     val db = State.db
     db.updateContactReceivedAvatar(sentTo, receivedAvatar = true)
-    updateSelfAvatar(context)
+    updateSelfAvatar(context, false)
   }
 
-  def updateSelfAvatar(context: Context): Unit = {
-    val db = State.db
-    val friendList = db.friendInfoList.toBlocking.first
+  def updateSelfAvatar(context: Context, updated: Boolean): Unit = {
 
-    friendList.filter(_.online).find(!_.receivedAvatar) match {
-      case Some(friend) =>
-        AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
-          case Some(file) =>
-            sendFileSendRequest(file.getPath, friend.key, AVATAR,
-              fileId =
-                ToxSingleton.tox.hash(file)
-                .map(_.getBytes)
-                .map(ToxFileId.unsafeFromValue)
-                .getOrElse(ToxFileId.empty),
-              context = context)
-          case None =>
-            sendFileDeleteRequest(friend.key, AVATAR, context)
-        }
+    // don't send my avatar in battery saving mode, unless we have changed the avatar
+    if ((!State.getBatterySavingMode()) || (updated)) {
+      val db = State.db
+      val friendList = db.friendInfoList.toBlocking.first
 
-      case None =>
+      friendList.filter(_.online).find(!_.receivedAvatar) match {
+        case Some(friend) =>
+          AVATAR.getAvatarFile(PreferenceManager.getDefaultSharedPreferences(context).getString("avatar", ""), context) match {
+            case Some(file) =>
+              sendFileSendRequest(file.getPath, friend.key, AVATAR,
+                fileId2 =
+                  ToxSingleton.tox.hash(file)
+                    .map(_.getBytes)
+                    .map(ToxFileId.unsafeFromValue)
+                    .getOrElse(ToxFileId.empty),
+                context = context)
+            case None =>
+              sendFileDeleteRequest(friend.key, AVATAR, context)
+          }
+
+        case None =>
         //avatar has been sent to all friends, do nothing
+      }
     }
   }
 }

@@ -13,12 +13,14 @@ import chat.tox.antox.fragments.CreateGroupDialog.CreateGroupListener
 import scala.collection.JavaConversions._
 
 object CreateGroupDialog {
+
   trait CreateGroupListener {
     def groupCreationConfimed(name: String): Unit
   }
+
 }
 
-class CreateGroupDialog (var context: Context) {
+class CreateGroupDialog(var context: Context) {
 
   private val createGroupListenerList = new util.ArrayList[CreateGroupListener]()
   val wrapInScrollView = true
@@ -29,10 +31,10 @@ class CreateGroupDialog (var context: Context) {
     .setView(R.layout.fragment_create_group)
     .setPositiveButton(R.string.create_group_dialog_create_group, null)
     .setNegativeButton(R.string.create_group_dialog_cancel, new OnClickListener {
-    override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
-      triggerCreateGroupEvent(nameInput.getText.toString)
-    }
-  }).create()
+      override def onClick(dialogInterface: DialogInterface, i: Int): Unit = {
+        triggerCreateGroupEvent(nameInput.getText.toString)
+      }
+    }).create()
 
   nameInput = dialog.findViewById(R.id.group_name).asInstanceOf[EditText]
   val positiveAction = dialog.getButton(DialogInterface.BUTTON_POSITIVE)

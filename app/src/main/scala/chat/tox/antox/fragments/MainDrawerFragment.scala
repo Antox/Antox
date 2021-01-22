@@ -24,6 +24,7 @@ import im.tox.tox4j.core.enums.ToxConnection
 import rx.lang.scala.Subscription
 import rx.lang.scala.schedulers.AndroidMainThreadScheduler
 
+
 class MainDrawerFragment extends Fragment {
 
   private var mDrawerLayout: DrawerLayout = _
@@ -39,6 +40,7 @@ class MainDrawerFragment extends Fragment {
   }
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
+
     super.onCreateView(inflater, container, savedInstanceState)
     val rootView = inflater.inflate(R.layout.fragment_main_drawer, container, false)
 
@@ -55,14 +57,20 @@ class MainDrawerFragment extends Fragment {
 
     val drawerHeader = rootView.findViewById(R.id.drawer_header)
 
-    drawerHeader.setOnClickListener(new OnClickListener {
-      override def onClick(v: View): Unit = {
-        val intent = new Intent(getActivity, classOf[ProfileSettingsActivity])
-        startActivity(intent)
-      }
-    })
+    // zoff //
+    if (drawerHeader != null) {
+      drawerHeader.setOnClickListener(new OnClickListener {
+        override def onClick(v: View): Unit = {
+          val intent = new Intent(getActivity, classOf[ProfileSettingsActivity])
+          startActivity(intent)
+        }
+      })
+    }
 
-    drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
+    // zoff //
+    if (drawerHeader != null) {
+      drawerHeader.setBackgroundColor(ThemeManager.primaryColorDark)
+    }
 
     rootView
   }
@@ -84,19 +92,27 @@ class MainDrawerFragment extends Fragment {
 
     val mAvatar = AVATAR.getAvatarFile(userInfo.avatarName, getActivity)
 
-    mAvatar match {
-      case Some(avatar) =>
-        BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
-      case None =>
-        avatarView.setImageResource(R.drawable.default_avatar)
+    // zoff //
+    if (avatarView != null) {
+      mAvatar match {
+        case Some(avatar) =>
+          BitmapManager.load(avatar, isAvatar = true).foreach(avatarView.setImageBitmap)
+        case None =>
+          avatarView.setImageResource(R.drawable.default_avatar)
+      }
     }
 
-
     val nameView = getView.findViewById(R.id.name).asInstanceOf[TextView]
-    nameView.setText(new String(userInfo.nickname.value))
 
+    // zoff //
+    if (nameView != null) {
+      nameView.setText(new String(userInfo.nickname.value))
+    }
     val statusMessageView = getView.findViewById(R.id.status_message).asInstanceOf[TextView]
-    statusMessageView.setText(new String(userInfo.statusMessage.value))
+    // zoff //
+    if (statusMessageView != null) {
+      statusMessageView.setText(new String(userInfo.statusMessage.value))
+    }
 
     updateNavigationHeaderStatus(connectionStatus)
   }
@@ -108,10 +124,13 @@ class MainDrawerFragment extends Fragment {
     val online = toxConnection != ToxConnection.NONE
     val drawable = getResources.getDrawable(IconColor.iconDrawable(online, status))
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      statusView.setBackground(drawable)
-    } else {
-      statusView.setBackgroundDrawable(drawable)
+    // zoff //
+    if (statusView != null) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        statusView.setBackground(drawable)
+      } else {
+        statusView.setBackgroundDrawable(drawable)
+      }
     }
   }
 
@@ -160,7 +179,7 @@ class MainDrawerFragment extends Fragment {
         startActivity(intent)
 
       case R.id.nav_logout =>
-        State.logout(getActivity)
+        if (State.loggedIn(getActivity)) State.logout(getActivity)
     }
 
     menuItem.setChecked(false)

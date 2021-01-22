@@ -10,9 +10,4 @@
         android:icon="@drawable/ic_action_video"
         android:title="@string/video_call_friend"
         antox:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/info"
-        android:icon="@drawable/ic_info"
-        android:title="@string/info"
-        antox:showAsAction="ifRoom" />
 </menu>

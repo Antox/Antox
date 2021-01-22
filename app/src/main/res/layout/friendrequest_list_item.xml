@@ -1,72 +1,73 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="50dp"
-    android:padding="@dimen/margin_medium" >
-        <ImageView
-            android:paddingTop="7dp"
-            android:src="@drawable/ic_action_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/reject"
-            android:layout_gravity="right"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+    android:padding="@dimen/margin_medium">
 
-        <ImageView
-            android:paddingLeft="5dp"
-            android:paddingTop="7dp"
-            android:src="@drawable/ic_action_tick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/accept"
-            android:layout_gravity="center_horizontal"
-            android:layout_toStartOf="@id/reject"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/reject"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"/>
+    <ImageView
+        android:paddingTop="7dp"
+        android:src="@drawable/ic_action_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reject"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_marginLeft="2dp"
-            android:id="@+id/avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/default_avatar"/>
+    <ImageView
+        android:paddingLeft="5dp"
+        android:paddingTop="7dp"
+        android:src="@drawable/ic_action_tick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/accept"
+        android:layout_gravity="center_horizontal"
+        android:layout_toStartOf="@id/reject"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/reject"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp" />
 
-        <TextView
-            android:id="@+id/icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:background="@drawable/circle_offline"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/avatar"
-            android:layout_alignEnd="@+id/avatar" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginLeft="2dp"
+        android:id="@+id/avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/default_avatar" />
 
-        <TextView
-            android:paddingTop="2dp"
-            android:id="@+id/request_key"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textSize="18dp"
-            android:paddingLeft="15dp"
-            android:layout_toRightOf="@id/avatar"
-            android:layout_toLeftOf="@id/accept" />
+    <TextView
+        android:id="@+id/icon"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/circle_offline"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/avatar"
+        android:layout_alignEnd="@+id/avatar" />
 
-        <TextView
-            android:paddingLeft="15dp"
-            android:layout_toRightOf="@id/avatar"
-            android:layout_toLeftOf="@id/accept"
-            android:id="@+id/request_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textSize="15dp"
-            android:layout_below="@id/request_key"
-            android:textColor="@color/grey_dark"
-            android:gravity="start"
-            android:textStyle="italic"/>
+    <TextView
+        android:paddingTop="2dp"
+        android:id="@+id/request_key"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="18dp"
+        android:paddingLeft="15dp"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_toLeftOf="@id/accept" />
+
+    <TextView
+        android:paddingLeft="15dp"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_toLeftOf="@id/accept"
+        android:id="@+id/request_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="15dp"
+        android:layout_below="@id/request_key"
+        android:textColor="@color/grey_dark"
+        android:gravity="start"
+        android:textStyle="italic" />
 
 </RelativeLayout> 
